@@ -40,10 +40,12 @@ describe("Branding", function () {
       "<progress>progress is a html element!</progress>"
     ];
     terria.configParameters.displayOneBrand = 0;
-    renderWithContexts(<Branding />, viewState);
+    const { container } = renderWithContexts(<Branding />, viewState);
 
-    expect(screen.getByRole("progressbar")).toBeVisible();
-    expect(screen.getByText("progress is a html element!")).toBeVisible();
+    expect(within(container).getByRole("progressbar")).toBeVisible();
+    expect(
+      within(container).getByText("progress is a html element!")
+    ).toBeVisible();
   });
 
   it("renders when provided displayOne outside of index", function () {

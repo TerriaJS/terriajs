@@ -12,6 +12,7 @@ const NumberParameterEditor: FC<{ parameter: NumberParameter }> = ({
 
   useEffect(() => {
     if (parameter.defaultValue !== undefined) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setValue(parameter.defaultValue);
     }
   }, [parameter.defaultValue]);

@@ -166,9 +166,7 @@ describe("TileErrorHandlerMixin", function () {
     it("retries fetching the tile using xhr", async function () {
       try {
         const error = newError(randomIntBetween(500, 599));
-        spyOn(Resource, "fetchImage").and.returnValue(
-          Promise.reject(error.error)
-        );
+        spyOn(Resource, "fetchImage").and.rejectWith(error.error);
         await onTileLoadError(item, error);
       } catch (_e) {}
       expect(Resource.fetchImage).toHaveBeenCalled();
@@ -246,28 +244,26 @@ describe("TileErrorHandlerMixin", function () {
     it("it fails after retrying a maximum of specified number of times", async function () {
       try {
         const error = newError(randomIntBetween(500, 599));
-        spyOn(Resource, "fetchImage").and.returnValue(
-          Promise.reject(error.error)
-        );
+        spyOn(Resource, "fetchImage").and.rejectWith(error.error);
         await onTileLoadError(item, error);
       } catch {}
       expect(Resource.fetchImage).toHaveBeenCalledTimes(
         !Array.isArray(item.tileRetryOptions)
-          ? item.tileRetryOptions.retries ?? 0
+          ? (item.tileRetryOptions.retries ?? 0)
           : 0
       );
       expect(item.tileFailures).toBe(1);
     });
 
     it("tells the map to reload the tile again if an xhr attempt succeeds", async function () {
-      spyOn(Resource, "fetchImage").and.returnValue(Promise.resolve());
+      spyOn(Resource, "fetchImage").and.resolveTo();
       await onTileLoadError(item, newError(randomIntBetween(500, 599)));
       expect(item.tileFailures).toBe(0);
     });
 
     it("fails if the xhr succeeds but the map fails to load the tile for more than 5 times", async function () {
       try {
-        spyOn(Resource, "fetchImage").and.returnValue(Promise.resolve());
+        spyOn(Resource, "fetchImage").and.resolveTo();
         await onTileLoadError(item, newError(randomIntBetween(500, 599), 0));
         await onTileLoadError(item, newError(randomIntBetween(500, 599), 1));
         await onTileLoadError(item, newError(randomIntBetween(500, 599), 2));
@@ -281,9 +277,7 @@ describe("TileErrorHandlerMixin", function () {
     it("gives up silently if the item is hidden", async function () {
       try {
         const error = newError(randomIntBetween(500, 599));
-        spyOn(Resource, "fetchImage").and.returnValue(
-          Promise.reject(error.error)
-        );
+        spyOn(Resource, "fetchImage").and.rejectWith(error.error);
         const result = onTileLoadError(item, error);
         item.setTrait(CommonStrata.user, "show", false);
         await result;
@@ -349,6 +343,7 @@ describe("TileErrorHandlerMixin", function () {
 
   it("calls `handleTileError` if the item defines it", async function () {
     item.handleTileError = (promise) => promise;
+    // @ts-expect-error: aaa
     spyOn(item, "handleTileError");
     try {
       await onTileLoadError(item, newError(400));

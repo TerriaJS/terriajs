@@ -21,16 +21,9 @@ import queryToObject from "terriajs-cesium/Source/Core/queryToObject";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import SplitDirection from "terriajs-cesium/Source/Scene/SplitDirection";
 import URI from "urijs";
-import {
-  Category,
-  DataSourceAction,
-  LaunchAction
-} from "../Core/AnalyticEvents/analyticEvents";
 import AsyncLoader from "../Core/AsyncLoader";
 import Class from "../Core/Class";
-import ConsoleAnalytics from "../Core/ConsoleAnalytics";
 import CorsProxy from "../Core/CorsProxy";
-import GoogleAnalytics from "../Core/GoogleAnalytics";
 import {
   JsonArray,
   JsonObject,
@@ -47,6 +40,13 @@ import TerriaError, {
   TerriaErrorSeverity
 } from "../Core/TerriaError";
 import { Complete } from "../Core/TypeModifiers";
+import NoopAnalytics from "../Core/Analytics/NoopAnalytics";
+import {
+  Category,
+  DataSourceAction,
+  LaunchAction
+} from "../Core/Analytics/analyticEvents";
+import { Analytics } from "../Core/Analytics/types";
 import ensureSuffix from "../Core/ensureSuffix";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import getDereferencedIfExists from "../Core/getDereferencedIfExists";
@@ -264,6 +264,11 @@ export interface ConfigParameters {
   googleAnalyticsKey?: string;
 
   /**
+   * Options for Google Analytics
+   */
+  googleAnalyticsOptions?: unknown;
+
+  /**
    * Error service provider configuration.
    */
   errorService?: ErrorServiceOptions;
@@ -355,11 +360,6 @@ export interface ConfigParameters {
    */
   enableConsoleAnalytics?: boolean;
 
-  /**
-   * Options for Google Analytics
-   */
-  googleAnalyticsOptions?: unknown;
-
   relatedMaps?: RelatedMap[];
 
   /**
@@ -404,26 +404,10 @@ interface StartOptions {
   beforeRestoreAppState?: () => Promise<void> | void;
 }
 
-export interface Analytics {
-  start: (
-    configParameters: Partial<{
-      enableConsoleAnalytics: boolean;
-      googleAnalyticsKey: any;
-      googleAnalyticsOptions: any;
-    }>
-  ) => void;
-  logEvent: (
-    category: string,
-    action: string,
-    label?: string,
-    value?: number
-  ) => void;
-}
-
 interface TerriaOptions {
   /**
    * Override detecting base href from document.baseURI.
-   * Used in specs to support routes within Karma spec automation framework
+   * Used in specs to support routes within Browser spec automation framework
    */
   appBaseHref?: string;
   /**
@@ -511,11 +495,11 @@ export default class Terria {
   corsProxy: CorsProxy = new CorsProxy();
 
   /**
-   * Gets or sets the instance to which to report Google Analytics-style log events.
-   * If a global `ga` function is defined, this defaults to `GoogleAnalytics`.  Otherwise, it defaults
-   * to `ConsoleAnalytics`.
+   * Gets or sets the instance to which to report Google Analytics-style log
+   * events. Default to NoopAnalytics, which does nothing. Can be set to
+   * ConsoleAnalytics for development, or GoogleAnalytics to report to Google Analytics.
    */
-  readonly analytics: Analytics | undefined;
+  readonly analytics: Analytics;
 
   /**
    * Gets the stack of layers active on the timeline.
@@ -761,14 +745,7 @@ export default class Terria {
     // Casting to `any` as `setBaseUrl` method is not part of the Cesiums' type definitions
     (buildModuleUrl as any).setBaseUrl(this.cesiumBaseUrl);
 
-    this.analytics = options.analytics;
-    if (!defined(this.analytics)) {
-      if (typeof window !== "undefined" && defined((window as any).ga)) {
-        this.analytics = new GoogleAnalytics();
-      } else {
-        this.analytics = new ConsoleAnalytics();
-      }
-    }
+    this.analytics = options.analytics ?? new NoopAnalytics();
   }
 
   /** Raise error to user.
@@ -1078,8 +1055,8 @@ export default class Terria {
         );
       }
     }
-    this.analytics?.start(this.configParameters);
-    this.analytics?.logEvent(
+    this.analytics.start(this.configParameters);
+    this.analytics.logEvent(
       Category.launch,
       LaunchAction.url,
       launchUrlForAnalytics
@@ -1239,7 +1216,8 @@ export default class Terria {
         baseMap = baseMapSearch;
       }
     }
-    await this.mainViewer.setBaseMap(baseMap.item as MappableMixin.Instance);
+    if (baseMap?.item)
+      await this.mainViewer.setBaseMap(baseMap.item as MappableMixin.Instance);
   }
 
   get isLoadingInitSources(): boolean {
@@ -1903,7 +1881,7 @@ export default class Terria {
 
     newItems.forEach((item) => {
       // fire the google analytics event
-      this.analytics?.logEvent(
+      this.analytics.logEvent(
         Category.dataSource,
         DataSourceAction.addFromShareOrInit,
         getPath(item)

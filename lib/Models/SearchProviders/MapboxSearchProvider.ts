@@ -3,10 +3,7 @@ import i18next from "i18next";
 import { makeObservable, override, runInAction } from "mobx";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import Resource from "terriajs-cesium/Source/Core/Resource";
-import {
-  Category,
-  SearchAction
-} from "../../Core/AnalyticEvents/analyticEvents";
+import { Category, SearchAction } from "../../Core/Analytics/analyticEvents";
 import isDefined from "../../Core/isDefined";
 import loadJson from "../../Core/loadJson";
 import { applyTranslationIfExists } from "../../Language/languageHelpers";
@@ -59,7 +56,7 @@ export default class MapboxSearchProvider extends LocationSearchProviderMixin(
   }
 
   protected logEvent(searchText: string) {
-    this.terria.analytics?.logEvent(
+    this.terria.analytics.logEvent(
       Category.search,
       SearchAction.mapbox,
       searchText

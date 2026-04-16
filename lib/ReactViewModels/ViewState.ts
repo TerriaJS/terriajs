@@ -14,7 +14,7 @@ import {
   Category,
   HelpAction,
   StoryAction
-} from "../Core/AnalyticEvents/analyticEvents";
+} from "../Core/Analytics/analyticEvents";
 import Result from "../Core/Result";
 import triggerResize from "../Core/triggerResize";
 import PickedFeatures from "../Map/PickedFeatures/PickedFeatures";
@@ -507,9 +507,10 @@ export default class ViewState {
         }
 
         try {
-          const result = await this.terria.getModelByIdShareKeyOrCatalogIndex(
-            previewedItemId
-          );
+          const result =
+            await this.terria.getModelByIdShareKeyOrCatalogIndex(
+              previewedItemId
+            );
           result.throwIfError();
           const model = result.throwIfUndefined();
           this.viewCatalogMember(model);
@@ -713,7 +714,7 @@ export default class ViewState {
 
   @action
   showHelpPanel(): void {
-    this.terria.analytics?.logEvent(Category.help, HelpAction.panelOpened);
+    this.terria.analytics.logEvent(Category.help, HelpAction.panelOpened);
     this.showHelpMenu = true;
     this.helpPanelExpanded = false;
     this.selectedHelpMenuItem = "";
@@ -853,7 +854,7 @@ export default class ViewState {
 
     this.terria.currentViewer.notifyRepaintRequired();
 
-    this.terria.analytics?.logEvent(Category.story, StoryAction.runStory);
+    this.terria.analytics.logEvent(Category.story, StoryAction.runStory);
   }
 
   @computed

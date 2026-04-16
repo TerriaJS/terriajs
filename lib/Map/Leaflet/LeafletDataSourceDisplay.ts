@@ -289,7 +289,7 @@ export default class LeafletDataSourceDisplay {
     const tmp = new BoundingSphere();
 
     let count = 0;
-    let state = BoundingSphereState.DONE;
+    let state: BoundingSphereState;
     const visualizers = dataSource.visualizers;
     const visualizersLength = visualizers.length;
 

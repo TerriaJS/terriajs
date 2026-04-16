@@ -136,6 +136,8 @@ describe("YDYRCatalogFunction", function () {
     let dispose: () => void;
     beforeEach(async () => {
       job = (await ydyr.submitJob()) as YDYRCatalogFunctionJob;
+      // Override the 2-second polling interval to speed up tests
+      Object.defineProperty(job, "refreshInterval", { get: () => 0.01 });
       dispose = reaction(
         () => job.mapItems,
         () => {}

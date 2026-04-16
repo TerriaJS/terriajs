@@ -52,7 +52,8 @@ describe("IndexedItemSearchProvider", function () {
   describe("load", function () {
     it("can be loaded", async function () {
       worker.use(
-        http.get("*/indexRoot.json", () => HttpResponse.json(validIndexRoot))
+        http.get("*/indexRoot.json", () => HttpResponse.json(validIndexRoot)),
+        http.get("*/resultsData.csv", () => new HttpResponse(resultsDataCsv))
       );
 
       const provider = new IndexedItemSearchProvider(
@@ -98,7 +99,8 @@ describe("IndexedItemSearchProvider", function () {
   describe("describeParameters", function () {
     it("returns the parameters", async function () {
       worker.use(
-        http.get("*/indexRoot.json", () => HttpResponse.json(validIndexRoot))
+        http.get("*/indexRoot.json", () => HttpResponse.json(validIndexRoot)),
+        http.get("*/resultsData.csv", () => new HttpResponse(resultsDataCsv))
       );
 
       const provider = new IndexedItemSearchProvider(

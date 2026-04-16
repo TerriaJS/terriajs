@@ -5,10 +5,7 @@ import { Component, RefObject, createRef, type ReactNode } from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { useSwipeable, type SwipeableProps } from "react-swipeable";
 import { DefaultTheme, withTheme } from "styled-components";
-import {
-  Category,
-  StoryAction
-} from "../../../Core/AnalyticEvents/analyticEvents";
+import { Category, StoryAction } from "../../../Core/Analytics/analyticEvents";
 import { animateEnd } from "../../../Core/animation";
 import getPath from "../../../Core/getPath";
 import TerriaError from "../../../Core/TerriaError";
@@ -30,7 +27,7 @@ import DragWrapper from "../../Drag/DragWrapper";
  */
 
 export async function activateStory(scene: Story, terria: Terria) {
-  terria.analytics?.logEvent(
+  terria.analytics.logEvent(
     Category.story,
     StoryAction.viewScene,
     JSON.stringify(scene)
@@ -65,7 +62,7 @@ export async function activateStory(scene: Story, terria: Terria) {
   }
 
   terria.workbench.items.forEach((item) => {
-    terria.analytics?.logEvent(
+    terria.analytics.logEvent(
       Category.story,
       StoryAction.datasetView,
       getPath(item)

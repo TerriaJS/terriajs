@@ -1,9 +1,11 @@
 import i18next from "i18next";
+import { http, passthrough } from "msw";
 import loadText from "../../../../lib/Core/loadText";
 import ProtomapsImageryProvider from "../../../../lib/Map/ImageryProvider/ProtomapsImageryProvider";
 import GpxCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/GpxCatalogItem";
 import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
 import Terria from "../../../../lib/Models/Terria";
+import { worker } from "../../../mocks/browser";
 
 describe("GpxCatalogItem", function () {
   let terria;
@@ -12,6 +14,8 @@ describe("GpxCatalogItem", function () {
   beforeEach(function () {
     terria = new Terria();
     item = new GpxCatalogItem("test", terria);
+
+    worker.use(http.get("test/gpx/example.gpx", () => passthrough()));
   });
 
   it("has type and type name", function () {

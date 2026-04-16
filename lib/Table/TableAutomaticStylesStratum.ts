@@ -22,8 +22,9 @@ import { ImageryParts } from "../ModelMixins/MappableMixin";
 
 const DEFAULT_ID_COLUMN = "id";
 
-interface TableCatalogItem
-  extends InstanceType<ReturnType<typeof TableMixin>> {}
+interface TableCatalogItem extends InstanceType<
+  ReturnType<typeof TableMixin>
+> {}
 
 export default class TableAutomaticStylesStratum extends LoadableStratum(
   TableTraits

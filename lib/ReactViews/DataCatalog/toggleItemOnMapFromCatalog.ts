@@ -1,7 +1,7 @@
 import {
   Category,
   DataSourceAction
-} from "../../Core/AnalyticEvents/analyticEvents";
+} from "../../Core/Analytics/analyticEvents";
 import getPath from "../../Core/getPath";
 import ReferenceMixin from "../../ModelMixins/ReferenceMixin";
 import TimeVarying from "../../ModelMixins/TimeVarying";
@@ -64,12 +64,13 @@ export default async function toggleItemOnMapFromCatalog(
 
   addOrRemoveFromTimelineStack(viewState.terria, item, op);
 
+  viewState.terria.analytics.logEvent(
+    Category.dataSource,
+    analyticsEvents[op],
+    getPath(item)
+  );
+
   if (viewState.terria.workbench.contains(item) && !keepCatalogOpen) {
     viewState.closeCatalog();
-    viewState.terria.analytics?.logEvent(
-      Category.dataSource,
-      analyticsEvents[op],
-      getPath(item)
-    );
   }
 }

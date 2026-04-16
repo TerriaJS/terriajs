@@ -184,8 +184,9 @@ function ReferenceMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
 }
 
 namespace ReferenceMixin {
-  export interface Instance
-    extends InstanceType<ReturnType<typeof ReferenceMixin>> {}
+  export interface Instance extends InstanceType<
+    ReturnType<typeof ReferenceMixin>
+  > {}
   export function isMixedInto(model: any): model is Instance {
     return model && "loadReference" in model;
   }

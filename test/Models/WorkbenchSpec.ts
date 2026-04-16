@@ -106,15 +106,15 @@ describe("Workbench", function () {
       expect(workbench.itemIds).toEqual(["C", "B", "A"]);
     });
 
-    it("will add another keepOnTop item4 ", () => {
+    it("will add another keepOnTop item4 ", async () => {
       item4.setTrait("definition", "keepOnTop", true);
-      workbench.add(item4);
+      await workbench.add(item4);
       expect(workbench.items).toEqual([item4, item3, item1, item2]);
       expect(workbench.itemIds).toEqual(["D", "C", "A", "B"]);
     });
 
-    it("will add another item4", () => {
-      workbench.add(item4);
+    it("will add another item4", async () => {
+      await workbench.add(item4);
       expect(workbench.items).toEqual([item3, item4, item1, item2]);
       expect(workbench.itemIds).toEqual(["C", "D", "A", "B"]);
     });
@@ -144,16 +144,16 @@ describe("Workbench", function () {
       expect(workbench.itemIds).toEqual(["C", "A", "B"]);
     });
 
-    it("will add another keepOnTop item4 ", () => {
+    it("will add another keepOnTop item4 ", async () => {
       item4.setTrait("definition", "keepOnTop", true);
-      workbench.add(item4);
+      await workbench.add(item4);
       expect(workbench.items).toEqual([item3, item4, item1, item2]);
       expect(workbench.itemIds).toEqual(["C", "D", "A", "B"]);
     });
 
-    it("will add another non layer-reordering item4 ", () => {
+    it("will add another non layer-reordering item4 ", async () => {
       item4.setTrait("definition", "supportsReordering", false);
-      workbench.add(item4);
+      await workbench.add(item4);
       expect(workbench.items).toEqual([item4, item3, item1, item2]);
       expect(workbench.itemIds).toEqual(["D", "C", "A", "B"]);
     });
@@ -275,9 +275,15 @@ describe("Workbench", function () {
 
     beforeEach(function () {
       testItem = new WebMapServiceCatalogItem("test-item", terria);
+      testItem.setTrait(
+        "definition",
+        "url",
+        "test/WMS/single_metadata_url.xml"
+      );
+      terria.addModel(testItem);
     });
 
-    it("triggers an initial message notification when an item is added to the workbench", function () {
+    it("triggers an initial message notification when an item is added to the workbench", async function () {
       updateModelFromJson(testItem, CommonStrata.user, {
         initialMessage: {
           title: "Hello, world",
@@ -288,26 +294,27 @@ describe("Workbench", function () {
 
       const notifications = terria.notificationState.getAllNotifications();
       expect(notifications.length).toBe(0);
-      workbench.add(testItem);
+      await workbench.add(testItem);
       expect(notifications.length).toBe(1);
       expect(notifications[0].title).toBe("Hello, world");
       expect(notifications[0].message).toBe("This is a test message");
       expect(notifications[0].showAsToast).toBe(true);
     });
 
-    it("triggers the initial message only once", function () {
+    it("triggers the initial message only once", async function () {
       updateModelFromJson(testItem, CommonStrata.user, {
         initialMessage: {
           title: "Hello, world",
-          content: "This is a test message"
+          content: "This is a test message",
+          showAsToast: true
         }
       });
 
       const notifications = terria.notificationState.getAllNotifications();
       expect(notifications.length).toBe(0);
-      workbench.add(testItem);
+      await workbench.add(testItem);
       workbench.remove(testItem);
-      workbench.add(testItem);
+      await workbench.add(testItem);
       expect(notifications.length).toBe(1);
     });
   });

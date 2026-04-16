@@ -58,7 +58,6 @@ Search provider configuration:
       - Required
       - The URL of `indexRoot.json` file that was generted using `terriajs-indexer`.
 - `resultTemplate: string`
-
   - Optional
   - A [Mustache](https://mustache.github.io/) formatted template string used to generate a title text for each result in the search results listing. The columns in `resultsData.csv` can be used as variables in the template string. If not provided, the text defaults to the ID of the feature.
 

@@ -11,7 +11,7 @@ import Icon from "../../../Styled/Icon";
 import {
   Category,
   TimeLineAction
-} from "../../../Core/AnalyticEvents/analyticEvents";
+} from "../../../Core/Analytics/analyticEvents";
 
 const TimelineControls = createReactClass({
   propTypes: {
@@ -29,16 +29,13 @@ const TimelineControls = createReactClass({
   },
 
   gotoStart() {
-    this.props.analytics?.logEvent(Category.timeLine, TimeLineAction.gotoStart);
+    this.props.analytics.logEvent(Category.timeLine, TimeLineAction.gotoStart);
     this.props.clock.currentTime = this.props.clock.startTime;
     this.props.currentViewer.notifyRepaintRequired();
   },
 
   togglePlay() {
-    this.props.analytics?.logEvent(
-      Category.timeLine,
-      TimeLineAction.togglePlay
-    );
+    this.props.analytics.logEvent(Category.timeLine, TimeLineAction.togglePlay);
 
     this.props.clock.tick();
     if (this.props.clock.multiplier < 0) {
@@ -50,10 +47,7 @@ const TimelineControls = createReactClass({
   },
 
   playSlower() {
-    this.props.analytics?.logEvent(
-      Category.timeLine,
-      TimeLineAction.playSlower
-    );
+    this.props.analytics.logEvent(Category.timeLine, TimeLineAction.playSlower);
 
     this.props.clock.tick();
     this.props.clock.multiplier /= 2;
@@ -63,10 +57,7 @@ const TimelineControls = createReactClass({
   },
 
   playFaster() {
-    this.props.analytics?.logEvent(
-      Category.timeLine,
-      TimeLineAction.playFaster
-    );
+    this.props.analytics.logEvent(Category.timeLine, TimeLineAction.playFaster);
 
     this.props.clock.tick();
     this.props.clock.multiplier *= 2;
@@ -76,10 +67,7 @@ const TimelineControls = createReactClass({
   },
 
   toggleLoop() {
-    this.props.analytics?.logEvent(
-      Category.timeline,
-      TimeLineAction.toggleLoop
-    );
+    this.props.analytics.logEvent(Category.timeline, TimeLineAction.toggleLoop);
 
     if (this.isLooping()) {
       this.props.clock.clockRange = ClockRange.CLAMPED;

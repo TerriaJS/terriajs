@@ -223,9 +223,8 @@ function ExportWebCoverageServiceMixin<
     }
 
     private async loadWcsCapabilities() {
-      const capabilities = await WebCoverageServiceCapabilitiesStratum.load(
-        this
-      );
+      const capabilities =
+        await WebCoverageServiceCapabilitiesStratum.load(this);
 
       runInAction(() =>
         this.strata.set(
@@ -523,8 +522,9 @@ function ExportWebCoverageServiceMixin<
 }
 
 namespace ExportWebCoverageServiceMixin {
-  export interface Instance
-    extends InstanceType<ReturnType<typeof ExportWebCoverageServiceMixin>> {}
+  export interface Instance extends InstanceType<
+    ReturnType<typeof ExportWebCoverageServiceMixin>
+  > {}
   export function isMixedInto(model: any): model is Instance {
     return (
       model &&

@@ -14,7 +14,7 @@ import WorkbenchList from "./WorkbenchList";
 import {
   Category,
   DataSourceAction
-} from "../../Core/AnalyticEvents/analyticEvents";
+} from "../../Core/Analytics/analyticEvents";
 import MappableMixin from "../../ModelMixins/MappableMixin";
 
 interface IProps extends WithTranslation {
@@ -55,7 +55,7 @@ class Workbench extends Component<IProps> {
   @action.bound
   removeAll() {
     this.props.terria.workbench.items.forEach((item) => {
-      this.props.terria.analytics?.logEvent(
+      this.props.terria.analytics.logEvent(
         Category.dataSource,
         DataSourceAction.removeAllFromWorkbench,
         getPath(item)

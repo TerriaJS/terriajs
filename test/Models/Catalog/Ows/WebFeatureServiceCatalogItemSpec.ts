@@ -6,6 +6,7 @@ import WebFeatureServiceCatalogItem, {
 } from "../../../../lib/Models/Catalog/Ows/WebFeatureServiceCatalogItem";
 import Terria from "../../../../lib/Models/Terria";
 import { worker } from "../../../mocks/browser";
+import getCapabilities from "../../../../wwwroot/test/WFS/getCapabilities.xml";
 
 describe("WebFeatureServiceCatalogItem", function () {
   let terria: Terria;
@@ -114,28 +115,32 @@ describe("WebFeatureServiceCatalogItem", function () {
       worker.use(
         http.get("*/test/WFS/getCapabilities.xml", ({ request }) => {
           const url = new URL(request.url);
-          if (url.searchParams.get("request") !== "GetFeature")
-            throw new Error(`Unexpected query params: ${url.search}`);
-          return HttpResponse.json({
-            type: "FeatureCollection",
-            name: "Test data",
-            features: [
-              {
-                type: "Feature",
-                properties: {
-                  someProp: "someValue"
-                },
-                geometry: {
-                  type: "LineString",
-                  coordinates: [
-                    [143.876421625763385, -37.565365204704129, 0.0],
-                    [143.878406116725529, -37.565587782094575, 0.0],
-                    [143.878637784265578, -37.565655550547291, 0.0]
-                  ]
+          if (url.searchParams.get("request") === "GetFeature") {
+            return HttpResponse.json({
+              type: "FeatureCollection",
+              name: "Test data",
+              features: [
+                {
+                  type: "Feature",
+                  properties: {
+                    someProp: "someValue"
+                  },
+                  geometry: {
+                    type: "LineString",
+                    coordinates: [
+                      [143.876421625763385, -37.565365204704129, 0.0],
+                      [143.878406116725529, -37.565587782094575, 0.0],
+                      [143.878637784265578, -37.565655550547291, 0.0]
+                    ]
+                  }
                 }
-              }
-            ]
-          });
+              ]
+            });
+          }
+          if (url.searchParams.get("request") === "GetCapabilities") {
+            return HttpResponse.xml(getCapabilities);
+          }
+          throw new Error(`Unexpected query params: ${url.search}`);
         })
       );
     });

@@ -64,13 +64,13 @@ describe("ChartItemSelector", function () {
   let terria: Terria;
   let item: SomeChartableItem;
 
-  beforeEach(function () {
+  beforeEach(async function () {
     terria = new Terria({
       baseUrl: "./"
     });
     item = new SomeChartableItem("test", terria);
     terria.addModel(item);
-    terria.workbench.add(item);
+    await terria.workbench.add(item);
   });
 
   it("sorts the chart items by name", function () {

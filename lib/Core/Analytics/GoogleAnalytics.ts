@@ -1,12 +1,12 @@
 import i18next from "i18next";
 import ReactGA from "react-ga4";
-import { Analytics, ConfigParameters } from "../Models/Terria";
-import isDefined from "./isDefined";
+import isDefined from "../isDefined";
+import { Analytics } from "./types";
 
-type GoogleAnalyticsConfigParameters = Pick<
-  ConfigParameters,
-  "enableConsoleAnalytics" | "googleAnalyticsKey" | "googleAnalyticsOptions"
->;
+type GoogleAnalyticsConfigParameters = {
+  googleAnalyticsKey?: string;
+  googleAnalyticsOptions?: unknown;
+};
 
 export default class GoogleAnalytics implements Analytics {
   key: string | undefined = undefined;

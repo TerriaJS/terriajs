@@ -1,13 +1,39 @@
 # Change Log
 
-#### next release (8.11.4)
+#### next release (8.12.3)
+
+- Refactor analytics into `lib/Core/analytics/` module, make `analytics` always defined using `NoopAnalytics` default, and remove auto-detection logic from `Terria`. Analytics instance must now be supplied via `TerriaOptions` or defaults to no-op. ([7817](https://github.com/TerriaJS/terriajs/pull/7817))
+- Upgrade dev dependencies
+  - Upgrade dompurify to version 3.3.3 to resolve security vulnerabilities.
+  - Replace unmaintained jsdom-global with maintained global-jsom.
+  - Upgrade babel packages to latest versions (7.28.0/7.29.0).
+  - Upgrade webpack to version 5.105.4.
+- Upgrade eslint to v10 and migrate to eslint flat config.
+
+#### 8.12.2 - 2026-03-27
+
+- Update attributions to make publish workflow pass.
+
+#### 8.12.1 - 2026-03-27
+
+- Fix `npm-publish.yml` workflow.
+
+#### 8.12.0 - 2026-03-27
+
+- Update prettier to v3.
+  - When merging the changes make sure to use pre-prettier-v3 and post-prettier-v3 tags to make merging easier. You can follow the guide for prettier v2 update https://github.com/TerriaJS/terriajs/discussions/6517.
+- Test environment modernization:
+  - Refactor tests to use @testing-library/react instead of react-test-renderer and react-shallow-testutils, and remove deprecated libraries.(#7755, #7763)
+  - Replace jasmine-ajax and fetch-mock with `msw` for mocking API requests in tests. (#7766, #7767, #7795, #7796, #7797, #7801)
+  - Replace karma test runner with jasmine-browser-runner and upgrade jasmine to v6. (#7807)
+  - Test runner is now exposed at port so to run tests in the browser, run `yarn gulp dev` and open `http://localhost:9876` in the browser.
+  - If you have custom tests this might require significant changes to your tests, so please reach out if you need help with this.
 
 - Capture default timeline state in share links including current time,
   playback etc.
 - Added support for draping imagery on 3D tilesets. This can be enabled per-tileset by setting the [drapeImagery](https://github.com/TerriaJS/terriajs/blob/23a2bb2b9c1058e1c7141b5e678de51af58da82b/lib/Traits/TraitsClasses/Cesium3dTilesTraits.ts#L195-L201) trait to `true`. Then from the workbench, drag the imagery layers that need to be draped, above the tileset item.
 - Underline text buttons
 - Replace node-fetch with node native fetch.
-- Refactor tests to use @testing-library/react instead of react-test-renderer and react-shallow-testutils, and remove deprecated libraries. (#7755, #7763)
 - TSify most of `lib/Core`. [#7417](https://github.com/TerriaJS/terriajs/pull/7417/)
 - Update gulpfile.js to gulp V4 syntax, which provides task descriptions in `yarn gulp --tasks`.
 - Fix splitter failing for local file catalog items by storing file data as blob URLs in the `url` trait instead of private instance fields, ensuring `duplicateModel()` preserves the data. [#7762](https://github.com/TerriaJS/terriajs/pull/7762)
@@ -23,8 +49,8 @@
   - Add Story Builder instructions behind a config parameter.
 - Fix Scene capture popup z-index appearing underneath the workbench.
 - Fix Search UI not debouncing properly
+- Upgraded `terriajs-cesium` to `23.0.2` and `terriajs-cesium-widgets` to `14.4.2`.
 - [The next improvement]
-
 #### 8.11.3 - 2026-02-02
 
 - Change to OIDC publishing to npm
@@ -56,7 +82,6 @@
 #### 8.11.0 - 2025-10-09
 
 - **Breaking changes:**
-
   - Replace unmaintained `svg-sprite-loader` with custom implementation of SvgSprite plugin based on `svg-sprite` package.
     - New implementation consists of svg sprite loader that loads svgs and svg webpack plugin that compiles them into a single sprite file.
 
@@ -77,7 +102,6 @@
 #### 8.10.0 - 2025-07-08
 
 - **Breaking changes:**
-
   - Update `protomaps-leafet` package to 5.0.1 which only support protomaps basempap tileset >v4.0
     - See [protomaps leaflet CHANGELOG](https://github.com/protomaps/protomaps-leaflet/blob/main/CHANGELOG.md#500).
   - Update react and react-dom to version 18
@@ -155,7 +179,6 @@
 
 - **Breaking changes:**
 - Major changes to UI
-
   - Changed workbench and bottom dock to absolute positioned over map with transparent background
   - Generally increase padding and font sizes to improve readability
   - Generally use a darker default theme
@@ -270,7 +293,6 @@
 #### 8.7.7 - 2024-10-01
 
 - **Breaking changes:**
-
   - Remove RollbarErrorServiceProvder
   - Error services now instantiated externally to terriajs
 
@@ -504,7 +526,6 @@
 #### 8.3.0 - 2023-05-22
 
 - **Breaking changes:**
-
   - **Upgraded Mobx to version 6.7.x**
   - **Upgraded Typescript to version 4.9.x**
   - See https://github.com/TerriaJS/terriajs/discussions/6787 for how to upgrade your map

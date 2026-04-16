@@ -14,7 +14,7 @@ import Styles from "./mobile-menu.scss";
 import { runInAction } from "mobx";
 import LangPanel from "../Map/Panels/LangPanel/LangPanel";
 import { applyTranslationIfExists } from "../../Language/languageHelpers";
-import { Category, HelpAction } from "../../Core/AnalyticEvents/analyticEvents";
+import { Category, HelpAction } from "../../Core/Analytics/analyticEvents";
 
 @observer
 class MobileMenu extends Component {
@@ -87,7 +87,7 @@ class MobileMenu extends Component {
       href: mapUserGuideItem.url,
       caption: title,
       onClick: () => {
-        this.props.terria.analytics?.logEvent(
+        this.props.terria.analytics.logEvent(
           Category.help,
           HelpAction.itemSelected,
           title

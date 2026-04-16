@@ -14,7 +14,7 @@ describe("CorsProxy", function () {
     });
     loadJson = jasmine
       .createSpy("loadJson")
-      .and.returnValue(loadDeferred.promise);
+      .and.resolveTo(loadDeferred.promise);
     corsProxy = new CorsProxy(loadJson);
 
     originalPageIsHttps = corsProxy.pageIsHttps;

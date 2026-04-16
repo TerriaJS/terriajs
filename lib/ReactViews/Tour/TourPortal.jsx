@@ -43,7 +43,7 @@ import TourProgressDot from "./TourProgressDot.jsx";
  * Fill in indicator dot depending on progress determined from count & max count
  */
 const TourProgress = ({ max, step, setTourIndex }) => {
-  const countArray = Array.from(Array(max).keys()).map((e) => e++);
+  const countArray = Array.from(Array(max).keys()).map((e) => e + 1);
   const countStep = step;
   return (
     <Box centered>

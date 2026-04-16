@@ -17,7 +17,7 @@ import { TextSpan } from "../../../../../Styled/Text";
 import {
   Category,
   ShareAction
-} from "../../../../../Core/AnalyticEvents/analyticEvents";
+} from "../../../../../Core/Analytics/analyticEvents";
 import Clipboard from "../../../../Clipboard";
 import { buildShareLink, buildShortShareLink } from "../BuildShareLink";
 import { ShareUrlWarning } from "./ShareUrlWarning";
@@ -123,11 +123,7 @@ export const ShareUrl = forwardRef<
             : t("share.shareLinkCreated")
         }
         onCopy={(text) =>
-          terria.analytics?.logEvent(
-            Category.share,
-            ShareAction.storyCopy,
-            text
-          )
+          terria.analytics.logEvent(Category.share, ShareAction.storyCopy, text)
         }
       />
       {children}

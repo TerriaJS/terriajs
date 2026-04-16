@@ -157,7 +157,7 @@ describe("Leaflet Model", function () {
           imageryLayer: new CesiumTileLayer({
             pickFeatures: jasmine
               .createSpy("pickFeatures")
-              .and.returnValue(deferred1.promise),
+              .and.resolveTo(deferred1.promise),
             url: "http://example.com/1",
             ready: true,
             tilingScheme: {
@@ -173,7 +173,7 @@ describe("Leaflet Model", function () {
           imageryLayer: new CesiumTileLayer({
             pickFeatures: jasmine
               .createSpy("pickFeatures")
-              .and.returnValue(deferred2.promise),
+              .and.resolveTo(deferred2.promise),
             url: "http://example.com/2",
             ready: true,
             tilingScheme: {
