@@ -93,7 +93,6 @@ import UserDrawing from "./UserDrawing";
 import ViewerMode, { setViewerMode } from "./ViewerMode";
 import ScreenSpaceEventHandler from "terriajs-cesium/Source/Core/ScreenSpaceEventHandler";
 import SceneMode from "terriajs-cesium/Source/Scene/SceneMode";
-import GeographicProjection from "terriajs-cesium/Source/Core/GeographicProjection";
 import WebMercatorProjection from "terriajs-cesium/Source/Core/WebMercatorProjection";
 import I3SDataProvider from "terriajs-cesium/Source/Scene/I3SDataProvider";
 import Color from "terriajs-cesium/Source/Core/Color";
@@ -196,14 +195,7 @@ export default class Cesium extends GlobeOrMap {
         {}
       ),
       scene3DOnly: false,
-      sceneMode:
-        terriaViewer.viewerMode && terriaViewer.viewerMode === ViewerMode.Cesium
-          ? SceneMode.SCENE3D
-          : SceneMode.SCENE2D,
-      mapProjection:
-        terriaViewer.viewerMode && terriaViewer.viewerMode === ViewerMode.Cesium
-          ? new GeographicProjection()
-          : new WebMercatorProjection(),
+      mapProjection: new WebMercatorProjection(),
       shadows: true,
       useBrowserRecommendedResolution: !this.terria.useNativeResolution
     };
@@ -468,6 +460,10 @@ export default class Cesium extends GlobeOrMap {
       this.cesiumWidget.scene.globe.maximumScreenSpaceError =
         this.terria.baseMaximumScreenSpaceError;
     });
+
+    if (this.terria.mainViewer.viewerMode === ViewerMode.Cesium2D) {
+      this.scene.mode = SceneMode.SCENE2D;
+    }
   }
 
   /** Add an event listener to a TerrainProvider.
@@ -1052,8 +1048,21 @@ export default class Cesium extends GlobeOrMap {
     if (scene.mode === SceneMode.SCENE2D) {
       const rect = camera.computeViewRectangle();
       if (rect) {
-        return new CameraView(rect);
+        return new CameraView(
+          rect,
+          camera.positionWC,
+          camera.directionWC,
+          camera.upWC
+        );
       }
+
+      // Fallback for 2D mode when computeViewRectangle returns undefined
+      return new CameraView(
+        this.terriaViewer.homeCamera.rectangle,
+        camera.positionWC,
+        camera.directionWC,
+        camera.upWC
+      );
     }
 
     const width = scene.canvas.clientWidth;

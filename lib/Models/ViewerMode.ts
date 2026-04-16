@@ -1,4 +1,5 @@
 import { runInAction } from "mobx";
+import SceneMode from "terriajs-cesium/Source/Scene/SceneMode";
 import TerriaViewer from "../ViewModels/TerriaViewer";
 
 enum ViewerMode {
@@ -20,19 +21,21 @@ export const MapViewers = Object.seal({
     label: "settingPanel.viewerModeLabels.CesiumEllipsoid",
     available: true
   },
+  "2dcesium": {
+    viewerMode: ViewerMode.Cesium2D,
+    terrain: false,
+    label: "settingPanel.viewerModeLabels.Cesium2D",
+    available: true
+  },
   "2d": {
     viewerMode: ViewerMode.Leaflet,
     terrain: false,
     label: "settingPanel.viewerModeLabels.Leaflet",
     available: true
-  },
-  cesium2d: {
-    viewerMode: ViewerMode.Cesium2D,
-    terrain: false,
-    label: "settingPanel.viewerModeLabels.Leaflet",
-    available: true
   }
 });
+
+export type MapViewersKey = keyof typeof MapViewers;
 
 export const isViewerMode = (mode: string): mode is keyof typeof MapViewers =>
   mode in MapViewers;
@@ -44,10 +47,16 @@ export function setViewerMode(
   runInAction(() => {
     if (viewerMode === "3d" || viewerMode === "3dsmooth") {
       viewer.viewerMode = ViewerMode.Cesium;
-      //viewer.viewerOptions.useTerrain = viewerMode === "3d";
-    } else if (viewerMode === "cesium2d") {
+      viewer.viewerOptions.useTerrain = viewerMode === "3d";
+      if (viewer.terria.cesium) {
+        viewer.terria.cesium.scene.mode = SceneMode.SCENE3D;
+      }
+    } else if (viewerMode === "2dcesium") {
       viewer.viewerMode = ViewerMode.Cesium2D;
       viewer.viewerOptions.useTerrain = false;
+      if (viewer.terria.cesium) {
+        viewer.terria.cesium.scene.mode = SceneMode.SCENE2D;
+      }
     } else if (viewerMode === "2d") {
       viewer.viewerMode = ViewerMode.Leaflet;
     } else {
