@@ -7,6 +7,7 @@ import sampleTerrainMostDetailed from "terriajs-cesium/Source/Core/sampleTerrain
 import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
 import EarthGravityModel1996 from "../../Map/Vector/EarthGravityModel1996";
 import { JsonObject } from "../../Core/Json";
+import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 
 export interface MeasurableGeometry {
   isClosed: boolean;
@@ -46,26 +47,17 @@ export default class MeasurableGeometryManager {
     );
   }
 
-  resample() {
+  resample(index: number = this.terria.measurableGeometryIndex) {
     this.sampleFromCartographics(
-      this.terria.measurableGeomList[this.terria.measurableGeometryIndex]
-        ?.stopPoints ?? [],
-      this.terria.measurableGeomList[this.terria.measurableGeometryIndex]
-        ?.isClosed,
-      this.terria.measurableGeomList[this.terria.measurableGeometryIndex]
-        ?.onlyPoints,
-      this.terria.measurableGeomList[this.terria.measurableGeometryIndex]
-        ?.pointDescriptions,
-      this.terria.measurableGeomList[this.terria.measurableGeometryIndex]
-        ?.pathNotes,
-      this.terria.measurableGeomList[this.terria.measurableGeometryIndex]
-        ?.isFileUploaded,
-      this.terria.measurableGeomList[this.terria.measurableGeometryIndex]
-        ?.indexPath,
-      this.terria.measurableGeomList[this.terria.measurableGeometryIndex]
-        ?.featureProperties,
-      this.terria.measurableGeomList[this.terria.measurableGeometryIndex]
-        ?.pointProperties
+      this.terria.measurableGeomList[index]?.stopPoints ?? [],
+      this.terria.measurableGeomList[index]?.isClosed,
+      this.terria.measurableGeomList[index]?.onlyPoints,
+      this.terria.measurableGeomList[index]?.pointDescriptions,
+      this.terria.measurableGeomList[index]?.pathNotes,
+      this.terria.measurableGeomList[index]?.isFileUploaded,
+      this.terria.measurableGeomList[index]?.indexPath ?? index,
+      this.terria.measurableGeomList[index]?.featureProperties,
+      this.terria.measurableGeomList[index]?.pointProperties
     );
   }
 
@@ -77,10 +69,8 @@ export default class MeasurableGeometryManager {
     pathNotes?: string,
     isFileUploaded?: boolean
   ) {
-    const ellipsoid = this.terria.cesium?.scene.globe.ellipsoid;
-    if (!ellipsoid) {
-      return;
-    }
+    const ellipsoid =
+      this.terria.cesium?.scene.globe.ellipsoid ?? Ellipsoid.WGS84;
 
     // extract valid points from CustomDataSource
     const cartesianEntities = pointEntities.entities.values.filter(
@@ -128,12 +118,9 @@ export default class MeasurableGeometryManager {
     featureProperties?: JsonObject,
     pointProperties?: JsonObject[]
   ) {
-    const terrainProvider = this.terria.cesium?.scene.terrainProvider;
-    const ellipsoid = this.terria.cesium?.scene.globe.ellipsoid;
-
-    if (!terrainProvider || !ellipsoid) {
-      return;
-    }
+    const terrainProvider = this.terria.cesium?.scene?.terrainProvider;
+    const ellipsoid =
+      this.terria.cesium?.scene?.globe?.ellipsoid ?? Ellipsoid.WGS84;
 
     // index of the original stops in the new array of sampling points
     const originalStopsIndex: number[] = [0];
@@ -163,9 +150,14 @@ export default class MeasurableGeometryManager {
 
     // sample points on terrain
     const terrainPromises = [
-      sampleTerrainMostDetailed(terrainProvider, interpolatedCartographics)
+      terrainProvider
+        ? sampleTerrainMostDetailed(terrainProvider, interpolatedCartographics)
+        : Promise.resolve(interpolatedCartographics)
     ];
-    if (this.terria.configParameters.useElevationMeanSeaLevel) {
+    if (
+      this.terria.configParameters.useElevationMeanSeaLevel &&
+      terrainProvider
+    ) {
       terrainPromises.push(
         this.geoidModel.getHeights(interpolatedCartographics)
       );
@@ -329,7 +321,8 @@ export default class MeasurableGeometryManager {
   public calculateGeodeticArea(stopPoints: Cartographic[]): number {
     if (stopPoints.length < 3) return 0;
 
-    const ellipsoid = this.terria.cesium?.scene.globe.ellipsoid;
+    const ellipsoid =
+      this.terria.cesium?.scene.globe.ellipsoid ?? Ellipsoid.WGS84;
     if (!ellipsoid) return 0;
 
     let totalArea = 0;
@@ -361,7 +354,8 @@ export default class MeasurableGeometryManager {
   private calculateAirArea(stopPoints: Cartographic[]): number {
     if (stopPoints.length < 3) return 0;
 
-    const ellipsoid = this.terria.cesium?.scene.globe.ellipsoid;
+    const ellipsoid =
+      this.terria.cesium?.scene.globe.ellipsoid ?? Ellipsoid.WGS84;
     if (!ellipsoid) return 0;
 
     const cartesianPoints = stopPoints.map((point) =>

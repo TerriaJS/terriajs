@@ -417,6 +417,12 @@ class LeafletGeomVisualizer {
       time,
       Cartesian2.ZERO
     );
+    const eyeOffset = getValueOrDefault(
+      markerGraphics.eyeOffset,
+      time,
+      Cartesian3.ZERO
+    );
+    const zIndexOffset = -eyeOffset.z;
 
     let imageUrl: string | undefined;
     if (isDefined(image)) {
@@ -445,7 +451,10 @@ class LeafletGeomVisualizer {
 
     let redrawIcon = false;
     if (!isDefined(geomLayer)) {
-      const markerOptions = { icon: L.icon({ iconUrl: tmpImage }) };
+      const markerOptions = {
+        icon: L.icon({ iconUrl: tmpImage }),
+        zIndexOffset: zIndexOffset
+      };
       marker = L.marker(latlng, markerOptions);
       marker.on("click", featureClicked.bind(undefined, this, entity));
       marker.on("mousedown", featureMousedown.bind(undefined, this, entity));
@@ -456,6 +465,9 @@ class LeafletGeomVisualizer {
       marker = geomLayer;
       if (!marker.getLatLng().equals(latlng)) {
         marker.setLatLng(latlng);
+      }
+      if (marker.options.zIndexOffset !== zIndexOffset) {
+        marker.setZIndexOffset(zIndexOffset);
       }
       for (const prop in iconOptions) {
         if (

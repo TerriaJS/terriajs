@@ -5,6 +5,7 @@ import classNames from "classnames";
 import Icon, { StyledIcon } from "../../Styled/Icon";
 import { action, computed, runInAction } from "mobx";
 import { observer } from "mobx-react";
+import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import EllipsoidGeodesic from "terriajs-cesium/Source/Core/EllipsoidGeodesic";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
@@ -15,6 +16,7 @@ import Box from "../../Styled/Box";
 import Input, { StyledTextArea } from "../../Styled/Input";
 import ViewState from "../../ReactViewModels/ViewState";
 import Terria from "../../Models/Terria";
+import ViewerMode from "../../Models/ViewerMode";
 import { useTheme } from "styled-components";
 import i18next from "i18next";
 import {
@@ -149,14 +151,13 @@ const MeasurablePanel = observer((props: Props) => {
 
   const getBearing = computed(() => {
     if (
-      !terria?.cesium?.scene?.globe?.ellipsoid ||
       !terria?.measurableGeomList[terria.measurableGeometryIndex]?.stopPoints ||
       terria.measurableGeomList[terria.measurableGeometryIndex].stopPoints
         .length === 0
     ) {
       return "";
     }
-    const ellipsoid = terria.cesium.scene.globe.ellipsoid;
+    const ellipsoid = terria.cesium?.scene?.globe?.ellipsoid ?? Ellipsoid.WGS84;
     const start =
       terria.measurableGeomList[terria.measurableGeometryIndex].stopPoints[0];
     const end =
@@ -262,7 +263,7 @@ const MeasurablePanel = observer((props: Props) => {
       geom,
       name: layerName,
       kind,
-      ellipsoid: terria?.cesium?.scene?.globe?.ellipsoid
+      ellipsoid: terria?.cesium?.scene?.globe?.ellipsoid ?? Ellipsoid.WGS84
     });
 
     const href = DataUri.make("txt", text);
@@ -280,7 +281,8 @@ const MeasurablePanel = observer((props: Props) => {
     const geom = terria.measurableGeomList[terria.measurableGeometryIndex];
     if (!geom) return;
 
-    const ellipsoid = terria?.cesium?.scene?.globe?.ellipsoid;
+    const ellipsoid =
+      terria?.cesium?.scene?.globe?.ellipsoid ?? Ellipsoid.WGS84;
     if (!ellipsoid) return;
 
     const links = await MeasurableGeometryExporter.generateAllDownloadLinks(
@@ -367,6 +369,26 @@ const MeasurablePanel = observer((props: Props) => {
       if (!seen) setShowTourPrompt(true);
     }
   }, [measurablePanelIsVisible]);
+
+  useEffect(() => {
+    if (measurablePanelIsVisible) {
+      const timeoutId = setTimeout(() => {
+        runInAction(() => {
+          terria.measurableGeomList.forEach((geom, index) => {
+            if (geom?.stopPoints && geom.stopPoints.length > 0) {
+              terria.measurableGeometryManager[index]?.resample(index);
+            }
+          });
+        });
+      }, 500);
+      return () => clearTimeout(timeoutId);
+    }
+  }, [
+    terria.mainViewer.viewerMode,
+    measurablePanelIsVisible,
+    terria.measurableGeomList,
+    terria.measurableGeometryManager
+  ]);
 
   const startMeasurableTour = () => {
     setShowTourPrompt(false);
@@ -614,6 +636,9 @@ const MeasurablePanel = observer((props: Props) => {
   );
 
   const renderGeometrySummary = () => {
+    const is2dMode =
+      terria.mainViewer.viewerMode === ViewerMode.Leaflet ||
+      terria.mainViewer.viewerMode === ViewerMode.Cesium2D;
     const currentGeom =
       terria.measurableGeomList[terria.measurableGeometryIndex];
     if (!currentGeom) return null;
@@ -737,7 +762,6 @@ const MeasurablePanel = observer((props: Props) => {
                 </tr>
               </tbody>
             </table>
-
             <div style={{ marginTop: "15px", marginBottom: "10px" }} />
 
             {renderSummaryTable(
@@ -836,7 +860,7 @@ const MeasurablePanel = observer((props: Props) => {
           </Button>
         </div>
         <small>
-          {renderSummaryTable(tableHeaders, tableData)}
+          {!is2dMode && renderSummaryTable(tableHeaders, tableData)}
           {!currentGeom.onlyPoints &&
             renderSummaryTable(
               [
@@ -850,14 +874,16 @@ const MeasurablePanel = observer((props: Props) => {
                 prettifyNumber(currentGeom.groundDistance ?? 0)
               ]
             )}
-
-          <div style={{ marginTop: "10px", marginBottom: "10px" }} />
         </small>
       </>
     );
   };
 
   const renderBody = () => {
+    const is2dMode =
+      terria.mainViewer.viewerMode === ViewerMode.Leaflet ||
+      terria.mainViewer.viewerMode === ViewerMode.Cesium2D;
+
     return (
       <div className={Styles.body} style={{ padding: "1rem" }}>
         {!terria?.measurableGeomList[terria.measurableGeometryIndex]
@@ -1011,30 +1037,31 @@ const MeasurablePanel = observer((props: Props) => {
               `}
             >
               {!terria?.measurableGeomList[terria.measurableGeometryIndex]
-                ?.hasArea && (
-                <Button
-                  ref={chartButtonRef}
-                  css={`
-                    background: ${theme.colorPrimary};
-                    margin-left: 5px;
-                    margin-bottom: 10px;
-                  `}
-                  onClick={toggleChart}
-                  disabled={
-                    !terria.measurableGeomList[terria.measurableGeometryIndex]
-                      ?.stopPoints.length
-                  }
-                  title={i18next.t("measurableGeometry.showElevationChart")}
-                >
-                  <StyledIcon
-                    light
-                    realDark={false}
-                    glyph={Icon.GLYPHS.lineChart}
-                    styledWidth="24px"
-                  />
-                </Button>
-              )}
-              {!isMobile && (
+                ?.hasArea &&
+                !is2dMode && (
+                  <Button
+                    ref={chartButtonRef}
+                    css={`
+                      background: ${theme.colorPrimary};
+                      margin-left: 5px;
+                      margin-bottom: 10px;
+                    `}
+                    onClick={toggleChart}
+                    disabled={
+                      !terria.measurableGeomList[terria.measurableGeometryIndex]
+                        ?.stopPoints.length
+                    }
+                    title={i18next.t("measurableGeometry.showElevationChart")}
+                  >
+                    <StyledIcon
+                      light
+                      realDark={false}
+                      glyph={Icon.GLYPHS.lineChart}
+                      styledWidth="24px"
+                    />
+                  </Button>
+                )}
+              {!isMobile && !is2dMode && (
                 <Button
                   ref={clampButtonRef}
                   css={`
@@ -1061,8 +1088,7 @@ const MeasurablePanel = observer((props: Props) => {
           </div>
         )}
 
-        {!!terria?.cesium?.scene?.globe?.ellipsoid &&
-          terria.measurableGeomList &&
+        {terria.measurableGeomList &&
           terria.measurableGeomList[terria.measurableGeometryIndex] && (
             <div
               css={`
@@ -1095,8 +1121,7 @@ const MeasurablePanel = observer((props: Props) => {
               </div>
             </div>
           )}
-        {!!terria?.cesium?.scene?.globe?.ellipsoid &&
-          terria.measurableGeomList &&
+        {terria.measurableGeomList &&
           terria.measurableGeomList[terria.measurableGeometryIndex] && (
             <Text textLight style={{ marginLeft: 1, marginBottom: 10 }}>
               {i18next.t("measurableGeometry.tempLayerInfo")}
@@ -1105,6 +1130,7 @@ const MeasurablePanel = observer((props: Props) => {
         {!terria?.measurableGeomList[terria.measurableGeometryIndex]?.hasArea &&
           !terria?.measurableGeomList[terria.measurableGeometryIndex]
             ?.onlyPoints &&
+          !is2dMode &&
           renderSamplingStep()}
         <br />
         <div ref={summaryTableRef}>{renderGeometrySummary()}</div>
@@ -1150,6 +1176,9 @@ const MeasurablePanel = observer((props: Props) => {
   );
 
   const renderStepDetails = () => {
+    const is2dMode =
+      terria.mainViewer.viewerMode === ViewerMode.Leaflet ||
+      terria.mainViewer.viewerMode === ViewerMode.Cesium2D;
     const stopPoints =
       terria?.measurableGeomList[terria.measurableGeometryIndex]?.stopPoints ||
       [];
@@ -1258,16 +1287,20 @@ const MeasurablePanel = observer((props: Props) => {
             <thead>
               <tr>
                 <th>#</th>
-                <th>
-                  {i18next.t("measurableGeometry.geometrySummaryElevation")}
-                </th>
+                {!is2dMode && (
+                  <th>
+                    {i18next.t("measurableGeometry.geometrySummaryElevation")}
+                  </th>
+                )}
                 {!onlyPoints && (
                   <>
-                    <th>
-                      {i18next.t(
-                        "measurableGeometry.geometrySummaryElevationDiff"
-                      )}
-                    </th>
+                    {!is2dMode && (
+                      <th>
+                        {i18next.t(
+                          "measurableGeometry.geometrySummaryElevationDiff"
+                        )}
+                      </th>
+                    )}
                     <th>
                       {i18next.t("measurableGeometry.geometrySummaryDistGeo")}
                     </th>
@@ -1279,9 +1312,11 @@ const MeasurablePanel = observer((props: Props) => {
                         "measurableGeometry.geometrySummaryDistGround"
                       )}
                     </th>
-                    <th>
-                      {i18next.t("measurableGeometry.geometrySummarySlope")}
-                    </th>
+                    {!is2dMode && (
+                      <th>
+                        {i18next.t("measurableGeometry.geometrySummarySlope")}
+                      </th>
+                    )}
                   </>
                 )}
                 {onlyPoints && !isMobile && <th>Descrizione</th>}
@@ -1303,6 +1338,7 @@ const MeasurablePanel = observer((props: Props) => {
                     prettifyNumber={prettifyNumber}
                     terria={terria}
                     point={point}
+                    is2dMode={is2dMode}
                   />
                 ))}
               </tbody>
@@ -1323,6 +1359,7 @@ const MeasurablePanel = observer((props: Props) => {
                 distance={5}
                 prettifyNumber={prettifyNumber}
                 terria={terria}
+                is2dMode={is2dMode}
               />
             )}
           </table>
@@ -1341,6 +1378,7 @@ const MeasurablePanel = observer((props: Props) => {
     onDescriptionChange: (index: number, value: string) => void;
     prettifyNumber: (num: number, squared?: boolean) => string;
     terria: any;
+    is2dMode?: boolean;
   }
 
   const SortableItemComponent: React.FC<SortableItemProps> = ({
@@ -1351,7 +1389,8 @@ const MeasurablePanel = observer((props: Props) => {
     pointsDescription,
     onDescriptionChange,
     prettifyNumber,
-    terria
+    terria,
+    is2dMode
   }) => {
     const theme = useTheme();
     const isHighlighted = idx === highlightedRow;
@@ -1387,21 +1426,14 @@ const MeasurablePanel = observer((props: Props) => {
     }, []);
 
     const handleMouseOver = React.useCallback(() => {
-      if (terria.cesium) {
-        setHighlightedRow(idx);
-        viewState.setSelectedStopPointIdx(idx);
-        MeasurablePanelManager.addMarker(
-          terria.measurableGeomList[terria.measurableGeometryIndex].stopPoints[
-            idx
-          ]
-        );
-      }
-    }, [
-      idx,
-      terria.cesium,
-      terria.measurableGeomList,
-      terria.measurableGeometryIndex
-    ]);
+      setHighlightedRow(idx);
+      viewState.setSelectedStopPointIdx(idx);
+      MeasurablePanelManager.addMarker(
+        terria.measurableGeomList[terria.measurableGeometryIndex].stopPoints[
+          idx
+        ]
+      );
+    }, [idx, terria.measurableGeomList, terria.measurableGeometryIndex]);
 
     const [localText, setLocalText] = React.useState(pointsDescription);
     useEffect(() => {
@@ -1428,13 +1460,15 @@ const MeasurablePanel = observer((props: Props) => {
         }}
       >
         <td>{idx + 1}</td>
-        <td>{`${point.height.toFixed(0)} m`}</td>
+        {!is2dMode && <td>{`${point.height.toFixed(0)} m`}</td>}
         {!onlyPoints && (
           <>
-            <td>
-              {idx > 0 &&
-                `${(point.height - array[idx - 1].height).toFixed(0)} m`}
-            </td>
+            {!is2dMode && (
+              <td>
+                {idx > 0 &&
+                  `${(point.height - array[idx - 1].height).toFixed(0)} m`}
+              </td>
+            )}
             <td>
               {renderDistanceData(
                 terria.measurableGeomList[terria.measurableGeometryIndex]
@@ -1456,7 +1490,7 @@ const MeasurablePanel = observer((props: Props) => {
                 idx
               )}
             </td>
-            <td>{renderSlope(idx)}</td>
+            {!is2dMode && <td>{renderSlope(idx)}</td>}
           </>
         )}
         {onlyPoints && !isMobile && (
@@ -1492,6 +1526,7 @@ const MeasurablePanel = observer((props: Props) => {
     onDescriptionChange: (index: number, value: string) => void;
     prettifyNumber: (num: number, squared?: boolean) => string;
     terria: any;
+    is2dMode?: boolean;
   }
 
   const SortableListComponent: React.FC<SortableListProps> = ({
@@ -1500,7 +1535,8 @@ const MeasurablePanel = observer((props: Props) => {
     pointsDescriptions,
     onDescriptionChange,
     prettifyNumber,
-    terria
+    terria,
+    is2dMode
   }) => {
     return (
       <tbody>
@@ -1516,6 +1552,7 @@ const MeasurablePanel = observer((props: Props) => {
             prettifyNumber={prettifyNumber}
             terria={terria}
             point={point}
+            is2dMode={is2dMode}
           />
         ))}
       </tbody>

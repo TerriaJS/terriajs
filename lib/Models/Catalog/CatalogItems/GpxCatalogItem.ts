@@ -157,12 +157,13 @@ class GpxCatalogItem extends GeoJsonMixin(CreateModel(GpxCatalogItemTraits)) {
 
     if (positions.length === 0) return;
 
-    if (!this.terria?.cesium?.scene) return;
-    const terrainProvider = this.terria.cesium.scene.terrainProvider;
+    if (!this.terria) return;
+    const terrainProvider = this.terria.cesium?.scene?.terrainProvider;
 
-    const resolvedPositions = positions.every((pos) => pos.height < 1)
-      ? await sampleTerrainMostDetailed(terrainProvider, positions)
-      : positions;
+    const resolvedPositions =
+      terrainProvider && positions.every((pos) => pos.height < 1)
+        ? await sampleTerrainMostDetailed(terrainProvider, positions)
+        : positions;
 
     const pathNotes = this.extractGpxNotes(fc);
 

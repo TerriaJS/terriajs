@@ -58,18 +58,21 @@ function MeasurableGeometryMixin<T extends AbstractConstructor<MixinModel>>(
       closeLoop?: boolean,
       featureProperties?: JsonObject
     ) {
-      if (!this?.terria?.cesium?.scene) {
+      if (!this?.terria) {
         return;
       }
-      const terrainProvider: TerrainProvider =
-        this.terria?.cesium?.scene.terrainProvider;
+
+      const terrainProvider: TerrainProvider | undefined =
+        this.terria?.cesium?.scene?.terrainProvider;
 
       let prom = Promise.resolve(positions);
-      if (positions.every((element) => element.height < 1)) {
+
+      if (terrainProvider && positions.every((element) => element.height < 1)) {
         prom = prom.then((pos) =>
           sampleTerrainMostDetailed(terrainProvider, pos)
         );
       }
+
       prom.then((newPositions: Cartographic[]) => {
         this.update(
           newPositions,

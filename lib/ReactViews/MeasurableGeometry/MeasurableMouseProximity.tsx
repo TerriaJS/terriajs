@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
+import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
+import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import sampleTerrainMostDetailed from "terriajs-cesium/Source/Core/sampleTerrainMostDetailed";
 import { observer } from "mobx-react";
 import isDefined from "../../Core/isDefined";
@@ -39,7 +41,7 @@ const MeasurableMouseProximity = observer((props: Props) => {
     const ellipsoid = scene?.globe?.ellipsoid;
     const terrainProvider = scene?.globe?.terrainProvider;
 
-    if (!currentGeom || !scene || !ellipsoid) {
+    if (!currentGeom) {
       setCachedPoints(null);
       return;
     }
@@ -124,8 +126,9 @@ const MeasurableMouseProximity = observer((props: Props) => {
 
     const handleMouseProximity = () => {
       const scene = terria?.cesium?.scene;
-      const ellipsoid = scene?.globe?.ellipsoid;
-      if (!scene || !ellipsoid) return;
+      const leafletMap = terria?.leaflet?.map;
+      const ellipsoid = scene?.globe?.ellipsoid ?? Ellipsoid.WGS84;
+      if (!scene && !leafletMap) return;
 
       const mouseCoords = terria.currentViewer.mouseCoords.cartographic;
       const currentGeometry =
@@ -149,22 +152,29 @@ const MeasurableMouseProximity = observer((props: Props) => {
       ): { point: Cartesian3; idx: number } | null => {
         if (!points.length) return null;
 
-        const scene = terria?.cesium?.scene;
-        const ellipsoid = scene?.globe?.ellipsoid;
-        if (!scene || !ellipsoid) return null;
+        let mouseScreenPoint: { x: number; y: number } | undefined;
+        if (scene) {
+          const mouseCartesian = Cartesian3.fromRadians(
+            mouseCoords.longitude,
+            mouseCoords.latitude,
+            mouseCoords.height ?? 0,
+            ellipsoid
+          );
 
-        const mouseCartesian = Cartesian3.fromRadians(
-          mouseCoords.longitude,
-          mouseCoords.latitude,
-          mouseCoords.height ?? 0,
-          ellipsoid
-        );
+          const mouseWindowPos = SceneTransforms.wgs84ToWindowCoordinates(
+            scene,
+            mouseCartesian
+          );
+          if (!isDefined(mouseWindowPos)) return null;
+          mouseScreenPoint = mouseWindowPos;
+        } else if (leafletMap) {
+          mouseScreenPoint = leafletMap.latLngToContainerPoint([
+            CesiumMath.toDegrees(mouseCoords.latitude),
+            CesiumMath.toDegrees(mouseCoords.longitude)
+          ]);
+        }
 
-        const mouseWindowPos = SceneTransforms.wgs84ToWindowCoordinates(
-          scene,
-          mouseCartesian
-        );
-        if (!isDefined(mouseWindowPos)) return null;
+        if (!mouseScreenPoint) return null;
 
         let nearestPoint: Cartesian3 | null = null;
         let nearestIdx: number | null = null;
@@ -174,14 +184,30 @@ const MeasurableMouseProximity = observer((props: Props) => {
         for (let idx = 0; idx < points.length; idx++) {
           const pointCartesian = points[idx];
 
-          const windowPos = SceneTransforms.wgs84ToWindowCoordinates(
-            scene,
-            pointCartesian
-          );
-          if (!isDefined(windowPos)) continue;
+          let pointScreenPoint: { x: number; y: number } | undefined;
+          if (scene) {
+            const windowPos = SceneTransforms.wgs84ToWindowCoordinates(
+              scene,
+              pointCartesian
+            );
+            if (!isDefined(windowPos)) continue;
+            pointScreenPoint = windowPos;
+          } else if (leafletMap) {
+            const pointCartographic = Cartographic.fromCartesian(
+              pointCartesian,
+              ellipsoid
+            );
+            if (!isDefined(pointCartographic)) continue;
+            pointScreenPoint = leafletMap.latLngToContainerPoint([
+              CesiumMath.toDegrees(pointCartographic.latitude),
+              CesiumMath.toDegrees(pointCartographic.longitude)
+            ]);
+          }
 
-          const dx = windowPos.x - mouseWindowPos.x;
-          const dy = windowPos.y - mouseWindowPos.y;
+          if (!pointScreenPoint) continue;
+
+          const dx = pointScreenPoint.x - mouseScreenPoint.x;
+          const dy = pointScreenPoint.y - mouseScreenPoint.y;
           const distanceSquared = dx * dx + dy * dy;
 
           if (
@@ -291,6 +317,7 @@ const MeasurableMouseProximity = observer((props: Props) => {
   }, [
     viewState,
     terria.cesium,
+    terria?.leaflet?.map,
     terria.currentViewer,
     terria.measurableGeomList,
     terria.measurableGeometryIndex,

@@ -216,14 +216,15 @@ export default class CsvCatalogItem
       Cartographic.fromDegrees(longitude, latitudes[i], heights[i])
     );
 
-    if (!this.terria?.cesium?.scene) {
+    if (!this.terria) {
       return;
     }
-    const terrainProvider = this.terria.cesium.scene.terrainProvider;
+    const terrainProvider = this.terria.cesium?.scene?.terrainProvider;
 
-    const resolvedPositions = positions.every((pos) => pos.height < 1)
-      ? await sampleTerrainMostDetailed(terrainProvider, positions)
-      : positions;
+    const resolvedPositions =
+      terrainProvider && positions.every((pos) => pos.height < 1)
+        ? await sampleTerrainMostDetailed(terrainProvider, positions)
+        : positions;
 
     this.terria.measurableGeometryManager[
       this.terria.measurableGeometryIndex
