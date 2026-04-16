@@ -1999,5 +1999,11 @@
   },
   "includeStory": {
     "message": "Includi Storia in Condividi"
+  },
+  "relatedMaps": {
+    "buttonText": "Collegamenti",
+    "buttonTitle": "Vedi i collegamenti",
+    "panelHeading": "Collegamenti",
+    "panelText": "Cliccando su una delle immagini seguenti aprirà il link alla mappa (in un'altra finestra o tab)."
   }
 }
