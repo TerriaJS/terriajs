@@ -124,7 +124,7 @@ import { SearchBarModel } from "./SearchProviders/SearchBarModel";
 import ShareDataService from "./ShareDataService";
 import { StoryVideoSettings } from "./StoryVideoSettings";
 import TimelineStack from "./TimelineStack";
-import { isViewerMode, setViewerMode } from "./ViewerMode";
+import { isViewerMode, setViewerMode, MapViewersKey } from "./ViewerMode";
 import Workbench from "./Workbench";
 import SelectableDimensionWorkflow from "./Workflows/SelectableDimensionWorkflow";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
@@ -420,6 +420,11 @@ export interface ConfigParameters {
   searchProviders: ModelPropertiesFromTraits<SearchProviderTraits>[];
 
   /**
+   * The enabled MapViewers: 3d, 3dsmooth, 2d, 2dcesium
+   */
+  mapViewers: MapViewersKey[];
+
+  /**
    * Url to coordinates converter service.
    */
   coordsConverterUrl?: string;
@@ -434,11 +439,6 @@ export interface ConfigParameters {
    * It is used when it is not possible to use a more precise (point) calculation.
    */
   wgs84vsMeanSeaLevelRoughDiff?: number;
-
-  /**
-   * List of the enabled MapViewers: 3d, 3dsmooth, 2d, cesium2d
-   */
-  mapViewers: string[];
 
   /**
    * Url to login service
