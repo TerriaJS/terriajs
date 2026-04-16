@@ -1,4 +1,3 @@
-import primitiveArrayTrait from "../Decorators/primitiveArrayTrait";
 import primitiveTrait from "../Decorators/primitiveTrait";
 import mixTraits from "../mixTraits";
 import CatalogMemberTraits from "./CatalogMemberTraits";
@@ -19,16 +18,14 @@ export default class GoogleTileMapsCatalogItemTraits extends mixTraits(
   @primitiveTrait({
     type: "string",
     name: "key",
-    description:
-      "Yout Google API key"
+    description: "Yout Google API key"
   })
   key: string = "";
 
   @primitiveTrait({
     type: "string",
     name: "key",
-    description:
-      "One of 'satellite', 'roadmap', 'terrain'"
+    description: "One of 'satellite', 'roadmap', 'terrain'"
   })
   mapType: "satellite" | "roadmap" | "terrain" = "satellite";
 

@@ -33,10 +33,11 @@ export default class GoogleTileMapsCatalogItem extends MappableMixin(
         "Content-Type": "application/json"
       },
       {
-        "mapType": this.mapType,
-        "language": this.language ?? "",
-        "region": this.region ?? ""
-      });
+        mapType: this.mapType,
+        language: this.language ?? "",
+        region: this.region ?? ""
+      }
+    );
     if (result) {
       runInAction(() => {
         this.sessionToken = result.session;
