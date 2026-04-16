@@ -22,9 +22,6 @@ export default class SearchState {
 
   @observable private _locationSearchText: string = "";
 
-  @observable unifiedSearchText: string = "";
-  @observable isWaitingToStartUnifiedSearch: boolean = false;
-
   @observable showLocationSearchResults: boolean = false;
   @observable showMobileLocationSearch: boolean = false;
   @observable showMobileCatalogSearch: boolean = false;
@@ -65,9 +62,7 @@ export default class SearchState {
     this._locationSearchText = newText;
 
     for (const searchProvider of this.locationSearchProviders) {
-      searchProvider.cancelSearch();
-
-      if (newText.length > 0) searchProvider.search(newText, false);
+      searchProvider.search(newText, false);
     }
   }
 
@@ -78,8 +73,7 @@ export default class SearchState {
   set catalogSearchText(newText: string) {
     this._catalogSearchText = newText;
 
-    this.catalogSearchProvider?.cancelSearch();
-    if (newText.length > 0) this.catalogSearchProvider?.search(newText, false);
+    this.catalogSearchProvider?.search(newText, false);
   }
 
   @computed
@@ -102,8 +96,8 @@ export default class SearchState {
     for (const searchProvider of this.locationSearchProviders) {
       if (
         !searchProvider.autocompleteEnabled ||
-        searchProvider.searchResult.isWaitingToStartSearch ||
-        searchProvider.searchResult.isSearching
+        searchProvider.searchResult.state === "waiting" ||
+        searchProvider.searchResult.state === "searching"
       )
         searchProvider.search(this.locationSearchText, true);
     }
