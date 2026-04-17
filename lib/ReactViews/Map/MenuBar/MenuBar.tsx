@@ -44,7 +44,7 @@ const MenuBar = observer((props: PropsType) => {
   };
 
   const storyEnabled = terria.configParameters.storyEnabled;
-  const enableTools = terria.userProperties.get("tools") === "1";
+  const enableTools = terria.hashParams.tools;
 
   return (
     <StyledMenuBar

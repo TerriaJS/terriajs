@@ -422,16 +422,16 @@ export default class ViewState {
         this.isMapFullScreen =
           disclaimerVisible ||
           terria.elements.get("show-workbench")?.visible === false ||
-          terria.userProperties.get("hideWorkbench") === "1" ||
-          terria.userProperties.get("hideExplorerPanel") === "1";
+          terria.configParameters.hideWorkbench ||
+          terria.configParameters.hideExplorerPanel;
       }
     );
 
     this._isMapFullScreenSubscription = reaction(
       () =>
         terria.elements.get("show-workbench")?.visible === false ||
-        terria.userProperties.get("hideWorkbench") === "1" ||
-        terria.userProperties.get("hideExplorerPanel") === "1",
+        terria.configParameters.hideWorkbench ||
+        terria.configParameters.hideExplorerPanel,
       (isMapFullScreen: boolean) => {
         this.isMapFullScreen = isMapFullScreen;
 
@@ -448,7 +448,7 @@ export default class ViewState {
     );
 
     this._showStoriesSubscription = reaction(
-      () => Boolean(terria.userProperties.get("playStory")),
+      () => terria.playStoryOnInit,
       (playStory: boolean) => {
         this.storyShown = terria.configParameters.storyEnabled && playStory;
       }
@@ -471,7 +471,9 @@ export default class ViewState {
           this.terria.configParameters.showInAppGuides &&
           hasTimeWMS === true &&
           // // only show it once
-          !this.terria.getLocalProperty(`${SATELLITE_HELP_PROMPT_KEY}Prompted`)
+          !this.terria.localStorage.getItem(
+            `${SATELLITE_HELP_PROMPT_KEY}Prompted`
+          )
         ) {
           this.setShowSatelliteGuidance(true);
           this.toggleFeaturePrompt(SATELLITE_HELP_PROMPT_KEY, true, true);
@@ -484,7 +486,7 @@ export default class ViewState {
       (storyShown: boolean | null) => {
         if (storyShown === false) {
           // only show it once
-          if (!this.terria.getLocalProperty("storyPrompted")) {
+          if (!this.terria.localStorage.getItem("storyPrompted")) {
             this.toggleFeaturePrompt("story", true, false);
           }
         }
@@ -805,14 +807,14 @@ export default class ViewState {
     if (
       state &&
       featureIndexInPrompts < 0 &&
-      !this.terria.getLocalProperty(`${feature}Prompted`)
+      !this.terria.localStorage.getItem(`${feature}Prompted`)
     ) {
       this.featurePrompts.push(feature);
     } else if (!state && featureIndexInPrompts >= 0) {
       this.featurePrompts.splice(featureIndexInPrompts, 1);
     }
     if (persistent) {
-      this.terria.setLocalProperty(`${feature}Prompted`, true);
+      this.terria.localStorage.setItem(`${feature}Prompted`, true);
     }
   }
 
