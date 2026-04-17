@@ -109,6 +109,7 @@ import { ConfigParameters, TerriaConfig } from "./TerriaConfig";
 import TimelineStack from "./TimelineStack";
 import { isViewerMode, setViewerMode } from "./ViewerMode";
 import Workbench from "./Workbench";
+import AppWorkflow from "./Workflows/AppWorkflows/AppWorkflow";
 import SelectableDimensionWorkflow from "./Workflows/SelectableDimensionWorkflow";
 
 interface StartOptions {
@@ -266,6 +267,10 @@ export default class Terria {
   /** Gets or sets the active SelectableDimensionWorkflow, if defined, then the workflow will be displayed using `WorkflowPanel` */
   @observable
   selectableDimensionWorkflow?: SelectableDimensionWorkflow;
+
+  /** Gets or sets the non-blocking app workflow, if defined then the workflow will be displayed on a panel on the right side of the app  */
+  @observable
+  appWorkflow?: AppWorkflow;
 
   /**
    * Flag for zooming to workbench items after all init sources have been loaded.

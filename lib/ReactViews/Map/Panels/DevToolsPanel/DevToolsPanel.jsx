@@ -1,14 +1,14 @@
-"use strict";
-
 import { observer } from "mobx-react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import MenuPanel from "../../../StandardUserInterface/customizable/MenuPanel";
 import { useViewState } from "../../../Context";
 import CountDatasets from "./CountDatasets";
+import EditCesiumSettings from "./EditCesiumSettings";
 import Styles from "./tools-panel.scss";
+import styled from "styled-components";
 
-const ToolsPanel = observer(() => {
+const DevToolsPanel = observer(() => {
   const [isOpen, setIsOpen] = useState(false);
   const [resultsMessage, setResultsMessage] = useState("");
   const dropdownTheme = {
@@ -29,19 +29,23 @@ const ToolsPanel = observer(() => {
       isOpen={isOpen}
       smallScreen={viewState.useSmallScreenInterface}
     >
-      {isOpen && (
-        <div style={{ padding: "15px" }}>
-          <div className={Styles.this}>
-            <CountDatasets updateResults={setResultsMessage} />
-          </div>
+      <MenuItems>
+        {isOpen && <EditCesiumSettings closePanel={() => setIsOpen(false)} />}
+        {isOpen && <CountDatasets updateResults={setResultsMessage} />}
+        <div className={Styles.results}>
+          {/* eslint-disable-next-line react/no-danger */}
+          <div dangerouslySetInnerHTML={{ __html: resultsMessage }} />
         </div>
-      )}
-      <div className={Styles.results}>
-        {/* eslint-disable-next-line react/no-danger */}
-        <div dangerouslySetInnerHTML={{ __html: resultsMessage }} />
-      </div>
+      </MenuItems>
     </MenuPanel>
   );
 });
 
-export default ToolsPanel;
+const MenuItems = styled.div`
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  gap: 20px;
+`;
+
+export default DevToolsPanel;

@@ -1,45 +1,46 @@
 import {
+  IReactionDisposer,
   action,
   computed,
-  IReactionDisposer,
+  makeObservable,
   observable,
   reaction,
-  runInAction,
-  makeObservable
+  runInAction
 } from "mobx";
-import { ReactNode, MouseEvent, ComponentType, Ref } from "react";
+import { ComponentType, MouseEvent, ReactNode, Ref } from "react";
 import defined from "terriajs-cesium/Source/Core/defined";
-import addedByUser from "../Core/addedByUser";
 import {
   Category,
   HelpAction,
   StoryAction
 } from "../Core/Analytics/analyticEvents";
 import Result from "../Core/Result";
+import addedByUser from "../Core/addedByUser";
 import triggerResize from "../Core/triggerResize";
 import PickedFeatures from "../Map/PickedFeatures/PickedFeatures";
 import CatalogMemberMixin, { getName } from "../ModelMixins/CatalogMemberMixin";
 import GroupMixin from "../ModelMixins/GroupMixin";
 import MappableMixin from "../ModelMixins/MappableMixin";
 import ReferenceMixin from "../ModelMixins/ReferenceMixin";
+import CatalogSearchProviderMixin from "../ModelMixins/SearchProviders/CatalogSearchProviderMixin";
+import CzmlCatalogItem from "../Models/Catalog/CatalogItems/CzmlCatalogItem";
 import CommonStrata from "../Models/Definition/CommonStrata";
 import { BaseModel } from "../Models/Definition/Model";
-import getAncestors from "../Models/getAncestors";
+import { getMarkerCatalogItem } from "../Models/LocationMarkerUtils";
 import { SelectableDimension } from "../Models/SelectableDimensions/SelectableDimensions";
 import Terria from "../Models/Terria";
 import { ViewingControl } from "../Models/ViewingControls";
+import { StoryBuilderWorkflow } from "../Models/Workflows/AppWorkflows/StoryBuilderWorkflow";
+import getAncestors from "../Models/getAncestors";
 import { SATELLITE_HELP_PROMPT_KEY } from "../ReactViews/HelpScreens/SatelliteHelpPrompt";
 import { animationDuration } from "../ReactViews/StandardUserInterface/StandardUserInterface";
 import { FeatureInfoPanelButtonGenerator } from "../ViewModels/FeatureInfoPanel";
-import {
-  defaultTourPoints,
-  RelativePosition,
-  TourPoint
-} from "./defaultTourPoints";
 import SearchState from "./SearchState";
-import CatalogSearchProviderMixin from "../ModelMixins/SearchProviders/CatalogSearchProviderMixin";
-import { getMarkerCatalogItem } from "../Models/LocationMarkerUtils";
-import CzmlCatalogItem from "../Models/Catalog/CatalogItems/CzmlCatalogItem";
+import {
+  RelativePosition,
+  TourPoint,
+  defaultTourPoints
+} from "./defaultTourPoints";
 
 export const DATA_CATALOG_NAME = "data-catalog";
 export const USER_DATA_NAME = "my-data";
@@ -87,7 +88,6 @@ export default class ViewState {
   @observable topElement: string = "FeatureInfo";
   // Map for storing react portal containers created by <Portal> component.
   @observable portals: Map<string, HTMLElement | null> = new Map();
-  @observable storyBuilderShown: boolean = false;
 
   // Flesh out later
   @observable showHelpMenu: boolean = false;
@@ -577,6 +577,23 @@ export default class ViewState {
       // toggle through an action.
       triggerResize();
     }, animationDuration);
+  }
+
+  /**
+   * Returns true if story builder UI has been activated
+   */
+  @computed
+  get storyBuilderShown() {
+    return this.terria.appWorkflow?.name === StoryBuilderWorkflow.name;
+  }
+
+  /**
+   * Show/hide story builder UI
+   */
+  set storyBuilderShown(show: boolean) {
+    runInAction(() => {
+      this.terria.appWorkflow = show ? StoryBuilderWorkflow : undefined;
+    });
   }
 
   @action

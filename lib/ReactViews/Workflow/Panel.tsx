@@ -42,6 +42,7 @@ export const Panel: FC<PanelProps> = (props) => {
   return props.title && props.collapsible ? (
     <Wrapper className={props.className}>
       <CollapsibleTitleBar
+        className={"workflowPanelTitleBar"}
         onClick={toggleOpen}
         fullWidth
         isOpen={isOpen}
@@ -60,7 +61,7 @@ export const Panel: FC<PanelProps> = (props) => {
   ) : (
     <Wrapper className={props.className}>
       {props.title !== undefined && (
-        <TitleBar>
+        <TitleBar className={"workflowPanelTitleBar"}>
           {props.icon !== undefined ? (
             <Icon glyph={props.icon} styledWidth="16px" styledHeight="16px" />
           ) : null}
