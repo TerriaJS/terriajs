@@ -17,6 +17,18 @@ interface Props {
   onClick?: () => void;
 }
 
+const makeUniqueFilename = (filename: string, existingCount: number) => {
+  if (existingCount === 0) return filename;
+
+  const dotIndex = filename.lastIndexOf(".");
+  if (dotIndex === -1) {
+    return `${filename}_${existingCount + 1}`;
+  }
+
+  return `${filename.slice(0, dotIndex)}_${existingCount + 1}${filename.slice(
+    dotIndex
+  )}`;
+};
 const MeasurableTransform = observer((props: Props) => {
   const { terria, viewState, pathNotes, layerName, onClick } = props;
   const geom = terria.measurableGeomList[terria.measurableGeometryIndex];
@@ -267,7 +279,26 @@ const MeasurableTransform = observer((props: Props) => {
     }
 
     try {
-      const file = dataURItoFile(linkObj.href as string, linkObj.download!);
+      const baseName = layerName || "";
+
+      const existingNames = terria.workbench.items
+        .map((item: any) => item.name)
+        .filter((name: string) => name?.startsWith(baseName));
+
+      const usedIndexes = existingNames.map((name: string) => {
+        const match = name.match(/_(\d+)\.geojson$/);
+        return match ? parseInt(match[1], 10) : 1; // base file = 1
+      });
+
+      let nextIndex = 1;
+      while (usedIndexes.includes(nextIndex)) {
+        nextIndex++;
+      }
+
+      const file = dataURItoFile(
+        linkObj.href as string,
+        makeUniqueFilename(linkObj.download!, nextIndex - 1)
+      );
       handleUploadFile({ target: { files: [file] } });
       onClick?.();
     } catch (e) {
