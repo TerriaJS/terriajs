@@ -183,7 +183,7 @@ export default withTranslation()(SharePanel);
 
 export function shouldShorten(terria: Terria) {
   return (
-    stringToBool(terria.getLocalProperty("shortenShareUrls")) ??
+    stringToBool(terria.configParameters.shortenShareUrls) ??
     !!canShorten(terria)
   );
 }

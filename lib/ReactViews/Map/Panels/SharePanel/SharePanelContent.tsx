@@ -12,6 +12,7 @@ import { shouldShorten as shouldShortenDefault } from "./SharePanel";
 import { IShareUrlRef, ShareUrl, ShareUrlBookmark } from "./ShareUrl";
 import Checkbox from "../../../../Styled/Checkbox";
 import { EmbedSection } from "./Embed/EmbedSection";
+import { runInAction } from "mobx";
 
 interface ISharePanelContentProps {
   terria: Terria;
@@ -41,7 +42,9 @@ export const SharePanelContent: FC<ISharePanelContentProps> = ({
 
   const shouldShortenOnChange = useCallback(() => {
     setShouldShorten((prevState) => {
-      terria.setLocalProperty("shortenShareUrls", !prevState);
+      runInAction(() => {
+        terria.configParameters.shortenShareUrls = !prevState;
+      });
       return !prevState;
     });
   }, [terria]);

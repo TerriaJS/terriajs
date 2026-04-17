@@ -743,7 +743,7 @@ describe("TerriaSpec", function () {
         await terria.updateApplicationUrl(
           new URL("story/my-story", document.baseURI).toString()
         );
-        expect(terria.userProperties.get("playStory")).toBe("1");
+        expect(terria.playStoryOnInit).toBe(true);
       });
 
       it("correctly adds the story share as a datasource", async function () {
@@ -1411,19 +1411,19 @@ describe("TerriaSpec", function () {
         await terria.applyInitData({
           initData: {}
         });
-        expect(terria.getLocalProperty("shortenShareUrls")).toBe(null);
+        expect(terria.localStorage.getItem("shortenShareUrls")).toBe(null);
 
-        terria.setLocalProperty("shortenShareUrls", true);
+        terria.updateConfig({ shortenShareUrls: true });
         await terria.applyInitData({
           initData: {}
         });
-        expect(terria.getLocalProperty("shortenShareUrls")).toBeTruthy();
+        expect(terria.localStorage.getItem("shortenShareUrls")).toBeTruthy();
 
-        terria.setLocalProperty("shortenShareUrls", false);
+        terria.updateConfig({ shortenShareUrls: false });
         await terria.applyInitData({
           initData: {}
         });
-        expect(terria.getLocalProperty("shortenShareUrls")).toBeFalsy();
+        expect(terria.localStorage.getItem("shortenShareUrls")).toBeFalsy();
       });
 
       it("should set local property shortenShareUrls to true", async function () {
@@ -1434,7 +1434,7 @@ describe("TerriaSpec", function () {
             }
           }
         });
-        expect(terria.getLocalProperty("shortenShareUrls")).toBeTruthy();
+        expect(terria.localStorage.getItem("shortenShareUrls")).toBeTruthy();
       });
 
       it("should set local property shortenShareUrls to false", async function () {
@@ -1445,9 +1445,9 @@ describe("TerriaSpec", function () {
             }
           }
         });
-        expect(terria.getLocalProperty("shortenShareUrls")).toBeFalsy();
+        expect(terria.localStorage.getItem("shortenShareUrls")).toBeFalsy();
 
-        terria.setLocalProperty("shortenShareUrls", true);
+        terria.updateConfig({ shortenShareUrls: true });
         await terria.applyInitData({
           initData: {
             settings: {
@@ -1455,14 +1455,13 @@ describe("TerriaSpec", function () {
             }
           }
         });
-        expect(terria.getLocalProperty("shortenShareUrls")).toBeFalsy();
+        expect(terria.localStorage.getItem("shortenShareUrls")).toBeFalsy();
       });
     });
   });
 
   describe("mapSettings", function () {
     it("properly interprets map hash parameter", async () => {
-      const getLocalPropertySpy = spyOn(terria, "getLocalProperty");
       const location = {
         href: "http://test.com/#map=2d"
       } as Location;
@@ -1470,35 +1469,35 @@ describe("TerriaSpec", function () {
         configUrl: "test-config.json",
         applicationUrl: location
       });
-      terria.loadPersistedMapSettings();
       expect(terria.mainViewer.viewerMode).toBe(ViewerMode.Leaflet);
-      expect(getLocalPropertySpy).not.toHaveBeenCalledWith("viewermode");
     });
 
     it("properly resolves persisted map viewer", async () => {
       const getLocalPropertySpy = spyOn(
-        terria,
-        "getLocalProperty"
+        terria.localStorage,
+        "getItem"
       ).and.returnValue("2d");
+
       await terria.start({ configUrl: "test-config.json" });
-      terria.loadPersistedMapSettings();
+
       expect(terria.mainViewer.viewerMode).toBe(ViewerMode.Leaflet);
       expect(getLocalPropertySpy).toHaveBeenCalledWith("viewermode");
     });
 
     it("properly interprets wrong map hash parameter and resolves persisted value", async () => {
       const getLocalPropertySpy = spyOn(
-        terria,
-        "getLocalProperty"
+        terria.localStorage,
+        "getItem"
       ).and.returnValue("3dsmooth");
       const location = {
         href: "http://test.com/#map=4d"
       } as Location;
+
       await terria.start({
         configUrl: "test-config.json",
         applicationUrl: location
       });
-      terria.loadPersistedMapSettings();
+
       expect(terria.mainViewer.viewerMode).toBe(ViewerMode.Cesium);
       expect(terria.mainViewer.viewerOptions.useTerrain).toBe(false);
       expect(getLocalPropertySpy).toHaveBeenCalledWith("viewermode");

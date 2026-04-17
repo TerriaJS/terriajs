@@ -126,7 +126,7 @@ const SettingPanel: FC = observer(() => {
         }
       });
       // We store the user's chosen viewer mode for future use.
-      terria.setLocalProperty("viewermode", viewer);
+      terria.localStorage.setItem("viewermode", viewer);
       terria.currentViewer.notifyRepaintRequired();
     }
   );
@@ -173,13 +173,11 @@ const SettingPanel: FC = observer(() => {
 
   const onBaseMaximumScreenSpaceErrorChange = (bmsse: number) => {
     terria.updateConfig({ baseMaximumScreenSpaceError: bmsse });
-    terria.setLocalProperty("baseMaximumScreenSpaceError", bmsse.toString());
   };
 
   const toggleUseNativeResolution = () => {
     const next = !terria.configParameters.useNativeResolution;
     terria.updateConfig({ useNativeResolution: next });
-    terria.setLocalProperty("useNativeResolution", next);
   };
 
   const qualityLabels = {
@@ -456,7 +454,7 @@ function saveBaseMapPreference(
   baseMap: MappableMixin.Instance
 ) {
   if (baseMap.uniqueId) {
-    terria.setLocalProperty("basemap", baseMap.uniqueId);
+    terria.localStorage.setItem("basemap", baseMap.uniqueId);
   }
 }
 

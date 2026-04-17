@@ -11,6 +11,7 @@ import { LanguageConfiguration } from "./Internationalization";
 import { RelatedMap } from "./RelatedMaps";
 import { StoryVideoSettings } from "./StoryVideoSettings";
 import { SplitDirection } from "terriajs-cesium";
+import { LocalStorage } from "./LocalStorage";
 
 type OnlyProps<T> = {
   [K in keyof T as T[K] extends (...args: never) => unknown ? never : K]: T[K];
@@ -362,10 +363,36 @@ export class TerriaConfig {
     | undefined = undefined;
   @observable
   searchProviders: ModelPropertiesFromTraits<SearchProviderTraits>[] = [];
-  // Viewer settings — defaults match former Terria observable defaults
-  @observable useNativeResolution: boolean = false;
-  @observable baseMaximumScreenSpaceError: number = 2;
-  @observable shortenShareUrls: boolean | undefined = undefined;
+
+  @observable
+  private _useNativeResolution: boolean = false;
+  get useNativeResolution(): boolean {
+    return this._useNativeResolution;
+  }
+  set useNativeResolution(value: boolean) {
+    this._useNativeResolution = value;
+    this._setLocalProperty("useNativeResolution", value);
+  }
+
+  @observable
+  private _baseMaximumScreenSpaceError: number = 2;
+  get baseMaximumScreenSpaceError(): number {
+    return this._baseMaximumScreenSpaceError;
+  }
+  set baseMaximumScreenSpaceError(value: number) {
+    this._baseMaximumScreenSpaceError = value;
+    this._setLocalProperty("baseMaximumScreenSpaceError", `${value}`);
+  }
+
+  @observable
+  private _shortenShareUrls: boolean | undefined = undefined;
+  get shortenShareUrls(): boolean | undefined {
+    return this._shortenShareUrls;
+  }
+  set shortenShareUrls(value: boolean | undefined) {
+    this._shortenShareUrls = value;
+    this._setLocalProperty("shortenShareUrls", !!value);
+  }
 
   @observable showSplitter: boolean = false;
   @observable splitPosition: number = 0.5;
@@ -374,7 +401,16 @@ export class TerriaConfig {
 
   @observable depthTestAgainstTerrainEnabled: boolean = false;
 
-  constructor() {
+  @observable ignoreErrors: boolean = false;
+  @observable hideWorkbench: boolean = false;
+  @observable hideExplorerPanel: boolean = false;
+
+  constructor(
+    private readonly _setLocalProperty = (
+      key: string,
+      value: boolean | string
+    ) => new LocalStorage(this).setItem(key, value)
+  ) {
     makeObservable(this);
   }
 

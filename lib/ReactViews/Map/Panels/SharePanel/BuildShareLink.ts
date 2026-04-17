@@ -3,9 +3,11 @@ import { runInAction, toJS } from "mobx";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import URI from "urijs";
+import getDereferencedIfExists from "../../../../Core/getDereferencedIfExists";
 import hashEntity from "../../../../Core/hashEntity";
 import isDefined from "../../../../Core/isDefined";
 import TerriaError from "../../../../Core/TerriaError";
+import CatalogMemberMixin from "../../../../ModelMixins/CatalogMemberMixin";
 import ReferenceMixin from "../../../../ModelMixins/ReferenceMixin";
 import CommonStrata from "../../../../Models/Definition/CommonStrata";
 import { BaseModel } from "../../../../Models/Definition/Model";
@@ -19,42 +21,35 @@ import {
   ViewModeJson
 } from "../../../../Models/InitSource";
 import Terria from "../../../../Models/Terria";
-import ViewState from "../../../../ReactViewModels/ViewState";
-import getDereferencedIfExists from "../../../../Core/getDereferencedIfExists";
-import CatalogMemberMixin from "../../../../ModelMixins/CatalogMemberMixin";
 import ViewerMode from "../../../../Models/ViewerMode";
+import ViewState from "../../../../ReactViewModels/ViewState";
+import { HashParams } from "../../../../Models/HashParams";
 
-/** User properties (generated from URL hash parameters) to add to share link URL in PRODUCTION environment.
- * If in Dev, we add all user properties.
- */
-const userPropsToShare = ["hideExplorerPanel", "activeTabId"];
+const hashParamsToShare = ["hideExplorerPanel"] as const;
 
 export const SHARE_VERSION = "8.0.0";
 
 /** Create base share link URL - with `hashParameters` applied on top.
- * This will copy over some `userProperties` - see `userPropsToShare`
+ * This will copy over some hash params - see `configParamsToShare`
  */
-function buildBaseShareUrl(
-  terria: Terria,
-  hashParams: { [key: string]: string }
-) {
+function buildBaseShareUrl(terria: Terria, hashParams: Partial<HashParams>) {
   const uri = new URI(document.baseURI).fragment("").search("");
 
-  const fragmentsToShare = new URL(document.URL).hash
-    .split(/[#&]/)
-    .filter(
-      (elem) =>
-        elem !== "" && !elem.includes("share=") && !elem.includes("start=")
-    );
-  fragmentsToShare.forEach((sub) => {
-    uri.addSearch(sub);
+  terria.hashParams.initFragments.forEach((fragment) => {
+    uri.addSearch(fragment);
   });
 
   if (terria.developmentEnv) {
-    uri.addSearch(toJS(terria.userProperties));
+    Object.entries(terria.hashParams).forEach(([key, value]) => {
+      if (["start", "share", "initFragments", "extra"].includes(key)) return;
+      uri.addSearch({
+        [key]: typeof value === "boolean" ? Number(value) : value
+      });
+    });
+    uri.addSearch(hashParams.extra ?? {});
   } else {
-    userPropsToShare.forEach((key) =>
-      uri.addSearch({ [key]: terria.userProperties.get(key) })
+    hashParamsToShare.forEach((key) =>
+      uri.addSearch({ [key]: terria.hashParams[key] })
     );
   }
 

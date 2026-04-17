@@ -75,7 +75,7 @@ export default class ArcGisPortalCatalogGroupTraits extends mixTraits(
      * organisationsGroups - Data is retrieved and sorted by the organisations groups.
      * portalCategories - Data is retrieved and sorted by categories specified by the portal items.
      * usersGroups - Data is retrieved and sorted by the groups particular to the user.
-     * Note: This requires a user to be signed into portal, with a "portalUsername" to be set in "terria.userProperties", this is not available by default and requires custom configuration of TerriaMap.
+     * Note: This requires a user to be signed into portal, with a "portalUsername" to be set as a URL hash param (e.g. #portalUsername=alice), this is not available by default and requires custom configuration of TerriaMap.
     `
   })
   groupBy?:

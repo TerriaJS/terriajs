@@ -16,7 +16,6 @@ import RequestScheduler from "terriajs-cesium/Source/Core/RequestScheduler";
 import RuntimeError from "terriajs-cesium/Source/Core/RuntimeError";
 import TerrainProvider from "terriajs-cesium/Source/Core/TerrainProvider";
 import buildModuleUrl from "terriajs-cesium/Source/Core/buildModuleUrl";
-import defined from "terriajs-cesium/Source/Core/defined";
 import queryToObject from "terriajs-cesium/Source/Core/queryToObject";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import SplitDirection from "terriajs-cesium/Source/Scene/SplitDirection";
@@ -88,6 +87,7 @@ import { ErrorServiceProvider } from "./ErrorServiceProviders/ErrorService";
 import StubErrorServiceProvider from "./ErrorServiceProviders/StubErrorServiceProvider";
 import TerriaFeature from "./Feature/Feature";
 import GlobeOrMap from "./GlobeOrMap";
+import { HashParams, emptyHashParams, parseHashParams } from "./HashParams";
 import IElementConfig from "./IElementConfig";
 import InitSource, {
   InitSourceData,
@@ -100,8 +100,13 @@ import InitSource, {
   isInitFromUrl
 } from "./InitSource";
 import Internationalization, { I18nStartOptions } from "./Internationalization";
+import { LocalStorage } from "./LocalStorage";
 import MapInteractionMode from "./MapInteractionMode";
 import NoViewer from "./NoViewer";
+import {
+  PersistedSettings,
+  readLocalStorageSettings
+} from "./PersistedSettings";
 import CatalogIndex from "./SearchProviders/CatalogIndex";
 import { SearchBarModel } from "./SearchProviders/SearchBarModel";
 import ShareDataService from "./ShareDataService";
@@ -244,6 +249,7 @@ export default class Terria {
   readonly timelineStack = new TimelineStack(this, this.timelineClock);
 
   readonly configParameters = new TerriaConfig();
+  readonly localStorage = new LocalStorage(this.configParameters);
 
   @observable
   pickedFeatures: PickedFeatures | undefined;
@@ -288,8 +294,12 @@ export default class Terria {
     );
   }
 
+  hashParams: HashParams = emptyHashParams;
+
   @observable
-  readonly userProperties = new Map<string, any>();
+  playStoryOnInit: boolean = false;
+
+  private persistedSettings: PersistedSettings = {};
 
   @observable
   readonly initSources: InitSource[] = [];
@@ -397,7 +407,7 @@ export default class Terria {
 
     // Only show error to user if `ignoreError` flag hasn't been set to "1"
     // Note: this will take precedence over forceRaiseToUser/overrideRaiseToUser
-    if (this.userProperties.get("ignoreErrors") !== "1")
+    if (!this.configParameters.ignoreErrors)
       this.notificationState.addNotificationToQueue(
         terriaError.toNotification()
       );
@@ -613,22 +623,22 @@ export default class Terria {
   }
 
   async start(options: StartOptions): Promise<void> {
-    // Some hashProperties need to be set before anything else happens
-    const hashProperties = queryToObject(new URI(window.location).fragment());
-
-    if (isDefined(hashProperties["ignoreErrors"])) {
-      this.userProperties.set("ignoreErrors", hashProperties["ignoreErrors"]);
-    }
+    // Parse the full hash early so ignoreErrors is available before anything else
+    const hashProperties = queryToObject(
+      new URL(window.location.href).hash.substring(1)
+    );
+    const hashParams = parseHashParams(hashProperties);
+    runInAction(() => {
+      this.hashParams = hashParams;
+    });
 
     this.shareDataService = options.shareDataService;
 
     // If in development environment, allow usage of #configUrl to set Terria config URL
     if (this.developmentEnv) {
-      if (
-        isDefined(hashProperties["configUrl"]) &&
-        hashProperties["configUrl"] !== ""
-      )
-        options.configUrl = hashProperties["configUrl"];
+      if (hashParams.configUrl) {
+        options.configUrl = hashParams.configUrl;
+      }
     }
 
     const baseUri = new URI(options.configUrl).filename("");
@@ -742,7 +752,26 @@ export default class Terria {
       );
     }
 
-    this.loadPersistedMapSettings();
+    this.applyPersistedSettings();
+  }
+
+  private applyPersistedSettings(): void {
+    const localSettings = readLocalStorageSettings(
+      (key) => this.localStorage.getItem(key),
+      this.configParameters.persistViewerMode ?? true
+    );
+    this.persistedSettings = localSettings;
+
+    this.updateConfig({
+      useNativeResolution: localSettings.useNativeResolution,
+      baseMaximumScreenSpaceError: localSettings.baseMaximumScreenSpaceError,
+      shortenShareUrls: localSettings.shortenShareUrls
+    });
+
+    const viewerMode = this.hashParams.map ?? localSettings.viewerMode;
+    if (viewerMode) {
+      setViewerMode(viewerMode, this.mainViewer);
+    }
   }
 
   /**
@@ -780,39 +809,11 @@ export default class Terria {
     }
   }
 
-  loadPersistedMapSettings(): void {
-    const persistViewerMode = this.configParameters.persistViewerMode;
-    const hashViewerMode = this.userProperties.get("map");
-    if (hashViewerMode && isViewerMode(hashViewerMode)) {
-      setViewerMode(hashViewerMode, this.mainViewer);
-    } else if (persistViewerMode) {
-      const viewerMode = this.getLocalProperty("viewermode") as string;
-      if (isDefined(viewerMode) && isViewerMode(viewerMode)) {
-        setViewerMode(viewerMode, this.mainViewer);
-      }
-    }
-    const useNativeResolution = this.getLocalProperty("useNativeResolution");
-    if (typeof useNativeResolution === "boolean") {
-      this.updateConfig({
-        useNativeResolution
-      });
-    }
-
-    const baseMaximumScreenSpaceError = parseFloat(
-      this.getLocalProperty("baseMaximumScreenSpaceError")?.toString() || ""
-    );
-    if (!isNaN(baseMaximumScreenSpaceError)) {
-      this.updateConfig({
-        baseMaximumScreenSpaceError
-      });
-    }
-  }
-
   async loadPersistedOrInitBaseMap(): Promise<void> {
     const baseMapItems = this.baseMapsModel.baseMapItems;
     // Set baseMap fallback to first option
     let baseMap = baseMapItems[0];
-    const persistedBaseMapId = this.getLocalProperty("basemap");
+    const persistedBaseMapId = this.persistedSettings.baseMapId;
     const baseMapSearch = baseMapItems.find(
       (baseMapItem) => baseMapItem.item?.uniqueId === persistedBaseMapId
     );
@@ -876,7 +877,30 @@ export default class Terria {
   async updateApplicationUrl(newUrl: string): Promise<Result<void>> {
     const uri = new URI(newUrl);
     const hash = uri.fragment();
-    const hashProperties = queryToObject(hash);
+    const hashParams = parseHashParams(queryToObject(hash));
+
+    runInAction(() => {
+      this.hashParams = hashParams;
+    });
+
+    if (isDefined(hashParams.hideWelcomeMessage)) {
+      this.updateConfig({
+        showWelcomeMessage: !hashParams.hideWelcomeMessage
+      });
+    }
+    if (isDefined(hashParams.hideExplorerPanel)) {
+      this.updateConfig({
+        hideExplorerPanel: hashParams.hideExplorerPanel
+      });
+    }
+    if (isDefined(hashParams.hideWorkbench)) {
+      this.updateConfig({
+        hideWorkbench: hashParams.hideWorkbench
+      });
+    }
+    if (isDefined(hashParams.map)) {
+      setViewerMode(hashParams.map, this.mainViewer);
+    }
 
     function checkSegments(urlSegments: string[], customRoute: string) {
       // Accept /${customRoute}/:some-id/ or /${customRoute}/:some-id
@@ -891,8 +915,7 @@ export default class Terria {
     try {
       await interpretHash(
         this,
-        hashProperties,
-        this.userProperties,
+        hashParams,
         new URI(newUrl).filename("").query("").hash("")
       );
 
@@ -935,7 +958,9 @@ export default class Terria {
             storyJson,
             `Start data from story \`"${this.appName}/${segments[1]}"\``
           );
-          runInAction(() => this.userProperties.set("playStory", "1"));
+          runInAction(() => {
+            this.playStoryOnInit = true;
+          });
         }
       }
     } catch (e) {
@@ -1564,13 +1589,6 @@ export default class Terria {
       });
     }
 
-    if (initData.settings?.shortenShareUrls !== undefined) {
-      this.setLocalProperty(
-        "shortenShareUrls",
-        initData.settings.shortenShareUrls
-      );
-    }
-
     if (errors.length > 0)
       throw TerriaError.combine(errors, {
         message: {
@@ -1784,36 +1802,6 @@ export default class Terria {
       []
     );
   }
-
-  getLocalProperty(key: string): string | boolean | null {
-    try {
-      if (!defined(window.localStorage)) {
-        return null;
-      }
-    } catch (_e) {
-      // SecurityError can arise if 3rd party cookies are blocked in Chrome and we're served in an iFrame
-      return null;
-    }
-    const v = window.localStorage.getItem(this.appName + "." + key);
-    if (v === "true") {
-      return true;
-    } else if (v === "false") {
-      return false;
-    }
-    return v;
-  }
-
-  setLocalProperty(key: string, value: string | boolean): boolean {
-    try {
-      if (!defined(window.localStorage)) {
-        return false;
-      }
-    } catch (_e) {
-      return false;
-    }
-    window.localStorage.setItem(this.appName + "." + key, value.toString());
-    return true;
-  }
 }
 
 function generateInitializationUrl(
@@ -1841,48 +1829,34 @@ function generateInitializationUrl(
 
 async function interpretHash(
   terria: Terria,
-  hashProperties: any,
-  userProperties: Map<string, any>,
+  hashParams: HashParams,
   baseUri: URI
 ) {
-  if (isDefined(hashProperties.clean)) {
+  if (hashParams.clean) {
     runInAction(() => {
       terria.initSources.splice(0, terria.initSources.length);
     });
   }
 
   runInAction(() => {
-    Object.keys(hashProperties).forEach(function (property) {
-      if (["clean", "hideWelcomeMessage", "start", "share"].includes(property))
-        return;
-      const propertyValue = hashProperties[property];
-      if (defined(propertyValue) && propertyValue.length > 0) {
-        userProperties.set(property, propertyValue);
-      } else {
-        const initSourceFile = generateInitializationUrl(
-          baseUri,
-          terria.configParameters.initFragmentPaths,
-          property
-        );
-        terria.initSources.push({
-          name: `InitUrl from applicationURL hash ${property}`,
-          errorSeverity: TerriaErrorSeverity.Error,
-          ...initSourceFile
-        });
-      }
+    hashParams.initFragments.forEach((fragment) => {
+      const initSourceFile = generateInitializationUrl(
+        baseUri,
+        terria.configParameters.initFragmentPaths,
+        fragment
+      );
+      terria.initSources.push({
+        name: `InitUrl from applicationURL hash ${fragment}`,
+        errorSeverity: TerriaErrorSeverity.Error,
+        ...initSourceFile
+      });
     });
   });
 
-  if (isDefined(hashProperties.hideWelcomeMessage)) {
-    terria.updateConfig({
-      showWelcomeMessage: false
-    });
-  }
-
   // a share link that hasn't been shortened: JSON embedded in URL (only works for small quantities of JSON)
-  if (isDefined(hashProperties.start)) {
+  if (hashParams.start !== undefined) {
     try {
-      const startData = JSON.parse(hashProperties.start);
+      const startData = JSON.parse(hashParams.start);
       await interpretStartData(
         terria,
         startData,
@@ -1899,18 +1873,15 @@ async function interpretHash(
   }
 
   // Resolve #share=xyz with the share data service.
-  if (
-    hashProperties.share !== undefined &&
-    terria.shareDataService !== undefined
-  ) {
+  if (hashParams.share !== undefined && terria.shareDataService !== undefined) {
     const shareProps = await terria.shareDataService.resolveData(
-      hashProperties.share
+      hashParams.share
     );
 
     await interpretStartData(
       terria,
       shareProps,
-      `Start data from sharelink \`"${hashProperties.share}"\``
+      `Start data from sharelink \`"${hashParams.share}"\``
     );
   }
 }
