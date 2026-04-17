@@ -47,6 +47,12 @@ declare module "terriajs-cesium/Source/DataSources/getElement";
 
 declare module "terriajs-cesium/Source/Scene/CameraFlightPath";
 
+declare module "terriajs-cesium/Source/Renderer/ContextLimits" {
+  export default class ContextLimits {
+    static readonly maximumSamples: number;
+  }
+}
+
 // This is a workaround for Cesium's incorrect type declaration for raiseEvent.
 declare module "terriajs-cesium" {
   export interface Event {

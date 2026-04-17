@@ -248,7 +248,7 @@
     "mapDataState_plural": "{{count}} datasets enabled on map"
   },
   "toolsPanel": {
-    "btnText": "Tool",
+    "btnText": "DevTools",
     "btnTitle": "Advanced toolbox"
   },
   "settingPanel": {
@@ -2227,5 +2227,8 @@
     "buttonTitle": "See related maps",
     "panelHeading": "Related Maps",
     "panelText": "Clicking on a map below will open it in a separate window or tab."
+  },
+  "appWorkflow": {
+    "close": "Close"
   }
 }

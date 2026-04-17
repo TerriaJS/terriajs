@@ -10,6 +10,7 @@ import { ErrorServiceOptions } from "./ErrorServiceProviders/ErrorService";
 import { LanguageConfiguration } from "./Internationalization";
 import { RelatedMap } from "./RelatedMaps";
 import { StoryVideoSettings } from "./StoryVideoSettings";
+import { CesiumOptionsSchema } from "./CesiumOptions";
 
 type OnlyProps<T> = {
   [K in keyof T as T[K] extends (...args: never) => unknown ? never : K]: T[K];
@@ -361,6 +362,11 @@ export class TerriaConfig {
     | undefined = undefined;
   @observable
   searchProviders: ModelPropertiesFromTraits<SearchProviderTraits>[] = [];
+
+  /**
+   * Options for the Cesium 3D globe
+   */
+  cesiumOptions: Partial<CesiumOptionsSchema> = {};
 
   constructor() {
     makeObservable(this);

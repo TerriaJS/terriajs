@@ -8,7 +8,7 @@ import { useViewState } from "../../Context";
 import LangPanel from "../Panels/LangPanel/LangPanel";
 import SettingPanel from "../Panels/SettingPanel";
 import SharePanel from "../Panels/SharePanel/SharePanel";
-import ToolsPanel from "../Panels/ToolsPanel/ToolsPanel";
+import DevToolsPanel from "../Panels/DevToolsPanel/DevToolsPanel";
 import StoryButton from "./StoryButton/StoryButton";
 import HelpButton from "./HelpButton/HelpButton";
 
@@ -34,7 +34,7 @@ const MenuBar = observer((props) => {
   };
 
   const storyEnabled = terria.configParameters.storyEnabled;
-  const enableTools = terria.userProperties.get("tools") === "1";
+  const enableDevTools = terria.userProperties.get("tools") === "1";
 
   return (
     <StyledMenuBar
@@ -50,9 +50,9 @@ const MenuBar = observer((props) => {
     >
       <section>
         <ul className={classNames(Styles.menu)}>
-          {enableTools && (
+          {enableDevTools && (
             <li className={Styles.menuItem}>
-              <ToolsPanel />
+              <DevToolsPanel />
             </li>
           )}
           {!viewState.useSmallScreenInterface &&

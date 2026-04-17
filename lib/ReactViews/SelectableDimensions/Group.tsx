@@ -29,7 +29,7 @@ export const SelectableDimensionGroup: FC<{
   // We still show checkbox groups with empty children as they are stateful.
   if (isGroup(dim) && childDims.length === 0) return null;
   return (
-    <GroupContainer>
+    <GroupContainer className="selectableDimensionGroup">
       <Collapsible
         title={
           dim.type === "group"
@@ -60,7 +60,12 @@ export const SelectableDimensionGroup: FC<{
         btnStyle={dim.type === "checkbox-group" ? "checkbox" : undefined}
         btnRight={dim.type === "group"}
       >
-        <Box displayInlineBlock fullWidth styledPadding="5px 0 0 20px">
+        <Box
+          displayInlineBlock
+          fullWidth
+          styledPadding="5px 0 0 20px"
+          className="selectableDimensionGroupItems"
+        >
           {isCheckboxGroup(dim) && childDims.length === 0 && dim.emptyText && (
             <Text>{dim.emptyText}</Text>
           )}

@@ -11,6 +11,8 @@ interface Dimension {
   readonly id?: string;
   /** Human readable name */
   readonly name?: string;
+  /** A description text */
+  readonly description?: string;
 }
 
 export interface EnumDimensionOption<T = string> {
@@ -41,6 +43,15 @@ export interface NumericalDimension extends Dimension {
   readonly allowUndefined?: boolean;
 }
 
+export interface NumericalRangeDimension extends Dimension {
+  readonly value?: number;
+  readonly min: number;
+  readonly max: number;
+  readonly step: number;
+  readonly marks?: Record<number, string>;
+  readonly allowUndefined?: boolean;
+}
+
 export interface TextDimension extends Dimension {
   readonly value?: string;
   readonly allowUndefined?: boolean;
@@ -56,6 +67,7 @@ export interface ButtonDimension extends Dimension {
   readonly icon?:
     | IconGlyph // Any Icon glyph
     | "spinner"; // Animated spinner icon
+  readonly variant?: "primary" | "secondary" | "warning" | "default";
 }
 
 export type SelectableDimensionType =
@@ -63,6 +75,7 @@ export type SelectableDimensionType =
   | "select"
   | "select-multi"
   | "numeric"
+  | "numeric-range"
   | "text"
   | "checkbox"
   | "checkbox-group"
@@ -141,6 +154,11 @@ export interface SelectableDimensionNumeric
   type: "numeric";
 }
 
+export interface SelectableDimensionNumericRange
+  extends SelectableDimensionBase<number>, NumericalRangeDimension {
+  type: "numeric-range";
+}
+
 export interface SelectableDimensionText
   extends SelectableDimensionBase<string>, TextDimension {
   type: "text";
@@ -183,6 +201,7 @@ export type SelectableDimension =
   | SelectableDimensionCheckboxGroup
   | SelectableDimensionGroup
   | SelectableDimensionNumeric
+  | SelectableDimensionNumericRange
   | SelectableDimensionText
   | SelectableDimensionButton
   | SelectableDimensionColor;
@@ -208,6 +227,10 @@ export const isGroup = (
 export const isNumeric = (
   dim: SelectableDimension
 ): dim is SelectableDimensionNumeric => dim.type === "numeric";
+
+export const isNumericRange = (
+  dim: SelectableDimension
+): dim is SelectableDimensionNumericRange => dim.type === "numeric-range";
 
 export const isText = (
   dim: SelectableDimension

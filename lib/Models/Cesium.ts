@@ -89,6 +89,7 @@ import TileErrorHandlerMixin from "../ModelMixins/TileErrorHandlerMixin";
 import SplitterTraits from "../Traits/TraitsClasses/SplitterTraits";
 import TerriaViewer from "../ViewModels/TerriaViewer";
 import CameraView from "./CameraView";
+import CesiumOptions from "./CesiumOptions";
 import hasTraits from "./Definition/hasTraits";
 import TerriaFeature from "./Feature/Feature";
 import GlobeOrMap from "./GlobeOrMap";
@@ -184,6 +185,11 @@ export default class Cesium extends GlobeOrMap {
    */
   readonly terriaPrimitives = new PrimitiveCollection();
 
+  /**
+   * Helper for setting and persisting cesium options
+   */
+  readonly options: CesiumOptions;
+
   constructor(terriaViewer: TerriaViewer, container: string | HTMLElement) {
     super();
 
@@ -203,7 +209,7 @@ export default class Cesium extends GlobeOrMap {
     AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO \
     9TXL0Y4OHwAAAABJRU5ErkJggg==";
 
-    const options = {
+    const widgetOptions = {
       clock: this.terria.timelineClock,
       baseLayer: ImageryLayer.fromProviderAsync(
         SingleTileImageryProvider.fromUrl(img),
@@ -211,8 +217,7 @@ export default class Cesium extends GlobeOrMap {
       ),
       scene3DOnly: true,
       shadows: true,
-      useBrowserRecommendedResolution: !this.terria.useNativeResolution,
-      targetFrameRate: 30
+      useBrowserRecommendedResolution: !this.terria.useNativeResolution
     };
 
     // Workaround for Firefox bug with WebGL and printing:
@@ -228,9 +233,19 @@ export default class Cesium extends GlobeOrMap {
     try {
       this.cesiumWidget = new CesiumWidget(
         container,
-        Object.assign({}, options, firefoxBugOptions)
+        Object.assign({}, widgetOptions, firefoxBugOptions)
       );
       this.scene = this.cesiumWidget.scene;
+
+      // Initialize CesiumOptions after all default app options have been set
+      this.options = new CesiumOptions(this, {
+        // Disable HDR lighting for better performance and to avoid changing imagery colors.
+        highDynamicRange: false,
+        ...this.terria.configParameters.cesiumOptions
+      });
+      // Load locally saved preferences
+      this.options.loadUserPreferences();
+
       this.scene.primitives.add(this.terriaPrimitives);
     } catch (error) {
       throw TerriaError.from(error, {
@@ -255,9 +270,6 @@ export default class Cesium extends GlobeOrMap {
       (currentLoadQueueLength: number) =>
         this._updateTilesLoadingCount(currentLoadQueueLength)
     );
-
-    // Disable HDR lighting for better performance and to avoid changing imagery colors.
-    (this.scene as any).highDynamicRange = false;
 
     this.scene.imageryLayers.removeAll();
 

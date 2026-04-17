@@ -14,11 +14,13 @@ export const SelectableDimensionButton: FC<{
 }> = ({ dim }) => {
   const iconGlyph = dim.icon;
   const iconProps = { light: true, styledWidth: "16px", styledHeight: "16px" };
+  const variant = dim.variant ?? "default";
   return (
     <Button
       onClick={() =>
         runInAction(() => dim.setDimensionValue(CommonStrata.user, true))
       }
+      fullWidth
       activeStyles
       shortMinHeight
       renderIcon={() =>
@@ -28,7 +30,13 @@ export const SelectableDimensionButton: FC<{
           <StyledIcon glyph={iconGlyph} {...iconProps} />
         ) : undefined
       }
-      style={{ backgroundColor: "transparent" }}
+      className={"selectableDimensionButton"}
+      primary={dim.variant === "primary"}
+      secondary={dim.variant === "secondary"}
+      warning={dim.variant === "warning"}
+      style={{
+        backgroundColor: variant === "default" ? "transparent" : undefined
+      }}
     >
       <div style={{ display: "flex" }}>
         <Text textLight>

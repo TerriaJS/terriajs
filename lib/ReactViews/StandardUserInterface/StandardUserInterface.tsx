@@ -2,24 +2,24 @@ import classNames from "classnames";
 import "inobounce";
 import { action } from "mobx";
 import { observer } from "mobx-react";
-import { FC, DragEvent, ReactNode, useEffect } from "react";
+import { DragEvent, FC, ReactNode, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { DefaultTheme } from "styled-components";
 import combine from "terriajs-cesium/Source/Core/combine";
 import ViewState from "../../ReactViewModels/ViewState";
+import { ContextProviders } from "../Context";
 import Disclaimer from "../Disclaimer";
 import DragDropFile from "../DragDropFile";
 import ExplorerWindow from "../ExplorerWindow/ExplorerWindow";
 import FeatureInfoPanel from "../FeatureInfo/FeatureInfoPanel";
 import FeedbackForm from "../Feedback/FeedbackForm";
 import { Medium, Small } from "../Generic/Responsive";
-import SatelliteHelpPrompt from "../HelpScreens/SatelliteHelpPrompt";
 import withFallback from "../HOCs/withFallback";
-import ExperimentalFeatures from "./ExperimentalFeatures";
+import SatelliteHelpPrompt from "../HelpScreens/SatelliteHelpPrompt";
+import MapColumn from "../Map/MapColumn";
 import { CollapsedNavigation } from "../Map/MapNavigation";
 import HelpPanel from "../Map/Panels/HelpPanel/HelpPanel";
 import PrintView from "../Map/Panels/SharePanel/Print/PrintView";
-import TrainerBar from "./TrainerBar/TrainerBar";
 import MobileHeader from "../Mobile/MobileHeader";
 import MapInteractionWindow from "../Notification/MapInteractionWindow";
 import Notification from "../Notification/Notification";
@@ -32,15 +32,16 @@ import ClippingBoxToolLauncher from "../Tools/ClippingBox/ClippingBoxToolLaunche
 import Tool from "../Tools/Tool";
 import TourPortal from "../Tour/TourPortal";
 import WelcomeMessage from "../WelcomeMessage/WelcomeMessage";
+import StandardAppWorkflow from "../Workflow/AppWorkflow/StandardAppWorkflow";
 import SelectableDimensionWorkflow from "../Workflow/SelectableDimensionWorkflow";
 import WorkflowPanelPortal from "../Workflow/WorkflowPanelPortal";
-import { ContextProviders } from "../Context";
+import ExperimentalFeatures from "./ExperimentalFeatures";
 import { GlobalTerriaStyles } from "./GlobalTerriaStyles";
-import MapColumn from "../Map/MapColumn";
-import processCustomElements from "./processCustomElements";
 import SidePanelContainer from "./SidePanelContainer";
-import Styles from "./standard-user-interface.scss";
 import { terriaTheme } from "./StandardTheme";
+import TrainerBar from "./TrainerBar/TrainerBar";
+import processCustomElements from "./processCustomElements";
+import Styles from "./standard-user-interface.scss";
 
 export const animationDuration = 250;
 
@@ -305,6 +306,9 @@ const StandardUserInterfaceBase: FC<StandardUserInterfaceProps> = observer(
               isVisible={showStoryBuilder}
               animationDuration={animationDuration}
             />
+          )}
+          {props.terria.appWorkflow && !showStoryBuilder && (
+            <StandardAppWorkflow appWorkflow={props.terria.appWorkflow} />
           )}
           {props.viewState.showHelpMenu &&
             props.viewState.topElement === "HelpPanel" && <HelpPanel />}
