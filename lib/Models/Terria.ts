@@ -1856,7 +1856,7 @@ async function interpretHash(
   // a share link that hasn't been shortened: JSON embedded in URL (only works for small quantities of JSON)
   if (hashParams.start !== undefined) {
     try {
-      const startData = JSON.parse(hashParams.start);
+      const startData = hashParams.start;
       await interpretStartData(
         terria,
         startData,

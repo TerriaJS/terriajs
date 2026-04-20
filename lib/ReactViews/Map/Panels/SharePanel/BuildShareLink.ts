@@ -29,28 +29,83 @@ const hashParamsToShare = ["hideExplorerPanel"] as const;
 
 export const SHARE_VERSION = "8.0.0";
 
+export function encodeHashParams(
+  hashParams: HashParams,
+  paramsToEncode: (keyof HashParams)[] = [
+    "clean",
+    "hideWelcomeMessage",
+    "map",
+    "ignoreErrors",
+    "hideWorkbench",
+    "hideExplorerPanel",
+    "configUrl",
+    "tools",
+    "initFragments",
+    "extra"
+  ]
+): Record<string, string> {
+  const {
+    clean,
+    hideWelcomeMessage,
+    map,
+    ignoreErrors,
+    hideWorkbench,
+    hideExplorerPanel,
+    configUrl,
+    tools,
+    initFragments,
+    extra
+  } = hashParams;
+
+  const encoded: Record<string, string> = {
+    ...(clean ? { clean: "" } : {}),
+    ...(hideWelcomeMessage ? { hideWelcomeMessage: "" } : {}),
+    ...(map ? { map } : {}),
+    ...(ignoreErrors ? { ignoreErrors: "" } : {}),
+    ...(hideWorkbench ? { hideWorkbench: "" } : {}),
+    ...(hideExplorerPanel ? { hideExplorerPanel: "" } : {}),
+    ...(configUrl ? { configUrl } : {}),
+    ...(tools ? { tools: "" } : {})
+  };
+
+  for (const key of Object.keys(encoded)) {
+    if (!paramsToEncode.includes(key as keyof HashParams)) {
+      delete encoded[key];
+    }
+  }
+
+  if (paramsToEncode.includes("initFragments")) {
+    for (const initFragment of initFragments) {
+      encoded[initFragment] = "";
+    }
+  }
+
+  if (paramsToEncode.includes("extra")) {
+    for (const [key, value] of Object.entries(extra)) {
+      encoded[key] = value as string;
+    }
+  }
+
+  return encoded;
+}
+
 /** Create base share link URL - with `hashParameters` applied on top.
  * This will copy over some hash params - see `configParamsToShare`
  */
 function buildBaseShareUrl(terria: Terria, hashParams: Partial<HashParams>) {
   const uri = new URI(document.baseURI).fragment("").search("");
 
-  terria.hashParams.initFragments.forEach((fragment) => {
-    uri.addSearch(fragment);
-  });
-
   if (terria.developmentEnv) {
-    Object.entries(terria.hashParams).forEach(([key, value]) => {
-      if (["start", "share", "initFragments", "extra"].includes(key)) return;
-      uri.addSearch({
-        [key]: typeof value === "boolean" ? Number(value) : value
-      });
-    });
-    uri.addSearch(hashParams.extra ?? {});
+    const params = encodeHashParams(terria.hashParams);
+
+    uri.addSearch(params);
   } else {
-    hashParamsToShare.forEach((key) =>
-      uri.addSearch({ [key]: terria.hashParams[key] })
-    );
+    const params = encodeHashParams(terria.hashParams, [
+      ...hashParamsToShare,
+      "initFragments"
+    ]);
+
+    uri.addSearch(params);
   }
 
   uri.addSearch(hashParams);

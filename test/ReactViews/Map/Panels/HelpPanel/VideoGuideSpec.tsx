@@ -31,7 +31,7 @@ describe("VideoGuide", function () {
         <VideoGuide
           viewState={viewState}
           videoLink={"some.url"}
-          background={"some_image.png"}
+          background={"images/blank.png"}
           videoName={videoName}
         />
       </ThemeProvider>
@@ -50,7 +50,7 @@ describe("VideoGuide", function () {
         <VideoGuide
           viewState={viewState}
           videoLink={"some.url"}
-          background={"some_image.png"}
+          background={"images/blank.png"}
           videoName={videoName}
         />
       </ThemeProvider>
@@ -68,7 +68,7 @@ describe("VideoGuide", function () {
         <VideoGuide
           viewState={viewState}
           videoLink={"some.url"}
-          background={"some_image.png"}
+          background={"images/blank.png"}
           videoName={videoName}
         />
       </ThemeProvider>
