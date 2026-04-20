@@ -1,6 +1,21 @@
 {
   "comments": "Matching takes place in the order defined in this file. Place code matches before name matches, and smaller regions before larger ones.",
   "regionWmsMap": {
+    "MB_2021": {
+      "layerName": "MB_2021",
+      "server": "https://tiles.terria.io/MB_2021/{z}/{x}/{y}.pbf",
+      "serverType": "MVT",
+      "serverMaxNativeZoom": 12,
+      "serverMinZoom": 0,
+      "serverMaxZoom": 28,
+      "regionIdsFile": "https://tiles.terria.io/region-mapping/regionids/region_map-MB_2021.json",
+      "uniqueIdProp": "FID",
+      "regionProp": "MB_CODE21",
+      "nameProp": "MB_CODE21",
+      "aliases": ["mb_code_2021", "mb_code21", "mb_code", "mb"],
+      "description": "Mesh Blocks 2021",
+      "bbox": [96.81, -43.74, 168, -9.14]
+    },
     "STE_2021": {
       "layerName": "STE_2021",
       "server": "https://tiles.terria.io/STE_2021/{z}/{x}/{y}.pbf",
