@@ -300,14 +300,6 @@ export default class Terria {
   @observable serverConfig: any; // TODO
   @observable shareDataService: ShareDataService | undefined;
 
-  /* Splitter controls */
-  @observable showSplitter = false;
-  @observable splitPosition = 0.5;
-  @observable splitPositionVertical = 0.5;
-  @observable terrainSplitDirection: SplitDirection = SplitDirection.NONE;
-
-  @observable depthTestAgainstTerrainEnabled = false;
-
   @observable stories: StoryData[] = [];
   @observable storyPromptShown: number = 0; // Story Prompt modal will be rendered when this property changes. See StandardUserInterface, section regarding sui.notifications. Ideally move this to ViewState.
 
@@ -322,23 +314,11 @@ export default class Terria {
   }
 
   /**
-   * Base ratio for maximumScreenSpaceError
-   * @type {number}
-   */
-  @observable baseMaximumScreenSpaceError = 2;
-
-  /**
    * Model to use for map navigation
    */
   @observable mapNavigationModel: MapNavigationModel = new MapNavigationModel(
     this
   );
-
-  /**
-   * Gets or sets whether to use the device's native resolution (sets cesium.viewer.resolutionScale to a ratio of devicePixelRatio)
-   * @type {boolean}
-   */
-  @observable useNativeResolution = false;
 
   /**
    * Whether we think all references in the catalog have been loaded
@@ -813,25 +793,19 @@ export default class Terria {
     }
     const useNativeResolution = this.getLocalProperty("useNativeResolution");
     if (typeof useNativeResolution === "boolean") {
-      this.setUseNativeResolution(useNativeResolution);
+      this.updateConfig({
+        useNativeResolution
+      });
     }
 
     const baseMaximumScreenSpaceError = parseFloat(
       this.getLocalProperty("baseMaximumScreenSpaceError")?.toString() || ""
     );
     if (!isNaN(baseMaximumScreenSpaceError)) {
-      this.setBaseMaximumScreenSpaceError(baseMaximumScreenSpaceError);
+      this.updateConfig({
+        baseMaximumScreenSpaceError
+      });
     }
-  }
-
-  @action
-  setUseNativeResolution(useNativeResolution: boolean): void {
-    this.useNativeResolution = useNativeResolution;
-  }
-
-  @action
-  setBaseMaximumScreenSpaceError(baseMaximumScreenSpaceError: number): void {
-    this.baseMaximumScreenSpaceError = baseMaximumScreenSpaceError;
   }
 
   async loadPersistedOrInitBaseMap(): Promise<void> {
@@ -1422,22 +1396,38 @@ export default class Terria {
     }
 
     if (isJsonBoolean(initData.showSplitter)) {
-      this.showSplitter = initData.showSplitter;
+      this.updateConfig({
+        showSplitter: initData.showSplitter
+      });
     }
 
     if (isJsonNumber(initData.splitPosition)) {
-      this.splitPosition = initData.splitPosition;
+      this.updateConfig({
+        splitPosition: initData.splitPosition
+      });
     }
 
     if (isJsonObject(initData.settings)) {
-      if (isJsonNumber(initData.settings.baseMaximumScreenSpaceError)) {
-        this.setBaseMaximumScreenSpaceError(
-          initData.settings.baseMaximumScreenSpaceError
-        );
-      }
-      if (isJsonBoolean(initData.settings.useNativeResolution)) {
-        this.setUseNativeResolution(initData.settings.useNativeResolution);
-      }
+      this.updateConfig({
+        ...(isJsonNumber(initData.settings.baseMaximumScreenSpaceError) && {
+          baseMaximumScreenSpaceError: initData.settings
+            .baseMaximumScreenSpaceError as number
+        }),
+        ...(isJsonBoolean(initData.settings.useNativeResolution) && {
+          useNativeResolution: initData.settings.useNativeResolution as boolean
+        }),
+        ...(isJsonBoolean(initData.settings.shortenShareUrls) && {
+          shortenShareUrls: initData.settings.shortenShareUrls as boolean
+        }),
+        ...(isJsonNumber(initData.settings.terrainSplitDirection) && {
+          terrainSplitDirection: initData.settings
+            .terrainSplitDirection as SplitDirection
+        }),
+        ...(isJsonBoolean(initData.settings.depthTestAgainstTerrainEnabled) && {
+          depthTestAgainstTerrainEnabled: initData.settings
+            .depthTestAgainstTerrainEnabled as boolean
+        })
+      });
       if (isJsonBoolean(initData.settings.alwaysShowTimeline)) {
         this.timelineStack.setAlwaysShowTimeline(
           initData.settings.alwaysShowTimeline
@@ -1449,13 +1439,6 @@ export default class Terria {
             (item) => item.item.uniqueId === initData.settings!.baseMapId
           )?.item
         );
-      }
-      if (isJsonNumber(initData.settings.terrainSplitDirection)) {
-        this.terrainSplitDirection = initData.settings.terrainSplitDirection;
-      }
-      if (isJsonBoolean(initData.settings.depthTestAgainstTerrainEnabled)) {
-        this.depthTestAgainstTerrainEnabled =
-          initData.settings.depthTestAgainstTerrainEnabled;
       }
     }
 
@@ -1891,7 +1874,9 @@ async function interpretHash(
   });
 
   if (isDefined(hashProperties.hideWelcomeMessage)) {
-    terria.configParameters.showWelcomeMessage = false;
+    terria.updateConfig({
+      showWelcomeMessage: false
+    });
   }
 
   // a share link that hasn't been shortened: JSON embedded in URL (only works for small quantities of JSON)
@@ -2010,7 +1995,9 @@ async function interpretStartData(
               initSource.stories.length
           )
         ) {
-          terria.configParameters.showWelcomeMessage = false;
+          terria.updateConfig({
+            showWelcomeMessage: false
+          });
         }
       }
     } catch (error) {

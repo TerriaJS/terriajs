@@ -325,16 +325,18 @@ function addViewSettings(
   initSource.homeCamera = terria.mainViewer.homeCamera.toJson();
   initSource.viewerMode = viewerMode;
 
-  initSource.showSplitter = terria.showSplitter;
-  initSource.splitPosition = terria.splitPosition;
+  initSource.showSplitter = terria.configParameters.showSplitter;
+  initSource.splitPosition = terria.configParameters.splitPosition;
 
   initSource.settings = {
-    baseMaximumScreenSpaceError: terria.baseMaximumScreenSpaceError,
-    useNativeResolution: terria.useNativeResolution,
+    baseMaximumScreenSpaceError:
+      terria.configParameters.baseMaximumScreenSpaceError,
+    useNativeResolution: terria.configParameters.useNativeResolution,
     alwaysShowTimeline: terria.timelineStack.alwaysShowingTimeline,
     baseMapId: viewer.baseMap?.uniqueId,
-    terrainSplitDirection: terria.terrainSplitDirection,
-    depthTestAgainstTerrainEnabled: terria.depthTestAgainstTerrainEnabled
+    terrainSplitDirection: terria.configParameters.terrainSplitDirection,
+    depthTestAgainstTerrainEnabled:
+      terria.configParameters.depthTestAgainstTerrainEnabled
   };
 
   if (isDefined(viewState)) {

@@ -226,8 +226,8 @@ describe("TerriaSpec", function () {
 
       expect(terria.initSources.length).toEqual(2);
 
-      expect(terria.showSplitter).toBe(true);
-      expect(terria.splitPosition).toBe(0.5);
+      expect(terria.configParameters.showSplitter).toBe(true);
+      expect(terria.configParameters.splitPosition).toBe(0.5);
       expect(terria.workbench.items.length).toBe(1);
       expect(terria.workbench.items[0].uniqueId).toBe("test-2");
     });
@@ -680,8 +680,8 @@ describe("TerriaSpec", function () {
         await terria.workbench.add(model1);
 
         runInAction(() => {
-          terria.showSplitter = true;
-          terria.splitPosition = 0.7;
+          terria.configParameters.showSplitter = true;
+          terria.configParameters.splitPosition = 0.7;
           model1.setTrait(
             CommonStrata.user,
             "splitDirection",
@@ -692,8 +692,8 @@ describe("TerriaSpec", function () {
         const shareLink = buildShareLink(terria, viewState);
         await newTerria.updateApplicationUrl(shareLink);
         await newTerria.loadInitSources();
-        expect(newTerria.showSplitter).toEqual(true);
-        expect(newTerria.splitPosition).toEqual(0.7);
+        expect(newTerria.configParameters.showSplitter).toEqual(true);
+        expect(newTerria.configParameters.splitPosition).toEqual(0.7);
         expect(newTerria.workbench.itemIds).toEqual(["itemABC"]);
 
         const newModel1 = newTerria.getModelById(
@@ -1524,8 +1524,8 @@ describe("TerriaSpec", function () {
 
       await terria.loadInitSources();
 
-      expect(terria.baseMaximumScreenSpaceError).toBe(1);
-      expect(terria.useNativeResolution).toBeTruthy();
+      expect(terria.configParameters.baseMaximumScreenSpaceError).toBe(1);
+      expect(terria.configParameters.useNativeResolution).toBeTruthy();
       expect(terria.timelineStack.alwaysShowingTimeline).toBeTruthy();
       expect(setBaseMapSpy).toHaveBeenCalledWith(
         terria.baseMapsModel.baseMapItems.find(
@@ -1533,8 +1533,12 @@ describe("TerriaSpec", function () {
         )?.item
       );
 
-      expect(terria.terrainSplitDirection).toBe(SplitDirection.LEFT);
-      expect(terria.depthTestAgainstTerrainEnabled).toBeTruthy();
+      expect(terria.configParameters.terrainSplitDirection).toBe(
+        SplitDirection.LEFT
+      );
+      expect(
+        terria.configParameters.depthTestAgainstTerrainEnabled
+      ).toBeTruthy();
     });
   });
 

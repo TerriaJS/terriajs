@@ -317,13 +317,15 @@ describe("BuildShareLink", function () {
         `{"type":"FeatureCollection","features":[{"type":"Feature","properties":{},"geometry":{"type":"Polygon","coordinates":[[[145.5908203125,-40.17887331434695],[143.349609375,-42.08191667830631],[146.35986328124997,-44.040218713142124],[149.08447265625,-42.859859815062784],[148.55712890625,-41.36031866306708],[145.5908203125,-40.17887331434695]]]}},{"type":"Feature","properties":{},"geometry":{"type":"Polygon","coordinates":[[[75.9375,51.069016659603896],[59.94140624999999,39.095962936305476],[79.453125,42.032974332441405],[80.15625,46.800059446787316],[75.673828125,51.45400691005982],[75.9375,51.069016659603896]]]}}]}`
       );
 
-      terria.setBaseMaximumScreenSpaceError(1);
-      terria.setUseNativeResolution(true);
+      terria.updateConfig({
+        baseMaximumScreenSpaceError: 1,
+        useNativeResolution: true
+      });
       setViewerMode("2d", terria.mainViewer);
       terria.timelineStack.setAlwaysShowTimeline(true);
       await terria.mainViewer.setBaseMap(testBaseMap);
-      terria.terrainSplitDirection = SplitDirection.LEFT;
-      terria.depthTestAgainstTerrainEnabled = true;
+      terria.configParameters.terrainSplitDirection = SplitDirection.LEFT;
+      terria.configParameters.depthTestAgainstTerrainEnabled = true;
 
       const shareLink = buildShareLink(terria, viewState);
       const params = decodeAndParseStartHash(shareLink);

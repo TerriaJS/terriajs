@@ -1,5 +1,5 @@
 import { TFunction } from "i18next";
-import { action } from "mobx";
+import { action, untracked } from "mobx";
 import { observer } from "mobx-react";
 import Slider from "rc-slider";
 import {
@@ -137,15 +137,22 @@ const SettingPanel: FC = observer(() => {
 
       switch (side) {
         case sides.left:
-          terria.terrainSplitDirection = SplitDirection.LEFT;
-          terria.showSplitter = true;
+          terria.updateConfig({
+            terrainSplitDirection: SplitDirection.LEFT,
+            showSplitter: true
+          });
           break;
         case sides.right:
-          terria.terrainSplitDirection = SplitDirection.RIGHT;
-          terria.showSplitter = true;
+          terria.updateConfig({
+            terrainSplitDirection: SplitDirection.RIGHT,
+            showSplitter: true
+          });
           break;
         case sides.both:
-          terria.terrainSplitDirection = SplitDirection.NONE;
+          terria.updateConfig({
+            terrainSplitDirection: SplitDirection.NONE,
+            showSplitter: false
+          });
           break;
       }
 
@@ -156,20 +163,23 @@ const SettingPanel: FC = observer(() => {
   const toggleDepthTestAgainstTerrainEnabled = action(
     (event: ChangeEvent<HTMLInputElement>) => {
       event.stopPropagation();
-      terria.depthTestAgainstTerrainEnabled =
-        !terria.depthTestAgainstTerrainEnabled;
+      terria.updateConfig({
+        depthTestAgainstTerrainEnabled:
+          !terria.configParameters.depthTestAgainstTerrainEnabled
+      });
       terria.currentViewer.notifyRepaintRequired();
     }
   );
 
   const onBaseMaximumScreenSpaceErrorChange = (bmsse: number) => {
-    terria.setBaseMaximumScreenSpaceError(bmsse);
+    terria.updateConfig({ baseMaximumScreenSpaceError: bmsse });
     terria.setLocalProperty("baseMaximumScreenSpaceError", bmsse.toString());
   };
 
   const toggleUseNativeResolution = () => {
-    terria.setUseNativeResolution(!terria.useNativeResolution);
-    terria.setLocalProperty("useNativeResolution", terria.useNativeResolution);
+    const next = !terria.configParameters.useNativeResolution;
+    terria.updateConfig({ useNativeResolution: next });
+    terria.setLocalProperty("useNativeResolution", next);
   };
 
   const qualityLabels = {
@@ -185,7 +195,7 @@ const SettingPanel: FC = observer(() => {
         : "3dsmooth"
       : "2d";
 
-  const useNativeResolution = terria.useNativeResolution;
+  const useNativeResolution = terria.configParameters.useNativeResolution;
   const nativeResolutionLabel = t("settingPanel.nativeResolutionLabel", {
     resolution1: useNativeResolution
       ? t("settingPanel.native")
@@ -210,7 +220,8 @@ const SettingPanel: FC = observer(() => {
 
   const supportsDepthTestAgainstTerrain = isCesiumWithTerrain;
   const depthTestAgainstTerrainEnabled =
-    supportsDepthTestAgainstTerrain && terria.depthTestAgainstTerrainEnabled;
+    supportsDepthTestAgainstTerrain &&
+    terria.configParameters.depthTestAgainstTerrainEnabled;
 
   const depthTestAgainstTerrainLabel = depthTestAgainstTerrainEnabled
     ? t("settingPanel.terrain.showUndergroundFeatures")
@@ -227,7 +238,7 @@ const SettingPanel: FC = observer(() => {
 
   let currentSide = sides.both;
   if (supportsSide) {
-    switch (terria.terrainSplitDirection) {
+    switch (terria.configParameters.terrainSplitDirection) {
       case SplitDirection.LEFT:
         currentSide = sides.left;
         break;
@@ -409,7 +420,7 @@ const SettingPanel: FC = observer(() => {
                   min={1}
                   max={3}
                   step={0.1}
-                  value={terria.baseMaximumScreenSpaceError}
+                  value={terria.configParameters.baseMaximumScreenSpaceError}
                   onChange={(val) => onBaseMaximumScreenSpaceErrorChange(val)}
                   marks={{ 2: "" }}
                   aria-valuetext={qualityLabels}

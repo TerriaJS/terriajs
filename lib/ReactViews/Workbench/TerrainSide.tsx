@@ -38,15 +38,21 @@ const TerrainSide: FC<ITerrainSideProps> = observer(
       runInAction(() => {
         switch (side) {
           case sides.left:
-            terria.terrainSplitDirection = SplitDirection.LEFT;
-            terria.showSplitter = true;
+            terria.updateConfig({
+              terrainSplitDirection: SplitDirection.LEFT,
+              showSplitter: true
+            });
             break;
           case sides.right:
-            terria.terrainSplitDirection = SplitDirection.RIGHT;
-            terria.showSplitter = true;
+            terria.updateConfig({
+              terrainSplitDirection: SplitDirection.RIGHT,
+              showSplitter: true
+            });
             break;
           case sides.both:
-            terria.terrainSplitDirection = SplitDirection.NONE;
+            terria.updateConfig({
+              terrainSplitDirection: SplitDirection.NONE
+            });
             break;
         }
 
@@ -57,8 +63,8 @@ const TerrainSide: FC<ITerrainSideProps> = observer(
     const toggleDepthTestAgainstTerrainEnabled = (event: any) => {
       event.stopPropagation();
       runInAction(() => {
-        terria.depthTestAgainstTerrainEnabled =
-          !terria.depthTestAgainstTerrainEnabled;
+        terria.configParameters.depthTestAgainstTerrainEnabled =
+          !terria.configParameters.depthTestAgainstTerrainEnabled;
       });
       terria.currentViewer.notifyRepaintRequired();
     };
@@ -70,7 +76,8 @@ const TerrainSide: FC<ITerrainSideProps> = observer(
 
     const supportsDepthTestAgainstTerrain = isCesiumWithTerrain;
     const depthTestAgainstTerrainEnabled =
-      supportsDepthTestAgainstTerrain && terria.depthTestAgainstTerrainEnabled;
+      supportsDepthTestAgainstTerrain &&
+      terria.configParameters.depthTestAgainstTerrainEnabled;
 
     const depthTestAgainstTerrainLabel = depthTestAgainstTerrainEnabled
       ? t("settingPanel.terrain.showUndergroundFeatures")
@@ -78,7 +85,7 @@ const TerrainSide: FC<ITerrainSideProps> = observer(
 
     let currentSide = sides.both;
     if (isCesiumWithTerrain) {
-      switch (terria.terrainSplitDirection) {
+      switch (terria.configParameters.terrainSplitDirection) {
         case SplitDirection.LEFT:
           currentSide = sides.left;
           break;

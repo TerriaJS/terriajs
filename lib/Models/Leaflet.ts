@@ -815,7 +815,7 @@ export default class Leaflet extends GlobeOrMap {
 
           const features = filteredResults.reduce((allFeatures, result) => {
             if (
-              this.terria.showSplitter &&
+              this.terria.configParameters.showSplitter &&
               ignoreSplitter === false &&
               isDefined(pickedFeatures.pickPosition)
             ) {
@@ -881,8 +881,8 @@ export default class Leaflet extends GlobeOrMap {
   _reactToSplitterChanges(): IReactionDisposer {
     return autorun(() => {
       const items = this.terria.mainViewer.items.get();
-      const showSplitter = this.terria.showSplitter;
-      const splitPosition = this.terria.splitPosition;
+      const showSplitter = this.terria.configParameters.showSplitter;
+      const splitPosition = this.terria.configParameters.splitPosition;
       items.forEach((item) => {
         if (
           MappableMixin.isMixedInto(item) &&
@@ -988,12 +988,13 @@ export default class Leaflet extends GlobeOrMap {
     let clipRight: string = "";
     let clipPositionWithinMap: number = 0;
     let clipX: number = 0;
-    if (this.terria.showSplitter) {
+    if (this.terria.configParameters.showSplitter) {
       const map = this.map;
       const size = map.getSize();
       const nw = map.containerPointToLayerPoint([0, 0]);
       const se = map.containerPointToLayerPoint(size);
-      clipPositionWithinMap = size.x * this.terria.splitPosition;
+      clipPositionWithinMap =
+        size.x * this.terria.configParameters.splitPosition;
       clipX = Math.round(nw.x + clipPositionWithinMap);
       clipLeft = "rect(" + [nw.y, clipX, se.y, nw.x].join("px,") + "px)";
       clipRight = "rect(" + [nw.y, se.x, se.y, clipX].join("px,") + "px)";
@@ -1023,7 +1024,7 @@ export default class Leaflet extends GlobeOrMap {
       // html2canvas can't handle the clip style which is used for the splitter. So if the splitter is active, we render
       // a left image and a right image and compose them. Also remove the splitter drag thumb.
       let promise: any;
-      if (this.terria.showSplitter) {
+      if (this.terria.configParameters.showSplitter) {
         const clips = this.getClipsForSplitter();
         const clipLeft = clips.left.replace(/ /g, "");
         const clipRight = clips.right.replace(/ /g, "");

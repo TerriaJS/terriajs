@@ -221,7 +221,7 @@ const ViewingControls: React.FC<PropsType> = observer((props) => {
 
       splitRef.setTrait(CommonStrata.user, "splitSourceItemId", item.uniqueId);
       terria.addModel(splitRef);
-      terria.showSplitter = true;
+      terria.configParameters.showSplitter = true;
 
       await splitRef.loadReference();
       runInAction(() => {

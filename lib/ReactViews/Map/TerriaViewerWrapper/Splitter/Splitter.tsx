@@ -26,10 +26,17 @@ export const Splitter: FC<ISplitterProps> = observer(
     );
 
     const onResize = useCallback(() => {
-      const smallChange =
-        viewState.terria.splitPosition < 0.5 ? 0.0001 : -0.0001; // Make sure never <0 or >1.
       runInAction(() => {
-        viewState.terria.splitPosition += smallChange;
+        const smallChange =
+          viewState.terria.configParameters.splitPosition < 0.5
+            ? 0.0001
+            : -0.0001; // Make sure never <0 or >1.
+
+        const newSplitPosition =
+          viewState.terria.configParameters.splitPosition + smallChange;
+        viewState.terria.updateConfig({
+          splitPosition: newSplitPosition
+        });
       });
     }, [viewState]);
 
@@ -42,7 +49,7 @@ export const Splitter: FC<ISplitterProps> = observer(
     }, [onResize, dragUnsubscribe]);
 
     if (
-      !viewState.terria.showSplitter ||
+      !viewState.terria.configParameters.showSplitter ||
       !viewState.terria.currentViewer.canShowSplitter ||
       !viewState.terria.currentViewer.getContainer()
     ) {
@@ -104,7 +111,7 @@ const getPosition = (terria: Terria) => {
   const canvasWidth = terria.currentViewer.getContainer()?.clientWidth || 0;
   const canvasHeight = terria.currentViewer.getContainer()?.clientHeight || 0;
   return {
-    x: terria.splitPosition * canvasWidth,
-    y: terria.splitPositionVertical * canvasHeight
+    x: terria.configParameters.splitPosition * canvasWidth,
+    y: terria.configParameters.splitPositionVertical * canvasHeight
   };
 };
