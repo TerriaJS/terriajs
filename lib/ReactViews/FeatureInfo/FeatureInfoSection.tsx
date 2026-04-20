@@ -373,6 +373,11 @@ export class FeatureInfoSection extends React.Component<FeatureInfoProps> {
     };
   }
 
+  @action
+  setFields = (newFields: string[] | undefined) => {
+    this.fields = newFields;
+  };
+
   checkAuth = runInAction(async () => {
     const feature = this.props.feature;
 
@@ -423,11 +428,6 @@ export class FeatureInfoSection extends React.Component<FeatureInfoProps> {
       this.setFields(undefined);
     }
   });
-
-  @action
-  setFields = (newFields: string[] | undefined) => {
-    this.fields = newFields;
-  };
 
   render() {
     const { t } = this.props;
