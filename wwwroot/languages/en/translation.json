@@ -86,7 +86,7 @@
       "copyName": "{{name}} (copy)"
     }
   },
-  "zoomCotrol": {
+  "zoomControl": {
     "zoomIn": "Zoom in",
     "zoomReset": "Reset zoom",
     "zoomOut": "Zoom out"
@@ -208,14 +208,14 @@
     "shortLinkError": "An error occurred while attempting to shorten the URL.  Please check your internet connection and try again.",
     "localDataNote": "<0><0>Note:</0></0><1>The following data sources will NOT be shared because they include data from this local system or from an authenticated online service. To share these data sources, publish their data on a web server and <2>add them using a url</2>.</1>",
     "generatingUrl": "Generating share URL...",
-    "printTitle": "Print Map",
+    "printTitle": "Print map",
     "printExplanation": "Open a printable version of this map.",
     "downloadMap": "Download map (png)",
     "printViewButton": "Show Print View",
     "btnAdvanced": "Advanced options",
     "embedTitle": "Embed map",
-    "embedDescription": "To embed, copy this code to embed this map into an HTML page:",
-    "shortenUsingService": "Shorten the share URL using a web service",
+    "embedDescription": "Copy this code to embed the map in an HTML page.",
+    "shortenUsingService": "Shorten the share link",
     "btnCatalogShareText": "Share",
     "btnStoryShareText": "Share",
     "btnMapShareText": "Share / Print",
@@ -229,7 +229,10 @@
     "convertNotificationWarningsTitle": "Technical details",
     "convertErrorTitle": "Could not upgrade share link to V8",
     "convertErrorMessage": "This share link is based on an older version of TerriaJS - the software powering this web map. An error has occurred trying to upgrade the share data.",
-    "getShareSaveHelpMessage": "How to Bookmark Sharelinks"
+    "getShareSaveHelpMessage": "How to Bookmark Sharelinks",
+    "shareStoryLink": "Share story link",
+    "storyLinkCreated": "Story link created",
+    "shareLinkCreated": "Share link created"
   },
   "countDatasets": {
     "btnText": "Start",
@@ -271,6 +274,17 @@
     "mapQuality": "Map Quality:",
     "qualityLabel": "Quality",
     "performanceLabel": "Performance",
+    "baseMapStatus": {
+      "requiresViewerMode": "⚠️ The selected base map can only be viewed in {{viewerMode}}"
+    },
+    "viewerModeSwitched": {
+      "title": "Viewer mode switched",
+      "message": "The '{{newBaseMap}}' base map cannot be viewed in {{currentMode}}. The Map View has been changed to {{newMode}}"
+    },
+    "baseMapSwitched": {
+      "title": "Base map switched",
+      "message": "The '{{currentBaseMap}}' base map cannot be viewed in {{mapMode}}. The Base Map has been changed to '{{newBaseMap}}'"
+    },
     "timeline": {
       "title": "Timeline",
       "alwaysShowLabel": "Press to start only showing the timeline when there are time-varying datasets on the workbench",
@@ -372,7 +386,8 @@
     "delete": "Delete",
     "untitledScene": "untitled scene",
     "doesNotExist": "Story does not exist",
-    "removeAllStories": "Remove All",
+    "saveInstructions": "Click share to create a new story link.",
+    "removeAllStories": "Remove all scenes",
     "removeAllStoriesDialog": "Are you sure you wish to delete {{ count }} scene?",
     "removeAllStoriesDialog_plural": "Are you sure you wish to delete {{ count }} scenes?",
     "removeStoryDialog": "Are you sure you wish to delete '<1>{{storyName}}</1>'?",
@@ -388,8 +403,8 @@
       "placeholder": "Enter a title here",
       "cancelBtn": "cancel",
       "cancelEditing": "Cancel",
-      "saveBtn": "save",
-      "saveStory": "Save"
+      "saveBtn": "done",
+      "saveStory": "Done"
     },
     "locationBtn": "center scene",
     "exitBtn": "exit story",
@@ -608,12 +623,12 @@
   "clipboard": {
     "success": "Copied to clipboard",
     "unsuccessful": "Copy unsuccessful...",
-    "shareURL": "Share URL",
-    "shareExplanation": "Anyone with this URL will be able to access this map.",
+    "shareURL": "Share link",
+    "shareExplanation": "Anyone with this link will be able to access this map.",
     "copy": "Copy"
   },
   "includeStory": {
-    "message": "Include Story in Share"
+    "message": "Include current story in link"
   },
   "dragDrop": {
     "text": "<0>Drag & Drop</0><1>Your data anywhere to view on the map<1>",

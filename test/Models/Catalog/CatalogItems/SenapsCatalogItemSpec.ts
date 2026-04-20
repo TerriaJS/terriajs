@@ -1,18 +1,16 @@
 import i18next from "i18next";
+import { http, HttpResponse } from "msw";
 import { runInAction } from "mobx";
-import _loadWithXhr from "../../../../lib/Core/loadWithXhr";
 import SenapsLocationsCatalogItem, {
   SenapsFeature,
   SenapsFeatureCollection
 } from "../../../../lib/Models/Catalog/CatalogItems/SenapsLocationsCatalogItem";
 import Terria from "../../../../lib/Models/Terria";
-
-interface ExtendedLoadWithXhr {
-  (): any;
-  load: { (...args: any[]): any; calls: any };
-}
-
-const loadWithXhr: ExtendedLoadWithXhr = _loadWithXhr as any;
+import { worker } from "../../../mocks/browser";
+import locationsJson from "../../../../wwwroot/test/Senaps/locations.json";
+import locationsFilteredJson from "../../../../wwwroot/test/Senaps/locations_filtered.json";
+import streamsJson from "../../../../wwwroot/test/Senaps/streams.json";
+import streamsFilteredJson from "../../../../wwwroot/test/Senaps/streams_filtered.json";
 
 describe("SenapsLocationsCatalogItem", function () {
   let terria: Terria;
@@ -65,21 +63,20 @@ describe("SenapsLocationsCatalogItem", function () {
     item = new SenapsLocationsCatalogItem("test", terria);
     item.setTrait("definition", "url", senapsCatalogItemUrl);
 
-    const realLoadWithXhr = loadWithXhr.load;
-    spyOn(loadWithXhr, "load").and.callFake(function (...args: any[]) {
-      const url = args[0];
-      // if we have a ?id= then we've passed in a filter
-      if (url.match(/locations\?id/g))
-        args[0] = "test/Senaps/locations_filtered.json";
-      if (url.match(/streams\?id/g))
-        args[0] = "test/Senaps/streams_filtered.json";
-
-      // non-filtered requests
-      if (url.match(/locations\?count/g))
-        args[0] = "test/Senaps/locations.json";
-      if (url.match(/streams\?location/g)) args[0] = "test/Senaps/streams.json";
-      return realLoadWithXhr(...args);
-    });
+    worker.use(
+      http.get("*/locations", ({ request }) => {
+        const url = new URL(request.url);
+        if (url.searchParams.has("id"))
+          return HttpResponse.json(locationsFilteredJson);
+        return HttpResponse.json(locationsJson);
+      }),
+      http.get("*/streams", ({ request }) => {
+        const url = new URL(request.url);
+        if (url.searchParams.has("id"))
+          return HttpResponse.json(streamsFilteredJson);
+        return HttpResponse.json(streamsJson);
+      })
+    );
   });
 
   it("- has a type and typename", function () {
@@ -113,7 +110,7 @@ describe("SenapsLocationsCatalogItem", function () {
         return errorMessage === i18next.t("models.senaps.missingSenapsBaseUrl");
       }
 
-      expect(await foundError()).toBe(true);
+      expect(foundError()).toBe(true);
     });
 
     it("- fail to construct streams url", async function () {
@@ -127,7 +124,7 @@ describe("SenapsLocationsCatalogItem", function () {
         return errorMessage === i18next.t("models.senaps.missingSenapsBaseUrl");
       }
 
-      expect(await foundError()).toBe(true);
+      expect(foundError()).toBe(true);
     });
   });
 

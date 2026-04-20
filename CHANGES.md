@@ -1,15 +1,86 @@
 # Change Log
 
-#### next release (8.11.1)
+#### next release (8.12.3)
 
+- Refactor analytics into `lib/Core/analytics/` module, make `analytics` always defined using `NoopAnalytics` default, and remove auto-detection logic from `Terria`. Analytics instance must now be supplied via `TerriaOptions` or defaults to no-op. ([7817](https://github.com/TerriaJS/terriajs/pull/7817))
+- Upgrade dev dependencies
+  - Upgrade dompurify to version 3.3.3 to resolve security vulnerabilities.
+  - Replace unmaintained jsdom-global with maintained global-jsom.
+  - Upgrade babel packages to latest versions (7.28.0/7.29.0).
+  - Upgrade webpack to version 5.105.4.
+- Upgrade eslint to v10 and migrate to eslint flat config.
+
+#### 8.12.2 - 2026-03-27
+
+- Update attributions to make publish workflow pass.
+
+#### 8.12.1 - 2026-03-27
+
+- Fix `npm-publish.yml` workflow.
+
+#### 8.12.0 - 2026-03-27
+
+- Update prettier to v3.
+  - When merging the changes make sure to use pre-prettier-v3 and post-prettier-v3 tags to make merging easier. You can follow the guide for prettier v2 update https://github.com/TerriaJS/terriajs/discussions/6517.
+- Test environment modernization:
+  - Refactor tests to use @testing-library/react instead of react-test-renderer and react-shallow-testutils, and remove deprecated libraries.(#7755, #7763)
+  - Replace jasmine-ajax and fetch-mock with `msw` for mocking API requests in tests. (#7766, #7767, #7795, #7796, #7797, #7801)
+  - Replace karma test runner with jasmine-browser-runner and upgrade jasmine to v6. (#7807)
+  - Test runner is now exposed at port so to run tests in the browser, run `yarn gulp dev` and open `http://localhost:9876` in the browser.
+  - If you have custom tests this might require significant changes to your tests, so please reach out if you need help with this.
+
+- Capture default timeline state in share links including current time,
+  playback etc.
+- Added support for draping imagery on 3D tilesets. This can be enabled per-tileset by setting the [drapeImagery](https://github.com/TerriaJS/terriajs/blob/23a2bb2b9c1058e1c7141b5e678de51af58da82b/lib/Traits/TraitsClasses/Cesium3dTilesTraits.ts#L195-L201) trait to `true`. Then from the workbench, drag the imagery layers that need to be draped, above the tileset item.
+- Underline text buttons
+- Replace node-fetch with node native fetch.
+- TSify most of `lib/Core`. [#7417](https://github.com/TerriaJS/terriajs/pull/7417/)
+- Update gulpfile.js to gulp V4 syntax, which provides task descriptions in `yarn gulp --tasks`.
+- Fix splitter failing for local file catalog items by storing file data as blob URLs in the `url` trait instead of private instance fields, ensuring `duplicateModel()` preserves the data. [#7762](https://github.com/TerriaJS/terriajs/pull/7762)
+- Replace react-uid with react useId hook for generating unique ids.
+- Remove ts-essentials dependency and replace with custom type utility.
+- Remove fs-extra dependency and replace with native fs.
+- Convert test `done` callbacks to async/await for modern test patterns.
+- Update Checkbox component icon and remove unused indeterminate prop.
+- Story Panel and Share Panel UX improvements:
+  - Update Share Panel layout
+  - Remove light theme variant of Clipboard
+  - Simplify Clipboard component and add success message.
+  - Add Story Builder instructions behind a config parameter.
+- Fix Scene capture popup z-index appearing underneath the workbench.
+- Upgraded `terriajs-cesium` to `23.0.2` and `terriajs-cesium-widgets` to `14.4.2`.
+
+#### 8.11.3 - 2026-02-02
+
+- Change to OIDC publishing to npm
+
+#### 8.11.2 - 2026-01-15
+
+- Add `token` to `ArcGisMapServerCatalogItem`, `ArcGisMapServerCatalogGroup`, `ArcGisFeatureServerCatalogItem`, `ArcGisFeatureServerCatalogGroup`, `ArcGisImageServerCatalogItem`, `I3SCatalogItem` and `ArcGisCatalogGroup` - if defined, it will be added to the `token` parameter for all ArcGIS Rest API requests.
+  - Added `tokenUrl` to `ArcGisImageServerCatalogItem`, and tweaked behaviour in `ArcGisMapServerCatalogItem` and `ArcGisImageServerCatalogItem` so that if both `token` and `tokenUrl` are defined, then `tokenUrl` will be used. This allows the token to be refreshed if needed.
+- WMTS read URL from operations metadata #7371
+- Add `workbenchControlFlags` trait to all catalog members for enabling or disabling workbench controls.
+- Add `<settingspanel>` custom component to open Map settings panel from template code (like short report, feature info etc).
+- Add UI to show toast messages.
+- Fix "Add data" button width for some languages #7726.
+- Make `<StoryPanel>` draggable
+
+#### 8.11.1 - 2025-12-04
+
+- ##### Security fixes
+  - Upgrades terriajs-server to v4.0.3. See [terriajs-server changes](https://github.com/TerriaJS/terriajs-server/blob/master/CHANGES.md#security-fixes).
+- Fix translations key typo "zoomCotrol".
 - Update docs for Client-side config: change `searchBar` parameter to `searchBarConfig`
 - Fix to show preview map when used outside the explorer panel.
-- [The next improvement]
+- Update `csv-geo-au` support to include the latest Australian Government regions.
+- Add `backgroundColor` trait to base maps for changing the map container background in 2D/Leaflet mode ([7718](https://github.com/TerriaJS/terriajs/pull/7718))
+- Keep camera steady when switching between viewer modes.
+- Fix sharing when using initfile.
+- Fix a bug where some georeferenced tiles where incorrectly positioned in Terria.
 
 #### 8.11.0 - 2025-10-09
 
 - **Breaking changes:**
-
   - Replace unmaintained `svg-sprite-loader` with custom implementation of SvgSprite plugin based on `svg-sprite` package.
     - New implementation consists of svg sprite loader that loads svgs and svg webpack plugin that compiles them into a single sprite file.
 
@@ -30,7 +101,6 @@
 #### 8.10.0 - 2025-07-08
 
 - **Breaking changes:**
-
   - Update `protomaps-leafet` package to 5.0.1 which only support protomaps basempap tileset >v4.0
     - See [protomaps leaflet CHANGELOG](https://github.com/protomaps/protomaps-leaflet/blob/main/CHANGELOG.md#500).
   - Update react and react-dom to version 18
@@ -38,6 +108,7 @@
     - It no longer convert props automatically to observable in class components. See [MobX React v9 class components guide](https://github.com/mobxjs/mobx/blob/mobx-react%409.2.0/packages/mobx-react/README.md#class-components) for more details on how to migrate
 
 - Fix a bug where `.pmtiles` urls with a query string at the end was not being rendered as PMTILES.
+- Add internationalization support to tinymce editor used in story editor
 - Add `MapboxSearchProvider` for geocoding using Mapbox.
 - Upgrade yarn to 1.22.22
 - Fix `ApiTableCatalogItem` to add `queryParameters` and `updateQueryParameters` to the API requests. These were previously being ignored.
@@ -60,7 +131,6 @@
 - Update data-attribution and terms of conditions links to point to terria.io. #7627
 - Hide the related maps button. #7627
 - Change `BingMapSearchProvider` to correctly logs bing search action. #7601
-- [The next improvement]
 - fix `MapboxStyleCatalogItem` scaleFactor bug where tiles are always scaled-up in Cesium. #7639
 
 #### 8.9.3 - 2025-04-24
@@ -108,7 +178,6 @@
 
 - **Breaking changes:**
 - Major changes to UI
-
   - Changed workbench and bottom dock to absolute positioned over map with transparent background
   - Generally increase padding and font sizes to improve readability
   - Generally use a darker default theme
@@ -223,7 +292,6 @@
 #### 8.7.7 - 2024-10-01
 
 - **Breaking changes:**
-
   - Remove RollbarErrorServiceProvder
   - Error services now instantiated externally to terriajs
 
@@ -457,7 +525,6 @@
 #### 8.3.0 - 2023-05-22
 
 - **Breaking changes:**
-
   - **Upgraded Mobx to version 6.7.x**
   - **Upgraded Typescript to version 4.9.x**
   - See https://github.com/TerriaJS/terriajs/discussions/6787 for how to upgrade your map

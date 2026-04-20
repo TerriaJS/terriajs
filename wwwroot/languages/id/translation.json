@@ -310,7 +310,7 @@
     "description": "Seret cincin luar: memutar tampilan. \nSeret giroskop bagian dalam: membebaskan orbit. \nKlik dua kali: mengatur ulang tampilan. \nTIPS: Anda juga dapat membebaskan orbit dengan menahan tombol CTRL dan menyeret peta.",
     "guidanceBtnTitle": "Panduan Giroskop"
   },
-  "zoomCotrol": {
+  "zoomControl": {
     "zoomOut": "Perkecil",
     "zoomIn": "Memperbesar",
     "zoomReset": "Setel ulang zum"

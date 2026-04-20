@@ -1,8 +1,8 @@
 // import Chart from "../../lib/ReactViews/Custom/Chart";
 import { render, screen } from "@testing-library/react";
+import Collapsible from "../../lib/ReactViews/Custom/Collapsible/Collapsible";
 import parseCustomHtmlToReact from "../../lib/ReactViews/Custom/parseCustomHtmlToReact";
 import registerCustomComponentTypes from "../../lib/ReactViews/Custom/registerCustomComponentTypes";
-import Collapsible from "../../lib/ReactViews/Custom/Collapsible/Collapsible";
 
 describe("parseCustomHtmlToReact and registerCustomComponentTypes", function () {
   beforeEach(function () {

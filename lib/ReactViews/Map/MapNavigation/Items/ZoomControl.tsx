@@ -10,7 +10,7 @@ import Scene from "terriajs-cesium/Source/Scene/Scene";
 import {
   Category,
   ViewAction
-} from "../../../../Core/AnalyticEvents/analyticEvents";
+} from "../../../../Core/Analytics/analyticEvents";
 import isDefined from "../../../../Core/isDefined";
 import Box from "../../../../Styled/Box";
 import { RawButton } from "../../../../Styled/Button";
@@ -103,7 +103,7 @@ class ZoomControlBase extends Component<PropTypes> {
 
   zoomIn() {
     const cartesian3Scratch = new Cartesian3();
-    this.props.terria.analytics?.logEvent(Category.view, ViewAction.zoomIn);
+    this.props.terria.analytics.logEvent(Category.view, ViewAction.zoomIn);
 
     if (isDefined(this.props.terria.leaflet)) {
       this.props.terria.leaflet.map.zoomIn(1);
@@ -136,7 +136,7 @@ class ZoomControlBase extends Component<PropTypes> {
 
   zoomOut() {
     const cartesian3Scratch = new Cartesian3();
-    this.props.terria.analytics?.logEvent(Category.view, ViewAction.zoomOut);
+    this.props.terria.analytics.logEvent(Category.view, ViewAction.zoomOut);
 
     if (isDefined(this.props.terria.leaflet)) {
       this.props.terria.leaflet.map.zoomOut(1);
@@ -167,7 +167,7 @@ class ZoomControlBase extends Component<PropTypes> {
   }
 
   zoomReset() {
-    this.props.terria.analytics?.logEvent(Category.view, ViewAction.reset);
+    this.props.terria.analytics.logEvent(Category.view, ViewAction.reset);
     this.props.terria.currentViewer.zoomTo(
       this.props.terria.mainViewer.homeCamera,
       1.5
@@ -188,7 +188,7 @@ class ZoomControlBase extends Component<PropTypes> {
             <RawButton
               type="button"
               onClick={this.zoomIn.bind(this)}
-              title={t("zoomCotrol.zoomIn")}
+              title={t("zoomControl.zoomIn")}
             >
               <Icon glyph={Icon.GLYPHS.zoomIn} />
             </RawButton>
@@ -197,7 +197,7 @@ class ZoomControlBase extends Component<PropTypes> {
             <RawButton
               type="button"
               onClick={this.zoomReset.bind(this)}
-              title={t("zoomCotrol.zoomReset")}
+              title={t("zoomControl.zoomReset")}
             >
               <Icon glyph={Icon.GLYPHS.zoomReset} />
             </RawButton>
@@ -206,7 +206,7 @@ class ZoomControlBase extends Component<PropTypes> {
             <RawButton
               type="button"
               onClick={this.zoomOut.bind(this)}
-              title={t("zoomCotrol.zoomOut")}
+              title={t("zoomControl.zoomOut")}
             >
               <Icon glyph={GLYPHS.zoomOut} />
             </RawButton>

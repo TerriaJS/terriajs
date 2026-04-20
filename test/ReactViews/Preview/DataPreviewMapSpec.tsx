@@ -78,10 +78,13 @@ describe("DataPreviewMapSpec", () => {
       <DataPreviewMap terria={terria} previewed={geojson} showMap />
     );
 
+    await waitFor(() => {
+      expect(attachSpy).toHaveBeenCalledTimes(1);
+    });
     await waitFor(() =>
       expect(container.querySelector(".leaflet-container")).toBeVisible()
     );
-    screen.debug(container, Infinity);
+
     expect(screen.getByText("preview.dataPreview")).toBeVisible();
     expect(attachSpy).toHaveBeenCalledTimes(1);
   });
@@ -137,7 +140,6 @@ describe("DataPreviewMapSpec", () => {
       ".tjs-data-preview-map__map"
     )!;
 
-    screen.debug(containerElement, Infinity);
     await userEvent.click(containerElement);
 
     expect(attachSpy).toHaveBeenCalledTimes(1);

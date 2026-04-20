@@ -3,10 +3,7 @@ import { makeObservable, override, runInAction } from "mobx";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import Resource from "terriajs-cesium/Source/Core/Resource";
 import defined from "terriajs-cesium/Source/Core/defined";
-import {
-  Category,
-  SearchAction
-} from "../../Core/AnalyticEvents/analyticEvents";
+import { Category, SearchAction } from "../../Core/Analytics/analyticEvents";
 import loadJson from "../../Core/loadJson";
 import { applyTranslationIfExists } from "../../Language/languageHelpers";
 import LocationSearchProviderMixin, {
@@ -56,7 +53,7 @@ export default class BingMapsSearchProvider extends LocationSearchProviderMixin(
   }
 
   protected logEvent(searchText: string) {
-    this.terria.analytics?.logEvent(
+    this.terria.analytics.logEvent(
       Category.search,
       SearchAction.bing,
       searchText

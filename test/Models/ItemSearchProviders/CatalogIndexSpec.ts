@@ -1,6 +1,8 @@
+import { http, HttpResponse } from "msw";
 import CatalogIndexReference from "../../../lib/Models/Catalog/CatalogReferences/CatalogIndexReference";
 import CatalogIndex from "../../../lib/Models/SearchProviders/CatalogIndex";
 import Terria from "../../../lib/Models/Terria";
+import { worker } from "../../mocks/browser";
 
 describe("CatalogIndex", function () {
   let terria: Terria;
@@ -11,29 +13,30 @@ describe("CatalogIndex", function () {
       baseUrl: "./"
     });
 
-    jasmine.Ajax.install();
-    jasmine.Ajax.stubRequest("catalog-index.json").andReturn({
-      responseText: JSON.stringify({
-        "test-group": {
-          name: "Test group",
-          description: "Test group description (some random words)",
-          memberKnownContainerUniqueIds: ["/"],
-          isGroup: true
-        },
-        "test-item": {
-          name: "Test item",
-          description: "This item is cool",
-          memberKnownContainerUniqueIds: ["/"],
-          isMappable: true
-        },
-        "test-item-nested": {
-          name: "Test item nested",
-          description: "This item is inside the test group",
-          memberKnownContainerUniqueIds: ["test-group"],
-          isMappable: true
-        }
-      })
-    });
+    worker.use(
+      http.get("*/catalog-index.json", () =>
+        HttpResponse.json({
+          "test-group": {
+            name: "Test group",
+            description: "Test group description (some random words)",
+            memberKnownContainerUniqueIds: ["/"],
+            isGroup: true
+          },
+          "test-item": {
+            name: "Test item",
+            description: "This item is cool",
+            memberKnownContainerUniqueIds: ["/"],
+            isMappable: true
+          },
+          "test-item-nested": {
+            name: "Test item nested",
+            description: "This item is inside the test group",
+            memberKnownContainerUniqueIds: ["test-group"],
+            isMappable: true
+          }
+        })
+      )
+    );
 
     await terria.applyInitData({
       initData: {
@@ -64,10 +67,6 @@ describe("CatalogIndex", function () {
 
     catalogIndex = new CatalogIndex(terria, "catalog-index.json");
     await catalogIndex.load();
-  });
-
-  afterEach(function () {
-    jasmine.Ajax.uninstall();
   });
 
   it("search for items", async function () {
@@ -121,91 +120,90 @@ describe("CatalogIndex - with shareKeys", function () {
       baseUrl: "./"
     });
 
-    jasmine.Ajax.install();
-    jasmine.Ajax.stubRequest("catalog-index.json").andReturn({
-      responseText: JSON.stringify({
-        "test-dynamic-group": {
-          name: "Test dynamic",
-          memberKnownContainerUniqueIds: ["/"],
-          isGroup: true
-        },
-        "test-item": {
-          name: "Test item",
-          description: "This item is cool",
-          memberKnownContainerUniqueIds: ["/"],
-          isMappable: true
-        },
-        "test-nested-dynamic-group": {
-          name: "Test nested dynamic",
-          memberKnownContainerUniqueIds: ["test-dynamic-group"],
-          isGroup: true,
-          shareKeys: ["test-nested-dynamic-group-sharekey"]
-        },
-        "test-item-2": {
-          name: "Test item 2",
-          description: "This item is more cool",
-          memberKnownContainerUniqueIds: ["test-dynamic-group"],
-          isMappable: true
-        },
-        "test-item-3": {
-          name: "Test item 3",
-          description: "This item is too cool",
-          memberKnownContainerUniqueIds: ["test-nested-dynamic-group"],
-          isMappable: true,
-          shareKeys: ["test-item-3-sharekey"]
-        },
-        "test-nested-dynamic-group/Test item without ID": {
-          name: "Test item without ID",
-          description: "This item is not cool",
-          memberKnownContainerUniqueIds: ["test-nested-dynamic-group"],
-          isMappable: true,
-          shareKeys: [
-            "Test item without ID-sharekey",
-            "test-nested-dynamic-group-sharekey/Test item without ID"
-          ]
-        }
-      })
-    });
-
-    jasmine.Ajax.stubRequest("some-group.json").andReturn({
-      responseText: JSON.stringify({
-        catalog: [
-          {
-            id: "test-nested-dynamic-group",
+    worker.use(
+      http.get("*/catalog-index.json", () =>
+        HttpResponse.json({
+          "test-dynamic-group": {
+            name: "Test dynamic",
+            memberKnownContainerUniqueIds: ["/"],
+            isGroup: true
+          },
+          "test-item": {
+            name: "Test item",
+            description: "This item is cool",
+            memberKnownContainerUniqueIds: ["/"],
+            isMappable: true
+          },
+          "test-nested-dynamic-group": {
             name: "Test nested dynamic",
-            type: "terria-reference",
-            url: "some-nested-group.json",
+            memberKnownContainerUniqueIds: ["test-dynamic-group"],
+            isGroup: true,
             shareKeys: ["test-nested-dynamic-group-sharekey"]
           },
-          {
-            id: "test-item-2",
+          "test-item-2": {
             name: "Test item 2",
             description: "This item is more cool",
-            type: "csv"
-          }
-        ]
-      })
-    });
-
-    jasmine.Ajax.stubRequest("some-nested-group.json").andReturn({
-      responseText: JSON.stringify({
-        catalog: [
-          {
-            id: "test-item-3",
+            memberKnownContainerUniqueIds: ["test-dynamic-group"],
+            isMappable: true
+          },
+          "test-item-3": {
             name: "Test item 3",
             description: "This item is too cool",
-            type: "csv",
+            memberKnownContainerUniqueIds: ["test-nested-dynamic-group"],
+            isMappable: true,
             shareKeys: ["test-item-3-sharekey"]
           },
-          {
+          "test-nested-dynamic-group/Test item without ID": {
             name: "Test item without ID",
             description: "This item is not cool",
-            type: "csv",
-            shareKeys: ["Test item without ID-sharekey"]
+            memberKnownContainerUniqueIds: ["test-nested-dynamic-group"],
+            isMappable: true,
+            shareKeys: [
+              "Test item without ID-sharekey",
+              "test-nested-dynamic-group-sharekey/Test item without ID"
+            ]
           }
-        ]
-      })
-    });
+        })
+      ),
+      http.get("*/some-group.json", () =>
+        HttpResponse.json({
+          catalog: [
+            {
+              id: "test-nested-dynamic-group",
+              name: "Test nested dynamic",
+              type: "terria-reference",
+              url: "some-nested-group.json",
+              shareKeys: ["test-nested-dynamic-group-sharekey"]
+            },
+            {
+              id: "test-item-2",
+              name: "Test item 2",
+              description: "This item is more cool",
+              type: "csv"
+            }
+          ]
+        })
+      ),
+      http.get("*/some-nested-group.json", () =>
+        HttpResponse.json({
+          catalog: [
+            {
+              id: "test-item-3",
+              name: "Test item 3",
+              description: "This item is too cool",
+              type: "csv",
+              shareKeys: ["test-item-3-sharekey"]
+            },
+            {
+              name: "Test item without ID",
+              description: "This item is not cool",
+              type: "csv",
+              shareKeys: ["Test item without ID-sharekey"]
+            }
+          ]
+        })
+      )
+    );
 
     await terria.applyInitData({
       initData: {
@@ -228,10 +226,6 @@ describe("CatalogIndex - with shareKeys", function () {
 
     terria.catalogIndex = new CatalogIndex(terria, "catalog-index.json");
     await terria.catalogIndex.load();
-  });
-
-  afterEach(function () {
-    jasmine.Ajax.uninstall();
   });
 
   it("loads shareKeys", function () {

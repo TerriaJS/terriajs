@@ -20,7 +20,6 @@ import backward from "../../wwwroot/images/icons/backward.svg";
 import barChart from "../../wwwroot/images/icons/bar-chart.svg";
 import bulb from "../../wwwroot/images/icons/bulb.svg";
 import controls from "../../wwwroot/images/icons/controls.svg";
-import checkboxIndeterminate from "../../wwwroot/images/icons/checkbox-indeterminate.svg";
 import checkboxOff from "../../wwwroot/images/icons/checkbox-off.svg";
 import checkboxOn from "../../wwwroot/images/icons/checkbox-on.svg";
 import close from "../../wwwroot/images/icons/close.svg";
@@ -145,6 +144,7 @@ import minusList from "../../wwwroot/images/icons/dismiss-20.svg";
 import switchOn from "../../wwwroot/images/icons/switch-on.svg";
 import switchOff from "../../wwwroot/images/icons/switch-off.svg";
 import dragDrop from "../../wwwroot/images/icons/drag-drop.svg";
+import warning from "../../wwwroot/images/icons/warning.svg";
 
 // Icon
 export const GLYPHS = {
@@ -165,7 +165,6 @@ export const GLYPHS = {
   barChart,
   bulb,
   controls,
-  checkboxIndeterminate,
   checkboxOff,
   checkboxOn,
   close,
@@ -289,7 +288,8 @@ export const GLYPHS = {
   minusList,
   switchOn,
   switchOff,
-  dragDrop
+  dragDrop,
+  warning
 };
 
 export interface IconGlyph {

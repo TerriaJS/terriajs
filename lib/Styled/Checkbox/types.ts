@@ -12,11 +12,6 @@ export type ICheckboxProps = {
   isChecked?: boolean;
   /** Sets whether the checkbox is disabled. */
   isDisabled?: boolean;
-  /**
-   * Sets whether the checkbox is indeterminate. This only affects the style and
-   * does not modify the isChecked property.
-   */
-  isIndeterminate?: boolean;
   /** Sets whether the checkbox should take up the full width of the parent. */
   isFullWidth?: boolean;
   /** Title of the html component */
@@ -58,9 +53,4 @@ export interface CheckboxIconProps {
   isChecked?: boolean;
   /** Sets whether the checkbox is disabled. */
   isDisabled?: boolean;
-  /**
-   * Sets whether the checkbox is indeterminate. This only affects the style and
-   * does not modify the isChecked property.
-   */
-  isIndeterminate?: boolean;
 }

@@ -18,8 +18,9 @@ export interface MeasureElementProps {
   widthFromMeasureElementHOC: number | null;
 }
 
-interface MeasureElementComponent<P>
-  extends Component<P & MeasureElementProps> {
+interface MeasureElementComponent<P> extends Component<
+  P & MeasureElementProps
+> {
   refToMeasure: RefObject<HTMLElement> | HTMLElement | null;
 }
 

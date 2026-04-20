@@ -11,12 +11,12 @@ interface MonthViewProps {
   onBack: () => void;
 }
 
-export const MonthView: React.FC<MonthViewProps> = ({
+export const MonthView = ({
   year,
   datesObject,
   onSelectMonth,
   onBack
-}) => {
+}: MonthViewProps) => {
   const { t } = useTranslation();
 
   if (!datesObject.dates || datesObject.dates.length <= 12) {

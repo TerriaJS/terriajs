@@ -1,22 +1,23 @@
 import { configure, runInAction } from "mobx";
-import _loadWithXhr from "../../../../lib/Core/loadWithXhr";
+import { http, HttpResponse } from "msw";
 import Terria from "../../../../lib/Models/Terria";
 import ArcGisMapServerCatalogGroup from "../../../../lib/Models/Catalog/Esri/ArcGisMapServerCatalogGroup";
 import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
 import i18next from "i18next";
 import ArcGisMapServerCatalogItem from "../../../../lib/Models/Catalog/Esri/ArcGisMapServerCatalogItem";
+import { worker } from "../../../mocks/browser";
+
+import redlandsMapServerJson from "../../../../wwwroot/test/ArcGisMapServer/Redlands_Emergency_Vehicles/mapServer.json";
+import redlands17Json from "../../../../wwwroot/test/ArcGisMapServer/Redlands_Emergency_Vehicles/17.json";
+import singleFusedMapCacheMapServerJson from "../../../../wwwroot/test/ArcGisMapServer/SingleFusedMapCache/mapserver.json";
+import singleFusedMapCacheLegendJson from "../../../../wwwroot/test/ArcGisMapServer/SingleFusedMapCache/legend.json";
+import singleFusedMapCacheLayersJson from "../../../../wwwroot/test/ArcGisMapServer/SingleFusedMapCache/layers.json";
+import residentialMapServerJson from "../../../../wwwroot/test/ArcGisMapServer/Residential_Dwelling_Density/mapServer.json";
 
 configure({
   enforceActions: "observed",
   computedRequiresReaction: true
 });
-
-interface ExtendedLoadWithXhr {
-  (): any;
-  load: { (...args: any[]): any; calls: any };
-}
-
-const loadWithXhr: ExtendedLoadWithXhr = _loadWithXhr as any;
 
 describe("ArcGisMapServerCatalogGroup", function () {
   const mapServerUrl =
@@ -32,25 +33,37 @@ describe("ArcGisMapServerCatalogGroup", function () {
     });
     group = new ArcGisMapServerCatalogGroup("test", terria);
 
-    const realLoadWithXhr = loadWithXhr.load;
-    // We replace calls to real servers with pre-captured JSON files so our testing is isolated, but reflects real data.
-    spyOn(loadWithXhr, "load").and.callFake(function (...args: any[]) {
-      let url = args[0];
-      if (url.match("Redlands_Emergency_Vehicles/MapServer")) {
-        url = url.replace(/^.*\/MapServer/, "MapServer");
-        url = url.replace(/MapServer\/?\?f=json$/i, "mapServer.json");
-        url = url.replace(/MapServer\/17\/?\?.*/i, "17.json");
-        args[0] = "test/ArcGisMapServer/Redlands_Emergency_Vehicles/" + url;
-      } else if (url.match("SingleFusedMapCache/MapServer")) {
-        url = url.replace(/^.*\/MapServer/, "MapServer");
-        url = url.replace(/MapServer\/?\?.*/i, "mapserver.json");
-        url = url.replace(/MapServer\/Legend\/?\?.*/i, "legend.json");
-        url = url.replace(/MapServer\/Layers\/?\?.*/i, "layers.json");
-        args[0] = "test/ArcGisMapServer/SingleFusedMapCache/" + url;
-      }
+    worker.use(
+      // Redlands MapServer - sub-layer 17
+      http.get(
+        "http://example.com/arcgis/rest/services/Redlands_Emergency_Vehicles/MapServer/17",
+        () => HttpResponse.json(redlands17Json)
+      ),
+      // Redlands MapServer root
+      http.get(
+        "http://example.com/arcgis/rest/services/Redlands_Emergency_Vehicles/MapServer",
+        () => HttpResponse.json(redlandsMapServerJson)
+      ),
 
-      return realLoadWithXhr(...args);
-    });
+      // SingleFusedMapCache MapServer
+      http.get(
+        "http://www.example.com/SingleFusedMapCache/MapServer/Layers",
+        () => HttpResponse.json(singleFusedMapCacheLayersJson)
+      ),
+      http.get(
+        "http://www.example.com/SingleFusedMapCache/MapServer/Legend",
+        () => HttpResponse.json(singleFusedMapCacheLegendJson)
+      ),
+      http.get("http://www.example.com/SingleFusedMapCache/MapServer", () =>
+        HttpResponse.json(singleFusedMapCacheMapServerJson)
+      ),
+
+      // Error tests: unknown MapServer returns network error
+      http.get(
+        "http://example.com/arcgis/rest/services/unknown/MapServer",
+        () => HttpResponse.error()
+      )
+    );
   });
 
   it("has a type and typeName", function () {
@@ -160,6 +173,57 @@ describe("ArcGisMapServerCatalogGroup", function () {
     });
   });
 
+  describe("Supports MapServer with token", function () {
+    beforeEach(async function () {
+      runInAction(() => {
+        group.setTrait(CommonStrata.definition, "url", mapServerUrl);
+        group.setTrait(CommonStrata.definition, "token", "test-token");
+      });
+    });
+
+    it("Uses token in url", async function () {
+      worker.use(
+        http.get(
+          "http://example.com/arcgis/rest/services/Redlands_Emergency_Vehicles/MapServer",
+          ({ request }) => {
+            if (new URL(request.url).searchParams.get("token") !== "test-token")
+              return HttpResponse.error();
+            return HttpResponse.json(redlandsMapServerJson);
+          }
+        )
+      );
+      await group.loadMembers();
+      expect(group.members.length).toBe(4);
+    });
+
+    it("Correctly passes token to members", async function () {
+      await group.loadMembers();
+
+      expect(group.members).toBeDefined();
+      expect(group.members.length).toBe(4);
+      expect(group.memberModels).toBeDefined();
+      expect(group.memberModels.length).toBe(4);
+
+      const member0 = group.memberModels[0] as ArcGisMapServerCatalogItem;
+      const member1 = group.memberModels[1] as ArcGisMapServerCatalogItem;
+      const member2 = group.memberModels[2] as ArcGisMapServerCatalogItem;
+      const member3 = group.memberModels[3] as ArcGisMapServerCatalogGroup;
+
+      expect(member0.token).toBe("test-token");
+      expect(member1.token).toBe("test-token");
+      expect(member2.token).toBe("test-token");
+      expect(member3.token).toBe("test-token");
+
+      await member3.loadMembers();
+
+      const member4 = member3.memberModels[0] as ArcGisMapServerCatalogGroup;
+      const member5 = member3.memberModels[1] as ArcGisMapServerCatalogGroup;
+
+      expect(member4.token).toBe("test-token");
+      expect(member5.token).toBe("test-token");
+    });
+  });
+
   describe("Supports MapServer with TilesOnly single fused map cache", function () {
     beforeEach(async () => {
       runInAction(() => {
@@ -183,6 +247,16 @@ describe("ArcGisMapServerCatalogGroup", function () {
       );
       expect(item.layers).toBeUndefined();
       expect(item.layersArray.length).toBe(0);
+    });
+
+    it("Correctly passes token to members", async function () {
+      runInAction(() => {
+        group.setTrait(CommonStrata.definition, "token", "test-token");
+      });
+      await group.loadMembers();
+
+      const member = group.memberModels[0] as ArcGisMapServerCatalogItem;
+      expect(member.token).toBe("test-token");
     });
   });
 });
@@ -210,19 +284,12 @@ describe("ArcGisMapServerCatalogGroup creates its layer members with given trait
     });
     group = new ArcGisMapServerCatalogGroup("test", terria);
 
-    const realLoadWithXhr = loadWithXhr.load;
-    // We replace calls to real servers with pre-captured JSON files so our testing is isolated, but reflects real data.
-    spyOn(loadWithXhr, "load").and.callFake(function (...args: any[]) {
-      let url = args[0];
-
-      if (url.match("Residential_Dwelling_Density/MapServer")) {
-        url = url.replace(/^.*\/MapServer/, "MapServer");
-        url = url.replace(/MapServer\/?\?f=json$/i, "mapServer.json");
-        args[0] = "test/ArcGisMapServer/Residential_Dwelling_Density/" + url;
-      }
-
-      return realLoadWithXhr(...args);
-    });
+    worker.use(
+      http.get(
+        "http://example.com/arcgis/rest/services/Residential_Dwelling_Density/MapServer",
+        () => HttpResponse.json(residentialMapServerJson)
+      )
+    );
   });
 
   describe("loadMembers", function () {

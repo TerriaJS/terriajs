@@ -11,6 +11,9 @@ on:
       - "wwwroot/data/regionMapping.json"
       - "buildprocess/find-region-mapping-alias-duplicates.js"
 
+permissions:
+  contents: read # to fetch code (actions/checkout)
+
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job
@@ -22,7 +25,7 @@ jobs:
     steps:
       # Check out only 2 files
       # Use without cone mode as no git operations are executed past checkout
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           sparse-checkout: |
             wwwroot/data/regionMapping.json

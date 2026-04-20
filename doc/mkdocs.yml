@@ -42,6 +42,7 @@ nav:
       - Deploying with Kubernetes: deploying/deploying-with-kubernetes.md
       - Setting Up a Region Mapping Server: deploying/setting-up-a-region-mapping-server.md
       - Setting Up Geoserver: deploying/setting-up-geoserver.md
+      - Creating ImageMosaic layer in GeoServer: deploying/geoserver-timeseries-wms.md
       - Using as a CKAN Previewer: deploying/using-as-a-ckan-previewer.md
       - Controlling with URL Parameters: deploying/controlling-with-url-parameters.md
       - Controlling in an &lt;iframe&gt; or Popup: deploying/controlling-in-an-iframe-or-popup.md

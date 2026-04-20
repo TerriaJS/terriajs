@@ -40,6 +40,16 @@ function buildBaseShareUrl(
 ) {
   const uri = new URI(document.baseURI).fragment("").search("");
 
+  const fragmentsToShare = new URL(document.URL).hash
+    .split(/[#&]/)
+    .filter(
+      (elem) =>
+        elem !== "" && !elem.includes("share=") && !elem.includes("start=")
+    );
+  fragmentsToShare.forEach((sub) => {
+    uri.addSearch(sub);
+  });
+
   if (terria.developmentEnv) {
     uri.addSearch(toJS(terria.userProperties));
   } else {
@@ -297,11 +307,6 @@ function addViewSettings(
   initSource: InitSourceData = {}
 ) {
   const viewer = terria.mainViewer;
-
-  // const time = {
-  //   dayNumber: terria.timelineClock.currentTime.dayNumber,
-  //   secondsOfDay: terria.timelineClock.currentTime.secondsOfDay
-  // };
 
   let viewerMode: ViewModeJson;
   if (terria.mainViewer.viewerMode === ViewerMode.Cesium) {

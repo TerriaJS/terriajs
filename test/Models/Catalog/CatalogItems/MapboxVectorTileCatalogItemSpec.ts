@@ -1,4 +1,5 @@
 import { action } from "mobx";
+import { http, passthrough } from "msw";
 import {
   Filter,
   GeomType,
@@ -17,6 +18,7 @@ import MapboxVectorTileCatalogItem from "../../../../lib/Models/Catalog/CatalogI
 import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
 import updateModelFromJson from "../../../../lib/Models/Definition/updateModelFromJson";
 import Terria from "../../../../lib/Models/Terria";
+import { worker } from "../../../mocks/browser";
 
 describe("MapboxVectorTileCatalogItem", function () {
   let mvt: MapboxVectorTileCatalogItem;
@@ -146,6 +148,12 @@ describe("MapboxVectorTileCatalogItem", function () {
     });
 
     it("correctly picks features", async function () {
+      worker.use(
+        http.get("*.pbf", () => {
+          return passthrough();
+        })
+      );
+
       // Get polygon
       const polygon = await imageryProvider.pickFeatures(
         1881,

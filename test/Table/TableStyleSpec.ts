@@ -15,10 +15,14 @@ import TableColumnTraits, {
 } from "../../lib/Traits/TraitsClasses/Table/ColumnTraits";
 import TableStyleTraits from "../../lib/Traits/TraitsClasses/Table/StyleTraits";
 
+import { http, HttpResponse } from "msw";
+import { worker } from "../mocks/browser";
+
 import regionMapping from "../../wwwroot/data/regionMapping.json";
 import SedCods from "../../wwwroot/data/regionids/region_map-SED_CODE18_SED_2018.json";
 import Sa4Codes from "../../wwwroot/data/regionids/region_map-SA4_2016_AUST_SA4_CODE16.json";
 import Sa4Names from "../../wwwroot/data/regionids/region_map-SA4_2016_AUST_SA4_NAME16.json";
+import Sa4Names2021 from "../../wwwroot/data/regionids/region_map-SA4_NAME_2021_SA4_2021.json";
 import LatLonCsv from "../../wwwroot/test/csv/lat_lon_enum_date_id.csv";
 import SedCsv from "../../wwwroot/test/csv/SED_2018_SED_CODE18.csv";
 import YouthUnEmployCsv from "../../wwwroot/test/csv/youth-unemployment-rate-2018.csv";
@@ -33,30 +37,28 @@ describe("TableStyle", function () {
     terria.configParameters.regionMappingDefinitionsUrl =
       "build/TerriaJS/data/regionMapping.json";
 
-    jasmine.Ajax.install();
-    jasmine.Ajax.stubRequest(/.*/).andError({
-      statusText: "Unexpected request, not stubbed"
-    });
-
-    jasmine.Ajax.stubRequest(
-      "build/TerriaJS/data/regionMapping.json"
-    ).andReturn({ responseJSON: regionMapping });
-
-    jasmine.Ajax.stubRequest(
-      "https://tiles.terria.io/region-mapping/regionids/region_map-SED_CODE18_SED_2018.json"
-    ).andReturn({ responseJSON: SedCods });
-
-    jasmine.Ajax.stubRequest(
-      "https://tiles.terria.io/region-mapping/regionids/region_map-SA4_2016_AUST_SA4_CODE16.json"
-    ).andReturn({ responseJSON: Sa4Codes });
-
-    jasmine.Ajax.stubRequest(
-      "https://tiles.terria.io/region-mapping/regionids/region_map-SA4_2016_AUST_SA4_NAME16.json"
-    ).andReturn({ responseJSON: Sa4Names });
-  });
-
-  afterEach(() => {
-    jasmine.Ajax.uninstall();
+    worker.use(
+      http.get("*/build/TerriaJS/data/regionMapping.json", () =>
+        HttpResponse.json(regionMapping)
+      ),
+      http.get(
+        "https://tiles.terria.io/region-mapping/regionids/region_map-SED_CODE18_SED_2018.json",
+        () => HttpResponse.json(SedCods)
+      ),
+      http.get(
+        "https://tiles.terria.io/region-mapping/regionids/region_map-SA4_2016_AUST_SA4_CODE16.json",
+        () => HttpResponse.json(Sa4Codes)
+      ),
+      http.get(
+        "https://tiles.terria.io/region-mapping/regionids/region_map-SA4_2016_AUST_SA4_NAME16.json",
+        () => HttpResponse.json(Sa4Names)
+      ),
+      http.get(
+        "https://tiles.terria.io/region-mapping/regionids/region_map-SA4_NAME_2021_SA4_2021.json",
+        () => HttpResponse.json(Sa4Names2021)
+      ),
+      http.all("*", () => HttpResponse.error())
+    );
   });
 
   describe(" - Scalar", function () {

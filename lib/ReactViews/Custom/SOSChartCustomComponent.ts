@@ -6,8 +6,7 @@ import ChartCustomComponent, {
   ChartCustomComponentAttributes
 } from "./ChartCustomComponent";
 import { ProcessNodeContext } from "./CustomComponent";
-interface SOSChartCustomComponentAttributes
-  extends ChartCustomComponentAttributes {
+interface SOSChartCustomComponentAttributes extends ChartCustomComponentAttributes {
   name?: string;
 }
 export default class SOSChartCustomComponent extends ChartCustomComponent<SensorObservationServiceCatalogItem> {

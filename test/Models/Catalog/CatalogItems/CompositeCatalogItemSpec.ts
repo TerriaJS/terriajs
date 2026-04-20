@@ -1,10 +1,15 @@
+import { runInAction } from "mobx";
+import { http, HttpResponse } from "msw";
 import CompositeCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/CompositeCatalogItem";
 import GeoJsonCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/GeoJsonCatalogItem";
 import WebMapServiceCatalogItem from "../../../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
+import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
 import updateModelFromJson from "../../../../lib/Models/Definition/updateModelFromJson";
 import Terria from "../../../../lib/Models/Terria";
-import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
-import { runInAction } from "mobx";
+import { worker } from "../../../mocks/browser";
+
+import bikeracksJson from "../../../../wwwroot/test/GeoJSON/bike_racks.geojson" with { type: "json" };
+import singleMetadataUrl from "../../../../wwwroot/test/WMS/single_metadata_url.xml";
 
 describe("CompositeCatalogItem", function () {
   let terria: Terria;
@@ -15,9 +20,18 @@ describe("CompositeCatalogItem", function () {
       baseUrl: "./"
     });
     composite = new CompositeCatalogItem("test", terria);
+
+    worker.use(
+      http.get("test/GeoJSON/bike_racks.geojson", () =>
+        HttpResponse.json(bikeracksJson)
+      ),
+      http.get("test/WMS/single_metadata_url.xml", () =>
+        HttpResponse.xml(singleMetadataUrl)
+      )
+    );
   });
 
-  it("loads map items after members are added", function (done) {
+  it("loads map items after members are added", async function () {
     const item1 = new GeoJsonCatalogItem("item1", terria);
     const item2 = new WebMapServiceCatalogItem("item2", terria);
     const item3 = new WebMapServiceCatalogItem("item3", terria);
@@ -43,17 +57,13 @@ describe("CompositeCatalogItem", function () {
     composite.add(CommonStrata.definition, item1);
     composite.add(CommonStrata.definition, item2);
 
-    composite
-      .loadMapItems()
-      .then(() => {
-        expect(composite.mapItems.length).toBe(2);
-        composite.add(CommonStrata.definition, item3);
-        return composite.loadMapItems();
-      })
-      .then(() => {
-        expect(composite.mapItems.length).toBe(3);
-        done();
-      });
+    await composite.loadMapItems();
+
+    expect(composite.mapItems.length).toBe(2);
+    composite.add(CommonStrata.definition, item3);
+    await composite.loadMapItems();
+
+    expect(composite.mapItems.length).toBe(3);
   });
 
   it("updates from json, preserving order", function () {
@@ -107,8 +117,8 @@ describe("CompositeCatalogItem", function () {
     expect(item2.show).toEqual(false);
   });
 
-  // it("concatenates legends", function(done) {
-  //   composite
+  // it("concatenates legends", async function() {
+  //   await composite
   //     .updateFromJson({
   //       type: "composite",
   //       items: [
@@ -121,14 +131,10 @@ describe("CompositeCatalogItem", function () {
   //           legendUrl: "http://not.valid.either"
   //         }
   //       ]
-  //     })
-  //     .then(function() {
-  //       expect(composite.legendUrls.slice()).toEqual([
-  //         new LegendUrl("http://not.valid"),
-  //         new LegendUrl("http://not.valid.either")
-  //       ]);
-  //     })
-  //     .then(done)
-  //     .catch(fail);
+  //     });
+  //     expect(composite.legendUrls.slice()).toEqual([
+  //       new LegendUrl("http://not.valid"),
+  //       new LegendUrl("http://not.valid.either")
+  //     ]);
   // });
 });

@@ -2,7 +2,7 @@ import { featureCollection } from "@turf/helpers";
 import { FeatureCollection } from "geojson";
 import i18next from "i18next";
 import { get as _get, set as _set } from "lodash-es";
-import { computed, makeObservable, toJS } from "mobx";
+import { action, computed, makeObservable, toJS } from "mobx";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
 import {
   FeatureCollectionWithCrs,
@@ -12,7 +12,6 @@ import isDefined from "../../../Core/isDefined";
 import JsonValue, { isJsonObject } from "../../../Core/Json";
 import loadBlob, { isZip, parseZipJsonBlob } from "../../../Core/loadBlob";
 import loadJson from "../../../Core/loadJson";
-import readJson from "../../../Core/readJson";
 import TerriaError from "../../../Core/TerriaError";
 import CesiumIonMixin from "../../../ModelMixins/CesiumIonMixin";
 import GeoJsonMixin, {
@@ -20,6 +19,7 @@ import GeoJsonMixin, {
 } from "../../../ModelMixins/GeojsonMixin";
 import ApiRequestTraits from "../../../Traits/TraitsClasses/ApiRequestTraits";
 import GeoJsonCatalogItemTraits from "../../../Traits/TraitsClasses/GeoJsonCatalogItemTraits";
+import CommonStrata from "../../Definition/CommonStrata";
 import CreateModel from "../../Definition/CreateModel";
 import Model, { ModelConstructorParameters } from "../../Definition/Model";
 import HasLocalData from "../../HasLocalData";
@@ -45,14 +45,17 @@ class GeoJsonCatalogItem
     return i18next.t("models.geoJson.name");
   }
 
-  protected _file?: File;
-
+  @action
   setFileInput(file: File) {
-    this._file = file;
+    this.setTrait(
+      CommonStrata.user,
+      "url",
+      URL.createObjectURL(file) + "#" + file.name
+    );
   }
 
   @computed get hasLocalData(): boolean {
-    return isDefined(this._file);
+    return this.url?.startsWith("blob:") ?? false;
   }
 
   /**
@@ -110,16 +113,6 @@ class GeoJsonCatalogItem
     // GeoJsonCatalogItemTraits.geoJsonData
     else if (isDefined(this.geoJsonString)) {
       jsonData = JSON.parse(this.geoJsonString);
-      // GeojsonCatalogItem._file
-    }
-    // Zipped file
-    else if (this._file) {
-      if (isDefined(this._file.name) && isZip(this._file.name)) {
-        const asAb = await this._file.arrayBuffer();
-        jsonData = await parseZipJsonBlob(new Blob([asAb]));
-      } else {
-        jsonData = await readJson(this._file);
-      }
     } else if (isDefined(this.ionResource)) {
       jsonData = await loadJson(this.ionResource);
     }

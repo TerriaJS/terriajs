@@ -17,14 +17,12 @@ describeIfSupported("EarthGravityModel1996", function () {
 
   // NGA calculator is here: http://earth-info.nga.mil/GandG/wgs84/gravitymod/egm96/intpt.html
 
-  it("produces a single result consistent with NGA calculator", function (done) {
-    egm96.getHeight(0.0, 0.0).then(function (height) {
-      expect(height).toBe(17.16);
-      done();
-    });
+  it("produces a single result consistent with NGA calculator", async function () {
+    const height = await egm96.getHeight(0.0, 0.0);
+    expect(height).toBe(17.16);
   });
 
-  it("produces multiple results consistent with NGA calculator", function (done) {
+  it("produces multiple results consistent with NGA calculator", async function () {
     var testData = [
       // longitude, latitude, expected height
       0.0, 89.74, 13.92, 180.0, 89.74, 13.49, -180.0, 89.74, 13.49, 0.0, -89.74,
@@ -41,27 +39,21 @@ describeIfSupported("EarthGravityModel1996", function () {
       );
     }
 
-    egm96.getHeights(cartographics).then(function () {
-      for (var i = 0; i < cartographics.length; ++i) {
-        expect(
-          Math.abs(cartographics[i].height - testData[i * 3 + 2])
-        ).toBeLessThan(0.01);
-      }
-      done();
-    });
+    await egm96.getHeights(cartographics);
+    for (let i = 0; i < cartographics.length; ++i) {
+      expect(
+        Math.abs(cartographics[i].height - testData[i * 3 + 2])
+      ).toBeLessThan(0.01);
+    }
   });
 
-  it("works at the north pole", function (done) {
-    egm96.getHeight(0.0, Math.PI).then(function (height) {
-      expect(height).toBe(13.61);
-      done();
-    });
+  it("works at the north pole", async function () {
+    const height = await egm96.getHeight(0.0, Math.PI);
+    expect(height).toBe(13.61);
   });
 
-  it("works at the south pole", function (done) {
-    egm96.getHeight(0.0, -Math.PI).then(function (height) {
-      expect(height).toBe(-29.53);
-      done();
-    });
+  it("works at the south pole", async function () {
+    const height = await egm96.getHeight(0.0, -Math.PI);
+    expect(height).toBe(-29.53);
   });
 });

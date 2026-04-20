@@ -1,6 +1,8 @@
+import { http, HttpResponse } from "msw";
 import CesiumIonSearchProvider from "../../../lib/Models/SearchProviders/CesiumIonSearchProvider";
 import Terria from "../../../lib/Models//Terria";
 import CommonStrata from "../../../lib/Models/Definition/CommonStrata";
+import { worker } from "../../mocks/browser";
 
 const fixture = {
   features: [
@@ -26,19 +28,17 @@ describe("CesiumIonSearchProvider", () => {
     });
     searchProvider = new CesiumIonSearchProvider("test-cesium-ion", terria);
     searchProvider.setTrait(CommonStrata.definition, "key", "testkey");
-    searchProvider.setTrait(CommonStrata.definition, "url", "api.test.com");
-
-    jasmine.Ajax.install();
-  });
-
-  afterEach(() => {
-    jasmine.Ajax.uninstall();
+    searchProvider.setTrait(
+      CommonStrata.definition,
+      "url",
+      "http://api.test.com"
+    );
   });
 
   it("Handles valid results", async () => {
-    jasmine.Ajax.stubRequest(
-      "api.test.com?text=test&access_token=testkey"
-    ).andReturn({ responseText: JSON.stringify(fixture) });
+    worker.use(
+      http.get("http://api.test.com", () => HttpResponse.json(fixture))
+    );
 
     const result = searchProvider.search("test");
     await result.resultsCompletePromise;
@@ -48,11 +48,8 @@ describe("CesiumIonSearchProvider", () => {
   });
 
   it("Handles empty result", async () => {
-    jasmine.Ajax.stubRequest(
-      "api.test.com?text=test&access_token=testkey"
-    ).andReturn({
-      responseText: JSON.stringify([])
-    });
+    worker.use(http.get("http://api.test.com", () => HttpResponse.json([])));
+
     const result = searchProvider.search("test");
     await result.resultsCompletePromise;
     expect(result.results.length).toBe(0);
@@ -62,11 +59,12 @@ describe("CesiumIonSearchProvider", () => {
   });
 
   it("Handles error", async () => {
-    jasmine.Ajax.stubRequest(
-      "api.test.com?text=test&access_token=testkey"
-    ).andReturn({
-      status: 404
-    });
+    worker.use(
+      http.get("http://api.test.com", () =>
+        HttpResponse.json({}, { status: 401 })
+      )
+    );
+
     const result = searchProvider.search("test");
     await result.resultsCompletePromise;
     expect(result.results.length).toBe(0);

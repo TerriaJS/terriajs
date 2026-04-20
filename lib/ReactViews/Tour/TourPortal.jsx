@@ -33,7 +33,7 @@ import {
 import TourExplanationBox, {
   TourExplanationBoxZIndex
 } from "./TourExplanationBox";
-import TourIndicator from "./TourIndicator.jsx";
+import TourIndicator from "./TourIndicator";
 import TourOverlay from "./TourOverlay.jsx";
 import TourPrefaceBox from "./TourPrefaceBox";
 import TourProgressDot from "./TourProgressDot.jsx";
@@ -43,7 +43,7 @@ import TourProgressDot from "./TourProgressDot.jsx";
  * Fill in indicator dot depending on progress determined from count & max count
  */
 const TourProgress = ({ max, step, setTourIndex }) => {
-  const countArray = Array.from(Array(max).keys()).map((e) => e++);
+  const countArray = Array.from(Array(max).keys()).map((e) => e + 1);
   const countStep = step;
   return (
     <Box centered>

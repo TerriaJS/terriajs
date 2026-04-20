@@ -66,6 +66,7 @@ $text-darker: #4d5766 !default;
 $text-light: #ffffff !default;
 $text-light-dimmed: #bbbbbb !default;
 $text-warning: rgb(255, 105, 97) !default;
+$text-success: #6ee7b7 !default;
 
 // You can override these functions to change the link color depending on the background, eg.
 // @function get-link-color($bg-color) {
@@ -94,7 +95,7 @@ $text-warning: rgb(255, 105, 97) !default;
 
 $faint-bg: #f5f5f5 !default;
 $warning: #ff5b6f !default;
-$info-color: #fed17f !default;
+$info-color: #fde68a !default;
 $link-text-decoration: none !default;
 
 $padding: 10px !default;
@@ -180,7 +181,9 @@ $chart-height: 250px !default;
 
 $border-color: rgba(#fff, 0.15) !default;
 $border-style: 1px solid $border-color !default;
-$box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.12), 0 2px 2px 0 rgba(0, 0, 0, 0.24) !default;
+$box-shadow:
+  0 0 2px 0 rgba(0, 0, 0, 0.12),
+  0 2px 2px 0 rgba(0, 0, 0, 0.24) !default;
 
 $radius-xlarge: 8px !default;
 $radius-large: 4px !default;

@@ -75,8 +75,9 @@ function SearchableItemMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
 }
 
 namespace SearchableItemMixin {
-  export interface Instance
-    extends InstanceType<ReturnType<typeof SearchableItemMixin>> {}
+  export interface Instance extends InstanceType<
+    ReturnType<typeof SearchableItemMixin>
+  > {}
 
   export function isMixedInto(model: any): model is Instance {
     return model && model.hasSearchableItemMixin;

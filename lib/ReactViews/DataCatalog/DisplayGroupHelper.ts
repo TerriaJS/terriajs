@@ -1,5 +1,5 @@
 import { runInAction } from "mobx";
-import { DataSourceAction } from "../../Core/AnalyticEvents/analyticEvents";
+import { DataSourceAction } from "../../Core/Analytics/analyticEvents";
 import MappableMixin from "../../ModelMixins/MappableMixin";
 import { BaseModel } from "../../Models/Definition/Model";
 import Terria from "../../Models/Terria";

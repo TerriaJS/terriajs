@@ -103,6 +103,11 @@ export default abstract class GlobeOrMap {
     );
   }
 
+  /**
+   * Set initial camera view
+   */
+  abstract setInitialView(cameraView: CameraView): void;
+
   abstract getCurrentCameraView(): CameraView;
 
   /* Gets the current container element.
@@ -221,9 +226,8 @@ export default abstract class GlobeOrMap {
     }
 
     // Lazy import here to avoid cyclic dependencies.
-    const { default: GeoJsonCatalogItem } = await import(
-      "./Catalog/CatalogItems/GeoJsonCatalogItem"
-    );
+    const { default: GeoJsonCatalogItem } =
+      await import("./Catalog/CatalogItems/GeoJsonCatalogItem");
 
     if (isDefined(feature)) {
       let hasGeometry = false;

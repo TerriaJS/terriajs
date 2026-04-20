@@ -79,7 +79,7 @@
     "modelNotFoundErrorMessage": "ID do modelo `\"{{id}}\"` não foi encontrado",
     "duplicateModelErrorMessage": "Ocorreu um erro ao dividir o item de catálogo `\"{{name}}\"`. Este item de catálogo pode não ser compatível com a funcionalidade \"comparar\""
   },
-  "zoomCotrol": {
+  "zoomControl": {
     "zoomReset": "Redefinir zoom",
     "zoomIn": "Aumentar o Zoom",
     "zoomOut": "Diminuir o zoom"

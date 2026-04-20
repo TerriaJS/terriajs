@@ -1,23 +1,20 @@
 import { configure, runInAction } from "mobx";
-import _loadWithXhr from "../../../../lib/Core/loadWithXhr";
+import { http, HttpResponse } from "msw";
 import Terria from "../../../../lib/Models/Terria";
 import registerCatalogMembers from "../../../../lib/Models/Catalog/registerCatalogMembers";
 
 import i18next from "i18next";
 import ArcGisPortalItemReference from "../../../../lib/Models/Catalog/Esri/ArcGisPortalItemReference";
 import ArcGisFeatureServerCatalogItem from "../../../../lib/Models/Catalog/Esri/ArcGisFeatureServerCatalogItem";
+import { worker } from "../../../mocks/browser";
+
+import itemJson from "../../../../wwwroot/test/ArcGisPortal/item.json";
+import itemDataJson from "../../../../wwwroot/test/ArcGisPortal/item-data.json";
 
 configure({
   enforceActions: "observed",
   computedRequiresReaction: true
 });
-
-interface ExtendedLoadWithXhr {
-  (): any;
-  load: { (...args: any[]): any; calls: any };
-}
-
-const loadWithXhr: ExtendedLoadWithXhr = _loadWithXhr as any;
 
 describe("ArcGisPortalItemReference", function () {
   let terria: Terria;
@@ -34,14 +31,18 @@ describe("ArcGisPortalItemReference", function () {
       terria
     );
 
-    const realLoadWithXhr = loadWithXhr.load;
-    // We replace calls to real servers with pre-captured JSON files so our testing is isolated, but reflects real data.
-    spyOn(loadWithXhr, "load").and.callFake(function (...args: any[]) {
-      if (args[0].indexOf("/data") > -1) {
-        args[0] = "test/ArcGisPortal/item-data.json";
-      } else args[0] = "test/ArcGisPortal/item.json";
-      return realLoadWithXhr(...args);
-    });
+    worker.use(
+      // Item data endpoint (must be before item endpoint since it's more specific)
+      http.get(
+        "https://portal.spatial.nsw.gov.au/portal/sharing/rest/content/items/:itemId/data",
+        () => HttpResponse.json(itemDataJson)
+      ),
+      // Item metadata endpoint
+      http.get(
+        "https://portal.spatial.nsw.gov.au/portal/sharing/rest/content/items/:itemId",
+        () => HttpResponse.json(itemJson)
+      )
+    );
   });
 
   it("has a type and typeName", function () {

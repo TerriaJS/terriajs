@@ -1,22 +1,18 @@
 import { configure, runInAction } from "mobx";
-import _loadWithXhr from "../../../../lib/Core/loadWithXhr";
+import { http, HttpResponse } from "msw";
 import Terria from "../../../../lib/Models/Terria";
 import ArcGisFeatureServerCatalogGroup from "../../../../lib/Models/Catalog/Esri/ArcGisFeatureServerCatalogGroup";
 import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
 import i18next from "i18next";
 import ArcGisFeatureServerCatalogItem from "../../../../lib/Models/Catalog/Esri/ArcGisFeatureServerCatalogItem";
+import { worker } from "../../../mocks/browser";
+
+import featureServerJson from "../../../../wwwroot/test/ArcGisFeatureServer/Redlands_Emergency_Vehicles/featureServer.json";
 
 configure({
   enforceActions: "observed",
   computedRequiresReaction: true
 });
-
-interface ExtendedLoadWithXhr {
-  (): any;
-  load: { (...args: any[]): any; calls: any };
-}
-
-const loadWithXhr: ExtendedLoadWithXhr = _loadWithXhr as any;
 
 describe("ArcGisFeatureServerCatalogGroup", function () {
   const featureServerUrl =
@@ -30,18 +26,12 @@ describe("ArcGisFeatureServerCatalogGroup", function () {
     });
     group = new ArcGisFeatureServerCatalogGroup("test", terria);
 
-    const realLoadWithXhr = loadWithXhr.load;
-    // We replace calls to real servers with pre-captured JSON files so our testing is isolated, but reflects real data.
-    spyOn(loadWithXhr, "load").and.callFake(function (...args: any[]) {
-      let url = args[0];
-      if (url.match("Redlands_Emergency_Vehicles/FeatureServer")) {
-        url = url.replace(/^.*\/FeatureServer/, "FeatureServer");
-        url = url.replace(/FeatureServer\/?\?f=json$/i, "featureServer.json");
-        args[0] = "test/ArcGisFeatureServer/Redlands_Emergency_Vehicles/" + url;
-      }
-
-      return realLoadWithXhr(...args);
-    });
+    worker.use(
+      http.get(
+        "http://example.com/arcgis/rest/services/Redlands_Emergency_Vehicles/FeatureServer",
+        () => HttpResponse.json(featureServerJson)
+      )
+    );
   });
 
   it("has a type and typeName", function () {
@@ -106,6 +96,47 @@ describe("ArcGisFeatureServerCatalogGroup", function () {
 
       expect(member2.name).toBe("Fire");
       expect(member2.url).toBe(featureServerUrl + "/123");
+    });
+  });
+
+  describe("Supports FeatureServer with token", function () {
+    beforeEach(async function () {
+      runInAction(() => {
+        group.setTrait(CommonStrata.definition, "url", featureServerUrl);
+        group.setTrait(CommonStrata.definition, "token", "test-token");
+      });
+    });
+
+    it("Uses token in url", async function () {
+      worker.use(
+        http.get(
+          "http://example.com/arcgis/rest/services/Redlands_Emergency_Vehicles/FeatureServer",
+          ({ request }) => {
+            if (new URL(request.url).searchParams.get("token") !== "test-token")
+              return HttpResponse.error();
+            return HttpResponse.json(featureServerJson);
+          }
+        )
+      );
+      await group.loadMembers();
+      expect(group.members.length).toBe(3);
+    });
+
+    it("Correctly passes token to members", async function () {
+      await group.loadMembers();
+
+      expect(group.members).toBeDefined();
+      expect(group.members.length).toBe(3);
+      expect(group.memberModels).toBeDefined();
+      expect(group.memberModels.length).toBe(3);
+
+      const member0 = group.memberModels[0] as ArcGisFeatureServerCatalogItem;
+      const member1 = group.memberModels[1] as ArcGisFeatureServerCatalogItem;
+      const member2 = group.memberModels[2] as ArcGisFeatureServerCatalogItem;
+
+      expect(member0.token).toBe("test-token");
+      expect(member1.token).toBe("test-token");
+      expect(member2.token).toBe("test-token");
     });
   });
 });

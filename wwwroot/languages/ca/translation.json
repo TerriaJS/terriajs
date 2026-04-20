@@ -82,7 +82,7 @@
     "errorTitle": "No s'ha pogut comparar l'element del catàleg.",
     "duplicateModelErrorMessage": "S'ha produït un error en dividir l'element del catàleg `\"{{name}}\"`. És possible que aquest element del catàleg no admeti la funcionalitat de \"comparació\""
   },
-  "zoomCotrol": {
+  "zoomControl": {
     "zoomIn": "Zoom +",
     "zoomReset": "Restablir zoom",
     "zoomOut": "Zoom -"
@@ -209,7 +209,7 @@
     "printViewButton": "Mostra la vista d'impressió",
     "btnAdvanced": "Opcions avançades",
     "embedTitle": "Inserir mapa",
-    "shortenUsingService": "Escurceu l'URL per compartir mitjançant un servei web",
+    "shortenUsingService": "Escurceu l'enllaç per compartir",
     "btnStoryShareText": "Compartir",
     "btnMapShareText": "Compartir / Imprimir",
     "btnCatalogShareTitle": "Comparteix el teu catàleg amb altres persones",
@@ -229,7 +229,10 @@
     "convertErrorMessage": "Aquest enllaç per compartir es basa en una versió anterior de TerriaJS, el programari que alimenta aquest mapa web. S'ha produït un error en intentar actualitzar les dades compartides.",
     "downloadMap": "Descarregar mapa (png)",
     "getShareSaveHelpMessage": "Com desar enllaços compartits",
-    "embedDescription": "Per inserir, copieu aquest codi per inserir aquest mapa en una pàgina HTML:"
+    "embedDescription": "Copieu aquest codi per inserir aquest mapa en una pàgina HTML.",
+    "shareStoryLink": "Comparteix l'enllaç de la història",
+    "storyLinkCreated": "Enllaç de la història creat",
+    "shareLinkCreated": "Enllaç de compartició creat"
   },
   "countDatasets": {
     "btnText": "Començar",
@@ -287,7 +290,18 @@
     "qualityLabel": "Qualitat",
     "performanceLabel": "Rendiment",
     "nativeResolutionLabel": "Premeu per deixar d'utilitzar la resolució {{resolution1}} i començar a utilitzar la resolució {{resolution2}}",
-    "btnTitle": "Canvia la vista"
+    "btnTitle": "Canvia la vista",
+    "baseMapStatus": {
+      "requiresViewerMode": "⚠️ El mapa base seleccionat només es pot visualitzar en {{viewerMode}}"
+    },
+    "viewerModeSwitched": {
+      "title": "Mode de visualització canviat",
+      "message": "El mapa base '{{newBaseMap}}' no es pot visualitzar a {{currentMode}}. La vista de mapa s'ha canviat a {{newMode}}"
+    },
+    "baseMapSwitched": {
+      "title": "Mapa base canviat",
+      "message": "El mapa base '{{currentBaseMap}}' no es pot visualitzar a {{mapMode}}. El mapa base s'ha canviat a '{{newBaseMap}}'"
+    }
   },
   "feedback": {
     "feedbackPreamble": "Ens encantaria saber de tu!",
@@ -353,7 +367,7 @@
     "deleteStory": "esborrar",
     "untitledScene": "escena sense títol",
     "doesNotExist": "La història no existeix",
-    "removeAllStories": "Esborra-ho tot",
+    "removeAllStories": "Esborra totes les escenes",
     "play": "Jugar",
     "previousBtn": "anar a l'escena anterior",
     "untitled": "escena sense títol",
@@ -371,9 +385,9 @@
     "editor": {
       "cancelEditing": "Cancel·lar",
       "placeholder": "Introduïu un títol",
-      "saveBtn": "desar",
+      "saveBtn": "fet",
       "cancelBtn": "cancel·lar",
-      "saveStory": "Desar",
+      "saveStory": "Fet",
       "descriptionLabel": "Descripció",
       "modalHeader": "Editor d'històries - Capturador d'escenes",
       "titleLabel": "Títol (obligatori)"
@@ -397,7 +411,8 @@
     "next": "Següent",
     "restart": "Reinicia",
     "panelBodyCapped": "Cada història té un límit de {{ shareMaxRequestSize }}: divideix dades grans o moltes escenes en diverses històries per mantenir-te per sota del límit.",
-    "storiesTooLong": "Aquesta història supera la mida màxima permesa. Prova de reduir el nombre de conjunts de dades visibles o captura menys escenes."
+    "storiesTooLong": "Aquesta història supera la mida màxima permesa. Prova de reduir el nombre de conjunts de dades visibles o captura menys escenes.",
+    "saveInstructions": "Feu clic a compartir per crear un enllaç d'història nou."
   },
   "satelliteGuidance": {
     "menuTitle": "Podeu accedir a les guies de mapes en qualsevol moment consultant el <2>menú d'ajuda</2>.",
@@ -598,8 +613,8 @@
   "clipboard": {
     "success": "Copiat al porta-retalls",
     "unsuccessful": "Còpia fallida...",
-    "shareURL": "Compartiu URL",
-    "shareExplanation": "Qualsevol persona amb aquest URL podrà accedir a aquest mapa.",
+    "shareURL": "Compartiu l'enllaç",
+    "shareExplanation": "Qualsevol persona amb aquest enllaç podrà accedir a aquest mapa.",
     "copy": "Copia"
   },
   "dragDrop": {
@@ -915,7 +930,7 @@
       "missingUrlTitle": "No es pot carregar FeatureServer",
       "missingUrlMessage": "No s'ha pogut carregar el punt d'accés de l'ArcGis FeatureServer perquè l'element del catàleg no té una \"url\".",
       "invalidServiceTitle": "Capa invàlida de l'ArcGIS Feature Service",
-      "reachedMaxFeatureLimit": "Avís: aquesta capa ha assolit el límit de funcions WFS ({{maxFeatures}})."
+      "reachedMaxFeatureLimit": "Avís: aquesta capa ha assolit el límit de funcions FeatureService ({{maxFeatures}})."
     },
     "arcGisFeatureServerCatalogGroup": {
       "invalidServiceMessage": "Error en invocar l'ArcGIS Feature Service. La resposta del servidor no sembla ser un document del servei de funcions vàlid.",
@@ -1234,7 +1249,7 @@
       "locationHeadingFeatureInfo": "Ubicació",
       "availableStreamsHeadingFeatureInfo": "Fluxos disponibles",
       "noStreamsMessageFeatureInfo": "No hi ha fluxos en aquesta ubicació.",
-      "missingSenapsBaseUrl": "No s'ha proporcionat l'URL base de Senaps. Has iniciat sessió?"
+      "missingSenapsBaseUrl": "No s'ha proporcionat l'Url base de Senaps. Has iniciat sessió?"
     },
     "placesLikeMe": {
       "regionsLikeThisDescription": "Identifica regions que _s'assemblen més_ a una regió determinada segons un conjunt de característiques.",
@@ -2198,7 +2213,7 @@
     "controls": {
       "title": "Controls"
     },
-    "dropPedestrianTooltipMessage": "<b>Feu clic amb el botó esquerre</b> per seleccionar la ubicació <br /><b>Clic dret / Esc</b> per cancel·lar"
+    "dropPedestrianTooltipMessage": "<b>Clic esquerre</b> per seleccionar la ubicació de descàrrega<br /><b>Clic dret / Esc</b> per cancel·lar"
   },
   "toast": {
     "mapIsZooming": "Carregant el zoom ideal..."
@@ -2253,7 +2268,7 @@
     }
   },
   "includeStory": {
-    "message": "Inclou la història a Share"
+    "message": "Inclou la història actual a l'enllaç"
   },
   "selectableDimensions": {
     "colorRemove": "Eliminar",

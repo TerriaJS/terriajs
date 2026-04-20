@@ -1,17 +1,23 @@
+import { http, HttpResponse } from "msw";
 import Terria from "../../../../lib/Models/Terria";
 
 import CswCatalogGroup from "../../../../lib/Models/Catalog/Ows/CswCatalogGroup";
-import loadText from "../../../../lib/Core/loadText";
 import CatalogMemberMixin from "../../../../lib/ModelMixins/CatalogMemberMixin";
 import updateModelFromJson from "../../../../lib/Models/Definition/updateModelFromJson";
 import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
 import CatalogGroup from "../../../../lib/Models/Catalog/CatalogGroup";
 import WebMapServiceCatalogItem from "../../../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
+import { worker } from "../../../mocks/browser";
+
+import getDomainXml from "../../../../wwwroot/test/csw/Example1GetDomain.xml";
+import getRecordsPage1Xml from "../../../../wwwroot/test/csw/Example1GetRecordsPage1.xml";
+import getRecordsPage2Xml from "../../../../wwwroot/test/csw/Example1GetRecordsPage2.xml";
+import getRecordsPage3Xml from "../../../../wwwroot/test/csw/Example1GetRecordsPage3.xml";
 
 describe("CswCatalogGroup", function () {
   let terria: Terria;
   let group: CswCatalogGroup;
-  beforeEach(async function () {
+  beforeEach(function () {
     terria = new Terria({
       baseUrl: "./"
     });
@@ -30,38 +36,38 @@ describe("CswCatalogGroup", function () {
       }
     });
 
-    const getDomainXml = await loadText("test/csw/Example1GetDomain.xml");
     const getRecords = [
-      await loadText("test/csw/Example1GetRecordsPage1.xml"),
-      await loadText("test/csw/Example1GetRecordsPage2.xml"),
-      await loadText("test/csw/Example1GetRecordsPage3.xml")
+      getRecordsPage1Xml,
+      getRecordsPage2Xml,
+      getRecordsPage3Xml
     ];
 
-    jasmine.Ajax.install();
-    jasmine.Ajax.stubRequest(/.*/).andError({
-      statusText: "Failed request"
-    });
-    jasmine.Ajax.stubRequest(
-      "http://oa-gis.csiro.au/geonetwork/srv/eng/csw?service=CSW&version=2.0.2&request=GetDomain&propertyname=awavea"
-    ).andReturn({
-      contentType: "text/xml",
-      responseText: getDomainXml
-    });
-
     let page = 0;
-    jasmine.Ajax.stubRequest(
-      "http://oa-gis.csiro.au/geonetwork/srv/eng/csw"
-    ).andCallFunction((req) => {
-      req.respondWith({
-        contentType: "text/xml",
-        responseText: getRecords[page]
-      });
-      page++;
-    });
-  });
-
-  afterEach(function () {
-    jasmine.Ajax.uninstall();
+    worker.use(
+      http.get(
+        "http://oa-gis.csiro.au/geonetwork/srv/eng/csw",
+        ({ request }) => {
+          const url = new URL(request.url);
+          const reqType = url.searchParams.get("request");
+          if (reqType === "GetDomain") {
+            if (url.searchParams.get("propertyname") !== "awavea")
+              throw new Error(`Unexpected query params: ${url.search}`);
+            return new HttpResponse(getDomainXml, {
+              headers: { "Content-Type": "text/xml" }
+            });
+          }
+          throw new Error(`Unexpected GET request: ${url.search}`);
+        }
+      ),
+      http.post("http://oa-gis.csiro.au/geonetwork/srv/eng/csw", () => {
+        const xml = getRecords[page];
+        page++;
+        return new HttpResponse(xml, {
+          headers: { "Content-Type": "text/xml" }
+        });
+      }),
+      http.all("*", () => HttpResponse.error())
+    );
   });
 
   it("loads domain and creates members", async function () {

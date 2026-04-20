@@ -1,11 +1,10 @@
 import i18next from "i18next";
-import { computed, runInAction, makeObservable } from "mobx";
+import { action, computed, runInAction, makeObservable } from "mobx";
 import getFilenameFromUri from "terriajs-cesium/Source/Core/getFilenameFromUri";
 import RuntimeError from "terriajs-cesium/Source/Core/RuntimeError";
 import isDefined from "../../../Core/isDefined";
 import { JsonObject } from "../../../Core/Json";
 import loadXML from "../../../Core/loadXML";
-import readXml from "../../../Core/readXml";
 import replaceUnderscores from "../../../Core/replaceUnderscores";
 import { networkRequestError } from "../../../Core/TerriaError";
 import {
@@ -21,6 +20,7 @@ import LoadableStratum from "../../Definition/LoadableStratum";
 import { BaseModel } from "../../Definition/Model";
 import StratumOrder from "../../Definition/StratumOrder";
 import HasLocalData from "../../HasLocalData";
+import CommonStrata from "../../Definition/CommonStrata";
 import { ModelConstructorParameters } from "../../Definition/Model";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 
@@ -142,15 +142,18 @@ export default class GeoRssCatalogItem
     return i18next.t("models.georss.name");
   }
 
-  private _georssFile?: File;
-
+  @action
   setFileInput(file: File) {
-    this._georssFile = file;
+    this.setTrait(
+      CommonStrata.user,
+      "url",
+      URL.createObjectURL(file) + "#" + file.name
+    );
   }
 
   @computed
   get hasLocalData(): boolean {
-    return isDefined(this._georssFile);
+    return this.url?.startsWith("blob:") ?? false;
   }
 
   private parseGeorss(xmlData: Document): JsonObject | never {
@@ -181,8 +184,6 @@ export default class GeoRssCatalogItem
     if (isDefined(this.geoRssString)) {
       const parser = new DOMParser();
       data = parser.parseFromString(this.geoRssString, "text/xml");
-    } else if (isDefined(this._georssFile)) {
-      data = await readXml(this._georssFile);
     } else if (isDefined(this.url)) {
       data = await loadXML(proxyCatalogItemUrl(this, this.url));
     }

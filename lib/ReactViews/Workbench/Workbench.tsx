@@ -14,7 +14,7 @@ import WorkbenchList from "./WorkbenchList";
 import {
   Category,
   DataSourceAction
-} from "../../Core/AnalyticEvents/analyticEvents";
+} from "../../Core/Analytics/analyticEvents";
 import MappableMixin from "../../ModelMixins/MappableMixin";
 
 interface IProps extends WithTranslation {
@@ -55,7 +55,7 @@ class Workbench extends Component<IProps> {
   @action.bound
   removeAll() {
     this.props.terria.workbench.items.forEach((item) => {
-      this.props.terria.analytics?.logEvent(
+      this.props.terria.analytics.logEvent(
         Category.dataSource,
         DataSourceAction.removeAllFromWorkbench,
         getPath(item)
@@ -100,7 +100,7 @@ class Workbench extends Component<IProps> {
                 styledWidth={"12px"}
                 displayInline
               />
-              <TextSpan textLight small>
+              <TextSpan textLight small isLink>
                 {t("workbench.enableAll")}
               </TextSpan>
             </RawButton>
@@ -121,7 +121,7 @@ class Workbench extends Component<IProps> {
                 styledWidth={"12px"}
                 displayInline
               />
-              <TextSpan textLight small>
+              <TextSpan textLight small isLink>
                 {t("workbench.disableAll")}
               </TextSpan>
             </RawButton>
@@ -143,7 +143,7 @@ class Workbench extends Component<IProps> {
                 styledWidth={"12px"}
                 displayInline
               />
-              <TextSpan textLight small>
+              <TextSpan textLight small isLink>
                 {t("workbench.expandAll")}
               </TextSpan>
             </RawButton>
@@ -164,7 +164,7 @@ class Workbench extends Component<IProps> {
                 styledWidth={"12px"}
                 displayInline
               />
-              <TextSpan textLight small>
+              <TextSpan textLight small isLink>
                 {t("workbench.collapseAll")}
               </TextSpan>
             </RawButton>
@@ -184,12 +184,12 @@ class Workbench extends Component<IProps> {
             `}
           >
             <StyledIcon
-              glyph={Icon.GLYPHS.remove}
+              glyph={Icon.GLYPHS.cancel}
               light
               styledWidth={"12px"}
               displayInline
             />
-            <TextSpan textLight small>
+            <TextSpan textLight small isLink>
               {t("workbench.removeAll")}
             </TextSpan>
           </RawButton>

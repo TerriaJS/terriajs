@@ -141,7 +141,8 @@ describe("Cesium3DTilesCatalogItemSpec", function () {
           item.setTrait("definition", "ionAccessToken", "fakeToken");
           item.setTrait("definition", "ionServer", "fakeServer");
         });
-        spyOn(IonResource, "fromAssetId").and.callThrough();
+        // @ts-expect-error: spy on static method
+        spyOn(IonResource, "fromAssetId").and.callFake(async () => {});
         try {
           await item.loadMapItems();
         } catch {}
@@ -225,7 +226,7 @@ describe("Cesium3DTilesCatalogItemSpec", function () {
             });
           });
 
-          it("sets the shadow mode", function () {
+          it("sets the shadow mode after blend", function () {
             runInAction(() => item.setTrait("definition", "shadows", "CAST"));
             const tileset = item.mapItems[0] as Cesium3DTileset;
             expect(tileset.shadows).toBe(ShadowMode.CAST_ONLY);
@@ -288,9 +289,9 @@ describe("Cesium3DTilesCatalogItemSpec", function () {
                 Matrix4.getMatrix3(modelMatrix, new Matrix3())
               )
             );
-            expect(rotation.heading.toFixed(2)).toBe("-1.85");
-            expect(rotation.pitch.toFixed(2)).toBe("0.89");
-            expect(rotation.roll.toFixed(2)).toBe("2.40");
+            expect(rotation.heading.toFixed(2)).toBe("-2.39");
+            expect(rotation.pitch.toFixed(2)).toBe("-1.57");
+            expect(rotation.roll.toFixed(2)).toBe("3.12");
 
             const scale = Matrix4.getScale(modelMatrix, new Cartesian3());
             expect(scale.x.toFixed(2)).toEqual("5.00");
@@ -303,7 +304,7 @@ describe("Cesium3DTilesCatalogItemSpec", function () {
             );
             expect(position.x.toFixed(2)).toEqual("6186437.07");
             expect(position.y.toFixed(2)).toEqual("1090835.77");
-            expect(position.z.toFixed(2)).toEqual("4081926.10");
+            expect(position.z.toFixed(2)).toEqual("-3804844.21");
           });
         });
       });

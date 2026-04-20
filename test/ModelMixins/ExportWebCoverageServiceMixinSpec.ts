@@ -1,7 +1,9 @@
+import { http, HttpResponse } from "msw";
 import { runInAction } from "mobx";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import WebMapServiceCatalogItem from "../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
 import Terria from "../../lib/Models/Terria";
+import { worker } from "../mocks/browser";
 import describeCoverageXml from "../../wwwroot/test/WCS/DescribeCoverage.xml";
 import wmsGetCapabilitiesXml from "../../wwwroot/test/WMS/wms_crs.xml";
 
@@ -13,25 +15,29 @@ describe("ExportWebCoverageServiceMixin", function () {
       baseUrl: "./"
     });
 
-    jasmine.Ajax.install();
-
-    jasmine.Ajax.stubRequest(
-      "https://some.ows.service/wms?service=WMS&version=1.3.0&request=GetCapabilities"
-    ).andReturn({
-      responseText: wmsGetCapabilitiesXml
-    });
-
-    jasmine.Ajax.stubRequest(
-      "https://some.ows.service/wcs?service=WCS&request=DescribeCoverage&version=2.0.0&coverageId=some_layer"
-    ).andReturn({ responseText: describeCoverageXml });
-
-    jasmine.Ajax.stubRequest(
-      "https://some.ows.service/wcs?service=WCS&request=GetCoverage&version=2.0.0&coverageId=some_layer&format=image%2Fgeotiff&subset=Long(115.17293930053712%2C115.21465301513675)&subset=Lat(-33.66155217864614%2C-33.63376478677889)&subset=time(%222018-01-01%22)&subsettingCrs=EPSG%3A4326&outputCrs=EPSG%3A3577"
-    ).andReturn({ responseText: "cool" });
-  });
-
-  afterEach(() => {
-    jasmine.Ajax.uninstall();
+    worker.use(
+      http.get("https://some.ows.service/wms", ({ request }) => {
+        const url = new URL(request.url);
+        if (url.searchParams.get("request") !== "GetCapabilities")
+          throw new Error(`Unexpected query params: ${url.search}`);
+        return new HttpResponse(wmsGetCapabilitiesXml, {
+          headers: { "Content-Type": "text/xml" }
+        });
+      }),
+      http.get("https://some.ows.service/wcs", ({ request }) => {
+        const url = new URL(request.url);
+        const wcsRequest = url.searchParams.get("request");
+        if (wcsRequest === "DescribeCoverage") {
+          return new HttpResponse(describeCoverageXml, {
+            headers: { "Content-Type": "text/xml" }
+          });
+        }
+        if (wcsRequest === "GetCoverage") {
+          return new HttpResponse("cool");
+        }
+        throw new Error(`Unexpected WCS request: ${url.search}`);
+      })
+    );
   });
 
   it("Can call DescribeCoverage and set correct GetCoverage URL", async function () {

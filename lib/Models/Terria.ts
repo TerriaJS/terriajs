@@ -21,16 +21,9 @@ import queryToObject from "terriajs-cesium/Source/Core/queryToObject";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import SplitDirection from "terriajs-cesium/Source/Scene/SplitDirection";
 import URI from "urijs";
-import {
-  Category,
-  DataSourceAction,
-  LaunchAction
-} from "../Core/AnalyticEvents/analyticEvents";
 import AsyncLoader from "../Core/AsyncLoader";
 import Class from "../Core/Class";
-import ConsoleAnalytics from "../Core/ConsoleAnalytics";
 import CorsProxy from "../Core/CorsProxy";
-import GoogleAnalytics from "../Core/GoogleAnalytics";
 import {
   JsonArray,
   JsonObject,
@@ -47,6 +40,13 @@ import TerriaError, {
   TerriaErrorSeverity
 } from "../Core/TerriaError";
 import { Complete } from "../Core/TypeModifiers";
+import NoopAnalytics from "../Core/Analytics/NoopAnalytics";
+import {
+  Category,
+  DataSourceAction,
+  LaunchAction
+} from "../Core/Analytics/analyticEvents";
+import { Analytics } from "../Core/Analytics/types";
 import ensureSuffix from "../Core/ensureSuffix";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import getDereferencedIfExists from "../Core/getDereferencedIfExists";
@@ -179,6 +179,10 @@ export interface ConfigParameters {
    */
   storyEnabled: boolean;
   /**
+   * Whether to show the saving instructions message in the story builder panel. Defaults to false.
+   */
+  showStorySaveInstructions?: boolean;
+  /**
    * True (the default) to intercept the browser's print feature and use a custom one accessible through the Share panel.
    */
   interceptBrowserPrint?: boolean;
@@ -258,6 +262,11 @@ export interface ConfigParameters {
    * A Google API key for [Google Analytics](https://analytics.google.com).  If specified, TerriaJS will send various events about how it's used to Google Analytics.
    */
   googleAnalyticsKey?: string;
+
+  /**
+   * Options for Google Analytics
+   */
+  googleAnalyticsOptions?: unknown;
 
   /**
    * Error service provider configuration.
@@ -351,11 +360,6 @@ export interface ConfigParameters {
    */
   enableConsoleAnalytics?: boolean;
 
-  /**
-   * Options for Google Analytics
-   */
-  googleAnalyticsOptions?: unknown;
-
   relatedMaps?: RelatedMap[];
 
   /**
@@ -400,26 +404,10 @@ interface StartOptions {
   beforeRestoreAppState?: () => Promise<void> | void;
 }
 
-export interface Analytics {
-  start: (
-    configParameters: Partial<{
-      enableConsoleAnalytics: boolean;
-      googleAnalyticsKey: any;
-      googleAnalyticsOptions: any;
-    }>
-  ) => void;
-  logEvent: (
-    category: string,
-    action: string,
-    label?: string,
-    value?: number
-  ) => void;
-}
-
 interface TerriaOptions {
   /**
    * Override detecting base href from document.baseURI.
-   * Used in specs to support routes within Karma spec automation framework
+   * Used in specs to support routes within Browser spec automation framework
    */
   appBaseHref?: string;
   /**
@@ -507,11 +495,11 @@ export default class Terria {
   corsProxy: CorsProxy = new CorsProxy();
 
   /**
-   * Gets or sets the instance to which to report Google Analytics-style log events.
-   * If a global `ga` function is defined, this defaults to `GoogleAnalytics`.  Otherwise, it defaults
-   * to `ConsoleAnalytics`.
+   * Gets or sets the instance to which to report Google Analytics-style log
+   * events. Default to NoopAnalytics, which does nothing. Can be set to
+   * ConsoleAnalytics for development, or GoogleAnalytics to report to Google Analytics.
    */
-  readonly analytics: Analytics | undefined;
+  readonly analytics: Analytics;
 
   /**
    * Gets the stack of layers active on the timeline.
@@ -534,6 +522,7 @@ export default class Terria {
     feedbackUrl: undefined,
     initFragmentPaths: ["init/"],
     storyEnabled: true,
+    showStorySaveInstructions: false,
     interceptBrowserPrint: true,
     tabbedCatalog: false,
     useCesiumIonTerrain: true,
@@ -635,6 +624,10 @@ export default class Terria {
    * ```
    */
   private focusWorkbenchItemsAfterLoadingInitSources: boolean = false;
+
+  private _loadPersistedSettings: { baseMapPromise?: Promise<void> } = {
+    baseMapPromise: undefined
+  };
 
   @computed
   get baseMapContrastColor() {
@@ -752,14 +745,7 @@ export default class Terria {
     // Casting to `any` as `setBaseUrl` method is not part of the Cesiums' type definitions
     (buildModuleUrl as any).setBaseUrl(this.cesiumBaseUrl);
 
-    this.analytics = options.analytics;
-    if (!defined(this.analytics)) {
-      if (typeof window !== "undefined" && defined((window as any).ga)) {
-        this.analytics = new GoogleAnalytics();
-      } else {
-        this.analytics = new ConsoleAnalytics();
-      }
-    }
+    this.analytics = options.analytics ?? new NoopAnalytics();
   }
 
   /** Raise error to user.
@@ -1069,8 +1055,8 @@ export default class Terria {
         );
       }
     }
-    this.analytics?.start(this.configParameters);
-    this.analytics?.logEvent(
+    this.analytics.start(this.configParameters);
+    this.analytics.logEvent(
       Category.launch,
       LaunchAction.url,
       launchUrlForAnalytics
@@ -1230,7 +1216,8 @@ export default class Terria {
         baseMap = baseMapSearch;
       }
     }
-    await this.mainViewer.setBaseMap(baseMap.item as MappableMixin.Instance);
+    if (baseMap?.item)
+      await this.mainViewer.setBaseMap(baseMap.item as MappableMixin.Instance);
   }
 
   get isLoadingInitSources(): boolean {
@@ -1413,14 +1400,18 @@ export default class Terria {
       })
     );
 
+    let baseMapPromise: Promise<void> | undefined;
     // Sequentially apply all InitSources
     for (let i = 0; i < loadedInitSources.length; i++) {
       const initSource = loadedInitSources[i];
       if (!isDefined(initSource?.data)) continue;
       try {
-        await this.applyInitData({
+        const result = await this._applyInitData({
           initData: initSource!.data
         });
+        if (result.baseMapPromise) {
+          baseMapPromise = result.baseMapPromise;
+        }
       } catch (e) {
         errors.push(
           TerriaError.from(e, {
@@ -1436,12 +1427,17 @@ export default class Terria {
       }
     }
 
-    // Load basemap
-    runInAction(() => {
-      if (!this.mainViewer.baseMap) {
-        // Note: there is no "await" here - as basemaps can take a while to load and there is no need to wait for them to load before rendering Terria
-        this.loadPersistedOrInitBaseMap();
-      }
+    // Wait for any basemap loaded from applyInitData to finish
+    // loading before we restore from user preference.
+    Promise.resolve(baseMapPromise).finally(() => {
+      runInAction(() => {
+        if (!this.mainViewer.baseMap) {
+          // Note: there is no "await" here - as basemaps can take a while
+          // to load and there is no need to wait for them to load before
+          // rendering Terria
+          this.loadPersistedOrInitBaseMap();
+        }
+      });
     });
 
     // Zoom to workbench items if any of the init sources specifically requested it
@@ -1675,21 +1671,34 @@ export default class Terria {
     }
   }
 
-  @action
-  async applyInitData({
-    initData,
-    replaceStratum = false,
-    canUnsetFeaturePickingState = false
-  }: {
+  async applyInitData(params: {
     initData: InitSourceData;
     replaceStratum?: boolean;
     // When feature picking state is missing from the initData, unset the state only if this flag is true
     // This is for eg, set to true when switching through story slides.
     canUnsetFeaturePickingState?: boolean;
   }): Promise<void> {
+    await this._applyInitData(params);
+  }
+
+  /**
+   * @private
+   */
+  @action
+  async _applyInitData({
+    initData,
+    replaceStratum = false,
+    canUnsetFeaturePickingState = false
+  }: {
+    initData: InitSourceData;
+    replaceStratum?: boolean;
+    canUnsetFeaturePickingState?: boolean;
+  }): Promise<{ baseMapPromise: Promise<void> | undefined }> {
     const errors: TerriaError[] = [];
 
     initData = toJS(initData);
+
+    let baseMapPromise: Promise<void> | undefined;
 
     const stratumId =
       typeof initData.stratum === "string"
@@ -1734,7 +1743,9 @@ export default class Terria {
     // Add map settings
     if (isJsonString(initData.viewerMode)) {
       const viewerMode = initData.viewerMode.toLowerCase();
-      if (isViewerMode(viewerMode)) setViewerMode(viewerMode, this.mainViewer);
+      if (isViewerMode(viewerMode)) {
+        setViewerMode(viewerMode, this.mainViewer);
+      }
     }
 
     if (isJsonObject(initData.baseMaps)) {
@@ -1792,7 +1803,7 @@ export default class Terria {
         );
       }
       if (isJsonString(initData.settings.baseMapId)) {
-        this.mainViewer.setBaseMap(
+        baseMapPromise = this.mainViewer.setBaseMap(
           this.baseMapsModel.baseMapItems.find(
             (item) => item.item.uniqueId === initData.settings!.baseMapId
           )?.item
@@ -1870,7 +1881,7 @@ export default class Terria {
 
     newItems.forEach((item) => {
       // fire the google analytics event
-      this.analytics?.logEvent(
+      this.analytics.logEvent(
         Category.dataSource,
         DataSourceAction.addFromShareOrInit,
         getPath(item)
@@ -1942,6 +1953,8 @@ export default class Terria {
           key: "models.terria.loadingInitSourceErrorTitle"
         }
       });
+
+    return { baseMapPromise };
   }
 
   @action

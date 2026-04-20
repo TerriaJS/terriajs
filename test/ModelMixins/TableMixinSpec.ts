@@ -1,3 +1,4 @@
+import { http, HttpResponse } from "msw";
 import { runInAction } from "mobx";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
@@ -11,6 +12,7 @@ import updateModelFromJson from "../../lib/Models/Definition/updateModelFromJson
 import TerriaFeature from "../../lib/Models/Feature/Feature";
 import { TerriaFeatureData } from "../../lib/Models/Feature/FeatureData";
 import Terria from "../../lib/Models/Terria";
+import { worker } from "../mocks/browser";
 import TableColorStyleTraits from "../../lib/Traits/TraitsClasses/Table/ColorStyleTraits";
 import TableLabelStyleTraits, {
   EnumLabelSymbolTraits,
@@ -51,7 +53,7 @@ import regionIdsLgaName from "../../wwwroot/data/regionids/region_map-FID_LGA_20
 import regionIdsLgaCode from "../../wwwroot/data/regionids/region_map-FID_LGA_2015_AUST_LGA_CODE15.json";
 import regionIdsLgaNameStates from "../../wwwroot/data/regionids/region_map-FID_LGA_2011_AUST_STE_NAME11.json";
 
-const NUMBER_OF_REGION_MAPPING_TYPES = 144;
+const NUMBER_OF_REGION_MAPPING_TYPES = 154;
 
 describe("TableMixin", function () {
   let item: CsvCatalogItem;
@@ -63,32 +65,27 @@ describe("TableMixin", function () {
     });
     item = new CsvCatalogItem("test", terria, undefined);
 
-    jasmine.Ajax.install();
-    jasmine.Ajax.stubRequest(/.*/).andError({});
-
-    jasmine.Ajax.stubRequest(
-      "build/TerriaJS/data/regionMapping.json"
-    ).andReturn({ responseJSON: regionMapping });
-
-    jasmine.Ajax.stubRequest(
-      "https://tiles.terria.io/region-mapping/regionids/region_map-STE_2016_AUST_STE_NAME16.json"
-    ).andReturn({ responseJSON: regionIdsSte });
-
-    jasmine.Ajax.stubRequest(
-      "https://tiles.terria.io/region-mapping/regionids/region_map-FID_LGA_2011_AUST_LGA_NAME11.json"
-    ).andReturn({ responseJSON: regionIdsLgaName });
-
-    jasmine.Ajax.stubRequest(
-      "https://tiles.terria.io/region-mapping/regionids/region_map-FID_LGA_2015_AUST_LGA_CODE15.json"
-    ).andReturn({ responseJSON: regionIdsLgaCode });
-
-    jasmine.Ajax.stubRequest(
-      "https://tiles.terria.io/region-mapping/regionids/region_map-FID_LGA_2011_AUST_STE_NAME11.json"
-    ).andReturn({ responseJSON: regionIdsLgaNameStates });
-  });
-
-  afterEach(function () {
-    jasmine.Ajax.uninstall();
+    worker.use(
+      http.get("*/build/TerriaJS/data/regionMapping.json", () =>
+        HttpResponse.json(regionMapping)
+      ),
+      http.get(
+        "https://tiles.terria.io/region-mapping/regionids/region_map-STE_2016_AUST_STE_NAME16.json",
+        () => HttpResponse.json(regionIdsSte)
+      ),
+      http.get(
+        "https://tiles.terria.io/region-mapping/regionids/region_map-FID_LGA_2011_AUST_LGA_NAME11.json",
+        () => HttpResponse.json(regionIdsLgaName)
+      ),
+      http.get(
+        "https://tiles.terria.io/region-mapping/regionids/region_map-FID_LGA_2015_AUST_LGA_CODE15.json",
+        () => HttpResponse.json(regionIdsLgaCode)
+      ),
+      http.get(
+        "https://tiles.terria.io/region-mapping/regionids/region_map-FID_LGA_2011_AUST_STE_NAME11.json",
+        () => HttpResponse.json(regionIdsLgaNameStates)
+      )
+    );
   });
 
   describe("when the table has time, lat/lon and id columns", function () {
@@ -590,9 +587,19 @@ describe("TableMixin", function () {
       // We add "additionalRegion.json" - which defines two region types
       // - "SOME_OTHER_REGION" - which is just another region type
       // - "SOME_OVERRIDDEN_REGION" - which will override "LGA_NAME_2011" in "build/TerriaJS/data/regionMapping.json"
-      jasmine.Ajax.stubRequest("additionalRegion.json").andReturn({
-        responseJSON: additionalRegionMapping
-      });
+      worker.use(
+        http.get("*/additionalRegion.json", () =>
+          HttpResponse.json(additionalRegionMapping)
+        ),
+        http.get(
+          "build/TerriaJS/data/regionids/region_map-FID_LGA_2011_AUST_LGA_NAME11.json",
+          () => HttpResponse.json(regionIdsLgaNameStates)
+        ),
+        http.get(
+          "build/TerriaJS/data/regionids/region_map-FID_LGA_2011_AUST_STE_NAME11.json",
+          () => HttpResponse.json(regionIdsLgaName)
+        )
+      );
 
       terria.updateParameters({
         regionMappingDefinitionsUrls: [
@@ -626,9 +633,19 @@ describe("TableMixin", function () {
       // We add "additionalRegion.json" - which defines two region types
       // - "SOME_OTHER_REGION" - which is just another region type
       // - "SOME_OVERRIDDEN_REGION" - which will override "LGA_NAME_2011" in "build/TerriaJS/data/regionMapping.json"
-      jasmine.Ajax.stubRequest("additionalRegion.json").andReturn({
-        responseJSON: additionalRegionMapping
-      });
+      worker.use(
+        http.get("*/additionalRegion.json", () =>
+          HttpResponse.json(additionalRegionMapping)
+        ),
+        http.get(
+          "build/TerriaJS/data/regionids/region_map-FID_LGA_2011_AUST_LGA_NAME11.json",
+          () => HttpResponse.json(regionIdsLgaNameStates)
+        ),
+        http.get(
+          "build/TerriaJS/data/regionids/region_map-FID_LGA_2011_AUST_STE_NAME11.json",
+          () => HttpResponse.json(regionIdsLgaName)
+        )
+      );
 
       terria.updateParameters({
         regionMappingDefinitionsUrl: "build/TerriaJS/data/regionMapping.json",

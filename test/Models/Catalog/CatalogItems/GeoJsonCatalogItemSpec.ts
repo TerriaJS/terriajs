@@ -1,4 +1,5 @@
 import { reaction, runInAction } from "mobx";
+import { http, HttpResponse } from "msw";
 import { GeomType, LineSymbolizer, PolygonSymbolizer } from "protomaps-leaflet";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
@@ -10,10 +11,7 @@ import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSourc
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import GeoJsonDataSource from "terriajs-cesium/Source/DataSources/GeoJsonDataSource";
 import HeightReference from "terriajs-cesium/Source/Scene/HeightReference";
-import { JsonObject } from "../../../../lib/Core/Json";
 import StandardCssColors from "../../../../lib/Core/StandardCssColors";
-import loadJson from "../../../../lib/Core/loadJson";
-import loadText from "../../../../lib/Core/loadText";
 import ContinuousColorMap from "../../../../lib/Map/ColorMap/ContinuousColorMap";
 import ProtomapsImageryProvider from "../../../../lib/Map/ImageryProvider/ProtomapsImageryProvider";
 import {
@@ -34,12 +32,77 @@ import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
 import updateModelFromJson from "../../../../lib/Models/Definition/updateModelFromJson";
 import TerriaFeature from "../../../../lib/Models/Feature/Feature";
 import {
-  TerriaFeatureData,
-  isTerriaFeatureData
+  isTerriaFeatureData,
+  TerriaFeatureData
 } from "../../../../lib/Models/Feature/FeatureData";
 import Terria from "../../../../lib/Models/Terria";
+import { worker } from "../../../mocks/browser";
+
+import verysimpleCzml from "../../../../wwwroot/test/CZML/verysimple.czml" with { type: "json" };
+import apiListGeojson from "../../../../wwwroot/test/GeoJSON/api-list.geojson" with { type: "json" };
+import apiGeojson from "../../../../wwwroot/test/GeoJSON/api.geojson" with { type: "json" };
+import bikeRacksGeojson from "../../../../wwwroot/test/GeoJSON/bike_racks.geojson" with { type: "json" };
+import cemeteriesGeojson from "../../../../wwwroot/test/GeoJSON/cemeteries.geojson" with { type: "json" };
+import emptyGeomsGeojson from "../../../../wwwroot/test/GeoJSON/empty-geoms.geojson" with { type: "json" };
+import gmeGeojson from "../../../../wwwroot/test/GeoJSON/gme.geojson" with { type: "json" };
+import heightGeojson from "../../../../wwwroot/test/GeoJSON/height.geojson" with { type: "json" };
+import multipointGeojson from "../../../../wwwroot/test/GeoJSON/multipoint.geojson" with { type: "json" };
+import multipolygonGeojson from "../../../../wwwroot/test/GeoJSON/multipolygon.geojson" with { type: "json" };
+import pointsGeojson from "../../../../wwwroot/test/GeoJSON/points.geojson" with { type: "json" };
+import polygonGeojson from "../../../../wwwroot/test/GeoJSON/polygon.geojson" with { type: "json" };
+import polylineGeojson from "../../../../wwwroot/test/GeoJSON/polyline.geojson" with { type: "json" };
+import timeBasedAutomaticStylesGeojson from "../../../../wwwroot/test/GeoJSON/time-based-automatic-styles.geojson" with { type: "json" };
+import timeBasedGeojson from "../../../../wwwroot/test/GeoJSON/time-based.geojson" with { type: "json" };
 
 describe("GeoJsonCatalogItemSpec", () => {
+  beforeEach(() => {
+    worker.use(
+      http.get("test/GeoJSON/bike_racks.geojson", () =>
+        HttpResponse.json(bikeRacksGeojson)
+      ),
+      http.get("test/GeoJSON/cemeteries.geojson", () =>
+        HttpResponse.json(cemeteriesGeojson)
+      ),
+      http.get("test/GeoJSON/gme.geojson", () => HttpResponse.json(gmeGeojson)),
+      http.get("test/CZML/verysimple.czml", () =>
+        HttpResponse.json(verysimpleCzml)
+      ),
+      http.get("test/GeoJSON/time-based.geojson", () =>
+        HttpResponse.json(timeBasedGeojson)
+      ),
+      http.get("test/GeoJSON/time-based-automatic-styles.geojson", () =>
+        HttpResponse.json(timeBasedAutomaticStylesGeojson)
+      ),
+      http.get("test/GeoJSON/height.geojson", () =>
+        HttpResponse.json(heightGeojson)
+      ),
+      http.get("test/GeoJSON/polyline.geojson", () =>
+        HttpResponse.json(polylineGeojson)
+      ),
+      http.get("test/GeoJSON/polygon.geojson", () =>
+        HttpResponse.json(polygonGeojson)
+      ),
+      http.get("test/GeoJSON/api.geojson", () => HttpResponse.json(apiGeojson)),
+      http.get("test/GeoJSON/api-list.geojson", () =>
+        HttpResponse.json(apiListGeojson)
+      ),
+      http.get("test/GeoJSON/points.geojson", () =>
+        HttpResponse.json(pointsGeojson)
+      ),
+      http.get("test/GeoJSON/multipoint.geojson", () =>
+        HttpResponse.json(multipointGeojson)
+      ),
+      http.get("test/GeoJSON/multipolygon.geojson", () =>
+        HttpResponse.json(multipolygonGeojson)
+      ),
+      http.get("test/GeoJSON/empty-geoms.geojson", () =>
+        HttpResponse.json(emptyGeomsGeojson)
+      ),
+      http.get("test/KML/vic_police.kml", () =>
+        HttpResponse.text("this is not json")
+      )
+    );
+  });
   describe("- with cesium primitives", function () {
     let terria: Terria;
     let geojson: GeoJsonCatalogItem;
@@ -151,8 +214,11 @@ describe("GeoJsonCatalogItemSpec", () => {
       });
 
       it("works by string", async function () {
-        const geojsonString = await loadText("test/GeoJSON/bike_racks.geojson");
-        geojson.setTrait(CommonStrata.user, "geoJsonString", geojsonString);
+        geojson.setTrait(
+          CommonStrata.user,
+          "geoJsonString",
+          JSON.stringify(bikeRacksGeojson)
+        );
         await geojson.loadMapItems();
         expect(geojson.mapItems.length).toEqual(1);
         expect(
@@ -164,8 +230,7 @@ describe("GeoJsonCatalogItemSpec", () => {
       });
 
       it("works by data object", async function () {
-        const geojsonObject = await loadJson("test/GeoJSON/bike_racks.geojson");
-        geojson.setTrait(CommonStrata.user, "geoJsonData", geojsonObject);
+        geojson.setTrait(CommonStrata.user, "geoJsonData", bikeRacksGeojson);
         await geojson.loadMapItems();
         expect(geojson.mapItems.length).toEqual(1);
         expect(
@@ -198,27 +263,22 @@ describe("GeoJsonCatalogItemSpec", () => {
          expect(geojson.dataUrl).toBe("test/GeoJSON/bike_racks.geojson");
          expect(geojson.dataUrlType).toBe("direct");
        })
-       it("use provided dataUrl", function(done) {
+       it("use provided dataUrl", async function() {
          geojson.url = "test/GeoJSON/bike_racks.geojson";
          geojson.dataUrl = "test/test.html";
          geojson.dataUrlType = "fake type";
-         geojson.load().then(function() {
-           expect(geojson.dataSource.entities.values.length).toBeGreaterThan(0);
-           expect(geojson.dataUrl).toBe("test/test.html");
-           expect(geojson.dataUrlType).toBe("fake type");
-           done();
-         });
+         await geojson.load();
+         expect(geojson.dataSource.entities.values.length).toBeGreaterThan(0);
+         expect(geojson.dataUrl).toBe("test/test.html");
+         expect(geojson.dataUrlType).toBe("fake type");
        })
 
-       it("works by blob", function(done) {
-         loadBlob("test/GeoJSON/bike_racks.geojson").then(function(blob) {
-           geojson.data = blob;
-           geojson.dataSourceUrl = "anything.geojson";
-           geojson.load().then(function() {
-             expect(geojson.dataSource.entities.values.length).toBeGreaterThan(0);
-             done();
-           });
-         });
+       it("works by blob", async function() {
+         const blob = await loadBlob("test/GeoJSON/bike_racks.geojson");
+         geojson.data = blob;
+         geojson.dataSourceUrl = "anything.geojson";
+         await geojson.load();
+         expect(geojson.dataSource.entities.values.length).toBeGreaterThan(0);
        }); */
     });
 
@@ -240,8 +300,11 @@ describe("GeoJsonCatalogItemSpec", () => {
       });
 
       it("works by string", async function () {
-        const geojsonString = await loadText("test/GeoJSON/cemeteries.geojson");
-        geojson.setTrait(CommonStrata.user, "geoJsonString", geojsonString);
+        geojson.setTrait(
+          CommonStrata.user,
+          "geoJsonString",
+          JSON.stringify(cemeteriesGeojson)
+        );
         await geojson.loadMapItems();
         expect(geojson.mapItems.length).toEqual(1);
         expect(
@@ -253,8 +316,7 @@ describe("GeoJsonCatalogItemSpec", () => {
       });
 
       it("works by blob", async function () {
-        const blob = await loadJson("test/GeoJSON/cemeteries.geojson");
-        geojson.setTrait(CommonStrata.user, "geoJsonData", blob as JsonObject);
+        geojson.setTrait(CommonStrata.user, "geoJsonData", cemeteriesGeojson);
         await geojson.loadMapItems();
         expect(geojson.mapItems.length).toEqual(1);
         expect(
@@ -296,8 +358,11 @@ describe("GeoJsonCatalogItemSpec", () => {
       });
 
       it("works by string", async function () {
-        const geojsonString = await loadText("test/GeoJSON/gme.geojson");
-        geojson.setTrait(CommonStrata.user, "geoJsonString", geojsonString);
+        geojson.setTrait(
+          CommonStrata.user,
+          "geoJsonString",
+          JSON.stringify(gmeGeojson)
+        );
         await geojson.loadMapItems();
         expect(geojson.mapItems.length).toEqual(1);
         expect(
@@ -309,8 +374,7 @@ describe("GeoJsonCatalogItemSpec", () => {
       });
 
       it("works by blob", async function () {
-        const blob = await loadJson("test/GeoJSON/gme.geojson");
-        geojson.setTrait(CommonStrata.user, "geoJsonData", blob as JsonObject);
+        geojson.setTrait(CommonStrata.user, "geoJsonData", gmeGeojson);
         await geojson.loadMapItems();
         expect(geojson.mapItems.length).toEqual(1);
         expect(
@@ -380,8 +444,11 @@ describe("GeoJsonCatalogItemSpec", () => {
       });
 
       it("fails gracefully when the provided string is not JSON", async () => {
-        const s = await loadText("test/KML/vic_police.kml");
-        geojson.setTrait(CommonStrata.user, "geoJsonString", s);
+        geojson.setTrait(
+          CommonStrata.user,
+          "geoJsonString",
+          "this is not json"
+        );
 
         const error = (await geojson.loadMapItems()).error;
 
@@ -397,8 +464,11 @@ describe("GeoJsonCatalogItemSpec", () => {
       });
 
       it("fails gracefully when the provided string is JSON but not GeoJSON", async () => {
-        const s = await loadText("test/CZML/verysimple.czml");
-        geojson.setTrait(CommonStrata.user, "geoJsonString", s);
+        geojson.setTrait(
+          CommonStrata.user,
+          "geoJsonString",
+          JSON.stringify(verysimpleCzml)
+        );
 
         const error = (await geojson.loadMapItems()).error;
 
@@ -433,23 +503,19 @@ describe("GeoJsonCatalogItemSpec", () => {
     //     geojson.isEnabled = true;
     //   });
 
-    //   it("can add attribution", function(done) {
+    //   it("can add attribution", async function() {
     //     spyOn(currentViewer, "addAttribution");
     //     geojson.load();
-    //     geojson._loadForEnablePromise.then(function() {
-    //       expect(currentViewer.addAttribution).toHaveBeenCalled();
-    //       done();
-    //     });
+    //     await geojson._loadForEnablePromise;
+    //     expect(currentViewer.addAttribution).toHaveBeenCalled();
     //   });
 
-    //   it("can remove attribution", function(done) {
+    //   it("can remove attribution", async function() {
     //     spyOn(currentViewer, "removeAttribution");
     //     geojson.load();
-    //     geojson._loadForEnablePromise.then(function() {
-    //       geojson.isEnabled = false;
-    //       expect(currentViewer.removeAttribution).toHaveBeenCalled();
-    //       done();
-    //     });
+    //     await geojson._loadForEnablePromise;
+    //     geojson.isEnabled = false;
+    //     expect(currentViewer.removeAttribution).toHaveBeenCalled();
     //   });
     // });
 
@@ -1379,8 +1445,11 @@ describe("GeoJsonCatalogItemSpec", () => {
 
     it("protomaps-mvt - polygons/lines", async function () {
       terria.addModel(geojson);
-      const geojsonString = await loadText("test/GeoJSON/time-based.geojson");
-      geojson.setTrait(CommonStrata.user, "geoJsonString", geojsonString);
+      geojson.setTrait(
+        CommonStrata.user,
+        "geoJsonString",
+        JSON.stringify(timeBasedGeojson)
+      );
       await geojson.loadMapItems();
 
       expect(geojson.disableSplitter).toBeFalsy();
@@ -1405,8 +1474,11 @@ describe("GeoJsonCatalogItemSpec", () => {
 
     it("cesium - points - splitter disabled", async function () {
       terria.addModel(geojson);
-      const geojsonString = await loadText("test/GeoJSON/cemeteries.geojson");
-      geojson.setTrait(CommonStrata.user, "geoJsonString", geojsonString);
+      geojson.setTrait(
+        CommonStrata.user,
+        "geoJsonString",
+        JSON.stringify(cemeteriesGeojson)
+      );
       await geojson.loadMapItems();
 
       expect(geojson.disableSplitter).toBeTruthy();

@@ -7,24 +7,25 @@ import {
   runInAction,
   toJS
 } from "mobx";
+import ArcGISTiledElevationTerrainProvider from "terriajs-cesium/Source/Core/ArcGISTiledElevationTerrainProvider";
 import BoundingSphere from "terriajs-cesium/Source/Core/BoundingSphere";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
-import isDefined from "../../../Core/isDefined";
-import I3SCatalogItemTraits from "../../../Traits/TraitsClasses/I3SCatalogItemTraits";
-import CreateModel from "../../Definition/CreateModel";
-import { ModelConstructorParameters } from "../../Definition/Model";
-import MappableMixin from "../../../ModelMixins/MappableMixin";
-import UrlMixin from "../../../ModelMixins/UrlMixin";
+import Resource from "terriajs-cesium/Source/Core/Resource";
+import Cesium3DTileColorBlendMode from "terriajs-cesium/Source/Scene/Cesium3DTileColorBlendMode";
 import I3SDataProvider from "terriajs-cesium/Source/Scene/I3SDataProvider";
+import I3SNode from "terriajs-cesium/Source/Scene/I3SNode";
+import isDefined from "../../../Core/isDefined";
 import CatalogMemberMixin, {
   getName
 } from "../../../ModelMixins/CatalogMemberMixin";
-import ArcGISTiledElevationTerrainProvider from "terriajs-cesium/Source/Core/ArcGISTiledElevationTerrainProvider";
 import Cesium3dTilesStyleMixin from "../../../ModelMixins/Cesium3dTilesStyleMixin";
-import ShadowMixin from "../../../ModelMixins/ShadowMixin";
-import Cesium3DTileColorBlendMode from "terriajs-cesium/Source/Scene/Cesium3DTileColorBlendMode";
 import FeatureInfoUrlTemplateMixin from "../../../ModelMixins/FeatureInfoUrlTemplateMixin";
-import I3SNode from "terriajs-cesium/Source/Scene/I3SNode";
+import MappableMixin from "../../../ModelMixins/MappableMixin";
+import ShadowMixin from "../../../ModelMixins/ShadowMixin";
+import UrlMixin from "../../../ModelMixins/UrlMixin";
+import I3SCatalogItemTraits from "../../../Traits/TraitsClasses/I3SCatalogItemTraits";
+import CreateModel from "../../Definition/CreateModel";
+import { ModelConstructorParameters } from "../../Definition/Model";
 import TerriaFeature from "../../Feature/Feature";
 
 export default class I3SCatalogItem extends Cesium3dTilesStyleMixin(
@@ -62,12 +63,21 @@ export default class I3SCatalogItem extends Cesium3dTilesStyleMixin(
     if (!isDefined(this.url)) {
       throw `\`url\` is not defined for ${getName(this)}`;
     }
-    const i3sProvider = await I3SDataProvider.fromUrl(this.url, {
+
+    const resource = new Resource(this.url);
+    if (this.token) {
+      resource.appendQueryParameters({
+        token: this.token
+      });
+    }
+
+    const i3sProvider = await I3SDataProvider.fromUrl(resource, {
       showFeatures: this.allowFeaturePicking,
       geoidTiledTerrainProvider: this.terrainURL
         ? await ArcGISTiledElevationTerrainProvider.fromUrl(this.terrainURL)
         : undefined
     });
+
     runInAction(() => {
       this.dataProvider = i3sProvider;
     });

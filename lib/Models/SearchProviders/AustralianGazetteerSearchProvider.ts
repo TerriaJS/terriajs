@@ -1,8 +1,5 @@
 import { makeObservable } from "mobx";
-import {
-  Category,
-  SearchAction
-} from "../../Core/AnalyticEvents/analyticEvents";
+import { Category, SearchAction } from "../../Core/Analytics/analyticEvents";
 import WebFeatureServiceSearchProviderMixin from "../../ModelMixins/SearchProviders/WebFeatureServiceSearchProviderMixin";
 import WebFeatureServiceSearchProviderTraits from "../../Traits/SearchProviders/WebFeatureServiceSearchProviderTraits";
 import CreateModel from "../Definition/CreateModel";
@@ -241,7 +238,7 @@ export default class AustralianGazetteerSearchProvider extends WebFeatureService
   }
 
   protected logEvent(searchText: string) {
-    this.terria.analytics?.logEvent(
+    this.terria.analytics.logEvent(
       Category.search,
       SearchAction.gazetteer,
       searchText

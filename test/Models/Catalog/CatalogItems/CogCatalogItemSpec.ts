@@ -1,10 +1,12 @@
 import { reaction, when } from "mobx";
+import { http, passthrough } from "msw";
 import { TIFFImageryProvider } from "terriajs-tiff-imagery-provider";
 import { ImageryParts } from "../../../../lib/ModelMixins/MappableMixin";
 import CogCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/CogCatalogItem";
 import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
 import updateModelFromJson from "../../../../lib/Models/Definition/updateModelFromJson";
 import Terria from "../../../../lib/Models/Terria";
+import { worker } from "../../../mocks/browser";
 
 const TEST_URLS = {
   "4326": "/test/cogs/4326.tif", // a 1x1 tif in native EPSG:4326 projection
@@ -16,6 +18,11 @@ describe("CogCatalogItem", function () {
 
   beforeEach(function () {
     item = new CogCatalogItem("test", new Terria());
+
+    worker.use(
+      http.get(TEST_URLS["4326"], () => passthrough()),
+      http.get(TEST_URLS["32756"], () => passthrough())
+    );
   });
 
   it("should have a type 'cog'", function () {

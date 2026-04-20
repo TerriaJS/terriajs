@@ -75,20 +75,16 @@ const DatePicker = forwardRef<IDatePickerHandle, PropsType>((props, ref) => {
     onDateSet();
   }, [item, onDateSet]);
 
-  useImperativeHandle(
-    ref,
-    () => {
-      return {
-        open: () => {
-          setIsOpen(true);
-        },
-        close: () => {
-          setIsOpen(false);
-        }
-      };
-    },
-    []
-  );
+  useImperativeHandle(ref, () => {
+    return {
+      open: () => {
+        setIsOpen(true);
+      },
+      close: () => {
+        setIsOpen(false);
+      }
+    };
+  }, []);
 
   return (
     <Box column centered flex={1}>

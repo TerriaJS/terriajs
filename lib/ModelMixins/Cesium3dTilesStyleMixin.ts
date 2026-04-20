@@ -157,8 +157,9 @@ function Cesium3dTilesStyleMixin<T extends AbstractConstructor<BaseType>>(
 }
 
 namespace Cesium3dTilesStyleMixin {
-  export interface Instance
-    extends InstanceType<ReturnType<typeof Cesium3dTilesStyleMixin>> {}
+  export interface Instance extends InstanceType<
+    ReturnType<typeof Cesium3dTilesStyleMixin>
+  > {}
   export function isMixedInto(model: any): model is Instance {
     return model && model.hasCesium3dTilesStyleMixin;
   }

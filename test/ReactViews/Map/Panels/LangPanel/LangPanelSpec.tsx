@@ -1,14 +1,12 @@
-import { create } from "react-test-renderer";
-import { act } from "react-dom/test-utils";
-
+import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import { http, HttpResponse } from "msw";
 import Terria from "../../../../../lib/Models/Terria";
-
 import LangPanel from "../../../../../lib/ReactViews/Map/Panels/LangPanel/LangPanel";
+import { worker } from "../../../../mocks/browser";
 
 describe("LangPanel", function () {
   let terria: Terria;
-
-  let testRenderer: any;
 
   beforeEach(function () {
     terria = new Terria({
@@ -17,30 +15,40 @@ describe("LangPanel", function () {
   });
 
   it("should not render if there is no langauge config", function () {
-    act(() => {
-      testRenderer = create(<LangPanel terria={terria} smallScreen={false} />);
-    });
+    render(<LangPanel terria={terria} smallScreen={false} />);
 
-    expect(testRenderer.toJSON()).toBeNull();
+    expect(screen.queryByRole("button")).not.toBeInTheDocument();
   });
 
-  it("should render if language are provided in config", function () {
-    terria.updateParameters({
-      languageConfiguration: {
-        enabled: true,
-        debug: false,
-        languages: {
-          en: "English",
-          fr: "Français",
-          af: "Afrikaans"
-        },
-        fallbackLanguage: "en"
-      }
-    });
-    act(() => {
-      testRenderer = create(<LangPanel terria={terria} smallScreen={false} />);
-    });
+  it("should render if language are provided in config", async function () {
+    worker.use(
+      http.get("serverconfig", () => HttpResponse.json({})),
+      http.get("test-config.json", () =>
+        HttpResponse.json({
+          parameters: {
+            languageConfiguration: {
+              enabled: true,
+              debug: false,
+              languages: {
+                cimode: "cimode",
+                en: "English",
+                fr: "Français",
+                af: "Afrikaans"
+              },
+              fallbackLanguage: "en"
+            }
+          }
+        })
+      )
+    );
+    await terria.start({ configUrl: "test-config.json" });
 
-    expect(testRenderer.toJSON()).toBeDefined();
+    render(<LangPanel terria={terria} smallScreen={false} />);
+
+    expect(screen.getByRole("button", { name: "cimode" })).toBeVisible();
+    await userEvent.click(screen.getByRole("button", { name: "cimode" }));
+    expect(screen.getByRole("button", { name: "English" })).toBeVisible();
+    expect(screen.getByRole("button", { name: "Français" })).toBeVisible();
+    expect(screen.getByRole("button", { name: "Afrikaans" })).toBeVisible();
   });
 });

@@ -2,7 +2,7 @@
 
 set -e
 
-GITHUB_BRANCH=${GITHUB_REF##*/}
+GITHUB_BRANCH=${GITHUB_REF_NAME}
 
 # Don't run for greenkeeper branches; there are too many!
 if [[ $GITHUB_BRANCH =~ ^greenkeeper/ ]]; then
@@ -10,7 +10,7 @@ if [[ $GITHUB_BRANCH =~ ^greenkeeper/ ]]; then
 fi
 
 # A version of the branch name that can be used as a DNS name once we prepend and append some stuff.
-SAFE_BRANCH_NAME=$(printf '%s' "${GITHUB_BRANCH:0:32}" | sed -e 's/./\L&/g' -e 's/[^-a-z0-9]/-/g' -e 's/-*$//')
+SAFE_BRANCH_NAME=$(printf '%s' "${GITHUB_BRANCH:0:32}" | tr '[:upper:]' '[:lower:]' | sed -e 's/[^-a-z0-9]/-/g' -e 's/-*$//')
 
 [[ $SAFE_BRANCH_NAME != $GITHUB_BRANCH ]] && echo "::warning file=buildprocess/ci-deploy.sh::Branch name sanitised to '${SAFE_BRANCH_NAME}' for kubernetes resources. This may work, however using branch names less than 32 characters long with [a-z0-9] and hyphen separators are preferred"
 
@@ -22,7 +22,7 @@ npm install -g yarn@^1.22.22
 
 # Clone and build TerriaMap, using this version of TerriaJS
 TERRIAJS_COMMIT_HASH=$(git rev-parse HEAD)
-git clone -b svg-sprite-plugin-ts-592 https://github.com/TerriaJS/TerriaMap.git
+git clone -b refactor-analytics https://github.com/TerriaJS/TerriaMap.git
 cd TerriaMap
 TERRIAMAP_COMMIT_HASH=$(git rev-parse HEAD)
 sed -i -e 's@"terriajs": ".*"@"terriajs": "'$GITHUB_REPOSITORY'#'${GITHUB_BRANCH}'"@g' package.json

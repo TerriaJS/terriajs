@@ -27,10 +27,7 @@ import styled, { DefaultTheme, withTheme } from "styled-components";
 import combine from "terriajs-cesium/Source/Core/combine";
 import createGuid from "terriajs-cesium/Source/Core/createGuid";
 import dataStoriesImg from "../../../wwwroot/images/data-stories-getting-started.jpg";
-import {
-  Category,
-  StoryAction
-} from "../../Core/AnalyticEvents/analyticEvents";
+import { Category, StoryAction } from "../../Core/Analytics/analyticEvents";
 import triggerResize from "../../Core/triggerResize";
 import ViewState from "../../ReactViewModels/ViewState";
 import Box from "../../Styled/Box";
@@ -149,7 +146,7 @@ class StoryBuilder extends Component<
       id: _story.id ? _story.id : createGuid()
     };
 
-    this.props.viewState.terria.analytics?.logEvent(
+    this.props.viewState.terria.analytics.logEvent(
       Category.story,
       StoryAction.saveStory,
       JSON.stringify(story)
@@ -406,9 +403,33 @@ class StoryBuilder extends Component<
             textLight
             className={Styles.removeButton}
           >
-            <Icon glyph={Icon.GLYPHS.remove} /> {t("story.removeAllStories")}
+            <Icon glyph={Icon.GLYPHS.cancel} />
+            <TextSpan isLink>{t("story.removeAllStories")}</TextSpan>
           </RawButton>
         </Box>
+        {this.props.viewState.terria.configParameters
+          .showStorySaveInstructions && (
+          <Box
+            verticalCenter
+            paddedRatio={2}
+            css={`
+              border-bottom: 1px solid ${this.props.theme.darkLighter};
+            `}
+          >
+            <StyledIcon
+              glyph={Icon.GLYPHS.info}
+              styledWidth={"16px"}
+              fillColor={this.props.theme.infoColor}
+              css={`
+                flex-shrink: 0;
+              `}
+            />
+            <Spacing right={1} />
+            <TextSpan medium color={this.props.theme.infoColor}>
+              {t("story.saveInstructions")}
+            </TextSpan>
+          </Box>
+        )}
         <Spacing bottom={2} />
         <Box column paddedHorizontally={2} flex={1} styledMinHeight="0">
           {this.state.isRemoving && (

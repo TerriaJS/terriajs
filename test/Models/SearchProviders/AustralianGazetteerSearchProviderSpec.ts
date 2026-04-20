@@ -23,14 +23,14 @@ describe("GazetteerSearchProvider", function () {
   });
 
   it("queries the web feature service and returns search results", async function () {
-    spyOn(searchProvider, "getXml").and.returnValue(
+    spyOn(searchProvider, "getXml").and.callFake(() =>
       Promise.resolve(wfsResponseXml)
     );
     const results = searchProvider.search("Fred");
-    return results.resultsCompletePromise.then(() => {
-      expect(searchProvider.getXml).toHaveBeenCalledTimes(1);
-      expect(results).toBeDefined();
-      expect(results.results.length > 0).toBeTruthy();
-    });
+    await results.resultsCompletePromise;
+
+    expect(searchProvider.getXml).toHaveBeenCalledTimes(1);
+    expect(results).toBeDefined();
+    expect(results.results.length > 0).toBeTruthy();
   });
 });

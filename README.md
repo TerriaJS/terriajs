@@ -8,16 +8,6 @@
 
 TerriaJS is a library for building rich, web-based geospatial data explorers, used to drive [Digital Earth Australia Map](https://maps.dea.ga.gov.au/), [NSW Spatial Digital Twin](https://nsw.digitaltwin.terria.io/) (and many others). It uses [Cesium](https://cesiumjs.org) and WebGL for a full 3D globe in the browser with no plugins. It gracefully falls back to 2D with [Leaflet](https://leafletjs.com/) on systems that can't run Cesium. It can handle catalogs of tens of thousands of layers, with dozens of geospatial file and web service types supported. It is almost entirely JavaScript in the browser, meaning it can even be deployed as a static website, making it simple and cheap to host.
 
----
-
-**We have just released a brand new version of Terria &mdash; verson 8!**
-
-We've put together a list of things we've removed from version 8 and some steps to help you migrate to the new version in our [migration guide](https://docs.terria.io/guide/contributing/migration-guide/)
-
-**Not ready to move to version 8 yet? You can find terriajs version 7 here:** https://github.com/TerriaJS/terriajs/tree/terriajs7
-
----
-
 ### Features
 
 - Nested catalog of layers which can be independently enabled to create mashups of many layers.
@@ -27,7 +17,7 @@ We've put together a list of things we've removed from version 8 and some steps 
 - 3D globe (Cesium) or 2D mode (Leaflet). 3D objects supported in CZML format.
 - Time dimensions supported for CSV, CZML, WMS. Automatically animate layers, or slide the time control forward and backward.
 - Drag-and-drop files from your desktop to the browser, for instant visualisation (no file upload to server required).
-- All ASGS (Australian Statistical Geographic Standard) region types (LGA, SA2, commonwealth electoral district etc) supported for [CSV region mapping](https://github.com/TerriaJS/nationalmap/wiki/csv-geo-au), plus several others: Primary Health Networks, Statistical Local Areas, ISO 3 letter country codes, etc.
+- All ASGS (Australian Statistical Geographic Standard) region types (LGA, SA2, commonwealth electoral district etc) supported for [CSV region mapping](https://github.com/TerriaJS/nationalmap/wiki/csv-geo-au), plus several others: Primary Health Networks, Statistical Local Areas, ISO 3 letter country codes, etc. Refer to the [active mappings](./doc/active_region_mapping_table.md) for a complete list of supported regions and how to reference them.
 - Users can generate a reusable URL link of their current map view, to quickly share mashups of web-hosted data.
 - The interface is internationalised and translations are available for French, Italian and Japanese. Partial translations have also been contributed for other languages (see [TerriaJS weblate](https://hosted.weblate.org/engage/terriajs/))
 

@@ -1,9 +1,11 @@
+import { http, passthrough } from "msw";
 import Color from "terriajs-cesium/Source/Core/Color";
 import MappableMixin from "../../../../lib/ModelMixins/MappableMixin";
 import GtfsCatalogItem from "../../../../lib/Models/Catalog/Gtfs/GtfsCatalogItem";
 import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
 import updateModelFromJson from "../../../../lib/Models/Definition/updateModelFromJson";
 import Terria from "../../../../lib/Models/Terria";
+import { worker } from "../../../mocks/browser";
 
 describe("GtfsCatalogItem", function () {
   let item: GtfsCatalogItem;
@@ -14,6 +16,10 @@ describe("GtfsCatalogItem", function () {
       CommonStrata.definition,
       "url",
       "test/gtfs/vic-metro-vehicle-positions.pbf"
+    );
+
+    worker.use(
+      http.get("test/gtfs/vic-metro-vehicle-positions.pbf", () => passthrough())
     );
   });
 

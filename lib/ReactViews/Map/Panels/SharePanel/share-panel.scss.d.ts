@@ -5,9 +5,7 @@ declare namespace SharePanelScssNamespace {
     btnCatalogShare: string;
     btnWithoutText: string;
     "catalog-share": string;
-    "catalog-share-inner": string;
     catalogShare: string;
-    catalogShareInner: string;
     "dropdown-inner": string;
     dropdownInner: string;
     "share-panel": string;

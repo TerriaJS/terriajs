@@ -1,7 +1,7 @@
 import Bottleneck from "bottleneck";
-import * as fse from "fs-extra";
 import { shuffle } from "lodash-es";
-import { join, parse } from "path";
+import fs from "node:fs";
+import { join, parse, dirname } from "node:path";
 import TerriaError from "../lib/Core/TerriaError";
 import filterOutUndefined from "../lib/Core/filterOutUndefined";
 import timeout from "../lib/Core/timeout";
@@ -22,6 +22,16 @@ import Terria from "../lib/Models/Terria";
 import CatalogMemberReferenceTraits from "../lib/Traits/TraitsClasses/CatalogMemberReferenceTraits";
 import patchNetworkRequests from "./patchNetworkRequests";
 import { program } from "commander";
+
+const writeFileSync = (...args: Parameters<typeof fs.writeFileSync>) => {
+  const path = args[0];
+  const dir = dirname(path.toString());
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir, { recursive: true });
+  }
+
+  fs.writeFileSync(...args);
+};
 
 /** Add model to index */
 function indexModel(
@@ -348,29 +358,26 @@ export default async function generateCatalogIndex(
     }, {});
 
   // Save index to file
-  fse.writeFileSync(
-    outPath ?? "catalog-index.json",
-    JSON.stringify(sortedIndex)
-  );
+  writeFileSync(outPath ?? "catalog-index.json", JSON.stringify(sortedIndex));
 
   // Save errors to file
   const terriaError = TerriaError.combine(errors, "Errors")?.toError();
 
   if (terriaError?.stack) {
-    fse.writeFileSync(
+    writeFileSync(
       join(outPathResolved.dir, outPathResolved.name + "errors.json"),
       terriaError.message
     );
-    fse.writeFileSync(
+    writeFileSync(
       join(outPathResolved.dir, outPathResolved.name + "errors-stack.json"),
       terriaError.stack
     );
   } else {
-    fse.writeFileSync(
+    writeFileSync(
       join(outPathResolved.dir, outPathResolved.name + "errors.json"),
       "No errors"
     );
-    fse.writeFileSync(
+    writeFileSync(
       join(outPathResolved.dir, outPathResolved.name + "errors-stack.json"),
       "No errors"
     );
