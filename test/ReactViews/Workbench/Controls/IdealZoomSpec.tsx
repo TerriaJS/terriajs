@@ -25,11 +25,9 @@ describe("Ideal Zoom", function () {
     theItem = new Cesium3DTilesCatalogItem("my3dtiles", terria);
     theItem.setTrait("definition", "url", "/test/Cesium3DTiles/tileset.json");
 
-    const options = {
-      terria: terria,
-      catalogSearchProvider: undefined
-    };
-    viewState = new ViewState(options);
+    viewState = new ViewState({
+      terria: terria
+    });
   });
 
   it("should use default camera view if no parameters are given.", async function () {

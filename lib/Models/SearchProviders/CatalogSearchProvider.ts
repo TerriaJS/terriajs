@@ -109,16 +109,12 @@ export default class CatalogSearchProvider extends CatalogSearchProviderMixin(
   static readonly type = "catalog-search-provider";
   debounceTime = 300;
 
-  constructor(id: string | undefined, terria: Terria) {
+  constructor(id: string | undefined, terria: Terria, minCharacters?: number) {
     super(id, terria);
 
     makeObservable(this);
 
-    this.setTrait(
-      CommonStrata.defaults,
-      "minCharacters",
-      terria.searchBarModel.minCharacters
-    );
+    this.setTrait(CommonStrata.defaults, "minCharacters", minCharacters);
   }
 
   get type() {

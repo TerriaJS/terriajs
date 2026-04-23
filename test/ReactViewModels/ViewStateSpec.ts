@@ -16,8 +16,7 @@ describe("ViewState", function () {
   beforeEach(function () {
     terria = new Terria();
     viewState = new ViewState({
-      terria,
-      catalogSearchProvider: undefined
+      terria
     });
   });
 
@@ -58,12 +57,6 @@ describe("ViewState", function () {
       viewState.userDataPreviewedItem = item;
       viewState.removeModelReferences(item);
       expect(viewState.userDataPreviewedItem).toBeUndefined();
-    });
-  });
-
-  describe("error provider", function () {
-    it("creates an empty error provider by default", function () {
-      expect(viewState.errorProvider).toBeNull();
     });
   });
 

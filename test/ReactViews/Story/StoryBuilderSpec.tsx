@@ -14,8 +14,7 @@ describe("StoryBuilder", function () {
       baseUrl: "./"
     });
     viewState = new ViewState({
-      terria: terria,
-      catalogSearchProvider: undefined
+      terria: terria
     });
     runInAction(() => {
       viewState.storyBuilderShown = true;

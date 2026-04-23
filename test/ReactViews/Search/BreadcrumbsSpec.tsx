@@ -15,8 +15,7 @@ describe("Breadcrumbs", function () {
       baseUrl: "./"
     });
     viewState = new ViewState({
-      terria: terria,
-      catalogSearchProvider: undefined
+      terria: terria
     });
     catalogGroup = new CatalogGroup("group-of-geospatial-cats", terria);
     terria.addModel(catalogGroup);

@@ -12,8 +12,7 @@ describe("Tool", function () {
   beforeEach(function () {
     const terria = new Terria();
     viewState = new ViewState({
-      terria,
-      catalogSearchProvider: undefined
+      terria
     });
   });
 

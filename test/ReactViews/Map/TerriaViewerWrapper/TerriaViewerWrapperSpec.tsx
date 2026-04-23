@@ -13,7 +13,7 @@ describe("TerriaViewerWrapper", function () {
 
   beforeEach(function () {
     terria = new Terria();
-    viewState = new ViewState({ terria, catalogSearchProvider: undefined });
+    viewState = new ViewState({ terria });
   });
 
   describe("when main viewer is in leaflet mode", function () {

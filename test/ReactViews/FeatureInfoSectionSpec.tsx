@@ -64,8 +64,7 @@ describe("FeatureInfoSection", function () {
     catalogItem = new TestModel("teststrata", terria);
 
     viewState = new ViewState({
-      terria,
-      catalogSearchProvider: undefined
+      terria
     });
     const properties = {
       name: "Kay",
