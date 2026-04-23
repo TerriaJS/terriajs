@@ -27,6 +27,7 @@
   - Added `autocompleteEnabled` trait to `LocationSearchProviderTraits`, replacing the previous `supportsAutocomplete()` method. When any provider has `autocompleteEnabled: false` (e.g. Nominatim), that provider displays a "Press Enter to start searching" message and only searches on manual submission. This changes behavior introduced in 8.11.0 where autocomplete was disabled globally when Nominatim was used, which was not ideal for other providers that support autocomplete.
   - Fixed a crash when searching for strings containing regex special characters (e.g. `mel\`) by escaping the search string before using it in the keyword highlight regex.
   - Nominatim default URL updated to `https://`.
+- We no longer start terriajs-server when running `yarn gulp dev` as it is not needed for running tests in the browser with jasmine-browser-runner. If you need terriajs-server, you can start it separately by running `yarn gulp terriajs-server` in another terminal.
 
 #### 8.12.2 - 2026-03-27
 
