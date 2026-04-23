@@ -9,8 +9,7 @@ describe("ViewingControlsMenu", function () {
     it("adds the menu item generator function to `viewState.globalViewingControlOptions` array", function () {
       const terria = new Terria();
       const viewState = new ViewState({
-        terria,
-        catalogSearchProvider: undefined
+        terria
       });
       expect(viewState.globalViewingControlOptions.length).toEqual(0);
       const generateFunction = () => ({

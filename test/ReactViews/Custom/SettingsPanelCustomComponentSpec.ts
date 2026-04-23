@@ -12,8 +12,7 @@ describe("SettingsPanelCustomComponent", function () {
 
   beforeEach(function () {
     viewState = new ViewState({
-      terria: new Terria(),
-      catalogSearchProvider: undefined
+      terria: new Terria()
     });
 
     registerCustomComponentTypes(viewState.terria);

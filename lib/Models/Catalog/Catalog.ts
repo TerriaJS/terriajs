@@ -7,18 +7,33 @@ import Terria from "../Terria";
 import Group from "./Group";
 import { BaseModel } from "../Definition/Model";
 import isDefined from "../../Core/isDefined";
+import CatalogSearchProviderMixin from "../../ModelMixins/SearchProviders/CatalogSearchProviderMixin";
+import CatalogSearchProvider from "../SearchProviders/CatalogSearchProvider";
 
 export default class Catalog {
   @observable
   group: Group & BaseModel;
 
+  @observable
+  searchProvider: CatalogSearchProviderMixin.Instance | undefined;
+
   readonly terria: Terria;
 
   private _disposeCreateUserAddedGroup: () => void;
 
-  constructor(terria: Terria) {
+  constructor(
+    terria: Terria,
+    searchProvider?: CatalogSearchProviderMixin.Instance
+  ) {
     makeObservable(this);
     this.terria = terria;
+    this.searchProvider =
+      searchProvider ??
+      new CatalogSearchProvider(
+        "catalog-search-provider",
+        terria,
+        terria.searchBarModel.minCharacters
+      );
     this.group = new CatalogGroup("/", this.terria);
     this.terria.addModel(this.group);
 

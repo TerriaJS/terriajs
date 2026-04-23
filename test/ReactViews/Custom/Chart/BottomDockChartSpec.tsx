@@ -15,8 +15,7 @@ describe("BottomDockChart", function () {
       baseUrl: "./"
     });
     viewState = new ViewState({
-      terria,
-      catalogSearchProvider: undefined
+      terria
     });
     chartItems = [
       {
