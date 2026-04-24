@@ -23,17 +23,20 @@ export default class Catalog {
 
   constructor(
     terria: Terria,
-    searchProvider?: CatalogSearchProviderMixin.Instance
+    options: { searchProvider?: CatalogSearchProviderMixin.Instance } = {}
   ) {
     makeObservable(this);
     this.terria = terria;
-    this.searchProvider =
-      searchProvider ??
-      new CatalogSearchProvider(
-        "catalog-search-provider",
+    if ("searchProvider" in options) {
+      this.searchProvider = options.searchProvider;
+    } else {
+      this.searchProvider = CatalogSearchProvider.fromOptions({
+        id: "catalog-search-provider",
         terria,
-        terria.searchBarModel.minCharacters
-      );
+        minCharacters: this.terria.searchBarModel.minCharacters
+      });
+    }
+
     this.group = new CatalogGroup("/", this.terria);
     this.terria.addModel(this.group);
 

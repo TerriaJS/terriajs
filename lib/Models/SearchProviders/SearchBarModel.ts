@@ -3,7 +3,8 @@ import {
   computed,
   isObservableArray,
   makeObservable,
-  observable
+  observable,
+  reaction
 } from "mobx";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import RuntimeError from "terriajs-cesium/Source/Core/RuntimeError";
@@ -27,6 +28,17 @@ export class SearchBarModel extends CreateModel(SearchBarTraits) {
 
   constructor(readonly terria: Terria) {
     super("search-bar-model", terria);
+
+    reaction(
+      () => this.minCharacters,
+      (minCharacters) => {
+        this.terria.catalog.searchProvider?.setTrait(
+          CommonStrata.defaults,
+          "minCharacters",
+          minCharacters
+        );
+      }
+    );
 
     makeObservable(this);
   }
