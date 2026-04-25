@@ -6,7 +6,6 @@ import { http, HttpResponse } from "msw";
 import { I18nextProvider } from "react-i18next";
 import { ThemeProvider } from "styled-components";
 import CommonStrata from "../../../lib/Models/Definition/CommonStrata";
-import CatalogSearchProvider from "../../../lib/Models/SearchProviders/CatalogSearchProvider";
 import MapboxSearchProvider, {
   MapboxGeocodingResponse
 } from "../../../lib/Models/SearchProviders/MapboxSearchProvider";
@@ -83,7 +82,7 @@ describe("SearchBoxAndResults", function () {
     runInAction(() => {
       viewState.searchState.locationSearchText = searchText;
       viewState.searchState.showLocationSearchResults = true;
-
+      viewState.searchState.locationSearchResults = [];
       viewState.terria.catalog.searchProvider = undefined;
     });
     renderWithContexts(

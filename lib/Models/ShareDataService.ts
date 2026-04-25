@@ -5,52 +5,51 @@ import loadWithXhr from "../Core/loadWithXhr";
 import TerriaError from "../Core/TerriaError";
 import Terria from "./Terria";
 
-export const DEFAULT_MAX_SHARE_SIZE = 200 * 1024; // 200 KB
+export const DEFAULT_MAX_SHARE_SIZE_BYTES = 200 * 1024; // 200 KB
+export const DEFAULT_MAX_SHARE_SIZE = "200kb";
 
 interface ShareDataServiceOptions {
   terria: Terria;
   url?: string;
+  sharePrefix?: string;
+  shareMaxRequestSize?: string;
+  shareMaxRequestSizeBytes?: number;
 }
 
 /**
  * Interface to the terriajs-server service for creating short share links.
- * @param {*} options
- *
- * @alias ShareDataService
- * @constructor
  */
 export default class ShareDataService {
   readonly terria: Terria;
   url: string | undefined;
-  private _serverConfig: any;
+  private _sharePrefix?: string;
+  private _shareMaxRequestSize: string;
+  private _shareMaxRequestSizeBytes: number;
 
   constructor(options: ShareDataServiceOptions) {
     this.terria = options.terria;
-    this.url = options.url;
-  }
-
-  init(serverConfig: any): void {
-    this.url = this.url ?? this.terria.configParameters.shareUrl ?? "share";
-    this._serverConfig = serverConfig;
+    this.url = options.url ?? this.terria.configParameters.shareUrl ?? "share";
+    this._sharePrefix = options.sharePrefix;
+    this._shareMaxRequestSize =
+      options.shareMaxRequestSize ?? DEFAULT_MAX_SHARE_SIZE;
+    this._shareMaxRequestSizeBytes =
+      options.shareMaxRequestSizeBytes ?? DEFAULT_MAX_SHARE_SIZE_BYTES;
   }
 
   get isUsable(): boolean {
     return (
-      (this.url !== undefined &&
-        typeof this._serverConfig === "object" &&
-        typeof this._serverConfig.newShareUrlPrefix === "string") ||
+      (this.url !== undefined && typeof this._sharePrefix === "string") ||
       this.url !== "share"
     );
   }
 
-  // get the raw string from serverConfig.shareMaxRequestSize
   get shareMaxRequestSize(): string | undefined {
-    return this._serverConfig.shareMaxRequestSize;
+    return this._shareMaxRequestSize;
   }
 
   // get the parsed value in bytes from the server
   get shareMaxRequestSizeBytes(): number | undefined {
-    return this._serverConfig.shareMaxRequestSizeBytes;
+    return this._shareMaxRequestSizeBytes;
   }
 
   /**

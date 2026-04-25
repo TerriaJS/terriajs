@@ -5,6 +5,7 @@ import CatalogSearchProviderMixin from "../../ModelMixins/SearchProviders/Catalo
 import CommonStrata from "../Definition/CommonStrata";
 import { BaseModel } from "../Definition/Model";
 import CatalogSearchProvider from "../SearchProviders/CatalogSearchProvider";
+import CatalogIndex from "../SearchProviders/CatalogIndex";
 import Terria from "../Terria";
 import CatalogGroup from "./CatalogGroup";
 import Group from "./Group";
@@ -29,6 +30,8 @@ const createUserAddedDataGroup = (terria: Terria) => {
 };
 
 export default class Catalog {
+  private _index: CatalogIndex | undefined;
+
   @observable
   group: Group & BaseModel;
 
@@ -37,6 +40,10 @@ export default class Catalog {
 
   readonly terria: Terria;
   private _userAddedDataGroup: CatalogGroup;
+
+  get index() {
+    return this._index;
+  }
 
   constructor(
     terria: Terria,
@@ -66,5 +73,9 @@ export default class Catalog {
 
   get userAddedDataGroup(): CatalogGroup {
     return this._userAddedDataGroup;
+  }
+
+  setIndex(index: CatalogIndex) {
+    this._index = index;
   }
 }

@@ -1,3 +1,4 @@
+import queryToObject from "terriajs-cesium/Source/Core/queryToObject";
 import { z } from "zod";
 
 const hashParamsSchema = z
@@ -108,19 +109,15 @@ const hashParamsSchema = z
  *
  * Named special params are lifted into explicit fields; everything else falls
  * into `initFragments` (empty-value keys → init source file names) or
- * `extra` (unknown keys with values — forwarded in share links).
+ * into `extra` (unknown keys with values — forwarded in share links).
  */
-
 export type HashParams = z.infer<typeof hashParamsSchema>;
 
 /**
- * Parses the raw hash query object (output of `queryToObject(uri.fragment())`)
- * into a fully typed HashParams.
+ * Parses the raw hash query object into a fully typed HashParams.
  */
-export function parseHashParams(
-  hashProperties: Record<string, string>
-): HashParams {
-  return hashParamsSchema.parse(hashProperties);
+export function parseHashParams(url: string): HashParams {
+  return hashParamsSchema.parse(queryToObject(new URL(url).hash.substring(1)));
 }
 
 export const emptyHashParams: HashParams = hashParamsSchema.parse({});

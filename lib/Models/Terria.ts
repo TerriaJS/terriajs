@@ -1,4 +1,3 @@
-import i18next from "i18next";
 import {
   action,
   computed,
@@ -12,11 +11,9 @@ import { createTransformer } from "mobx-utils";
 import Clock from "terriajs-cesium/Source/Core/Clock";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import CesiumEvent from "terriajs-cesium/Source/Core/Event";
-import RequestScheduler from "terriajs-cesium/Source/Core/RequestScheduler";
 import RuntimeError from "terriajs-cesium/Source/Core/RuntimeError";
 import TerrainProvider from "terriajs-cesium/Source/Core/TerrainProvider";
 import buildModuleUrl from "terriajs-cesium/Source/Core/buildModuleUrl";
-import queryToObject from "terriajs-cesium/Source/Core/queryToObject";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import SplitDirection from "terriajs-cesium/Source/Scene/SplitDirection";
 import URI from "urijs";
@@ -39,7 +36,6 @@ import {
 } from "../Core/Json";
 import { isLatLonHeight } from "../Core/LatLonHeight";
 import Result from "../Core/Result";
-import ServerConfig from "../Core/ServerConfig";
 import TerriaError, {
   TerriaErrorOverrides,
   TerriaErrorSeverity
@@ -51,10 +47,7 @@ import getPath from "../Core/getPath";
 import hashEntity from "../Core/hashEntity";
 import instanceOf from "../Core/instanceOf";
 import isDefined from "../Core/isDefined";
-import { loadConfig } from "../Core/loadConfig";
-import loadJson from "../Core/loadJson";
 import loadJson5 from "../Core/loadJson5";
-import { getUriWithoutPath } from "../Core/uriHelpers";
 import PickedFeatures, {
   featureBelongsToCatalogItem,
   isProviderCoordsMap
@@ -65,8 +58,6 @@ import MappableMixin, { isDataSource } from "../ModelMixins/MappableMixin";
 import ReferenceMixin from "../ModelMixins/ReferenceMixin";
 import TimeVarying from "../ModelMixins/TimeVarying";
 import NotificationState from "../ReactViewModels/NotificationState";
-import { SHARE_VERSION } from "../ReactViews/Map/Panels/SharePanel/BuildShareLink";
-import { shareConvertNotification } from "../ReactViews/Notification/shareConvertNotification";
 import MappableTraits from "../Traits/TraitsClasses/MappableTraits";
 import MapNavigationModel from "../ViewModels/MapNavigation/MapNavigationModel";
 import TerriaViewer from "../ViewModels/TerriaViewer";
@@ -74,7 +65,6 @@ import { BaseMapsModel } from "./BaseMaps/BaseMapsModel";
 import CameraView from "./CameraView";
 import Catalog from "./Catalog/Catalog";
 import CatalogMemberFactory from "./Catalog/CatalogMemberFactory";
-import CatalogProvider from "./Catalog/CatalogProvider";
 import SplitItemReference from "./Catalog/CatalogReferences/SplitItemReference";
 import CommonStrata from "./Definition/CommonStrata";
 import { BaseModel } from "./Definition/Model";
@@ -84,16 +74,15 @@ import upsertModelFromJson from "./Definition/upsertModelFromJson";
 import { ErrorServiceProvider } from "./ErrorServiceProviders/ErrorService";
 import StubErrorServiceProvider from "./ErrorServiceProviders/StubErrorServiceProvider";
 import TerriaFeature from "./Feature/Feature";
+import { FeedbackService } from "./FeedbackService";
 import GlobeOrMap from "./GlobeOrMap";
-import { HashParams, emptyHashParams, parseHashParams } from "./HashParams";
+import { HashParams, emptyHashParams } from "./HashParams";
 import IElementConfig from "./IElementConfig";
 import InitSource, {
   InitSourceData,
   InitSourceFromData,
   StartData,
   StoryData,
-  buildInitSourcesFromConfig,
-  generateInitFragmentSource,
   isInitFromData,
   isInitFromDataPromise,
   isInitFromOptions,
@@ -103,10 +92,7 @@ import Internationalization, { I18nStartOptions } from "./Internationalization";
 import { LocalStorage } from "./LocalStorage";
 import MapInteractionMode from "./MapInteractionMode";
 import NoViewer from "./NoViewer";
-import {
-  PersistedSettings,
-  readLocalStorageSettings
-} from "./PersistedSettings";
+import { PersistedSettings } from "./PersistedSettings";
 import CatalogIndex from "./SearchProviders/CatalogIndex";
 import { SearchBarModel } from "./SearchProviders/SearchBarModel";
 import ShareDataService from "./ShareDataService";
@@ -116,52 +102,14 @@ import { isViewerMode, setViewerMode } from "./ViewerMode";
 import Workbench from "./Workbench";
 import SelectableDimensionWorkflow from "./Workflows/SelectableDimensionWorkflow";
 
-interface StartOptions {
-  /**
-   * URL of the Terria config to load. Used (via {@link loadConfig}) when
-   * `loadConfig` is not supplied.
-   */
-  configUrl?: string;
-  /** Headers to send when fetching `configUrl`. */
-  configUrlHeaders?: {
-    [key: string]: string;
-  };
-  /**
-   * Loads the Terria config. Supply this to load config from somewhere other
-   * than a URL (e.g. a non-browser/SSR environment). Use the exported
-   * {@link loadConfig} helper for the standard behaviour. When omitted,
-   * `configUrl`/`configUrlHeaders` are loaded via {@link loadConfig}.
-   *
-   * @experimental - not ready for general consumption!
-   */
-  loadConfig?: () => Promise<{
-    config: JsonObject;
-    baseUri: URI;
-  }>;
-  applicationUrl?: Location;
-  shareDataService?: ShareDataService;
-  errorService?: ErrorServiceProvider;
-  /**
-   * i18nOptions is explicitly a separate option from `languageConfiguration`,
-   * as `languageConfiguration` can be serialised, but `i18nOptions` may have
-   * some functions that are passed in from a TerriaMap
-   *  */
-  i18nOptions?: I18nStartOptions;
-
-  /**
-   * Hook to run before restoring app state from the share URL. This is for
-   * example used in terriamap/index.js for loading plugins before restoring
-   * app state.
-   */
-  beforeRestoreAppState?: () => Promise<void> | void;
-}
-
 interface TerriaOptions {
+  config?: TerriaConfig;
   /**
    * Override detecting base href from document.baseURI.
    * Used in specs to support routes within Browser spec automation framework
    */
   appBaseHref?: string;
+
   /**
    * Base url where TerriaJS resources can be found.
    * Normally "build/TerriaJS/" in any TerriaMap and "./" in specs
@@ -172,10 +120,6 @@ interface TerriaOptions {
    * Base url where Cesium static resources can be found.
    */
   cesiumBaseUrl?: string;
-
-  analytics?: Analytics;
-
-  corsProxy?: CorsProxy;
 }
 
 interface HomeCameraInit {
@@ -194,20 +138,8 @@ export default class Terria {
   /** Map from id -> share keys */
   readonly modelIdShareKeysMap = observable.map<string, string[]>();
 
-  /** Base URL for the Terria app. Used for SPA routes */
-  readonly appBaseHref: string = ensureSuffix(
-    typeof document !== "undefined" ? document.baseURI : "/",
-    "/"
-  );
   /** Base URL to Terria resources */
-  readonly baseUrl: string = "build/TerriaJS/";
-
-  /**
-   * Base URL used by Cesium to link to images and other static assets.
-   * This can be customized by passing `options.cesiumBaseUrl`
-   * Default value is constructed relative to `Terria.baseUrl`.
-   */
-  readonly cesiumBaseUrl: string;
+  readonly baseUrl: string;
 
   readonly tileLoadProgressEvent = new CesiumEvent();
   readonly indeterminateTileLoadProgressEvent = new CesiumEvent();
@@ -217,9 +149,6 @@ export default class Terria {
   readonly searchBarModel = new SearchBarModel(this);
   readonly catalog = new Catalog(this);
   readonly timelineClock = new Clock({ shouldAnimate: false });
-  // readonly overrides: any = overrides; // TODO: add options.functionOverrides like in master
-
-  catalogIndex: CatalogIndex | undefined;
 
   readonly elements = observable.map<string, IElementConfig>();
 
@@ -253,22 +182,36 @@ export default class Terria {
    * Gets or sets the {@link this.corsProxy} used to determine if a URL needs to be proxied and to proxy it if necessary.
    * @type {CorsProxy}
    */
-  corsProxy: CorsProxy;
+  corsProxy: CorsProxy = new CorsProxy();
 
   /**
    * Gets or sets the instance to which to report Google Analytics-style log
    * events. Default to NoopAnalytics, which does nothing. Can be set to
    * ConsoleAnalytics for development, or GoogleAnalytics to report to Google Analytics.
    */
-  readonly analytics: Analytics;
+  analytics: Analytics = new NoopAnalytics();
+
+  /**
+   *
+   */
+  feedbackService: FeedbackService | undefined;
+
+  @observable shareDataService: ShareDataService | undefined;
+
+  /**
+   * An error service instance. The instance can be provided via the
+   * `errorService` startOption. Here we initialize it to stub provider so
+   * that the `terria.errorService` always exists.
+   */
+  errorService: ErrorServiceProvider = new StubErrorServiceProvider();
 
   /**
    * Gets the stack of layers active on the timeline.
    */
   readonly timelineStack = new TimelineStack(this, this.timelineClock);
 
-  readonly configParameters = new TerriaConfig();
-  readonly localStorage = new LocalStorage(this.configParameters);
+  readonly configParameters: TerriaConfig;
+  readonly localStorage: LocalStorage;
 
   @observable
   pickedFeatures: PickedFeatures | undefined;
@@ -323,9 +266,6 @@ export default class Terria {
     this.forceLoadInitSources.bind(this)
   );
 
-  @observable serverConfig: any; // TODO
-  @observable shareDataService: ShareDataService | undefined;
-
   @observable stories: StoryData[] = [];
   @observable storyPromptShown: number = 0; // Story Prompt modal will be rendered when this property changes. See StandardUserInterface, section regarding sui.notifications. Ideally move this to ViewState.
 
@@ -358,32 +298,29 @@ export default class Terria {
 
   readonly developmentEnv = process.env.NODE_ENV === "development";
 
-  /**
-   * An error service instance. The instance can be provided via the
-   * `errorService` startOption. Here we initialize it to stub provider so
-   * that the `terria.errorService` always exists.
-   */
-  errorService: ErrorServiceProvider = new StubErrorServiceProvider();
-
-  /**
-   * @experimental
-   */
-  catalogProvider?: CatalogProvider;
-
-  constructor(options: TerriaOptions = {}) {
+  constructor({
+    config = new TerriaConfig(),
+    baseUrl = "build/TerriaJS/",
+    appBaseHref,
+    cesiumBaseUrl
+  }: TerriaOptions = {}) {
     makeObservable(this);
-    if (options.appBaseHref) {
-      this.appBaseHref = ensureSuffix(
-        typeof document !== "undefined"
-          ? new URI(options.appBaseHref).absoluteTo(document.baseURI).toString()
-          : options.appBaseHref,
-        "/"
-      );
-    }
+    this.configParameters = config;
+    this.localStorage = new LocalStorage(this.configParameters);
 
-    if (options.baseUrl) {
-      this.baseUrl = ensureSuffix(options.baseUrl, "/");
-    }
+    appBaseHref = !appBaseHref
+      ? ensureSuffix(
+          typeof document !== "undefined" ? document.baseURI : "/",
+          "/"
+        )
+      : ensureSuffix(
+          typeof document !== "undefined"
+            ? new URI(appBaseHref).absoluteTo(document.baseURI).toString()
+            : appBaseHref,
+          "/"
+        );
+
+    this.baseUrl = ensureSuffix(baseUrl, "/");
 
     // Try to construct an absolute URL to send to Cesium, as otherwise it resolves relative
     // to document.location instead of the correct document.baseURI
@@ -391,46 +328,14 @@ export default class Terria {
     // (e.g. Node.js) and no absolute URL is passed as an option for `appBaseHref`. In this case,
     // send a relative URL to cesium
     const cesiumBaseUrlRelative =
-      options.cesiumBaseUrl ?? `${this.baseUrl}build/Cesium/build/`;
-    this.cesiumBaseUrl = ensureSuffix(
-      new URI(cesiumBaseUrlRelative).absoluteTo(this.appBaseHref).toString(),
-      "/"
-    );
+      cesiumBaseUrl ?? `${this.baseUrl}build/Cesium/build/`;
     // Casting to `any` as `setBaseUrl` method is not part of the Cesiums' type definitions
-    (buildModuleUrl as any).setBaseUrl(this.cesiumBaseUrl);
-
-    this.analytics = options.analytics ?? new NoopAnalytics();
-
-    this.corsProxy = options.corsProxy ?? new CorsProxy();
-  }
-
-  /** Raise error to user.
-   *
-   * This accepts same arguments as `TerriaError.from` - but also has:
-   *
-   * @param forceRaiseToUser - which can be used to force raise the error
-   */
-  raiseErrorToUser(
-    error: unknown,
-    overrides?: TerriaErrorOverrides,
-    forceRaiseToUser = false
-  ): void {
-    const terriaError = TerriaError.from(error, overrides);
-
-    // Set shouldRaiseToUser true if forceRaiseToUser agrument is true
-    if (forceRaiseToUser) terriaError.overrideRaiseToUser = true;
-
-    // Log error to error service
-    this.errorService.error(terriaError);
-
-    // Only show error to user if `ignoreError` flag hasn't been set to "1"
-    // Note: this will take precedence over forceRaiseToUser/overrideRaiseToUser
-    if (!this.configParameters.ignoreErrors)
-      this.notificationState.addNotificationToQueue(
-        terriaError.toNotification()
-      );
-
-    terriaError.log();
+    (buildModuleUrl as any).setBaseUrl(
+      ensureSuffix(
+        new URI(cesiumBaseUrlRelative).absoluteTo(appBaseHref).toString(),
+        "/"
+      )
+    );
   }
 
   @computed
@@ -473,6 +378,153 @@ export default class Terria {
   @computed
   get modelIds() {
     return Array.from(this.models.keys());
+  }
+
+  setAnalyticsService(analytics: Analytics): Terria {
+    this.analytics = analytics;
+
+    return this;
+  }
+
+  setFeedbackService(feedbackService: FeedbackService): Terria {
+    this.feedbackService = feedbackService;
+
+    return this;
+  }
+
+  setErrorService(errorService: ErrorServiceProvider): Terria {
+    this.errorService = errorService;
+
+    return this;
+  }
+
+  @action
+  setShareDataService(shareDataService: ShareDataService): Terria {
+    this.shareDataService = shareDataService;
+
+    return this;
+  }
+
+  @action
+  setHashParams(hashParams: HashParams): Terria {
+    this.hashParams = hashParams;
+
+    if (isDefined(hashParams.hideWelcomeMessage)) {
+      this.updateConfig({
+        showWelcomeMessage: !hashParams.hideWelcomeMessage
+      });
+    }
+    if (isDefined(hashParams.hideExplorerPanel)) {
+      this.updateConfig({
+        hideExplorerPanel: hashParams.hideExplorerPanel
+      });
+    }
+    if (isDefined(hashParams.hideWorkbench)) {
+      this.updateConfig({
+        hideWorkbench: hashParams.hideWorkbench
+      });
+    }
+    if (isDefined(hashParams.tools)) {
+      this.updateConfig({
+        tools: hashParams.tools
+      });
+    }
+    if (isDefined(hashParams.map)) {
+      setViewerMode(hashParams.map, this.mainViewer);
+    }
+
+    return this;
+  }
+
+  initCorsProxy(
+    proxyAllDomains?: boolean,
+    allowProxyFor?: string[],
+    baseProxyUrl: string = CorsProxy.DEFAULT_BASE_PROXY_PATH,
+    proxyDomains: string[] = []
+  ): void {
+    this.corsProxy.init(
+      proxyAllDomains,
+      allowProxyFor,
+      baseProxyUrl,
+      proxyDomains
+    );
+  }
+
+  async initLanguage(i18nOptions?: I18nStartOptions): Promise<Terria> {
+    await Internationalization.initLanguage(
+      this.configParameters.languageConfiguration,
+      i18nOptions,
+      this.baseUrl
+    );
+
+    return this;
+  }
+
+  /**
+   * Initialize catalog index. Note: this isn't loaded now, it is loaded in
+   * first `CatalogSearchProvider.doSearch()`
+   * @param url - the url of the catalog index, if not provided, it will be taken from `configParameters.catalogIndexUrl`
+   */
+  initCatalogIndex(
+    url: string | undefined = this.configParameters.catalogIndexUrl
+  ): Terria {
+    if (url) {
+      this.catalog.setIndex(new CatalogIndex(this, url));
+    }
+    return this;
+  }
+
+  init(): Terria {
+    this.analytics.logEvent(
+      Category.launch,
+      LaunchAction.url,
+      window.location.href
+    );
+
+    this.baseMapsModel.initializeDefaultBaseMaps();
+
+    return this;
+  }
+
+  /** Raise error to user.
+   *
+   * This accepts same arguments as `TerriaError.from` - but also has:
+   *
+   * @param forceRaiseToUser - which can be used to force raise the error
+   */
+  raiseErrorToUser(
+    error: unknown,
+    overrides?: TerriaErrorOverrides,
+    forceRaiseToUser = false
+  ): void {
+    const terriaError = TerriaError.from(error, overrides);
+
+    // Set shouldRaiseToUser true if forceRaiseToUser agrument is true
+    if (forceRaiseToUser) terriaError.overrideRaiseToUser = true;
+
+    // Log error to error service
+    this.errorService.error(terriaError);
+
+    // Only show error to user if `ignoreError` flag hasn't been set to "1"
+    // Note: this will take precedence over forceRaiseToUser/overrideRaiseToUser
+    if (!this.configParameters.ignoreErrors)
+      this.notificationState.addNotificationToQueue(
+        terriaError.toNotification()
+      );
+
+    terriaError.log();
+  }
+
+  addInitSources(sources: InitSource[]): Terria {
+    this.initSources.push(...sources);
+
+    return this;
+  }
+
+  updateConfig(config: Partial<ConfigParameters>): Terria {
+    this.configParameters.update(config);
+
+    return this;
   }
 
   getModelById<T extends BaseModel>(type: Class<T>, id: string): T | undefined {
@@ -558,16 +610,16 @@ export default class Terria {
       // If no model exists, try to find it through Terria model sharekeys or CatalogIndex sharekeys
       if (model?.uniqueId !== undefined) {
         return new Result(model);
-      } else if (this.catalogIndex) {
+      } else if (this.catalog.index) {
         try {
-          await this.catalogIndex.load();
+          await this.catalog.index.load();
         } catch (e) {
           throw TerriaError.from(
             e,
             `Failed to load CatalogIndex while trying to load model \`${id}\``
           );
         }
-        const indexModel = this.catalogIndex.getModelByIdOrShareKey(id);
+        const indexModel = this.catalog.index.getModelByIdOrShareKey(id);
         if (indexModel) {
           (await indexModel.loadReference()).throwIfError();
           return new Result(indexModel.target);
@@ -586,161 +638,6 @@ export default class Terria {
     // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     this.modelIdShareKeysMap.get(id)?.push(shareKey) ??
       this.modelIdShareKeysMap.set(id, [shareKey]);
-  }
-
-  setupInitializationUrls(baseUri: URI, config: any): void {
-    const initSources: InitSource[] = buildInitSourcesFromConfig(
-      config,
-      baseUri,
-      this.configParameters.initFragmentPaths
-    );
-    this.initSources.push(...initSources);
-  }
-
-  async start(options: StartOptions): Promise<void> {
-    // Parse the full hash early so ignoreErrors is available before anything else
-    const hashProperties =
-      typeof window !== "undefined"
-        ? queryToObject(new URL(window.location.href).hash.substring(1))
-        : {};
-    const hashParams = parseHashParams(hashProperties);
-    runInAction(() => {
-      this.hashParams = hashParams;
-    });
-
-    this.shareDataService = options.shareDataService;
-
-    // If in development environment, allow usage of #configUrl to set Terria config URL
-    if (this.developmentEnv) {
-      if (hashParams.configUrl) {
-        options.configUrl = hashParams.configUrl;
-      }
-    }
-
-    let launchUrlForAnalytics = options.applicationUrl?.href;
-
-    try {
-      const loadConfigFunc =
-        options.loadConfig ??
-        (() => loadConfig(options.configUrl ?? "", options.configUrlHeaders));
-      const { config, baseUri } = await loadConfigFunc();
-      launchUrlForAnalytics ||= getUriWithoutPath(baseUri);
-
-      runInAction(() => {
-        if (isJsonObject(config) && isJsonObject(config.parameters)) {
-          this.updateConfig(config.parameters);
-        }
-        this.setupInitializationUrls(baseUri, config);
-      });
-    } catch (error) {
-      this.raiseErrorToUser(error, {
-        sender: this,
-        title: { key: "models.terria.loadConfigErrorTitle" },
-        message: `Couldn't load configuration`,
-        severity: TerriaErrorSeverity.Error
-      });
-    } finally {
-      if (!options.i18nOptions?.skipInit) {
-        await Internationalization.initLanguage(
-          this.configParameters.languageConfiguration,
-          options.i18nOptions,
-          this.baseUrl
-        );
-      }
-    }
-    setCustomRequestSchedulerDomainLimits(
-      this.configParameters.customRequestSchedulerLimits
-    );
-    if (options.errorService) {
-      try {
-        this.errorService = options.errorService;
-        this.errorService.init(this.configParameters);
-      } catch (e) {
-        console.error(
-          `Failed to initialize error service: ${this.configParameters.errorService?.provider}`,
-          e
-        );
-      }
-    }
-    this.analytics.start(this.configParameters);
-    this.analytics.logEvent(
-      Category.launch,
-      LaunchAction.url,
-      launchUrlForAnalytics
-    );
-    this.serverConfig = new ServerConfig();
-    const serverConfig = await this.serverConfig.init(
-      this.configParameters.serverConfigUrl
-    );
-    await this.initCorsProxy(this.configParameters, serverConfig);
-    if (this.shareDataService && this.serverConfig.config) {
-      this.shareDataService.init(this.serverConfig.config);
-    }
-
-    // Create catalog index if catalogIndexUrl is set
-    // Note: this isn't loaded now, it is loaded in first CatalogSearchProvider.doSearch()
-    if (this.configParameters.catalogIndexUrl && !this.catalogIndex) {
-      this.catalogIndex = new CatalogIndex(
-        this,
-        this.configParameters.catalogIndexUrl
-      );
-    }
-
-    this.baseMapsModel
-      .initializeDefaultBaseMaps()
-      .catchError((error) =>
-        this.raiseErrorToUser(
-          TerriaError.from(error, "Failed to load default basemaps")
-        )
-      );
-
-    this.searchBarModel
-      .updateModelConfig(this.configParameters.searchBarConfig)
-      .initializeSearchProviders(this.configParameters.searchProviders)
-      .catchError((error) =>
-        this.raiseErrorToUser(
-          TerriaError.from(error, "Failed to initialize searchProviders")
-        )
-      );
-
-    if (typeof options.beforeRestoreAppState === "function") {
-      try {
-        await options.beforeRestoreAppState();
-      } catch (error) {
-        console.log(error);
-      }
-    }
-
-    await this.restoreAppState(options);
-  }
-
-  private async restoreAppState(options: StartOptions) {
-    if (options.applicationUrl) {
-      (await this.updateApplicationUrl(options.applicationUrl.href)).raiseError(
-        this
-      );
-    }
-
-    this.applyPersistedSettings();
-  }
-
-  private applyPersistedSettings(): void {
-    const localSettings = readLocalStorageSettings(
-      (key) => this.localStorage.getItem(key),
-      this.configParameters.persistViewerMode ?? true
-    );
-    this.persistedSettings = localSettings;
-
-    this.updateConfig({
-      useNativeResolution: localSettings.useNativeResolution,
-      baseMaximumScreenSpaceError: localSettings.baseMaximumScreenSpaceError,
-      shortenShareUrls: localSettings.shortenShareUrls
-    });
-
-    const viewerMode = this.hashParams.map ?? localSettings.viewerMode;
-    if (viewerMode) {
-      setViewerMode(viewerMode, this.mainViewer);
-    }
   }
 
   /**
@@ -824,123 +721,6 @@ export default class Terria {
 
   dispose(): void {
     this._initSourceLoader.dispose();
-  }
-
-  async updateFromStartData(
-    startData: unknown,
-    /** Name for startData initSources - this is only used for debugging purposes */
-    name: string = "Application start data",
-    /** Error severity to use for loading startData init sources - default will be `TerriaErrorSeverity.Error` */
-    errorSeverity?: TerriaErrorSeverity
-  ): Promise<Result<void>> {
-    try {
-      await interpretStartData(this, startData, name, errorSeverity);
-    } catch (e) {
-      return Result.error(e);
-    }
-
-    return await this.loadInitSources();
-  }
-
-  async updateApplicationUrl(newUrl: string): Promise<Result<void>> {
-    const uri = new URI(newUrl);
-    const hash = uri.fragment();
-    const hashParams = parseHashParams(queryToObject(hash));
-
-    runInAction(() => {
-      this.hashParams = hashParams;
-    });
-
-    if (isDefined(hashParams.hideWelcomeMessage)) {
-      this.updateConfig({
-        showWelcomeMessage: !hashParams.hideWelcomeMessage
-      });
-    }
-    if (isDefined(hashParams.hideExplorerPanel)) {
-      this.updateConfig({
-        hideExplorerPanel: hashParams.hideExplorerPanel
-      });
-    }
-    if (isDefined(hashParams.hideWorkbench)) {
-      this.updateConfig({
-        hideWorkbench: hashParams.hideWorkbench
-      });
-    }
-    if (isDefined(hashParams.map)) {
-      setViewerMode(hashParams.map, this.mainViewer);
-    }
-
-    function checkSegments(urlSegments: string[], customRoute: string) {
-      // Accept /${customRoute}/:some-id/ or /${customRoute}/:some-id
-      return (
-        ((urlSegments.length === 3 && urlSegments[2] === "") ||
-          urlSegments.length === 2) &&
-        urlSegments[0] === customRoute &&
-        urlSegments[1].length > 0
-      );
-    }
-
-    try {
-      await interpretHash(
-        this,
-        hashParams,
-        new URI(newUrl).filename("").query("").hash("")
-      );
-
-      // /catalog/ and /story/ routes
-      if (newUrl.startsWith(this.appBaseHref)) {
-        const pageUrl = new URL(newUrl);
-        // Find relative path from baseURI to documentURI excluding query and hash
-        // then split into url segments
-        // e.g. "http://ci.terria.io/main/story/1#map=2d" -> ["story", "1"]
-        const segments = (pageUrl.origin + pageUrl.pathname)
-          .slice(this.appBaseHref.length)
-          .split("/");
-        if (checkSegments(segments, "catalog")) {
-          this.initSources.push({
-            name: `Go to ${pageUrl.pathname}`,
-            errorSeverity: TerriaErrorSeverity.Error,
-            data: {
-              previewedItemId: decodeURIComponent(segments[1])
-            }
-          });
-          const replaceUrl = new URL(newUrl);
-          replaceUrl.pathname = new URL(this.appBaseHref).pathname;
-          history.replaceState({}, "", replaceUrl.href);
-        } else if (
-          checkSegments(segments, "story") &&
-          isDefined(this.configParameters.storyRouteUrlPrefix)
-        ) {
-          let storyJson;
-          try {
-            storyJson = await loadJson(
-              `${this.configParameters.storyRouteUrlPrefix}${segments[1]}`
-            );
-          } catch (e) {
-            throw TerriaError.from(e, {
-              message: `Failed to fetch story \`"${this.appName}/${segments[1]}"\``
-            });
-          }
-          await interpretStartData(
-            this,
-            storyJson,
-            `Start data from story \`"${this.appName}/${segments[1]}"\``
-          );
-          runInAction(() => {
-            this.playStoryOnInit = true;
-          });
-        }
-      }
-    } catch (e) {
-      this.raiseErrorToUser(e);
-    }
-
-    return await this.loadInitSources();
-  }
-
-  @action
-  updateConfig(config: Partial<ConfigParameters>): void {
-    this.configParameters.update(config);
   }
 
   protected async forceLoadInitSources(): Promise<void> {
@@ -1651,180 +1431,6 @@ export default class Terria {
           this.selectedFeature = selectedFeature;
         }
       }
-    });
-  }
-
-  async initCorsProxy(config: TerriaConfig, serverConfig: any): Promise<void> {
-    if (config.proxyableDomainsUrl) {
-      console.warn(i18next.t("models.terria.proxyableDomainsDeprecation"));
-    }
-    this.corsProxy.init(
-      serverConfig,
-      this.configParameters.corsProxyBaseUrl,
-      []
-    );
-  }
-}
-
-async function interpretHash(
-  terria: Terria,
-  hashParams: HashParams,
-  baseUri: URI
-) {
-  if (hashParams.clean) {
-    runInAction(() => {
-      terria.initSources.splice(0, terria.initSources.length);
-    });
-  }
-
-  runInAction(() => {
-    hashParams.initFragments.forEach((fragment) => {
-      const initSourceFile = generateInitFragmentSource(
-        baseUri,
-        terria.configParameters.initFragmentPaths,
-        fragment
-      );
-      terria.initSources.push({
-        name: `InitUrl from applicationURL hash ${fragment}`,
-        errorSeverity: TerriaErrorSeverity.Error,
-        ...initSourceFile
-      });
-    });
-  });
-
-  // a share link that hasn't been shortened: JSON embedded in URL (only works for small quantities of JSON)
-  if (hashParams.start !== undefined) {
-    try {
-      const startData = hashParams.start;
-      await interpretStartData(
-        terria,
-        startData,
-        'Start data from hash `"#start"` value',
-        TerriaErrorSeverity.Error,
-        false // Hide conversion warning message - as we assume that people using #start are embedding terria.
-      );
-    } catch (e) {
-      throw TerriaError.from(e, {
-        message: { key: "models.terria.parsingStartDataErrorMessage" },
-        importance: -1
-      });
-    }
-  }
-
-  // Resolve #share=xyz with the share data service.
-  if (hashParams.share !== undefined && terria.shareDataService !== undefined) {
-    const shareProps = await terria.shareDataService.resolveData(
-      hashParams.share
-    );
-
-    await interpretStartData(
-      terria,
-      shareProps,
-      `Start data from sharelink \`"${hashParams.share}"\``
-    );
-  }
-}
-
-async function interpretStartData(
-  terria: Terria,
-  startData: unknown,
-  /** Name for startData initSources - this is only used for debugging purposes */
-  name: string,
-  /** Error severity to use for loading startData init sources - if not set, TerriaError will be propagated normally */
-  errorSeverity?: TerriaErrorSeverity,
-  showConversionWarning = true
-) {
-  if (isJsonObject(startData, false)) {
-    // Convert startData to v8 if necessary
-    let startDataV8: StartData | null;
-    try {
-      if (
-        // If startData.version has version 0.x.x - user catalog-converter to convert startData
-        "version" in startData &&
-        typeof startData.version === "string" &&
-        startData.version.startsWith("0")
-      ) {
-        const { convertShare } = await import("catalog-converter");
-        const result = convertShare(startData);
-
-        // Show warning messages if converted
-        if (result.converted && showConversionWarning) {
-          terria.notificationState.addNotificationToQueue({
-            title: i18next.t("share.convertNotificationTitle"),
-            message: shareConvertNotification(result.messages)
-          });
-        }
-        startDataV8 = result.result;
-      } else {
-        startDataV8 = {
-          ...startData,
-          version: isJsonString(startData.version)
-            ? startData.version
-            : SHARE_VERSION,
-          initSources: Array.isArray(startData.initSources)
-            ? (startData.initSources.filter(
-                (initSource) =>
-                  isJsonString(initSource) || isJsonObject(initSource)
-              ) as (string | JsonObject)[])
-            : []
-        };
-      }
-
-      if (startDataV8 !== null && Array.isArray(startDataV8.initSources)) {
-        // Push startData.initSources to terria.initSources array
-        // Note startData.initSources can be an initUrl (string) or initData (InitDataSource/JsonObject)
-        // Terria.initSources are different to startData.initSources
-        // They need to be transformed into appropriate `InitSource`
-        runInAction(() => {
-          terria.initSources.push(
-            ...startDataV8!.initSources.map((initSource) =>
-              isJsonString(initSource)
-                ? // InitSourceFromUrl if string
-                  {
-                    name,
-                    initUrl: initSource,
-                    errorSeverity
-                  }
-                : // InitSourceFromData if Json Object
-                  {
-                    name,
-                    data: initSource,
-                    errorSeverity
-                  }
-            )
-          );
-        });
-
-        // If initSources contain story - we disable the welcome message so there aren't too many modals/popups
-        // We only check JSON share initSources - as URLs will be loaded in `forceLoadInitSources`
-        if (
-          startDataV8.initSources.some(
-            (initSource) =>
-              isJsonObject(initSource) &&
-              Array.isArray(initSource.stories) &&
-              initSource.stories.length
-          )
-        ) {
-          terria.updateConfig({
-            showWelcomeMessage: false
-          });
-        }
-      }
-    } catch (error) {
-      throw TerriaError.from(error, {
-        title: { key: "share.convertErrorTitle" },
-        message: { key: "share.convertErrorMessage" }
-      });
-    }
-  }
-}
-
-function setCustomRequestSchedulerDomainLimits(
-  customDomainLimits: TerriaConfig["customRequestSchedulerLimits"]
-) {
-  if (isDefined(customDomainLimits)) {
-    Object.entries(customDomainLimits).forEach(([domain, limit]) => {
-      RequestScheduler.requestsByServer[domain] = limit;
     });
   }
 }
