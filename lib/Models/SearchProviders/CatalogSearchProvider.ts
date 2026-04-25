@@ -107,7 +107,7 @@ export default class CatalogSearchProvider extends CatalogSearchProviderMixin(
   CreateModel(CatalogSearchProviderTraits)
 ) {
   static readonly type = "catalog-search-provider";
-  debounceTime = 300;
+  override debounceTime = 300;
 
   constructor(id: string | undefined, terria: Terria) {
     super(id, terria);
