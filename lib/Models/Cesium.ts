@@ -727,7 +727,7 @@ export default class Cesium extends GlobeOrMap {
   ): Promise<void> {
     // 1. Remove deleted data sources
     // Iterate backwards because we're removing items.
-    for (let i = dataSources.length - 1; i >= 0; i--) {
+    for (let i = dataSources?.length - 1; i >= 0; i--) {
       const d = dataSources.get(i);
       if (availableDataSources.indexOf(d) === -1) {
         dataSources.remove(d);

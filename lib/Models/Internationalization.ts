@@ -34,10 +34,10 @@ export interface I18nStartOptions {
 export interface LanguageConfiguration {
   enabled: boolean;
   debug: boolean;
-  react: ReactOptions;
   languages: object;
   fallbackLanguage: string;
-  changeLanguageOnStartWhen: string[];
+  react?: ReactOptions;
+  changeLanguageOnStartWhen?: string[];
   lookupCookie?: string;
 
   /** Base URL for override namespace translation files. If set, this makes up the base URL for translation override files. Should end in /

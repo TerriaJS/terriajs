@@ -395,6 +395,7 @@ export default class Terria {
   }
 
   setErrorService(errorService: ErrorServiceProvider): Terria {
+    errorService.init(this.configParameters);
     this.errorService = errorService;
 
     return this;
@@ -438,12 +439,17 @@ export default class Terria {
     return this;
   }
 
-  initCorsProxy(
-    proxyAllDomains?: boolean,
-    allowProxyFor?: string[],
-    baseProxyUrl: string = CorsProxy.DEFAULT_BASE_PROXY_PATH,
-    proxyDomains: string[] = []
-  ): void {
+  initCorsProxy({
+    proxyAllDomains,
+    allowProxyFor,
+    baseProxyUrl = CorsProxy.DEFAULT_BASE_PROXY_PATH,
+    proxyDomains = []
+  }: {
+    proxyAllDomains?: boolean;
+    allowProxyFor?: string[];
+    baseProxyUrl?: string;
+    proxyDomains?: string[];
+  }): void {
     this.corsProxy.init(
       proxyAllDomains,
       allowProxyFor,
@@ -476,7 +482,7 @@ export default class Terria {
     return this;
   }
 
-  init(): Terria {
+  build(): Terria {
     this.analytics.logEvent(
       Category.launch,
       LaunchAction.url,

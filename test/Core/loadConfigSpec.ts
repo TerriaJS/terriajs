@@ -12,7 +12,7 @@ describe("loadConfig", function () {
       );
 
       const config = await loadConfig("config.json");
-      expect((config as any).parameters.appName).toBe("TestApp");
+      expect(config.parameters.appName).toBe("TestApp");
     });
 
     it("passes custom headers to the request", async function () {
@@ -21,7 +21,7 @@ describe("loadConfig", function () {
           if (request.headers.get("Authorization") !== "Bearer token123") {
             return new HttpResponse(null, { status: 401 });
           }
-          return HttpResponse.json({ appName: "SecureApp" });
+          return HttpResponse.json({ parameters: { appName: "SecureApp" } });
         })
       );
 
@@ -32,7 +32,7 @@ describe("loadConfig", function () {
       const config = await loadConfig("config-with-auth.json", {
         Authorization: "Bearer token123"
       });
-      expect((config as any).appName).toBe("SecureApp");
+      expect(config.parameters.appName).toBe("SecureApp");
     });
 
     it("throws when the URL returns a non-JSON response", async function () {

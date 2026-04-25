@@ -1,3 +1,4 @@
+import { updateInitSourcesFromUrl } from "../Models/InitSource";
 import Terria from "../Models/Terria";
 
 /**
@@ -12,9 +13,17 @@ export default function (terria: Terria, window: Window) {
     "hashchange",
     async function () {
       try {
-        // (
-        //   await terria.updateApplicationUrl(window.location.toString())
-        // ).throwIfError();
+        const baseUrl = `${window.location.origin}/${terria.baseUrl}`.replace(
+          /(\.\/|\/\.|\.)$/,
+          ""
+        );
+
+        await updateInitSourcesFromUrl(
+          window.location.toString(),
+          baseUrl,
+          terria
+        );
+
         (await terria.loadInitSources()).throwIfError();
       } catch (e) {
         terria.raiseErrorToUser(e);

@@ -10,7 +10,7 @@ import { ErrorServiceOptions } from "./ErrorServiceProviders/ErrorService";
 import { LanguageConfiguration } from "./Internationalization";
 import { RelatedMap } from "./RelatedMaps";
 import { StoryVideoSettings } from "./StoryVideoSettings";
-import { SplitDirection } from "terriajs-cesium";
+import { RequestScheduler, SplitDirection } from "terriajs-cesium";
 import { LocalStorage } from "./LocalStorage";
 
 type OnlyProps<T> = {
@@ -32,10 +32,6 @@ export type ConfigParameters = OnlyProps<TerriaConfig>;
  * config.apply(readLocalStorage(localStorage));
  */
 export class TerriaConfig {
-  @observable initializationUrls: string[] = [];
-
-  @observable v7initializationUrls: string[] = [];
-
   /**
    * TerriaJS uses this name whenever it needs to display the name of the
    * application.
@@ -288,8 +284,22 @@ export class TerriaConfig {
    * prioritised request scheduling and important data may load slower. Format
    * is {"domain_without_protocol:port": number}.
    */
-  @observable customRequestSchedulerLimits: Record<string, number> | undefined =
+  @observable
+  private _customRequestSchedulerLimits: Record<string, number> | undefined =
     undefined;
+  set customRequestSchedulerLimits(
+    customDomainLimits: Record<string, number> | undefined
+  ) {
+    if (!customDomainLimits) return;
+
+    Object.entries(customDomainLimits).forEach(([domain, limit]) => {
+      RequestScheduler.requestsByServer[domain] = limit;
+    });
+    this._customRequestSchedulerLimits = customDomainLimits;
+  }
+  get customRequestSchedulerLimits(): Record<string, number> | undefined {
+    return this._customRequestSchedulerLimits;
+  }
 
   /**
    * Whether to load persisted viewer mode from local storage.

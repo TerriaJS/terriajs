@@ -23,22 +23,21 @@ describe("InitSource", () => {
     const initFragmentPaths = ["init/", "http://cdn.example.com/init/"];
 
     it("returns empty array when config has no initializationUrls", () => {
-      const sources = buildInitSourcesFromConfig(
-        new TerriaConfig(),
+      const sources = buildInitSourcesFromConfig({
+        initializationUrls: [],
+        v7initializationUrls: [],
         baseUri,
         initFragmentPaths
-      );
+      });
       expect(sources.length).toBe(0);
     });
 
     it("converts a .json URL to an InitSourceFromUrl with absolute URL", () => {
-      const config = new TerriaConfig();
-      config.update({ initializationUrls: ["catalog/main.json"] });
-      const sources = buildInitSourcesFromConfig(
-        config,
+      const sources = buildInitSourcesFromConfig({
+        initializationUrls: ["catalog/main.json"],
         baseUri,
         initFragmentPaths
-      );
+      });
 
       expect(sources.length).toBe(1);
       expect(isInitFromUrl(sources[0])).toBeTrue();
@@ -50,13 +49,11 @@ describe("InitSource", () => {
     });
 
     it("converts a non-.json fragment to InitSourceFromOptions with one option per initFragmentPath", () => {
-      const config = new TerriaConfig();
-      config.update({ initializationUrls: ["nationalparks"] });
-      const sources = buildInitSourcesFromConfig(
-        config,
+      const sources = buildInitSourcesFromConfig({
+        initializationUrls: ["nationalparks"],
         baseUri,
         initFragmentPaths
-      );
+      });
 
       expect(sources.length).toBe(1);
       expect(isInitFromOptions(sources[0])).toBeTrue();
@@ -77,25 +74,23 @@ describe("InitSource", () => {
     });
 
     it("sets errorSeverity to Error for each init source", () => {
-      const config = new TerriaConfig();
-      config.update({ initializationUrls: ["catalog.json"] });
-      const sources = buildInitSourcesFromConfig(
-        config,
+      const sources = buildInitSourcesFromConfig({
+        initializationUrls: ["catalog.json"],
+        v7initializationUrls: [],
         baseUri,
         initFragmentPaths
-      );
+      });
 
       expect(sources[0].errorSeverity).toBeDefined();
     });
 
     it("sets a descriptive name for each init source", () => {
-      const config = new TerriaConfig();
-      config.update({ initializationUrls: ["catalog.json"] });
-      const sources = buildInitSourcesFromConfig(
-        config,
+      const sources = buildInitSourcesFromConfig({
+        initializationUrls: ["catalog.json"],
+        v7initializationUrls: [],
         baseUri,
         initFragmentPaths
-      );
+      });
 
       expect(sources[0].name).toContain("catalog.json");
     });
@@ -107,12 +102,12 @@ describe("InitSource", () => {
         )
       );
       const config = new TerriaConfig();
-      config.update({ v7initializationUrls: ["old-catalog.json"] });
-      const sources = buildInitSourcesFromConfig(
-        config,
+      config.update({});
+      const sources = buildInitSourcesFromConfig({
+        v7initializationUrls: ["old-catalog.json"],
         baseUri,
         initFragmentPaths
-      );
+      });
 
       expect(sources.length).toBe(1);
       expect(isInitFromDataPromise(sources[0])).toBeTrue();
@@ -123,15 +118,13 @@ describe("InitSource", () => {
         http.get("*/old.json", () => HttpResponse.json({ catalog: "old" }))
       );
       const config = new TerriaConfig();
-      config.update({
+      config.update({});
+      const sources = buildInitSourcesFromConfig({
         initializationUrls: ["new.json"],
-        v7initializationUrls: ["old.json"]
-      });
-      const sources = buildInitSourcesFromConfig(
-        config,
+        v7initializationUrls: ["old.json"],
         baseUri,
         initFragmentPaths
-      );
+      });
 
       expect(sources.length).toBe(2);
       expect(isInitFromUrl(sources[0])).toBeTrue();
@@ -187,7 +180,10 @@ describe("InitSource", () => {
 
       terria.setShareDataService(shareDataService as never as ShareDataService);
 
-      const initSources = await buildInitSourcesFromShare("abc123", terria);
+      const initSources = await buildInitSourcesFromShare(
+        "abc123",
+        terria.shareDataService
+      );
 
       expect(shareDataService.resolveData).toHaveBeenCalledWith("abc123");
       expect(initSources.length).toBe(1);
@@ -196,7 +192,10 @@ describe("InitSource", () => {
 
     it("returns empty initSources when no shareDataService is provided", async () => {
       const terria = new Terria();
-      const initSources = await buildInitSourcesFromShare("abc123", terria);
+      const initSources = await buildInitSourcesFromShare(
+        "abc123",
+        terria.shareDataService
+      );
       expect(initSources).toEqual([]);
     });
   });

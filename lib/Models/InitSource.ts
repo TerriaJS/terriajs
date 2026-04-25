@@ -1,6 +1,6 @@
 import type { ShareResult } from "catalog-converter";
 import URI from "urijs";
-import {
+import JsonValue, {
   isJsonObject,
   isJsonString,
   JsonArray,
@@ -12,10 +12,9 @@ import TerriaError, { TerriaErrorSeverity } from "../Core/TerriaError";
 import { ProviderCoordsMap } from "../Map/PickedFeatures/PickedFeatures";
 import { SHARE_VERSION } from "../ReactViews/Map/Panels/SharePanel/BuildShareLink";
 import { BaseMapsJson } from "./BaseMaps/BaseMapsModel";
-import { HashParams } from "./HashParams";
+import { HashParams, parseHashParams } from "./HashParams";
 import IElementConfig from "./IElementConfig";
 import Terria from "./Terria";
-import { TerriaConfig } from "./TerriaConfig";
 import loadJson from "../Core/loadJson";
 
 export interface InitSourcePickedFeatures {
@@ -164,7 +163,7 @@ export function isInitFromOptions(
  * catalog-converter).
  *
  */
-const convertStartData = async (
+export const convertStartData = async (
   startData: unknown,
   name: string,
   errorSeverity?: TerriaErrorSeverity,
@@ -224,24 +223,29 @@ const convertStartData = async (
  * - Fragment names (no extension) → `InitSourceFromOptions` (tries each initFragmentPath)
  * - v7 URLs → `InitSourceFromDataPromise` (lazily converted via catalog-converter)
  */
-export const buildInitSourcesFromConfig = (
-  config: TerriaConfig,
-  baseUri: URI,
-  initFragmentPaths: string[]
-): InitSource[] => {
-  const initializationUrls: string[] = Array.isArray(config.initializationUrls)
-    ? (config.initializationUrls as JsonArray).filter(isJsonString)
+export const buildInitSourcesFromConfig = (options: {
+  initializationUrls?: JsonValue | undefined;
+  v7initializationUrls?: JsonValue | undefined;
+  baseUri: URI;
+  initFragmentPaths: string[];
+}): InitSource[] => {
+  const initializationUrls: string[] = Array.isArray(options.initializationUrls)
+    ? (options.initializationUrls as JsonArray).filter(isJsonString)
     : [];
 
   const initSources: InitSource[] = initializationUrls.map((url) => ({
     name: `Init URL from config ${url}`,
     errorSeverity: TerriaErrorSeverity.Error,
-    ...generateInitFragmentSource(baseUri, initFragmentPaths, url)
+    ...generateInitFragmentSource(
+      options.baseUri,
+      options.initFragmentPaths,
+      url
+    )
   }));
 
-  if (Array.isArray(config.v7initializationUrls)) {
+  if (Array.isArray(options.v7initializationUrls)) {
     initSources.push(
-      ...(config.v7initializationUrls as JsonArray)
+      ...(options.v7initializationUrls as JsonArray)
         .filter(isJsonString)
         .map((v7initUrl) => ({
           name: `V7 Init URL from config ${v7initUrl}`,
@@ -305,10 +309,10 @@ export const buildInitSourcesFromStartData = async (
 
 export const buildInitSourcesFromShare = async (
   shareToken: string | undefined,
-  terria: Terria
+  shareDataService: Terria["shareDataService"]
 ): Promise<InitSource[]> => {
-  if (!shareToken || !terria.shareDataService) return [];
-  const shareProps = await terria.shareDataService.resolveData(shareToken);
+  if (!shareToken || !shareDataService) return [];
+  const shareProps = await shareDataService.resolveData(shareToken);
   const sources = await convertStartData(
     shareProps,
     `Start data from sharelink \`"${shareToken}"\``,
@@ -317,14 +321,14 @@ export const buildInitSourcesFromShare = async (
   return sources;
 };
 
-export const buildInitSourcesFromHash = async (
+export const buildInitSourcesFromUrlFragments = async (
   url: string,
-  hashParams: HashParams,
+  initFragments: HashParams["initFragments"],
   initFragmentPaths: string[]
 ): Promise<InitSource[]> => {
   const initSources: InitSource[] = [];
 
-  hashParams.initFragments.forEach((fragment) => {
+  initFragments?.forEach((fragment) => {
     const fragmentSource = generateInitFragmentSource(
       new URI(url).filename("").query("").hash(""),
       initFragmentPaths,
@@ -408,6 +412,38 @@ export const generateInitFragmentSource = (
   return {
     initUrl: new URI(url).absoluteTo(baseUri).toString()
   };
+};
+
+export const updateInitSourcesFromUrl = async (
+  url: string,
+  baseUrl: string,
+  terria: Terria
+): Promise<void> => {
+  const hashParams = parseHashParams(url);
+
+  const fromUrl = await buildInitSourcesFromUrlFragments(
+    url,
+    hashParams.initFragments,
+    terria.configParameters.initFragmentPaths
+  );
+  const fromStartData = await buildInitSourcesFromStartData(hashParams.start);
+  const fromShare = await buildInitSourcesFromShare(
+    hashParams.share,
+    terria.shareDataService
+  );
+
+  const fromSpaRoutes = await buildInitSourcesFromSpaRoutes(
+    url.replace(baseUrl, ""),
+    terria.configParameters.storyRouteUrlPrefix
+  );
+
+  const initSources = [
+    ...fromUrl,
+    ...fromStartData,
+    ...fromShare,
+    ...fromSpaRoutes
+  ];
+  terria.addInitSources(initSources);
 };
 
 export default InitSource;
