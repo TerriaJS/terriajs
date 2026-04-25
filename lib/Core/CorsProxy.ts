@@ -55,24 +55,25 @@ export default class CorsProxy {
    * the options will be correct for the proxy server it's configured to call, but this can be skipped and the values it
    * initialises set manually if desired.
    *
-   * @param serverConfig Configuration options retrieved from a ServerConfig object.
+   * @param proxyAllDomains Whether the proxy should be open to all domains.
+   * @param allowProxyFor Specific domains that are allowed to use the proxy.
    * @param baseProxyUrl The base URL to proxy with - this will default to 'proxy/'
    * @param proxyDomains Initial value for proxyDomains to which proxyable domains from the server will be appended -
    *      defaults to an empty array.
    * @returns A promise that resolves when initialisation is complete.
    */
   init(
-    serverConfig: any,
+    proxyAllDomains?: boolean,
+    allowProxyFor?: string[],
     baseProxyUrl: string = CorsProxy.DEFAULT_BASE_PROXY_PATH,
     proxyDomains: string[] = []
   ): void {
-    if (serverConfig !== null && serverConfig !== undefined) {
-      this.isOpenProxy = !!serverConfig.proxyAllDomains;
-      // ignore client list of allowed proxies in favour of definitive server list.
-      if (Array.isArray(serverConfig.allowProxyFor)) {
-        this.proxyDomains = serverConfig.allowProxyFor;
-      }
+    this.isOpenProxy = !!proxyAllDomains;
+    // ignore client list of allowed proxies in favour of definitive server list.
+    if (Array.isArray(allowProxyFor)) {
+      this.proxyDomains = allowProxyFor;
     }
+
     this.baseProxyUrl = baseProxyUrl;
 
     if (this.proxyDomains === null || this.proxyDomains === undefined) {

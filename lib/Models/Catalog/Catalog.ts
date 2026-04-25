@@ -1,76 +1,78 @@
 import i18next from "i18next";
-import { autorun, observable, makeObservable } from "mobx";
+import { makeObservable, observable } from "mobx";
 import { USER_ADDED_CATEGORY_ID } from "../../Core/addedByUser";
-import CatalogGroup from "./CatalogGroup";
+import CatalogSearchProviderMixin from "../../ModelMixins/SearchProviders/CatalogSearchProviderMixin";
 import CommonStrata from "../Definition/CommonStrata";
+import CatalogIndex from "../SearchProviders/CatalogIndex";
+import CatalogSearchProvider from "../SearchProviders/CatalogSearchProvider";
 import Terria from "../Terria";
-import Group from "./Group";
-import { BaseModel } from "../Definition/Model";
-import isDefined from "../../Core/isDefined";
+import CatalogGroup from "./CatalogGroup";
+
+const createUserAddedDataGroup = (terria: Terria) => {
+  const userAddedDataGroup = new CatalogGroup(USER_ADDED_CATEGORY_ID, terria);
+  const userAddedGroupName: string = i18next.t("core.userAddedData");
+  userAddedDataGroup.setTrait(
+    CommonStrata.definition,
+    "name",
+    userAddedGroupName
+  );
+  const userAddedGroupDescription: string = i18next.t(
+    "models.catalog.userAddedDataGroup"
+  );
+  userAddedDataGroup.setTrait(
+    CommonStrata.definition,
+    "description",
+    userAddedGroupDescription
+  );
+  return userAddedDataGroup;
+};
 
 export default class Catalog {
+  private _index: CatalogIndex | undefined;
   @observable
-  group: Group & BaseModel;
+  group: CatalogGroup;
+
+  _userAddedDataGroup: CatalogGroup;
+
+  @observable
+  searchProvider: CatalogSearchProviderMixin.Instance | undefined;
 
   readonly terria: Terria;
 
-  private _disposeCreateUserAddedGroup: () => void;
+  get index() {
+    return this._index;
+  }
 
-  constructor(terria: Terria) {
+  constructor(
+    terria: Terria,
+    catalogSearchProvider?: CatalogSearchProviderMixin.Instance
+  ) {
     makeObservable(this);
     this.terria = terria;
     this.group = new CatalogGroup("/", this.terria);
+    this._userAddedDataGroup = createUserAddedDataGroup(this.terria);
     this.terria.addModel(this.group);
+    this.terria.addModel(this._userAddedDataGroup);
 
-    this._disposeCreateUserAddedGroup = autorun(() => {
-      // Make sure the catalog has a user added data group even if its
-      // group or group members are reset.
-      if (
-        !this.group.memberModels.find(
-          (m) => m.uniqueId === USER_ADDED_CATEGORY_ID
-        )
-      ) {
-        let userAddedDataGroup = this.terria.getModelById(
-          BaseModel,
-          USER_ADDED_CATEGORY_ID
-        );
-
-        if (!isDefined(userAddedDataGroup)) {
-          userAddedDataGroup = new CatalogGroup(
-            USER_ADDED_CATEGORY_ID,
-            this.terria
-          );
-          const userAddedGroupName: string = i18next.t("core.userAddedData");
-          userAddedDataGroup.setTrait(
-            CommonStrata.definition,
-            "name",
-            userAddedGroupName
-          );
-          const userAddedGroupDescription: string = i18next.t(
-            "models.catalog.userAddedDataGroup"
-          );
-          userAddedDataGroup.setTrait(
-            CommonStrata.definition,
-            "description",
-            userAddedGroupDescription
-          );
-
-          this.terria.addModel(userAddedDataGroup);
-        }
-
-        this.group.add(CommonStrata.definition, userAddedDataGroup);
-      }
-    });
+    this.searchProvider =
+      catalogSearchProvider ??
+      new CatalogSearchProvider(
+        "catalog-search-provider",
+        terria,
+        terria.searchBarModel.minCharacters
+      );
   }
 
   destroy() {
-    this._disposeCreateUserAddedGroup();
+    this.terria.removeModelReferences(this.group);
+    this.terria.removeModelReferences(this._userAddedDataGroup);
   }
 
   get userAddedDataGroup(): CatalogGroup {
-    const group = this.group.memberModels.find(
-      (m) => m.uniqueId === USER_ADDED_CATEGORY_ID
-    );
-    return group as CatalogGroup;
+    return this._userAddedDataGroup;
+  }
+
+  setIndex(index: CatalogIndex) {
+    this._index = index;
   }
 }

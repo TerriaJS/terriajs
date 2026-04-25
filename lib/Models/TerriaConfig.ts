@@ -32,6 +32,10 @@ export type ConfigParameters = OnlyProps<TerriaConfig>;
  * config.apply(readLocalStorage(localStorage));
  */
 export class TerriaConfig {
+  @observable initializationUrls: string[] = [];
+
+  @observable v7initializationUrls: string[] = [];
+
   /**
    * TerriaJS uses this name whenever it needs to display the name of the
    * application.
@@ -94,6 +98,10 @@ export class TerriaConfig {
    * available.
    */
   @observable storyEnabled: boolean = true;
+  /**
+   * Enable additional tools in the UI.
+   */
+  @observable tools: boolean = false;
   /**
    * Whether to show the saving instructions message in the story builder panel.
    * Defaults to false.

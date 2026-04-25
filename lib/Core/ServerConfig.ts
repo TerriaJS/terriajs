@@ -6,18 +6,31 @@ const DEFAULT_URL = "serverconfig/";
 /**
  * Provides information about the configuration of the Terria server, by querying /serverconfig
  */
-class ServerConfig {
+export class ServerConfig {
   /**
    * Contains configuration information retrieved from the server. The attributes are defined by TerriaJS-Server but include:
    *   version: current version of server
    *   proxyAllDomains: whether all domains can be proxied
-   *   allowProxyFrom: array of domains that can be proxied
-   *   maxConversionSize: maximum size, in bytes, of files that can be uploaded to conversion service
+   *   allowProxyFor: array of domains that can be proxied
    *   newShareUrlPrefix: if defined, the share URL service is active
    *   shareUrlPrefixes: object defining share URL prefixes that can be resolved
    *   additionalFeedbackParameters: array of additional feedback parameters that can be used
    */
-  config: unknown;
+  config:
+    | {
+        version: string;
+        proxyAllDomains?: boolean;
+        allowProxyFor?: string[];
+        newShareUrlPrefix?: string;
+        shareUrlPrefixes?: Record<string, string>;
+        shareMaxRequestSize?: string;
+        shareMaxRequestSizeBytes?: number;
+        additionalFeedbackParameters?: {
+          name: string;
+          descriptiveLabel: string;
+        }[];
+      }
+    | undefined = undefined;
 
   serverConfigUrl?: string;
 
@@ -29,11 +42,11 @@ class ServerConfig {
    * @param  serverConfigUrl Optional override URL.
    * @return Promise that resolves to the configuration object itself.
    */
-  async init(serverConfigUrl: string) {
+  async init(serverConfigUrl: string = DEFAULT_URL) {
     if (this.config !== undefined) {
       return Promise.resolve(this.config);
     }
-    this.serverConfigUrl = serverConfigUrl ?? DEFAULT_URL;
+    this.serverConfigUrl = serverConfigUrl;
 
     try {
       this.config = await loadJson(this.serverConfigUrl);
@@ -47,5 +60,3 @@ class ServerConfig {
     }
   }
 }
-
-export default ServerConfig;

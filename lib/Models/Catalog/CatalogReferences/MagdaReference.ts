@@ -202,14 +202,14 @@ export default class MagdaReference extends AccessControlMixin(
         return target;
       }
 
-      if (
-        this.recordId === undefined &&
-        this.terria.catalogProvider?.isProviderFor(this)
-      ) {
-        // Occurs if record is no longer found inside containing group
-        // (i.e moved, deleted or user no longer has access, including if not logged in)
-        throw this.terria.catalogProvider.createLoadError(this);
-      }
+      // if (
+      //   this.recordId === undefined &&
+      //   this.terria.catalogProvider?.isProviderFor(this)
+      // ) {
+      //   // Occurs if record is no longer found inside containing group
+      //   // (i.e moved, deleted or user no longer has access, including if not logged in)
+      //   throw this.terria.catalogProvider.createLoadError(this);
+      // }
 
       const record = await this.loadMagdaRecord({
         id: this.recordId,

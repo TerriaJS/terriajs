@@ -326,7 +326,7 @@ export default async function generateCatalogIndex(
   try {
     terria.configParameters.serverConfigUrl = `${baseUrl}serverconfig`;
     terria.configParameters.corsProxyBaseUrl = `${baseUrl}proxy/`;
-    await terria.start({ configUrl });
+    // await terria.start({ configUrl });
 
     await terria.loadInitSources();
   } catch (e) {

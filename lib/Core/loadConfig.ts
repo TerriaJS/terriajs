@@ -1,3 +1,4 @@
+import { TerriaConfig } from "../Models/TerriaConfig";
 import { JsonObject } from "./Json";
 import loadJson5 from "./loadJson5";
 
@@ -12,12 +13,13 @@ import loadJson5 from "./loadJson5";
 export const loadConfig = async (
   configUrl: string,
   headers?: Record<string, string>
-): Promise<JsonObject> => {
+): Promise<TerriaConfig> => {
   const raw = await loadJson5(configUrl, headers);
 
   if (typeof raw !== "object" || raw === null || Array.isArray(raw)) {
     throw new Error(`Config at "${configUrl}" did not return a JSON object.`);
   }
-
-  return raw as JsonObject;
+  const config = new TerriaConfig();
+  config.update(raw as Partial<TerriaConfig>);
+  return config;
 };

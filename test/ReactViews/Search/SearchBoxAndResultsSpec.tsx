@@ -2,7 +2,6 @@ import { screen } from "@testing-library/react";
 import { runInAction } from "mobx";
 import { ThemeProvider } from "styled-components";
 import CommonStrata from "../../../lib/Models/Definition/CommonStrata";
-import CatalogSearchProvider from "../../../lib/Models/SearchProviders/CatalogSearchProvider";
 import Terria from "../../../lib/Models/Terria";
 import ViewState from "../../../lib/ReactViewModels/ViewState";
 import SearchBoxAndResults from "../../../lib/ReactViews/Search/SearchBoxAndResults";
@@ -18,8 +17,8 @@ describe("SearchBoxAndResults", function () {
       baseUrl: "./"
     });
     viewState = new ViewState({
-      terria: terria,
-      catalogSearchProvider: new CatalogSearchProvider("catalog", terria)
+      terria: terria
+      // catalogSearchProvider: new CatalogSearchProvider("catalog", terria)
     });
   });
 
@@ -74,7 +73,7 @@ describe("SearchBoxAndResults", function () {
       viewState.searchState.locationSearchText = searchText;
       viewState.searchState.showLocationSearchResults = true;
       viewState.searchState.locationSearchResults = [];
-      viewState.terria.searchBarModel.catalogSearchProvider = undefined;
+      viewState.terria.catalog.searchProvider = undefined;
     });
     renderWithContexts(
       <ThemeProvider theme={terriaTheme}>

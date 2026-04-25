@@ -224,13 +224,13 @@ describe("CatalogIndex - with shareKeys", function () {
       }
     });
 
-    terria.catalogIndex = new CatalogIndex(terria, "catalog-index.json");
-    await terria.catalogIndex.load();
+    terria.catalog.index = new CatalogIndex(terria, "catalog-index.json");
+    await terria.catalog.index.load();
   });
 
   it("loads shareKeys", function () {
     expect(
-      Object.fromEntries(terria.catalogIndex!.shareKeysMap.toJSON())
+      Object.fromEntries(terria.catalog.index!.shareKeysMap.toJSON())
     ).toEqual({
       "test-nested-dynamic-group-sharekey": "test-nested-dynamic-group",
       "test-item-3-sharekey": "test-item-3",
@@ -243,16 +243,16 @@ describe("CatalogIndex - with shareKeys", function () {
 
   it('can use "deep" shareKeys', async function () {
     expect(
-      terria.catalogIndex!.getModelByIdOrShareKey("test-item-3")?.uniqueId
+      terria.catalog.index!.getModelByIdOrShareKey("test-item-3")?.uniqueId
     ).toBe("test-item-3");
     expect(
-      terria.catalogIndex!.getModelByIdOrShareKey("test-item-3-sharekey")
+      terria.catalog.index!.getModelByIdOrShareKey("test-item-3-sharekey")
         ?.uniqueId
     ).toBe("test-item-3");
 
     (
-      await terria
-        .catalogIndex!.getModelByIdOrShareKey("test-item-3")
+      await terria.catalog
+        .index!.getModelByIdOrShareKey("test-item-3")
         ?.loadReference()
     )?.logError();
 
@@ -267,7 +267,7 @@ describe("CatalogIndex - with shareKeys", function () {
   });
 
   it("another one", async function () {
-    const model = terria.catalogIndex!.getModelByIdOrShareKey(
+    const model = terria.catalog.index!.getModelByIdOrShareKey(
       "test-nested-dynamic-group-sharekey/Test item without ID"
     );
     expect(model?.uniqueId).toBe(

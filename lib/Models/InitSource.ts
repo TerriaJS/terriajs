@@ -1,11 +1,22 @@
+import type { ShareResult } from "catalog-converter";
 import URI from "urijs";
-import { isJsonString, JsonArray, JsonObject } from "../Core/Json";
+import {
+  isJsonObject,
+  isJsonString,
+  JsonArray,
+  JsonObject
+} from "../Core/Json";
 import loadJson5 from "../Core/loadJson5";
 import Result from "../Core/Result";
-import { TerriaErrorSeverity } from "../Core/TerriaError";
+import TerriaError, { TerriaErrorSeverity } from "../Core/TerriaError";
 import { ProviderCoordsMap } from "../Map/PickedFeatures/PickedFeatures";
+import { SHARE_VERSION } from "../ReactViews/Map/Panels/SharePanel/BuildShareLink";
 import { BaseMapsJson } from "./BaseMaps/BaseMapsModel";
+import { HashParams } from "./HashParams";
 import IElementConfig from "./IElementConfig";
+import Terria from "./Terria";
+import { TerriaConfig } from "./TerriaConfig";
+import loadJson from "../Core/loadJson";
 
 export interface InitSourcePickedFeatures {
   providerCoords?: ProviderCoordsMap;
@@ -148,6 +159,63 @@ export function isInitFromOptions(
 }
 
 /**
+ * Converts raw share/start data (as loaded from the server or inline) into an
+ * array of InitSource objects. Handles both v8 data and v7 data (via
+ * catalog-converter).
+ *
+ */
+const convertStartData = async (
+  startData: unknown,
+  name: string,
+  errorSeverity?: TerriaErrorSeverity,
+  showConversionWarning?: (messages: ShareResult["messages"]) => void
+): Promise<InitSource[]> => {
+  if (!isJsonObject(startData, false)) return [];
+
+  let v8Data: ShareInitSourceData | null;
+
+  try {
+    if (
+      "version" in startData &&
+      typeof startData.version === "string" &&
+      startData.version.startsWith("0")
+    ) {
+      const { convertShare } = await import("catalog-converter");
+      const result = convertShare(startData);
+      if (result.converted) {
+        showConversionWarning?.(result.messages);
+      }
+      v8Data = result.result;
+    } else {
+      const initSources = Array.isArray(startData.initSources)
+        ? startData.initSources.filter(
+            (s) => isJsonString(s) || isJsonObject(s)
+          )
+        : [];
+
+      const version = isJsonString(startData.version)
+        ? startData.version
+        : SHARE_VERSION;
+
+      v8Data = { version, initSources };
+    }
+  } catch (error) {
+    throw TerriaError.from(error, {
+      title: { key: "share.convertErrorTitle" },
+      message: { key: "share.convertErrorMessage" }
+    });
+  }
+
+  if (v8Data === null || !Array.isArray(v8Data.initSources)) return [];
+
+  return v8Data.initSources.map((initSource) =>
+    isJsonString(initSource)
+      ? ({ name, initUrl: initSource, errorSeverity } as InitSource)
+      : ({ name, data: initSource, errorSeverity } as InitSource)
+  );
+};
+
+/**
  * Converts `config.initializationUrls` and `config.v7initializationUrls`
  * into an array of `InitSource` objects ready to be passed to
  * `terria.addInitSources()`.
@@ -157,7 +225,7 @@ export function isInitFromOptions(
  * - v7 URLs → `InitSourceFromDataPromise` (lazily converted via catalog-converter)
  */
 export const buildInitSourcesFromConfig = (
-  config: JsonObject,
+  config: TerriaConfig,
   baseUri: URI,
   initFragmentPaths: string[]
 ): InitSource[] => {
@@ -207,6 +275,110 @@ export const buildInitSourcesFromConfig = (
           })()
         }))
     );
+  }
+
+  return initSources;
+};
+
+const checkSegments = (urlSegments: string[], customRoute: string) => {
+  // Accept /${customRoute}/:some-id/ or /${customRoute}/:some-id
+  return (
+    ((urlSegments.length === 3 && urlSegments[2] === "") ||
+      urlSegments.length === 2) &&
+    urlSegments[0] === customRoute &&
+    urlSegments[1].length > 0
+  );
+};
+
+export const buildInitSourcesFromStartData = async (
+  start: HashParams["start"] | undefined
+): Promise<InitSource[]> => {
+  if (!start) return [];
+
+  const initSourcesFromStart = await convertStartData(
+    start,
+    'Start data from hash `"#start"` value',
+    TerriaErrorSeverity.Error
+  );
+  return initSourcesFromStart;
+};
+
+export const buildInitSourcesFromShare = async (
+  shareToken: string | undefined,
+  terria: Terria
+): Promise<InitSource[]> => {
+  if (!shareToken || !terria.shareDataService) return [];
+  const shareProps = await terria.shareDataService.resolveData(shareToken);
+  const sources = await convertStartData(
+    shareProps,
+    `Start data from sharelink \`"${shareToken}"\``,
+    TerriaErrorSeverity.Error
+  );
+  return sources;
+};
+
+export const buildInitSourcesFromHash = async (
+  url: string,
+  hashParams: HashParams,
+  initFragmentPaths: string[]
+): Promise<InitSource[]> => {
+  const initSources: InitSource[] = [];
+
+  hashParams.initFragments.forEach((fragment) => {
+    const fragmentSource = generateInitFragmentSource(
+      new URI(url).filename("").query("").hash(""),
+      initFragmentPaths,
+      fragment
+    );
+    initSources.push({
+      name: `InitUrl from applicationURL hash ${fragment}`,
+      errorSeverity: TerriaErrorSeverity.Error,
+      ...fragmentSource
+    });
+  });
+
+  return initSources;
+};
+
+export const buildInitSourcesFromSpaRoutes = async (
+  url: string,
+  storyRouteUrlPrefix: string | undefined
+): Promise<InitSource[]> => {
+  const initSources: InitSource[] = [];
+
+  // SPA route: /catalog/:id and /story/:id
+  const segments = url.split("/").filter((s) => s.length > 0);
+
+  if (checkSegments(segments, "catalog")) {
+    initSources.push({
+      name: `Go to ${url}`,
+      errorSeverity: TerriaErrorSeverity.Error,
+      data: {
+        previewedItemId: decodeURIComponent(segments[1])
+      }
+    } as InitSourceFromData & {
+      name: string;
+      errorSeverity: TerriaErrorSeverity;
+    });
+  } else if (
+    checkSegments(segments, "story") &&
+    storyRouteUrlPrefix !== undefined
+  ) {
+    let storyJson;
+    try {
+      storyJson = await loadJson(`${storyRouteUrlPrefix}${segments[1]}`);
+    } catch (e) {
+      throw TerriaError.from(e, {
+        message: `Failed to fetch story "${segments[1]}"`
+      });
+    }
+    const sources = await convertStartData(
+      storyJson,
+      `Start data from story "${segments[1]}"`,
+      TerriaErrorSeverity.Error
+    );
+    initSources.push(...sources);
+    // userProperties.set("playStory", "1");
   }
 
   return initSources;
