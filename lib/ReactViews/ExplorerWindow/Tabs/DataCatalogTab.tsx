@@ -58,7 +58,7 @@ const DataCatalogTab = observer(function DataCatalogTab(
                   terria.catalogReferencesLoaded
                     ? (
                         searchState.catalogSearchProvider as CatalogSearchProvider
-                      ).debounceDurationOnceLoaded
+                      ).debounceDuration
                     : DEBOUNCE_INTERVAL
                 }
               />

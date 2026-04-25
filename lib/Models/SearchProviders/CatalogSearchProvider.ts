@@ -108,7 +108,6 @@ export default class CatalogSearchProvider extends CatalogSearchProviderMixin(
 ) {
   static readonly type = "catalog-search-provider";
   @observable isSearching: boolean = false;
-  @observable debounceDurationOnceLoaded: number = 300;
 
   constructor(id: string | undefined, terria: Terria) {
     super(id, terria);
