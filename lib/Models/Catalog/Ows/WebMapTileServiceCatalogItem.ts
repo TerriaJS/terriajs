@@ -6,10 +6,14 @@ import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTili
 import WebMapTileServiceImageryProvider from "terriajs-cesium/Source/Scene/WebMapTileServiceImageryProvider";
 import URI from "urijs";
 import containsAny from "../../../Core/containsAny";
+import createDiscreteTimesFromIsoSegments from "../../../Core/createDiscreteTimes";
 import isDefined from "../../../Core/isDefined";
 import isReadOnlyArray from "../../../Core/isReadOnlyArray";
 import TerriaError from "../../../Core/TerriaError";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
+import DiscretelyTimeVaryingMixin, {
+  DiscreteTimeAsJS
+} from "../../../ModelMixins/DiscretelyTimeVaryingMixin";
 import GetCapabilitiesMixin from "../../../ModelMixins/GetCapabilitiesMixin";
 import MappableMixin, { MapItem } from "../../../ModelMixins/MappableMixin";
 import UrlMixin from "../../../ModelMixins/UrlMixin";
@@ -31,6 +35,7 @@ import WebMapTileServiceCapabilities, {
   ResourceUrl,
   TileMatrixSetLink,
   WmtsCapabilitiesLegend,
+  WmtsDimension,
   WmtsLayer
 } from "./WebMapTileServiceCapabilities";
 
@@ -419,12 +424,138 @@ class GetCapabilitiesStratum extends LoadableStratum(
       layerAvailableStyles?.[0]?.identifier
     );
   }
+
+  /**
+   * Locate the time `<Dimension>` (case-insensitive on Identifier) on the
+   * matched WMTS layer. Returns `undefined` if the layer or dimension is
+   * absent.
+   */
+  @computed
+  private get timeDimension(): WmtsDimension | undefined {
+    const layer = this.capabilitiesLayer;
+    if (!layer || !layer.Dimension) return undefined;
+    const dimensions: ReadonlyArray<WmtsDimension> = Array.isArray(
+      layer.Dimension
+    )
+      ? layer.Dimension
+      : [layer.Dimension];
+    return dimensions.find(
+      (d) => isDefined(d.Identifier) && d.Identifier.toLowerCase() === "time"
+    );
+  }
+
+  /**
+   * Discrete times parsed from the time `<Dimension>` of the matched layer.
+   *
+   * Three encodings are supported (per OGC 07-057r7 section 7.1.2 and common
+   * server practice):
+   *
+   * 1. Multiple `<Value>` children: each text node is treated as an explicit
+   *    ISO instant (NASA GIBS style).
+   * 2. A single `<Value>` containing a `start/stop/period` ISO 19128 range:
+   *    expanded via `createDiscreteTimesFromIsoSegments` (TERN, GeoServer
+   *    style).
+   * 3. A single `<Value>` containing a comma-separated list of instants or
+   *    ranges: each segment is parsed independently. (Not strictly per spec
+   *    but observed in the wild on GeoServer-backed endpoints.)
+   *
+   * Honours `maxRefreshIntervals` to cap range expansion.
+   */
+  @computed
+  get discreteTimes(): DiscreteTimeAsJS[] | undefined {
+    const dimension = this.timeDimension;
+    if (!dimension || !isDefined(dimension.Value)) return undefined;
+
+    const result: DiscreteTimeAsJS[] = [];
+
+    const rawValues: ReadonlyArray<string> = isReadOnlyArray(dimension.Value)
+      ? dimension.Value
+      : [dimension.Value];
+
+    // Flatten any comma-separated entries inside individual <Value> children.
+    const values: string[] = [];
+    for (const raw of rawValues) {
+      if (typeof raw !== "string") continue;
+      for (const segment of raw.split(",")) {
+        const trimmed = segment.trim();
+        if (trimmed.length > 0) values.push(trimmed);
+      }
+    }
+
+    for (const value of values) {
+      const isoSegments = value.split("/");
+      if (isoSegments.length === 1) {
+        result.push({ time: value, tag: undefined });
+      } else {
+        createDiscreteTimesFromIsoSegments(
+          result,
+          isoSegments[0],
+          isoSegments[1],
+          isoSegments[2],
+          this.catalogItem.maxRefreshIntervals
+        );
+      }
+    }
+
+    return result.length > 0 ? result : undefined;
+  }
+
+  @computed
+  get initialTimeSource() {
+    return "now";
+  }
+
+  /**
+   * Default time selection. Priority:
+   *
+   * 1. `<Default>` from the time `<Dimension>`, if present and not the
+   *    placeholder string `"current"`.
+   * 2. The most recent discrete instant.
+   * 3. `undefined` (UI falls back to `initialTimeSource`).
+   *
+   * INTENTIONAL DIVERGENCE FROM WMS: when no `<Default>` is supplied (or it
+   * equals the `"current"` sentinel), this stratum returns the latest
+   * discrete time — not `undefined`. The WMS stratum returns `undefined`
+   * here and lets `initialTimeSource="now"` drive the UI to the wall-clock.
+   *
+   * The WMTS choice is per upstream issue #7742 acceptance criteria
+   * ("otherwise latest discrete time"). Rationale: WMTS layers are typically
+   * pre-tiled archives where the wall-clock "now" is rarely a tiled instant,
+   * so anchoring to the newest available tile gives a usable initial render.
+   * If you change this, also change the U4/U5 specs in
+   * `WebMapTileServiceCatalogItemSpec.ts` and update issue #7742.
+   */
+  @computed
+  get currentTime(): string | undefined {
+    const dimension = this.timeDimension;
+    const explicitDefault = dimension?.Default;
+
+    // The literal "current" sentinel means "send the most recent data
+    // available" — we let the UI's "now" handling take over rather than
+    // pinning the layer to a stale ISO string.
+    if (isDefined(explicitDefault) && explicitDefault !== "current") {
+      return explicitDefault;
+    }
+
+    const times = this.discreteTimes;
+    if (times && times.length > 0) {
+      // discreteTimes from a range expansion are ordered ascending. For
+      // explicit <Value> lists we don't sort (preserve server order) but
+      // still pick the last entry, which matches WMS behaviour where the
+      // newest instant is conventionally last.
+      return times[times.length - 1].time;
+    }
+
+    return undefined;
+  }
 }
 
 class WebMapTileServiceCatalogItem extends MappableMixin(
-  GetCapabilitiesMixin(
-    UrlMixin(
-      CatalogMemberMixin(CreateModel(WebMapTileServiceCatalogItemTraits))
+  DiscretelyTimeVaryingMixin(
+    GetCapabilitiesMixin(
+      UrlMixin(
+        CatalogMemberMixin(CreateModel(WebMapTileServiceCatalogItemTraits))
+      )
     )
   )
 ) {
@@ -452,6 +583,24 @@ class WebMapTileServiceCatalogItem extends MappableMixin(
 
   get type() {
     return WebMapTileServiceCatalogItem.type;
+  }
+
+  /**
+   * Class-level delegate: forward `discreteTimes` from the GetCapabilities
+   * stratum so `DiscretelyTimeVaryingMixin` can read it off the model
+   * directly. There is intentionally no equivalent class-level delegate for
+   * `currentTime` — the trait system (via `DiscretelyTimeVaryingTraits`)
+   * already resolves `currentTime` from strata automatically, so an
+   * explicit getter would shadow stratum priority and break override
+   * semantics. `discreteTimes` is NOT a trait, hence the explicit forward.
+   */
+  @computed
+  get discreteTimes() {
+    const getCapabilitiesStratum: GetCapabilitiesStratum | undefined =
+      this.strata.get(
+        GetCapabilitiesMixin.getCapabilitiesStratumName
+      ) as GetCapabilitiesStratum;
+    return getCapabilitiesStratum?.discreteTimes;
   }
 
   async createGetCapabilitiesStratumFromParent(
