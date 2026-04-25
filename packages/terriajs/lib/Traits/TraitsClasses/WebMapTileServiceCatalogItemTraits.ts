@@ -7,6 +7,7 @@ import mixTraits from "../mixTraits";
 import ModelTraits from "../ModelTraits";
 import { traitClass } from "../Trait";
 import CatalogMemberTraits from "./CatalogMemberTraits";
+import DiscretelyTimeVaryingTraits from "./DiscretelyTimeVaryingTraits";
 import GetCapabilitiesTraits from "./GetCapabilitiesTraits";
 import ImageryProviderTraits from "./ImageryProviderTraits";
 import LayerOrderingTraits from "./LayerOrderingTraits";
@@ -87,7 +88,8 @@ export default class WebMapTileServiceCatalogItemTraits extends mixTraits(
   UrlTraits,
   MappableTraits,
   CatalogMemberTraits,
-  LegendOwnerTraits
+  LegendOwnerTraits,
+  DiscretelyTimeVaryingTraits
 ) {
   @primitiveTrait({
     type: "string",
@@ -132,4 +134,14 @@ export default class WebMapTileServiceCatalogItemTraits extends mixTraits(
       "The encoding of the tile images. We will try to load the tile images with this encoding, if not available we will fallback to KVP. Supported values are KVP and Restful"
   })
   requestEncoding = "RESTful";
+
+  @primitiveTrait({
+    type: "number",
+    name: "Maximum Refresh Intervals",
+    description:
+      "The maximum number of discrete times that can be created by a single " +
+      "date range, when specified in the format time/time/periodicity. E.g. " +
+      "`2015-04-27T16:15:00/2015-04-27T18:45:00/PT15M` has 11 times."
+  })
+  maxRefreshIntervals: number = 10000;
 }
