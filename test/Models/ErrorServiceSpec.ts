@@ -18,10 +18,7 @@ describe("ErrorService", function () {
 
   beforeEach(() => {
     worker.use(
-      http.get("serverconfig", () => HttpResponse.json({ foo: "bar" })),
-      http.get("*/proxyabledomains", () => HttpResponse.json({ foo: "bar" })),
-      http.get("*/test-config.json", () => HttpResponse.json({ config: true })),
-      http.all("*", () => HttpResponse.error())
+      http.get("*/proxyabledomains", () => HttpResponse.json({ foo: "bar" }))
     );
 
     terria = new Terria({
@@ -32,19 +29,13 @@ describe("ErrorService", function () {
 
   it("Initializes an error service, passing in config", async function () {
     const initSpy = spyOn(mockErrorServiceProvider, "init");
-    await terria.start({
-      configUrl: "test-config.json",
-      errorService: mockErrorServiceProvider
-    });
+    terria.setErrorService(mockErrorServiceProvider).build();
     expect(initSpy).toHaveBeenCalledTimes(1);
   });
 
   it("Gets called with error", async function () {
     const errorSpy = spyOn(mockErrorServiceProvider, "error").and.callThrough();
-    await terria.start({
-      configUrl: "test-config.json",
-      errorService: mockErrorServiceProvider
-    });
+    terria.setErrorService(mockErrorServiceProvider).build();
     const error = new TerriaError({
       message: "test error"
     });
@@ -53,9 +44,7 @@ describe("ErrorService", function () {
   });
 
   it("Falls back to stub provider", async () => {
-    await terria.start({
-      configUrl: "test-config.json"
-    });
+    terria.build();
     expect(terria.errorService).toEqual(jasmine.any(StubErrorServiceProvider));
   });
 });

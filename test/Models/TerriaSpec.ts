@@ -7,6 +7,7 @@ import RequestScheduler from "terriajs-cesium/Source/Core/RequestScheduler";
 import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import SplitDirection from "terriajs-cesium/Source/Scene/SplitDirection";
+import URI from "urijs";
 import hashEntity from "../../lib/Core/hashEntity";
 import Result from "../../lib/Core/Result";
 import TerriaError from "../../lib/Core/TerriaError";
@@ -23,18 +24,20 @@ import WebMapServiceCatalogItem from "../../lib/Models/Catalog/Ows/WebMapService
 import CommonStrata from "../../lib/Models/Definition/CommonStrata";
 import { BaseModel } from "../../lib/Models/Definition/Model";
 import TerriaFeature from "../../lib/Models/Feature/Feature";
+import { parseHashParams } from "../../lib/Models/HashParams";
 import {
+  buildInitSourcesFromStartData,
+  buildInitSourcesFromUrlFragments,
+  buildInitSourcesFromConfig,
   isInitFromData,
   isInitFromOptions,
-  isInitFromUrl
+  isInitFromUrl,
+  updateInitSourcesFromUrl
 } from "../../lib/Models/InitSource";
 import Terria from "../../lib/Models/Terria";
 import ViewerMode from "../../lib/Models/ViewerMode";
 import ViewState from "../../lib/ReactViewModels/ViewState";
 import { buildShareLink } from "../../lib/ReactViews/Map/Panels/SharePanel/BuildShareLink";
-import SimpleCatalogItem from "../Helpers/SimpleCatalogItem";
-import { worker } from "../mocks/browser";
-
 import configProxy from "../../wwwroot/test/init/configProxy.json";
 import serverConfig from "../../wwwroot/test/init/serverconfig.json";
 import storyJson from "../../wwwroot/test/stories/TerriaJS App/my-story.json";
@@ -42,12 +45,8 @@ import esriFeatureServerJson from "../../wwwroot/test/Terria/applyInitData/Featu
 import mapServerSimpleGroupJson from "../../wwwroot/test/Terria/applyInitData/MapServer/mapServerSimpleGroup.json";
 import mapServerWithErrorJson from "../../wwwroot/test/Terria/applyInitData/MapServer/mapServerWithError.json";
 import wmsCapabilitiesXml from "../../wwwroot/test/Terria/applyInitData/WmsServer/capabilities.xml";
-
-// i18nOptions for CI
-const i18nOptions = {
-  // Skip calling i18next.init in specs
-  skipInit: true
-};
+import SimpleCatalogItem from "../Helpers/SimpleCatalogItem";
+import { worker } from "../mocks/browser";
 
 describe("TerriaSpec", function () {
   let terria: Terria;
@@ -57,11 +56,6 @@ describe("TerriaSpec", function () {
       appBaseHref: "/",
       baseUrl: "./"
     });
-
-    worker.use(
-      http.get("*/serverconfig/*", () => HttpResponse.json({})),
-      http.get("*/test-config.json", () => HttpResponse.json({}))
-    );
   });
 
   describe("cesiumBaseUrl", function () {
@@ -71,7 +65,8 @@ describe("TerriaSpec", function () {
         baseUrl: "./",
         cesiumBaseUrl: "some/path/to/cesium"
       });
-      const path = new URL(terria.cesiumBaseUrl).pathname;
+
+      const path = new URL(buildModuleUrl("")).pathname;
       expect(path).toBe("/some/path/to/cesium/");
     });
 
@@ -80,7 +75,7 @@ describe("TerriaSpec", function () {
         appBaseHref: "/",
         baseUrl: "some/path/to/terria"
       });
-      const path = new URL(terria.cesiumBaseUrl).pathname;
+      const path = new URL(buildModuleUrl("")).pathname;
       expect(path).toBe("/some/path/to/terria/build/Cesium/build/");
     });
 
@@ -116,11 +111,6 @@ describe("TerriaSpec", function () {
     it("applies initSources in correct order", async function () {
       expect(terria.initSources.length).toEqual(0);
       worker.use(
-        http.get("*/config.json", () =>
-          HttpResponse.json({
-            initializationUrls: ["something"]
-          })
-        ),
         http.get("*/init/something.json", () =>
           HttpResponse.json({
             workbench: ["test"],
@@ -149,12 +139,25 @@ describe("TerriaSpec", function () {
           HttpResponse.json([{ id: "document", version: "1.0" }])
         )
       );
-      await terria.start({
-        configUrl: `config.json`,
-        i18nOptions
-      });
+      terria.build();
+      terria.addInitSources(
+        buildInitSourcesFromConfig({
+          initializationUrls: ["something"],
+          baseUri: new URI(terria.baseUrl),
+          initFragmentPaths: terria.configParameters.initFragmentPaths
+        })
+      );
 
-      await terria.updateApplicationUrl("https://application.url/#hash-init");
+      const hashParams = parseHashParams("https://application.url/#hash-init");
+      terria.setHashParams(hashParams).build();
+      const initSources = await buildInitSourcesFromUrlFragments(
+        "https://application.url/#hash-init",
+        hashParams.initFragments,
+        terria.configParameters.initFragmentPaths
+      );
+      terria.addInitSources(initSources);
+
+      await terria.loadInitSources();
 
       expect(terria.initSources.length).toEqual(2);
 
@@ -168,18 +171,6 @@ describe("TerriaSpec", function () {
       expect(terria.initSources.length).toEqual(0);
 
       worker.use(
-        http.get("*/path/to/config/configUrl.json", () =>
-          HttpResponse.json({
-            initializationUrls: ["something"],
-            parameters: {
-              applicationUrl: "https://application.url/",
-              initFragmentPaths: [
-                "path/to/init/",
-                "https://hostname.com/some/other/path/"
-              ]
-            }
-          })
-        ),
         http.get("*/init/something.json", () =>
           HttpResponse.json({
             catalog: []
@@ -188,11 +179,24 @@ describe("TerriaSpec", function () {
         http.get("https://hostname.com/*", () => HttpResponse.json({}))
       );
 
-      await terria.start({
-        configUrl: `path/to/config/configUrl.json`,
-        i18nOptions
-      });
-
+      terria
+        .updateConfig({
+          initFragmentPaths: [
+            "path/to/init/",
+            "https://hostname.com/some/other/path/"
+          ]
+        })
+        .build();
+      terria.addInitSources(
+        buildInitSourcesFromConfig({
+          initializationUrls: ["something"],
+          baseUri: new URI("path/to/config/"),
+          initFragmentPaths: [
+            "path/to/init/",
+            "https://hostname.com/some/other/path/"
+          ]
+        })
+      );
       expect(terria.initSources.length).toEqual(1);
 
       const initSource = terria.initSources[0];
@@ -212,50 +216,6 @@ describe("TerriaSpec", function () {
         "https://hostname.com/some/other/path/something.json"
       ]);
     });
-
-    it("calls `beforeRestoreAppState` before restoring app state from share data", async function () {
-      terria = new Terria({
-        appBaseHref: "/",
-        baseUrl: "./"
-      });
-
-      const restoreAppState = spyOn(
-        terria,
-        "restoreAppState" as any
-      ).and.callThrough();
-
-      const beforeRestoreAppState = jasmine
-        .createSpy("beforeRestoreAppState")
-        // It should also handle errors when calling beforeRestoreAppState
-        .and.callFake(() => Promise.reject("some error"));
-
-      expect(terria.mainViewer.viewerMode).toBe(ViewerMode.Cesium);
-      await terria.start({
-        configUrl: "test-config.json",
-        applicationUrl: {
-          href: "http://test.com/#map=2d"
-        } as Location,
-        beforeRestoreAppState
-      });
-
-      expect(terria.mainViewer.viewerMode).toBe(ViewerMode.Leaflet);
-      expect(beforeRestoreAppState).toHaveBeenCalledBefore(restoreAppState);
-    });
-
-    it("uses a supplied loadConfig callback instead of configUrl", async function () {
-      const loadConfig = jasmine.createSpy("loadConfig").and.returnValue(
-        Promise.resolve({
-          config: { parameters: { disableMobileInterface: true } },
-          baseUri: new URI("test-config.json").filename(""),
-          configUrl: "test-config.json"
-        })
-      );
-
-      await terria.start({ loadConfig, i18nOptions });
-
-      expect(loadConfig).toHaveBeenCalledTimes(1);
-      expect(terria.configParameters.disableMobileInterface).toBe(true);
-    });
   });
 
   describe("updateApplicationUrl", function () {
@@ -266,13 +226,7 @@ describe("TerriaSpec", function () {
         http.get("*/path/to/config/configUrl.json", () =>
           HttpResponse.json({
             initializationUrls: ["something"],
-            parameters: {
-              applicationUrl: "https://application.url/",
-              initFragmentPaths: [
-                "path/to/init/",
-                "https://hostname.com/some/other/path/"
-              ]
-            }
+            parameters: {}
           })
         ),
         http.get("*/init/something.json", () =>
@@ -284,13 +238,32 @@ describe("TerriaSpec", function () {
         http.get("https://hostname.com/*", () => HttpResponse.json({}))
       );
 
-      await terria.start({
-        configUrl: `path/to/config/configUrl.json`,
-        i18nOptions
+      terria.updateConfig({
+        initFragmentPaths: [
+          "path/to/init/",
+          "https://hostname.com/some/other/path/"
+        ]
       });
 
-      await terria.updateApplicationUrl(
+      const hashParams = parseHashParams(
         "https://application.url/#someInitHash"
+      );
+
+      terria.setHashParams(hashParams).build();
+
+      terria.addInitSources(
+        buildInitSourcesFromConfig({
+          initializationUrls: ["something"],
+          baseUri: new URI("path/to/config/"),
+          initFragmentPaths: terria.configParameters.initFragmentPaths
+        })
+      );
+      terria.addInitSources(
+        await buildInitSourcesFromUrlFragments(
+          "https://application.url",
+          hashParams.initFragments,
+          terria.configParameters.initFragmentPaths
+        )
       );
 
       expect(terria.initSources.length).toEqual(2);
@@ -316,26 +289,19 @@ describe("TerriaSpec", function () {
     it("processes #start correctly", async function () {
       expect(terria.initSources.length).toEqual(0);
 
-      worker.use(
-        http.get("*/configUrl.json", () => HttpResponse.json({})),
-        http.get("http://something/*", () => HttpResponse.json({}))
-      );
+      worker.use(http.get("http://something/*", () => HttpResponse.json({})));
 
-      await terria.start({
-        configUrl: `configUrl.json`,
-        i18nOptions
-      });
-
-      // Test #start with two init sources
-      // - one initURL = "http://something/init.json"
-      // - one initData which sets `splitPosition`
-      await terria.updateApplicationUrl(
+      const hashParams = parseHashParams(
         "https://application.url/#start=" +
           JSON.stringify({
             version: "8.0.0",
             initSources: ["http://something/init.json", { splitPosition: 0.3 }]
           })
       );
+
+      terria.setHashParams(hashParams).build();
+      const initSoruces = await buildInitSourcesFromStartData(hashParams.start);
+      terria.addInitSources(initSoruces);
 
       expect(terria.initSources.length).toEqual(2);
 
@@ -407,7 +373,16 @@ describe("TerriaSpec", function () {
         );
 
         const shareLink = buildShareLink(terria, viewState);
-        await newTerria.updateApplicationUrl(shareLink);
+        const baseUrl = new URL(document.baseURI);
+        baseUrl.pathname = "";
+        baseUrl.search = "";
+        baseUrl.hash = "";
+        await updateInitSourcesFromUrl(
+          shareLink,
+          baseUrl.toString(),
+          newTerria
+        );
+
         await newTerria.loadInitSources();
         expect(newTerria.catalog.userAddedDataGroup.members).toContain(
           "itemABC"
@@ -431,7 +406,15 @@ describe("TerriaSpec", function () {
         );
 
         const shareLink = buildShareLink(terria, viewState);
-        await newTerria.updateApplicationUrl(shareLink);
+        const baseUrl = new URL(document.baseURI);
+        baseUrl.pathname = "";
+        baseUrl.search = "";
+        baseUrl.hash = "";
+        await updateInitSourcesFromUrl(
+          shareLink,
+          baseUrl.toString(),
+          newTerria
+        );
         await newTerria.loadInitSources();
         expect(newTerria.catalog.userAddedDataGroup.members).toContain(
           "url_test"
@@ -462,7 +445,15 @@ describe("TerriaSpec", function () {
         expect(newTerria.workbench.itemIds).toEqual([]);
 
         const shareLink = buildShareLink(terria, viewState);
-        await newTerria.updateApplicationUrl(shareLink);
+        const baseUrl = new URL(document.baseURI);
+        baseUrl.pathname = "";
+        baseUrl.search = "";
+        baseUrl.hash = "";
+        await updateInitSourcesFromUrl(
+          shareLink,
+          baseUrl.toString(),
+          newTerria
+        );
         await newTerria.loadInitSources();
         expect(newTerria.workbench.itemIds).toEqual(terria.workbench.itemIds);
       });
@@ -485,7 +476,15 @@ describe("TerriaSpec", function () {
         });
 
         const shareLink = buildShareLink(terria, viewState);
-        await newTerria.updateApplicationUrl(shareLink);
+        const baseUrl = new URL(document.baseURI);
+        baseUrl.pathname = "";
+        baseUrl.search = "";
+        baseUrl.hash = "";
+        await updateInitSourcesFromUrl(
+          shareLink,
+          baseUrl.toString(),
+          newTerria
+        );
         await newTerria.loadInitSources();
         expect(newTerria.configParameters.showSplitter).toEqual(true);
         expect(newTerria.configParameters.splitPosition).toEqual(0.7);
@@ -508,7 +507,15 @@ describe("TerriaSpec", function () {
         expect(group.isOpen).toBe(true);
         expect(group.members.length).toBeGreaterThan(0);
         const shareLink = buildShareLink(terria, viewState);
-        await newTerria.updateApplicationUrl(shareLink);
+        const baseUrl = new URL(document.baseURI);
+        baseUrl.pathname = "";
+        baseUrl.search = "";
+        baseUrl.hash = "";
+        await updateInitSourcesFromUrl(
+          shareLink,
+          baseUrl.toString(),
+          newTerria
+        );
         await newTerria.loadInitSources();
         const newGroup = newTerria.getModelById(
           BaseModel,
@@ -535,15 +542,27 @@ describe("TerriaSpec", function () {
       });
 
       it("sets playStory to 1", async function () {
-        await terria.updateApplicationUrl(
-          new URL("story/my-story", document.baseURI).toString()
+        const baseUrl = new URL(document.baseURI);
+        baseUrl.pathname = "";
+        baseUrl.search = "";
+        baseUrl.hash = "";
+        await updateInitSourcesFromUrl(
+          new URL("story/my-story", baseUrl).toString(),
+          baseUrl.toString(),
+          terria
         );
         expect(terria.playStoryOnInit).toBe(true);
       });
 
       it("correctly adds the story share as a datasource", async function () {
-        await terria.updateApplicationUrl(
-          new URL("story/my-story", document.baseURI).toString()
+        const baseUrl = new URL(document.baseURI);
+        baseUrl.pathname = "";
+        baseUrl.search = "";
+        baseUrl.hash = "";
+        await updateInitSourcesFromUrl(
+          new URL("story/my-story/", baseUrl).toString(),
+          baseUrl.toString(),
+          terria
         );
         expect(terria.initSources.length).toBe(1);
         expect(terria.initSources[0].name).toMatch(/my-story/);
@@ -556,8 +575,14 @@ describe("TerriaSpec", function () {
       });
 
       it("correctly adds the story share as a datasource when there's a trailing slash on story url", async function () {
-        await terria.updateApplicationUrl(
-          new URL("story/my-story/", document.baseURI).toString()
+        const baseUrl = new URL(document.baseURI);
+        baseUrl.pathname = "";
+        baseUrl.search = "";
+        baseUrl.hash = "";
+        await updateInitSourcesFromUrl(
+          new URL("story/my-story/", baseUrl).toString(),
+          baseUrl.toString(),
+          terria
         );
         expect(terria.initSources.length).toBe(1);
         expect(terria.initSources[0].name).toMatch(/my-story/);
@@ -578,22 +603,17 @@ describe("TerriaSpec", function () {
       let viewState: ViewState;
       beforeEach(async function () {
         // Create a config.json in a URL to pass to Terria.start
-        const configUrl = `data:application/json;base64,${btoa(
-          JSON.stringify({
-            initializationUrls: [],
-            parameters: {
-              regionMappingDefinitionsUrls: ["data/regionMapping.json"]
-            }
-          })
-        )}`;
         newTerria = new Terria({ baseUrl: "./" });
         viewState = new ViewState({
           terria: terria
         });
 
-        await Promise.all(
-          [terria, newTerria].map((t) => t.start({ configUrl, i18nOptions }))
-        );
+        terria.updateConfig({
+          regionMappingDefinitionsUrls: ["data/regionMapping.json"]
+        });
+        newTerria.updateConfig({
+          regionMappingDefinitionsUrls: ["data/regionMapping.json"]
+        });
 
         terria.catalog.group.addMembersFromJson(CommonStrata.definition, [
           {
@@ -639,7 +659,15 @@ describe("TerriaSpec", function () {
         expect(csv).toBeDefined("Can't find csv item in source terria");
         csv?.setTrait(CommonStrata.user, "opacity", 0.5);
         const shareLink = buildShareLink(terria, viewState);
-        await newTerria.updateApplicationUrl(shareLink);
+        const baseUrl = new URL(document.baseURI);
+        baseUrl.pathname = "";
+        baseUrl.search = "";
+        baseUrl.hash = "";
+        await updateInitSourcesFromUrl(
+          shareLink,
+          baseUrl.toString(),
+          newTerria
+        );
         await newTerria.loadInitSources();
 
         const newCsv = newTerria.getModelById(
@@ -661,8 +689,17 @@ describe("TerriaSpec", function () {
         if (csv === undefined) return;
         await terria.workbench.add(csv);
         terria.timelineStack.addToTop(csv);
+
         const shareLink = buildShareLink(terria, viewState);
-        await newTerria.updateApplicationUrl(shareLink);
+        const baseUrl = new URL(document.baseURI);
+        baseUrl.pathname = "";
+        baseUrl.search = "";
+        baseUrl.hash = "";
+        await updateInitSourcesFromUrl(
+          shareLink,
+          baseUrl.toString(),
+          newTerria
+        );
         await newTerria.loadInitSources();
 
         const newCsv = newTerria.getModelById(
@@ -692,9 +729,13 @@ describe("TerriaSpec", function () {
     });
 
     it("initializes proxy with parameters from config file", async function () {
-      await terria.start({
-        configUrl: "test/init/configProxy.json",
-        i18nOptions
+      terria.updateConfig({
+        corsProxyBaseUrl: "/myproxy/"
+      });
+      terria.initCorsProxy({
+        proxyAllDomains: false,
+        allowProxyFor: ["example.com", "csiro.au"],
+        baseProxyUrl: terria.configParameters.corsProxyBaseUrl
       });
 
       expect(terria.corsProxy.baseProxyUrl).toBe("/myproxy/");
@@ -1029,13 +1070,9 @@ describe("TerriaSpec", function () {
 
   describe("mapSettings", function () {
     it("properly interprets map hash parameter", async () => {
-      const location = {
-        href: "http://test.com/#map=2d"
-      } as Location;
-      await terria.start({
-        configUrl: "test-config.json",
-        applicationUrl: location
-      });
+      const hashParams = parseHashParams("http://test.com/#map=2d");
+      terria.setHashParams(hashParams).build();
+
       expect(terria.mainViewer.viewerMode).toBe(ViewerMode.Leaflet);
     });
 
@@ -1045,7 +1082,7 @@ describe("TerriaSpec", function () {
         "getItem"
       ).and.returnValue("2d");
 
-      await terria.start({ configUrl: "test-config.json" });
+      terria.build();
 
       expect(terria.mainViewer.viewerMode).toBe(ViewerMode.Leaflet);
       expect(getLocalPropertySpy).toHaveBeenCalledWith("viewermode");
@@ -1059,11 +1096,8 @@ describe("TerriaSpec", function () {
       const location = {
         href: "http://test.com/#map=4d"
       } as Location;
-
-      await terria.start({
-        configUrl: "test-config.json",
-        applicationUrl: location
-      });
+      const hashParams = parseHashParams(location.href);
+      terria.setHashParams(hashParams).build();
 
       expect(terria.mainViewer.viewerMode).toBe(ViewerMode.Cesium);
       expect(terria.mainViewer.viewerOptions.useTerrain).toBe(false);
@@ -1073,7 +1107,7 @@ describe("TerriaSpec", function () {
     it("uses `settings` in initsource", async () => {
       const setBaseMapSpy = spyOn(terria.mainViewer, "setBaseMap");
 
-      await terria.start({ configUrl: "test-config.json" });
+      terria.build();
 
       await terria.applyInitData({
         initData: {
@@ -1110,7 +1144,7 @@ describe("TerriaSpec", function () {
 
   describe("basemaps", function () {
     it("when no base maps are specified load defaultBaseMaps", async function () {
-      await terria.start({ configUrl: "test-config.json" });
+      terria.build();
       await terria.applyInitData({
         initData: {}
       });
@@ -1123,7 +1157,7 @@ describe("TerriaSpec", function () {
     });
 
     it("correctly loads the base maps", async function () {
-      await terria.start({ configUrl: "test-config.json" });
+      terria.build();
       await (
         await terria._applyInitData({
           initData: {
@@ -1241,17 +1275,12 @@ describe("TerriaSpec", function () {
   });
 
   it("customRequestSchedulerLimits sets RequestScheduler limits for domains", async function () {
-    const configUrl = `data:application/json;base64,${btoa(
-      JSON.stringify({
-        initializationUrls: [],
-        parameters: {
-          customRequestSchedulerLimits: {
-            "test.domain:333": 12
-          }
-        }
-      })
-    )}`;
-    await terria.start({ configUrl, i18nOptions });
+    terria.updateConfig({
+      customRequestSchedulerLimits: {
+        "test.domain:333": 12
+      }
+    });
+    terria.build();
     expect(RequestScheduler.requestsByServer["test.domain:333"]).toBe(12);
   });
 
@@ -1265,10 +1294,6 @@ describe("TerriaSpec", function () {
         document.body.appendChild(container);
         terria.mainViewer.viewerOptions.useTerrain = false;
         terria.mainViewer.attach(container);
-
-        const configJson = {
-          initializationUrls: ["focus-workbench-items.json"]
-        };
 
         // An init source with a pre-loaded workbench item
         const initJson = {
@@ -1313,8 +1338,6 @@ describe("TerriaSpec", function () {
           }
         };
         worker.use(
-          http.get("*/serverconfig/*", () => HttpResponse.json({})),
-          http.get("*/test-config.json", () => HttpResponse.json(configJson)),
           http.get("*/focus-workbench-items.json", () =>
             HttpResponse.json(initJson)
           )
@@ -1327,8 +1350,20 @@ describe("TerriaSpec", function () {
       });
 
       it("zooms the map to focus on the workbench items", async function () {
-        await terria.start({ configUrl: "test-config.json" });
-        await terria.loadInitSources();
+        terria.build();
+        terria.addInitSources(
+          buildInitSourcesFromConfig({
+            initializationUrls: ["focus-workbench-items.json"],
+            baseUri: new URI(terria.baseUrl),
+            initFragmentPaths: terria.configParameters.initFragmentPaths
+          })
+        );
+        try {
+          const result = await terria.loadInitSources();
+          console.log(result);
+        } catch (e) {
+          fail(`Failed to load init sources: ${(e as Error).message}`);
+        }
         await when(() => terria.currentViewer.type === "Cesium");
 
         const cameraPos = terria.cesium?.scene.camera.positionCartographic;
@@ -1344,7 +1379,14 @@ describe("TerriaSpec", function () {
         runInAction(() => {
           terria.mainViewer.viewerMode = undefined;
         });
-        await terria.start({ configUrl: "test-config.json" });
+        terria.addInitSources(
+          buildInitSourcesFromConfig({
+            initializationUrls: ["focus-workbench-items.json"],
+            baseUri: new URI(terria.baseUrl),
+            initFragmentPaths: terria.configParameters.initFragmentPaths
+          })
+        );
+        terria.build();
         await terria.loadInitSources();
         expect(terria.currentViewer.type).toEqual("none");
         // Switch to Cesium viewer
@@ -1362,7 +1404,15 @@ describe("TerriaSpec", function () {
       });
 
       it("is not applied if subsequent init sources override the initialCamera settings", async function () {
-        await terria.start({ configUrl: "test-config.json" });
+        terria.addInitSources(
+          buildInitSourcesFromConfig({
+            initializationUrls: ["focus-workbench-items.json"],
+            baseUri: new URI(terria.baseUrl),
+            initFragmentPaths: terria.configParameters.initFragmentPaths
+          })
+        );
+        terria.build();
+
         terria.initSources.push({
           data: {
             initialCamera: {
@@ -1405,14 +1455,31 @@ describe("TerriaSpec", function () {
         );
         terria.currentViewer.zoomTo = (target, _duration) =>
           originalZoomTo(target, 0.0);
+        terria.addInitSources(
+          buildInitSourcesFromConfig({
+            initializationUrls: ["focus-workbench-items.json"],
+            baseUri: new URI(terria.baseUrl),
+            initFragmentPaths: terria.configParameters.initFragmentPaths
+          })
+        );
+        terria.build();
 
-        await terria.start({
-          configUrl: "test-config.json",
-          applicationUrl: {
-            // A share URL with a different `initialCamera` setting
-            href: "http://localhost:3001/#start=%7B%22version%22%3A%228.0.0%22%2C%22initSources%22%3A%5B%7B%22stratum%22%3A%22user%22%2C%22initialCamera%22%3A%7B%22east%22%3A80.48324442836365%2C%22west%22%3A74.16912021554141%2C%22north%22%3A10.82936711956377%2C%22south%22%3A7.882086009700934%7D%2C%22workbench%22%3A%5B%22points%22%5D%7D%5D%7D"
-          } as Location
+        const initSources = await buildInitSourcesFromStartData({
+          version: "8.0.0",
+          initSources: [
+            {
+              stratum: "user",
+              initialCamera: {
+                east: 80.48324442836365,
+                west: 74.16912021554141,
+                north: 10.82936711956377,
+                south: 7.882086009700934
+              },
+              workbench: ["points"]
+            }
+          ]
         });
+        terria.addInitSources(initSources);
 
         await terria.loadInitSources();
         await when(() => terria.currentViewer.type === "Cesium");

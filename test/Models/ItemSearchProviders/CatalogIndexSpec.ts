@@ -224,8 +224,8 @@ describe("CatalogIndex - with shareKeys", function () {
       }
     });
 
-    terria.catalog.index = new CatalogIndex(terria, "catalog-index.json");
-    await terria.catalog.index.load();
+    terria.catalog.setIndex(new CatalogIndex(terria, "catalog-index.json"));
+    await terria.catalog.index!.load();
   });
 
   it("loads shareKeys", function () {

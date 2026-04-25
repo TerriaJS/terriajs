@@ -1,9 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { http, HttpResponse } from "msw";
 import Terria from "../../../../../lib/Models/Terria";
 import LangPanel from "../../../../../lib/ReactViews/Map/Panels/LangPanel/LangPanel";
-import { worker } from "../../../../mocks/browser";
 
 describe("LangPanel", function () {
   let terria: Terria;
@@ -21,27 +19,19 @@ describe("LangPanel", function () {
   });
 
   it("should render if language are provided in config", async function () {
-    worker.use(
-      http.get("serverconfig", () => HttpResponse.json({})),
-      http.get("test-config.json", () =>
-        HttpResponse.json({
-          parameters: {
-            languageConfiguration: {
-              enabled: true,
-              debug: false,
-              languages: {
-                cimode: "cimode",
-                en: "English",
-                fr: "Français",
-                af: "Afrikaans"
-              },
-              fallbackLanguage: "en"
-            }
-          }
-        })
-      )
-    );
-    await terria.start({ configUrl: "test-config.json" });
+    terria.updateConfig({
+      languageConfiguration: {
+        enabled: true,
+        debug: false,
+        languages: {
+          cimode: "cimode",
+          en: "English",
+          fr: "Français",
+          af: "Afrikaans"
+        },
+        fallbackLanguage: "en"
+      }
+    });
 
     render(<LangPanel terria={terria} smallScreen={false} />);
 
