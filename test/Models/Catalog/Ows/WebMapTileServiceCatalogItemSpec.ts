@@ -1,5 +1,6 @@
 import i18next from "i18next";
 import { autorun, runInAction } from "mobx";
+import { ImageryParts } from "../../../../lib/ModelMixins/MappableMixin";
 import WebMapTileServiceCatalogItem from "../../../../lib/Models/Catalog/Ows/WebMapTileServiceCatalogItem";
 import Terria from "../../../../lib/Models/Terria";
 
@@ -179,10 +180,11 @@ describe("WebMapTileServiceCatalogItem", function () {
   // Time dimension parsing.
   //
   // Specs in this block correspond to plan items U1-U5 (Verification > Phase 2).
-  // U6-U10 (REST {Time} substitution, KVP TIME param, provider rebuild on time
-  // change, etc.) are gated on issue I7 — the imagery-provider-per-time
-  // refactor — and intentionally NOT shipped here. They land in the Week 8-10
-  // pass after I7 is merged. Do not silently downgrade those to xit/pending.
+  // U6-U8 (REST {Time} substitution, KVP TIME dimension on the imagery
+  // provider, provider rebuild on currentTime change) live in the sibling
+  // `imagery provider per time` describe block below — they exercise the I7
+  // imagery-provider-per-time refactor (`_createImageryProvider(time)`),
+  // not the capabilities-parsing layer.
   // ---------------------------------------------------------------------------
   describe("time dimension parsing", function () {
     it("expands explicit <Value> children into discrete times (NASA GIBS style)", async function () {
@@ -295,6 +297,176 @@ describe("WebMapTileServiceCatalogItem", function () {
       expect(wmts.discreteTimes!.length).toBe(97);
       expect(wmts.discreteTimes![0].time).toContain("2024-01-01T00:00");
       expect(wmts.discreteTimes![96].time).toContain("2024-01-05T00:00");
+    });
+  });
+
+  // ---------------------------------------------------------------------------
+  // Imagery provider per time (issue I7).
+  //
+  // These specs exercise `_createImageryProvider(time)` — the per-time provider
+  // factory introduced by the I7 refactor. Two propagation paths are covered:
+  //
+  //   1. REST `{Time}`/`{time}` placeholder substitution into `imageryProvider.url`
+  //      (TERN-style ResourceURL templates).
+  //   2. `dimensions: { Time }` constructor option on the imagery provider,
+  //      which Cesium routes to `&TIME=` query param appends on KVP GetTile
+  //      and to `setTemplateValues` on REST. The dimensions option is set
+  //      whenever a time is selected, regardless of REST/KVP encoding —
+  //      asserting it on the GIBS fixture (REST template lacking `{Time}`)
+  //      proves the KVP-bound code path fires independently of substitution.
+  //
+  // U6-U8 from the plan. U9-U10 (cache hit on second-pass scrub, no-time
+  // layers behave unchanged) are integration-level and land in I9/I14.
+  // ---------------------------------------------------------------------------
+  describe("imagery provider per time", function () {
+    it("substitutes {time} in the REST ResourceURL with the selected currentTime (U6)", async function () {
+      runInAction(() => {
+        wmts.setTrait(
+          "definition",
+          "url",
+          "test/WMTS/tern-landscapes-time.xml"
+        );
+        wmts.setTrait("definition", "layer", "tern_soil_moisture_daily");
+      });
+
+      await wmts.loadMapItems();
+
+      // The TERN fixture's <Default> is 2024-01-05T00:00:00Z and the
+      // ResourceURL template contains a `{time}` placeholder. After
+      // _createImageryProvider runs, the provider's url MUST have the
+      // placeholder substituted with the default-selected time.
+      // Discriminating assertion: a literal `{time}` in the URL would prove
+      // the substitution path didn't fire.
+      expect(wmts.imageryProvider).toBeDefined();
+      expect(wmts.imageryProvider!.url).toContain("2024-01-05T00:00:00Z");
+      expect(wmts.imageryProvider!.url).not.toContain("{time}");
+      expect(wmts.imageryProvider!.url).not.toContain("{Time}");
+    });
+
+    it("passes the selected time as a Time dimension on the imagery provider (U7)", async function () {
+      runInAction(() => {
+        wmts.setTrait("definition", "url", "test/WMTS/nasa-gibs-time.xml");
+        wmts.setTrait(
+          "definition",
+          "layer",
+          "MODIS_Terra_CorrectedReflectance_TrueColor"
+        );
+      });
+
+      await wmts.loadMapItems();
+
+      // The GIBS fixture's ResourceURL template does NOT contain a {Time}
+      // placeholder — Cesium's KVP-mode tile fetch is what consumes the
+      // `dimensions: { Time }` constructor option (it appends &TIME=...
+      // to the GetTile request). We assert the dimensions option round-
+      // trips through the provider so the KVP code path is exercised
+      // independently of REST {Time} substitution. <Default> is 2024-03-13.
+      expect(wmts.imageryProvider).toBeDefined();
+      expect(wmts.imageryProvider!.dimensions).toEqual({ Time: "2024-03-13" });
+    });
+
+    it("substitutes uppercase {Time} in the REST ResourceURL (U6b)", async function () {
+      runInAction(() => {
+        wmts.setTrait(
+          "definition",
+          "url",
+          "test/WMTS/tern-landscapes-time-uppercase.xml"
+        );
+        wmts.setTrait("definition", "layer", "tern_soil_moisture_daily");
+      });
+
+      await wmts.loadMapItems();
+
+      // The uppercase fixture's ResourceURL template literally contains
+      // `{Time}` (capital T — Cesium / NASA GIBS convention). The
+      // implementation regex `/\{time\}/gi` carries the `i` flag specifically
+      // to handle this case. Positive assertion: the timestamp appears
+      // where `{Time}` was. Negative assertion: no leftover placeholder
+      // in either case. Together these prove the case-insensitive substitution
+      // path actually fires (not just the lowercase one tested in U6).
+      expect(wmts.imageryProvider).toBeDefined();
+      expect(wmts.imageryProvider!.url).toContain("2024-01-05T00:00:00Z");
+      expect(wmts.imageryProvider!.url).not.toContain("{Time}");
+      expect(wmts.imageryProvider!.url).not.toContain("{time}");
+    });
+
+    it("propagates allowFeaturePicking onto _currentImageryParts and disables it on _nextImageryParts (U6c)", async function () {
+      runInAction(() => {
+        wmts.setTrait(
+          "definition",
+          "url",
+          "test/WMTS/tern-landscapes-time.xml"
+        );
+        wmts.setTrait("definition", "layer", "tern_soil_moisture_daily");
+      });
+
+      await wmts.loadMapItems();
+      terria.timelineStack.addToTop(wmts);
+      terria.timelineStack.activate();
+
+      runInAction(() => {
+        wmts.setTrait("definition", "isPaused", false);
+        // Force a non-default `currentTime` so a `nextDiscreteTimeTag` exists
+        // and `_nextImageryParts` resolves.
+        wmts.setTrait("definition", "currentTime", "2024-01-02T00:00:00Z");
+      });
+
+      // mapItems[0] = current, mapItems[1] = next during cross-fade.
+      // Mirror of WMS spec at WebMapServiceCatalogItemSpec.ts:720-735. Cesium's
+      // WMTS provider has no real picking implementation today; this assertion
+      // verifies the plumbing matches WMS shape so upstream parity holds.
+      const imageryParts = wmts.mapItems.filter(ImageryParts.is);
+      expect(imageryParts.length).toBe(2);
+
+      const currentProvider = imageryParts[0].imageryProvider as any;
+      expect(currentProvider.enablePickFeatures).toBe(true);
+
+      const nextProvider = imageryParts[1].imageryProvider as any;
+      expect(nextProvider.enablePickFeatures).toBe(false);
+
+      // Flip allowFeaturePicking and reload — current should follow.
+      runInAction(() => {
+        wmts.setTrait("definition", "allowFeaturePicking", false);
+      });
+      const partsAfter = wmts.mapItems.filter(ImageryParts.is);
+      const currentProviderAfter = partsAfter[0].imageryProvider as any;
+      expect(currentProviderAfter.enablePickFeatures).toBe(false);
+    });
+
+    it("rebuilds the imagery provider when currentTime changes (U8)", async function () {
+      runInAction(() => {
+        wmts.setTrait(
+          "definition",
+          "url",
+          "test/WMTS/tern-landscapes-time.xml"
+        );
+        wmts.setTrait("definition", "layer", "tern_soil_moisture_daily");
+      });
+
+      await wmts.loadMapItems();
+
+      // Snapshot the provider at the default time.
+      const providerAtDefault = wmts.imageryProvider;
+      expect(providerAtDefault).toBeDefined();
+      expect(providerAtDefault!.url).toContain("2024-01-05T00:00:00Z");
+
+      // Flip currentTime to an earlier discrete instant. The
+      // `createTransformerAllowUndefined` cache means the provider is keyed
+      // by the time string — a different time MUST produce a different
+      // provider instance with a different substituted URL.
+      runInAction(() => {
+        wmts.setTrait("definition", "currentTime", "2024-01-02T00:00:00Z");
+      });
+
+      const providerAtNewTime = wmts.imageryProvider;
+      expect(providerAtNewTime).toBeDefined();
+      // Discriminating assertion #1: the new URL reflects the new time.
+      expect(providerAtNewTime!.url).toContain("2024-01-02T00:00:00Z");
+      expect(providerAtNewTime!.url).not.toContain("2024-01-05T00:00:00Z");
+      // Discriminating assertion #2: it is a *different* provider instance.
+      // If the transformer returned the cached default-time provider, this
+      // would fail and prove the per-time keying is broken.
+      expect(providerAtNewTime).not.toBe(providerAtDefault);
     });
   });
 });

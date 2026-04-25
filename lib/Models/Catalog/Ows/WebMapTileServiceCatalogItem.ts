@@ -7,6 +7,7 @@ import WebMapTileServiceImageryProvider from "terriajs-cesium/Source/Scene/WebMa
 import URI from "urijs";
 import containsAny from "../../../Core/containsAny";
 import createDiscreteTimesFromIsoSegments from "../../../Core/createDiscreteTimes";
+import createTransformerAllowUndefined from "../../../Core/createTransformerAllowUndefined";
 import isDefined from "../../../Core/isDefined";
 import isReadOnlyArray from "../../../Core/isReadOnlyArray";
 import TerriaError from "../../../Core/TerriaError";
@@ -15,7 +16,10 @@ import DiscretelyTimeVaryingMixin, {
   DiscreteTimeAsJS
 } from "../../../ModelMixins/DiscretelyTimeVaryingMixin";
 import GetCapabilitiesMixin from "../../../ModelMixins/GetCapabilitiesMixin";
-import MappableMixin, { MapItem } from "../../../ModelMixins/MappableMixin";
+import MappableMixin, {
+  ImageryParts,
+  MapItem
+} from "../../../ModelMixins/MappableMixin";
 import UrlMixin from "../../../ModelMixins/UrlMixin";
 import { InfoSectionTraits } from "../../../Traits/TraitsClasses/CatalogMemberTraits";
 import LegendTraits from "../../../Traits/TraitsClasses/LegendTraits";
@@ -632,66 +636,196 @@ class WebMapTileServiceCatalogItem extends MappableMixin(
     return "1d";
   }
 
+  /**
+   * Imagery-provider-per-time factory. Wrapped in `createTransformerAllowUndefined`
+   * so MobX caches one provider instance per `time` value — flipping the
+   * timeline tag ticks `currentDiscreteTimeTag`/`nextDiscreteTimeTag`, which
+   * recomputes `_currentImageryParts`/`_nextImageryParts`, which calls this
+   * with a new `time` and gets back a fresh provider. Mirrors the WMS
+   * pattern in `WebMapServiceCatalogItem._createImageryProvider`.
+   *
+   * `time` propagates two ways to Cesium:
+   * 1. **REST `{Time}` placeholder substitution** — if the resolved tile URL
+   *    (pre-Cesium) contains a `{Time}` / `{time}` literal, we substitute it
+   *    here so `imageryProvider.url` is directly inspectable in tests and
+   *    so any URL-level proxying/caching downstream sees the time-keyed URL.
+   * 2. **`dimensions: { Time: time }` constructor option** — Cesium routes
+   *    this to `&TIME=` query param appends in KVP mode, and to template
+   *    substitution (`resource.setTemplateValues(staticDimensions)`) in
+   *    REST mode. Passing it on both paths is harmless: REST templates
+   *    without a `{Time}` placeholder simply ignore the value.
+   *
+   * Layers without a time `<Dimension>` get `time === undefined`, the
+   * substitution is a no-op, and `dimensions` is omitted — so non-temporal
+   * WMTS layers behave exactly as before this refactor.
+   */
+  private _createImageryProvider = createTransformerAllowUndefined(
+    (
+      time: string | undefined
+    ): WebMapTileServiceImageryProvider | undefined => {
+      const stratum = this.strata.get(
+        GetCapabilitiesMixin.getCapabilitiesStratumName
+      ) as GetCapabilitiesStratum;
+
+      if (
+        !isDefined(this.layer) ||
+        !isDefined(this.url) ||
+        !isDefined(stratum) ||
+        !isDefined(this.style)
+      ) {
+        return;
+      }
+
+      const layer = stratum.capabilitiesLayer;
+      const layerIdentifier = layer?.Identifier;
+      if (!isDefined(layer) || !isDefined(layerIdentifier)) {
+        return;
+      }
+
+      let format: string = "image/png";
+      const formats = layer.Format;
+      if (
+        formats &&
+        formats?.indexOf("image/png") === -1 &&
+        formats?.indexOf("image/jpeg") !== -1
+      ) {
+        format = "image/jpeg";
+      }
+
+      let baseUrl: string = this.getTileUrl(
+        layer,
+        stratum.capabilities,
+        format
+      );
+
+      // REST {Time} substitution. We do this BEFORE `proxyCatalogItemUrl` so
+      // the proxy sees the time-keyed URL (matters for cache key uniqueness
+      // and for any allow-list checks that assert against the literal URL).
+      // The regex is case-insensitive to cover both `{Time}` (NASA GIBS,
+      // Cesium's documented form) and `{time}` (TERN/GeoServer style — see
+      // the `tern-landscapes-time.xml` fixture).
+      if (isDefined(time)) {
+        baseUrl = baseUrl.replace(/\{time\}/gi, time);
+      }
+
+      const tileMatrixSet = this.tileMatrixSet;
+      if (!isDefined(tileMatrixSet)) {
+        return;
+      }
+
+      const imageryProvider = new WebMapTileServiceImageryProvider({
+        url: proxyCatalogItemUrl(this, baseUrl),
+        layer: layerIdentifier,
+        style: this.style,
+        tileMatrixSetID: tileMatrixSet.id,
+        tileMatrixLabels: tileMatrixSet.labels,
+        minimumLevel: tileMatrixSet.minLevel,
+        maximumLevel: tileMatrixSet.maxLevel,
+        tileWidth: this.tileWidth ?? tileMatrixSet.tileWidth,
+        tileHeight:
+          this.tileHeight ?? this.minimumLevel ?? tileMatrixSet.tileHeight,
+        tilingScheme: tileMatrixSet.scheme,
+        format,
+        credit: this.attribution,
+        // KVP path: Cesium combines `dimensions` into the GetTile query
+        // string. REST path: Cesium calls `setTemplateValues(staticDimensions)`
+        // which substitutes any remaining `{Time}` placeholders. We've
+        // already pre-substituted in `baseUrl`, so this is belt-and-braces
+        // for KVP.
+        //
+        // SAFE-SINGLE-SUBSTITUTION INVARIANT: when the REST template contains
+        // `{Time}`/`{time}`, our `baseUrl.replace(/\{time\}/gi, time)` above
+        // consumes all placeholders before Cesium's `setTemplateValues` runs.
+        // Cesium's pass is therefore a no-op on REST URLs that already had
+        // their placeholder, and a real substitution only happens on URLs
+        // that did NOT have one (in which case our regex was the no-op).
+        // The two passes never both substitute the same placeholder; the
+        // ordering is invariant. If Cesium ever changes the order or
+        // escaping of `setTemplateValues`, only this comment's claim is
+        // affected — the URL we hand to Cesium is already fully resolved.
+        ...(isDefined(time) ? { dimensions: { Time: time } } : {})
+        // TODO: implement picking for WebMapTileServiceImageryProvider
+        //enablePickFeatures: this.allowFeaturePicking
+      });
+      return imageryProvider;
+    }
+  );
+
+  /**
+   * Backward-compatible accessor. Pre-I7 callers (and the existing
+   * `with_operation_metadata.xml` URL-shape spec) read `wmts.imageryProvider`
+   * directly. We resolve to the provider for the currently-selected discrete
+   * time tag so non-temporal layers (no `<Dimension>` -> tag is `undefined`)
+   * keep returning a single, stable provider instance.
+   *
+   * @deprecated Use `mapItems` instead. WMS does not expose this accessor;
+   * it is kept here only to avoid breaking the pre-I7
+   * `with_operation_metadata.xml` URL-shape spec and any third-party callers
+   * that read `wmts.imageryProvider` directly. New code should resolve
+   * the provider via `mapItems[0].imageryProvider` (after filtering
+   * `ImageryParts.is`).
+   */
   @computed
-  get imageryProvider() {
-    const stratum = this.strata.get(
-      GetCapabilitiesMixin.getCapabilitiesStratumName
-    ) as GetCapabilitiesStratum;
+  get imageryProvider(): WebMapTileServiceImageryProvider | undefined {
+    return this._createImageryProvider(this.currentDiscreteTimeTag);
+  }
 
-    if (
-      !isDefined(this.layer) ||
-      !isDefined(this.url) ||
-      !isDefined(stratum) ||
-      !isDefined(this.style)
-    ) {
-      return;
-    }
-
-    const layer = stratum.capabilitiesLayer;
-    const layerIdentifier = layer?.Identifier;
-    if (!isDefined(layer) || !isDefined(layerIdentifier)) {
-      return;
-    }
-
-    let format: string = "image/png";
-    const formats = layer.Format;
-    if (
-      formats &&
-      formats?.indexOf("image/png") === -1 &&
-      formats?.indexOf("image/jpeg") !== -1
-    ) {
-      format = "image/jpeg";
-    }
-
-    const baseUrl: string = this.getTileUrl(
-      layer,
-      stratum.capabilities,
-      format
+  @computed
+  private get _currentImageryParts(): ImageryParts | undefined {
+    const imageryProvider = this._createImageryProvider(
+      this.currentDiscreteTimeTag
     );
-
-    const tileMatrixSet = this.tileMatrixSet;
-    if (!isDefined(tileMatrixSet)) {
-      return;
+    if (imageryProvider === undefined) {
+      return undefined;
     }
 
-    const imageryProvider = new WebMapTileServiceImageryProvider({
-      url: proxyCatalogItemUrl(this, baseUrl),
-      layer: layerIdentifier,
-      style: this.style,
-      tileMatrixSetID: tileMatrixSet.id,
-      tileMatrixLabels: tileMatrixSet.labels,
-      minimumLevel: tileMatrixSet.minLevel,
-      maximumLevel: tileMatrixSet.maxLevel,
-      tileWidth: this.tileWidth ?? tileMatrixSet.tileWidth,
-      tileHeight:
-        this.tileHeight ?? this.minimumLevel ?? tileMatrixSet.tileHeight,
-      tilingScheme: tileMatrixSet.scheme,
-      format,
-      credit: this.attribution
-      // TODO: implement picking for WebMapTileServiceImageryProvider
-      //enablePickFeatures: this.allowFeaturePicking
-    });
-    return imageryProvider;
+    // Reset feature picking for the current imagery layer.
+    // We disable feature picking for the next imagery layer (cross-fade).
+    // NOTE: Cesium's `WebMapTileServiceImageryProvider.pickFeatures` always
+    // returns undefined (WMTS has no GetFeatureInfo equivalent), so this
+    // assignment is currently a no-op at runtime — it mirrors WMS shape so
+    // the contract is in place if Cesium ever adds WMTS picking, and matches
+    // the established `WebMapServiceCatalogItem` pattern for upstream parity.
+    (imageryProvider as any).enablePickFeatures = this.allowFeaturePicking;
+
+    return {
+      imageryProvider,
+      alpha: this.opacity,
+      show: this.show,
+      clippingRectangle: this.clipToRectangle ? this.cesiumRectangle : undefined
+    };
+  }
+
+  @computed
+  private get _nextImageryParts(): ImageryParts | undefined {
+    if (
+      this.terria.timelineStack.contains(this) &&
+      !this.isPaused &&
+      this.nextDiscreteTimeTag
+    ) {
+      const imageryProvider = this._createImageryProvider(
+        this.nextDiscreteTimeTag
+      );
+      if (imageryProvider === undefined) {
+        return undefined;
+      }
+
+      // Disable feature picking for the next imagery layer during cross-fade.
+      // See note in `_currentImageryParts`: this is a no-op on Cesium's WMTS
+      // provider today; kept for shape-parity with WMS.
+      (imageryProvider as any).enablePickFeatures = false;
+
+      return {
+        imageryProvider,
+        alpha: 0.0,
+        show: true,
+        clippingRectangle: this.clipToRectangle
+          ? this.cesiumRectangle
+          : undefined
+      };
+    } else {
+      return undefined;
+    }
   }
 
   getTileUrl(
@@ -838,19 +972,25 @@ class WebMapTileServiceCatalogItem extends MappableMixin(
 
   @computed
   get mapItems(): MapItem[] {
-    if (isDefined(this.imageryProvider)) {
-      return [
-        {
-          alpha: this.opacity,
-          show: this.show,
-          imageryProvider: this.imageryProvider,
-          clippingRectangle: this.clipToRectangle
-            ? this.cesiumRectangle
-            : undefined
-        }
-      ];
+    const result: MapItem[] = [];
+
+    const current = this._currentImageryParts;
+    if (current) {
+      result.push(current);
     }
-    return [];
+
+    // _nextImageryParts only resolves to non-undefined when this layer is on
+    // the active timelineStack and has a `nextDiscreteTimeTag` — i.e. the
+    // user is animating through the time dimension. For non-temporal WMTS
+    // layers (no `<Dimension>`), `nextDiscreteTimeTag` is always undefined
+    // so this is always skipped and behaviour matches the pre-I7 single-
+    // imagery shape.
+    const next = this._nextImageryParts;
+    if (next) {
+      result.push(next);
+    }
+
+    return result;
   }
 
   protected get defaultGetCapabilitiesUrl(): string | undefined {

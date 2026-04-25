@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  Minimal WMTS 1.0.0 capabilities document with a NASA GIBS-style time
-  dimension. GIBS encodes the time dimension as multiple explicit <Value>
-  children (one per available date) and supplies a <Default>. KVP-implied:
-  no {time} placeholder in the ResourceURL template, the time gets passed
-  as a TIME query parameter at request time.
+  Variant of tern-landscapes-time.xml whose ResourceURL template uses an
+  uppercase `{Time}` placeholder (Cesium / NASA GIBS convention) instead of
+  lowercase `{time}` (TERN / GeoServer convention). Verifies that the
+  case-insensitive `/\{time\}/gi` regex in
+  WebMapTileServiceCatalogItem._createImageryProvider substitutes both
+  cases. Single layer, single time matrix — minimal surface for the assertion.
 -->
 <Capabilities xmlns="http://www.opengis.net/wmts/1.0"
               xmlns:ows="http://www.opengis.net/ows/1.1"
@@ -14,43 +15,34 @@
                   http://schemas.opengis.net/wmts/1.0/wmtsGetCapabilities_response.xsd"
               version="1.0.0">
   <ows:ServiceIdentification>
-    <ows:Title>NASA GIBS</ows:Title>
+    <ows:Title>TERN Landscapes Time Series (uppercase placeholder)</ows:Title>
     <ows:ServiceType>OGC WMTS</ows:ServiceType>
     <ows:ServiceTypeVersion>1.0.0</ows:ServiceTypeVersion>
   </ows:ServiceIdentification>
   <Contents>
     <Layer>
-      <ows:Title>MODIS Terra TrueColor</ows:Title>
-      <ows:Identifier>MODIS_Terra_CorrectedReflectance_TrueColor</ows:Identifier>
+      <ows:Title>Soil Moisture Daily</ows:Title>
+      <ows:Identifier>tern_soil_moisture_daily</ows:Identifier>
       <ows:WGS84BoundingBox>
-        <ows:LowerCorner>-180 -90</ows:LowerCorner>
-        <ows:UpperCorner>180 90</ows:UpperCorner>
+        <ows:LowerCorner>112 -44</ows:LowerCorner>
+        <ows:UpperCorner>154 -10</ows:UpperCorner>
       </ows:WGS84BoundingBox>
       <Style isDefault="true">
         <ows:Title>default</ows:Title>
         <ows:Identifier>default</ows:Identifier>
       </Style>
-      <Format>image/jpeg</Format>
+      <Format>image/png</Format>
       <Dimension>
         <ows:Identifier>time</ows:Identifier>
         <ows:UOM>ISO8601</ows:UOM>
-        <!--
-          NOTE: <Default> is intentionally NOT the last <Value> so that the
-          Default-branch and last-value-fallback branch in the stratum's
-          currentTime getter produce *different* outputs. A test asserting
-          currentTime === "2024-03-13" therefore discriminates: it only
-          passes if the <Default> branch fires.
-        -->
-        <Default>2024-03-13</Default>
-        <Value>2024-03-13</Value>
-        <Value>2024-03-14</Value>
-        <Value>2024-03-15</Value>
+        <Default>2024-01-05T00:00:00Z</Default>
+        <Value>2024-01-01T00:00:00Z/2024-01-05T00:00:00Z/P1D</Value>
       </Dimension>
       <TileMatrixSetLink>
         <TileMatrixSet>GoogleMapsCompatible_Level9</TileMatrixSet>
       </TileMatrixSetLink>
-      <ResourceURL format="image/jpeg" resourceType="tile"
-                   template="https://gibs.example/wmts/MODIS_Terra_CorrectedReflectance_TrueColor/default/{TileMatrixSet}/{TileMatrix}/{TileRow}/{TileCol}.jpg" />
+      <ResourceURL format="image/png" resourceType="tile"
+                   template="https://tern.example/wmts/tern_soil_moisture_daily/default/{Time}/{TileMatrixSet}/{TileMatrix}/{TileRow}/{TileCol}.png" />
     </Layer>
     <TileMatrixSet>
       <ows:Identifier>GoogleMapsCompatible_Level9</ows:Identifier>

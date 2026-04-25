@@ -77,6 +77,15 @@
     <TileMatrixSet>
       <ows:Identifier>GoogleMapsCompatible_Level9</ows:Identifier>
       <ows:SupportedCRS>urn:ogc:def:crs:EPSG::3857</ows:SupportedCRS>
+      <!--
+        Two TileMatrix children are required: the WMTS capabilities XML->JSON
+        parser only produces an array for `TileMatrix` when there are 2+
+        siblings. With a single child, the parser yields a bare object and
+        `usableTileMatrixSets` (WebMapTileServiceCatalogItem.ts:331) accesses
+        `matrices[0].TopLeftCorner` -> TypeError. Two entries also keep the
+        fixture in line with `with_tilematrix.xml` and real GetCapabilities
+        responses, which always emit at least the level-0 + level-1 pair.
+      -->
       <TileMatrix>
         <ows:Identifier>0</ows:Identifier>
         <ScaleDenominator>559082264.0287178</ScaleDenominator>
@@ -85,6 +94,15 @@
         <TileHeight>256</TileHeight>
         <MatrixWidth>1</MatrixWidth>
         <MatrixHeight>1</MatrixHeight>
+      </TileMatrix>
+      <TileMatrix>
+        <ows:Identifier>1</ows:Identifier>
+        <ScaleDenominator>279541132.0143589</ScaleDenominator>
+        <TopLeftCorner>-20037508.3427892 20037508.3427892</TopLeftCorner>
+        <TileWidth>256</TileWidth>
+        <TileHeight>256</TileHeight>
+        <MatrixWidth>2</MatrixWidth>
+        <MatrixHeight>2</MatrixHeight>
       </TileMatrix>
     </TileMatrixSet>
   </Contents>
