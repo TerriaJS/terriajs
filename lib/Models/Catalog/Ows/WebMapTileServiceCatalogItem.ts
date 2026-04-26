@@ -32,6 +32,7 @@ import createStratumInstance from "../../Definition/createStratumInstance";
 import LoadableStratum from "../../Definition/LoadableStratum";
 import { BaseModel, ModelConstructorParameters } from "../../Definition/Model";
 import StratumFromTraits from "../../Definition/StratumFromTraits";
+import StratumOrder from "../../Definition/StratumOrder";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import { ServiceProvider } from "./OwsInterfaces";
 import WebMapTileServiceCapabilities, {
@@ -554,6 +555,102 @@ class GetCapabilitiesStratum extends LoadableStratum(
   }
 }
 
+/**
+ * Stratum that translates the user-supplied `time` trait (an explicit time
+ * dimension declaration in catalog JSON) into `discreteTimes` and
+ * `currentTime` values.
+ *
+ * Registered at HIGHER priority than `GetCapabilitiesStratum`, so when the
+ * user declares `time` in catalog JSON, the override values take precedence
+ * over whatever (if anything) the WMTS server advertises in `<Dimension>`.
+ *
+ * When `time` is unset, this stratum returns `undefined` for everything,
+ * letting `GetCapabilitiesStratum` provide values via the regular
+ * trait/stratum priority cascade — preserving existing behaviour.
+ *
+ * Required because GeoServer's GeoWebCache does not advertise `<Dimension>`
+ * in GetCapabilities even when the underlying layer has a configured time
+ * dimension. See issue #14.
+ */
+class TimeOverrideStratum extends LoadableStratum(
+  WebMapTileServiceCatalogItemTraits
+) {
+  static stratumName = "wmts-time-override";
+
+  constructor(readonly catalogItem: WebMapTileServiceCatalogItem) {
+    super();
+    makeObservable(this);
+  }
+
+  duplicateLoadableStratum(model: BaseModel): this {
+    return new TimeOverrideStratum(
+      model as WebMapTileServiceCatalogItem
+    ) as this;
+  }
+
+  /**
+   * Discrete times derived from the `time` trait. Returns `undefined` (and
+   * thereby falls through to GetCapabilitiesStratum) when the trait is not
+   * configured to produce a time set:
+   *   - `time.values` (preferred): used directly, sorted ascending.
+   *   - `time.start` + `time.stop` + `time.period`: expanded via
+   *     `createDiscreteTimesFromIsoSegments` (honours `maxRefreshIntervals`).
+   *   - Anything else (no `time`, only `defaultValue`, partial range): the
+   *     stratum has no times to provide here; GetCapabilities still runs
+   *     for `discreteTimes`. `currentTime` may still resolve from
+   *     `defaultValue` below.
+   */
+  @computed
+  get discreteTimes(): DiscreteTimeAsJS[] | undefined {
+    const t = this.catalogItem.time;
+    if (!t) return undefined;
+
+    if (t.values && t.values.length > 0) {
+      return [...t.values].sort().map((time) => ({ time, tag: undefined }));
+    }
+
+    if (isDefined(t.start) && isDefined(t.stop) && isDefined(t.period)) {
+      const result: DiscreteTimeAsJS[] = [];
+      createDiscreteTimesFromIsoSegments(
+        result,
+        t.start,
+        t.stop,
+        t.period,
+        this.catalogItem.maxRefreshIntervals
+      );
+      return result.length > 0 ? result : undefined;
+    }
+
+    return undefined;
+  }
+
+  /**
+   * Initial `currentTime` selection. Priority:
+   *   1. `time.defaultValue` if set.
+   *   2. The most recent value in `discreteTimes` (matches the
+   *      GetCapabilitiesStratum fallback contract).
+   *   3. `undefined` — falls through to GetCapabilitiesStratum / UI default.
+   */
+  @computed
+  get currentTime(): string | undefined {
+    const t = this.catalogItem.time;
+    if (!t) return undefined;
+
+    if (isDefined(t.defaultValue)) return t.defaultValue;
+
+    const dt = this.discreteTimes;
+    if (dt && dt.length > 0) return dt[dt.length - 1].time;
+
+    return undefined;
+  }
+}
+
+// Register `TimeOverrideStratum` AFTER the GetCapabilities stratum so it
+// receives a higher priority — the `time` trait override wins over whatever
+// the WMTS server advertises (or fails to advertise) in <Dimension>.
+// `getCapabilities` is registered when `GetCapabilitiesMixin` loads above.
+StratumOrder.addLoadStratum(TimeOverrideStratum.stratumName);
+
 class WebMapTileServiceCatalogItem extends MappableMixin(
   DiscretelyTimeVaryingMixin(
     GetCapabilitiesMixin(
@@ -580,9 +677,21 @@ class WebMapTileServiceCatalogItem extends MappableMixin(
 
   static readonly type = "wmts";
 
+  static readonly TimeOverrideStratumName = TimeOverrideStratum.stratumName;
+
   constructor(...args: ModelConstructorParameters) {
     super(...args);
     makeObservable(this);
+    // Register the override stratum unconditionally. When the `time` trait
+    // is unset its computed properties return `undefined`, so the priority
+    // cascade falls through to `GetCapabilitiesStratum` and existing
+    // behaviour is preserved. When `time` is set, this stratum's higher
+    // priority means its `currentTime` wins, and the class-level
+    // `discreteTimes` getter consults this stratum first.
+    this.strata.set(
+      TimeOverrideStratum.stratumName,
+      new TimeOverrideStratum(this)
+    );
   }
 
   get type() {
@@ -590,16 +699,28 @@ class WebMapTileServiceCatalogItem extends MappableMixin(
   }
 
   /**
-   * Class-level delegate: forward `discreteTimes` from the GetCapabilities
-   * stratum so `DiscretelyTimeVaryingMixin` can read it off the model
-   * directly. There is intentionally no equivalent class-level delegate for
+   * Class-level delegate: forward `discreteTimes` from the strata so
+   * `DiscretelyTimeVaryingMixin` can read it off the model directly.
+   * There is intentionally no equivalent class-level delegate for
    * `currentTime` — the trait system (via `DiscretelyTimeVaryingTraits`)
    * already resolves `currentTime` from strata automatically, so an
    * explicit getter would shadow stratum priority and break override
    * semantics. `discreteTimes` is NOT a trait, hence the explicit forward.
+   *
+   * Priority: `TimeOverrideStratum` (catalog-JSON `time` trait) wins over
+   * `GetCapabilitiesStratum`. This mirrors the trait-stratum priority used
+   * for `currentTime`. When the override stratum has nothing to say (no
+   * `time` trait or only `defaultValue` set), it returns `undefined` and
+   * we fall through to GetCapabilities — preserving existing behaviour.
    */
   @computed
   get discreteTimes() {
+    const overrideStratum: TimeOverrideStratum | undefined = this.strata.get(
+      TimeOverrideStratum.stratumName
+    ) as TimeOverrideStratum;
+    const overrideTimes = overrideStratum?.discreteTimes;
+    if (overrideTimes !== undefined) return overrideTimes;
+
     const getCapabilitiesStratum: GetCapabilitiesStratum | undefined =
       this.strata.get(
         GetCapabilitiesMixin.getCapabilitiesStratumName
