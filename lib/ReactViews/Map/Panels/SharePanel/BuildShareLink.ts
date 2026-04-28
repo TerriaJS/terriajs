@@ -1,3 +1,4 @@
+import i18next from "i18next";
 import { uniq } from "lodash-es";
 import { runInAction, toJS } from "mobx";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
@@ -32,7 +33,10 @@ const userPropsToShare = ["hideExplorerPanel", "activeTabId"];
 export const SHARE_VERSION = "8.0.0";
 
 /** Create base share link URL - with `hashParameters` applied on top.
- * This will copy over some `userProperties` - see `userPropsToShare`
+ * This will copy over some `userProperties` - see `userPropsToShare`.
+ * When more than one language is configured in `terria.configParameters.languageConfiguration.languages`
+ * and the current i18next language is one of them, an `lng` query parameter is appended
+ * so recipients open the shared view in the sharer's language.
  */
 function buildBaseShareUrl(
   terria: Terria,
@@ -59,8 +63,21 @@ function buildBaseShareUrl(
   }
 
   uri.addSearch(hashParams);
+  uri.fragment(uri.query()).query("");
 
-  return uri.fragment(uri.query()).query("").toString();
+  const supportedLanguages =
+    terria.configParameters.languageConfiguration?.languages;
+  const currentLang = i18next.resolvedLanguage ?? i18next.language;
+  if (
+    currentLang &&
+    supportedLanguages &&
+    Object.keys(supportedLanguages).length > 1 &&
+    Object.prototype.hasOwnProperty.call(supportedLanguages, currentLang)
+  ) {
+    uri.addSearch({ lng: currentLang });
+  }
+
+  return uri.toString();
 }
 
 /**
