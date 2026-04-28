@@ -542,6 +542,7 @@ export default class UserDrawing extends MappableMixin(
         }
         this.updateAreaLabel();
       }
+      this.dragHelper?.resetDragCount();
       this.prepareToAddNewPoint();
     });
     this.dragHelper.setUp();
@@ -1022,6 +1023,10 @@ export default class UserDrawing extends MappableMixin(
     const that = this;
 
     features.forEach((feature) => {
+      if (userClickedExistingPoint) {
+        return;
+      }
+
       let index = -1;
       for (let i = 0; i < this.pointEntities.entities.values.length; i++) {
         const pointFeature = this.pointEntities.entities.values[i];

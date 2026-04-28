@@ -522,10 +522,6 @@ const MeasurablePanel = observer((props: Props) => {
           })}
           className={Styles.btnCloseFeature}
           title={i18next.t("general.close")}
-          disabled={
-            terria.measurableGeomList[terria.measurableGeometryIndex]
-              ?.isPointAdding
-          }
         >
           <Icon glyph={Icon.GLYPHS.close} />
         </button>
