@@ -105,6 +105,7 @@ import IElementConfig from "./IElementConfig";
 import InitSource, {
   InitSourceData,
   InitSourceFromData,
+  MicrozonationConfig,
   ShareInitSourceData,
   StoryData,
   isInitFromData,
@@ -192,20 +193,6 @@ export interface ConfigParameters {
   storyEnabled: boolean;
 
   /**
-   * Enables seismic microzonation panel.
-   */
-  microzonationEnabled?: boolean;
-
-  /**
-   * WFS configuration for the seismic microzonation service.
-   */
-  microzonationConfig?: {
-    url: string;
-    typeName: string;
-    outputFormat?: string;
-  };
-
-  /**
    * True (the default) to intercept the browser's print feature and use a custom one accessible through the Share panel.
    */
   interceptBrowserPrint?: boolean;
@@ -275,6 +262,8 @@ export interface ConfigParameters {
    */
   disableMyLocation?: boolean;
   disableSplitter?: boolean;
+
+  microzonationConfig?: MicrozonationConfig;
 
   disablePedestrianMode?: boolean;
 
@@ -677,8 +666,6 @@ export default class Terria {
     feedbackUrl: undefined,
     initFragmentPaths: ["init/"],
     storyEnabled: true,
-    microzonationEnabled: false,
-    microzonationConfig: undefined,
     interceptBrowserPrint: true,
     tabbedCatalog: false,
     useCesiumIonTerrain: true,
@@ -693,6 +680,7 @@ export default class Terria {
     hideTerriaLogo: false,
     brandBarElements: undefined,
     brandBarSmallElements: undefined,
+    microzonationConfig: undefined,
     displayOneBrand: 0,
     disableMyLocation: undefined,
     disableSplitter: undefined,
@@ -1940,6 +1928,7 @@ export default class Terria {
         brandBarElements,
         brandBarSmallElements,
         displayOneBrand,
+        microzonationConfig,
         relatedMaps
       } = initData.parameters;
 
@@ -1985,6 +1974,21 @@ export default class Terria {
 
       if (isJsonNumber(displayOneBrand)) {
         parameterOverrides.displayOneBrand = Number(displayOneBrand);
+        hasOverrides = true;
+      }
+
+      if (
+        isJsonObject(microzonationConfig) &&
+        isJsonString(microzonationConfig.url) &&
+        isJsonString(microzonationConfig.typeName)
+      ) {
+        parameterOverrides.microzonationConfig = {
+          url: microzonationConfig.url,
+          typeName: microzonationConfig.typeName,
+          outputFormat: isJsonString(microzonationConfig.outputFormat)
+            ? microzonationConfig.outputFormat
+            : undefined
+        };
         hasOverrides = true;
       }
 
