@@ -1984,7 +1984,7 @@ export default class Terria {
       ) {
         parameterOverrides.microzonationConfig = {
           url: microzonationConfig.url,
-          typeName: microzonationConfig.typeName,
+          projectsLayerName: microzonationConfig.projectsLayerName as string,
           outputFormat: isJsonString(microzonationConfig.outputFormat)
             ? microzonationConfig.outputFormat
             : undefined

@@ -139,17 +139,17 @@
     width: 45%;
     color: $text-light-dimmed;
   }
+}
 
-  a {
-    font-size: $font-size-mid-mini;
-    font-weight: $font-weight-bold;
-    color: #64b5f6;
-    text-decoration: none;
+a {
+  font-size: $font-size-mid-mini;
+  font-weight: $font-weight-bold;
+  color: #64b5f6;
+  text-decoration: none;
 
-    &:hover {
-      color: #90caf9;
-      text-decoration: underline;
-    }
+  &:hover {
+    color: #90caf9;
+    text-decoration: underline;
   }
 }
 

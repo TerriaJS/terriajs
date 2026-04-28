@@ -1727,7 +1727,13 @@
     "docStart": "Inizio",
     "docEnd": "Fine",
     "docDownload": "Scarica allegato",
-    "municipalEmergencyPlans": "Piani Emergenza Comunali"
+    "municipalEmergencyPlans": "Piani Emergenza Comunali",
+    "typeMS": "Tipo MS",
+    "typeDoc": "Tipo Doc",
+    "docFormat": "Formato Doc",
+    "description": "Descrizione",
+    "startDate": "Data inizio",
+    "endDate": "Data fine"
   },
   "dragDrop": {
     "not": "<0>bbbb</0>",

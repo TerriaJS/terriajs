@@ -37,6 +37,18 @@ export type MicrozonationDetail = {
     municipalPlan?: string;
     link?: string;
   };
+  documents?: MicrozonationDocument[];
+};
+
+export type MicrozonationDocument = {
+  id: string;
+  url: string;
+  typeMS: string;
+  typeDoc: string;
+  desc: string;
+  docFormat: string;
+  startDate: string;
+  endDate?: string;
 };
 
 export type Filters = {
@@ -48,9 +60,37 @@ export type Filters = {
 
 export type WfsConfig = {
   url: string;
-  typeName: string;
-  maxFeatures?: number;
+  projectsLayerName: string;
+  documentsLayerName?: string;
   outputFormat?: string;
+};
+
+const normalizeDocument = (
+  feature: any,
+  index: number
+): MicrozonationDocument | undefined => {
+  const properties = feature?.properties ?? {};
+  const url = String(properties?.link).trim();
+
+  if (!url) {
+    return undefined;
+  }
+
+  return {
+    id: String(feature?.id ?? properties?.descrizione_file ?? index),
+    url,
+    typeMS: formatValue(properties?.tipo_microzonazione),
+    typeDoc: formatValue(properties?.tipo_documento),
+    desc: formatValue(properties?.descrizione_file),
+    docFormat: properties?.link?.split(".").pop() ?? "",
+    startDate: formatValue(properties?.validita_inizio),
+    endDate:
+      properties?.validita_fine !== null &&
+      properties?.validita_fine !== undefined &&
+      properties?.validita_fine !== ""
+        ? String(properties.validita_fine)
+        : undefined
+  };
 };
 
 const flattenCoordinates = (coords: any): number[][] => {
@@ -184,18 +224,30 @@ export const normalizeDetail = (properties: any): MicrozonationDetail => ({
   }
 });
 
-const buildWfsUrl = (config: WfsConfig): string => {
+type WfsUrlOptions = {
+  layerName?: string;
+  extraParams?: Record<string, string | undefined>;
+};
+
+const buildWfsUrl = (
+  config: WfsConfig,
+  options: WfsUrlOptions = {}
+): string => {
   const baseUrl = config.url;
   const params: Record<string, string> = {
     service: "WFS",
     version: "1.0.0",
     request: "GetFeature",
-    typeName: config.typeName,
+    typeName: options.layerName ?? config.projectsLayerName,
     outputFormat: config.outputFormat ?? "application/json",
     srsName: "EPSG:4326"
   };
-  if (config.maxFeatures) {
-    params.maxFeatures = String(config.maxFeatures);
+  if (options.extraParams) {
+    for (const [key, value] of Object.entries(options.extraParams)) {
+      if (value !== undefined && value !== "") {
+        params[key] = value;
+      }
+    }
   }
   const queryString = Object.entries(params)
     .map(([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(v)}`)
@@ -241,6 +293,33 @@ export const fetchWfsFeatures = async (
   }
 
   return { records, propertiesById, geometryById };
+};
+
+export const fetchWfsDocuments = async (
+  config: WfsConfig | undefined,
+  idStatoProgetto: string | number | undefined
+): Promise<MicrozonationDocument[]> => {
+  if (!config || idStatoProgetto === null || idStatoProgetto === undefined) {
+    return [];
+  }
+
+  const documentsLayerName = String(config.documentsLayerName).trim();
+  if (!documentsLayerName) {
+    return [];
+  }
+
+  const url = buildWfsUrl(config, {
+    layerName: documentsLayerName,
+    extraParams: {
+      CQL_FILTER: `id_stato_progetto=${String(idStatoProgetto)}`
+    }
+  });
+  const json = await loadJson(url);
+  const features: any[] = json?.features ?? [];
+
+  return features
+    .map((feature, index) => normalizeDocument(feature, index))
+    .filter((document): document is MicrozonationDocument => Boolean(document));
 };
 
 export const getDetailFromProperties = (

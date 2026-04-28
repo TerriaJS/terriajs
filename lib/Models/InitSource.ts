@@ -49,7 +49,8 @@ export interface ShareInitSourceData {
 
 export interface MicrozonationConfig {
   url: string;
-  typeName: string;
+  projectsLayerName: string;
+  documentsLayerName?: string;
   outputFormat?: string;
 }
 

@@ -23,11 +23,13 @@ import {
   MicrozonationRecord,
   emptyFilters,
   fetchWfsFeatures,
+  fetchWfsDocuments,
   getDetailFromProperties,
   filterRecords,
   formatValue,
   uniqueSorted,
-  computeGeometryBBox
+  computeGeometryBBox,
+  MicrozonationDocument
 } from "./Microzonation";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 
@@ -99,6 +101,8 @@ const MicrozonationPanel: React.FC<Props> = observer((props) => {
   const [loadingList, setLoadingList] = useState(false);
   const [listError, setListError] = useState<string | undefined>(undefined);
   const [hasLoaded, setHasLoaded] = useState(false);
+  const [documents, setDocuments] = useState<MicrozonationDocument[]>([]);
+  const [loadingDocs, setLoadingDocs] = useState(false);
 
   useEffect(() => {
     setHasLoaded(false);
@@ -110,7 +114,14 @@ const MicrozonationPanel: React.FC<Props> = observer((props) => {
     setSelectedRecord(undefined);
     setDetail(undefined);
     setListError(undefined);
-  }, [wfsConfig?.url, wfsConfig?.typeName]);
+    setDocuments([]);
+    setLoadingDocs(false);
+  }, [
+    wfsConfig?.url,
+    wfsConfig?.projectsLayerName,
+    wfsConfig?.documentsLayerName,
+    wfsConfig?.outputFormat
+  ]);
 
   useEffect(() => {
     if (!props.isVisible || hasLoaded) {
@@ -188,11 +199,31 @@ const MicrozonationPanel: React.FC<Props> = observer((props) => {
     setHasSearched(false);
     setSelectedRecord(undefined);
     setDetail(undefined);
+    setDocuments([]);
+    setLoadingDocs(false);
   };
 
-  const loadDetail = (record: MicrozonationRecord) => {
+  const loadDetail = async (record: MicrozonationRecord) => {
     const resolved = getDetailFromProperties(propertiesById, record);
     setDetail(resolved);
+
+    if (record.id === null || record.id === undefined) {
+      setDocuments([]);
+      setLoadingDocs(false);
+      return;
+    }
+
+    setLoadingDocs(true);
+    setDocuments([]);
+
+    try {
+      const fetchedDocuments = await fetchWfsDocuments(wfsConfig, record.id);
+      setDocuments(fetchedDocuments);
+    } catch {
+      setDocuments([]);
+    } finally {
+      setLoadingDocs(false);
+    }
   };
 
   const zoomToRecord = (record: MicrozonationRecord) => {
@@ -460,7 +491,7 @@ const MicrozonationPanel: React.FC<Props> = observer((props) => {
                         }
                         onClick={() => {
                           setSelectedRecord(record);
-                          loadDetail(record);
+                          void loadDetail(record);
                           zoomToRecord(record);
                         }}
                       >
@@ -610,6 +641,67 @@ const MicrozonationPanel: React.FC<Props> = observer((props) => {
                 </tbody>
               </table>
             </div>
+          </div>
+        )}
+        {detail && (
+          <div className={Styles.sectionTitle}>
+            {t("microzonation.documents")}
+          </div>
+        )}
+
+        {detail && (
+          <div className={Styles.detailWrapper}>
+            {loadingDocs && (
+              <div className={Styles.notice}>
+                {t("microzonation.loadingDocuments")}
+              </div>
+            )}
+
+            {!loadingDocs && documents.length === 0 && (
+              <div className={Styles.emptyState}>
+                {t("microzonation.noDocuments")}
+              </div>
+            )}
+
+            {!loadingDocs && documents.length > 0 && (
+              <div className={Styles.tableWrapper}>
+                <table className={Styles.table}>
+                  <thead>
+                    <tr>
+                      <th>{t("microzonation.typeMS")}</th>
+                      <th>{t("microzonation.typeDoc")}</th>
+                      <th>{t("microzonation.description")}</th>
+                      <th>{t("microzonation.docFormat")}</th>
+                      <th>{t("microzonation.startDate")}</th>
+                      <th>{t("microzonation.endDate")}</th>
+                      <th />
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {documents.map((doc) => (
+                      <tr key={doc.id} className={Styles.rowClickable}>
+                        <td>{formatValue(doc.typeMS)}</td>
+                        <td>{formatValue(doc.typeDoc)}</td>
+                        <td>{formatValue(doc.desc)}</td>
+                        <td>{formatValue(doc.docFormat)}</td>
+                        <td>{formatValue(doc.startDate)}</td>
+                        <td>{formatValue(doc.endDate)}</td>
+                        <td>
+                          <a
+                            href={doc.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            download
+                          >
+                            {t("microzonation.download")}
+                          </a>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
         )}
         <div className={Styles.emergencyPlansLink}>
