@@ -156,10 +156,12 @@ const MicrozonationPanel: React.FC<Props> = observer((props) => {
     () => uniqueSorted(records.map((r) => r.province)),
     [records]
   );
-  const municipalityOptions = useMemo(
-    () => uniqueSorted(records.map((r) => r.municipality)),
-    [records]
-  );
+  const municipalityOptions = useMemo(() => {
+    const filtered = filters.province
+      ? records.filter((r) => r.province === filters.province)
+      : records;
+    return uniqueSorted(filtered.map((r) => r.municipality));
+  }, [records, filters.province]);
   const microzonationLabels: Record<string, string> = {
     "1": t("microzonation.level1"),
     "2": t("microzonation.level2"),
