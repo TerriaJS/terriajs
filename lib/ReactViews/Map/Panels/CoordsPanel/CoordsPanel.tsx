@@ -16,6 +16,7 @@ import createZoomToFunction from "../../../../Map/Vector/zoomRectangleFromPoint"
 import loadJson from "../../../../Core/loadJson";
 import {
   action,
+  computed,
   IReactionDisposer,
   makeObservable,
   observable,
@@ -125,36 +126,44 @@ interface ISrsSelectionProps {
   reset: () => void;
   convert: () => void;
   conversionList: ISrsConversion[];
+  selectedSrs: ISrsConversion;
+  isOpen: boolean;
 }
 
 const SrsSelection = (props: ISrsSelectionProps) => {
-  const isCartographic = props.isCartographic;
-  const conversionList = props.conversionList;
-  const setSrs = props.setSrs;
+  const { conversionList, setSrs, isOpen, selectedSrs } = props;
+
   useEffect(() => {
-    setSrs(conversionList[0]);
-  }, [isCartographic, conversionList, setSrs]);
+    // Reset to first item when list changes (e.g., due to input type filter)
+    // or when panel opens/closes
+    if (conversionList && conversionList.length > 0) {
+      setSrs(conversionList[0]);
+    }
+  }, [isOpen, setSrs, conversionList]);
+
+  // Find the index of the currently selected conversion in the filtered list
+  const selectedIndex = conversionList.findIndex(
+    (conv) => conv.from === selectedSrs.from && conv.to === selectedSrs.to
+  );
+  const controlledValue = selectedIndex >= 0 ? selectedIndex.toString() : "0";
 
   return (
     <div>
       <div>{props.title}</div>
 
       <Select
+        value={controlledValue}
         onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
-          props.setSrs(props.conversionList[parseInt(e.target.value, 10)]);
+          setSrs(conversionList[parseInt(e.target.value, 10)]);
         }}
         title={props.tooltip}
       >
-        {props.conversionList.map((conv, index) => {
-          if (
-            !props.isCartographic ||
-            (props.isCartographic && conv.from === 4326)
-          )
-            return (
-              <option key={index} className={Styles.crsItem} value={index}>
-                {conv.desc}
-              </option>
-            );
+        {conversionList.map((conv, index) => {
+          return (
+            <option key={index} className={Styles.crsItem} value={index}>
+              {conv.desc}
+            </option>
+          );
         })}
       </Select>
       <Button
@@ -198,6 +207,22 @@ interface SharePanelState {
 @observer
 class CoordsPanel extends React.Component<PropTypes, SharePanelState> {
   static displayName = "CoordsPanel";
+
+  setSrs = action((value: ISrsConversion) => {
+    this.srs = value;
+  });
+
+  // Get filtered conversion list based on input type
+  // Using @computed to cache the result so the reference only changes when isInputNotCartographic changes
+  @computed
+  private get filteredConversionList(): ISrsConversion[] {
+    if (this.isInputNotCartographic) {
+      // If input is projected, show conversions FROM projected systems (to 4326)
+      return this.conversionList.filter((conv) => conv.from !== 4326);
+    }
+
+    return this.conversionList;
+  }
 
   private conversionList: ISrsConversion[] = [
     {
@@ -403,9 +428,9 @@ class CoordsPanel extends React.Component<PropTypes, SharePanelState> {
   private inputY?: number;
   private outputX?: number;
   private outputY?: number;
-  private isInputCartographic: boolean;
-  private isOutputCartographic: boolean;
-  private srs: ISrsConversion;
+  @observable private isInputNotCartographic: boolean;
+  @observable private isOutputCartographic: boolean;
+  @observable private srs: ISrsConversion;
   private pickedPositionSubscription: IReactionDisposer;
   private coordsInputTxtSubscription: IReactionDisposer;
 
@@ -420,24 +445,33 @@ class CoordsPanel extends React.Component<PropTypes, SharePanelState> {
 
     this.coordsInputTxt = "";
     this.coordsOutputTxt = "";
-    this.isInputCartographic = false;
+    this.isInputNotCartographic = false;
     this.isOutputCartographic = false;
-    this.srs = this.conversionList[0];
+    this.srs = this.filteredConversionList[0];
 
     this.coordsInputTxtSubscription = reaction(
       () => this.coordsInputTxt,
-      (coordsInputTxt) => {
+      action((coordsInputTxt) => {
         if (coordsInputTxt && coordsInputTxt !== "") {
           const splitted = coordsInputTxt.toString().split(/[ |,|;]+/g);
           this.inputX = parseFloat(splitted[0]);
           this.inputY = parseFloat(splitted[1]);
-          this.isInputCartographic =
-            this.inputX >= 0 &&
-            this.inputX <= 360 &&
-            this.inputY >= 0 &&
-            this.inputY <= 360;
+
+          const isDefinitelyNotLatitude = this.inputY < -90 || this.inputY > 90;
+          const isDefinitelyNotLongitude =
+            this.inputX < -360 || this.inputX > 360;
+          this.isInputNotCartographic =
+            isDefinitelyNotLatitude && isDefinitelyNotLongitude;
+
+          // Reset srs to first item of the newly filtered list when input type changes
+          if (
+            this.filteredConversionList &&
+            this.filteredConversionList.length > 0
+          ) {
+            this.srs = this.filteredConversionList[0];
+          }
         }
-      }
+      })
     );
 
     this.pickedPositionSubscription = reaction(
@@ -469,7 +503,7 @@ class CoordsPanel extends React.Component<PropTypes, SharePanelState> {
   reset() {
     this.coordsInputTxt = "";
     this.coordsOutputTxt = "";
-    this.isInputCartographic = false;
+    this.isInputNotCartographic = false;
     this.isOutputCartographic = false;
   }
 
@@ -502,9 +536,9 @@ class CoordsPanel extends React.Component<PropTypes, SharePanelState> {
     const results = await loadJson(`${url}?inSR=${this.srs.from}
       &outSR=${this.srs.to}
       &geometries=${
-        this.isInputCartographic
-          ? this.inputY.toString() + "," + this.inputX.toString()
-          : this.inputX.toString() + "," + this.inputY.toString()
+        this.isInputNotCartographic
+          ? this.inputX.toString() + "," + this.inputY.toString()
+          : this.inputY.toString() + "," + this.inputX.toString()
       }
       &transformation=${
         this.srs.wkt ? JSON.stringify({ wkt: this.srs.wkt }) : "{}"
@@ -559,7 +593,7 @@ class CoordsPanel extends React.Component<PropTypes, SharePanelState> {
           setValue={action((value) => {
             this.coordsInputTxt = value;
           })}
-          isCartographic={this.isInputCartographic}
+          isCartographic={this.isInputNotCartographic}
           moveTo={() => {
             this.moveToA(this.inputX, this.inputY);
           }}
@@ -569,18 +603,18 @@ class CoordsPanel extends React.Component<PropTypes, SharePanelState> {
         />
         <SrsSelection
           title="Conversione"
-          isCartographic={this.isInputCartographic}
-          setSrs={(value: ISrsConversion) => {
-            this.srs = value;
-          }}
+          isCartographic={this.isInputNotCartographic}
+          setSrs={this.setSrs}
           reset={() => {
             this.reset();
           }}
           convert={() => {
             this.callConverter();
           }}
-          conversionList={this.conversionList}
+          conversionList={this.filteredConversionList}
+          selectedSrs={this.srs}
           tooltip={t("coordsPanel.srsSelectionTooltip")}
+          isOpen={this.state.isOpen}
         />
         <CoordsText
           name="coordsOut"
