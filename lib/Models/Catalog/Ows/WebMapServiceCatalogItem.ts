@@ -658,11 +658,15 @@ class WebMapServiceCatalogItem
         } styles`;
       }
 
+      const useNameBeforeTitle =
+        this.styleSelectableDimensionsUseNameBeforeTitle;
       const options = filterOutUndefined(
         layer.styles.map(function (s) {
           if (isDefined(s.name)) {
             return {
-              name: s.title || s.name || "",
+              name:
+                (useNameBeforeTitle ? s.name || s.title : s.title || s.name) ||
+                "",
               id: s.name as string
             };
           }
