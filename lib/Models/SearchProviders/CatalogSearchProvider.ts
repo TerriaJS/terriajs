@@ -108,18 +108,33 @@ export default class CatalogSearchProvider extends CatalogSearchProviderMixin(
 ) {
   static readonly type = "catalog-search-provider";
   @observable isSearching: boolean = false;
-  @observable debounceDurationOnceLoaded: number = 300;
 
   constructor(id: string | undefined, terria: Terria) {
     super(id, terria);
 
     makeObservable(this);
+  }
 
-    this.setTrait(
-      CommonStrata.defaults,
-      "minCharacters",
-      terria.searchBarModel.minCharacters
-    );
+  static fromOptions({
+    id,
+    terria,
+    minCharacters
+  }: {
+    id: string | undefined;
+    terria: Terria;
+    minCharacters?: number;
+  }) {
+    const searchProvider = new CatalogSearchProvider(id, terria);
+
+    if (minCharacters !== undefined) {
+      searchProvider.setTrait(
+        CommonStrata.defaults,
+        "minCharacters",
+        minCharacters
+      );
+    }
+
+    return searchProvider;
   }
 
   get type() {

@@ -2,22 +2,19 @@ import {
   action,
   computed,
   IReactionDisposer,
-  observable,
-  reaction,
   makeObservable,
-  runInAction
+  observable,
+  reaction
 } from "mobx";
 import filterOutUndefined from "../Core/filterOutUndefined";
+import CatalogSearchProviderMixin from "../ModelMixins/SearchProviders/CatalogSearchProviderMixin";
 import LocationSearchProviderMixin from "../ModelMixins/SearchProviders/LocationSearchProviderMixin";
 import SearchProviderMixin from "../ModelMixins/SearchProviders/SearchProviderMixin";
-import CatalogSearchProvider from "../Models/SearchProviders/CatalogSearchProvider";
 import SearchProviderResults from "../Models/SearchProviders/SearchProviderResults";
 import Terria from "../Models/Terria";
-import CatalogSearchProviderMixin from "../ModelMixins/SearchProviders/CatalogSearchProviderMixin";
 
 interface SearchStateOptions {
   terria: Terria;
-  catalogSearchProvider?: CatalogSearchProviderMixin.Instance;
 }
 
 export default class SearchState {
@@ -49,12 +46,6 @@ export default class SearchState {
     makeObservable(this);
 
     this.terria = options.terria;
-
-    runInAction(() => {
-      this.terria.searchBarModel.catalogSearchProvider =
-        options.catalogSearchProvider ||
-        new CatalogSearchProvider("catalog-search-provider", options.terria);
-    });
 
     const self = this;
 
@@ -121,7 +112,7 @@ export default class SearchState {
 
   @computed
   get catalogSearchProvider(): CatalogSearchProviderMixin.Instance | undefined {
-    return this.terria.searchBarModel.catalogSearchProvider;
+    return this.terria.catalog.searchProvider;
   }
 
   @computed

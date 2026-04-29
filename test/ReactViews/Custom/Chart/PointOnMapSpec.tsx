@@ -13,8 +13,7 @@ describe("PointOnMap", function () {
       baseUrl: "./"
     });
     viewState = new ViewState({
-      terria,
-      catalogSearchProvider: undefined
+      terria
     });
   });
 

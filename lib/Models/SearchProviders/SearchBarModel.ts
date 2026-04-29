@@ -3,14 +3,14 @@ import {
   computed,
   isObservableArray,
   makeObservable,
-  observable
+  observable,
+  reaction
 } from "mobx";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import RuntimeError from "terriajs-cesium/Source/Core/RuntimeError";
 import { JsonObject } from "../../Core/Json";
 import Result from "../../Core/Result";
 import TerriaError from "../../Core/TerriaError";
-import CatalogSearchProviderMixin from "../../ModelMixins/SearchProviders/CatalogSearchProviderMixin";
 import LocationSearchProviderMixin from "../../ModelMixins/SearchProviders/LocationSearchProviderMixin";
 import { SearchBarTraits } from "../../Traits/SearchProviders/SearchBarTraits";
 import SearchProviderTraits from "../../Traits/SearchProviders/SearchProviderTraits";
@@ -26,11 +26,19 @@ import upsertSearchProviderFromJson from "./upsertSearchProviderFromJson";
 export class SearchBarModel extends CreateModel(SearchBarTraits) {
   private locationSearchProviders = observable.map<string, BaseModel>();
 
-  @observable
-  catalogSearchProvider: CatalogSearchProviderMixin.Instance | undefined;
-
   constructor(readonly terria: Terria) {
     super("search-bar-model", terria);
+
+    reaction(
+      () => this.minCharacters,
+      (minCharacters) => {
+        this.terria.catalog.searchProvider?.setTrait(
+          CommonStrata.defaults,
+          "minCharacters",
+          minCharacters
+        );
+      }
+    );
 
     makeObservable(this);
   }
