@@ -36,6 +36,7 @@ import { BaseModel, ModelConstructorParameters } from "../../Definition/Model";
 import StratumFromTraits from "../../Definition/StratumFromTraits";
 import StratumOrder from "../../Definition/StratumOrder";
 import createStratumInstance from "../../Definition/createStratumInstance";
+import CommonStrata from "../../Definition/CommonStrata";
 import { RectangleCoordinates } from "../../FunctionParameters/RectangleParameter";
 import getToken from "../../getToken";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
@@ -375,6 +376,17 @@ export default class ArcGisMapServerCatalogItem extends UrlMixin(
     const stratum = await MapServerStratum.load(this);
     runInAction(() => {
       this.strata.set(MapServerStratum.stratumName, stratum);
+
+      if (
+        isDefined(this.maximumScale) &&
+        !isDefined(this.minScaleDenominator)
+      ) {
+        this.setTrait(
+          CommonStrata.user,
+          "minScaleDenominator",
+          this.maximumScale
+        );
+      }
     });
   }
 
