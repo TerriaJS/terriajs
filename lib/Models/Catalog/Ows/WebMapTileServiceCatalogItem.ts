@@ -6,12 +6,20 @@ import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTili
 import WebMapTileServiceImageryProvider from "terriajs-cesium/Source/Scene/WebMapTileServiceImageryProvider";
 import URI from "urijs";
 import containsAny from "../../../Core/containsAny";
+import createDiscreteTimesFromIsoSegments from "../../../Core/createDiscreteTimes";
+import createTransformerAllowUndefined from "../../../Core/createTransformerAllowUndefined";
 import isDefined from "../../../Core/isDefined";
 import isReadOnlyArray from "../../../Core/isReadOnlyArray";
 import TerriaError from "../../../Core/TerriaError";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
+import DiscretelyTimeVaryingMixin, {
+  DiscreteTimeAsJS
+} from "../../../ModelMixins/DiscretelyTimeVaryingMixin";
 import GetCapabilitiesMixin from "../../../ModelMixins/GetCapabilitiesMixin";
-import MappableMixin, { MapItem } from "../../../ModelMixins/MappableMixin";
+import MappableMixin, {
+  ImageryParts,
+  MapItem
+} from "../../../ModelMixins/MappableMixin";
 import UrlMixin from "../../../ModelMixins/UrlMixin";
 import { InfoSectionTraits } from "../../../Traits/TraitsClasses/CatalogMemberTraits";
 import LegendTraits from "../../../Traits/TraitsClasses/LegendTraits";
@@ -24,6 +32,7 @@ import createStratumInstance from "../../Definition/createStratumInstance";
 import LoadableStratum from "../../Definition/LoadableStratum";
 import { BaseModel, ModelConstructorParameters } from "../../Definition/Model";
 import StratumFromTraits from "../../Definition/StratumFromTraits";
+import StratumOrder from "../../Definition/StratumOrder";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import { ServiceProvider } from "./OwsInterfaces";
 import WebMapTileServiceCapabilities, {
@@ -31,6 +40,7 @@ import WebMapTileServiceCapabilities, {
   ResourceUrl,
   TileMatrixSetLink,
   WmtsCapabilitiesLegend,
+  WmtsDimension,
   WmtsLayer
 } from "./WebMapTileServiceCapabilities";
 
@@ -419,12 +429,234 @@ class GetCapabilitiesStratum extends LoadableStratum(
       layerAvailableStyles?.[0]?.identifier
     );
   }
+
+  /**
+   * Locate the time `<Dimension>` (case-insensitive on Identifier) on the
+   * matched WMTS layer. Returns `undefined` if the layer or dimension is
+   * absent.
+   */
+  @computed
+  private get timeDimension(): WmtsDimension | undefined {
+    const layer = this.capabilitiesLayer;
+    if (!layer || !layer.Dimension) return undefined;
+    const dimensions: ReadonlyArray<WmtsDimension> = Array.isArray(
+      layer.Dimension
+    )
+      ? layer.Dimension
+      : [layer.Dimension];
+    return dimensions.find(
+      (d) => isDefined(d.Identifier) && d.Identifier.toLowerCase() === "time"
+    );
+  }
+
+  /**
+   * Discrete times parsed from the time `<Dimension>` of the matched layer.
+   *
+   * Three encodings are supported (per OGC 07-057r7 section 7.1.2 and common
+   * server practice):
+   *
+   * 1. Multiple `<Value>` children: each text node is treated as an explicit
+   *    ISO instant (NASA GIBS style).
+   * 2. A single `<Value>` containing a `start/stop/period` ISO 19128 range:
+   *    expanded via `createDiscreteTimesFromIsoSegments` (TERN, GeoServer
+   *    style).
+   * 3. A single `<Value>` containing a comma-separated list of instants or
+   *    ranges: each segment is parsed independently. (Not strictly per spec
+   *    but observed in the wild on GeoServer-backed endpoints.)
+   *
+   * Honours `maxRefreshIntervals` to cap range expansion.
+   */
+  @computed
+  get discreteTimes(): DiscreteTimeAsJS[] | undefined {
+    const dimension = this.timeDimension;
+    if (!dimension || !isDefined(dimension.Value)) return undefined;
+
+    const result: DiscreteTimeAsJS[] = [];
+
+    const rawValues: ReadonlyArray<string> = isReadOnlyArray(dimension.Value)
+      ? dimension.Value
+      : [dimension.Value];
+
+    // Flatten any comma-separated entries inside individual <Value> children.
+    const values: string[] = [];
+    for (const raw of rawValues) {
+      if (typeof raw !== "string") continue;
+      for (const segment of raw.split(",")) {
+        const trimmed = segment.trim();
+        if (trimmed.length > 0) values.push(trimmed);
+      }
+    }
+
+    for (const value of values) {
+      const isoSegments = value.split("/");
+      if (isoSegments.length === 1) {
+        result.push({ time: value, tag: undefined });
+      } else {
+        createDiscreteTimesFromIsoSegments(
+          result,
+          isoSegments[0],
+          isoSegments[1],
+          isoSegments[2],
+          this.catalogItem.maxRefreshIntervals
+        );
+      }
+    }
+
+    return result.length > 0 ? result : undefined;
+  }
+
+  @computed
+  get initialTimeSource() {
+    return "now";
+  }
+
+  /**
+   * Default time selection. Priority:
+   *
+   * 1. `<Default>` from the time `<Dimension>`, if present and not the
+   *    placeholder string `"current"`.
+   * 2. The most recent discrete instant.
+   * 3. `undefined` (UI falls back to `initialTimeSource`).
+   *
+   * INTENTIONAL DIVERGENCE FROM WMS: when no `<Default>` is supplied (or it
+   * equals the `"current"` sentinel), this stratum returns the latest
+   * discrete time — not `undefined`. The WMS stratum returns `undefined`
+   * here and lets `initialTimeSource="now"` drive the UI to the wall-clock.
+   *
+   * The WMTS choice is per upstream issue #7742 acceptance criteria
+   * ("otherwise latest discrete time"). Rationale: WMTS layers are typically
+   * pre-tiled archives where the wall-clock "now" is rarely a tiled instant,
+   * so anchoring to the newest available tile gives a usable initial render.
+   * If you change this, also change the U4/U5 specs in
+   * `WebMapTileServiceCatalogItemSpec.ts` and update issue #7742.
+   */
+  @computed
+  get currentTime(): string | undefined {
+    const dimension = this.timeDimension;
+    const explicitDefault = dimension?.Default;
+
+    // The literal "current" sentinel means "send the most recent data
+    // available" — we let the UI's "now" handling take over rather than
+    // pinning the layer to a stale ISO string.
+    if (isDefined(explicitDefault) && explicitDefault !== "current") {
+      return explicitDefault;
+    }
+
+    const times = this.discreteTimes;
+    if (times && times.length > 0) {
+      // discreteTimes from a range expansion are ordered ascending. For
+      // explicit <Value> lists we don't sort (preserve server order) but
+      // still pick the last entry, which matches WMS behaviour where the
+      // newest instant is conventionally last.
+      return times[times.length - 1].time;
+    }
+
+    return undefined;
+  }
 }
 
+/**
+ * Stratum that translates the user-supplied `time` trait (an explicit time
+ * dimension declaration in catalog JSON) into `discreteTimes` and
+ * `currentTime` values.
+ *
+ * Registered at HIGHER priority than `GetCapabilitiesStratum`, so when the
+ * user declares `time` in catalog JSON, the override values take precedence
+ * over whatever (if anything) the WMTS server advertises in `<Dimension>`.
+ *
+ * When `time` is unset, this stratum returns `undefined` for everything,
+ * letting `GetCapabilitiesStratum` provide values via the regular
+ * trait/stratum priority cascade — preserving existing behaviour.
+ *
+ * Required because GeoServer's GeoWebCache does not advertise `<Dimension>`
+ * in GetCapabilities even when the underlying layer has a configured time
+ * dimension. See issue #14.
+ */
+class TimeOverrideStratum extends LoadableStratum(
+  WebMapTileServiceCatalogItemTraits
+) {
+  static stratumName = "wmts-time-override";
+
+  constructor(readonly catalogItem: WebMapTileServiceCatalogItem) {
+    super();
+    makeObservable(this);
+  }
+
+  duplicateLoadableStratum(model: BaseModel): this {
+    return new TimeOverrideStratum(
+      model as WebMapTileServiceCatalogItem
+    ) as this;
+  }
+
+  /**
+   * Discrete times derived from the `time` trait. Returns `undefined` (and
+   * thereby falls through to GetCapabilitiesStratum) when the trait is not
+   * configured to produce a time set:
+   *   - `time.values` (preferred): used directly, sorted ascending.
+   *   - `time.start` + `time.stop` + `time.period`: expanded via
+   *     `createDiscreteTimesFromIsoSegments` (honours `maxRefreshIntervals`).
+   *   - Anything else (no `time`, only `defaultValue`, partial range): the
+   *     stratum has no times to provide here; GetCapabilities still runs
+   *     for `discreteTimes`. `currentTime` may still resolve from
+   *     `defaultValue` below.
+   */
+  @computed
+  get discreteTimes(): DiscreteTimeAsJS[] | undefined {
+    const t = this.catalogItem.time;
+    if (!t) return undefined;
+
+    if (t.values && t.values.length > 0) {
+      return [...t.values].sort().map((time) => ({ time, tag: undefined }));
+    }
+
+    if (isDefined(t.start) && isDefined(t.stop) && isDefined(t.period)) {
+      const result: DiscreteTimeAsJS[] = [];
+      createDiscreteTimesFromIsoSegments(
+        result,
+        t.start,
+        t.stop,
+        t.period,
+        this.catalogItem.maxRefreshIntervals
+      );
+      return result.length > 0 ? result : undefined;
+    }
+
+    return undefined;
+  }
+
+  /**
+   * Initial `currentTime` selection. Priority:
+   *   1. `time.defaultValue` if set.
+   *   2. The most recent value in `discreteTimes` (matches the
+   *      GetCapabilitiesStratum fallback contract).
+   *   3. `undefined` — falls through to GetCapabilitiesStratum / UI default.
+   */
+  @computed
+  get currentTime(): string | undefined {
+    const t = this.catalogItem.time;
+    if (!t) return undefined;
+
+    if (isDefined(t.defaultValue)) return t.defaultValue;
+
+    const dt = this.discreteTimes;
+    if (dt && dt.length > 0) return dt[dt.length - 1].time;
+
+    return undefined;
+  }
+}
+
+// Register `TimeOverrideStratum` AFTER the GetCapabilities stratum so it
+// receives a higher priority — the `time` trait override wins over whatever
+// the WMTS server advertises (or fails to advertise) in <Dimension>.
+// `getCapabilities` is registered when `GetCapabilitiesMixin` loads above.
+StratumOrder.addLoadStratum(TimeOverrideStratum.stratumName);
+
 class WebMapTileServiceCatalogItem extends MappableMixin(
-  GetCapabilitiesMixin(
-    UrlMixin(
-      CatalogMemberMixin(CreateModel(WebMapTileServiceCatalogItemTraits))
+  DiscretelyTimeVaryingMixin(
+    GetCapabilitiesMixin(
+      UrlMixin(
+        CatalogMemberMixin(CreateModel(WebMapTileServiceCatalogItemTraits))
+      )
     )
   )
 ) {
@@ -445,13 +677,55 @@ class WebMapTileServiceCatalogItem extends MappableMixin(
 
   static readonly type = "wmts";
 
+  static readonly TimeOverrideStratumName = TimeOverrideStratum.stratumName;
+
   constructor(...args: ModelConstructorParameters) {
     super(...args);
     makeObservable(this);
+    // Register the override stratum unconditionally. When the `time` trait
+    // is unset its computed properties return `undefined`, so the priority
+    // cascade falls through to `GetCapabilitiesStratum` and existing
+    // behaviour is preserved. When `time` is set, this stratum's higher
+    // priority means its `currentTime` wins, and the class-level
+    // `discreteTimes` getter consults this stratum first.
+    this.strata.set(
+      TimeOverrideStratum.stratumName,
+      new TimeOverrideStratum(this)
+    );
   }
 
   get type() {
     return WebMapTileServiceCatalogItem.type;
+  }
+
+  /**
+   * Class-level delegate: forward `discreteTimes` from the strata so
+   * `DiscretelyTimeVaryingMixin` can read it off the model directly.
+   * There is intentionally no equivalent class-level delegate for
+   * `currentTime` — the trait system (via `DiscretelyTimeVaryingTraits`)
+   * already resolves `currentTime` from strata automatically, so an
+   * explicit getter would shadow stratum priority and break override
+   * semantics. `discreteTimes` is NOT a trait, hence the explicit forward.
+   *
+   * Priority: `TimeOverrideStratum` (catalog-JSON `time` trait) wins over
+   * `GetCapabilitiesStratum`. This mirrors the trait-stratum priority used
+   * for `currentTime`. When the override stratum has nothing to say (no
+   * `time` trait or only `defaultValue` set), it returns `undefined` and
+   * we fall through to GetCapabilities — preserving existing behaviour.
+   */
+  @computed
+  get discreteTimes() {
+    const overrideStratum: TimeOverrideStratum | undefined = this.strata.get(
+      TimeOverrideStratum.stratumName
+    ) as TimeOverrideStratum;
+    const overrideTimes = overrideStratum?.discreteTimes;
+    if (overrideTimes !== undefined) return overrideTimes;
+
+    const getCapabilitiesStratum: GetCapabilitiesStratum | undefined =
+      this.strata.get(
+        GetCapabilitiesMixin.getCapabilitiesStratumName
+      ) as GetCapabilitiesStratum;
+    return getCapabilitiesStratum?.discreteTimes;
   }
 
   async createGetCapabilitiesStratumFromParent(
@@ -483,66 +757,196 @@ class WebMapTileServiceCatalogItem extends MappableMixin(
     return "1d";
   }
 
+  /**
+   * Imagery-provider-per-time factory. Wrapped in `createTransformerAllowUndefined`
+   * so MobX caches one provider instance per `time` value — flipping the
+   * timeline tag ticks `currentDiscreteTimeTag`/`nextDiscreteTimeTag`, which
+   * recomputes `_currentImageryParts`/`_nextImageryParts`, which calls this
+   * with a new `time` and gets back a fresh provider. Mirrors the WMS
+   * pattern in `WebMapServiceCatalogItem._createImageryProvider`.
+   *
+   * `time` propagates two ways to Cesium:
+   * 1. **REST `{Time}` placeholder substitution** — if the resolved tile URL
+   *    (pre-Cesium) contains a `{Time}` / `{time}` literal, we substitute it
+   *    here so `imageryProvider.url` is directly inspectable in tests and
+   *    so any URL-level proxying/caching downstream sees the time-keyed URL.
+   * 2. **`dimensions: { Time: time }` constructor option** — Cesium routes
+   *    this to `&TIME=` query param appends in KVP mode, and to template
+   *    substitution (`resource.setTemplateValues(staticDimensions)`) in
+   *    REST mode. Passing it on both paths is harmless: REST templates
+   *    without a `{Time}` placeholder simply ignore the value.
+   *
+   * Layers without a time `<Dimension>` get `time === undefined`, the
+   * substitution is a no-op, and `dimensions` is omitted — so non-temporal
+   * WMTS layers behave exactly as before this refactor.
+   */
+  private _createImageryProvider = createTransformerAllowUndefined(
+    (
+      time: string | undefined
+    ): WebMapTileServiceImageryProvider | undefined => {
+      const stratum = this.strata.get(
+        GetCapabilitiesMixin.getCapabilitiesStratumName
+      ) as GetCapabilitiesStratum;
+
+      if (
+        !isDefined(this.layer) ||
+        !isDefined(this.url) ||
+        !isDefined(stratum) ||
+        !isDefined(this.style)
+      ) {
+        return;
+      }
+
+      const layer = stratum.capabilitiesLayer;
+      const layerIdentifier = layer?.Identifier;
+      if (!isDefined(layer) || !isDefined(layerIdentifier)) {
+        return;
+      }
+
+      let format: string = "image/png";
+      const formats = layer.Format;
+      if (
+        formats &&
+        formats?.indexOf("image/png") === -1 &&
+        formats?.indexOf("image/jpeg") !== -1
+      ) {
+        format = "image/jpeg";
+      }
+
+      let baseUrl: string = this.getTileUrl(
+        layer,
+        stratum.capabilities,
+        format
+      );
+
+      // REST {Time} substitution. We do this BEFORE `proxyCatalogItemUrl` so
+      // the proxy sees the time-keyed URL (matters for cache key uniqueness
+      // and for any allow-list checks that assert against the literal URL).
+      // The regex is case-insensitive to cover both `{Time}` (NASA GIBS,
+      // Cesium's documented form) and `{time}` (TERN/GeoServer style — see
+      // the `tern-landscapes-time.xml` fixture).
+      if (isDefined(time)) {
+        baseUrl = baseUrl.replace(/\{time\}/gi, time);
+      }
+
+      const tileMatrixSet = this.tileMatrixSet;
+      if (!isDefined(tileMatrixSet)) {
+        return;
+      }
+
+      const imageryProvider = new WebMapTileServiceImageryProvider({
+        url: proxyCatalogItemUrl(this, baseUrl),
+        layer: layerIdentifier,
+        style: this.style,
+        tileMatrixSetID: tileMatrixSet.id,
+        tileMatrixLabels: tileMatrixSet.labels,
+        minimumLevel: tileMatrixSet.minLevel,
+        maximumLevel: tileMatrixSet.maxLevel,
+        tileWidth: this.tileWidth ?? tileMatrixSet.tileWidth,
+        tileHeight:
+          this.tileHeight ?? this.minimumLevel ?? tileMatrixSet.tileHeight,
+        tilingScheme: tileMatrixSet.scheme,
+        format,
+        credit: this.attribution,
+        // KVP path: Cesium combines `dimensions` into the GetTile query
+        // string. REST path: Cesium calls `setTemplateValues(staticDimensions)`
+        // which substitutes any remaining `{Time}` placeholders. We've
+        // already pre-substituted in `baseUrl`, so this is belt-and-braces
+        // for KVP.
+        //
+        // SAFE-SINGLE-SUBSTITUTION INVARIANT: when the REST template contains
+        // `{Time}`/`{time}`, our `baseUrl.replace(/\{time\}/gi, time)` above
+        // consumes all placeholders before Cesium's `setTemplateValues` runs.
+        // Cesium's pass is therefore a no-op on REST URLs that already had
+        // their placeholder, and a real substitution only happens on URLs
+        // that did NOT have one (in which case our regex was the no-op).
+        // The two passes never both substitute the same placeholder; the
+        // ordering is invariant. If Cesium ever changes the order or
+        // escaping of `setTemplateValues`, only this comment's claim is
+        // affected — the URL we hand to Cesium is already fully resolved.
+        ...(isDefined(time) ? { dimensions: { Time: time } } : {})
+        // TODO: implement picking for WebMapTileServiceImageryProvider
+        //enablePickFeatures: this.allowFeaturePicking
+      });
+      return imageryProvider;
+    }
+  );
+
+  /**
+   * Backward-compatible accessor. Pre-I7 callers (and the existing
+   * `with_operation_metadata.xml` URL-shape spec) read `wmts.imageryProvider`
+   * directly. We resolve to the provider for the currently-selected discrete
+   * time tag so non-temporal layers (no `<Dimension>` -> tag is `undefined`)
+   * keep returning a single, stable provider instance.
+   *
+   * @deprecated Use `mapItems` instead. WMS does not expose this accessor;
+   * it is kept here only to avoid breaking the pre-I7
+   * `with_operation_metadata.xml` URL-shape spec and any third-party callers
+   * that read `wmts.imageryProvider` directly. New code should resolve
+   * the provider via `mapItems[0].imageryProvider` (after filtering
+   * `ImageryParts.is`).
+   */
   @computed
-  get imageryProvider() {
-    const stratum = this.strata.get(
-      GetCapabilitiesMixin.getCapabilitiesStratumName
-    ) as GetCapabilitiesStratum;
+  get imageryProvider(): WebMapTileServiceImageryProvider | undefined {
+    return this._createImageryProvider(this.currentDiscreteTimeTag);
+  }
 
-    if (
-      !isDefined(this.layer) ||
-      !isDefined(this.url) ||
-      !isDefined(stratum) ||
-      !isDefined(this.style)
-    ) {
-      return;
-    }
-
-    const layer = stratum.capabilitiesLayer;
-    const layerIdentifier = layer?.Identifier;
-    if (!isDefined(layer) || !isDefined(layerIdentifier)) {
-      return;
-    }
-
-    let format: string = "image/png";
-    const formats = layer.Format;
-    if (
-      formats &&
-      formats?.indexOf("image/png") === -1 &&
-      formats?.indexOf("image/jpeg") !== -1
-    ) {
-      format = "image/jpeg";
-    }
-
-    const baseUrl: string = this.getTileUrl(
-      layer,
-      stratum.capabilities,
-      format
+  @computed
+  private get _currentImageryParts(): ImageryParts | undefined {
+    const imageryProvider = this._createImageryProvider(
+      this.currentDiscreteTimeTag
     );
-
-    const tileMatrixSet = this.tileMatrixSet;
-    if (!isDefined(tileMatrixSet)) {
-      return;
+    if (imageryProvider === undefined) {
+      return undefined;
     }
 
-    const imageryProvider = new WebMapTileServiceImageryProvider({
-      url: proxyCatalogItemUrl(this, baseUrl),
-      layer: layerIdentifier,
-      style: this.style,
-      tileMatrixSetID: tileMatrixSet.id,
-      tileMatrixLabels: tileMatrixSet.labels,
-      minimumLevel: tileMatrixSet.minLevel,
-      maximumLevel: tileMatrixSet.maxLevel,
-      tileWidth: this.tileWidth ?? tileMatrixSet.tileWidth,
-      tileHeight:
-        this.tileHeight ?? this.minimumLevel ?? tileMatrixSet.tileHeight,
-      tilingScheme: tileMatrixSet.scheme,
-      format,
-      credit: this.attribution
-      // TODO: implement picking for WebMapTileServiceImageryProvider
-      //enablePickFeatures: this.allowFeaturePicking
-    });
-    return imageryProvider;
+    // Reset feature picking for the current imagery layer.
+    // We disable feature picking for the next imagery layer (cross-fade).
+    // NOTE: Cesium's `WebMapTileServiceImageryProvider.pickFeatures` always
+    // returns undefined (WMTS has no GetFeatureInfo equivalent), so this
+    // assignment is currently a no-op at runtime — it mirrors WMS shape so
+    // the contract is in place if Cesium ever adds WMTS picking, and matches
+    // the established `WebMapServiceCatalogItem` pattern for upstream parity.
+    (imageryProvider as any).enablePickFeatures = this.allowFeaturePicking;
+
+    return {
+      imageryProvider,
+      alpha: this.opacity,
+      show: this.show,
+      clippingRectangle: this.clipToRectangle ? this.cesiumRectangle : undefined
+    };
+  }
+
+  @computed
+  private get _nextImageryParts(): ImageryParts | undefined {
+    if (
+      this.terria.timelineStack.contains(this) &&
+      !this.isPaused &&
+      this.nextDiscreteTimeTag
+    ) {
+      const imageryProvider = this._createImageryProvider(
+        this.nextDiscreteTimeTag
+      );
+      if (imageryProvider === undefined) {
+        return undefined;
+      }
+
+      // Disable feature picking for the next imagery layer during cross-fade.
+      // See note in `_currentImageryParts`: this is a no-op on Cesium's WMTS
+      // provider today; kept for shape-parity with WMS.
+      (imageryProvider as any).enablePickFeatures = false;
+
+      return {
+        imageryProvider,
+        alpha: 0.0,
+        show: true,
+        clippingRectangle: this.clipToRectangle
+          ? this.cesiumRectangle
+          : undefined
+      };
+    } else {
+      return undefined;
+    }
   }
 
   getTileUrl(
@@ -689,19 +1093,25 @@ class WebMapTileServiceCatalogItem extends MappableMixin(
 
   @computed
   get mapItems(): MapItem[] {
-    if (isDefined(this.imageryProvider)) {
-      return [
-        {
-          alpha: this.opacity,
-          show: this.show,
-          imageryProvider: this.imageryProvider,
-          clippingRectangle: this.clipToRectangle
-            ? this.cesiumRectangle
-            : undefined
-        }
-      ];
+    const result: MapItem[] = [];
+
+    const current = this._currentImageryParts;
+    if (current) {
+      result.push(current);
     }
-    return [];
+
+    // _nextImageryParts only resolves to non-undefined when this layer is on
+    // the active timelineStack and has a `nextDiscreteTimeTag` — i.e. the
+    // user is animating through the time dimension. For non-temporal WMTS
+    // layers (no `<Dimension>`), `nextDiscreteTimeTag` is always undefined
+    // so this is always skipped and behaviour matches the pre-I7 single-
+    // imagery shape.
+    const next = this._nextImageryParts;
+    if (next) {
+      result.push(next);
+    }
+
+    return result;
   }
 
   protected get defaultGetCapabilitiesUrl(): string | undefined {

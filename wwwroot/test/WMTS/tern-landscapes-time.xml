@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Minimal WMTS 1.0.0 capabilities document with a TERN-style time dimension.
+  TERN encodes the time dimension as a single ISO 19128 range under one
+  <Value>, plus a <Default> with the most recent instant. The ResourceURL
+  template uses a {time} placeholder for time-keyed RESTful tile URLs.
+-->
+<Capabilities xmlns="http://www.opengis.net/wmts/1.0"
+              xmlns:ows="http://www.opengis.net/ows/1.1"
+              xmlns:xlink="http://www.w3.org/1999/xlink"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://www.opengis.net/wmts/1.0
+                  http://schemas.opengis.net/wmts/1.0/wmtsGetCapabilities_response.xsd"
+              version="1.0.0">
+  <ows:ServiceIdentification>
+    <ows:Title>TERN Landscapes Time Series</ows:Title>
+    <ows:ServiceType>OGC WMTS</ows:ServiceType>
+    <ows:ServiceTypeVersion>1.0.0</ows:ServiceTypeVersion>
+  </ows:ServiceIdentification>
+  <Contents>
+    <Layer>
+      <ows:Title>Soil Moisture Daily</ows:Title>
+      <ows:Identifier>tern_soil_moisture_daily</ows:Identifier>
+      <ows:WGS84BoundingBox>
+        <ows:LowerCorner>112 -44</ows:LowerCorner>
+        <ows:UpperCorner>154 -10</ows:UpperCorner>
+      </ows:WGS84BoundingBox>
+      <Style isDefault="true">
+        <ows:Title>default</ows:Title>
+        <ows:Identifier>default</ows:Identifier>
+      </Style>
+      <Format>image/png</Format>
+      <Dimension>
+        <ows:Identifier>time</ows:Identifier>
+        <ows:UOM>ISO8601</ows:UOM>
+        <Default>2024-01-05T00:00:00Z</Default>
+        <Value>2024-01-01T00:00:00Z/2024-01-05T00:00:00Z/P1D</Value>
+      </Dimension>
+      <TileMatrixSetLink>
+        <TileMatrixSet>GoogleMapsCompatible_Level9</TileMatrixSet>
+      </TileMatrixSetLink>
+      <ResourceURL format="image/png" resourceType="tile"
+                   template="https://tern.example/wmts/tern_soil_moisture_daily/default/{time}/{TileMatrixSet}/{TileMatrix}/{TileRow}/{TileCol}.png" />
+    </Layer>
+    <!--
+      Variant layer: the time <Value> contains exactly two slash segments
+      (start/stop, NO period). createDiscreteTimesFromIsoSegments must
+      receive period=undefined and pick a default duration based on the
+      span (see createDiscreteTimes.ts:30-67). 96-hour (4-day) span falls
+      into the `1000 * hour` bucket => 1-hour duration => 97 hourly
+      instants emitted (inclusive of both ends).
+    -->
+    <Layer>
+      <ows:Title>Soil Moisture Daily (no period)</ows:Title>
+      <ows:Identifier>tern_soil_moisture_daily_no_period</ows:Identifier>
+      <ows:WGS84BoundingBox>
+        <ows:LowerCorner>112 -44</ows:LowerCorner>
+        <ows:UpperCorner>154 -10</ows:UpperCorner>
+      </ows:WGS84BoundingBox>
+      <Style isDefault="true">
+        <ows:Title>default</ows:Title>
+        <ows:Identifier>default</ows:Identifier>
+      </Style>
+      <Format>image/png</Format>
+      <Dimension>
+        <ows:Identifier>time</ows:Identifier>
+        <ows:UOM>ISO8601</ows:UOM>
+        <Default>2024-01-05T00:00:00Z</Default>
+        <Value>2024-01-01T00:00:00Z/2024-01-05T00:00:00Z</Value>
+      </Dimension>
+      <TileMatrixSetLink>
+        <TileMatrixSet>GoogleMapsCompatible_Level9</TileMatrixSet>
+      </TileMatrixSetLink>
+      <ResourceURL format="image/png" resourceType="tile"
+                   template="https://tern.example/wmts/tern_soil_moisture_daily_no_period/default/{time}/{TileMatrixSet}/{TileMatrix}/{TileRow}/{TileCol}.png" />
+    </Layer>
+    <TileMatrixSet>
+      <ows:Identifier>GoogleMapsCompatible_Level9</ows:Identifier>
+      <ows:SupportedCRS>urn:ogc:def:crs:EPSG::3857</ows:SupportedCRS>
+      <!--
+        Two TileMatrix children are required: the WMTS capabilities XML->JSON
+        parser only produces an array for `TileMatrix` when there are 2+
+        siblings. With a single child, the parser yields a bare object and
+        `usableTileMatrixSets` (WebMapTileServiceCatalogItem.ts:331) accesses
+        `matrices[0].TopLeftCorner` -> TypeError. Two entries also keep the
+        fixture in line with `with_tilematrix.xml` and real GetCapabilities
+        responses, which always emit at least the level-0 + level-1 pair.
+      -->
+      <TileMatrix>
+        <ows:Identifier>0</ows:Identifier>
+        <ScaleDenominator>559082264.0287178</ScaleDenominator>
+        <TopLeftCorner>-20037508.3427892 20037508.3427892</TopLeftCorner>
+        <TileWidth>256</TileWidth>
+        <TileHeight>256</TileHeight>
+        <MatrixWidth>1</MatrixWidth>
+        <MatrixHeight>1</MatrixHeight>
+      </TileMatrix>
+      <TileMatrix>
+        <ows:Identifier>1</ows:Identifier>
+        <ScaleDenominator>279541132.0143589</ScaleDenominator>
+        <TopLeftCorner>-20037508.3427892 20037508.3427892</TopLeftCorner>
+        <TileWidth>256</TileWidth>
+        <TileHeight>256</TileHeight>
+        <MatrixWidth>2</MatrixWidth>
+        <MatrixHeight>2</MatrixHeight>
+      </TileMatrix>
+    </TileMatrixSet>
+  </Contents>
+</Capabilities>
