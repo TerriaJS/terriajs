@@ -50,8 +50,9 @@
   - Simplify Clipboard component and add success message.
   - Add Story Builder instructions behind a config parameter.
 - Fix Scene capture popup z-index appearing underneath the workbench.
+- Fix Search UI not debouncing properly
 - Upgraded `terriajs-cesium` to `23.0.2` and `terriajs-cesium-widgets` to `14.4.2`.
-
+- [The next improvement]
 #### 8.11.3 - 2026-02-02
 
 - Change to OIDC publishing to npm
