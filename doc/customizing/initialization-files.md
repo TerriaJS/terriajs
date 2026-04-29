@@ -83,6 +83,7 @@ Init files can be edited two ways:
 | `showSplitter`    | no       | **`boolean`**                                                                                                                                                                                         | `false` | Show splitter initally.                                                                                                                                                                                                                                                                  |
 | `splitPosition`   | no       | **`number`**                                                                                                                                                                                          | `0.5`   | The position of splitter.                                                                                                                                                                                                                                                                |
 | `workbench`       | no       | **`string[]`**                                                                                                                                                                                        |         | List of items ids to initially add to workbench.                                                                                                                                                                                                                                         |
+| `parameters`      | no       | [**`parameters`**](#parameters)                                                                                                                                                                       |         | Parameter overrides applied from init files (e.g. branding).                                                                                                                                                                                                                             |
 | `previewedItemId` | no       | **`string`**                                                                                                                                                                                          |         | ID of the catalog member that is currently being previewed.                                                                                                                                                                                                                              |
 | `settings`        | no       | [**`settings`**](#advanced-settings)                                                                                                                                                                  |         | Additional (more advanced) settings.                                                                                                                                                                                                                                                     |
 
@@ -302,6 +303,33 @@ Definition of the baseMap model.
 | `x`  | yes      | **`number`** |         | The X component. |
 | `y`  | yes      | **`number`** |         | The Y component. |
 | `z`  | yes      | **`number`** |         | The Z component. |
+
+### <a id="parameters"></a>`parameters`
+
+Parameter overrides that are applied when the init file is loaded. These override values from the main `config.json` `parameters` object, allowing per-init-file customization of branding.
+
+| Name                    | Required | Type           | Default | Description                                                                                                       |
+| ----------------------- | -------- | -------------- | ------- | ----------------------------------------------------------------------------------------------------------------- |
+| `brandBarElements`      | no       | **`string[]`** |         | An array of strings of HTML that fill up the top left logo space (see `brandBarSmallElements` for small screens). |
+| `brandBarSmallElements` | no       | **`string[]`** |         | An array of strings of HTML that fill up the top left logo space - used for small screens.                        |
+| `displayOneBrand`       | no       | **`number`**   | `0`     | Index of which `brandBarElements` to show for mobile header. Used if `brandBarSmallElements` is not defined.      |
+
+**Example**
+
+```json
+{
+  "parameters": {
+    "brandBarElements": [
+      "<a href='https://example.com'><img src='images/my-logo.png' height='50' /></a>"
+    ],
+    "brandBarSmallElements": [
+      "<a href='https://example.com'><img src='images/my-logo-small.png' height='30' /></a>"
+    ],
+    "displayOneBrand": 0
+  },
+  "catalog": [...]
+}
+```
 
 ### <a id="advanced-settings"></a>`settings`
 
