@@ -1920,7 +1920,8 @@ export default class Terria {
         ? initData.stratum
         : CommonStrata.definition;
 
-    if (isJsonObject(initData.parameters)) {
+    // Overwriting config from init files.
+    if (initData.parameters) {
       const parameterOverrides: Partial<ConfigParameters> = {};
       let hasOverrides = false;
 
@@ -1932,69 +1933,33 @@ export default class Terria {
         relatedMaps
       } = initData.parameters;
 
-      const stringArrayFrom = (value: unknown): string[] | undefined => {
-        if (!Array.isArray(value)) return undefined;
-        return value.every((item) => typeof item === "string") &&
-          value.some((item) => item !== "")
-          ? (value as string[]).slice()
-          : undefined;
-      };
-
-      const relatedMapsFrom = (value: unknown): RelatedMap[] | undefined => {
-        if (!Array.isArray(value)) return undefined;
-
-        const parsedRelatedMaps = value.map((item) => {
-          if (!isJsonObject(item)) return undefined;
-
-          const { imageUrl, url, title, description } = item;
-          return isJsonString(imageUrl) &&
-            isJsonString(url) &&
-            isJsonString(title) &&
-            isJsonString(description)
-            ? { imageUrl, url, title, description }
-            : undefined;
-        });
-
-        return parsedRelatedMaps.every(isDefined)
-          ? (parsedRelatedMaps as RelatedMap[])
-          : undefined;
-      };
-
-      const overrideBrandElements = stringArrayFrom(brandBarElements);
-      if (overrideBrandElements) {
-        parameterOverrides.brandBarElements = overrideBrandElements;
+      if (brandBarElements) {
+        parameterOverrides.brandBarElements = brandBarElements;
         hasOverrides = true;
       }
 
-      const overrideBrandSmallElements = stringArrayFrom(brandBarSmallElements);
-      if (overrideBrandSmallElements) {
-        parameterOverrides.brandBarSmallElements = overrideBrandSmallElements;
+      if (brandBarSmallElements) {
+        parameterOverrides.brandBarSmallElements = brandBarSmallElements;
         hasOverrides = true;
       }
 
-      if (isJsonNumber(displayOneBrand)) {
-        parameterOverrides.displayOneBrand = Number(displayOneBrand);
+      if (displayOneBrand) {
+        parameterOverrides.displayOneBrand = displayOneBrand;
         hasOverrides = true;
       }
 
-      if (
-        isJsonObject(microzonationConfig) &&
-        isJsonString(microzonationConfig.url) &&
-        isJsonString(microzonationConfig.typeName)
-      ) {
+      if (microzonationConfig) {
         parameterOverrides.microzonationConfig = {
           url: microzonationConfig.url,
-          projectsLayerName: microzonationConfig.projectsLayerName as string,
-          outputFormat: isJsonString(microzonationConfig.outputFormat)
-            ? microzonationConfig.outputFormat
-            : undefined
+          projectsLayerName: microzonationConfig.projectsLayerName,
+          documentsLayerName: microzonationConfig.documentsLayerName,
+          outputFormat: microzonationConfig.outputFormat
         };
         hasOverrides = true;
       }
 
-      const overrideRelatedMaps = relatedMapsFrom(relatedMaps);
-      if (overrideRelatedMaps) {
-        parameterOverrides.relatedMaps = overrideRelatedMaps;
+      if (relatedMaps) {
+        parameterOverrides.relatedMaps = relatedMaps;
         hasOverrides = true;
       }
 
