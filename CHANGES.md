@@ -10,6 +10,7 @@
   - Upgrade webpack to version 5.105.4.
 - Upgrade eslint to v10 and migrate to eslint flat config.
 - Update `csv-geo-au` support to include the Australian Mesh Blocks 2021.
+- We no longer start terriajs-server when running `yarn gulp dev` as it is not needed for running tests in the browser with jasmine-browser-runner. If you need terriajs-server, you can start it separately by running `yarn gulp terriajs-server` in another terminal.
 
 #### 8.12.2 - 2026-03-27
 
