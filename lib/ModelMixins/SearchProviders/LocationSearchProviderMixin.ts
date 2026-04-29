@@ -1,4 +1,4 @@
-import { action, makeObservable } from "mobx";
+import { action, makeObservable, override } from "mobx";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
@@ -32,8 +32,23 @@ function LocationSearchProviderMixin<
     @action
     showWarning() {}
 
-    supportsAutocomplete(): boolean {
-      return true;
+    async search(searchText: string, manuallyTriggered?: boolean) {
+      if (!this.autocompleteEnabled && !manuallyTriggered) {
+        this.searchResult.isSearching = false;
+        this.searchResult.isWaitingToStartSearch = false;
+        this.searchResult.message = {
+          content: "translate#viewModels.enterToStartSearch"
+        };
+
+        return;
+      }
+
+      await super.search(searchText, manuallyTriggered);
+    }
+
+    @override
+    get autocompleteEnabled() {
+      return super.autocompleteEnabled ?? true;
     }
   }
 
