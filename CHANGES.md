@@ -50,6 +50,7 @@
   - Simplify Clipboard component and add success message.
   - Add Story Builder instructions behind a config parameter.
 - Fix Scene capture popup z-index appearing underneath the workbench.
+- [Documentation] Replace obsolete Nexis dataset example with LGA 2025 data in model-dimensions.md
 - Upgraded `terriajs-cesium` to `23.0.2` and `terriajs-cesium-widgets` to `14.4.2`.
 
 #### 8.11.3 - 2026-02-02
