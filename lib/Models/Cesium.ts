@@ -864,6 +864,13 @@ export default class Cesium extends GlobeOrMap {
       if (target instanceof Rectangle) {
         // target is a Rectangle
 
+        if (this.terria.mainViewer.viewerMode === ViewerMode.Cesium2D) {
+          return flyToPromise(camera, {
+            duration: flightDurationSeconds,
+            destination: target
+          });
+        }
+
         // Work out the destination that the camera would naturally fly to
         const destinationCartesian =
           camera.getRectangleCameraCoordinates(target);
