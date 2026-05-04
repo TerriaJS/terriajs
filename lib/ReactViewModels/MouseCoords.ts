@@ -68,6 +68,7 @@ export default class MouseCoords {
   north?: string;
   east?: string;
   cartographic?: Cartographic;
+  screenPosition?: Cartesian2;
 
   @observable useProjection = false;
 
@@ -107,6 +108,8 @@ export default class MouseCoords {
 
   @action
   updateCoordinatesFromCesium(terria: Terria, position: Cartesian2) {
+    this.screenPosition = Cartesian2.clone(position, this.screenPosition);
+
     if (!terria.cesium) {
       return;
     }
@@ -213,6 +216,8 @@ export default class MouseCoords {
 
   @action
   updateCoordinatesFromLeaflet(terria: Terria, mouseMoveEvent: MouseEvent) {
+    this.screenPosition = undefined;
+
     if (!terria.leaflet) {
       return;
     }

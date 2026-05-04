@@ -2,6 +2,7 @@ import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import HeightReference from "terriajs-cesium/Source/Scene/HeightReference";
 import Terria from "../../Models/Terria";
+import ViewerMode from "../../Models/ViewerMode";
 import markerIcon from "./Chart/markerIcon.js";
 
 import MappableMixin from "../../ModelMixins/MappableMixin";
@@ -63,6 +64,9 @@ export default class MeasurablePanelManager {
   }
 
   static addMarker(position: Cartographic) {
+    const isCesium2D =
+      MeasurablePanelManager.terria?.mainViewer.viewerMode ===
+      ViewerMode.Cesium2D;
     MeasurablePanelManager.initializeModel();
     if (!MeasurablePanelManager.markerModel) return;
     MeasurablePanelManager.removeAllMarkers();
@@ -75,8 +79,12 @@ export default class MeasurablePanelManager {
         billboard: {
           image: markerIcon,
           scale: 1.5,
-          heightReference: HeightReference.CLAMP_TO_GROUND,
-          eyeOffset: new Cartesian3(0.0, 0.0, 50.0)
+          heightReference: isCesium2D
+            ? HeightReference.NONE
+            : HeightReference.CLAMP_TO_GROUND,
+          eyeOffset: isCesium2D
+            ? Cartesian3.ZERO
+            : new Cartesian3(0.0, 0.0, 50.0)
         }
       })
     );

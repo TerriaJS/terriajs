@@ -64,12 +64,17 @@ function MeasurableGeometryMixin<T extends AbstractConstructor<MixinModel>>(
 
       const terrainProvider: TerrainProvider | undefined =
         this.terria?.cesium?.scene?.terrainProvider;
+      const canSampleMostDetailed =
+        !!terrainProvider && !!(terrainProvider as any).availability;
 
       let prom = Promise.resolve(positions);
 
-      if (terrainProvider && positions.every((element) => element.height < 1)) {
+      if (
+        canSampleMostDetailed &&
+        positions.every((element) => element.height < 1)
+      ) {
         prom = prom.then((pos) =>
-          sampleTerrainMostDetailed(terrainProvider, pos)
+          sampleTerrainMostDetailed(terrainProvider, pos).catch(() => pos)
         );
       }
 

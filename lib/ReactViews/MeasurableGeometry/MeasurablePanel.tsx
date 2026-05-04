@@ -635,6 +635,7 @@ const MeasurablePanel = observer((props: Props) => {
     const is2dMode =
       terria.mainViewer.viewerMode === ViewerMode.Leaflet ||
       terria.mainViewer.viewerMode === ViewerMode.Cesium2D;
+    const showGroundDistance = !is2dMode;
     const currentGeom =
       terria.measurableGeomList[terria.measurableGeometryIndex];
     if (!currentGeom) return null;
@@ -862,12 +863,16 @@ const MeasurablePanel = observer((props: Props) => {
               [
                 "measurableGeometry.geometrySummaryDistGeo",
                 "measurableGeometry.geometrySummaryDistAir",
-                "measurableGeometry.geometrySummaryDistGround"
+                ...(showGroundDistance
+                  ? ["measurableGeometry.geometrySummaryDistGround"]
+                  : [])
               ],
               [
                 prettifyNumber(currentGeom.geodeticDistance ?? 0),
                 prettifyNumber(currentGeom.airDistance ?? 0),
-                prettifyNumber(currentGeom.groundDistance ?? 0)
+                ...(showGroundDistance
+                  ? [prettifyNumber(currentGeom.groundDistance ?? 0)]
+                  : [])
               ]
             )}
         </small>
@@ -1175,6 +1180,7 @@ const MeasurablePanel = observer((props: Props) => {
     const is2dMode =
       terria.mainViewer.viewerMode === ViewerMode.Leaflet ||
       terria.mainViewer.viewerMode === ViewerMode.Cesium2D;
+    const showGroundDistance = !is2dMode;
     const stopPoints =
       terria?.measurableGeomList[terria.measurableGeometryIndex]?.stopPoints ||
       [];
@@ -1303,11 +1309,13 @@ const MeasurablePanel = observer((props: Props) => {
                     <th>
                       {i18next.t("measurableGeometry.geometrySummaryDistAir")}
                     </th>
-                    <th>
-                      {i18next.t(
-                        "measurableGeometry.geometrySummaryDistGround"
-                      )}
-                    </th>
+                    {showGroundDistance && (
+                      <th>
+                        {i18next.t(
+                          "measurableGeometry.geometrySummaryDistGround"
+                        )}
+                      </th>
+                    )}
                     {!is2dMode && (
                       <th>
                         {i18next.t("measurableGeometry.geometrySummarySlope")}
@@ -1390,6 +1398,7 @@ const MeasurablePanel = observer((props: Props) => {
   }) => {
     const theme = useTheme();
     const isHighlighted = idx === highlightedRow;
+    const showGroundDistance = !is2dMode;
 
     const renderDistanceData = React.useCallback(
       (distanceArray: any[], index: number) =>
@@ -1479,13 +1488,15 @@ const MeasurablePanel = observer((props: Props) => {
                 idx
               )}
             </td>
-            <td>
-              {renderDistanceData(
-                terria.measurableGeomList[terria.measurableGeometryIndex]
-                  ?.stopGroundDistances,
-                idx
-              )}
-            </td>
+            {showGroundDistance && (
+              <td>
+                {renderDistanceData(
+                  terria.measurableGeomList[terria.measurableGeometryIndex]
+                    ?.stopGroundDistances,
+                  idx
+                )}
+              </td>
+            )}
             {!is2dMode && <td>{renderSlope(idx)}</td>}
           </>
         )}
