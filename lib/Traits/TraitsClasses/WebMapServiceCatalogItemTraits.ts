@@ -347,11 +347,10 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
   })
   getFeatureInfoParameters?: JsonObject;
 
-  @primitiveTrait({
-    type: "boolean",
-    name: "styleSelectableDimensionsUseNameBeforeTitle",
-    description:
-      "Use the layer name before the style title to choose the SelectableDimension label."
+  @primitiveArrayTrait({
+    type: "string",
+    name: "Styles to use",
+    description: "If it is present, use only the styles defined in the list."
   })
-  styleSelectableDimensionsUseNameBeforeTitle: boolean = false;
+  stylesToUse?: string[];
 }

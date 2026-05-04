@@ -658,15 +658,17 @@ class WebMapServiceCatalogItem
         } styles`;
       }
 
-      const useNameBeforeTitle =
-        this.styleSelectableDimensionsUseNameBeforeTitle;
+      const stylesToUse = this.stylesToUse;
       const options = filterOutUndefined(
         layer.styles.map(function (s) {
-          if (isDefined(s.name)) {
+          if (
+            isDefined(s.name) &&
+            (!stylesToUse ||
+              stylesToUse.length === 0 ||
+              stylesToUse.includes(s.name))
+          ) {
             return {
-              name:
-                (useNameBeforeTitle ? s.name || s.title : s.title || s.name) ||
-                "",
+              name: s.title || s.name || "",
               id: s.name as string
             };
           }
