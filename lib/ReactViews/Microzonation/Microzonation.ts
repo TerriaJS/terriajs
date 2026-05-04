@@ -43,7 +43,6 @@ export type MicrozonationDetail = {
 export type MicrozonationDocument = {
   id: string;
   url: string;
-  typeMS: string;
   typeDoc: string;
   desc: string;
   docFormat: string;
@@ -79,7 +78,6 @@ const normalizeDocument = (
   return {
     id: String(feature?.id ?? properties?.descrizione_file ?? index),
     url,
-    typeMS: formatValue(properties?.tipo_microzonazione),
     typeDoc: formatValue(properties?.tipo_documento),
     desc: formatValue(properties?.descrizione_file),
     docFormat: properties?.link?.split(".").pop() ?? "",
@@ -102,6 +100,13 @@ const flattenCoordinates = (coords: any): number[][] => {
     result.push(...flattenCoordinates(item));
   }
   return result;
+};
+
+export const formatDate = (value?: string) => {
+  if (!value) return "-";
+  const date = new Date(value);
+  if (isNaN(date.getTime())) return value;
+  return date.toLocaleDateString("it-IT");
 };
 
 export const computeGeometryBBox = (
