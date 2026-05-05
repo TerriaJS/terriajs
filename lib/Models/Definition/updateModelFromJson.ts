@@ -147,7 +147,9 @@ function pushStratumError(
   stratumName: string,
   error: unknown
 ) {
-  errors.push(TerriaError.from(error, `Error updating stratum \`${stratumName}\``));
+  errors.push(
+    TerriaError.from(error, `Error updating stratum \`${stratumName}\``)
+  );
 }
 
 function mergeWithExistingMembers(
