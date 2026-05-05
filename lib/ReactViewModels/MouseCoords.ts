@@ -9,6 +9,7 @@ import Intersections2D from "terriajs-cesium/Source/Core/Intersections2D";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import Ray from "terriajs-cesium/Source/Core/Ray";
 import TerrainProvider from "terriajs-cesium/Source/Core/TerrainProvider";
+import SceneMode from "terriajs-cesium/Source/Scene/SceneMode";
 import sampleTerrainMostDetailed from "terriajs-cesium/Source/Core/sampleTerrainMostDetailed";
 import isDefined from "../Core/isDefined";
 import pickTriangle, { PickTriangleResult } from "../Map/Cesium/pickTriangle";
@@ -118,9 +119,15 @@ export default class MouseCoords {
     const camera = scene.camera;
     const pickRay = camera.getPickRay(position, scratchRay);
     const globe = scene.globe;
-    const pickedTriangle = isDefined(pickRay)
-      ? pickTriangle(pickRay, scene, true, pickedTriangleScratch)
-      : undefined;
+    const is2D = scene.mode === SceneMode.SCENE2D;
+
+    let pickedTriangle: PickTriangleResult | undefined;
+    if (!is2D) {
+      pickedTriangle = isDefined(pickRay)
+        ? pickTriangle(pickRay, scene, true, pickedTriangleScratch)
+        : undefined;
+    }
+
     if (isDefined(pickedTriangle)) {
       // Get a fast, accurate-ish height every time the mouse moves.
       const ellipsoid = globe.ellipsoid;
@@ -202,15 +209,34 @@ export default class MouseCoords {
         this.debounceAskWhereAmI(terria, intersection);
       }
     } else {
-      runInAction(() => {
-        this.elevation = undefined;
-        this.utmZone = undefined;
-        this.latitude = undefined;
-        this.longitude = undefined;
-        this.north = undefined;
-        this.east = undefined;
-      });
-      this.updateEvent.raiseEvent();
+      let intersection: Cartographic | undefined;
+      if (is2D && isDefined(pickRay)) {
+        const cartesian = camera.pickEllipsoid(position, globe.ellipsoid);
+        if (isDefined(cartesian)) {
+          intersection = globe.ellipsoid.cartesianToCartographic(
+            cartesian,
+            scratchIntersection
+          );
+        }
+      }
+
+      if (intersection) {
+        this.cartographicToFields(intersection);
+        if (terria.configParameters.whereAmIParams) {
+          this.debounceAskWhereAmI(terria, intersection);
+        }
+      } else {
+        runInAction(() => {
+          this.elevation = undefined;
+          this.utmZone = undefined;
+          this.latitude = undefined;
+          this.longitude = undefined;
+          this.north = undefined;
+          this.east = undefined;
+        });
+        this.cartographic = undefined;
+        this.updateEvent.raiseEvent();
+      }
     }
   }
 

@@ -10,6 +10,7 @@ import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import EllipsoidGeodesic from "terriajs-cesium/Source/Core/EllipsoidGeodesic";
 import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
+import ConstantPositionProperty from "terriajs-cesium/Source/DataSources/ConstantPositionProperty";
 import Terria from "../../../../Models/Terria";
 import UserDrawing from "../../../../Models/UserDrawing";
 import EllipsoidTangentPlane from "terriajs-cesium/Source/Core/EllipsoidTangentPlane";
@@ -21,6 +22,7 @@ import ArcType from "terriajs-cesium/Source/Core/ArcType";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import MeasureTools from "../../../../Models/MeasureTools";
 import ViewState from "../../../../ReactViewModels/ViewState";
+import { sampleTerrainMostDetailed } from "terriajs-cesium";
 
 interface IProps {
   terria: Terria;
@@ -158,23 +160,6 @@ export class MeasureLineTool extends MapNavigationItemController {
     );
   }
 
-  prettifyNumber(number: number) {
-    if (number <= 0) {
-      return "";
-    }
-    // Given a number representing a number in metres, make it human readable
-    let label = "m";
-    if (number > 999) {
-      label = "km";
-      number = number / 1000.0;
-    }
-    let numberStr = number.toFixed(2);
-    // http://stackoverflow.com/questions/2901102/how-to-print-a-number-with-commas-as-thousands-separators-in-javascript
-    numberStr.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    numberStr = `${numberStr} ${label}`;
-    return numberStr;
-  }
-
   updateDistance(pointEntities: CustomDataSource) {
     this.totalDistanceMetres = 0;
     if (pointEntities.entities.values.length < 1) {
@@ -209,17 +194,9 @@ export class MeasureLineTool extends MapNavigationItemController {
   }
 
   getGeodesicDistance(pointOne: Cartesian3, pointTwo: Cartesian3) {
-    // Note that Cartesian.distance gives the straight line distance between the two points, ignoring
-    // curvature. This is not what we want.
-    const pickedPointCartographic =
-      Ellipsoid.WGS84.cartesianToCartographic(pointOne);
-    const lastPointCartographic =
-      Ellipsoid.WGS84.cartesianToCartographic(pointTwo);
-    const geodesic = new EllipsoidGeodesic(
-      pickedPointCartographic,
-      lastPointCartographic
-    );
-    return geodesic.surfaceDistance;
+    return this.terria.measurableGeometryManager[
+      this.terria.measurableGeometryIndex
+    ].getGeodesicDistance(pointOne, pointTwo);
   }
 
   onCleanUp() {
@@ -320,33 +297,6 @@ export class MeasurePolygonTool extends MapNavigationItemController {
         this.props.viewState.useSmallScreenInterface) &&
       super.visible
     );
-  }
-
-  prettifyNumber(number: number, squared: boolean) {
-    if (number <= 0) {
-      return "";
-    }
-    // Given a number representing a number in metres, make it human readable
-    let label = "m";
-    if (squared) {
-      if (number > 999999) {
-        label = "km";
-        number = number / 1000000.0;
-      }
-    } else {
-      if (number > 999) {
-        label = "km";
-        number = number / 1000.0;
-      }
-    }
-    let numberStr = number.toFixed(2);
-    // http://stackoverflow.com/questions/2901102/how-to-print-a-number-with-commas-as-thousands-separators-in-javascript
-    numberStr.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    numberStr = `${numberStr} ${label}`;
-    if (squared) {
-      numberStr += "\u00B2";
-    }
-    return numberStr;
   }
 
   updateDistance(pointEntities: CustomDataSource) {
@@ -477,17 +427,9 @@ export class MeasurePolygonTool extends MapNavigationItemController {
   }
 
   getGeodesicDistance(pointOne: Cartesian3, pointTwo: Cartesian3) {
-    // Note that Cartesian.distance gives the straight line distance between the two points, ignoring
-    // curvature. This is not what we want.
-    const pickedPointCartographic =
-      Ellipsoid.WGS84.cartesianToCartographic(pointOne);
-    const lastPointCartographic =
-      Ellipsoid.WGS84.cartesianToCartographic(pointTwo);
-    const geodesic = new EllipsoidGeodesic(
-      pickedPointCartographic,
-      lastPointCartographic
-    );
-    return geodesic.surfaceDistance;
+    return this.terria.measurableGeometryManager[
+      this.terria.measurableGeometryIndex
+    ].getGeodesicDistance(pointOne, pointTwo);
   }
 
   onCleanUp() {
@@ -632,6 +574,154 @@ export class MeasureAngleTool extends MapNavigationItemController {
 
   deactivate() {
     this.onClose();
+    this.userDrawing.endDrawing();
+    super.deactivate();
+  }
+}
+
+export class MeasureCircleTool extends MapNavigationItemController {
+  static id = "measure-circle-tool";
+  static displayName = "MeasureCircleTool";
+
+  private readonly terria: Terria;
+  private readonly userDrawing: UserDrawing;
+  private circleLocked = false;
+
+  onOpen: () => void;
+  onClose: () => void;
+  itemRef: React.RefObject<HTMLDivElement> = React.createRef();
+
+  constructor(private props: IProps) {
+    super();
+    makeObservable(this);
+
+    this.terria = props.terria;
+    this.userDrawing = new UserDrawing({
+      terria: props.terria,
+      messageHeader: () => i18next.t("measure.measureCircleTool"),
+      allowPolygon: false,
+      autoClosePolygon: false,
+      onPointClicked: (pts) => this.onPointUpdated(pts, false),
+      onPointMoved: (pts) => this.onPointUpdated(pts, true),
+      onCleanUp: this.onCleanUp.bind(this),
+      onMakeDialogMessage: this.onMakeDialogMessage.bind(this),
+      invisible: true
+    });
+
+    this.onOpen = props.onOpen ?? (() => {});
+    this.onClose = props.onClose ?? (() => {});
+  }
+
+  get glyph(): any {
+    return GLYPHS.circleEmpty;
+  }
+  get viewerMode(): ViewerMode | undefined {
+    return undefined;
+  }
+
+  @computed get visible(): boolean {
+    return (
+      (this.props.measureTools.active ||
+        this.props.viewState.useSmallScreenInterface) &&
+      super.visible
+    );
+  }
+
+  private updateCircleGeometry(center: Cartesian3, edge: Cartesian3) {
+    this.terria.measurableGeometryManager[
+      this.terria.measurableGeometryIndex
+    ]?.updateCircleGeometry(center, edge);
+  }
+
+  async setRadiusFromPanel(radius: number): Promise<boolean> {
+    if (!this.circleLocked || radius <= 0 || !Number.isFinite(radius)) {
+      return false;
+    }
+    const [centerE, edgeE] = this.userDrawing.pointEntities.entities.values;
+    if (!centerE || !edgeE) return false;
+    const t = this.terria.timelineClock.currentTime;
+    const center = centerE.position?.getValue(t);
+    const edge = edgeE.position?.getValue(t);
+    if (!center || !edge) return false;
+    const c1 = Cartographic.fromCartesian(center);
+    const c2 = Cartographic.fromCartesian(edge);
+    const geo = new EllipsoidGeodesic(
+      new Cartographic(c1.longitude, c1.latitude),
+      new Cartographic(c2.longitude, c2.latitude)
+    );
+    const newEdgeCarto = geo.interpolateUsingSurfaceDistance(radius);
+    try {
+      const terrain = (this.terria.currentViewer as any)?.scene
+        ?.terrainProvider;
+      if (terrain) {
+        const [sampled] = await sampleTerrainMostDetailed(terrain, [
+          new Cartographic(newEdgeCarto.longitude, newEdgeCarto.latitude)
+        ]);
+        newEdgeCarto.height = sampled.height ?? c2.height;
+      } else {
+        newEdgeCarto.height = c2.height;
+      }
+    } catch {
+      newEdgeCarto.height = c2.height;
+    }
+    const newEdge = Cartographic.toCartesian(newEdgeCarto);
+    edgeE.position = new ConstantPositionProperty(newEdge);
+    this.updateCircleGeometry(center, newEdge);
+    this.terria.currentViewer.notifyRepaintRequired();
+    return true;
+  }
+
+  private onPointUpdated(pointEntities: CustomDataSource, isMove: boolean) {
+    const t = this.terria.timelineClock.currentTime;
+    const entities = pointEntities.entities.values;
+    const points = entities
+      .map((e) => e.position?.getValue(t))
+      .filter((p): p is Cartesian3 => p !== undefined);
+    if (!isMove && this.circleLocked) {
+      const last = entities[entities.length - 1];
+      pointEntities.entities.removeAll();
+      pointEntities.entities.add(last);
+      this.circleLocked = false;
+      this.terria.currentViewer.notifyRepaintRequired();
+      return;
+    }
+
+    if (!isMove && points.length >= 2) {
+      this.circleLocked = true;
+      const center = points[0];
+      const edge = points[points.length - 1];
+      this.updateCircleGeometry(center, edge);
+      this.terria.currentViewer.notifyRepaintRequired();
+      return;
+    }
+
+    if (isMove && points.length >= 2) {
+      if (this.circleLocked) this.updateCircleGeometry(points[0], points[1]);
+      this.terria.currentViewer.notifyRepaintRequired();
+    }
+  }
+
+  onMakeDialogMessage = () => {
+    return "";
+  };
+
+  onCleanUp() {
+    this.circleLocked = false;
+    this.onClose();
+    super.deactivate();
+  }
+
+  activate() {
+    this.onOpen();
+    this.circleLocked = false;
+    this.userDrawing.cleanUp(true);
+    this.userDrawing.enterDrawMode(MeasureCircleTool.id);
+    super.activate();
+  }
+
+  deactivate() {
+    this.onClose();
+    this.circleLocked = false;
     this.userDrawing.endDrawing();
     super.deactivate();
   }

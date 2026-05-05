@@ -40,8 +40,11 @@ import LabelStyle from "terriajs-cesium/Source/Scene/LabelStyle";
 import VerticalOrigin from "terriajs-cesium/Source/Scene/VerticalOrigin";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import HorizontalOrigin from "terriajs-cesium/Source/Scene/HorizontalOrigin";
-import { MeasureAngleTool } from "../ReactViews/Map/MapNavigation/Items/MeasureTools";
-import { MeasurePointTool } from "../ReactViews/Map/MapNavigation/Items/MeasureTools";
+import {
+  MeasureAngleTool,
+  MeasureCircleTool,
+  MeasurePointTool
+} from "../ReactViews/Map/MapNavigation/Items";
 import ViewerMode from "./ViewerMode";
 
 interface OnDrawingCompleteParams {
@@ -100,6 +103,7 @@ export default class UserDrawing extends MappableMixin(
 
   private isAngleMeasuring: boolean = false;
   private isPointMeasuring: boolean = false;
+  private isCircleMeasuring: boolean = false;
 
   constructor(options: Options) {
     super(createGuid(), options.terria);
@@ -237,6 +241,30 @@ export default class UserDrawing extends MappableMixin(
     return this.getRectangleForShape();
   }
 
+  private get cesiumGlobe(): any | undefined {
+    if (this.terria.mainViewer.viewerMode === ViewerMode.Cesium2D) {
+      return undefined;
+    }
+    return (this.terria.currentViewer as any)?.scene?.globe ?? undefined;
+  }
+
+  private liftToTerrain(pos: Cartesian3): Cartesian3 {
+    const globe = this.cesiumGlobe;
+    if (!globe) {
+      return pos;
+    }
+
+    const carto = Cartographic.fromCartesian(pos);
+    const terrainHeight: number | undefined = globe.getHeight(carto);
+
+    if (terrainHeight !== undefined && carto.height < terrainHeight) {
+      return Cartographic.toCartesian(
+        new Cartographic(carto.longitude, carto.latitude, terrainHeight)
+      );
+    }
+    return pos;
+  }
+
   private createSegmentLabel(
     name: string,
     entityA: Entity,
@@ -270,59 +298,204 @@ export default class UserDrawing extends MappableMixin(
     });
   }
 
-  private updateSegmentLabels() {
-    if (
-      !this.terria.measurableGeomList[this.terria.measurableGeometryIndex]
-        ?.showDistanceLabels
-    ) {
-      const toRemove: Entity[] = [];
-      for (const entity of this.otherEntities.entities.values) {
-        if (entity.name && entity.name.startsWith("SegmentLabel-")) {
-          toRemove.push(entity);
-        }
+  private clearSegmentLabels() {
+    const toRemove: Entity[] = [];
+    for (const entity of this.otherEntities.entities.values) {
+      if (entity.name && entity.name.startsWith("SegmentLabel-")) {
+        toRemove.push(entity);
       }
-      toRemove.forEach((e) => this.otherEntities.entities.remove(e));
+    }
+    toRemove.forEach((e) => this.otherEntities.entities.remove(e));
+  }
+
+  private getCircleDisplayPoints(time?: JulianDate) {
+    const t = time ?? this.terria.timelineClock.currentTime;
+    const [centerEntity, edgeEntity] = this.pointEntities.entities.values;
+    const center = centerEntity?.position?.getValue(t);
+    if (!center) return [];
+    const edge =
+      edgeEntity?.position?.getValue(t) ??
+      (this.terria.currentViewer.mouseCoords.cartographic &&
+        Ellipsoid.WGS84.cartographicToCartesian(
+          this.terria.currentViewer.mouseCoords.cartographic
+        ));
+    return edge ? [center, edge] : [center];
+  }
+
+  private buildCirclePolylinePositions(
+    center: Cartesian3,
+    radius: number
+  ): Cartesian3[] {
+    const centerCarto = Cartographic.fromCartesian(center);
+    const segments = Math.max(
+      64,
+      Math.min(512, Math.ceil((2 * Math.PI * radius) / 20))
+    );
+    return this.terria.measurableGeometryManager[
+      this.terria.measurableGeometryIndex
+    ]
+      .buildCircleRingRadians(
+        centerCarto.latitude,
+        centerCarto.longitude,
+        radius,
+        segments
+      )
+      .map(({ lat, lon }) =>
+        Cartographic.toCartesian(new Cartographic(lon, lat, centerCarto.height))
+      );
+  }
+
+  private createCircleEntities() {
+    this.otherEntities.entities.add({
+      id: "Circle Line",
+      name: "Circle Line",
+      polyline: {
+        positions: new CallbackProperty((time: JulianDate) => {
+          const [center, edge] = this.getCircleDisplayPoints(time);
+          if (!center || !edge) {
+            return [];
+          }
+
+          const radius = this.terria.measurableGeometryManager[
+            this.terria.measurableGeometryIndex
+          ].getGeodesicDistance(center, edge);
+          if (radius <= 0) {
+            return [];
+          }
+
+          return this.buildCirclePolylinePositions(center, radius);
+        }, false),
+        clampToGround: !!this.terria?.clampMeasureLineToGround,
+        width: 20,
+        material: new PolylineGlowMaterialProperty({
+          color: new Color(0.0, 0.0, 0.0, 0.1),
+          glowPower: 0.25
+        })
+      }
+    });
+
+    this.otherEntities.entities.add({
+      id: "Circle Label",
+      name: "Circle Label",
+      position: new CallbackProperty((time: JulianDate) => {
+        return this.getCircleDisplayPoints(time)[0];
+      }, false) as any,
+      label: {
+        text: new CallbackProperty((time: JulianDate) => {
+          const [center, edge] = this.getCircleDisplayPoints(time);
+          if (!center || !edge) {
+            return "";
+          }
+
+          const radius = this.terria.measurableGeometryManager[
+            this.terria.measurableGeometryIndex
+          ].getGeodesicDistance(center, edge);
+          return `${((Math.PI * radius * radius) / 1000000.0).toFixed(2)} km²`;
+        }, false),
+        font: "bold 17px sans-serif",
+        style: LabelStyle.FILL_AND_OUTLINE,
+        fillColor: Color.fromCssColorString("#E8A200"),
+        outlineColor: Color.BLACK,
+        outlineWidth: 3,
+        heightReference: this.labelHeightReference,
+        disableDepthTestDistance: Number.POSITIVE_INFINITY,
+        pixelOffset: new Cartesian2(0, -16),
+        verticalOrigin: VerticalOrigin.CENTER,
+        horizontalOrigin: HorizontalOrigin.CENTER
+      }
+    });
+
+    this.otherEntities.entities.add({
+      id: "Circle Radius Line",
+      name: "Circle Radius Line",
+      polyline: {
+        positions: new CallbackProperty((time: JulianDate) => {
+          const [center, edge] = this.getCircleDisplayPoints(time);
+          if (!center || !edge) return [];
+          return [this.liftToTerrain(center), this.liftToTerrain(edge)];
+        }, false),
+        clampToGround: false,
+        width: 20,
+        material: new PolylineGlowMaterialProperty({
+          color: new Color(0.0, 0.0, 0.0, 0.35),
+          glowPower: 0.15
+        })
+      }
+    });
+
+    this.otherEntities.entities.add({
+      id: "Circle Radius Label",
+      name: "Circle Radius Label",
+      position: new CallbackProperty((time: JulianDate) => {
+        const [center, edge] = this.getCircleDisplayPoints(time);
+        if (!center || !edge) return undefined;
+        const liftedCenter = this.liftToTerrain(center);
+        const liftedEdge = this.liftToTerrain(edge);
+        return Cartesian3.midpoint(liftedCenter, liftedEdge, new Cartesian3());
+      }, false) as any,
+      label: {
+        text: new CallbackProperty((time: JulianDate) => {
+          const [center, edge] = this.getCircleDisplayPoints(time);
+          if (!center || !edge) {
+            return "";
+          }
+          const radius = this.terria.measurableGeometryManager[
+            this.terria.measurableGeometryIndex
+          ].getGeodesicDistance(center, edge);
+          if (radius >= 1000) return `${(radius / 1000).toFixed(2)} km`;
+          return `${radius.toFixed(2)} m`;
+        }, false),
+        font: "18px sans-serif",
+        style: LabelStyle.FILL_AND_OUTLINE,
+        fillColor: Color.DARKBLUE,
+        outlineColor: Color.WHITE,
+        outlineWidth: 4,
+        heightReference: this.labelHeightReference,
+        disableDepthTestDistance: Number.POSITIVE_INFINITY,
+        pixelOffset: new Cartesian2(0, -16),
+        verticalOrigin: VerticalOrigin.BOTTOM
+      }
+    });
+
+    this.otherEntities.entities.add({
+      id: "Circle Preview Point",
+      name: "Circle Preview Point",
+      position: new CallbackProperty((time: JulianDate) => {
+        if (this.pointEntities.entities.values.length !== 1) {
+          return undefined;
+        }
+        return this.getCircleDisplayPoints(time)[1];
+      }, false),
+      billboard: { ...this.pointBillboardOptions }
+    } as any);
+  }
+
+  private updateSegmentLabels() {
+    const geom =
+      this.terria.measurableGeomList[this.terria.measurableGeometryIndex];
+
+    if (
+      this.isCircleMeasuring ||
+      geom?.isCircle ||
+      !geom?.showDistanceLabels ||
+      geom.onlyPoints
+    ) {
+      this.clearSegmentLabels();
       return;
     }
-    if (
-      !this.terria.measurableGeomList[this.terria.measurableGeometryIndex]
-        .onlyPoints
-    ) {
-      const toRemove: Entity[] = [];
-      for (const entity of this.otherEntities.entities.values) {
-        if (entity.name && entity.name.startsWith("SegmentLabel-")) {
-          toRemove.push(entity);
-        }
-      }
-      toRemove.forEach((e) => this.otherEntities.entities.remove(e));
 
-      const numPoints = this.pointEntities.entities.values.length;
-      for (let i = 0; i < numPoints - 1; i++) {
-        const entityA = this.pointEntities.entities.values[i];
-        const entityB = this.pointEntities.entities.values[i + 1];
-        if (entityA && entityB) {
-          const labelEntity = this.createSegmentLabel(
-            `SegmentLabel-${i}`,
-            entityA,
-            entityB
-          );
-          this.otherEntities.entities.add(labelEntity);
-        }
-      }
+    this.clearSegmentLabels();
+    const pts = this.pointEntities.entities.values;
+    for (let i = 0; i < pts.length - 1; i++) {
+      this.otherEntities.entities.add(
+        this.createSegmentLabel(`SegmentLabel-${i}`, pts[i], pts[i + 1])
+      );
+    }
 
-      if (this.closeLoop && numPoints > 1) {
-        const lastIndex = numPoints - 1;
-        const entityA = this.pointEntities.entities.values[lastIndex];
-        const entityB = this.pointEntities.entities.values[0];
-        if (entityA && entityB) {
-          const labelEntity = this.createSegmentLabel(
-            "SegmentLabel-close",
-            entityA,
-            entityB
-          );
-          this.otherEntities.entities.add(labelEntity);
-        }
-      }
+    if (this.closeLoop && pts.length > 1) {
+      this.otherEntities.entities.add(
+        this.createSegmentLabel("SegmentLabel-close", pts.at(-1)!, pts[0])
+      );
     }
     this.terria.currentViewer.notifyRepaintRequired();
   }
@@ -500,14 +673,15 @@ export default class UserDrawing extends MappableMixin(
       position: labelPosition,
       label: {
         text: labelText,
-        font: "16px sans-serif",
+        font: "18px sans-serif",
         style: LabelStyle.FILL_AND_OUTLINE,
-        fillColor: Color.BLACK,
+        fillColor: Color.DARKBLUE,
         outlineColor: Color.WHITE,
-        outlineWidth: 2,
-        pixelOffset: new Cartesian2(0, -10),
-        verticalOrigin: VerticalOrigin.BOTTOM,
-        horizontalOrigin: HorizontalOrigin.CENTER
+        outlineWidth: 4,
+        heightReference: HeightReference.CLAMP_TO_GROUND,
+        disableDepthTestDistance: Number.POSITIVE_INFINITY,
+        pixelOffset: new Cartesian2(0, -16),
+        verticalOrigin: VerticalOrigin.BOTTOM
       }
     });
 
@@ -553,11 +727,24 @@ export default class UserDrawing extends MappableMixin(
   }
 
   private refreshPointBillboardsForViewerMode() {
-    for (const pointEntity of this.pointEntities.entities.values) {
-      if (!pointEntity.billboard) {
-        continue;
+    for (const entity of this.pointEntities.entities.values) {
+      if (entity.billboard) {
+        entity.billboard = { ...this.pointBillboardOptions } as any;
       }
-      pointEntity.billboard = { ...this.pointBillboardOptions } as any;
+    }
+
+    for (const entity of this.otherEntities.entities.values) {
+      if (entity.label) {
+        entity.label.heightReference = new ConstantProperty(
+          this.labelHeightReference
+        );
+        entity.label = { ...entity.label } as any;
+      }
+    }
+
+    if (this.isCircleMeasuring) {
+      this.otherEntities.entities.removeAll();
+      this.createCircleEntities();
     }
 
     this.updateSegmentLabels();
@@ -572,6 +759,7 @@ export default class UserDrawing extends MappableMixin(
   enterDrawMode(sender?: any) {
     this.isAngleMeasuring = sender === MeasureAngleTool.id;
     this.isPointMeasuring = sender === MeasurePointTool.id;
+    this.isCircleMeasuring = sender === MeasureCircleTool.id;
     // Create and setup a new dragHelper
     this.dragHelper = new DragPoints(this.terria, (customDataSource) => {
       if (typeof this.onPointMoved === "function") {
@@ -748,6 +936,8 @@ export default class UserDrawing extends MappableMixin(
       };
 
       this.otherEntities.entities.add(rectangle as any);
+    } else if (this.isCircleMeasuring) {
+      this.createCircleEntities();
     } else if (sender !== MeasurePointTool.id) {
       // Line will show up once user has drawn some points. Vertices of line are user points.
       this.otherEntities.entities.add({
@@ -938,14 +1128,20 @@ export default class UserDrawing extends MappableMixin(
    * Called after a point has been added, prepares to add and draw another point, as well as updating the dialog.
    */
   private prepareToAddNewPoint() {
+    const circleIsLocked =
+      this.isCircleMeasuring && this.pointEntities.entities.values.length >= 2;
+
     if (this.terria.measurableGeomList[this.terria.measurableGeometryIndex]) {
-      this.terria.measurableGeomList[
-        this.terria.measurableGeometryIndex
-      ].pointDescriptions?.push("");
       runInAction(() => {
+        if (!circleIsLocked) {
+          this.terria.measurableGeomList[
+            this.terria.measurableGeometryIndex
+          ].pointDescriptions?.push("");
+        }
+
         this.terria.measurableGeomList[
           this.terria.measurableGeometryIndex
-        ].isPointAdding = true;
+        ].isPointAdding = !circleIsLocked;
       });
     }
     runInAction(() => {

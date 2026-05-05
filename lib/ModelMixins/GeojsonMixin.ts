@@ -1770,8 +1770,25 @@ function GeoJsonMixin<T extends Constructor<BaseType>>(Base: T) {
 
         const properties = feature?.properties ?? {};
         const pathNotes = properties.desc || properties.path_notes || "";
+        const isCircle = properties.is_circle === true;
+        const circleRadius = properties.circle_radius || 0;
+        const circleCenter = Cartographic.fromDegrees(
+          properties.center_lon,
+          properties.center_lat
+        );
         const coordinates = this.convertJsonCoords(jsonCoords);
-        this.asPath(coordinates, pathNotes, index, closeLoop, properties);
+        const geomProperties = properties;
+
+        this.asPath(
+          coordinates,
+          pathNotes,
+          index,
+          closeLoop,
+          isCircle,
+          circleRadius,
+          circleCenter,
+          geomProperties
+        );
       };
 
       for (let i = 0; i < this.readyData.features.length; i++) {

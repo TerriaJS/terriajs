@@ -283,6 +283,13 @@ class GeoJsonCatalogItem
       }
     }
 
+    const isCircle = fc.features[0].properties?.is_circle === true;
+    const circleRadius = fc.features[0].properties?.circle_radius || 0;
+    const circleCenter = Cartographic.fromDegrees(
+      fc.features[0].properties?.center_lon,
+      fc.features[0].properties?.center_lat
+    );
+
     this.terria.measurableGeometryManager[
       this.terria.measurableGeometryIndex
     ].sampleFromCartographics(
@@ -293,8 +300,13 @@ class GeoJsonCatalogItem
       pathNotes,
       true,
       undefined,
-      featureProperties,
-      pointProperties.length ? pointProperties : undefined
+      isCircle,
+      circleRadius,
+      circleCenter,
+      {
+        featureProperties,
+        pointProperties: pointProperties.length ? pointProperties : undefined
+      }
     );
   }
 

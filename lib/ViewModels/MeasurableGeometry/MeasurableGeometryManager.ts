@@ -8,7 +8,6 @@ import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSourc
 import EarthGravityModel1996 from "../../Map/Vector/EarthGravityModel1996";
 import { JsonObject } from "../../Core/Json";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
-
 export interface MeasurableGeometry {
   isClosed: boolean;
   hasArea: boolean;
@@ -29,6 +28,12 @@ export interface MeasurableGeometry {
   pathNotes?: string;
   isFileUploaded?: boolean;
   isPointAdding?: boolean;
+  isCircle?: boolean;
+  circleRadius?: number;
+  circleDiameter?: number;
+  circlePerimeter?: number;
+  circleArea?: number;
+  circleCenter?: Cartographic;
   indexPath?: number;
   featureProperties?: JsonObject;
   pointProperties?: JsonObject[];
@@ -48,17 +53,134 @@ export default class MeasurableGeometryManager {
   }
 
   resample(index: number = this.terria.measurableGeometryIndex) {
+    const currentGeometry = this.terria.measurableGeomList[index];
+    if (!currentGeometry || !currentGeometry.stopPoints?.length) {
+      return;
+    }
+
+    const closeGeomProperties = currentGeometry?.isCircle
+      ? {
+          hasArea: true,
+          isCircle: true,
+          circleRadius: currentGeometry.circleRadius,
+          circleDiameter: currentGeometry.circleDiameter,
+          circlePerimeter: currentGeometry.circlePerimeter,
+          circleArea: currentGeometry.circleArea,
+          circleCenter: currentGeometry.circleCenter,
+          geodeticDistance:
+            currentGeometry.circlePerimeter ?? currentGeometry.geodeticDistance,
+          geodeticArea:
+            currentGeometry.circleArea ?? currentGeometry.geodeticArea,
+          airArea: currentGeometry.airArea
+        }
+      : undefined;
+
     this.sampleFromCartographics(
-      this.terria.measurableGeomList[index]?.stopPoints ?? [],
-      this.terria.measurableGeomList[index]?.isClosed,
-      this.terria.measurableGeomList[index]?.onlyPoints,
-      this.terria.measurableGeomList[index]?.pointDescriptions,
-      this.terria.measurableGeomList[index]?.pathNotes,
-      this.terria.measurableGeomList[index]?.isFileUploaded,
-      this.terria.measurableGeomList[index]?.indexPath ?? index,
-      this.terria.measurableGeomList[index]?.featureProperties,
-      this.terria.measurableGeomList[index]?.pointProperties
+      currentGeometry?.stopPoints ?? [],
+      currentGeometry?.isClosed,
+      currentGeometry?.onlyPoints,
+      currentGeometry?.pointDescriptions,
+      currentGeometry?.pathNotes,
+      currentGeometry?.isFileUploaded,
+      currentGeometry?.indexPath ?? index,
+      currentGeometry?.isCircle,
+      currentGeometry?.circleRadius,
+      currentGeometry?.circleCenter,
+      closeGeomProperties
     );
+  }
+
+  getGeodesicDistance(
+    pointOne: Cartesian3,
+    pointTwo: Cartesian3,
+    ellipsoid: Ellipsoid = Ellipsoid.WGS84
+  ): number {
+    const pickedPointCartographic = ellipsoid.cartesianToCartographic(pointOne);
+    const lastPointCartographic = ellipsoid.cartesianToCartographic(pointTwo);
+
+    if (!pickedPointCartographic || !lastPointCartographic) {
+      return 0;
+    }
+
+    const geodesic = new EllipsoidGeodesic(
+      pickedPointCartographic,
+      lastPointCartographic,
+      ellipsoid
+    );
+    return geodesic.surfaceDistance;
+  }
+
+  buildCircleRingRadians(
+    centerLat: number,
+    centerLon: number,
+    radius: number,
+    segments: number,
+    closedRing = false
+  ): { lat: number; lon: number }[] {
+    const earthRadius = Ellipsoid.WGS84.maximumRadius;
+    const angularDistance = radius / earthRadius;
+    const sinLat1 = Math.sin(centerLat);
+    const cosLat1 = Math.cos(centerLat);
+    const sinAd = Math.sin(angularDistance);
+    const cosAd = Math.cos(angularDistance);
+    const count = closedRing ? segments + 1 : segments;
+    const points: { lat: number; lon: number }[] = new Array(count);
+
+    for (let i = 0; i < count; i++) {
+      const bearing = (2 * Math.PI * (i % segments)) / (segments - 1);
+      const lat2 = Math.asin(
+        sinLat1 * cosAd + cosLat1 * sinAd * Math.cos(bearing)
+      );
+      const lon2 =
+        centerLon +
+        Math.atan2(
+          Math.sin(bearing) * sinAd * cosLat1,
+          cosAd - sinLat1 * Math.sin(lat2)
+        );
+      points[i] = { lat: lat2, lon: lon2 };
+    }
+
+    return points;
+  }
+
+  @action
+  updateCircleGeometry(
+    center: Cartesian3,
+    edge: Cartesian3,
+    indexPath: number = this.terria.measurableGeometryIndex
+  ) {
+    const radius = this.getGeodesicDistance(center, edge);
+    const centerCarto = Cartographic.fromCartesian(center);
+    const edgeCarto = Cartographic.fromCartesian(edge);
+    const currentGeometry = this.terria.measurableGeomList[indexPath];
+
+    const circleGeometry: MeasurableGeometry = {
+      ...(currentGeometry ?? {}),
+      isClosed: true,
+      hasArea: true,
+      stopPoints: [centerCarto, edgeCarto],
+      stopGeodeticDistances: [0, radius],
+      stopAirDistances: [0, radius],
+      stopGroundDistances: [0, radius],
+      geodeticDistance: 2 * Math.PI * radius,
+      geodeticArea: Math.PI * radius * radius,
+      onlyPoints: false,
+      isCircle: true,
+      circleRadius: radius,
+      circleDiameter: radius * 2,
+      circlePerimeter: 2 * Math.PI * radius,
+      circleArea: Math.PI * radius * radius,
+      circleCenter: centerCarto,
+      showDistanceLabels: false,
+      isPointAdding: false,
+      indexPath
+    };
+
+    while (this.terria.measurableGeomList.length < indexPath) {
+      this.terria.measurableGeomList.push(circleGeometry);
+    }
+
+    this.terria.measurableGeomList[indexPath] = circleGeometry;
   }
 
   sampleFromCustomDataSource(
@@ -115,20 +237,24 @@ export default class MeasurableGeometryManager {
     pathNotes?: string,
     isFileUploaded?: boolean,
     indexPath?: number,
-    featureProperties?: JsonObject,
-    pointProperties?: JsonObject[]
+    isCircle?: boolean,
+    circleRadius?: number,
+    circleCenter?: Cartographic,
+    geomProperties?: Partial<MeasurableGeometry> | JsonObject
   ) {
-    const terrainProvider = this.terria.cesium?.scene?.terrainProvider;
+    const terrainProvider = this.terria.cesium?.scene.terrainProvider;
     const ellipsoid =
       this.terria.cesium?.scene?.globe?.ellipsoid ?? Ellipsoid.WGS84;
     const canSampleMostDetailed =
-      !!terrainProvider && !!(terrainProvider as any).availability;
+      !!terrainProvider &&
+      !!(terrainProvider as any).availability &&
+      !!ellipsoid &&
+      cartoPositions.length > 0;
 
     // index of the original stops in the new array of sampling points
     const originalStopsIndex: number[] = [0];
     // geodetic distance between two stops
     const stopGeodeticDistances: number[] = [0];
-
     // compute sampling points every "samplingStep" meters
     const interpolatedCartographics = [cartoPositions[0]];
     for (let i = 0; i < cartoPositions.length - 1; ++i) {
@@ -149,7 +275,6 @@ export default class MeasurableGeometryManager {
       originalStopsIndex.push(interpolatedCartographics.length);
       interpolatedCartographics.push(cartoPositions[i + 1]);
     }
-
     // sample points on terrain
     const terrainPromises = [
       canSampleMostDetailed
@@ -192,7 +317,6 @@ export default class MeasurableGeometryManager {
             ).surfaceDistance;
         stepDistances.push(dist);
       }
-
       const stopAirDistances: number[] = [0];
       const stopGroundDistances: number[] = [0];
       for (let i = 0; i < originalStopsIndex.length - 1; ++i) {
@@ -217,7 +341,6 @@ export default class MeasurableGeometryManager {
             : stopGeodeticDistances[i + 1]
         );
       }
-
       // update state of Terria
       const updatePathParams: Parameters<typeof this.updatePath> = onlyPoints
         ? [
@@ -233,8 +356,10 @@ export default class MeasurableGeometryManager {
             pathNotes,
             isFileUploaded,
             indexPath,
-            featureProperties,
-            pointProperties
+            false,
+            circleRadius,
+            circleCenter,
+            geomProperties
           ]
         : [
             cartoPositions,
@@ -249,8 +374,10 @@ export default class MeasurableGeometryManager {
             pathNotes,
             isFileUploaded,
             indexPath,
-            featureProperties,
-            pointProperties
+            isCircle,
+            circleRadius,
+            circleCenter,
+            geomProperties
           ];
 
       this.updatePath(...updatePathParams);
@@ -271,8 +398,10 @@ export default class MeasurableGeometryManager {
     pathNotes?: string,
     isFileUploaded?: boolean,
     indexPath?: number,
-    featureProperties?: JsonObject,
-    pointProperties?: JsonObject[]
+    isCircle?: boolean,
+    circleRadius?: number,
+    circleCenter?: Cartographic,
+    geomProperties?: Partial<MeasurableGeometry> | JsonObject
   ) {
     let geodeticArea = 0;
     let airArea = 0;
@@ -282,7 +411,7 @@ export default class MeasurableGeometryManager {
       airArea = this.calculateAirArea(stopPoints);
     }
 
-    const newGeometry = {
+    const newGeometry: MeasurableGeometry = {
       isClosed: isClosed,
       hasArea: false,
       stopPoints: stopPoints,
@@ -306,9 +435,16 @@ export default class MeasurableGeometryManager {
       pointDescriptions: pointDescriptions,
       pathNotes: pathNotes,
       isFileUploaded: isFileUploaded,
+      isCircle: isCircle,
+      circleRadius: circleRadius,
+      circleDiameter: circleRadius ? circleRadius * 2 : undefined,
+      circlePerimeter: circleRadius ? 2 * Math.PI * circleRadius : undefined,
+      circleArea: circleRadius
+        ? Math.PI * circleRadius * circleRadius
+        : undefined,
+      circleCenter: circleCenter,
       indexPath: indexPath,
-      featureProperties: featureProperties,
-      pointProperties: pointProperties
+      ...(geomProperties ?? {})
     };
 
     if (indexPath !== undefined) {

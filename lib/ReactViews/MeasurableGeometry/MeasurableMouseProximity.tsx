@@ -11,6 +11,7 @@ import ViewerMode from "../../Models/ViewerMode";
 import ViewState from "../../ReactViewModels/ViewState";
 import MeasurablePanelManager from "../Custom/MeasurablePanelManager";
 import SceneTransforms from "terriajs-cesium/Source/Scene/SceneTransforms";
+import { MeasureCircleTool } from "../Map/MapNavigation/Items";
 
 interface Props {
   terria: Terria;
@@ -126,6 +127,18 @@ const MeasurableMouseProximity = observer((props: Props) => {
     if (!measurablePanelIsVisible) return;
 
     const handleMouseProximity = () => {
+      if (
+        terria.mapNavigationModel.findItem(MeasureCircleTool.id)?.controller
+          ?.active === true
+      ) {
+        onHighlightedRowChange(null);
+        viewState.setSelectedSampledPointIdx(null);
+        viewState.setSelectedStopPointIdx(null);
+        MeasurablePanelManager.removeAllMarkers();
+        terria.currentViewer.notifyRepaintRequired();
+        return;
+      }
+
       const scene = terria?.cesium?.scene;
       const leafletMap = terria?.leaflet?.map;
       const ellipsoid = scene?.globe?.ellipsoid ?? Ellipsoid.WGS84;
@@ -342,6 +355,7 @@ const MeasurableMouseProximity = observer((props: Props) => {
     terria.cesium,
     terria?.leaflet?.map,
     terria.currentViewer,
+    terria.mapNavigationModel,
     terria.measurableGeomList,
     terria.mainViewer.viewerMode,
     terria.measurableGeometryIndex,

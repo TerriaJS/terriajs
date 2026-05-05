@@ -6,8 +6,10 @@ import MappableTraits from "../Traits/TraitsClasses/MappableTraits";
 import sampleTerrainMostDetailed from "terriajs-cesium/Source/Core/sampleTerrainMostDetailed";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import TerrainProvider from "terriajs-cesium/Source/Core/TerrainProvider";
+import MeasurableGeometryManager, {
+  MeasurableGeometry
+} from "../ViewModels/MeasurableGeometry/MeasurableGeometryManager";
 import { JsonObject } from "../Core/Json";
-import MeasurableGeometryManager from "../ViewModels/MeasurableGeometry/MeasurableGeometryManager";
 
 type MixinModel = Model<MappableTraits>;
 
@@ -30,7 +32,10 @@ function MeasurableGeometryMixin<T extends AbstractConstructor<MixinModel>>(
       pathNotes?: any,
       indexPath?: number,
       closeLoop?: boolean,
-      featureProperties?: JsonObject
+      isCircle?: boolean,
+      circleRadius?: number,
+      circleCenter?: Cartographic,
+      geomProperties?: Partial<MeasurableGeometry> | JsonObject
     ) {
       if (indexPath && !this.terria.measurableGeometryManager[indexPath]) {
         this.terria.measurableGeometryManager.push(
@@ -47,7 +52,10 @@ function MeasurableGeometryMixin<T extends AbstractConstructor<MixinModel>>(
         pathNotes,
         true,
         indexPath,
-        featureProperties
+        isCircle,
+        circleRadius,
+        circleCenter,
+        geomProperties
       );
     }
 
@@ -56,7 +64,10 @@ function MeasurableGeometryMixin<T extends AbstractConstructor<MixinModel>>(
       pathNotes?: any,
       indexPath?: number,
       closeLoop?: boolean,
-      featureProperties?: JsonObject
+      isCircle?: boolean,
+      circleRadius?: number,
+      circleCenter?: Cartographic,
+      geomProperties?: Partial<MeasurableGeometry> | JsonObject
     ) {
       if (!this?.terria) {
         return;
@@ -84,7 +95,10 @@ function MeasurableGeometryMixin<T extends AbstractConstructor<MixinModel>>(
           pathNotes,
           indexPath,
           closeLoop,
-          featureProperties
+          isCircle,
+          circleRadius,
+          circleCenter,
+          geomProperties
         );
       });
     }

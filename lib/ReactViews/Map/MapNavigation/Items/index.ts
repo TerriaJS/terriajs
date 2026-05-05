@@ -12,7 +12,8 @@ export {
   MeasureLineTool,
   MeasurePolygonTool,
   MeasurePointTool,
-  MeasureAngleTool
+  MeasureAngleTool,
+  MeasureCircleTool
 } from "./MeasureTools";
 export { MyLocation } from "./MyLocation";
 export { ToggleSplitterController } from "./ToggleSplitterTool";

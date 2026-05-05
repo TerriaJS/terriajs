@@ -54,7 +54,8 @@ import {
   MeasureAngleTool,
   MeasureLineTool,
   MeasurePointTool,
-  MeasurePolygonTool
+  MeasurePolygonTool,
+  MeasureCircleTool
 } from "../../Map/MapNavigation/Items";
 import { MeasureToolsController } from "../../Map/MapNavigation/Items/MeasureTools";
 import ViewerMode from "../../../Models/ViewerMode";
@@ -649,7 +650,8 @@ class ViewingControls extends React.Component<
                       MeasureLineTool.id,
                       MeasurePolygonTool.id,
                       MeasurePointTool.id,
-                      MeasureAngleTool.id
+                      MeasureAngleTool.id,
+                      MeasureCircleTool.id
                     ].forEach((id) =>
                       viewState.terria.mapNavigationModel.disable(id)
                     );

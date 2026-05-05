@@ -252,11 +252,65 @@ const MeasurableTransform = observer((props: Props) => {
     return new File([blob], filename, { type: mime });
   };
 
+  const generateCircleGeoJson = (geom: MeasurableGeometry) => {
+    const center = geom.circleCenter;
+    const radius = geom.circleRadius ?? 0;
+    if (!center || radius <= 0) return "";
+
+    const coordinates = terria.measurableGeometryManager[
+      terria.measurableGeometryIndex
+    ]
+      .buildCircleRingRadians(
+        center.latitude,
+        center.longitude,
+        radius,
+        64,
+        true
+      )
+      .map(({ lat, lon }) => [
+        CesiumMath.toDegrees(lon),
+        CesiumMath.toDegrees(lat)
+      ]);
+
+    return JSON.stringify({
+      name: layerName || "",
+      type: "Feature",
+      geometry: {
+        type: "Polygon",
+        coordinates: [coordinates]
+      },
+      properties: {
+        path_notes: pathNotes || "",
+        is_circle: true,
+        circle_radius: radius,
+        center_lat: CesiumMath.toDegrees(center.latitude),
+        center_lon: CesiumMath.toDegrees(center.longitude)
+      }
+    });
+  };
+
   const handleUploadFile = (e: any) => {
     addUserFiles(e.target.files, terria, viewState, undefined, true);
   };
 
   const handleTransform = () => {
+    if (geom.isCircle) {
+      const circleJson = generateCircleGeoJson(geom);
+      if (!circleJson) return;
+      const href = DataUri.make("json", circleJson);
+      try {
+        const file = dataURItoFile(
+          href as string,
+          `${layerName}_circle.geojson`
+        );
+        handleUploadFile({ target: { files: [file] } });
+        onClick?.();
+      } catch (e) {
+        console.error("Unable to create File from Data URI:", e);
+      }
+      return;
+    }
+
     const validPaths = terria.measurableGeomList.filter(
       (geom) => geom.stopPoints && geom.stopPoints.length > 0
     );
