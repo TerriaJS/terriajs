@@ -32,7 +32,10 @@ export default function usePlayPath(terria: Terria, viewState: ViewState) {
 
   const checkAndUpdatePitch = useCallback(() => {
     const camera = terria.cesium?.scene.camera;
-    if (!camera) return;
+    if (!camera || terria.currentViewer.type === "Leaflet") {
+      setIsPitchTooLowState(false);
+      return;
+    }
 
     const currentPitch = Math.abs(camera.pitch ?? 0);
     const thresholdRadians = CesiumMath.toRadians(
@@ -193,6 +196,7 @@ export default function usePlayPath(terria: Terria, viewState: ViewState) {
     const scene = terria.cesium?.scene;
     const camera = scene?.camera;
     const viewer = terria.currentViewer;
+    const isLeafletViewer = viewer.type === "Leaflet";
     const cartesians = pts.map((p) => Cartographic.toCartesian(p));
     const useLookAt = Boolean(camera && cartesians.length);
     const pitch = camera?.pitch ?? 0;
@@ -216,6 +220,13 @@ export default function usePlayPath(terria: Terria, viewState: ViewState) {
           }
         };
         terria.tileLoadProgressEvent.addEventListener(onProg);
+      });
+
+    const waitForLeafletFlight = (durationSeconds: number) =>
+      new Promise<"loaded">((resolve) => {
+        window.setTimeout(() => {
+          resolve("loaded");
+        }, durationSeconds * 1000);
       });
 
     const waitForAbort = () =>
@@ -253,7 +264,9 @@ export default function usePlayPath(terria: Terria, viewState: ViewState) {
         duration
       );
       const result = await Promise.race([
-        waitForProgressComplete(),
+        isLeafletViewer
+          ? waitForLeafletFlight(duration)
+          : waitForProgressComplete(),
         waitForAbort()
       ]);
 
@@ -299,7 +312,7 @@ export default function usePlayPath(terria: Terria, viewState: ViewState) {
   const onPlay = () => {
     const pts = getPoints();
     const camera = terria.cesium?.scene.camera;
-    if (!pts?.length || !camera) return;
+    if (!pts?.length) return;
 
     if (
       !viewState.isPlayingPath &&
@@ -310,10 +323,23 @@ export default function usePlayPath(terria: Terria, viewState: ViewState) {
       });
       return;
     }
-    const cartesian = pts.map((p) => Cartographic.toCartesian(p));
-    const distFirst = Cartesian3.distance(camera.position, cartesian[0]);
-    const distLast = Cartesian3.distance(camera.position, cartesian.at(-1)!);
-    reverseRef.current = distFirst > distLast;
+    if (camera) {
+      const cartesian = pts.map((p) => Cartographic.toCartesian(p));
+      const distFirst = Cartesian3.distance(camera.position, cartesian[0]);
+      const distLast = Cartesian3.distance(camera.position, cartesian.at(-1)!);
+      reverseRef.current = distFirst > distLast;
+    } else {
+      const view = terria.currentViewer.getCurrentCameraView();
+      const viewCenter = Rectangle.center(view.rectangle);
+      const viewCenterCartesian = Cartographic.toCartesian(viewCenter);
+      const cartesian = pts.map((p) => Cartographic.toCartesian(p));
+      const distFirst = Cartesian3.distance(viewCenterCartesian, cartesian[0]);
+      const distLast = Cartesian3.distance(
+        viewCenterCartesian,
+        cartesian.at(-1)!
+      );
+      reverseRef.current = distFirst > distLast;
+    }
     startIdxRef.current = reverseRef.current ? pts.length - 1 : 0;
     setCurrentPointIndex(startIdxRef.current);
     setCountdown(3);
@@ -333,17 +359,17 @@ export default function usePlayPath(terria: Terria, viewState: ViewState) {
     });
     const pts = getPoints();
     const camera = terria.cesium?.scene.camera;
-    if (!pts?.length || !camera) return;
+    if (!pts?.length) return;
     const targetIdx = startIdxRef.current;
     reverseRef.current = startIdxRef.current === pts.length - 1;
     const point = pts[targetIdx];
-    const dist = Cartesian3.distance(
-      camera.position,
-      Cartographic.toCartesian(point)
-    );
-    const pitch = camera.pitch ?? 0;
     let hpr: HeadingPitchRange | undefined;
-    if (pts.length > 1) {
+    if (camera && pts.length > 1) {
+      const dist = Cartesian3.distance(
+        camera.position,
+        Cartographic.toCartesian(point)
+      );
+      const pitch = camera.pitch ?? 0;
       const neighborIdx = reverseRef.current ? targetIdx - 1 : targetIdx + 1;
       const heading =
         (new EllipsoidGeodesic(point, pts[neighborIdx]).startHeading +

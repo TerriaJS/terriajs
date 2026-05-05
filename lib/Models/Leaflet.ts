@@ -523,6 +523,24 @@ export default class Leaflet extends GlobeOrMap {
 
       // Ensure extent is defined before accessing its properties
       if (isDefined(extent)) {
+        const isSinglePointExtent =
+          Math.abs(extent.east - extent.west) < CesiumMath.EPSILON14 &&
+          Math.abs(extent.north - extent.south) < CesiumMath.EPSILON14;
+
+        if (isSinglePointExtent) {
+          this.map.panTo(
+            {
+              lat: CesiumMath.toDegrees(extent.south),
+              lng: CesiumMath.toDegrees(extent.west)
+            },
+            {
+              animate: flightDurationSeconds > 0.0,
+              duration: flightDurationSeconds
+            }
+          );
+          return Promise.resolve();
+        }
+
         // Account for a bounding box crossing the date line.
         if (extent.east < extent.west) {
           extent = Rectangle.clone(extent);
