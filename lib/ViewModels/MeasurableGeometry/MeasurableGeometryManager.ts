@@ -115,7 +115,7 @@ export default class MeasurableGeometryManager {
     centerLon: number,
     radius: number,
     segments: number,
-    closedRing = false
+    closedRing = true
   ): { lat: number; lon: number }[] {
     const earthRadius = Ellipsoid.WGS84.maximumRadius;
     const angularDistance = radius / earthRadius;
@@ -126,8 +126,8 @@ export default class MeasurableGeometryManager {
     const count = closedRing ? segments + 1 : segments;
     const points: { lat: number; lon: number }[] = new Array(count);
 
-    for (let i = 0; i < count; i++) {
-      const bearing = (2 * Math.PI * (i % segments)) / (segments - 1);
+    for (let i = 0; i < segments; i++) {
+      const bearing = (2 * Math.PI * i) / segments;
       const lat2 = Math.asin(
         sinLat1 * cosAd + cosLat1 * sinAd * Math.cos(bearing)
       );
@@ -138,6 +138,10 @@ export default class MeasurableGeometryManager {
           cosAd - sinLat1 * Math.sin(lat2)
         );
       points[i] = { lat: lat2, lon: lon2 };
+    }
+
+    if (closedRing) {
+      points[segments] = points[0];
     }
 
     return points;
