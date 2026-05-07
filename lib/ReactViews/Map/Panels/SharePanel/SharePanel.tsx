@@ -11,11 +11,10 @@ import ViewState from "../../../../ReactViewModels/ViewState";
 import Box from "../../../../Styled/Box";
 import Spacing from "../../../../Styled/Spacing";
 import Text from "../../../../Styled/Text";
-import { canShorten } from "./BuildShareLink";
+import MenuPanel from "../../../StandardUserInterface/customizable/MenuPanel";
 import Styles from "./share-panel.scss";
 import { SharePanelContent } from "./SharePanelContent";
 import { ShareUrl } from "./ShareUrl";
-import MenuPanel from "../../../StandardUserInterface/customizable/MenuPanel";
 import StorySharePanel from "./StorySharePanel";
 
 interface PropTypes extends WithTranslation {
@@ -74,12 +73,7 @@ class SharePanel extends Component<PropTypes, SharePanelState> {
         <Box fullWidth column paddedRatio={3}>
           <Text medium>{t("clipboard.shareURL")}</Text>
           <Spacing bottom={1} />
-          <ShareUrl
-            terria={terria}
-            viewState={viewState}
-            includeStories
-            shouldShorten={shouldShorten(terria)}
-          />
+          <ShareUrl terria={terria} viewState={viewState} includeStories />
         </Box>
       );
     } else if (this.props.storyShare) {
@@ -87,12 +81,7 @@ class SharePanel extends Component<PropTypes, SharePanelState> {
         <Box fullWidth column paddedRatio={3}>
           <Text medium>{t("share.shareStoryLink")}</Text>
           <Spacing bottom={1} />
-          <ShareUrl
-            terria={terria}
-            viewState={viewState}
-            includeStories
-            shouldShorten={shouldShorten(terria)}
-          />
+          <ShareUrl terria={terria} viewState={viewState} includeStories />
         </Box>
       );
     } else {
@@ -180,18 +169,3 @@ class SharePanel extends Component<PropTypes, SharePanelState> {
 }
 
 export default withTranslation()(SharePanel);
-
-export function shouldShorten(terria: Terria) {
-  return (
-    stringToBool(terria.configParameters.shortenShareUrls) ??
-    !!canShorten(terria)
-  );
-}
-
-function stringToBool(s: string | boolean | null | undefined) {
-  if (s === true) return true;
-  if (s === false) return false;
-  if (s === "true") return true;
-  if (s === "false") return false;
-  return undefined;
-}

@@ -1,4 +1,5 @@
 import type { ShareResult } from "catalog-converter";
+import { runInAction } from "mobx";
 import URI from "urijs";
 import JsonValue, {
   isJsonObject,
@@ -6,17 +7,19 @@ import JsonValue, {
   JsonArray,
   JsonObject
 } from "../Core/Json";
+import loadJson from "../Core/loadJson";
 import loadJson5 from "../Core/loadJson5";
 import Result from "../Core/Result";
 import TerriaError, { TerriaErrorSeverity } from "../Core/TerriaError";
 import { ProviderCoordsMap } from "../Map/PickedFeatures/PickedFeatures";
-import { SHARE_VERSION } from "../ReactViews/Map/Panels/SharePanel/BuildShareLink";
+import {
+  IShareLinkService,
+  SHARE_VERSION
+} from "../ReactViews/Map/Panels/SharePanel/BuildShareLink";
 import { BaseMapsJson } from "./BaseMaps/BaseMapsModel";
 import { HashParams, parseHashParams } from "./HashParams";
 import IElementConfig from "./IElementConfig";
 import Terria from "./Terria";
-import loadJson from "../Core/loadJson";
-import { runInAction } from "mobx";
 
 export interface InitSourcePickedFeatures {
   providerCoords?: ProviderCoordsMap;
@@ -310,10 +313,13 @@ export const buildInitSourcesFromStartData = async (
 
 export const buildInitSourcesFromShare = async (
   shareToken: string | undefined,
-  shareDataService: Terria["shareDataService"]
+  shareLinkService: IShareLinkService | undefined
 ): Promise<InitSource[]> => {
-  if (!shareToken || !shareDataService) return [];
-  const shareProps = await shareDataService.resolveData(shareToken);
+  if (!shareToken || !shareLinkService) return [];
+  const shareProps = (
+    await shareLinkService.resolveShareLink(shareToken)
+  ).throwIfError("Failed to resolve share link");
+
   const sources = await convertStartData(
     shareProps,
     `Start data from sharelink \`"${shareToken}"\``,
@@ -431,7 +437,7 @@ export const updateInitSourcesFromUrl = async (
   const fromStartData = await buildInitSourcesFromStartData(hashParams.start);
   const fromShare = await buildInitSourcesFromShare(
     hashParams.share,
-    terria.shareDataService
+    terria.shareLinkService
   );
 
   const fromSpaRoutes = await buildInitSourcesFromSpaRoutes(

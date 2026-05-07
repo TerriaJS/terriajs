@@ -37,6 +37,7 @@ import {
   isJsonString
 } from "../Core/Json";
 import { isLatLonHeight } from "../Core/LatLonHeight";
+import { LocalStorage } from "../Core/LocalStorage";
 import Result from "../Core/Result";
 import TerriaError, {
   TerriaErrorOverrides,
@@ -60,6 +61,7 @@ import MappableMixin, { isDataSource } from "../ModelMixins/MappableMixin";
 import ReferenceMixin from "../ModelMixins/ReferenceMixin";
 import TimeVarying from "../ModelMixins/TimeVarying";
 import NotificationState from "../ReactViewModels/NotificationState";
+import { IShareLinkService } from "../ReactViews/Map/Panels/SharePanel/BuildShareLink";
 import MappableTraits from "../Traits/TraitsClasses/MappableTraits";
 import MapNavigationModel from "../ViewModels/MapNavigation/MapNavigationModel";
 import TerriaViewer from "../ViewModels/TerriaViewer";
@@ -76,9 +78,8 @@ import upsertModelFromJson from "./Definition/upsertModelFromJson";
 import { ErrorServiceProvider } from "./ErrorServiceProviders/ErrorService";
 import StubErrorServiceProvider from "./ErrorServiceProviders/StubErrorServiceProvider";
 import TerriaFeature from "./Feature/Feature";
-import { FeedbackService } from "./FeedbackService";
+import { IFeedbackService } from "./FeedbackService";
 import GlobeOrMap from "./GlobeOrMap";
-import { HashParams, emptyHashParams } from "./HashParams";
 import IElementConfig from "./IElementConfig";
 import InitSource, {
   InitSourceData,
@@ -90,13 +91,11 @@ import InitSource, {
   isInitFromUrl
 } from "./InitSource";
 import Internationalization, { I18nStartOptions } from "./Internationalization";
-import { LocalStorage } from "../Core/LocalStorage";
 import MapInteractionMode from "./MapInteractionMode";
 import NoViewer from "./NoViewer";
-import { PersistedSettings } from "./PersistedSettings";
+import { IPersistedSettingsSevice } from "./PersistedSettings";
 import CatalogIndex from "./SearchProviders/CatalogIndex";
 import { SearchBarModel } from "./SearchProviders/SearchBarModel";
-import ShareDataService from "./ShareDataService";
 import {
   ConfigParameters,
   ConfigStrata,
@@ -200,9 +199,9 @@ export default class Terria<TConfig extends TerriaConfig = TerriaConfig> {
   /**
    *
    */
-  feedbackService: FeedbackService | undefined;
+  feedbackService: IFeedbackService | undefined;
 
-  @observable shareDataService: ShareDataService | undefined;
+  @observable shareLinkService: IShareLinkService | undefined;
 
   /**
    * An error service instance. The instance can be provided via the
@@ -211,7 +210,7 @@ export default class Terria<TConfig extends TerriaConfig = TerriaConfig> {
    */
   errorService: ErrorServiceProvider = new StubErrorServiceProvider();
 
-  persistedSettingsService?: PersistedSettings;
+  persistedSettingsService?: IPersistedSettingsSevice;
 
   /**
    * Gets the stack of layers active on the timeline.
@@ -263,8 +262,6 @@ export default class Terria<TConfig extends TerriaConfig = TerriaConfig> {
       )?.contrastColor ?? "#ffffff"
     );
   }
-
-  hashParams: HashParams = emptyHashParams;
 
   @observable
   playStoryOnInit: boolean = false;
@@ -395,7 +392,7 @@ export default class Terria<TConfig extends TerriaConfig = TerriaConfig> {
     return this;
   }
 
-  setFeedbackService(feedbackService: FeedbackService): Terria {
+  setFeedbackService(feedbackService: IFeedbackService): Terria {
     this.feedbackService = feedbackService;
 
     return this;
@@ -409,14 +406,14 @@ export default class Terria<TConfig extends TerriaConfig = TerriaConfig> {
   }
 
   @action
-  setShareDataService(shareDataService: ShareDataService): Terria {
-    this.shareDataService = shareDataService;
+  setShareLinkService(shareLinkService: IShareLinkService): Terria {
+    this.shareLinkService = shareLinkService;
 
     return this;
   }
 
   setPersistedSettingsService(
-    persistedSettingsService: PersistedSettings
+    persistedSettingsService: IPersistedSettingsSevice
   ): Terria {
     persistedSettingsService.initConfigSync();
     this.updateConfig(
@@ -424,54 +421,6 @@ export default class Terria<TConfig extends TerriaConfig = TerriaConfig> {
       ConfigStrata.persistedStorage
     );
     this.persistedSettingsService = persistedSettingsService;
-
-    return this;
-  }
-
-  @action
-  setHashParams(hashParams: HashParams): Terria {
-    this.hashParams = hashParams;
-
-    if (isDefined(hashParams.hideWelcomeMessage)) {
-      this.updateConfig(
-        {
-          showWelcomeMessage: !hashParams.hideWelcomeMessage
-        },
-        ConfigStrata.url
-      );
-    }
-    if (isDefined(hashParams.hideExplorerPanel)) {
-      this.updateConfig(
-        {
-          hideExplorerPanel: hashParams.hideExplorerPanel
-        },
-        ConfigStrata.url
-      );
-    }
-    if (isDefined(hashParams.hideWorkbench)) {
-      this.updateConfig(
-        {
-          hideWorkbench: hashParams.hideWorkbench
-        },
-        ConfigStrata.url
-      );
-    }
-    if (isDefined(hashParams.tools)) {
-      this.updateConfig(
-        {
-          tools: hashParams.tools
-        },
-        ConfigStrata.url
-      );
-    }
-    if (isDefined(hashParams.map)) {
-      this.updateConfig(
-        {
-          viewerMode: hashParams.map
-        },
-        ConfigStrata.url
-      );
-    }
 
     return this;
   }

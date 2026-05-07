@@ -23,7 +23,10 @@ import WebMapServiceCatalogItem from "../../lib/Models/Catalog/Ows/WebMapService
 import CommonStrata from "../../lib/Models/Definition/CommonStrata";
 import { BaseModel } from "../../lib/Models/Definition/Model";
 import TerriaFeature from "../../lib/Models/Feature/Feature";
-import { parseHashParams } from "../../lib/Models/HashParams";
+import {
+  applyHashParamsToConfig,
+  parseHashParams
+} from "../../lib/Models/HashParams";
 import {
   buildInitSourcesFromStartData,
   buildInitSourcesFromUrlFragments,
@@ -36,7 +39,6 @@ import {
 import Terria from "../../lib/Models/Terria";
 import ViewerMode from "../../lib/Models/ViewerMode";
 import ViewState from "../../lib/ReactViewModels/ViewState";
-import { buildShareLink } from "../../lib/ReactViews/Map/Panels/SharePanel/BuildShareLink";
 import configProxy from "../../wwwroot/test/init/configProxy.json";
 import serverConfig from "../../wwwroot/test/init/serverconfig.json";
 import storyJson from "../../wwwroot/test/stories/TerriaJS App/my-story.json";
@@ -46,7 +48,8 @@ import mapServerWithErrorJson from "../../wwwroot/test/Terria/applyInitData/MapS
 import wmsCapabilitiesXml from "../../wwwroot/test/Terria/applyInitData/WmsServer/capabilities.xml";
 import SimpleCatalogItem from "../Helpers/SimpleCatalogItem";
 import { worker } from "../mocks/browser";
-import { PersistedSettings } from "../../lib/Models/PersistedSettings";
+import { PersistedSettingsService } from "../../lib/Models/PersistedSettings";
+import { ShareLinkService } from "../../lib/ReactViews/Map/Panels/SharePanel/BuildShareLink";
 
 describe("TerriaSpec", function () {
   let terria: Terria;
@@ -149,7 +152,8 @@ describe("TerriaSpec", function () {
       );
 
       const hashParams = parseHashParams("https://application.url/#hash-init");
-      terria.setHashParams(hashParams).build();
+      applyHashParamsToConfig(terria, hashParams);
+      terria.build();
       const initSources = await buildInitSourcesFromUrlFragments(
         "https://application.url/#hash-init",
         hashParams.initFragments,
@@ -249,7 +253,8 @@ describe("TerriaSpec", function () {
         "https://application.url/#someInitHash"
       );
 
-      terria.setHashParams(hashParams).build();
+      applyHashParamsToConfig(terria, hashParams);
+      terria.build();
 
       terria.addInitSources(
         buildInitSourcesFromConfig({
@@ -299,7 +304,8 @@ describe("TerriaSpec", function () {
           })
       );
 
-      terria.setHashParams(hashParams).build();
+      applyHashParamsToConfig(terria, hashParams);
+      terria.build();
       const initSoruces = await buildInitSourcesFromStartData(hashParams.start);
       terria.addInitSources(initSoruces);
 
@@ -366,6 +372,8 @@ describe("TerriaSpec", function () {
       });
 
       it("initializes user added data group with shared items", async function () {
+        terria.setShareLinkService(new ShareLinkService(terria)).build();
+
         expect(newTerria.catalog.userAddedDataGroup.members).not.toContain(
           "itemABC"
         );
@@ -373,7 +381,8 @@ describe("TerriaSpec", function () {
           "groupABC"
         );
 
-        const shareLink = buildShareLink(terria, viewState);
+        const shareLink =
+          await terria.shareLinkService!.buildShareLink(viewState);
         const baseUrl = new URL(document.baseURI);
         baseUrl.pathname = "";
         baseUrl.search = "";
@@ -394,6 +403,7 @@ describe("TerriaSpec", function () {
       });
 
       it("initializes user added data group with shared UrlReference items", async function () {
+        terria.setShareLinkService(new ShareLinkService(terria)).build();
         terria.catalog.userAddedDataGroup.addMembersFromJson(
           CommonStrata.user,
           [
@@ -406,7 +416,8 @@ describe("TerriaSpec", function () {
           ]
         );
 
-        const shareLink = buildShareLink(terria, viewState);
+        const shareLink =
+          await terria.shareLinkService!.buildShareLink(viewState);
         const baseUrl = new URL(document.baseURI);
         baseUrl.pathname = "";
         baseUrl.search = "";
@@ -431,6 +442,7 @@ describe("TerriaSpec", function () {
       });
 
       it("initializes workbench with shared workbench items", async function () {
+        terria.setShareLinkService(new ShareLinkService(terria)).build();
         const model1 = terria.getModelById(
           BaseModel,
           "itemABC"
@@ -445,7 +457,8 @@ describe("TerriaSpec", function () {
         expect(terria.workbench.itemIds).toContain("itemDEF");
         expect(newTerria.workbench.itemIds).toEqual([]);
 
-        const shareLink = buildShareLink(terria, viewState);
+        const shareLink =
+          await terria.shareLinkService!.buildShareLink(viewState);
         const baseUrl = new URL(document.baseURI);
         baseUrl.pathname = "";
         baseUrl.search = "";
@@ -460,6 +473,7 @@ describe("TerriaSpec", function () {
       });
 
       it("initializes splitter correctly", async function () {
+        terria.setShareLinkService(new ShareLinkService(terria)).build();
         const model1 = terria.getModelById(
           BaseModel,
           "itemABC"
@@ -476,7 +490,8 @@ describe("TerriaSpec", function () {
           );
         });
 
-        const shareLink = buildShareLink(terria, viewState);
+        const shareLink =
+          await terria.shareLinkService!.buildShareLink(viewState);
         const baseUrl = new URL(document.baseURI);
         baseUrl.pathname = "";
         baseUrl.search = "";
@@ -500,6 +515,7 @@ describe("TerriaSpec", function () {
       });
 
       it("opens and loads members of shared open groups", async function () {
+        terria.setShareLinkService(new ShareLinkService(terria)).build();
         const group = terria.getModelById(
           BaseModel,
           "groupABC"
@@ -507,7 +523,8 @@ describe("TerriaSpec", function () {
         await viewState.viewCatalogMember(group);
         expect(group.isOpen).toBe(true);
         expect(group.members.length).toBeGreaterThan(0);
-        const shareLink = buildShareLink(terria, viewState);
+        const shareLink =
+          await terria.shareLinkService!.buildShareLink(viewState);
         const baseUrl = new URL(document.baseURI);
         baseUrl.pathname = "";
         baseUrl.search = "";
@@ -654,13 +671,15 @@ describe("TerriaSpec", function () {
       });
 
       it("correctly applies user stratum changes to moved item", async function () {
+        terria.setShareLinkService(new ShareLinkService(terria)).build();
         const csv = terria.getModelById(
           CsvCatalogItem,
           "//Old group/Random CSV"
         );
         expect(csv).toBeDefined("Can't find csv item in source terria");
         csv?.setTrait(CommonStrata.user, "opacity", 0.5);
-        const shareLink = buildShareLink(terria, viewState);
+        const shareLink =
+          await terria.shareLinkService!.buildShareLink(viewState);
         const baseUrl = new URL(document.baseURI);
         baseUrl.pathname = "";
         baseUrl.search = "";
@@ -692,7 +711,8 @@ describe("TerriaSpec", function () {
         await terria.workbench.add(csv);
         terria.timelineStack.addToTop(csv);
 
-        const shareLink = buildShareLink(terria, viewState);
+        const shareLink =
+          await terria.shareLinkService!.buildShareLink(viewState);
         const baseUrl = new URL(document.baseURI);
         baseUrl.pathname = "";
         baseUrl.search = "";
@@ -1019,7 +1039,10 @@ describe("TerriaSpec", function () {
 
       it("should not change local property shortenShareUrls", async function () {
         terria.setPersistedSettingsService(
-          new PersistedSettings(terria.configParameters, terria.localStorage)
+          new PersistedSettingsService(
+            terria.configParameters,
+            terria.localStorage
+          )
         );
         await terria.applyInitData({
           initData: {}
@@ -1041,7 +1064,10 @@ describe("TerriaSpec", function () {
 
       it("should set local property shortenShareUrls to true", async function () {
         terria.setPersistedSettingsService(
-          new PersistedSettings(terria.configParameters, terria.localStorage)
+          new PersistedSettingsService(
+            terria.configParameters,
+            terria.localStorage
+          )
         );
         await terria.applyInitData({
           initData: {
@@ -1079,7 +1105,8 @@ describe("TerriaSpec", function () {
   describe("mapSettings", function () {
     it("properly interprets map hash parameter", async () => {
       const hashParams = parseHashParams("http://test.com/#map=2d");
-      terria.setHashParams(hashParams).build();
+      applyHashParamsToConfig(terria, hashParams);
+      terria.build();
 
       expect(terria.mainViewer.viewerMode).toBe(ViewerMode.Leaflet);
     });
@@ -1092,7 +1119,10 @@ describe("TerriaSpec", function () {
       ).and.callThrough();
 
       terria.setPersistedSettingsService(
-        new PersistedSettings(terria.configParameters, terria.localStorage)
+        new PersistedSettingsService(
+          terria.configParameters,
+          terria.localStorage
+        )
       );
       terria.build();
 
@@ -1110,11 +1140,14 @@ describe("TerriaSpec", function () {
         href: "http://test.com/#map=4d"
       } as Location;
       const hashParams = parseHashParams(location.href);
+      applyHashParamsToConfig(terria, hashParams);
       terria
         .setPersistedSettingsService(
-          new PersistedSettings(terria.configParameters, terria.localStorage)
+          new PersistedSettingsService(
+            terria.configParameters,
+            terria.localStorage
+          )
         )
-        .setHashParams(hashParams)
         .build();
 
       expect(terria.mainViewer.viewerMode).toBe(ViewerMode.Cesium);

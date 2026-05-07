@@ -541,9 +541,9 @@ class StoryBuilder extends Component<
     const hasStories = this.props.viewState.terria.stories.length > 0;
     const shareDataSize = this.shareDataStringSize;
     const shareMaxRequestSize =
-      this.props.viewState.terria.shareDataService?.shareMaxRequestSize;
+      this.props.viewState.terria.shareLinkService?.shareMaxRequestSize;
     const shareMaxRequestSizeBytes =
-      this.props.viewState.terria.shareDataService?.shareMaxRequestSizeBytes;
+      this.props.viewState.terria.shareLinkService?.shareMaxRequestSizeBytes;
     // Disable the warning if map owners use custom server that does not return shareMaxRequestSize:
     const shareDataTooLong =
       shareDataSize && shareMaxRequestSizeBytes

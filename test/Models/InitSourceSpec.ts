@@ -13,9 +13,10 @@ import {
   isInitFromUrl
 } from "../../lib/Models/InitSource";
 import ShareDataService from "../../lib/Models/ShareDataService";
-import Terria from "../../lib/Models/Terria";
 import { createTerriaConfig } from "../../lib/Models/TerriaConfig";
 import { worker } from "../mocks/browser";
+import { ShareLinkService } from "../../lib/ReactViews/Map/Panels/SharePanel/BuildShareLink";
+import Terria from "../../lib/Models/Terria";
 
 describe("InitSource", () => {
   describe("buildInitSourcesFromConfig", () => {
@@ -177,7 +178,6 @@ describe("InitSource", () => {
         version: "8.0.0",
         initSources: [{ workbench: ["item1"] }]
       };
-      const terria = new Terria();
 
       const shareDataService = {
         resolveData: jasmine
@@ -185,11 +185,12 @@ describe("InitSource", () => {
           .and.returnValue(Promise.resolve(shareData))
       };
 
-      terria.setShareDataService(shareDataService as never as ShareDataService);
-
       const initSources = await buildInitSourcesFromShare(
         "abc123",
-        terria.shareDataService
+        new ShareLinkService(
+          new Terria(),
+          shareDataService as never as ShareDataService
+        )
       );
 
       expect(shareDataService.resolveData).toHaveBeenCalledWith("abc123");
@@ -198,11 +199,7 @@ describe("InitSource", () => {
     });
 
     it("returns empty initSources when no shareDataService is provided", async () => {
-      const terria = new Terria();
-      const initSources = await buildInitSourcesFromShare(
-        "abc123",
-        terria.shareDataService
-      );
+      const initSources = await buildInitSourcesFromShare("abc123", undefined);
       expect(initSources).toEqual([]);
     });
   });

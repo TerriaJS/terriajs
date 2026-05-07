@@ -32,7 +32,19 @@ export type StorageAdapter = {
   setItem: (key: string, value: boolean | number | string) => void;
 };
 
-export class PersistedSettings<TConfig extends TerriaConfig = TerriaConfig> {
+export interface IPersistedSettingsSevice<
+  TConfig extends TerriaConfig = TerriaConfig
+> {
+  read<T extends keyof z.input<typeof PERSISTED_SETTINGS_SCHEMA>>(
+    key: T
+  ): z.output<typeof PERSISTED_SETTINGS_SCHEMA>[T] | undefined;
+  mapToConfigParams(): Partial<TConfig>;
+  initConfigSync(): IReactionDisposer[];
+}
+
+export class PersistedSettingsService<
+  TConfig extends TerriaConfig = TerriaConfig
+> implements IPersistedSettingsSevice<TConfig> {
   constructor(
     private readonly config: TConfig,
     private readonly adapter: StorageAdapter = new LocalStorage(
@@ -54,11 +66,7 @@ export class PersistedSettings<TConfig extends TerriaConfig = TerriaConfig> {
     return undefined;
   }
 
-  mapToConfigParams(): {
-    useNativeResolution?: TerriaConfig["useNativeResolution"];
-    baseMaximumScreenSpaceError?: TerriaConfig["baseMaximumScreenSpaceError"];
-    shortenShareUrls?: TerriaConfig["shortenShareUrls"];
-  } {
+  mapToConfigParams(): Partial<TConfig> {
     const raw = {
       useNativeResolution:
         this.adapter.getItem("useNativeResolution") ?? undefined,
@@ -67,7 +75,7 @@ export class PersistedSettings<TConfig extends TerriaConfig = TerriaConfig> {
       ) ?? undefined) as string,
       shortenShareUrls: this.adapter.getItem("shortenShareUrls") ?? undefined
     };
-    return PERSISTED_SETTINGS_SCHEMA.decode(raw);
+    return PERSISTED_SETTINGS_SCHEMA.decode(raw) as Partial<TConfig>;
   }
 
   initConfigSync(): IReactionDisposer[] {

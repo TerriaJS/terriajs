@@ -1,6 +1,6 @@
 import CommonStrata from "../../lib/Models/Definition/CommonStrata";
 import {
-  PersistedSettings,
+  PersistedSettingsService,
   StorageAdapter
 } from "../../lib/Models/PersistedSettings";
 import {
@@ -33,49 +33,49 @@ describe("PersistedSettings", () => {
   describe("read", () => {
     it("reads a viewermode string from storage", () => {
       const adapter = makeAdapter({ viewermode: "2d" });
-      const ps = new PersistedSettings(config, adapter);
+      const ps = new PersistedSettingsService(config, adapter);
       expect(ps.read("viewermode")).toBe("2d");
     });
 
     it("reads useNativeResolution from storage", () => {
       const adapter = makeAdapter({ useNativeResolution: "true" });
-      const ps = new PersistedSettings(config, adapter);
+      const ps = new PersistedSettingsService(config, adapter);
       expect(ps.read("useNativeResolution")).toBe(true);
     });
 
     it("reads shortenShareUrls from storage", () => {
       const adapter = makeAdapter({ shortenShareUrls: "true" });
-      const ps = new PersistedSettings(config, adapter);
+      const ps = new PersistedSettingsService(config, adapter);
       expect(ps.read("shortenShareUrls")).toBe(true);
     });
 
     it("reads baseMaximumScreenSpaceError from storage", () => {
       const adapter = makeAdapter({ baseMaximumScreenSpaceError: "4" });
-      const ps = new PersistedSettings(config, adapter);
+      const ps = new PersistedSettingsService(config, adapter);
       expect(ps.read("baseMaximumScreenSpaceError")).toBe(4);
     });
 
     it("reads a basemap string from storage", () => {
       const adapter = makeAdapter({ basemap: "basemap-bing-aerial" });
-      const ps = new PersistedSettings(config, adapter);
+      const ps = new PersistedSettingsService(config, adapter);
       expect(ps.read("basemap")).toBe("basemap-bing-aerial");
     });
 
     it("reads a viewer mode string from storage", () => {
       const adapter = makeAdapter({ viewermode: "2d" });
-      const ps = new PersistedSettings(config, adapter);
+      const ps = new PersistedSettingsService(config, adapter);
       expect(ps.read("viewermode")).toBe("2d");
     });
 
     it("returns undefined when the key is absent from storage", () => {
       const adapter = makeAdapter();
-      const ps = new PersistedSettings(config, adapter);
+      const ps = new PersistedSettingsService(config, adapter);
       expect(ps.read("viewermode")).toBeUndefined();
     });
 
     it("returns undefined when the value fails schema validation", () => {
       const adapter = makeAdapter({ viewermode: "4d" });
-      const ps = new PersistedSettings(config, adapter);
+      const ps = new PersistedSettingsService(config, adapter);
       expect(ps.read("viewermode")).toBeUndefined();
     });
   });
@@ -83,19 +83,19 @@ describe("PersistedSettings", () => {
   describe("mapToConfigParams", () => {
     it("reads useNativeResolution from storage as a boolean", () => {
       const adapter = makeAdapter({ useNativeResolution: "true" });
-      const ps = new PersistedSettings(config, adapter);
+      const ps = new PersistedSettingsService(config, adapter);
       expect(ps.mapToConfigParams().useNativeResolution).toBe(true);
     });
 
     it("reads baseMaximumScreenSpaceError from storage as a number", () => {
       const adapter = makeAdapter({ baseMaximumScreenSpaceError: "4" });
-      const ps = new PersistedSettings(config, adapter);
+      const ps = new PersistedSettingsService(config, adapter);
       expect(ps.mapToConfigParams().baseMaximumScreenSpaceError).toBe(4);
     });
 
     it("reads shortenShareUrls from storage as a boolean", () => {
       const adapter = makeAdapter({ shortenShareUrls: "false" });
-      const ps = new PersistedSettings(config, adapter);
+      const ps = new PersistedSettingsService(config, adapter);
       expect(ps.mapToConfigParams().shortenShareUrls).toBe(false);
     });
 
@@ -105,7 +105,7 @@ describe("PersistedSettings", () => {
         baseMaximumScreenSpaceError: "2",
         shortenShareUrls: "false"
       });
-      const ps = new PersistedSettings(config, adapter);
+      const ps = new PersistedSettingsService(config, adapter);
       expect(ps.mapToConfigParams()).toEqual({
         useNativeResolution: true,
         baseMaximumScreenSpaceError: 2,
@@ -117,7 +117,7 @@ describe("PersistedSettings", () => {
   describe("initConfigSync", () => {
     it("writes useNativeResolution to storage when config changes", () => {
       const adapter = makeAdapter();
-      const ps = new PersistedSettings(config, adapter);
+      const ps = new PersistedSettingsService(config, adapter);
       ps.initConfigSync();
 
       config.update(CommonStrata.user, { useNativeResolution: true });
@@ -127,7 +127,7 @@ describe("PersistedSettings", () => {
 
     it("writes baseMaximumScreenSpaceError to storage when config changes", () => {
       const adapter = makeAdapter();
-      const ps = new PersistedSettings(config, adapter);
+      const ps = new PersistedSettingsService(config, adapter);
       ps.initConfigSync();
 
       config.update(CommonStrata.user, { baseMaximumScreenSpaceError: 4 });
@@ -137,7 +137,7 @@ describe("PersistedSettings", () => {
 
     it("writes shortenShareUrls to storage when config changes", () => {
       const adapter = makeAdapter();
-      const ps = new PersistedSettings(config, adapter);
+      const ps = new PersistedSettingsService(config, adapter);
       ps.initConfigSync();
 
       config.update(CommonStrata.user, { shortenShareUrls: true });
@@ -147,7 +147,7 @@ describe("PersistedSettings", () => {
 
     it("returns one disposer", () => {
       const adapter = makeAdapter();
-      const ps = new PersistedSettings(config, adapter);
+      const ps = new PersistedSettingsService(config, adapter);
       const disposers = ps.initConfigSync();
       expect(disposers.length).toBe(1);
       disposers.forEach((d) => d());
@@ -155,7 +155,7 @@ describe("PersistedSettings", () => {
 
     it("stops reacting after the disposer is called", () => {
       const adapter = makeAdapter();
-      const ps = new PersistedSettings(config, adapter);
+      const ps = new PersistedSettingsService(config, adapter);
       const disposers = ps.initConfigSync();
       disposers.forEach((d) => d());
 
