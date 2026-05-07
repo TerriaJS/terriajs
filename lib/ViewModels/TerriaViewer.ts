@@ -55,29 +55,12 @@ export default class TerriaViewer {
   @observable
   private _baseMap: MappableMixin.Instance | undefined;
 
-  /**
-   * Tracks the basemap that is currently being loaded
-   */
-  @observable
-  private _loadingBaseMap: MappableMixin.Instance | undefined;
-
   get baseMap() {
     return this._baseMap;
   }
 
-  /**
-   * Returns the basemap that is currently loading
-   */
-  get loadingBaseMap(): MappableMixin.Instance | undefined {
-    return this._loadingBaseMap;
-  }
-
-  async setBaseMap(baseMap?: MappableMixin.Instance): Promise<void> {
-    if (!baseMap) return;
-
-    runInAction(() => {
-      this._loadingBaseMap = baseMap;
-    });
+  async setBaseMap(baseMap?: MappableMixin.Instance): Promise<boolean> {
+    if (!baseMap) return false;
 
     try {
       const result = await baseMap.loadMapItems();
@@ -93,28 +76,24 @@ export default class TerriaViewer {
             }
           }
         });
+        return false;
       } else {
         runInAction(() => {
           // Concurrent attempts to load basemap might not complete in the same
           // order they were called. Set as current basemap only if this was
           // the last call to setBaseMap.
-          if (this._loadingBaseMap === baseMap) {
-            // If the basemap specifies a preferred viewer mode, switch to it.
-            if (baseMap.preferredViewerMode) {
-              this.viewerMode =
-                getViewerType(baseMap.preferredViewerMode) ?? this.viewerMode;
-            }
-            this._baseMap = baseMap;
+
+          // If the basemap specifies a preferred viewer mode, switch to it.
+          if (baseMap.preferredViewerMode) {
+            this.viewerMode =
+              getViewerType(baseMap.preferredViewerMode) ?? this.viewerMode;
           }
+          this._baseMap = baseMap;
         });
+        return true;
       }
-    } finally {
-      // Unset loadingBaseMap
-      if (this._loadingBaseMap === baseMap) {
-        runInAction(() => {
-          this._loadingBaseMap = undefined;
-        });
-      }
+    } catch {
+      return false;
     }
   }
 

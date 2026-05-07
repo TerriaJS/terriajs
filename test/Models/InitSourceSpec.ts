@@ -1,3 +1,4 @@
+import { http, HttpResponse } from "msw";
 import URI from "urijs";
 import {
   buildInitSourcesFromConfig,
@@ -11,11 +12,10 @@ import {
   isInitFromOptions,
   isInitFromUrl
 } from "../../lib/Models/InitSource";
-import { http, HttpResponse } from "msw";
-import { worker } from "../mocks/browser";
-import { TerriaConfig } from "../../lib/Models/TerriaConfig";
-import Terria from "../../lib/Models/Terria";
 import ShareDataService from "../../lib/Models/ShareDataService";
+import Terria from "../../lib/Models/Terria";
+import { createTerriaConfig } from "../../lib/Models/TerriaConfig";
+import { worker } from "../mocks/browser";
 
 describe("InitSource", () => {
   describe("buildInitSourcesFromConfig", () => {
@@ -95,14 +95,14 @@ describe("InitSource", () => {
       expect(sources[0].name).toContain("catalog.json");
     });
 
-    it("converts v7initializationUrls to InitSourceFromDataPromise entries", () => {
+    it("converts v7initializationUrls to InitSourceFromDataPromise entries", async () => {
       worker.use(
-        http.get("*/old-catalog.json", () =>
+        http.get("old-catalog.json", () =>
           HttpResponse.json({ catalog: "old" })
         )
       );
-      const config = new TerriaConfig();
-      config.update({});
+      const config = createTerriaConfig();
+      config.update("user", {});
       const sources = buildInitSourcesFromConfig({
         v7initializationUrls: ["old-catalog.json"],
         baseUri,
@@ -111,14 +111,18 @@ describe("InitSource", () => {
 
       expect(sources.length).toBe(1);
       expect(isInitFromDataPromise(sources[0])).toBeTrue();
+      // have to await the data promise to ensure it resolves without error
+      if (isInitFromDataPromise(sources[0])) {
+        await sources[0].data;
+      }
     });
 
-    it("includes both v8 and v7 sources when both are present", () => {
+    it("includes both v8 and v7 sources when both are present", async () => {
       worker.use(
         http.get("*/old.json", () => HttpResponse.json({ catalog: "old" }))
       );
-      const config = new TerriaConfig();
-      config.update({});
+      const config = createTerriaConfig();
+      config.update("user", {});
       const sources = buildInitSourcesFromConfig({
         initializationUrls: ["new.json"],
         v7initializationUrls: ["old.json"],
@@ -129,6 +133,9 @@ describe("InitSource", () => {
       expect(sources.length).toBe(2);
       expect(isInitFromUrl(sources[0])).toBeTrue();
       expect(isInitFromDataPromise(sources[1])).toBeTrue();
+      if (isInitFromDataPromise(sources[1])) {
+        await sources[1].data;
+      }
     });
   });
 
@@ -203,14 +210,16 @@ describe("InitSource", () => {
   describe("SPA routes", () => {
     describe("/catalog/:id route", function () {
       it("adds an initSource with previewedItemId", async function () {
-        const initSources = await buildInitSourcesFromSpaRoutes(
+        const { initSources, hasStory } = await buildInitSourcesFromSpaRoutes(
           "catalog/my-layer",
           ""
         );
         expect(initSources.length).toBe(1);
-        if (isInitFromData(initSources[0])) {
-          expect((initSources[0].data as any).previewedItemId).toBe("my-layer");
-        }
+        expect(isInitFromData(initSources[0])).toBeTrue();
+        expect(
+          (initSources[0] as InitSourceFromData).data.previewedItemId
+        ).toBe("my-layer");
+        expect(hasStory).toBeFalse();
       });
     });
 
@@ -225,7 +234,7 @@ describe("InitSource", () => {
           )
         );
 
-        const initSources = await buildInitSourcesFromSpaRoutes(
+        const { initSources, hasStory } = await buildInitSourcesFromSpaRoutes(
           "story/my-story",
           "stories/"
         );
@@ -235,14 +244,16 @@ describe("InitSource", () => {
         expect(
           (initSources[0] as InitSourceFromData).data.stories?.[0].id
         ).toBe("s1");
+        expect(hasStory).toBeTrue();
       });
 
       it("returns empty initSources when storyRouteUrlPrefix is not defined", async function () {
-        const initSources = await buildInitSourcesFromSpaRoutes(
+        const { initSources, hasStory } = await buildInitSourcesFromSpaRoutes(
           "story/my-story",
           undefined
         );
         expect(initSources).toEqual([]);
+        expect(hasStory).toBeFalse();
       });
     });
   });

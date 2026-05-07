@@ -18,6 +18,7 @@ import ModelPropertiesFromTraits from "../Definition/ModelPropertiesFromTraits";
 import updateModelFromJson from "../Definition/updateModelFromJson";
 import Terria from "../Terria";
 import { defaultBaseMaps } from "./defaultBaseMaps";
+import CatalogMemberMixin from "../../ModelMixins/CatalogMemberMixin";
 
 export class BaseMapModel extends CreateModel(BaseMapTraits) {}
 
@@ -141,6 +142,23 @@ export class BaseMapsModel extends CreateModel(BaseMapsTraits) {
         `Failed to add members from JSON for model \`${this.uniqueId}\``
       )
     );
+  }
+
+  findBaseMapById(id: string | undefined): BaseMapItem | undefined {
+    if (!id) return undefined;
+    return this.baseMapItems.find((baseMapItem) => {
+      return baseMapItem.item.uniqueId === id;
+    });
+  }
+
+  findBaseMapByName(name: string | undefined): BaseMapItem | undefined {
+    if (!name) return undefined;
+    return this.baseMapItems.find((baseMapItem) => {
+      if (CatalogMemberMixin.isMixedInto(baseMapItem.item)) {
+        return baseMapItem.item.name === name;
+      }
+      return false;
+    });
   }
 }
 

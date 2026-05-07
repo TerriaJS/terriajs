@@ -46,6 +46,7 @@ import mapServerWithErrorJson from "../../wwwroot/test/Terria/applyInitData/MapS
 import wmsCapabilitiesXml from "../../wwwroot/test/Terria/applyInitData/WmsServer/capabilities.xml";
 import SimpleCatalogItem from "../Helpers/SimpleCatalogItem";
 import { worker } from "../mocks/browser";
+import { PersistedSettings } from "../../lib/Models/PersistedSettings";
 
 describe("TerriaSpec", function () {
   let terria: Terria;
@@ -1017,6 +1018,9 @@ describe("TerriaSpec", function () {
       });
 
       it("should not change local property shortenShareUrls", async function () {
+        terria.setPersistedSettingsService(
+          new PersistedSettings(terria.configParameters, terria.localStorage)
+        );
         await terria.applyInitData({
           initData: {}
         });
@@ -1036,6 +1040,9 @@ describe("TerriaSpec", function () {
       });
 
       it("should set local property shortenShareUrls to true", async function () {
+        terria.setPersistedSettingsService(
+          new PersistedSettings(terria.configParameters, terria.localStorage)
+        );
         await terria.applyInitData({
           initData: {
             settings: {
@@ -1078,11 +1085,15 @@ describe("TerriaSpec", function () {
     });
 
     it("properly resolves persisted map viewer", async () => {
+      terria.localStorage.setItem("viewermode", "2d");
       const getLocalPropertySpy = spyOn(
         terria.localStorage,
         "getItem"
-      ).and.returnValue("2d");
+      ).and.callThrough();
 
+      terria.setPersistedSettingsService(
+        new PersistedSettings(terria.configParameters, terria.localStorage)
+      );
       terria.build();
 
       expect(terria.mainViewer.viewerMode).toBe(ViewerMode.Leaflet);
@@ -1090,15 +1101,21 @@ describe("TerriaSpec", function () {
     });
 
     it("properly interprets wrong map hash parameter and resolves persisted value", async () => {
+      terria.localStorage.setItem("viewermode", "3dsmooth");
       const getLocalPropertySpy = spyOn(
         terria.localStorage,
         "getItem"
-      ).and.returnValue("3dsmooth");
+      ).and.callThrough();
       const location = {
         href: "http://test.com/#map=4d"
       } as Location;
       const hashParams = parseHashParams(location.href);
-      terria.setHashParams(hashParams).build();
+      terria
+        .setPersistedSettingsService(
+          new PersistedSettings(terria.configParameters, terria.localStorage)
+        )
+        .setHashParams(hashParams)
+        .build();
 
       expect(terria.mainViewer.viewerMode).toBe(ViewerMode.Cesium);
       expect(terria.mainViewer.viewerOptions.useTerrain).toBe(false);
@@ -1159,39 +1176,40 @@ describe("TerriaSpec", function () {
 
     it("correctly loads the base maps", async function () {
       terria.build();
-      await (
-        await terria._applyInitData({
-          initData: {
-            settings: { baseMapId: "basemap-2" },
-            baseMaps: {
-              items: [
-                {
-                  item: {
-                    id: "basemap-natural-earth-II",
-                    name: "Natural Earth II",
-                    type: "url-template-imagery",
-                    url: "https://storage.googleapis.com/terria-datasets-public/basemaps/natural-earth-tiles/{z}/{x}/{reverseY}.png",
-                    attribution:
-                      "<a href='https://www.naturalearthdata.com/downloads/10m-raster-data/10m-natural-earth-2/'>Natural Earth II</a> - From Natural Earth. <a href='https://www.naturalearthdata.com/about/terms-of-use/'>Public Domain</a>.",
-                    maximumLevel: 7,
-                    opacity: 1.0
-                  },
-                  image: "build/TerriaJS/images/natural-earth.png",
-                  contrastColor: "#000000"
+      const { baseMapItem } = await terria._applyInitData({
+        initData: {
+          settings: { baseMapId: "basemap-2" },
+          baseMaps: {
+            items: [
+              {
+                item: {
+                  id: "basemap-natural-earth-II",
+                  name: "Natural Earth II",
+                  type: "url-template-imagery",
+                  url: "https://storage.googleapis.com/terria-datasets-public/basemaps/natural-earth-tiles/{z}/{x}/{reverseY}.png",
+                  attribution:
+                    "<a href='https://www.naturalearthdata.com/downloads/10m-raster-data/10m-natural-earth-2/'>Natural Earth II</a> - From Natural Earth. <a href='https://www.naturalearthdata.com/about/terms-of-use/'>Public Domain</a>.",
+                  maximumLevel: 7,
+                  opacity: 1.0
                 },
-                {
-                  item: {
-                    id: "basemap-2",
-                    name: "Base map 2",
-                    type: "url-template-imagery",
-                    url: "https://example.com"
-                  }
+                image: "build/TerriaJS/images/natural-earth.png",
+                contrastColor: "#000000"
+              },
+              {
+                item: {
+                  id: "basemap-2",
+                  name: "Base map 2",
+                  type: "url-template-imagery",
+                  url: "https://example.com"
                 }
-              ]
-            }
+              }
+            ]
           }
-        })
-      ).baseMapPromise;
+        }
+      });
+      expect(baseMapItem).toBeDefined();
+
+      await terria.initializeBaseMap([baseMapItem!]);
       const _defaultBaseMaps = defaultBaseMaps(terria);
       expect(terria.baseMapsModel).toBeDefined();
       expect(terria.baseMapsModel.baseMapItems.length).toEqual(

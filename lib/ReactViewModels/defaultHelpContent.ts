@@ -1,33 +1,39 @@
+import z from "zod";
+
 export enum PaneMode {
   videoAndContent = "videoAndContent",
   slider = "slider",
   trainer = "trainer"
 }
 
-export interface StepItem {
-  title: string;
-  markdownDescription?: string;
-}
+const StepItemSchema = z.object({
+  title: z.string(),
+  markdownDescription: z.string().optional()
+});
 
-export interface TrainerItem {
-  title: string;
-  footnote?: string;
-  steps: StepItem[];
-}
+const TrainerItemSchema = z.object({
+  title: z.string(),
+  footnote: z.string().optional(),
+  steps: z.array(StepItemSchema)
+});
 
-export interface HelpContentItem {
-  itemName: string;
-  title?: string;
+export const HelpContentItemSchema = z.object({
+  itemName: z.string(),
+  title: z.string().optional(),
 
-  videoUrl?: string;
-  placeholderImage?: string;
+  videoUrl: z.string().optional(),
+  placeholderImage: z.string().optional(),
 
   // The `placeholderImage` is also used as background cover image for the container that embeds the video. This setting allows us to control the opacity of the cover image.
-  videoCoverImageOpacity?: number;
+  videoCoverImageOpacity: z.number().optional(),
 
-  paneMode?: PaneMode;
-  trainerItems?: TrainerItem[];
+  paneMode: z.string().optional(),
+  trainerItems: z.array(TrainerItemSchema).optional(),
 
-  markdownText?: string;
-  icon?: string;
-}
+  markdownText: z.string().optional(),
+  icon: z.string().optional()
+});
+
+export type StepItem = z.infer<typeof StepItemSchema>;
+export type TrainerItem = z.infer<typeof TrainerItemSchema>;
+export type HelpContentItem = z.infer<typeof HelpContentItemSchema>;

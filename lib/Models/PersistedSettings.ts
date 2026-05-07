@@ -1,62 +1,114 @@
-import { isViewerMode, MapViewers } from "./ViewerMode";
+import { IReactionDisposer, reaction, untracked } from "mobx";
+import isDefined from "../Core/isDefined";
+import { TerriaConfig } from "./TerriaConfig";
+import { LocalStorage } from "../Core/LocalStorage";
+import z from "zod";
 
-export type PersistedSettings = {
-  /** Map viewer mode key ("2d" | "3d" | "3dsmooth"), or undefined if not specified */
-  viewerMode?: keyof typeof MapViewers;
-  /** Unique ID of the persisted base map, or undefined if not specified */
-  baseMapId?: string;
-  /** Whether to use native resolution, or undefined if not specified */
-  useNativeResolution?: boolean;
-  /** Base maximum screen space error, or undefined if not specified */
-  baseMaximumScreenSpaceError?: number;
-  /** Whether to shorten share URLs, or undefined if not specified */
-  shortenShareUrls?: boolean;
+const stringToNumber = z.codec(z.string().regex(z.regexes.number), z.number(), {
+  decode: (str) => Number.parseFloat(str),
+  encode: (num) => num.toString()
+});
+
+const stringToBoolean = z.codec(z.string().or(z.boolean()), z.boolean(), {
+  decode: (str) => {
+    if (typeof str === "boolean") {
+      return str;
+    }
+    return str.toLowerCase() === "true";
+  },
+  encode: (bool) => bool.toString()
+});
+
+export const PERSISTED_SETTINGS_SCHEMA = z.object({
+  viewermode: z.enum(["2d", "3d", "3dsmooth"]).optional(),
+  basemap: z.string().optional(),
+  useNativeResolution: stringToBoolean.optional(),
+  baseMaximumScreenSpaceError: stringToNumber.optional(),
+  shortenShareUrls: stringToBoolean.optional()
+});
+
+export type StorageAdapter = {
+  getItem: (key: string) => boolean | string | null;
+  setItem: (key: string, value: boolean | number | string) => void;
 };
 
-/**
- * Reads persisted config from localStorage into a single object.
- *
- * @param getLocalProp - Abstraction over localStorage so this stays testable
- *   without DOM. Pass `(key) => terria.localStorage.getItem(key)` at the call site.
- * @param persistViewerMode - When false, viewerMode is excluded (controlled by
- *   TerriaConfig.persistViewerMode).
- */
-export function readLocalStorageSettings(
-  getLocalProp: (key: string) => string | boolean | null,
-  persistViewerMode: boolean
-): PersistedSettings {
-  const rawViewerMode = getLocalProp("viewermode");
-  const viewerMode =
-    persistViewerMode &&
-    typeof rawViewerMode === "string" &&
-    isViewerMode(rawViewerMode)
-      ? rawViewerMode
-      : undefined;
+export class PersistedSettings<TConfig extends TerriaConfig = TerriaConfig> {
+  constructor(
+    private readonly config: TConfig,
+    private readonly adapter: StorageAdapter = new LocalStorage(
+      untracked(() => config.appName)
+    )
+  ) {}
 
-  const useNativeResolution = getLocalProp("useNativeResolution");
-  const shortenShareUrls = getLocalProp("shortenShareUrls");
-  const rawError = getLocalProp("baseMaximumScreenSpaceError")?.toString();
-  const baseMaximumScreenSpaceError =
-    rawError !== undefined ? parseFloat(rawError) : NaN;
+  read<T extends keyof z.input<typeof PERSISTED_SETTINGS_SCHEMA>>(
+    key: T
+  ): z.output<typeof PERSISTED_SETTINGS_SCHEMA>[T] | undefined {
+    const raw = this.adapter.getItem(key);
 
-  const rawBaseMapId = getLocalProp("basemap");
-  const baseMapId =
-    typeof rawBaseMapId === "string" && rawBaseMapId.length > 0
-      ? rawBaseMapId
-      : undefined;
+    const parsed = PERSISTED_SETTINGS_SCHEMA.safeDecode({ [key]: raw });
 
-  return {
-    useNativeResolution:
-      typeof useNativeResolution === "boolean"
-        ? useNativeResolution
-        : undefined,
-    baseMaximumScreenSpaceError: !isNaN(baseMaximumScreenSpaceError)
-      ? baseMaximumScreenSpaceError
-      : undefined,
-    shortenShareUrls:
-      typeof shortenShareUrls === "boolean" ? shortenShareUrls : undefined,
+    if (parsed.success) {
+      return parsed.data[key];
+    }
 
-    viewerMode,
-    baseMapId
-  };
+    return undefined;
+  }
+
+  mapToConfigParams(): {
+    useNativeResolution?: TerriaConfig["useNativeResolution"];
+    baseMaximumScreenSpaceError?: TerriaConfig["baseMaximumScreenSpaceError"];
+    shortenShareUrls?: TerriaConfig["shortenShareUrls"];
+  } {
+    const raw = {
+      useNativeResolution:
+        this.adapter.getItem("useNativeResolution") ?? undefined,
+      baseMaximumScreenSpaceError: (this.adapter.getItem(
+        "baseMaximumScreenSpaceError"
+      ) ?? undefined) as string,
+      shortenShareUrls: this.adapter.getItem("shortenShareUrls") ?? undefined
+    };
+    return PERSISTED_SETTINGS_SCHEMA.decode(raw);
+  }
+
+  initConfigSync(): IReactionDisposer[] {
+    const disposer = reaction(
+      () =>
+        [
+          this.config.useNativeResolution,
+          this.config.baseMaximumScreenSpaceError,
+          this.config.shortenShareUrls
+        ] as const,
+      ([
+        useNativeResolution,
+        baseMaximumScreenSpaceError,
+        shortenShareUrls
+      ]) => {
+        const encoded = PERSISTED_SETTINGS_SCHEMA.encode({
+          useNativeResolution: useNativeResolution,
+          baseMaximumScreenSpaceError: baseMaximumScreenSpaceError,
+          shortenShareUrls: shortenShareUrls
+        });
+        this.syncFromConfig(encoded);
+      }
+    );
+
+    return [disposer];
+  }
+
+  protected syncFromConfig(
+    config: z.input<typeof PERSISTED_SETTINGS_SCHEMA>
+  ): void {
+    if (isDefined(config.useNativeResolution)) {
+      this.adapter.setItem("useNativeResolution", config.useNativeResolution);
+    }
+    if (isDefined(config.baseMaximumScreenSpaceError)) {
+      this.adapter.setItem(
+        "baseMaximumScreenSpaceError",
+        config.baseMaximumScreenSpaceError
+      );
+    }
+    if (isDefined(config.shortenShareUrls)) {
+      this.adapter.setItem("shortenShareUrls", config.shortenShareUrls);
+    }
+  }
 }

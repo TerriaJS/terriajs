@@ -3,6 +3,7 @@ import {
   computed,
   makeObservable,
   observable,
+  reaction,
   runInAction,
   toJS,
   when
@@ -11,6 +12,7 @@ import { createTransformer } from "mobx-utils";
 import Clock from "terriajs-cesium/Source/Core/Clock";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import CesiumEvent from "terriajs-cesium/Source/Core/Event";
+import RequestScheduler from "terriajs-cesium/Source/Core/RequestScheduler";
 import RuntimeError from "terriajs-cesium/Source/Core/RuntimeError";
 import TerrainProvider from "terriajs-cesium/Source/Core/TerrainProvider";
 import buildModuleUrl from "terriajs-cesium/Source/Core/buildModuleUrl";
@@ -52,7 +54,7 @@ import PickedFeatures, {
   featureBelongsToCatalogItem,
   isProviderCoordsMap
 } from "../Map/PickedFeatures/PickedFeatures";
-import CatalogMemberMixin, { getName } from "../ModelMixins/CatalogMemberMixin";
+import { getName } from "../ModelMixins/CatalogMemberMixin";
 import GroupMixin from "../ModelMixins/GroupMixin";
 import MappableMixin, { isDataSource } from "../ModelMixins/MappableMixin";
 import ReferenceMixin from "../ModelMixins/ReferenceMixin";
@@ -88,21 +90,26 @@ import InitSource, {
   isInitFromUrl
 } from "./InitSource";
 import Internationalization, { I18nStartOptions } from "./Internationalization";
-import { LocalStorage } from "./LocalStorage";
+import { LocalStorage } from "../Core/LocalStorage";
 import MapInteractionMode from "./MapInteractionMode";
 import NoViewer from "./NoViewer";
 import { PersistedSettings } from "./PersistedSettings";
 import CatalogIndex from "./SearchProviders/CatalogIndex";
 import { SearchBarModel } from "./SearchProviders/SearchBarModel";
 import ShareDataService from "./ShareDataService";
-import { ConfigParameters, TerriaConfig } from "./TerriaConfig";
+import {
+  ConfigParameters,
+  ConfigStrata,
+  TerriaConfig,
+  createTerriaConfig
+} from "./TerriaConfig";
 import TimelineStack from "./TimelineStack";
 import { isViewerMode, setViewerMode } from "./ViewerMode";
 import Workbench from "./Workbench";
 import SelectableDimensionWorkflow from "./Workflows/SelectableDimensionWorkflow";
 
-interface TerriaOptions {
-  config?: TerriaConfig;
+interface TerriaOptions<TConfig extends TerriaConfig = TerriaConfig> {
+  config?: TConfig;
   /**
    * Override detecting base href from document.baseURI.
    * Used in specs to support routes within Browser spec automation framework
@@ -129,7 +136,7 @@ interface HomeCameraInit {
   west: number;
 }
 
-export default class Terria {
+export default class Terria<TConfig extends TerriaConfig = TerriaConfig> {
   private readonly models = observable.map<string, BaseModel>();
 
   /** Map from share key -> id */
@@ -204,12 +211,14 @@ export default class Terria {
    */
   errorService: ErrorServiceProvider = new StubErrorServiceProvider();
 
+  persistedSettingsService?: PersistedSettings;
+
   /**
    * Gets the stack of layers active on the timeline.
    */
   readonly timelineStack = new TimelineStack(this, this.timelineClock);
 
-  readonly configParameters: TerriaConfig;
+  readonly configParameters: TConfig;
   readonly localStorage: LocalStorage;
 
   @observable
@@ -260,8 +269,6 @@ export default class Terria {
   @observable
   playStoryOnInit: boolean = false;
 
-  private persistedSettings: PersistedSettings = {};
-
   @observable
   readonly initSources: InitSource[] = [];
   private _initSourceLoader = new AsyncLoader(
@@ -301,14 +308,14 @@ export default class Terria {
   readonly developmentEnv = process.env.NODE_ENV === "development";
 
   constructor({
-    config = new TerriaConfig(),
+    config = createTerriaConfig() as TConfig,
     baseUrl = "build/TerriaJS/",
     appBaseHref,
     cesiumBaseUrl
-  }: TerriaOptions = {}) {
+  }: TerriaOptions<TConfig> = {}) {
     makeObservable(this);
     this.configParameters = config;
-    this.localStorage = new LocalStorage(this.configParameters);
+    this.localStorage = new LocalStorage(this.configParameters.appName);
 
     appBaseHref = !appBaseHref
       ? ensureSuffix(
@@ -408,32 +415,62 @@ export default class Terria {
     return this;
   }
 
+  setPersistedSettingsService(
+    persistedSettingsService: PersistedSettings
+  ): Terria {
+    persistedSettingsService.initConfigSync();
+    this.updateConfig(
+      persistedSettingsService.mapToConfigParams(),
+      ConfigStrata.persistedStorage
+    );
+    this.persistedSettingsService = persistedSettingsService;
+
+    return this;
+  }
+
   @action
   setHashParams(hashParams: HashParams): Terria {
     this.hashParams = hashParams;
 
     if (isDefined(hashParams.hideWelcomeMessage)) {
-      this.updateConfig({
-        showWelcomeMessage: !hashParams.hideWelcomeMessage
-      });
+      this.updateConfig(
+        {
+          showWelcomeMessage: !hashParams.hideWelcomeMessage
+        },
+        ConfigStrata.url
+      );
     }
     if (isDefined(hashParams.hideExplorerPanel)) {
-      this.updateConfig({
-        hideExplorerPanel: hashParams.hideExplorerPanel
-      });
+      this.updateConfig(
+        {
+          hideExplorerPanel: hashParams.hideExplorerPanel
+        },
+        ConfigStrata.url
+      );
     }
     if (isDefined(hashParams.hideWorkbench)) {
-      this.updateConfig({
-        hideWorkbench: hashParams.hideWorkbench
-      });
+      this.updateConfig(
+        {
+          hideWorkbench: hashParams.hideWorkbench
+        },
+        ConfigStrata.url
+      );
     }
     if (isDefined(hashParams.tools)) {
-      this.updateConfig({
-        tools: hashParams.tools
-      });
+      this.updateConfig(
+        {
+          tools: hashParams.tools
+        },
+        ConfigStrata.url
+      );
     }
     if (isDefined(hashParams.map)) {
-      setViewerMode(hashParams.map, this.mainViewer);
+      this.updateConfig(
+        {
+          viewerMode: hashParams.map
+        },
+        ConfigStrata.url
+      );
     }
 
     return this;
@@ -490,6 +527,40 @@ export default class Terria {
     );
 
     this.baseMapsModel.initializeDefaultBaseMaps();
+    if (this.configParameters.persistViewerMode) {
+      const viewerMode = this.persistedSettingsService?.read("viewermode");
+      if (viewerMode) {
+        this.updateConfig(
+          {
+            viewerMode: viewerMode
+          },
+          ConfigStrata.user
+        );
+      }
+    }
+
+    reaction(
+      () =>
+        [
+          this.configParameters.customRequestSchedulerLimits,
+          this.configParameters.alwaysShowTimeline,
+          this.configParameters.viewerMode
+        ] as const,
+      ([limits, alwaysShowTimeline, viewerMode]) => {
+        if (limits) {
+          for (const [domain, limit] of Object.entries(limits)) {
+            RequestScheduler.requestsByServer[domain] = limit;
+          }
+        }
+
+        this.timelineStack.setAlwaysShowTimeline(alwaysShowTimeline);
+
+        if (viewerMode && isViewerMode(viewerMode)) {
+          setViewerMode(viewerMode, this.mainViewer);
+        }
+      },
+      { fireImmediately: true }
+    );
 
     return this;
   }
@@ -529,8 +600,11 @@ export default class Terria {
     return this;
   }
 
-  updateConfig(config: Partial<ConfigParameters>): Terria {
-    this.configParameters.update(config);
+  updateConfig(
+    config: Partial<ConfigParameters>,
+    stratum: string = "user"
+  ): Terria {
+    this.configParameters.update(stratum, config);
 
     return this;
   }
@@ -683,38 +757,48 @@ export default class Terria {
     }
   }
 
-  async loadPersistedOrInitBaseMap(): Promise<void> {
+  async initializeBaseMap(
+    baseMapItemsFromInit: MappableMixin.Instance[]
+  ): Promise<void> {
+    const isApplied = await (async () => {
+      for (const baseMapItem of baseMapItemsFromInit) {
+        const applied = await this.mainViewer.setBaseMap(baseMapItem);
+        if (applied) {
+          return true;
+        }
+      }
+      return false;
+    })();
+    if (isApplied) return;
+
     const baseMapItems = this.baseMapsModel.baseMapItems;
     // Set baseMap fallback to first option
     let baseMap = baseMapItems[0];
-    const persistedBaseMapId = this.persistedSettings.baseMapId;
-    const baseMapSearch = baseMapItems.find(
-      (baseMapItem) => baseMapItem.item?.uniqueId === persistedBaseMapId
-    );
-    if (baseMapSearch?.item && MappableMixin.isMixedInto(baseMapSearch.item)) {
-      baseMap = baseMapSearch;
+    const persistedBaseMapId = this.persistedSettingsService?.read("basemap");
+    const persistedBaseMap =
+      this.baseMapsModel.findBaseMapById(persistedBaseMapId);
+    if (
+      persistedBaseMap?.item &&
+      MappableMixin.isMixedInto(persistedBaseMap.item)
+    ) {
+      baseMap = persistedBaseMap;
     } else {
       // Try to find basemap using defaultBaseMapId and defaultBaseMapName
-      const baseMapSearch =
-        baseMapItems.find(
-          (baseMapItem) =>
-            baseMapItem.item?.uniqueId === this.baseMapsModel.defaultBaseMapId
+      const defaultBaseMap =
+        this.baseMapsModel.findBaseMapById(
+          this.baseMapsModel.defaultBaseMapId
         ) ??
-        baseMapItems.find(
-          (baseMapItem) =>
-            CatalogMemberMixin.isMixedInto(baseMapItem) &&
-            (baseMapItem.item as any).name ===
-              this.baseMapsModel.defaultBaseMapName
+        this.baseMapsModel.findBaseMapByName(
+          this.baseMapsModel.defaultBaseMapName
         );
       if (
-        baseMapSearch?.item &&
-        MappableMixin.isMixedInto(baseMapSearch.item)
+        defaultBaseMap?.item &&
+        MappableMixin.isMixedInto(defaultBaseMap.item)
       ) {
-        baseMap = baseMapSearch;
+        baseMap = defaultBaseMap;
       }
     }
-    if (baseMap?.item)
-      await this.mainViewer.setBaseMap(baseMap.item as MappableMixin.Instance);
+    if (baseMap?.item) await this.mainViewer.setBaseMap(baseMap.item);
   }
 
   get isLoadingInitSources(): boolean {
@@ -797,7 +881,8 @@ export default class Terria {
       })
     );
 
-    let baseMapPromise: Promise<void> | undefined;
+    const baseMapItems: MappableMixin.Instance[] = [];
+
     // Sequentially apply all InitSources
     for (let i = 0; i < loadedInitSources.length; i++) {
       const initSource = loadedInitSources[i];
@@ -806,8 +891,8 @@ export default class Terria {
         const result = await this._applyInitData({
           initData: initSource!.data
         });
-        if (result.baseMapPromise) {
-          baseMapPromise = result.baseMapPromise;
+        if (result.baseMapItem) {
+          baseMapItems.unshift(result.baseMapItem);
         }
       } catch (e) {
         errors.push(
@@ -824,18 +909,10 @@ export default class Terria {
       }
     }
 
-    // Wait for any basemap loaded from applyInitData to finish
-    // loading before we restore from user preference.
-    Promise.resolve(baseMapPromise).finally(() => {
-      runInAction(() => {
-        if (!this.mainViewer.baseMap) {
-          // Note: there is no "await" here - as basemaps can take a while
-          // to load and there is no need to wait for them to load before
-          // rendering Terria
-          this.loadPersistedOrInitBaseMap();
-        }
-      });
-    });
+    // Note: there is no "await" here - as basemaps can take a while
+    // to load and there is no need to wait for them to load before
+    // rendering Terria
+    this.initializeBaseMap(baseMapItems);
 
     // Zoom to workbench items if any of the init sources specifically requested it
     if (this.focusWorkbenchItemsAfterLoadingInitSources) {
@@ -1090,12 +1167,11 @@ export default class Terria {
     initData: InitSourceData;
     replaceStratum?: boolean;
     canUnsetFeaturePickingState?: boolean;
-  }): Promise<{ baseMapPromise: Promise<void> | undefined }> {
+  }): Promise<{ baseMapItem: MappableMixin.Instance | undefined }> {
     const errors: TerriaError[] = [];
 
     initData = toJS(initData);
-
-    let baseMapPromise: Promise<void> | undefined;
+    let baseMapItem: MappableMixin.Instance | undefined;
 
     const stratumId =
       typeof initData.stratum === "string"
@@ -1140,9 +1216,12 @@ export default class Terria {
     // Add map settings
     if (isJsonString(initData.viewerMode)) {
       const viewerMode = initData.viewerMode.toLowerCase();
-      if (isViewerMode(viewerMode)) {
-        setViewerMode(viewerMode, this.mainViewer);
-      }
+      this.updateConfig(
+        {
+          viewerMode: viewerMode as ConfigParameters["viewerMode"]
+        },
+        ConfigStrata.definition
+      );
     }
 
     if (isJsonObject(initData.baseMaps)) {
@@ -1178,49 +1257,59 @@ export default class Terria {
     }
 
     if (isJsonBoolean(initData.showSplitter)) {
-      this.updateConfig({
-        showSplitter: initData.showSplitter
-      });
+      this.updateConfig(
+        {
+          showSplitter: initData.showSplitter
+        },
+        ConfigStrata.override
+      );
     }
 
     if (isJsonNumber(initData.splitPosition)) {
-      this.updateConfig({
-        splitPosition: initData.splitPosition
-      });
+      this.updateConfig(
+        {
+          splitPosition: initData.splitPosition
+        },
+        ConfigStrata.override
+      );
     }
 
     if (isJsonObject(initData.settings)) {
-      this.updateConfig({
-        ...(isJsonNumber(initData.settings.baseMaximumScreenSpaceError) && {
-          baseMaximumScreenSpaceError: initData.settings
-            .baseMaximumScreenSpaceError as number
-        }),
-        ...(isJsonBoolean(initData.settings.useNativeResolution) && {
-          useNativeResolution: initData.settings.useNativeResolution as boolean
-        }),
-        ...(isJsonBoolean(initData.settings.shortenShareUrls) && {
-          shortenShareUrls: initData.settings.shortenShareUrls as boolean
-        }),
-        ...(isJsonNumber(initData.settings.terrainSplitDirection) && {
-          terrainSplitDirection: initData.settings
-            .terrainSplitDirection as SplitDirection
-        }),
-        ...(isJsonBoolean(initData.settings.depthTestAgainstTerrainEnabled) && {
-          depthTestAgainstTerrainEnabled: initData.settings
-            .depthTestAgainstTerrainEnabled as boolean
-        })
-      });
-      if (isJsonBoolean(initData.settings.alwaysShowTimeline)) {
-        this.timelineStack.setAlwaysShowTimeline(
-          initData.settings.alwaysShowTimeline
-        );
-      }
+      this.updateConfig(
+        {
+          ...(isJsonNumber(initData.settings.baseMaximumScreenSpaceError) && {
+            baseMaximumScreenSpaceError: initData.settings
+              .baseMaximumScreenSpaceError as number
+          }),
+          ...(isJsonBoolean(initData.settings.useNativeResolution) && {
+            useNativeResolution: initData.settings
+              .useNativeResolution as boolean
+          }),
+          ...(isJsonBoolean(initData.settings.shortenShareUrls) && {
+            shortenShareUrls: initData.settings.shortenShareUrls as boolean
+          }),
+          ...(isJsonNumber(initData.settings.terrainSplitDirection) && {
+            terrainSplitDirection: initData.settings
+              .terrainSplitDirection as SplitDirection
+          }),
+          ...(isJsonBoolean(
+            initData.settings.depthTestAgainstTerrainEnabled
+          ) && {
+            depthTestAgainstTerrainEnabled: initData.settings
+              .depthTestAgainstTerrainEnabled as boolean
+          }),
+          ...(isJsonBoolean(initData.settings.alwaysShowTimeline) && {
+            alwaysShowTimeline: initData.settings.alwaysShowTimeline
+          })
+        },
+        ConfigStrata.override
+      );
+
+      // Not storing it in config to avoid triggering reactions and multiple data load.
       if (isJsonString(initData.settings.baseMapId)) {
-        baseMapPromise = this.mainViewer.setBaseMap(
-          this.baseMapsModel.baseMapItems.find(
-            (item) => item.item.uniqueId === initData.settings!.baseMapId
-          )?.item
-        );
+        baseMapItem = this.baseMapsModel.findBaseMapById(
+          initData.settings!.baseMapId
+        )?.item;
       }
     }
 
@@ -1353,7 +1442,7 @@ export default class Terria {
         }
       });
 
-    return { baseMapPromise };
+    return { baseMapItem };
   }
 
   @action

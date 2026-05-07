@@ -16,6 +16,7 @@ import { HashParams, parseHashParams } from "./HashParams";
 import IElementConfig from "./IElementConfig";
 import Terria from "./Terria";
 import loadJson from "../Core/loadJson";
+import { runInAction } from "mobx";
 
 export interface InitSourcePickedFeatures {
   providerCoords?: ProviderCoordsMap;
@@ -347,8 +348,9 @@ export const buildInitSourcesFromUrlFragments = async (
 export const buildInitSourcesFromSpaRoutes = async (
   url: string,
   storyRouteUrlPrefix: string | undefined
-): Promise<InitSource[]> => {
+): Promise<{ initSources: InitSource[]; hasStory: boolean }> => {
   const initSources: InitSource[] = [];
+  let hasStory = false;
 
   // SPA route: /catalog/:id and /story/:id
   const segments = url.split("/").filter((s) => s.length > 0);
@@ -382,10 +384,10 @@ export const buildInitSourcesFromSpaRoutes = async (
       TerriaErrorSeverity.Error
     );
     initSources.push(...sources);
-    // userProperties.set("playStory", "1");
+    hasStory = true;
   }
 
-  return initSources;
+  return { initSources, hasStory };
 };
 
 /**
@@ -441,8 +443,13 @@ export const updateInitSourcesFromUrl = async (
     ...fromUrl,
     ...fromStartData,
     ...fromShare,
-    ...fromSpaRoutes
+    ...fromSpaRoutes.initSources
   ];
+  if (fromSpaRoutes.hasStory) {
+    runInAction(() => {
+      terria.playStoryOnInit = fromSpaRoutes.hasStory;
+    });
+  }
   terria.addInitSources(initSources);
 };
 
