@@ -765,36 +765,61 @@ const MeasurablePanel = observer((props: Props) => {
                   </td>
                 </tr>
                 {canEditCircleRadius && (
-                  <tr>
-                    <td
-                      colSpan={3}
-                      css={`
-                        padding: 8px;
-                      `}
-                    >
-                      <div style={{ marginBottom: "8px" }}>
-                        {`${i18next.t("measurableGeometry.circleRadius")} (m)`}
-                      </div>
-                      <Input
-                        title={i18next.t("measurableGeometry.circleRadius")}
-                        light={false}
-                        dark
-                        type="number"
-                        min={0}
-                        step={0.1}
-                        value={circleRadiusInput}
-                        style={{ width: "100%" }}
-                        onChange={(e) => setCircleRadiusInput(e.target.value)}
-                        onBlur={applyCircleRadiusFromInput}
-                        onKeyDown={(e) => {
-                          if (e.key === "Enter") {
-                            e.preventDefault();
-                            applyCircleRadiusFromInput();
-                          }
-                        }}
-                      />
-                    </td>
-                  </tr>
+                  <>
+                    <tr>
+                      <th
+                        colSpan={3}
+                        css={`
+                          padding: 8px;
+                          text-align: center;
+                        `}
+                      >
+                        <div>
+                          <span>{`${i18next.t(
+                            "measurableGeometry.circleRadius"
+                          )} (m)`}</span>
+                        </div>
+                      </th>
+                    </tr>
+                    <tr>
+                      <td
+                        colSpan={3}
+                        css={`
+                          padding: 8px;
+                        `}
+                      >
+                        <div
+                          style={{
+                            display: "flex",
+                            gap: "8px",
+                            alignItems: "stretch"
+                          }}
+                        >
+                          <Input
+                            title={i18next.t("measurableGeometry.circleRadius")}
+                            type="number"
+                            min={0}
+                            step={0.1}
+                            value={circleRadiusInput}
+                            style={{
+                              flex: "1",
+                              padding: "8px"
+                            }}
+                            onChange={(e) =>
+                              setCircleRadiusInput(e.target.value)
+                            }
+                            onBlur={applyCircleRadiusFromInput}
+                            onKeyDown={(e) => {
+                              if (e.key === "Enter") {
+                                e.preventDefault();
+                                applyCircleRadiusFromInput();
+                              }
+                            }}
+                          />
+                        </div>
+                      </td>
+                    </tr>
+                  </>
                 )}
               </tbody>
             </table>
