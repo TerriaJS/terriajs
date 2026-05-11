@@ -702,11 +702,12 @@ describe("TerriaSpec", function () {
       });
 
       it("correctly adds moved item to workbench and timeline", async function () {
+        terria.setShareLinkService(new ShareLinkService(terria)).build();
         const csv = terria.getModelById(
           CsvCatalogItem,
           "//Old group/Random CSV"
         );
-        expect(csv).toBeDefined("csv not found in source terria");
+        expect(csv).withContext("csv not found in source terria").toBeDefined();
         if (csv === undefined) return;
         await terria.workbench.add(csv);
         terria.timelineStack.addToTop(csv);

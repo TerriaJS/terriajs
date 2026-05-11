@@ -34,7 +34,7 @@ import CommonStrata from "./Definition/CommonStrata";
  * config.  Callers register additional strata on the same instance before
  * calling `update()` with that stratum name.
  */
-export class StratifiedConfig<TSchema extends z.ZodObject<any>> {
+export class StratifiedConfig<TSchema extends z.ZodObject> {
   /**
    * Outer map tracks which strata exist (coarse, ObservableMap).
    * Each value is a MobX observable object for fine-grained per-key reactivity.
@@ -232,7 +232,7 @@ export class StratifiedConfig<TSchema extends z.ZodObject<any>> {
  * config methods and the transparently-proxied property accesses without any
  * assertion at call sites.
  */
-export function createStratifiedConfig<TSchema extends z.ZodObject<any>>(
+export function createStratifiedConfig<TSchema extends z.ZodObject>(
   schema: TSchema,
   stratumOrder: ConfigStratumOrder = new ConfigStratumOrder()
 ): StratifiedConfig<TSchema> & z.output<TSchema> {

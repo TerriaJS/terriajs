@@ -3,6 +3,7 @@ import { z } from "zod";
 import { defaultTerms, TermSchema } from "../ReactViewModels/defaultTerms";
 import { HelpContentItemSchema } from "../ReactViewModels/defaultHelpContent";
 import { LanguageConfigurationSchema } from "./Internationalization";
+import { SearchBarConfigSchema } from "./SearchProviders/SearchBarModel";
 
 /**
  * Zod schema for all TerriaJS configuration parameters — validation only.
@@ -108,11 +109,14 @@ export const configSchema = z.object({
   googleAnalyticsOptions: z.unknown().optional(),
 
   // ── Complex / opaque types ───────────────────────────────────────────────────
-  errorService: z.unknown().optional(),
-  globalDisclaimer: z.unknown().optional(),
+  globalDisclaimer: z.any().optional(),
   /** Theme overrides merged with terriaTheme in StandardUserInterface */
   theme: z.any().optional(),
-  welcomeMessageVideo: z.unknown(),
+  welcomeMessageVideo: z.object({
+    videoUrl: z.string(),
+    videoTitle: z.string().optional(),
+    placeholderImage: z.string().optional()
+  }),
   storyVideo: z.looseObject({
     videoUrl: z.string()
   }),
@@ -134,8 +138,19 @@ export const configSchema = z.object({
   customRequestSchedulerLimits: z.record(z.string(), z.number()).optional(),
 
   // ── Search ───────────────────────────────────────────────────────────────────
-  searchBarConfig: z.unknown().optional(),
-  searchProviders: z.array(z.unknown()),
+  searchBarConfig: SearchBarConfigSchema,
+  searchProviders: z.array(
+    z.object({
+      name: z
+        .string()
+        .default("unknown")
+        .describe("Name of the search provider."),
+      minCharacters: z
+        .number()
+        .or(z.undefined())
+        .describe("Minimum number of characters required for search to start")
+    })
+  ),
 
   // ── Share ────────────────────────────────────────────────────────────────────
   shortenShareUrls: z.boolean().optional(),
@@ -230,5 +245,6 @@ export const CONFIG_DEFAULTS: ConfigParameters = {
   ],
   relatedMaps: [],
   searchProviders: [],
-  alwaysShowTimeline: false
+  alwaysShowTimeline: false,
+  searchBarConfig: SearchBarConfigSchema.parse({}) // Use Zod defaults for searchBarConfig
 };

@@ -6,16 +6,20 @@ import SearchResults from "../../../../lib/ReactViews/Tools/ItemSearchTool/Searc
 import MockSearchableItem from "./MockSearchableItem";
 
 describe("SearchResults", function () {
-  beforeAll(async () => {
+  let terria: Terria;
+  beforeEach(async () => {
+    terria = new Terria();
+    (await terria.initLanguage()).build();
     await i18next.changeLanguage("en");
   });
-  afterAll(async () => {
+  afterEach(async () => {
     await i18next.changeLanguage("cimode");
   });
+
   it("shows the results count", async function () {
     const { container } = render(
       <SearchResults
-        item={new MockSearchableItem(undefined, new Terria())}
+        item={new MockSearchableItem(undefined, terria)}
         results={sampleResults(20)}
       />
     );

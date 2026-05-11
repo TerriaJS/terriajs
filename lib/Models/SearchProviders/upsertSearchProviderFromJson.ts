@@ -87,19 +87,19 @@ function setDefaultTraits(model: BaseModel) {
     model.setTrait(
       CommonStrata.defaults,
       "flightDurationSeconds",
-      terria.searchBarModel.flightDurationSeconds
+      terria.searchBarModel.config.flightDurationSeconds
     );
 
     model.setTrait(
       CommonStrata.defaults,
       "minCharacters",
-      terria.searchBarModel.minCharacters
+      terria.searchBarModel.config.minCharacters
     );
 
     model.setTrait(
       CommonStrata.defaults,
       "recommendedListLength",
-      terria.searchBarModel.recommendedListLength
+      terria.searchBarModel.config.recommendedListLength
     );
   });
 }

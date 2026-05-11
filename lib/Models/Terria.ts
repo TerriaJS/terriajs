@@ -476,6 +476,14 @@ export default class Terria<TConfig extends TerriaConfig = TerriaConfig> {
     );
 
     this.baseMapsModel.initializeDefaultBaseMaps();
+    this.searchBarModel
+      .updateModelConfig(this.configParameters.searchBarConfig)
+      .initializeSearchProviders(this.configParameters.searchProviders)
+      .catchError((error) =>
+        this.raiseErrorToUser(
+          TerriaError.from(error, "Failed to initialize searchProviders")
+        )
+      );
     if (this.configParameters.persistViewerMode) {
       const viewerMode = this.persistedSettingsService?.read("viewermode");
       if (viewerMode) {

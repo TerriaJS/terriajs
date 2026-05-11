@@ -27,9 +27,8 @@ import z from "zod";
  * config.appName;                        // resolved transparently
  * config.getProvidingStratum("appName"); // "definition" / "user" / …
  */
-export type TerriaConfig<
-  TSchema extends z.ZodObject<any> = typeof configSchema
-> = StratifiedConfig<TSchema> & z.output<TSchema>;
+export type TerriaConfig<TSchema extends z.ZodObject = typeof configSchema> =
+  StratifiedConfig<TSchema> & z.output<TSchema>;
 
 /**
  * Re-export so callers that import ConfigParameters from this module continue
