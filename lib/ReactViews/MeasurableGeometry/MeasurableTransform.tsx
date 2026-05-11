@@ -33,6 +33,9 @@ const MeasurableTransform = observer((props: Props) => {
   const { terria, viewState, pathNotes, layerName, onClick } = props;
   const geom = terria.measurableGeomList[terria.measurableGeometryIndex];
   const theme = useTheme();
+  const currentGeomIsEmpty =
+    !terria.measurableGeomList[terria.measurableGeometryIndex]?.stopPoints
+      ?.length;
 
   const getDownloadLinks = (geom: MeasurableGeometry, isMultiPath: boolean) => {
     const baseDownloads = [
@@ -375,6 +378,7 @@ const MeasurableTransform = observer((props: Props) => {
           !layerName ||
           terria.measurableGeomList[terria.measurableGeometryIndex]
             ?.isPointAdding ||
+          currentGeomIsEmpty ||
           viewState.measurableDownloadPanelIsVisible === true
         }
       >
