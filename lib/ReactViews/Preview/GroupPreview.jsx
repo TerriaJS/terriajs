@@ -66,7 +66,7 @@ class GroupPreview extends Component {
                   : t("models.catalog.addAll")}
               </button>
             )}
-            {this.props.terria.configParameters.disableSharePanel && (
+            {!this.props.terria.configParameters.disableSharePanel && (
               <SharePanel
                 catalogShare
                 modalWidth={this.props.widthFromMeasureElementHOC}
