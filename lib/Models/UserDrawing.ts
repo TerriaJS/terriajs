@@ -678,7 +678,7 @@ export default class UserDrawing extends MappableMixin(
         fillColor: Color.DARKBLUE,
         outlineColor: Color.WHITE,
         outlineWidth: 4,
-        heightReference: HeightReference.CLAMP_TO_GROUND,
+        heightReference: this.labelHeightReference,
         disableDepthTestDistance: Number.POSITIVE_INFINITY,
         pixelOffset: new Cartesian2(0, -16),
         verticalOrigin: VerticalOrigin.BOTTOM
