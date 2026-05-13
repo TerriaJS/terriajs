@@ -1123,6 +1123,12 @@ const MeasurablePanel = observer((props: Props) => {
     const is2dMode =
       terria.mainViewer.viewerMode === ViewerMode.Leaflet ||
       terria.mainViewer.viewerMode === ViewerMode.Cesium2D;
+    const currentGeomIsEmpty =
+      !terria.measurableGeomList[terria.measurableGeometryIndex]?.stopPoints
+        ?.length;
+    const isCurrentlyPointAdding =
+      !!terria.measurableGeomList[terria.measurableGeometryIndex]
+        ?.isPointAdding;
 
     return (
       <div className={Styles.body} style={{ padding: "1rem" }}>
@@ -1140,10 +1146,7 @@ const MeasurablePanel = observer((props: Props) => {
                   <Select
                     title={i18next.t("measurableGeometry.changePath")}
                     value={terria.measurableGeometryIndex}
-                    disabled={
-                      terria.measurableGeomList[terria.measurableGeometryIndex]
-                        ?.isPointAdding
-                    }
+                    disabled={isCurrentlyPointAdding || currentGeomIsEmpty}
                     onChange={(e: any) => {
                       runInAction(() => {
                         terria.measurableGeometryIndex = parseInt(
@@ -1170,9 +1173,8 @@ const MeasurablePanel = observer((props: Props) => {
                       <div style={{ display: "flex", alignItems: "center" }}>
                         <Button
                           disabled={
-                            terria.measurableGeomList[
-                              terria.measurableGeometryIndex
-                            ]?.isPointAdding ||
+                            isCurrentlyPointAdding ||
+                            currentGeomIsEmpty ||
                             viewState.measurableDownloadPanelIsVisible === true
                           }
                           css={`
@@ -1232,9 +1234,7 @@ const MeasurablePanel = observer((props: Props) => {
                         <Button
                           disabled={
                             terria.measurableGeomList.length <= 1 ||
-                            terria.measurableGeomList[
-                              terria.measurableGeometryIndex
-                            ]?.isPointAdding ||
+                            (isCurrentlyPointAdding && currentGeomIsEmpty) ||
                             viewState.measurableDownloadPanelIsVisible === true
                           }
                           css={`
