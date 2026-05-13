@@ -1,6 +1,6 @@
 "use strict";
 
-import { action, computed, makeObservable } from "mobx";
+import { action, computed, makeObservable, reaction } from "mobx";
 import MapNavigationItemController from "../../../../ViewModels/MapNavigation/MapNavigationItemController";
 import ViewerMode from "../../../../Models/ViewerMode";
 import { GLYPHS } from "../../../../Styled/Icon";
@@ -259,6 +259,7 @@ export class MeasurePolygonTool extends MapNavigationItemController {
   private totalAreaMetresSquared: number = 0;
   private totalFlatAreaMetresSquared: number = 0;
   private userDrawing: UserDrawing;
+  private _disposeIndexReaction: (() => void) | undefined;
 
   onOpen: () => void;
   onClose: () => void;
@@ -280,6 +281,16 @@ export class MeasurePolygonTool extends MapNavigationItemController {
     });
     this.onOpen = props.onOpen || (() => {});
     this.onClose = props.onClose || (() => {});
+
+    this._disposeIndexReaction = reaction(
+      () => this.terria.measurableGeometryIndex,
+      () => {
+        if (this.active) {
+          this.userDrawing.cleanUp(true);
+          this.userDrawing.enterDrawMode();
+        }
+      }
+    );
   }
 
   get glyph(): any {
@@ -334,6 +345,7 @@ export class MeasurePolygonTool extends MapNavigationItemController {
 
   updateArea(pointEntities: CustomDataSource) {
     this.totalAreaMetresSquared = 0;
+    this.totalFlatAreaMetresSquared = 0;
     if (!this.userDrawing.closeLoop) {
       // Not a closed polygon? Don't calculate area.
       return;
@@ -472,6 +484,8 @@ export class MeasurePolygonTool extends MapNavigationItemController {
   deactivate() {
     this.onClose();
     this.userDrawing.endDrawing();
+    this._disposeIndexReaction?.();
+    this._disposeIndexReaction = undefined;
     super.deactivate();
   }
 
@@ -480,6 +494,18 @@ export class MeasurePolygonTool extends MapNavigationItemController {
    */
   activate() {
     this.onOpen();
+    if (!this._disposeIndexReaction) {
+      this._disposeIndexReaction = reaction(
+        () => this.terria.measurableGeometryIndex,
+        () => {
+          if (this.active) {
+            this.userDrawing.cleanUp(true);
+            this.userDrawing.enterDrawMode();
+          }
+        }
+      );
+    }
+
     this.userDrawing.cleanUp(true);
     this.userDrawing.enterDrawMode();
     super.activate();
