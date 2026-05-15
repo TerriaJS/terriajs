@@ -156,6 +156,7 @@ interface FeatureServer {
   advancedQueryCapabilities?: {
     supportsPagination: boolean;
   };
+  objectIdField?: string;
 }
 
 interface SpatialReference {
@@ -299,6 +300,10 @@ class FeatureServerStratum extends LoadableStratum(
     }
 
     return !!this._featureServer.advancedQueryCapabilities.supportsPagination;
+  }
+
+  get objectIdField(): string | undefined {
+    return this._featureServer?.objectIdField;
   }
 
   @computed get activeStyle() {
@@ -463,7 +468,7 @@ StratumOrder.addLoadStratum(FeatureServerStratum.stratumName);
 export default class ArcGisFeatureServerCatalogItem extends GeoJsonMixin(
   CreateModel(ArcGisFeatureServerCatalogItemTraits)
 ) {
-  static readonly type = "esri-featureServer";
+  static readonly type: string = "esri-featureServer";
 
   constructor(...args: ModelConstructorParameters) {
     super(...args);
@@ -562,6 +567,13 @@ export default class ArcGisFeatureServerCatalogItem extends GeoJsonMixin(
       FeatureServerStratum.stratumName
     ) as FeatureServerStratum;
     return isDefined(stratum) ? stratum.featureServerData : undefined;
+  }
+
+  get objectIdField(): string {
+    const stratum = this.strata.get(
+      FeatureServerStratum.stratumName
+    ) as FeatureServerStratum;
+    return stratum?.objectIdField ?? "OBJECTID";
   }
 
   /**

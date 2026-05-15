@@ -49,6 +49,7 @@ import ArcGisMapServerCatalogItem from "./Esri/ArcGisMapServerCatalogItem";
 import ArcGisPortalCatalogGroup from "./Esri/ArcGisPortalCatalogGroup";
 import ArcGisPortalItemReference from "./Esri/ArcGisPortalItemReference";
 import ArcGisTerrainCatalogItem from "./Esri/ArcGisTerrainCatalogItem";
+import RerPoiCatalogItem from "./Esri/RerPoiCatalogItem";
 import AssImpCatalogItem from "./Gltf/AssImpCatalogItem";
 import GltfCatalogItem from "./Gltf/GltfCatalogItem";
 import GtfsCatalogItem from "./Gtfs/GtfsCatalogItem";
@@ -66,6 +67,10 @@ import WebProcessingServiceCatalogGroup from "./Ows/WebProcessingServiceCatalogG
 import SdmxJsonCatalogGroup from "./SdmxJson/SdmxJsonCatalogGroup";
 import SdmxJsonCatalogItem from "./SdmxJson/SdmxJsonCatalogItem";
 import CogCatalogItem from "./CatalogItems/CogCatalogItem";
+import {
+  isRerPoiUrl,
+  RER_POI_CATALOG_ITEM_TYPE
+} from "../../ModelMixins/RerPoiHelpers";
 
 export default function registerCatalogMembers() {
   CatalogMemberFactory.register(CatalogGroup.type, CatalogGroup);
@@ -121,6 +126,7 @@ export default function registerCatalogMembers() {
     ArcGisFeatureServerCatalogItem.type,
     ArcGisFeatureServerCatalogItem
   );
+  CatalogMemberFactory.register(RerPoiCatalogItem.type, RerPoiCatalogItem);
   CatalogMemberFactory.register(
     ArcGisFeatureServerCatalogGroup.type,
     ArcGisFeatureServerCatalogGroup
@@ -316,6 +322,16 @@ export default function registerCatalogMembers() {
     true
   );
   UrlToCatalogMemberMapping.register(
+    isRerPoiUrl,
+    RER_POI_CATALOG_ITEM_TYPE,
+    true
+  );
+  UrlToCatalogMemberMapping.register(
+    matchesUrl(/\/arcgis\/rest\/.*\/MapServer\/\d+\b/i),
+    ArcGisFeatureServerCatalogItem.type,
+    true
+  );
+  UrlToCatalogMemberMapping.register(
     matchesUrl(/\/arcgis\/rest\/.*\/MapServer\/\d+\b/i),
     ArcGisMapServerCatalogItem.type,
     true
@@ -348,6 +364,11 @@ export default function registerCatalogMembers() {
   UrlToCatalogMemberMapping.register(
     matchesUrl(/\/arcgis\/rest\//i),
     ArcGisCatalogGroup.type,
+    true
+  );
+  UrlToCatalogMemberMapping.register(
+    matchesUrl(/\/rest\/.*\/MapServer\/\d+\b/i),
+    ArcGisFeatureServerCatalogItem.type,
     true
   );
   UrlToCatalogMemberMapping.register(
