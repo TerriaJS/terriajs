@@ -64,6 +64,41 @@ export default class RerPoiCatalogItemTraits extends mixTraits(
   nameField: string = "NOME";
 
   @primitiveTrait({
+    type: "boolean",
+    name: "Show labels",
+    description: "Whether to show labels for POI markers."
+  })
+  showLabels: boolean = false;
+
+  @primitiveTrait({
+    type: "string",
+    name: "Label text color",
+    description: "The color of the label text for POI markers."
+  })
+  labelTextColor: string = "#ffffff";
+
+  @primitiveTrait({
+    type: "number",
+    name: "Label font size",
+    description: "The font size in pixels for POI marker labels."
+  })
+  labelFontSize: number = 12;
+
+  @primitiveTrait({
+    type: "number",
+    name: "Label outline width",
+    description: "The outline width in pixels for POI marker labels."
+  })
+  labelOutlineWidth: number = 3;
+
+  @primitiveTrait({
+    type: "string",
+    name: "Label outline color",
+    description: "The outline color for POI marker labels."
+  })
+  labelOutlineColor: string = "rgba(0, 0, 0, 0.65)";
+
+  @primitiveTrait({
     type: "string",
     name: "Scale field",
     description:

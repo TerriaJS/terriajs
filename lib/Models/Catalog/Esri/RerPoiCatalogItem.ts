@@ -374,8 +374,14 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
         markerSize: this.getRerPoiTrait("markerSize"),
         iconStrokeWidth: this.getRerPoiTrait("iconStrokeWidth"),
         iconStrokeColor: this.getRerPoiTrait("iconStrokeColor"),
+        showLabels: this.getRerPoiTrait("showLabels"),
+        labelTextColor: this.getRerPoiTrait("labelTextColor"),
+        labelFontSize: this.getRerPoiTrait("labelFontSize"),
+        labelOutlineWidth: this.getRerPoiTrait("labelOutlineWidth"),
+        labelOutlineColor: this.getRerPoiTrait("labelOutlineColor"),
         poiDomainStyleGroups: this.getRerPoiTrait("poiDomainStyleGroups"),
         scaleField: this.getRerPoiTrait("scaleField"),
+        nameField: this.getRerPoiTrait("nameField"),
         domainIdField: this.getRerPoiTrait("domainIdField")
       });
       for (const entity of newEntities) {
@@ -426,8 +432,14 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
       markerSize: this.getRerPoiTrait("markerSize"),
       iconStrokeWidth: this.getRerPoiTrait("iconStrokeWidth"),
       iconStrokeColor: this.getRerPoiTrait("iconStrokeColor"),
+      showLabels: this.getRerPoiTrait("showLabels"),
+      labelTextColor: this.getRerPoiTrait("labelTextColor"),
+      labelFontSize: this.getRerPoiTrait("labelFontSize"),
+      labelOutlineWidth: this.getRerPoiTrait("labelOutlineWidth"),
+      labelOutlineColor: this.getRerPoiTrait("labelOutlineColor"),
       poiDomainStyleGroups: this.getRerPoiTrait("poiDomainStyleGroups"),
       scaleField: this.getRerPoiTrait("scaleField"),
+      nameField: this.getRerPoiTrait("nameField"),
       domainIdField: this.getRerPoiTrait("domainIdField")
     });
     return dataSource;
