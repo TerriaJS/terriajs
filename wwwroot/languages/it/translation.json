@@ -903,6 +903,9 @@
       "invalidServiceMessage": "Si è verificato un errore durante l'invocazione di ArcGIS Feature Service.  La risposta del server non sembra essere un livello Feature Service valido.",
       "missingUrlMessage": "Impossibile caricare l'endpoint ArcGis FeatureServer perché l'elemento del catalogo non ha un `url`."
     },
+    "rerPoiCatalogItem": {
+      "exceededCameraTiltLimit": "Attenzione: Il limite dell'angolo di inclinazione della camera ({{cameraTiltLimitDegrees}}°) è stato superato. Per poter visualizzare nuovi POI è necessario reimpostare l'angolo di inclinazione della camera in maniera corretta."
+    },
     "arcGisFeatureServerCatalogGroup": {
       "serviceDescription": "Descrizione del Servizio",
       "dataDescription": "Descrizione dei Dati",

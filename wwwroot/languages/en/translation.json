@@ -1168,6 +1168,9 @@
       "invalidServiceMessage": "An error occurred while invoking the ArcGIS Feature Service.  The server's response does not appear to be a valid Feature Service layer.",
       "reachedMaxFeatureLimit": "Warning: This layer has reached the FeatureService feature limit ({{maxFeatures}})."
     },
+    "rerPoiCatalogItem": {
+      "exceededCameraTiltLimit": "Warning: The camera tilt angle limit ({{cameraTiltLimitDegrees}}°) has been exceeded. To view new POIs, you must reset the camera tilt angle correctly."
+    },
     "arcGisMapServerCatalogGroup": {
       "name": "ArcGIS Map Server Group",
       "dataDescription": "Data Description",
