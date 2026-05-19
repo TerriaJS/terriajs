@@ -2,6 +2,7 @@ import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import { Component } from "react";
 import { withTranslation } from "react-i18next";
+import { applyTranslationIfExists } from "../../Language/languageHelpers";
 import parseCustomMarkdownToReact from "../Custom/parseCustomMarkdownToReact";
 import {
   addRemoveButtonClicked,
@@ -34,14 +35,16 @@ class GroupPreview extends Component {
   render() {
     const metadataItem =
       this.props.previewed.nowViewingCatalogItem || this.props.previewed;
-    const { t } = this.props;
+    const { t, i18n } = this.props;
     return (
       <div>
         <div
           className={Styles.titleAndShareWrapper}
           ref={(component) => (this.refToMeasure = component)}
         >
-          <h3>{this.props.previewed.name}</h3>
+          <h3>
+            {applyTranslationIfExists(this.props.previewed.name || "", i18n)}
+          </h3>
 
           <div className={Styles.shareLinkWrapper}>
             {/* If this is a display group, show the "Add/Remove All" button next to the shareLink */}
@@ -95,7 +98,10 @@ class GroupPreview extends Component {
                 <div>
                   <h4 className={Styles.h4}>{t("description.name")}</h4>
                   {parseCustomMarkdownToReact(
-                    this.props.previewed.description,
+                    applyTranslationIfExists(
+                      this.props.previewed.description || "",
+                      i18n
+                    ),
                     { catalogItem: this.props.previewed }
                   )}
                 </div>

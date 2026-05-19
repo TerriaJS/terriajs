@@ -1,6 +1,7 @@
 import { runInAction } from "mobx";
 import { observer } from "mobx-react";
 import { MouseEvent } from "react";
+import { useTranslation } from "react-i18next";
 import defined from "terriajs-cesium/Source/Core/defined";
 import addedByUser from "../../Core/addedByUser";
 import { DataSourceAction } from "../../Core/Analytics/analyticEvents";
@@ -35,6 +36,8 @@ export default observer(function DataCatalogReference({
   isTopLevel,
   hideActionButton
 }: Props) {
+  const { i18n } = useTranslation();
+
   const setPreviewedItem = () =>
     viewState
       .viewCatalogMember(reference)
@@ -68,7 +71,7 @@ export default observer(function DataCatalogReference({
     ? viewState.userDataPreviewedItem === reference
     : viewState.previewedItem === reference;
 
-  const path = getPath(reference, " -> ");
+  const path = getPath(reference, " -> ", i18n);
 
   let btnState: ButtonState;
   if (reference.isLoading) {

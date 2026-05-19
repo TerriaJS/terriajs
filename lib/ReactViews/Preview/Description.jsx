@@ -7,6 +7,7 @@ import Box from "../../Styled/Box";
 import Button from "../../Styled/Button";
 import Collapsible from "../Custom/Collapsible/Collapsible";
 import parseCustomMarkdownToReact from "../Custom/parseCustomMarkdownToReact";
+import { applyTranslationIfExists } from "../../Language/languageHelpers";
 import DataPreviewSections from "./DataPreviewSections";
 import ExportData from "./ExportData";
 import Styles from "./mappable-preview.scss";
@@ -88,9 +89,15 @@ class Description extends Component {
         {catalogItem.description && catalogItem.description.length > 0 && (
           <div>
             <h4 className={Styles.h4}>{t("description.name")}</h4>
-            {parseCustomMarkdownToReact(catalogItem.description, {
-              catalogItem: catalogItem
-            })}
+            {parseCustomMarkdownToReact(
+              applyTranslationIfExists(
+                catalogItem.description,
+                this.props.i18n
+              ),
+              {
+                catalogItem: catalogItem
+              }
+            )}
           </div>
         )}
 

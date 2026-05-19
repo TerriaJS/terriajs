@@ -7,8 +7,10 @@ import {
   makeObservable,
   override
 } from "mobx";
+import i18next, { i18n as i18nType } from "i18next";
 import Mustache from "mustache";
 import AbstractConstructor from "../Core/AbstractConstructor";
+import { applyTranslationIfExists } from "../Language/languageHelpers";
 import AsyncLoader from "../Core/AsyncLoader";
 import isDefined from "../Core/isDefined";
 import { isJsonObject, isJsonString, JsonObject } from "../Core/Json";
@@ -236,9 +238,8 @@ function CatalogMemberMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
 const descriptionRegex = /description/i;
 
 namespace CatalogMemberMixin {
-  export interface Instance extends InstanceType<
-    ReturnType<typeof CatalogMemberMixin>
-  > {}
+  export interface Instance
+    extends InstanceType<ReturnType<typeof CatalogMemberMixin>> {}
   export function isMixedInto(model: any): model is Instance {
     return model && model.hasCatalogMemberMixin;
   }
@@ -247,16 +248,18 @@ namespace CatalogMemberMixin {
 export default CatalogMemberMixin;
 
 /** Convenience function to get user readable name of a BaseModel */
-export const getName = action((model: BaseModel | undefined) => {
-  return (
-    (CatalogMemberMixin.isMixedInto(model) ? model.name : undefined) ??
-    (hasTraits(model, CatalogMemberReferenceTraits, "name")
-      ? model.name
-      : undefined) ??
-    model?.uniqueId ??
-    "Unknown model"
-  );
-});
+export const getName = action(
+  (model: BaseModel | undefined, i18nInstance: i18nType = i18next) => {
+    const name =
+      (CatalogMemberMixin.isMixedInto(model) ? model.name : undefined) ??
+      (hasTraits(model, CatalogMemberReferenceTraits, "name")
+        ? model.name
+        : undefined) ??
+      model?.uniqueId ??
+      "Unknown model";
+    return applyTranslationIfExists(name, i18nInstance) || name;
+  }
+);
 
 /** Recursively apply mustache template to all nested string properties in a JSON Object */
 function mustacheNestedJsonObject(obj: JsonObject, view: any) {

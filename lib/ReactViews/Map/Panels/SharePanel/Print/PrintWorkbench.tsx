@@ -4,6 +4,7 @@ import CatalogMemberMixin, {
 import DiscretelyTimeVaryingMixin from "../../../../../ModelMixins/DiscretelyTimeVaryingMixin";
 import MappableMixin from "../../../../../ModelMixins/MappableMixin";
 import { BaseModel } from "../../../../../Models/Definition/Model";
+import { useTranslation } from "react-i18next";
 import SelectableDimensions, {
   DEFAULT_PLACEMENT,
   filterSelectableDimensions,
@@ -51,9 +52,10 @@ const renderLegend = (catalogItem: BaseModel) => {
 };
 
 const WorkbenchItem = ({ item }: { item: BaseModel }) => {
+  const { i18n } = useTranslation();
   return (
     <div className="WorkbenchItem">
-      <h3>{getName(item)}</h3>
+      <h3>{getName(item, i18n)}</h3>
       {renderDisplayVariables(item)}
       <div>{renderLegend(item)}</div>
     </div>
