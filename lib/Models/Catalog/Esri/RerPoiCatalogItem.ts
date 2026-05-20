@@ -269,6 +269,7 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
     if (!query || !this.managedDataSource) return;
     const now = JulianDate.now();
     const { minLevelId, maxLevelId } = query.requestOptions;
+    let visiblePoiCount = 0;
     for (const entity of this.liveEntityByObjectId.values()) {
       const inRectangle = isEntityInRectangle(entity, query.queryRectangle);
       const inLevelRange = this.isEntityInLevelRange(
@@ -277,8 +278,18 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
         minLevelId,
         maxLevelId
       );
-      entity.show = inRectangle && inLevelRange;
+      const isVisible = inRectangle && inLevelRange;
+      entity.show = isVisible;
+      if (isVisible) visiblePoiCount += 1;
     }
+
+    console.log("[RerPoiCatalogItem] POI debug", {
+      cachedPoiCount: this.liveEntityByObjectId.size,
+      visiblePoiCount,
+      cameraHeight: this.getCurrentCameraHeight(),
+      minLevelId,
+      maxLevelId
+    });
   }
 
   private isEntityInLevelRange(
