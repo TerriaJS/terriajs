@@ -1,10 +1,13 @@
 import { featureCollection } from "@turf/helpers";
 import { Geometry, GeometryCollection, Properties } from "@turf/helpers";
 import {
+  override,
   onBecomeObserved,
   onBecomeUnobserved,
   reaction,
-  runInAction
+  runInAction,
+  observable,
+  makeObservable
 } from "mobx";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
@@ -12,6 +15,7 @@ import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import GeoJsonDataSource from "terriajs-cesium/Source/DataSources/GeoJsonDataSource";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import URI from "urijs";
+import i18next from "i18next";
 import isDefined from "../../../Core/isDefined";
 import loadJson from "../../../Core/loadJson";
 import { networkRequestError } from "../../../Core/TerriaError";
@@ -59,6 +63,7 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
   private removeCesiumCameraChangedListener: (() => void) | undefined;
   private removeViewerChangedListener: (() => void) | undefined;
   private removeShowReaction: (() => void) | undefined;
+  private removeLanguageChangedListener: (() => void) | undefined;
 
   private dynamicReloadTimer: ReturnType<typeof setTimeout> | undefined;
   private pendingDynamicQuery: DynamicViewportQuery | undefined;
@@ -66,17 +71,32 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
   private dynamicReloadQueued = false;
   private dynamicReloadInProgress = false;
 
+  @observable private cameraTiltLimitExceeded = false;
+  @observable private activeLanguage =
+    i18next.resolvedLanguage ?? i18next.language;
+
   private managedDataSource: GeoJsonDataSource | undefined;
   private liveEntityByObjectId = new Map<string, any>();
   private isFirstDynamicLoad = true;
 
   private readonly onDynamicViewportChanged = () => {
-    if (this.isCameraPastTiltLimit()) return;
+    const isPastLimit = this.isCameraPastTiltLimit();
+    runInAction(() => {
+      this.cameraTiltLimitExceeded = isPastLimit;
+    });
+    if (isPastLimit) return;
     this.queueDynamicReload();
+  };
+
+  private readonly onLanguageChanged = (language: string) => {
+    runInAction(() => {
+      this.activeLanguage = language;
+    });
   };
 
   constructor(...args: ModelConstructorParameters) {
     super(...args);
+    makeObservable(this);
     this.setTrait(CommonStrata.definition, "forceCesiumPrimitives", true);
     this.setTrait(CommonStrata.definition, "clustering", {
       enabled: true,
@@ -103,6 +123,24 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
     return stratum?._featureServer?.objectIdField ?? "OBJECTID";
   }
 
+  @override
+  get shortReport(): string | undefined {
+    let report: string = "";
+
+    if (this.cameraTiltLimitExceeded) {
+      const tiltMessage = i18next.t(
+        "models.rerPoiCatalogItem.exceededCameraTiltLimit",
+        {
+          cameraTiltLimitDegrees: this.getRerPoiTrait("cameraTiltLimitDegrees"),
+          lng: this.activeLanguage
+        }
+      );
+      report = report ? `${report}<br/>${tiltMessage}` : tiltMessage;
+    }
+
+    return report;
+  }
+
   private getRerPoiTrait<T extends keyof RerPoiCatalogItemTraits>(
     traitName: T
   ): RerPoiCatalogItemTraits[T] {
@@ -122,6 +160,17 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
         });
     }
 
+    if (!this.removeLanguageChangedListener) {
+      i18next.on("languageChanged", this.onLanguageChanged);
+      this.removeLanguageChangedListener = () => {
+        i18next.off("languageChanged", this.onLanguageChanged);
+      };
+    }
+
+    runInAction(() => {
+      this.activeLanguage = i18next.resolvedLanguage ?? i18next.language;
+    });
+
     this.removeShowReaction ??= reaction(
       () => this.show,
       (show) => {
@@ -135,6 +184,8 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
 
   private stopDynamicViewportRequests() {
     this.detachCurrentViewerListener();
+    this.removeLanguageChangedListener?.();
+    this.removeLanguageChangedListener = undefined;
     this.removeShowReaction?.();
     this.removeShowReaction = undefined;
     this.removeViewerChangedListener?.();
@@ -151,7 +202,6 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
     this.liveEntityByObjectId.clear();
     this.isFirstDynamicLoad = true;
   }
-
   private attachCurrentViewerListener() {
     this.detachCurrentViewerListener();
     const cesium = this.terria.cesium;
@@ -160,6 +210,7 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
         cesium.scene.camera.changed.addEventListener(
           this.onDynamicViewportChanged
         );
+      this.onDynamicViewportChanged();
     }
   }
 
