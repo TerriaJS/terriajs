@@ -117,6 +117,32 @@ function QueryableCatalogItemMixin<T extends Constructor<MixinModel>>(Base: T) {
     }
 
     @action
+    sanitizeQueryValues() {
+      if (!this.queryValues || !this.enumValues || !this.queryProperties)
+        return;
+
+      let changed = false;
+      for (const [name, property] of Object.entries(this.queryProperties)) {
+        if (property.type !== "enum") continue;
+
+        const currentValue = this.queryValues[name]?.[0] ?? "";
+        if (currentValue === "" || currentValue === this.ENUM_ALL_VALUE)
+          continue;
+
+        const available = this.enumValues[name] ?? [];
+        if (!available.includes(currentValue)) {
+          this.queryValues[name] = [""];
+          changed = true;
+        }
+      }
+
+      if (changed) {
+        this.filterData();
+        this.updateEnumValues();
+      }
+    }
+
+    @action
     initQueryValues() {
       if (!this.queryProperties) return;
 

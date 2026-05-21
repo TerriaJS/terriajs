@@ -238,10 +238,12 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
           this.isFirstDynamicLoad = false;
           this.syncCachedEntityVisibility(nextQuery);
           this.updateEnumValues();
+          this.sanitizeQueryValues();
         }
       } else {
         await this.applyIncrementalUpdate(nextQuery);
         this.updateEnumValues();
+        this.sanitizeQueryValues();
       }
     } finally {
       this.dynamicReloadInProgress = false;
