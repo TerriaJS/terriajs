@@ -1,3 +1,4 @@
+import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Color from "terriajs-cesium/Source/Core/Color";
 import DistanceDisplayCondition from "terriajs-cesium/Source/Core/DistanceDisplayCondition";
@@ -5,7 +6,9 @@ import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import BillboardGraphics from "terriajs-cesium/Source/DataSources/BillboardGraphics";
 import ConstantProperty from "terriajs-cesium/Source/DataSources/ConstantProperty";
 import GeoJsonDataSource from "terriajs-cesium/Source/DataSources/GeoJsonDataSource";
+import LabelGraphics from "terriajs-cesium/Source/DataSources/LabelGraphics";
 import HeightReference from "terriajs-cesium/Source/Scene/HeightReference";
+import LabelStyle from "terriajs-cesium/Source/Scene/LabelStyle";
 import VerticalOrigin from "terriajs-cesium/Source/Scene/VerticalOrigin";
 import PinBuilder from "terriajs-cesium/Source/Core/PinBuilder";
 import { getMakiIcon } from "../Map/Icons/Maki/MakiIcons";
@@ -53,21 +56,15 @@ const EYE_OFFSET = new ConstantProperty(new Cartesian3(0, 0, -12));
 const DEPTH_TEST_DISTANCE = new ConstantProperty(Number.POSITIVE_INFINITY);
 
 type PoiDomainStyle = { symbol: string; color?: string };
-type LabelStyle = {
+type LabelStyleOptions = {
   labelTextColor: string;
   labelFontSize: number;
   labelOutlineWidth: number;
   labelOutlineColor: string;
 };
 
-const MARKER_IMAGE_CACHE = new Map<
-  string,
-  HTMLCanvasElement | Promise<HTMLCanvasElement>
->();
-const COMPOSITE_IMAGE_CACHE = new Map<
-  string,
-  HTMLCanvasElement | Promise<HTMLCanvasElement>
->();
+// Use base64 Data URLs strings instead of HTMLCanvasElement to prevent browser VRAM eviction (black icons)
+const MARKER_IMAGE_CACHE = new Map<string, string | Promise<string>>();
 const pinBuilder = new PinBuilder();
 
 function getPinImage(
@@ -76,7 +73,7 @@ function getPinImage(
   markerSize: number,
   iconStrokeWidth: number,
   iconStrokeColor: string
-): HTMLCanvasElement | Promise<HTMLCanvasElement> | undefined {
+): string | Promise<string> | undefined {
   const key = [
     iconId,
     color,
@@ -109,13 +106,18 @@ function getPinImage(
     | Promise<HTMLCanvasElement>;
 
   if (image instanceof Promise) {
-    image.then((canvas: HTMLCanvasElement) => {
-      MARKER_IMAGE_CACHE.set(key, canvas);
+    const stringPromise = image.then((canvas: HTMLCanvasElement) => {
+      const dataUrl = canvas.toDataURL();
+      MARKER_IMAGE_CACHE.set(key, dataUrl);
+      return dataUrl;
     });
+    MARKER_IMAGE_CACHE.set(key, stringPromise);
+    return stringPromise;
   }
 
-  MARKER_IMAGE_CACHE.set(key, image);
-  return image;
+  const dataUrl = image.toDataURL();
+  MARKER_IMAGE_CACHE.set(key, dataUrl);
+  return dataUrl;
 }
 
 function getVisibilityRange(
@@ -172,63 +174,16 @@ function getRerPoiIconId(symbol: unknown): string {
   return typeof symbol === "string" && symbol.trim() ? symbol.trim() : "marker";
 }
 
-function measureTextMetrics(
-  ctx: CanvasRenderingContext2D,
-  text: string
-): { width: number; height: number } {
-  const metrics = ctx.measureText(text);
-  const ascent = metrics.actualBoundingBoxAscent ?? 10;
-  const descent = metrics.actualBoundingBoxDescent ?? 3;
-  return {
-    width: metrics.width,
-    height: ascent + descent
-  };
-}
-
-function buildCompositeMarkerImage(
-  pinImage: HTMLCanvasElement,
-  labelText: string,
-  markerSize: number,
-  labelStyle: LabelStyle
-): HTMLCanvasElement {
-  const {
-    labelTextColor,
-    labelFontSize,
-    labelOutlineWidth,
-    labelOutlineColor
-  } = labelStyle;
-  const cacheKey = [
-    pinImage.width,
-    pinImage.height,
-    labelText,
-    markerSize,
-    labelTextColor,
-    labelFontSize,
-    labelOutlineWidth,
-    labelOutlineColor
-  ].join("|");
-
-  const cached = COMPOSITE_IMAGE_CACHE.get(cacheKey);
-  if (cached instanceof HTMLCanvasElement) {
-    return cached;
-  }
-
+// Replaces the heavy text-on-canvas drawing with simple line-breaking for Cesium's native LabelGraphics
+function wrapTextForCesiumLabel(labelText: string, fontSize: number): string {
   const textCanvas = document.createElement("canvas");
   const textCtx = textCanvas.getContext("2d");
-  if (!textCtx) {
-    return pinImage;
-  }
+  if (!textCtx) return labelText;
 
-  const font = `${labelFontSize}px sans-serif`;
-  textCtx.font = font;
-
-  const paddingX = 6;
-  const paddingY = 4;
-  const gap = 6;
+  textCtx.font = `${fontSize}px sans-serif`;
   const maxTextWidth = 220;
-
-  const lines: string[] = [];
   const words = labelText.trim().split(/\s+/);
+  const lines: string[] = [];
   let currentLine = "";
 
   for (const word of words) {
@@ -240,69 +195,16 @@ function buildCompositeMarkerImage(
       currentLine = testLine;
     }
   }
-
   if (currentLine) {
     lines.push(currentLine);
   }
 
-  if (lines.length === 0) {
-    lines.push(labelText);
-  }
-
-  const lineMetrics = lines.map((line) => measureTextMetrics(textCtx, line));
-  const textWidth =
-    Math.max(...lineMetrics.map((m) => m.width), 0) + paddingX * 2;
-  const textHeight =
-    lineMetrics.reduce((sum, m) => sum + m.height, 0) +
-    paddingY * 2 +
-    Math.max(0, lines.length - 1) * 2;
-
-  const canvasWidth = Math.max(pinImage.width, Math.ceil(textWidth));
-  const canvasHeight = Math.ceil(textHeight) + gap + pinImage.height;
-
-  const canvas = document.createElement("canvas");
-  canvas.width = canvasWidth;
-  canvas.height = canvasHeight;
-
-  const ctx = canvas.getContext("2d");
-  if (!ctx) {
-    return pinImage;
-  }
-
-  ctx.imageSmoothingEnabled = true;
-
-  // Draw text at the top.
-  ctx.font = font;
-  ctx.fillStyle = labelTextColor;
-  ctx.textAlign = "center";
-  ctx.textBaseline = "top";
-
-  // Optional outline for readability without a background box.
-  ctx.strokeStyle = labelOutlineColor;
-  ctx.lineWidth = labelOutlineWidth;
-  ctx.lineJoin = "round";
-  let y = paddingY;
-  for (let i = 0; i < lines.length; i++) {
-    const line = lines[i];
-    const metrics = lineMetrics[i];
-
-    ctx.strokeText(line, canvasWidth / 2, y);
-    ctx.fillText(line, canvasWidth / 2, y);
-
-    y += metrics.height + 2;
-  }
-
-  // Draw the pin below the text.
-  const pinX = Math.floor((canvasWidth - pinImage.width) / 2);
-  const pinY = Math.ceil(textHeight) + gap;
-  ctx.drawImage(pinImage, pinX, pinY);
-
-  COMPOSITE_IMAGE_CACHE.set(cacheKey, canvas);
-  return canvas;
+  return lines.join("\n");
 }
 
 export function applyRerPoiEntityStyles(
   dataSource: GeoJsonDataSource,
+  entitiesToStyle: any[], // Accepts only the targeted entities to prevent rebuilding the whole list
   options?: RerPoiStylingOptions
 ): void {
   const defaultMarkerColor =
@@ -316,7 +218,7 @@ export function applyRerPoiEntityStyles(
     options?.iconStrokeColor ?? defaultRerPoiCatalogItemTraits.iconStrokeColor;
   const showLabels =
     options?.showLabels ?? defaultRerPoiCatalogItemTraits.showLabels;
-  const labelStyle: LabelStyle = {
+  const labelStyle: LabelStyleOptions = {
     labelTextColor:
       options?.labelTextColor ?? defaultRerPoiCatalogItemTraits.labelTextColor,
     labelFontSize:
@@ -341,13 +243,12 @@ export function applyRerPoiEntityStyles(
     options?.domainIdField ?? defaultRerPoiCatalogItemTraits.domainIdField;
 
   const poiDomainIconMap = buildPoiDomainStyleMap(poiDomainStyleGroups);
-  const entities = dataSource.entities.values;
   const now = JulianDate.now();
 
   dataSource.entities.suspendEvents();
   try {
-    for (let i = 0; i < entities.length; i++) {
-      const entity = entities[i];
+    for (let i = 0; i < entitiesToStyle.length; i++) {
+      const entity = entitiesToStyle[i];
       const properties = entity.properties;
 
       const visibilityRange = getVisibilityRange(
@@ -382,14 +283,13 @@ export function applyRerPoiEntityStyles(
             : undefined;
 
         if (imageResult) {
-          const createBillboard = (img: HTMLCanvasElement) => {
-            const finalImage =
-              name && showLabels
-                ? buildCompositeMarkerImage(img, name, markerSize, labelStyle)
-                : img;
+          const createVisuals = (imgDataUrl: string) => {
+            // Anti-Ghosting Check: If the user toggled the filter rapidly, 
+            // this entity might have been removed before the Promise resolved.
+            if (!dataSource.entities.contains(entity)) return;
 
             entity.billboard = new BillboardGraphics({
-              image: new ConstantProperty(finalImage),
+              image: new ConstantProperty(imgDataUrl),
               verticalOrigin: BILLBOARD_VERTICAL_ORIGIN,
               heightReference: HEIGHT_REFERENCE,
               eyeOffset: EYE_OFFSET,
@@ -397,14 +297,37 @@ export function applyRerPoiEntityStyles(
               disableDepthTestDistance: DEPTH_TEST_DISTANCE
             });
 
-            entity.label = undefined;
+            if (name && showLabels) {
+              const multiLineText = wrapTextForCesiumLabel(
+                name,
+                labelStyle.labelFontSize
+              );
+
+              entity.label = new LabelGraphics({
+                text: new ConstantProperty(multiLineText),
+                font: new ConstantProperty(`${labelStyle.labelFontSize}px sans-serif`),
+                fillColor: new ConstantProperty(Color.fromCssColorString(labelStyle.labelTextColor)),
+                outlineColor: new ConstantProperty(Color.fromCssColorString(labelStyle.labelOutlineColor)),
+                outlineWidth: new ConstantProperty(labelStyle.labelOutlineWidth),
+                style: new ConstantProperty(LabelStyle.FILL_AND_OUTLINE),
+                verticalOrigin: new ConstantProperty(VerticalOrigin.BOTTOM),
+                pixelOffset: new ConstantProperty(new Cartesian2(0, -markerSize - 6)),
+                heightReference: HEIGHT_REFERENCE,
+                eyeOffset: EYE_OFFSET,
+                distanceDisplayCondition: visibilityProp,
+                disableDepthTestDistance: DEPTH_TEST_DISTANCE
+              });
+            } else {
+              entity.label = undefined;
+            }
+
             entity.point = undefined;
           };
 
           if (imageResult instanceof Promise) {
-            imageResult.then(createBillboard);
+            imageResult.then(createVisuals);
           } else {
-            createBillboard(imageResult);
+            createVisuals(imageResult);
           }
         }
       }

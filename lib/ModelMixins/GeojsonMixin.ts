@@ -1451,8 +1451,9 @@ function GeoJsonMixin<T extends Constructor<BaseType>>(Base: T) {
 
       this.applyMixedStyle(dataSource);
 
-      if (isRerPoiUrl(this.url) && this.type !== RER_POI_CATALOG_ITEM_TYPE) {
-        applyRerPoiEntityStyles(dataSource);
+   if (isRerPoiUrl(this.url) && this.type !== RER_POI_CATALOG_ITEM_TYPE) {
+        // FIX: Pass the array of entities as the second argument to match the new signature
+        applyRerPoiEntityStyles(dataSource, dataSource.entities.values);
       }
 
       return dataSource;
