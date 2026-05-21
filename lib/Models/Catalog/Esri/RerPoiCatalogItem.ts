@@ -262,6 +262,8 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
         nextQuery.queryRectangle
       )
     ) {
+      this.activeDynamicQuery = nextQuery;
+      this.syncCachedEntityVisibility(nextQuery);
       return;
     }
 
@@ -286,9 +288,13 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
           this.activeDynamicQuery = nextQuery;
           this.isFirstDynamicLoad = false;
           this.syncCachedEntityVisibility(nextQuery);
+          this.updateEnumValues();
+          this.sanitizeQueryValues();
         }
       } else {
         await this.applyIncrementalUpdate(nextQuery);
+        this.updateEnumValues();
+        this.sanitizeQueryValues();
       }
     } finally {
       this.dynamicReloadInProgress = false;
@@ -321,7 +327,9 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
     const now = JulianDate.now();
     const { minLevelId, maxLevelId } = query.requestOptions;
     let visiblePoiCount = 0;
-    for (const entity of this.liveEntityByObjectId.values()) {
+    const totalPoiCount = this.managedDataSource.entities.values.length;
+
+    for (const entity of this.managedDataSource.entities.values) {
       const inRectangle = isEntityInRectangle(entity, query.queryRectangle);
       const inLevelRange = this.isEntityInLevelRange(
         entity,
@@ -329,7 +337,8 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
         minLevelId,
         maxLevelId
       );
-      const isVisible = inRectangle && inLevelRange;
+      const matchesQueryableFilters = this.matchesQueryableFilters(entity, now);
+      const isVisible = inRectangle && inLevelRange && matchesQueryableFilters;
       entity.show = isVisible;
       if (isVisible) visiblePoiCount += 1;
     }
@@ -337,10 +346,15 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
     console.log("[RerPoiCatalogItem] POI debug", {
       cachedPoiCount: this.liveEntityByObjectId.size,
       visiblePoiCount,
+      totalPoiCount,
       cameraHeight: this.getCurrentCameraHeight(),
       minLevelId,
       maxLevelId
     });
+    this.numberOfTotalElements = totalPoiCount;
+    this.numberOfVisibleElements = visiblePoiCount;
+
+    this.terria.currentViewer.notifyRepaintRequired();
   }
 
   private isEntityInLevelRange(
@@ -382,6 +396,59 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
     const raw =
       props[this.objectIdField] ?? props["OBJECTID"] ?? props["objectid"];
     return raw !== undefined && raw !== null ? String(raw) : undefined;
+  }
+
+  filterData() {
+    this.syncCachedEntityVisibility(
+      this.activeDynamicQuery ?? this.getDynamicViewportQuery()
+    );
+  }
+
+  private matchesQueryableFilters(entity: any, now: JulianDate): boolean {
+    if (!this.queryProperties || !this.queryValues) return true;
+
+    const selectedValuesArray = Object.values(this.queryValues);
+    const showAll = !selectedValuesArray
+      .flat()
+      .some((value) => value !== "" && value !== this.ENUM_ALL_VALUE);
+
+    if (showAll) return true;
+
+    const entityProperties = entity.properties?.getValue(now);
+    if (!entityProperties) return false;
+
+    return Object.entries(this.queryValues).every(([key, value]) => {
+      const property = this.queryProperties?.[key];
+      if (!property) return true;
+
+      if (!entity.properties?.hasProperty(key)) return false;
+
+      const queryValue = (value?.[0] ?? "").trim().toLowerCase();
+      if (queryValue === "" || queryValue === this.ENUM_ALL_VALUE) {
+        return true;
+      }
+
+      const entityValue = entityProperties[key];
+      if (entityValue === undefined || entityValue === null) return false;
+
+      if (property.type === "date") {
+        if (value[0] === "" || value[1] === "") return true;
+        const fromDate = new Date(value[0]);
+        const toDate = new Date(value[1]);
+        const entityDate = new Date(String(entityValue));
+        return (
+          fromDate.getTime() < entityDate.getTime() &&
+          entityDate.getTime() < toDate.getTime()
+        );
+      }
+
+      const entityText = String(entityValue).trim().toLowerCase();
+      if (property.type === "enum" && property.enumMultiValue) {
+        return entityText.includes(queryValue);
+      }
+
+      return entityText === queryValue;
+    });
   }
 
   private async applyIncrementalUpdate(nextQuery: DynamicViewportQuery) {
