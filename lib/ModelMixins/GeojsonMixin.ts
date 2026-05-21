@@ -1452,7 +1452,7 @@ function GeoJsonMixin<T extends Constructor<BaseType>>(Base: T) {
       this.applyMixedStyle(dataSource);
 
       if (isRerPoiUrl(this.url) && this.type !== RER_POI_CATALOG_ITEM_TYPE) {
-        applyRerPoiEntityStyles(dataSource);
+        applyRerPoiEntityStyles(dataSource, dataSource.entities.values);
       }
 
       return dataSource;

@@ -431,7 +431,8 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
       const newEntities = ds.entities.values.filter(
         (e: any) => !idsBefore.has(e.id as string)
       );
-      applyRerPoiEntityStyles(ds, {
+
+      applyRerPoiEntityStyles(ds, newEntities, {
         defaultMarkerColor: this.getRerPoiTrait("defaultMarkerColor"),
         markerSize: this.getRerPoiTrait("markerSize"),
         iconStrokeWidth: this.getRerPoiTrait("iconStrokeWidth"),
@@ -489,7 +490,8 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
     geoJson: FeatureCollectionWithCrs<Geometry | GeometryCollection, Properties>
   ): Promise<GeoJsonDataSource> {
     const dataSource = await super.loadGeoJsonDataSource(geoJson as any);
-    applyRerPoiEntityStyles(dataSource, {
+
+    applyRerPoiEntityStyles(dataSource, dataSource.entities.values, {
       defaultMarkerColor: this.getRerPoiTrait("defaultMarkerColor"),
       markerSize: this.getRerPoiTrait("markerSize"),
       iconStrokeWidth: this.getRerPoiTrait("iconStrokeWidth"),

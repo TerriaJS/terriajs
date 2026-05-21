@@ -53,24 +53,22 @@ const EYE_OFFSET = new ConstantProperty(new Cartesian3(0, 0, -12));
 const DEPTH_TEST_DISTANCE = new ConstantProperty(Number.POSITIVE_INFINITY);
 
 type PoiDomainStyle = { symbol: string; color?: string };
-type LabelStyle = {
+type LabelStyleOptions = {
   labelTextColor: string;
   labelFontSize: number;
   labelOutlineWidth: number;
   labelOutlineColor: string;
 };
 
-const MARKER_IMAGE_CACHE = new Map<
+const PIN_CANVAS_CACHE = new Map<
   string,
   HTMLCanvasElement | Promise<HTMLCanvasElement>
 >();
-const COMPOSITE_IMAGE_CACHE = new Map<
-  string,
-  HTMLCanvasElement | Promise<HTMLCanvasElement>
->();
+const COMPOSITE_DATAURL_CACHE = new Map<string, string | Promise<string>>();
+
 const pinBuilder = new PinBuilder();
 
-function getPinImage(
+function getPinCanvas(
   iconId: string,
   color: string,
   markerSize: number,
@@ -85,10 +83,8 @@ function getPinImage(
     iconStrokeColor
   ].join("|");
 
-  const cached = MARKER_IMAGE_CACHE.get(key);
-  if (cached) {
-    return cached;
-  }
+  const cached = PIN_CANVAS_CACHE.get(key);
+  if (cached) return cached;
 
   const svgUrl = getMakiIcon(
     iconId,
@@ -98,10 +94,7 @@ function getPinImage(
     24,
     24
   );
-
-  if (!svgUrl) {
-    return undefined;
-  }
+  if (!svgUrl) return undefined;
 
   const pinColor = Color.fromCssColorString(color);
   const image = pinBuilder.fromUrl(svgUrl, pinColor, markerSize) as
@@ -110,66 +103,12 @@ function getPinImage(
 
   if (image instanceof Promise) {
     image.then((canvas: HTMLCanvasElement) => {
-      MARKER_IMAGE_CACHE.set(key, canvas);
+      PIN_CANVAS_CACHE.set(key, canvas);
     });
   }
 
-  MARKER_IMAGE_CACHE.set(key, image);
+  PIN_CANVAS_CACHE.set(key, image);
   return image;
-}
-
-function getVisibilityRange(
-  scaleValue: unknown
-): DistanceDisplayCondition | undefined {
-  const maxDistance = Number(scaleValue);
-  return Number.isFinite(maxDistance)
-    ? new DistanceDisplayCondition(0, maxDistance)
-    : undefined;
-}
-
-function normalizePoiDomainStyleGroup(
-  group: Partial<PoiDomainStyleGroup>
-): PoiDomainStyleGroup {
-  const normalized = new PoiDomainStyleGroup();
-
-  normalized.id = typeof group.id === "string" ? group.id : "";
-  normalized.symbol =
-    typeof group.symbol === "string" && group.symbol.trim()
-      ? group.symbol.trim()
-      : "marker";
-  normalized.color =
-    typeof group.color === "string" && group.color.trim()
-      ? group.color.trim()
-      : undefined;
-  normalized.domainIds = Array.isArray(group.domainIds)
-    ? group.domainIds.map((x) => Number(x)).filter(Number.isFinite)
-    : [];
-
-  return normalized;
-}
-
-function getDefaultPoiDomainStyleGroups(): PoiDomainStyleGroup[] {
-  return (defaultRerPoiCatalogItemTraits.poiDomainStyleGroups ?? []).map(
-    normalizePoiDomainStyleGroup
-  );
-}
-
-function buildPoiDomainStyleMap(
-  groups: PoiDomainStyleGroup[]
-): Record<number, PoiDomainStyle> {
-  return groups.reduce<Record<number, PoiDomainStyle>>((acc, group) => {
-    for (const domainId of group.domainIds ?? []) {
-      acc[domainId] = {
-        symbol: group.symbol,
-        color: group.color
-      };
-    }
-    return acc;
-  }, {});
-}
-
-function getRerPoiIconId(symbol: unknown): string {
-  return typeof symbol === "string" && symbol.trim() ? symbol.trim() : "marker";
 }
 
 function measureTextMetrics(
@@ -185,11 +124,11 @@ function measureTextMetrics(
   };
 }
 
-function buildCompositeMarkerImage(
+function buildCompositeMarkerCanvas(
   pinImage: HTMLCanvasElement,
   labelText: string,
   markerSize: number,
-  labelStyle: LabelStyle
+  labelStyle: LabelStyleOptions
 ): HTMLCanvasElement {
   const {
     labelTextColor,
@@ -197,27 +136,10 @@ function buildCompositeMarkerImage(
     labelOutlineWidth,
     labelOutlineColor
   } = labelStyle;
-  const cacheKey = [
-    pinImage.width,
-    pinImage.height,
-    labelText,
-    markerSize,
-    labelTextColor,
-    labelFontSize,
-    labelOutlineWidth,
-    labelOutlineColor
-  ].join("|");
-
-  const cached = COMPOSITE_IMAGE_CACHE.get(cacheKey);
-  if (cached instanceof HTMLCanvasElement) {
-    return cached;
-  }
 
   const textCanvas = document.createElement("canvas");
   const textCtx = textCanvas.getContext("2d");
-  if (!textCtx) {
-    return pinImage;
-  }
+  if (!textCtx) return pinImage;
 
   const font = `${labelFontSize}px sans-serif`;
   textCtx.font = font;
@@ -265,44 +187,86 @@ function buildCompositeMarkerImage(
   canvas.height = canvasHeight;
 
   const ctx = canvas.getContext("2d");
-  if (!ctx) {
-    return pinImage;
-  }
+  if (!ctx) return pinImage;
 
   ctx.imageSmoothingEnabled = true;
 
-  // Draw text at the top.
   ctx.font = font;
   ctx.fillStyle = labelTextColor;
   ctx.textAlign = "center";
   ctx.textBaseline = "top";
-
-  // Optional outline for readability without a background box.
   ctx.strokeStyle = labelOutlineColor;
   ctx.lineWidth = labelOutlineWidth;
   ctx.lineJoin = "round";
+
   let y = paddingY;
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
     const metrics = lineMetrics[i];
-
     ctx.strokeText(line, canvasWidth / 2, y);
     ctx.fillText(line, canvasWidth / 2, y);
-
     y += metrics.height + 2;
   }
 
-  // Draw the pin below the text.
   const pinX = Math.floor((canvasWidth - pinImage.width) / 2);
   const pinY = Math.ceil(textHeight) + gap;
   ctx.drawImage(pinImage, pinX, pinY);
 
-  COMPOSITE_IMAGE_CACHE.set(cacheKey, canvas);
   return canvas;
+}
+
+function getVisibilityRange(
+  scaleValue: unknown
+): DistanceDisplayCondition | undefined {
+  const maxDistance = Number(scaleValue);
+  return Number.isFinite(maxDistance)
+    ? new DistanceDisplayCondition(0, maxDistance)
+    : undefined;
+}
+
+function normalizePoiDomainStyleGroup(
+  group: Partial<PoiDomainStyleGroup>
+): PoiDomainStyleGroup {
+  const normalized = new PoiDomainStyleGroup();
+  normalized.id = typeof group.id === "string" ? group.id : "";
+  normalized.symbol =
+    typeof group.symbol === "string" && group.symbol.trim()
+      ? group.symbol.trim()
+      : "marker";
+  normalized.color =
+    typeof group.color === "string" && group.color.trim()
+      ? group.color.trim()
+      : undefined;
+  normalized.domainIds = Array.isArray(group.domainIds)
+    ? group.domainIds.map((x) => Number(x)).filter(Number.isFinite)
+    : [];
+  return normalized;
+}
+
+function getDefaultPoiDomainStyleGroups(): PoiDomainStyleGroup[] {
+  return (defaultRerPoiCatalogItemTraits.poiDomainStyleGroups ?? []).map(
+    normalizePoiDomainStyleGroup
+  );
+}
+
+function buildPoiDomainStyleMap(
+  groups: PoiDomainStyleGroup[]
+): Record<number, PoiDomainStyle> {
+  return groups.reduce<Record<number, PoiDomainStyle>>((acc, group) => {
+    for (const domainId of group.domainIds ?? []) {
+      acc[domainId] = { symbol: group.symbol, color: group.color };
+    }
+    return acc;
+  }, {});
+}
+
+function getRerPoiIconId(symbol: unknown): string {
+  return typeof symbol === "string" && symbol.trim() ? symbol.trim() : "marker";
 }
 
 export function applyRerPoiEntityStyles(
   dataSource: GeoJsonDataSource,
+  entitiesToStyle: any[],
   options?: RerPoiStylingOptions
 ): void {
   const defaultMarkerColor =
@@ -316,7 +280,8 @@ export function applyRerPoiEntityStyles(
     options?.iconStrokeColor ?? defaultRerPoiCatalogItemTraits.iconStrokeColor;
   const showLabels =
     options?.showLabels ?? defaultRerPoiCatalogItemTraits.showLabels;
-  const labelStyle: LabelStyle = {
+
+  const labelStyle: LabelStyleOptions = {
     labelTextColor:
       options?.labelTextColor ?? defaultRerPoiCatalogItemTraits.labelTextColor,
     labelFontSize:
@@ -328,11 +293,13 @@ export function applyRerPoiEntityStyles(
       options?.labelOutlineColor ??
       defaultRerPoiCatalogItemTraits.labelOutlineColor
   };
+
   const poiDomainStyleGroups = (
     options?.poiDomainStyleGroups?.length
       ? options.poiDomainStyleGroups
       : getDefaultPoiDomainStyleGroups()
   ).map(normalizePoiDomainStyleGroup);
+
   const scaleField =
     options?.scaleField ?? defaultRerPoiCatalogItemTraits.scaleField;
   const nameField =
@@ -341,13 +308,12 @@ export function applyRerPoiEntityStyles(
     options?.domainIdField ?? defaultRerPoiCatalogItemTraits.domainIdField;
 
   const poiDomainIconMap = buildPoiDomainStyleMap(poiDomainStyleGroups);
-  const entities = dataSource.entities.values;
   const now = JulianDate.now();
 
   dataSource.entities.suspendEvents();
   try {
-    for (let i = 0; i < entities.length; i++) {
-      const entity = entities[i];
+    for (let i = 0; i < entitiesToStyle.length; i++) {
+      const entity = entitiesToStyle[i];
       const properties = entity.properties;
 
       const visibilityRange = getVisibilityRange(
@@ -357,56 +323,91 @@ export function applyRerPoiEntityStyles(
         ? new ConstantProperty(visibilityRange)
         : undefined;
 
-      if (entity.position) {
-        const rawDomainValue = properties?.[domainIdField]?.getValue(now);
-        const domainId = Number(rawDomainValue);
-        const mapped = Number.isFinite(domainId)
-          ? poiDomainIconMap[domainId]
+      if (!entity.position) continue;
+
+      const rawDomainValue = properties?.[domainIdField]?.getValue(now);
+      const domainId = Number(rawDomainValue);
+      const mapped = Number.isFinite(domainId)
+        ? poiDomainIconMap[domainId]
+        : undefined;
+
+      const symbol = getRerPoiIconId(mapped?.symbol);
+      const color = mapped?.color ?? defaultMarkerColor;
+
+      const rawName = properties?.[nameField]?.getValue(now);
+      const name =
+        isDefined(rawName) && String(rawName).trim().length > 0
+          ? String(rawName).trim()
           : undefined;
 
-        const symbol = getRerPoiIconId(mapped?.symbol);
-        const color = mapped?.color ?? defaultMarkerColor;
+      const finalCacheKey = [
+        symbol,
+        color,
+        markerSize,
+        iconStrokeWidth,
+        iconStrokeColor,
+        name,
+        showLabels
+      ].join("|");
 
-        const imageResult = getPinImage(
-          symbol,
-          color,
-          markerSize,
-          iconStrokeWidth,
-          iconStrokeColor
-        );
+      const createVisuals = (dataUrl: string) => {
+        if (!dataSource.entities.contains(entity)) return;
 
-        const rawName = properties?.[nameField]?.getValue(now);
-        const name =
-          isDefined(rawName) && String(rawName).trim().length > 0
-            ? String(rawName).trim()
-            : undefined;
+        entity.billboard = new BillboardGraphics({
+          image: new ConstantProperty(dataUrl),
+          verticalOrigin: BILLBOARD_VERTICAL_ORIGIN,
+          heightReference: HEIGHT_REFERENCE,
+          eyeOffset: EYE_OFFSET,
+          distanceDisplayCondition: visibilityProp,
+          disableDepthTestDistance: DEPTH_TEST_DISTANCE
+        });
 
-        if (imageResult) {
-          const createBillboard = (img: HTMLCanvasElement) => {
-            const finalImage =
-              name && showLabels
-                ? buildCompositeMarkerImage(img, name, markerSize, labelStyle)
-                : img;
+        entity.label = undefined;
+        entity.point = undefined;
+      };
 
-            entity.billboard = new BillboardGraphics({
-              image: new ConstantProperty(finalImage),
-              verticalOrigin: BILLBOARD_VERTICAL_ORIGIN,
-              heightReference: HEIGHT_REFERENCE,
-              eyeOffset: EYE_OFFSET,
-              distanceDisplayCondition: visibilityProp,
-              disableDepthTestDistance: DEPTH_TEST_DISTANCE
-            });
-
-            entity.label = undefined;
-            entity.point = undefined;
-          };
-
-          if (imageResult instanceof Promise) {
-            imageResult.then(createBillboard);
-          } else {
-            createBillboard(imageResult);
-          }
+      const cachedDataUrl = COMPOSITE_DATAURL_CACHE.get(finalCacheKey);
+      if (cachedDataUrl) {
+        if (cachedDataUrl instanceof Promise) {
+          cachedDataUrl.then(createVisuals);
+        } else {
+          createVisuals(cachedDataUrl);
         }
+        continue;
+      }
+
+      const pinCanvasResult = getPinCanvas(
+        symbol,
+        color,
+        markerSize,
+        iconStrokeWidth,
+        iconStrokeColor
+      );
+      if (!pinCanvasResult) continue;
+
+      const generateFinalDataUrl = (pinCanvas: HTMLCanvasElement): string => {
+        const finalCanvas =
+          name && showLabels
+            ? buildCompositeMarkerCanvas(
+                pinCanvas,
+                name,
+                markerSize,
+                labelStyle
+              )
+            : pinCanvas;
+
+        const dataUrl = finalCanvas.toDataURL(); // Prevents browser VRAM eviction
+        COMPOSITE_DATAURL_CACHE.set(finalCacheKey, dataUrl); // Store concrete string over the promise
+        return dataUrl;
+      };
+
+      if (pinCanvasResult instanceof Promise) {
+        const dataUrlPromise = pinCanvasResult.then(generateFinalDataUrl);
+        COMPOSITE_DATAURL_CACHE.set(finalCacheKey, dataUrlPromise);
+        dataUrlPromise.then(createVisuals);
+      } else {
+        const dataUrl = generateFinalDataUrl(pinCanvasResult);
+        createVisuals(dataUrl);
       }
     }
   } finally {
