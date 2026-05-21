@@ -13,6 +13,7 @@ import { GLYPHS, StyledIcon } from "../../../Styled/Icon";
 import Button, { RawButton } from "../../../Styled/Button";
 import Hr from "../../../Styled/Hr";
 import ViewState from "../../../ReactViewModels/ViewState";
+import { RER_POI_CATALOG_ITEM_TYPE } from "../../../ModelMixins/RerPoiHelpers";
 
 interface PropsType {
   item: BaseModel;
@@ -196,7 +197,8 @@ const FilterFeaturesSection: React.FC<PropsType> = observer(
             <Spacing bottom={3} />
             <Box style={{ display: "flex", flexDirection: "row-reverse" }}>
               {viewState.terria.isFeatureAllowedByProfile("QueryData") &&
-                !viewState.useSmallScreenInterface && (
+                !viewState.useSmallScreenInterface &&
+                item.type !== RER_POI_CATALOG_ITEM_TYPE && (
                   <Button
                     primary
                     title="Mostra i dati come grafici e tabelle"
