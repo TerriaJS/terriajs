@@ -144,6 +144,16 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
       report = report ? `${report}<br/>${tiltMessage}` : tiltMessage;
     }
 
+    if (this.show && this.numberOfVisibleElements === 0) {
+      const noVisiblePointsMessage = i18next.t(
+        "models.rerPoiCatalogItem.noVisiblePoints",
+        { lng: this.activeLanguage }
+      );
+      report = report
+        ? `${report}<br/>${noVisiblePointsMessage}`
+        : noVisiblePointsMessage;
+    }
+
     return report;
   }
 
