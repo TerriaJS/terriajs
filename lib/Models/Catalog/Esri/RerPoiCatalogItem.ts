@@ -362,7 +362,14 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
       entity.show = isVisible;
       if (isVisible) visiblePoiCount += 1;
     }
-
+    console.log("[RerPoiCatalogItem] POI debug", {
+      cachedPoiCount: this.liveEntityByObjectId.size,
+      visiblePoiCount,
+      totalPoiCount,
+      cameraHeight: this.getCurrentCameraHeight(),
+      minLevelId,
+      maxLevelId
+    });
     this.numberOfTotalElements = totalPoiCount;
     this.numberOfVisibleElements = visiblePoiCount;
 
