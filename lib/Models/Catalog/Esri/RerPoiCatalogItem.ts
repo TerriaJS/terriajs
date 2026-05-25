@@ -176,7 +176,9 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
       return this.serviceEnumValues.get(propertyName) ?? [this.ENUM_ALL_VALUE];
     }
 
-    const visibleValues = super.getEnumValues(propertyName);
+    const baseValues = this.getLoadedEnumValues(propertyName);
+    const valuesFromData =
+      baseValues.length > 0 ? baseValues : super.getEnumValues(propertyName);
     const preservedValues = (this.queryValues?.[propertyName] ?? []).flatMap(
       (value) =>
         queryableProperty?.enumMultiValue
@@ -186,7 +188,7 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
 
     const combinedValues = Array.from(
       new Set(
-        [...visibleValues, ...preservedValues].filter(
+        [...valuesFromData, ...preservedValues].filter(
           (value) => isDefined(value) && value.length > 0
         )
       )
@@ -259,6 +261,36 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
         );
       this.onDynamicViewportChanged();
     }
+  }
+
+  private getLoadedEnumValues(propertyName: string): string[] {
+    const queryableProperty = this.queryableProperties?.find(
+      (property) => property.propertyName === propertyName
+    );
+    if (!queryableProperty || !this.managedDataSource) return [];
+
+    const now = JulianDate.now();
+    const values = new Set<string>();
+
+    for (const entity of this.managedDataSource.entities.values) {
+      const rawValue = entity.properties?.[propertyName]?.getValue(now);
+      if (!isDefined(rawValue)) continue;
+
+      if (queryableProperty.enumMultiValue) {
+        String(rawValue)
+          .split(",")
+          .map((text) => text.trim())
+          .filter((text) => text.length > 0 && text !== this.ENUM_ALL_VALUE)
+          .forEach((text) => values.add(text));
+      } else {
+        const normalized = String(rawValue).trim();
+        if (normalized && normalized !== this.ENUM_ALL_VALUE) {
+          values.add(normalized);
+        }
+      }
+    }
+
+    return [this.ENUM_ALL_VALUE, ...Array.from(values)];
   }
 
   private detachCurrentViewerListener() {
@@ -598,17 +630,22 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
     const entityProperties = entity.properties?.getValue(now);
     if (!entityProperties) return false;
 
+    const normalizeSelectedValues = (values: string[] | undefined): string[] =>
+      (values ?? [])
+        .map((selectedValue) => selectedValue.trim().toLowerCase())
+        .filter(
+          (selectedValue) =>
+            selectedValue !== "" &&
+            selectedValue !== this.ENUM_ALL_VALUE.toLowerCase()
+        );
+
     return Object.entries(this.queryValues).every(([key, value]) => {
       const property = this.queryProperties?.[key];
       if (!property) return true;
 
       if (!entity.properties?.hasProperty(key)) return false;
 
-      const queryValue = (value?.[0] ?? "").trim().toLowerCase();
-      if (queryValue === "" || queryValue === this.ENUM_ALL_VALUE) {
-        return true;
-      }
-
+      const selectedValues = normalizeSelectedValues(value);
       const entityValue = entityProperties[key];
       if (entityValue === undefined || entityValue === null) return false;
 
@@ -623,12 +660,28 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
         );
       }
 
-      const entityText = String(entityValue).trim().toLowerCase();
-      if (property.type === "enum" && property.enumMultiValue) {
-        return entityText.includes(queryValue);
+      if (selectedValues.length === 0) {
+        return true;
       }
 
-      return entityText === queryValue;
+      const entityText = String(entityValue).trim().toLowerCase();
+      if (property.type === "enum") {
+        if (property.enumMultiValue) {
+          const entityValues = entityText
+            .split(",")
+            .map((text) => text.trim())
+            .filter((text) => text.length > 0);
+          return selectedValues.some((selectedValue) =>
+            entityValues.includes(selectedValue)
+          );
+        }
+
+        return selectedValues.some(
+          (selectedValue) => entityText === selectedValue
+        );
+      }
+
+      return entityText === selectedValues[0];
     });
   }
 

@@ -23,6 +23,7 @@ interface PropsType {
 const FilterFeaturesSection: React.FC<PropsType> = observer(
   ({ item, viewState }: PropsType) => {
     const [showQuerySection, setShowQuerySection] = useState<boolean>(false);
+    const isRerPoiCatalogItem = item.type === RER_POI_CATALOG_ITEM_TYPE;
 
     const toggleQuerySection = () => {
       setShowQuerySection((prevState) => !prevState);
@@ -55,6 +56,8 @@ const FilterFeaturesSection: React.FC<PropsType> = observer(
       item.queryableProperties.length === 0
     )
       return null;
+
+    const queryableItem = item as QueryableCatalogItemMixin.Instance;
 
     return (
       <Box column>
@@ -93,13 +96,108 @@ const FilterFeaturesSection: React.FC<PropsType> = observer(
                   );
                 })
                 .map(([propertyName, property]) => {
+                  const enumValues = (
+                    queryableItem.enumValues?.[propertyName] ?? []
+                  )
+                    .slice()
+                    .sort();
+                  const enumRows = queryableItem.queryValues?.[
+                    propertyName
+                  ] ?? [""];
+
                   return (
                     <Box key={propertyName} styledMargin="0 0 10px 0">
                       <StyledLabel small htmlFor="opacity">
                         {property.label}
                       </StyledLabel>
                       <Spacing right={3} />
-                      {property.type === "enum" && (
+                      {property.type === "enum" && isRerPoiCatalogItem && (
+                        <Box column>
+                          {enumRows.map((rowValue, rowIndex) => {
+                            const selectedValue =
+                              rowValue.trim().length > 0
+                                ? rowValue
+                                : queryableItem.ENUM_ALL_VALUE;
+                            const isLastRow = rowIndex === enumRows.length - 1;
+
+                            return (
+                              <Box
+                                key={`${propertyName}-${rowIndex}`}
+                                styledMargin={
+                                  rowIndex < enumRows.length - 1
+                                    ? "0 0 8px 0"
+                                    : "0"
+                                }
+                                style={{
+                                  display: "flex",
+                                  alignItems: "center"
+                                }}
+                              >
+                                <Select
+                                  boxProps={{
+                                    fullWidth: false,
+                                    flex: 1,
+                                    styledMinWidth: "0"
+                                  }}
+                                  name={`${propertyName}-${rowIndex}`}
+                                  value={selectedValue}
+                                  onChange={(
+                                    e: React.ChangeEvent<HTMLSelectElement>
+                                  ) => {
+                                    runInAction(() => {
+                                      const nextValues = enumRows.slice();
+                                      nextValues[rowIndex] =
+                                        e.target.value ===
+                                        queryableItem.ENUM_ALL_VALUE
+                                          ? ""
+                                          : e.target.value;
+                                      item.setQuery(propertyName, nextValues);
+                                    });
+                                  }}
+                                >
+                                  {enumValues.map((value) => {
+                                    return (
+                                      <option key={value} value={value}>
+                                        {value}
+                                      </option>
+                                    );
+                                  })}
+                                </Select>
+                                {isLastRow &&
+                                  selectedValue !==
+                                    queryableItem.ENUM_ALL_VALUE && (
+                                    <Button
+                                      primary
+                                      title="Aggiungi un altro filtro della stessa categoria"
+                                      css={`
+                                        min-width: 32px;
+                                        height: 34px;
+                                        border-radius: 2px;
+                                        margin-left: 6px;
+                                        padding: 0 8px;
+                                        display: flex;
+                                        align-items: center;
+                                        justify-content: center;
+                                        font-weight: bold;
+                                      `}
+                                      onClick={() =>
+                                        runInAction(() => {
+                                          item.setQuery(propertyName, [
+                                            ...enumRows,
+                                            ""
+                                          ]);
+                                        })
+                                      }
+                                    >
+                                      +
+                                    </Button>
+                                  )}
+                              </Box>
+                            );
+                          })}
+                        </Box>
+                      )}
+                      {property.type === "enum" && !isRerPoiCatalogItem && (
                         <Select
                           name={propertyName}
                           value={item.queryValues?.[propertyName]?.[0]}
@@ -111,16 +209,13 @@ const FilterFeaturesSection: React.FC<PropsType> = observer(
                             });
                           }}
                         >
-                          {(item.enumValues?.[propertyName] ?? [])
-                            .slice()
-                            .sort()
-                            .map((value) => {
-                              return (
-                                <option key={value} value={value}>
-                                  {value}
-                                </option>
-                              );
-                            })}
+                          {enumValues.map((value) => {
+                            return (
+                              <option key={value} value={value}>
+                                {value}
+                              </option>
+                            );
+                          })}
                         </Select>
                       )}
                       {(property.type === "string" ||
