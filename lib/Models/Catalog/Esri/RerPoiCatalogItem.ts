@@ -166,7 +166,25 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
       return this.serviceEnumValues.get(propertyName) ?? [this.ENUM_ALL_VALUE];
     }
 
-    return super.getEnumValues(propertyName);
+    const visibleValues = super.getEnumValues(propertyName);
+    const preservedValues = (this.queryValues?.[propertyName] ?? []).flatMap(
+      (value) =>
+        queryableProperty?.enumMultiValue
+          ? value.split(",").map((text) => text.trim())
+          : [value]
+    );
+
+    const combinedValues = Array.from(
+      new Set(
+        [...visibleValues, ...preservedValues].filter(
+          (value) => isDefined(value) && value.length > 0
+        )
+      )
+    );
+
+    return combinedValues.includes(this.ENUM_ALL_VALUE)
+      ? combinedValues
+      : [this.ENUM_ALL_VALUE, ...combinedValues];
   }
 
   private startDynamicViewportRequests() {
