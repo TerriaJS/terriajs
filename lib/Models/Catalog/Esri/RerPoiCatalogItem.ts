@@ -10,6 +10,7 @@ import {
   makeObservable
 } from "mobx";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
+import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import GeoJsonDataSource from "terriajs-cesium/Source/DataSources/GeoJsonDataSource";
@@ -33,6 +34,9 @@ import {
 import RerPoiCatalogItemTraits, {
   defaultRerPoiCatalogItemTraits
 } from "../../../Traits/TraitsClasses/RerPoiCatalogItemTraits";
+
+import Color from "terriajs-cesium/Source/Core/Color";
+import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
 
 interface EsriJsonQueryOptions {
   resultOffset?: number;
@@ -79,6 +83,8 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
   private liveEntityByObjectId = new Map<string, any>();
   private isFirstDynamicLoad = true;
 
+  @observable private debugDataSource: CustomDataSource | undefined;
+
   private readonly onDynamicViewportChanged = () => {
     const isPastLimit = this.isCameraPastTiltLimit();
     runInAction(() => {
@@ -112,6 +118,15 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
     onBecomeUnobserved(this, "mapItems", () =>
       this.stopDynamicViewportRequests()
     );
+  }
+
+  @override
+  get mapItems() {
+    const items = super.mapItems.slice();
+    if (this.debugDataSource) {
+      items.push(this.debugDataSource);
+    }
+    return items;
   }
 
   get type(): string {
@@ -196,12 +211,17 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
       this.dynamicReloadTimer = undefined;
     }
 
+    runInAction(() => {
+      this.debugDataSource = undefined;
+    });
+
     this.dynamicReloadQueued = false;
     this.dynamicReloadInProgress = false;
     this.managedDataSource = undefined;
     this.liveEntityByObjectId.clear();
     this.isFirstDynamicLoad = true;
   }
+
   private attachCurrentViewerListener() {
     this.detachCurrentViewerListener();
     const cesium = this.terria.cesium;
@@ -343,14 +363,6 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
       if (isVisible) visiblePoiCount += 1;
     }
 
-    console.log("[RerPoiCatalogItem] POI debug", {
-      cachedPoiCount: this.liveEntityByObjectId.size,
-      visiblePoiCount,
-      totalPoiCount,
-      cameraHeight: this.getCurrentCameraHeight(),
-      minLevelId,
-      maxLevelId
-    });
     this.numberOfTotalElements = totalPoiCount;
     this.numberOfVisibleElements = visiblePoiCount;
 
@@ -726,6 +738,119 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
     return undefined;
   }
 
+  // --- NEW CORE LOGIC: Dynamically calculate accurate rectangle based on literal screen pixels ---
+  private getScreenBoundingBox(): Rectangle {
+    const currentView = this.terria.currentViewer.getCurrentCameraView();
+    const cesium = this.terria.cesium;
+    if (!cesium) return currentView.rectangle;
+
+    const scene = cesium.scene;
+    const camera = scene.camera;
+    const canvas = scene.canvas;
+    const ellipsoid = scene.globe.ellipsoid;
+
+    const w = canvas.clientWidth;
+    const h = canvas.clientHeight;
+
+    // Sample a 3x3 grid across the screen to accurately trace the visible Earth surface
+    const screenPoints = [
+      new Cartesian2(0, 0),
+      new Cartesian2(w / 2, 0),
+      new Cartesian2(w, 0),
+      new Cartesian2(0, h / 2),
+      new Cartesian2(w / 2, h / 2),
+      new Cartesian2(w, h / 2),
+      new Cartesian2(0, h),
+      new Cartesian2(w / 2, h),
+      new Cartesian2(w, h)
+    ];
+
+    let minLon = Number.POSITIVE_INFINITY;
+    let maxLon = Number.NEGATIVE_INFINITY;
+    let minLat = Number.POSITIVE_INFINITY;
+    let maxLat = Number.NEGATIVE_INFINITY;
+    let validPoints = 0;
+
+    for (const pt of screenPoints) {
+      const cartesian = camera.pickEllipsoid(pt, ellipsoid);
+      if (cartesian) {
+        const carto = Cartographic.fromCartesian(cartesian);
+        if (carto) {
+          minLon = Math.min(minLon, carto.longitude);
+          maxLon = Math.max(maxLon, carto.longitude);
+          minLat = Math.min(minLat, carto.latitude);
+          maxLat = Math.max(maxLat, carto.latitude);
+          validPoints++;
+        }
+      }
+    }
+
+    // If all 9 points successfully hit the globe, we have a geometrically perfect bounding box.
+    if (validPoints === screenPoints.length) {
+      // Safety check to prevent wrap-around bugs if zoomed out near the poles or antimeridian
+      if (maxLon - minLon < Math.PI) {
+        return new Rectangle(minLon, minLat, maxLon, maxLat);
+      }
+    }
+
+    // Fallback: if the camera is pitched such that some rays miss the Earth (e.g. sky is visible),
+    // use Cesium's internal View Frustum calculator. It safely handles horizon calculations.
+    const nativeRect = camera.computeViewRectangle(ellipsoid);
+    if (nativeRect) {
+      return nativeRect;
+    }
+
+    // Absolute fallback to Terria's basic cache
+    return currentView.rectangle;
+  }
+
+  private renderDebugRectangles(cameraRect: Rectangle, queryRect: Rectangle) {
+    if (!this.getRerPoiTrait("showDebugBBox")) {
+      if (this.debugDataSource) {
+        runInAction(() => {
+          this.debugDataSource = undefined;
+        });
+        this.terria.currentViewer.notifyRepaintRequired();
+      }
+      return;
+    }
+
+    runInAction(() => {
+      if (!this.debugDataSource) {
+        this.debugDataSource = new CustomDataSource("RerPoiDebugBBox");
+      }
+    });
+
+    const entities = this.debugDataSource!.entities;
+    entities.suspendEvents();
+    entities.removeAll();
+
+    entities.add({
+      name: "Camera View Rectangle",
+      rectangle: {
+        coordinates: cameraRect,
+        material: Color.BLUE.withAlpha(0.2),
+        outline: true,
+        outlineColor: Color.BLUE,
+        height: 500
+      }
+    } as any);
+
+    entities.add({
+      name: "Padded Query BBox",
+      rectangle: {
+        coordinates: queryRect,
+        material: Color.RED.withAlpha(0.2),
+        outline: true,
+        outlineColor: Color.RED,
+        height: 500
+      }
+    } as any);
+
+    entities.resumeEvents();
+    this.terria.currentViewer.notifyRepaintRequired();
+  }
+
   private getDynamicViewportQuery(): DynamicViewportQuery | undefined {
     if (
       this.terria.currentViewer.type === "none" ||
@@ -734,17 +859,12 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
       return undefined;
     }
 
-    const currentView = this.terria.currentViewer.getCurrentCameraView();
-    const pitch =
-      (currentView as { pitch?: number }).pitch ??
-      this.terria.cesium?.scene.camera.pitch;
-
+    // Inject our new precision screen calculating method here
+    const screenRectangle = this.getScreenBoundingBox();
     const paddingRatio = this.getRerPoiTrait("queryBboxPaddingRatio");
-    const queryRectangle = rectangleWithPadding(
-      currentView.rectangle,
-      paddingRatio,
-      getPaddingMultiplierForPitch(pitch, 1.5, 6)
-    );
+    const queryRectangle = rectangleWithPadding(screenRectangle, paddingRatio);
+
+    this.renderDebugRectangles(screenRectangle, queryRectangle);
 
     if (rectangleArea(queryRectangle) <= 0) return undefined;
 
@@ -820,46 +940,28 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
 
 function rectangleWithPadding(
   rectangle: Rectangle,
-  paddingRatio: number,
-  verticalPaddingMultiplier = 1
+  paddingRatio: number
 ): Rectangle {
   const width = Rectangle.computeWidth(rectangle);
   const height = Rectangle.computeHeight(rectangle);
   const safePadding = Math.max(0, paddingRatio);
-  const southMult = CesiumMath.clamp(verticalPaddingMultiplier, 1, 3);
-  const northMult = CesiumMath.clamp(verticalPaddingMultiplier, 1, 6);
   const lonPad = width * safePadding;
   const latPad = height * safePadding;
 
   return new Rectangle(
     CesiumMath.clamp(rectangle.west - lonPad, -Math.PI, Math.PI),
     CesiumMath.clamp(
-      rectangle.south - latPad * southMult,
+      rectangle.south - latPad,
       -CesiumMath.PI_OVER_TWO,
       CesiumMath.PI_OVER_TWO
     ),
     CesiumMath.clamp(rectangle.east + lonPad, -Math.PI, Math.PI),
     CesiumMath.clamp(
-      rectangle.north + latPad * northMult,
+      rectangle.north + latPad,
       -CesiumMath.PI_OVER_TWO,
       CesiumMath.PI_OVER_TWO
     )
   );
-}
-
-function getPaddingMultiplierForPitch(
-  pitch: number | undefined,
-  minMultiplier: number,
-  maxMultiplier: number
-): number {
-  if (!isDefined(pitch)) return minMultiplier;
-  const safeMin = Math.max(1, minMultiplier);
-  const safeMax = Math.max(safeMin, maxMultiplier);
-  const pitchRatio =
-    (CesiumMath.clamp(pitch, -CesiumMath.PI_OVER_TWO, 0) +
-      CesiumMath.PI_OVER_TWO) /
-    CesiumMath.PI_OVER_TWO;
-  return safeMin + pitchRatio * (safeMax - safeMin);
 }
 
 function rectangleArea(rectangle: Rectangle): number {
