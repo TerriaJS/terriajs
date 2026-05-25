@@ -41,6 +41,27 @@ export class PoiDomainStyleGroup extends ModelTraits {
 }
 
 @traitClass({
+  description:
+    "Level ID to camera height mapping for progressive POI filtering."
+})
+export class LevelIdCameraHeightMapping extends ModelTraits {
+  @primitiveTrait({
+    type: "number",
+    name: "Level ID",
+    description: "The zoom level ID from the RER3D POI service."
+  })
+  levelId: number = 0;
+
+  @primitiveTrait({
+    type: "number",
+    name: "Camera height threshold (meters)",
+    description:
+      "The camera height threshold in meters at which this zoom level should be displayed. Converted from cartographic scale."
+  })
+  cameraHeightThreshold: number = 0;
+}
+
+@traitClass({
   description: `Creates a single item in the catalog from RER3D POI (Regione Emilia-Romagna 3D Points of Interest) service.
 
 This specialized feature server item provides dynamic viewport-based loading and custom styling for POI layers,
@@ -140,14 +161,6 @@ export default class RerPoiCatalogItemTraits extends mixTraits(
 
   @primitiveTrait({
     type: "number",
-    name: "Progressive level step",
-    description:
-      "The step size for filtering POI levels based on camera height. Used to reduce the number of features at intermediate zoom levels."
-  })
-  progressiveLevelStep: number = 1;
-
-  @primitiveTrait({
-    type: "number",
     name: "Query bbox padding ratio",
     description:
       "The padding ratio to apply to the viewport rectangle when querying features. A value of 0.2 means 20% padding on each side."
@@ -169,22 +182,6 @@ export default class RerPoiCatalogItemTraits extends mixTraits(
       "The maximum camera tilt angle in degrees. Applied when the RerPoi layer is shown to limit steep viewing angles."
   })
   cameraTiltLimitDegrees: number = 60;
-
-  @primitiveTrait({
-    type: "number",
-    name: "Progressive near camera height",
-    description:
-      "The camera height in meters below which level filtering starts to apply. Used for zoom-dependent POI filtering."
-  })
-  progressiveNearCameraHeight: number = 1800;
-
-  @primitiveTrait({
-    type: "number",
-    name: "Progressive far camera height",
-    description:
-      "The camera height in meters above which all POI levels are hidden. Used for zoom-dependent POI filtering."
-  })
-  progressiveFarCameraHeight: number = 140000;
 
   @primitiveTrait({
     type: "string",
@@ -215,6 +212,29 @@ export default class RerPoiCatalogItemTraits extends mixTraits(
       "The color of the stroke around icon symbols. Accepts CSS color strings."
   })
   iconStrokeColor: string = "#000000";
+
+  @objectArrayTrait({
+    type: LevelIdCameraHeightMapping,
+    idProperty: "levelId",
+    name: "Level ID camera height mappings",
+    description:
+      "Maps zoom level IDs to camera height thresholds in meters. Used for progressive POI filtering based on camera altitude. Thresholds are derived from cartographic scales and represent the camera altitude at which each level should be displayed."
+  })
+  levelIdMappings: LevelIdCameraHeightMapping[] = [
+    { levelId: 7, cameraHeightThreshold: 46223.24 },
+    { levelId: 8, cameraHeightThreshold: 23111.62 },
+    { levelId: 9, cameraHeightThreshold: 11555.81 },
+    { levelId: 10, cameraHeightThreshold: 5777.9 },
+    { levelId: 11, cameraHeightThreshold: 2888.95 },
+    { levelId: 12, cameraHeightThreshold: 1444.47 },
+    { levelId: 13, cameraHeightThreshold: 722.23 },
+    { levelId: 14, cameraHeightThreshold: 361.11 },
+    { levelId: 15, cameraHeightThreshold: 180.55 },
+    { levelId: 16, cameraHeightThreshold: 90.27 },
+    { levelId: 17, cameraHeightThreshold: 45.13 },
+    { levelId: 18, cameraHeightThreshold: 22.56 },
+    { levelId: 19, cameraHeightThreshold: 11.28 }
+  ];
 
   @objectArrayTrait({
     type: PoiDomainStyleGroup,

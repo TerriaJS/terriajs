@@ -10,8 +10,10 @@ import {
   makeObservable
 } from "mobx";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
+import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
+import EllipsoidGeodesic from "terriajs-cesium/Source/Core/EllipsoidGeodesic";
 import GeoJsonDataSource from "terriajs-cesium/Source/DataSources/GeoJsonDataSource";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import URI from "urijs";
@@ -31,8 +33,11 @@ import {
   normalizeRerPoiUrl
 } from "../../../ModelMixins/RerPoiHelpers";
 import RerPoiCatalogItemTraits, {
-  defaultRerPoiCatalogItemTraits
+  defaultRerPoiCatalogItemTraits,
+  LevelIdCameraHeightMapping
 } from "../../../Traits/TraitsClasses/RerPoiCatalogItemTraits";
+
+const geodesic = new EllipsoidGeodesic();
 
 interface EsriJsonQueryOptions {
   resultOffset?: number;
@@ -202,6 +207,7 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
     this.liveEntityByObjectId.clear();
     this.isFirstDynamicLoad = true;
   }
+
   private attachCurrentViewerListener() {
     this.detachCurrentViewerListener();
     const cesium = this.terria.cesium;
@@ -347,7 +353,7 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
       cachedPoiCount: this.liveEntityByObjectId.size,
       visiblePoiCount,
       totalPoiCount,
-      cameraHeight: this.getCurrentCameraHeight(),
+      viewerScale: this.getCurrentViewerScale(),
       minLevelId,
       maxLevelId
     });
@@ -766,21 +772,12 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
     filterKey: string;
   } {
     const minLevelId = this.getRerPoiTrait("minLevelId");
-    let maxLevelId = this.getRerPoiTrait("maxLevelId");
-    const cameraHeight = this.getCurrentCameraHeight();
-    const farHeight = this.getRerPoiTrait("progressiveFarCameraHeight");
+    const viewerScale = this.getCurrentViewerScale();
 
-    if (cameraHeight !== undefined) {
-      if (cameraHeight >= farHeight) {
-        maxLevelId = minLevelId;
-      } else if (maxLevelId > minLevelId) {
-        maxLevelId = this.getProgressiveLevelIdFromHeight(
-          cameraHeight,
-          minLevelId,
-          maxLevelId
-        );
-      }
-    }
+    const maxLevelId =
+      viewerScale === undefined
+        ? minLevelId - 1
+        : this.getProgressiveLevelIdFromScale(viewerScale, minLevelId);
 
     const levelIdField = this.getRerPoiTrait("levelIdField");
     return {
@@ -790,31 +787,78 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
     };
   }
 
-  private getProgressiveLevelIdFromHeight(
-    cameraHeight: number,
-    minimumLevelId: number,
-    maximumLevelId: number
-  ): number {
-    const nearHeight = this.getRerPoiTrait("progressiveNearCameraHeight");
-    const farHeight = this.getRerPoiTrait("progressiveFarCameraHeight");
-    const levelStep = this.getRerPoiTrait("progressiveLevelStep");
-
-    const clampedHeight = CesiumMath.clamp(cameraHeight, nearHeight, farHeight);
-    const zoomRatio =
-      1 - (clampedHeight - nearHeight) / (farHeight - nearHeight);
-    const continuousLevel =
-      minimumLevelId + zoomRatio * (maximumLevelId - minimumLevelId);
-    const steppedLevel =
-      minimumLevelId +
-      Math.floor((continuousLevel - minimumLevelId) / levelStep) * levelStep;
-
-    return CesiumMath.clamp(steppedLevel, minimumLevelId, maximumLevelId);
+  private getProgressiveLevelIdMappings(): LevelIdCameraHeightMapping[] {
+    const mappings = this.getRerPoiTrait("levelIdMappings");
+    return mappings.length > 0
+      ? mappings
+      : defaultRerPoiCatalogItemTraits.levelIdMappings;
   }
 
-  private getCurrentCameraHeight(): number | undefined {
-    const position = this.terria.currentViewer.getCurrentCameraView().position;
-    if (!position) return undefined;
-    return Cartographic.fromCartesian(position)?.height;
+  private getProgressiveLevelIdFromScale(
+    viewerScale: number,
+    minimumLevelId: number
+  ): number {
+    const levelIdMappings = this.getProgressiveLevelIdMappings();
+
+    if (levelIdMappings.length === 0) {
+      return minimumLevelId - 1;
+    }
+
+    let lastLevelId = levelIdMappings[levelIdMappings.length - 1].levelId;
+
+    for (const mapping of levelIdMappings) {
+      lastLevelId = mapping.levelId;
+
+      if (viewerScale >= mapping.cameraHeightThreshold) {
+        return mapping.levelId;
+      }
+    }
+
+    return lastLevelId;
+  }
+
+  private getCurrentViewerScale(): number | undefined {
+    const scale = this.terria.mainViewer.scale;
+    if (isDefined(scale) && Number.isFinite(scale)) {
+      // Existing scale is in "hundreds of meters" units:
+      // 639 -> 63.9 km -> 63,900 m
+      return scale * 100;
+    }
+
+    const cesium = this.terria.cesium;
+    if (!cesium) return undefined;
+
+    const scene = cesium.scene;
+    const width = scene.canvas.clientWidth;
+    const height = scene.canvas.clientHeight;
+
+    if (width <= 1 || height <= 1) return undefined;
+
+    const left = scene.camera.getPickRay(
+      new Cartesian2((width / 2) | 0, height - 1)
+    );
+    const right = scene.camera.getPickRay(
+      new Cartesian2((1 + width / 2) | 0, height - 1)
+    );
+
+    if (!isDefined(left) || !isDefined(right)) return undefined;
+
+    const leftPosition = scene.globe.pick(left, scene);
+    const rightPosition = scene.globe.pick(right, scene);
+
+    if (!isDefined(leftPosition) || !isDefined(rightPosition)) return undefined;
+
+    const leftCartographic =
+      scene.globe.ellipsoid.cartesianToCartographic(leftPosition);
+    const rightCartographic =
+      scene.globe.ellipsoid.cartesianToCartographic(rightPosition);
+
+    if (!isDefined(leftCartographic) || !isDefined(rightCartographic)) {
+      return undefined;
+    }
+
+    geodesic.setEndPoints(leftCartographic, rightCartographic);
+    return geodesic.surfaceDistance;
   }
 }
 
