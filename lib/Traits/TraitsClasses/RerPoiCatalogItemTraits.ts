@@ -77,6 +77,14 @@ export default class RerPoiCatalogItemTraits extends mixTraits(
   ArcGisFeatureServerCatalogItemTraits
 ) {
   @primitiveTrait({
+    type: "boolean",
+    name: "Show debug bounding box",
+    description:
+      "Whether to display the camera viewport and padded query bounding boxes on the map."
+  })
+  showDebugBBox: boolean = false;
+
+  @primitiveTrait({
     type: "string",
     name: "Name field",
     description:
