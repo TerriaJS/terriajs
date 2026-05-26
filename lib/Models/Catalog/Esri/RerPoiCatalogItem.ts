@@ -338,7 +338,9 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
         maxLevelId
       );
       const matchesQueryableFilters = this.matchesQueryableFilters(entity, now);
-      const isVisible = inRectangle && inLevelRange && matchesQueryableFilters;
+      const isVisible =
+        this.isProtectedLevelId(entity, now) ||
+        (inRectangle && inLevelRange && matchesQueryableFilters);
       entity.show = isVisible;
       if (isVisible) visiblePoiCount += 1;
     }
@@ -375,6 +377,16 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
     if (isDefined(minLevelId) && levelId < minLevelId) return false;
     if (isDefined(maxLevelId) && levelId > maxLevelId) return false;
     return true;
+  }
+
+  private isProtectedLevelId(entity: any, now: JulianDate): boolean {
+    const levelIdField = this.getRerPoiTrait("levelIdField");
+    if (!levelIdField) return false;
+
+    const raw = entity.properties?.[levelIdField]?.getValue(now);
+    if (!isDefined(raw)) return false;
+
+    return Number(raw) === 7;
   }
 
   private readObjectIdFromEntity(
@@ -468,9 +480,15 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
     if (newFeatures.length === 0) return;
 
     const pruneRect = rectangleWithPadding(nextQuery.queryRectangle, 0.5);
+    const now = JulianDate.now();
     const idsToRemove: string[] = [];
     for (const [id, entity] of this.liveEntityByObjectId) {
-      if (!isEntityInRectangle(entity, pruneRect)) idsToRemove.push(id);
+      if (
+        !isEntityInRectangle(entity, pruneRect) &&
+        !this.isProtectedLevelId(entity, now)
+      ) {
+        idsToRemove.push(id);
+      }
     }
 
     const featuresToAdd = newFeatures.filter((f) => {
