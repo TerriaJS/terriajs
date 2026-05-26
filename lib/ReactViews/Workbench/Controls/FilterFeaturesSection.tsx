@@ -119,6 +119,10 @@ const FilterFeaturesSection: React.FC<PropsType> = observer(
                                 ? rowValue
                                 : queryableItem.ENUM_ALL_VALUE;
                             const isLastRow = rowIndex === enumRows.length - 1;
+                            const showAddButton =
+                              isLastRow &&
+                              selectedValue !== queryableItem.ENUM_ALL_VALUE;
+                            const showRemoveButton = rowIndex > 0;
 
                             return (
                               <Box
@@ -163,35 +167,75 @@ const FilterFeaturesSection: React.FC<PropsType> = observer(
                                     );
                                   })}
                                 </Select>
-                                {isLastRow &&
-                                  selectedValue !==
-                                    queryableItem.ENUM_ALL_VALUE && (
-                                    <Button
-                                      primary
-                                      title="Aggiungi un altro filtro della stessa categoria"
-                                      css={`
-                                        min-width: 32px;
-                                        height: 34px;
-                                        border-radius: 2px;
-                                        margin-left: 6px;
-                                        padding: 0 8px;
-                                        display: flex;
-                                        align-items: center;
-                                        justify-content: center;
-                                        font-weight: bold;
-                                      `}
-                                      onClick={() =>
-                                        runInAction(() => {
-                                          item.setQuery(propertyName, [
-                                            ...enumRows,
-                                            ""
-                                          ]);
-                                        })
-                                      }
-                                    >
-                                      +
-                                    </Button>
-                                  )}
+                                {(showAddButton || showRemoveButton) && (
+                                  <Box
+                                    style={{
+                                      display: "flex",
+                                      alignItems: "center",
+                                      marginLeft: "6px"
+                                    }}
+                                  >
+                                    {showAddButton && (
+                                      <Button
+                                        primary
+                                        title="Aggiungi un altro filtro della stessa categoria"
+                                        css={`
+                                          min-width: 32px;
+                                          height: 34px;
+                                          border-radius: 2px;
+                                          padding: 0 8px;
+                                          display: flex;
+                                          align-items: center;
+                                          justify-content: center;
+                                          font-weight: bold;
+                                        `}
+                                        onClick={() =>
+                                          runInAction(() => {
+                                            item.setQuery(propertyName, [
+                                              ...enumRows,
+                                              ""
+                                            ]);
+                                          })
+                                        }
+                                      >
+                                        +
+                                      </Button>
+                                    )}
+                                    {showRemoveButton && (
+                                      <Button
+                                        primary
+                                        title="Rimuovi questo filtro"
+                                        css={`
+                                          min-width: 32px;
+                                          height: 34px;
+                                          border-radius: 2px;
+                                          padding: 0 8px;
+                                          display: flex;
+                                          align-items: center;
+                                          justify-content: center;
+                                          font-weight: bold;
+                                          margin-left: ${showAddButton
+                                            ? "6px"
+                                            : "0"};
+                                        `}
+                                        onClick={() =>
+                                          runInAction(() => {
+                                            const nextValues = enumRows.slice();
+                                            nextValues.splice(rowIndex, 1);
+                                            item.setQuery(
+                                              propertyName,
+                                              nextValues.length > 0
+                                                ? nextValues
+                                                : [""]
+                                            );
+                                          })
+                                        }
+                                      >
+                                        -
+                                      </Button>
+                                    )}
+                                  </Box>
+                                )}
                               </Box>
                             );
                           })}
