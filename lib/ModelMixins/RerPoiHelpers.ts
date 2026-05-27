@@ -354,6 +354,7 @@ export function applyRerPoiEntityStyles(
         if (!dataSource.entities.contains(entity)) return;
 
         entity.billboard = new BillboardGraphics({
+          show: new ConstantProperty(entity.show !== false),
           image: new ConstantProperty(dataUrl),
           verticalOrigin: BILLBOARD_VERTICAL_ORIGIN,
           heightReference: HEIGHT_REFERENCE,
