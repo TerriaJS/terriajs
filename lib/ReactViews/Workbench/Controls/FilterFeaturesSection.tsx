@@ -1,5 +1,5 @@
 import { observer } from "mobx-react";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { runInAction } from "mobx";
 import { BaseModel } from "../../../Models/Definition/Model";
 import Box from "../../../Styled/Box";
@@ -14,6 +14,7 @@ import Button, { RawButton } from "../../../Styled/Button";
 import Hr from "../../../Styled/Hr";
 import ViewState from "../../../ReactViewModels/ViewState";
 import { RER_POI_CATALOG_ITEM_TYPE } from "../../../ModelMixins/RerPoiHelpers";
+import Checkbox from "../../../Styled/Checkbox";
 
 interface PropsType {
   item: BaseModel;
@@ -23,6 +24,27 @@ interface PropsType {
 const FilterFeaturesSection: React.FC<PropsType> = observer(
   ({ item, viewState }: PropsType) => {
     const [showQuerySection, setShowQuerySection] = useState<boolean>(false);
+    const [openSelectDropdown, setOpenSelectDropdown] = useState<string | null>(
+      null
+    );
+    const dropdownRef = useRef<HTMLDivElement>(null);
+
+    const isRerPoiCatalogItem = item.type === RER_POI_CATALOG_ITEM_TYPE;
+
+    useEffect(() => {
+      const handleClickOutside = (event: MouseEvent) => {
+        if (
+          dropdownRef.current &&
+          !dropdownRef.current.contains(event.target as Node)
+        ) {
+          setOpenSelectDropdown(null);
+        }
+      };
+      document.addEventListener("mousedown", handleClickOutside);
+      return () => {
+        document.removeEventListener("mousedown", handleClickOutside);
+      };
+    }, []);
 
     const toggleQuerySection = () => {
       setShowQuerySection((prevState) => !prevState);
@@ -55,6 +77,8 @@ const FilterFeaturesSection: React.FC<PropsType> = observer(
       item.queryableProperties.length === 0
     )
       return null;
+
+    const queryableItem = item as QueryableCatalogItemMixin.Instance;
 
     return (
       <Box column>
@@ -93,13 +117,187 @@ const FilterFeaturesSection: React.FC<PropsType> = observer(
                   );
                 })
                 .map(([propertyName, property]) => {
+                  const enumValues = (
+                    queryableItem.enumValues?.[propertyName] ?? []
+                  )
+                    .slice()
+                    .sort();
+                  const enumRows = queryableItem.queryValues?.[
+                    propertyName
+                  ] ?? [""];
+
                   return (
                     <Box key={propertyName} styledMargin="0 0 10px 0">
                       <StyledLabel small htmlFor="opacity">
                         {property.label}
                       </StyledLabel>
                       <Spacing right={3} />
-                      {property.type === "enum" && (
+                      {property.type === "enum" && isRerPoiCatalogItem && (
+                        <Box
+                          column
+                          position="relative"
+                          style={{ flex: 1 }}
+                          ref={
+                            openSelectDropdown === propertyName
+                              ? dropdownRef
+                              : undefined
+                          }
+                        >
+                          <Button
+                            css={`
+                              background: ${(p: any) => p.theme.darkLighter};
+                              border: 1px solid ${(p: any) => p.theme.dark};
+                              border-radius: 2px;
+                              color: ${(p: any) => p.theme.textLight};
+                              display: flex;
+                              align-items: center;
+                              min-height: 34px;
+                              padding: 5px 10px;
+                              text-align: left;
+                              justify-content: space-between;
+                              width: 100%;
+                            `}
+                            onClick={() =>
+                              setOpenSelectDropdown(
+                                openSelectDropdown === propertyName
+                                  ? null
+                                  : propertyName
+                              )
+                            }
+                          >
+                            <TextSpan>
+                              {enumRows.filter(
+                                (v: string) =>
+                                  v &&
+                                  v !== queryableItem.ENUM_ALL_VALUE &&
+                                  v.toLowerCase() !== "--tutto" &&
+                                  v.toLowerCase() !== "--tutti"
+                              ).length > 0
+                                ? `${
+                                    enumRows.filter(
+                                      (v: string) =>
+                                        v &&
+                                        v !== queryableItem.ENUM_ALL_VALUE &&
+                                        v.toLowerCase() !== "--tutto" &&
+                                        v.toLowerCase() !== "--tutti"
+                                    ).length
+                                  } selezionati`
+                                : "Tutti"}
+                            </TextSpan>
+                            <StyledIcon
+                              glyph={
+                                openSelectDropdown === propertyName
+                                  ? GLYPHS.opened
+                                  : GLYPHS.closed
+                              }
+                              styledWidth="10px"
+                              light
+                            />
+                          </Button>
+
+                          {openSelectDropdown === propertyName && (
+                            <Box
+                              column
+                              css={`
+                                position: absolute;
+                                top: 100%;
+                                left: 0;
+                                min-width: 100%;
+                                width: max-content;
+                                z-index: 99;
+                                background: ${(p: any) => p.theme.darkLighter};
+                                border: 1px solid ${(p: any) => p.theme.dark};
+                                max-height: 250px;
+                                overflow-y: auto;
+                                margin-top: 2px;
+                                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+                                border-radius: 2px;
+                              `}
+                            >
+                              {enumValues.map((value) => {
+                                const isAllValue =
+                                  value === queryableItem.ENUM_ALL_VALUE ||
+                                  value.toLowerCase() === "--tutto" ||
+                                  value.toLowerCase() === "--tutti";
+                                const hasActiveFilters =
+                                  enumRows.filter(
+                                    (v: string) =>
+                                      v &&
+                                      v !== queryableItem.ENUM_ALL_VALUE &&
+                                      v.toLowerCase() !== "--tutto" &&
+                                      v.toLowerCase() !== "--tutti"
+                                  ).length > 0;
+
+                                const isChecked = isAllValue
+                                  ? !hasActiveFilters
+                                  : enumRows.includes(value);
+
+                                return (
+                                  <Box
+                                    key={value}
+                                    css={`
+                                      padding: 0;
+                                      &:hover {
+                                        background: ${(p: any) =>
+                                          p.theme.colorPrimary};
+                                      }
+                                    `}
+                                  >
+                                    <Checkbox
+                                      title={value}
+                                      isChecked={isChecked}
+                                      onChange={() => {
+                                        runInAction(() => {
+                                          if (isAllValue) {
+                                            item.setQuery(propertyName, [""]);
+                                          } else {
+                                            const nextValues = new Set(
+                                              enumRows.filter(
+                                                (v: string) =>
+                                                  v &&
+                                                  v !==
+                                                    queryableItem.ENUM_ALL_VALUE &&
+                                                  v.toLowerCase() !==
+                                                    "--tutto" &&
+                                                  v.toLowerCase() !== "--tutti"
+                                              )
+                                            );
+                                            if (isChecked) {
+                                              nextValues.delete(value);
+                                            } else {
+                                              nextValues.add(value);
+                                            }
+                                            const valuesArr =
+                                              Array.from(nextValues);
+                                            item.setQuery(
+                                              propertyName,
+                                              valuesArr.length > 0
+                                                ? valuesArr
+                                                : [""]
+                                            );
+                                          }
+                                        });
+                                      }}
+                                      textProps={{
+                                        css: `
+                                          color: ${(p: any) =>
+                                            p.theme.textLight};
+                                          margin-left: 0;
+                                          padding: 8px 10px;
+                                          width: 100%;
+                                        `
+                                      }}
+                                    >
+                                      {value}
+                                    </Checkbox>
+                                  </Box>
+                                );
+                              })}
+                            </Box>
+                          )}
+                        </Box>
+                      )}
+                      {property.type === "enum" && !isRerPoiCatalogItem && (
                         <Select
                           name={propertyName}
                           value={item.queryValues?.[propertyName]?.[0]}
@@ -111,16 +309,13 @@ const FilterFeaturesSection: React.FC<PropsType> = observer(
                             });
                           }}
                         >
-                          {(item.enumValues?.[propertyName] ?? [])
-                            .slice()
-                            .sort()
-                            .map((value) => {
-                              return (
-                                <option key={value} value={value}>
-                                  {value}
-                                </option>
-                              );
-                            })}
+                          {enumValues.map((value) => {
+                            return (
+                              <option key={value} value={value}>
+                                {value}
+                              </option>
+                            );
+                          })}
                         </Select>
                       )}
                       {(property.type === "string" ||

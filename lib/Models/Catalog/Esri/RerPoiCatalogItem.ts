@@ -46,6 +46,10 @@ interface EsriJsonQueryOptions {
   bbox?: Rectangle;
   minLevelId?: number;
   maxLevelId?: number;
+  outFields?: string;
+  orderByFields?: string;
+  returnDistinctValues?: boolean;
+  returnGeometry?: boolean;
 }
 
 interface DynamicViewportQuery {
@@ -85,6 +89,8 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
   private managedDataSource: GeoJsonDataSource | undefined;
   private liveEntityByObjectId = new Map<string, any>();
   private isFirstDynamicLoad = true;
+  private serviceEnumValuesLoadPromise: Promise<void> | undefined;
+  private readonly serviceEnumValues = new Map<string, string[]>();
 
   @observable private debugDataSource: CustomDataSource | undefined;
 
@@ -156,6 +162,16 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
       report = report ? `${report}<br/>${tiltMessage}` : tiltMessage;
     }
 
+    if (this.show && this.numberOfVisibleElements === 0) {
+      const noVisiblePointsMessage = i18next.t(
+        "models.rerPoiCatalogItem.noVisiblePoints",
+        { lng: this.activeLanguage }
+      );
+      report = report
+        ? `${report}<br/>${noVisiblePointsMessage}`
+        : noVisiblePointsMessage;
+    }
+
     return report;
   }
 
@@ -167,6 +183,38 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
     return value === undefined
       ? defaultRerPoiCatalogItemTraits[traitName]
       : (value as RerPoiCatalogItemTraits[T]);
+  }
+
+  getEnumValues(propertyName: string): string[] {
+    const queryableProperty = this.queryableProperties?.find(
+      (property) => property.propertyName === propertyName
+    );
+
+    if (queryableProperty?.loadValuesFromService) {
+      return this.serviceEnumValues.get(propertyName) ?? [this.ENUM_ALL_VALUE];
+    }
+
+    const baseValues = this.getLoadedEnumValues(propertyName);
+    const valuesFromData =
+      baseValues.length > 0 ? baseValues : super.getEnumValues(propertyName);
+    const preservedValues = (this.queryValues?.[propertyName] ?? []).flatMap(
+      (value) =>
+        queryableProperty?.enumMultiValue
+          ? value.split(",").map((text) => text.trim())
+          : [value]
+    );
+
+    const combinedValues = Array.from(
+      new Set(
+        [...valuesFromData, ...preservedValues].filter(
+          (value) => isDefined(value) && value.length > 0
+        )
+      )
+    );
+
+    return combinedValues.includes(this.ENUM_ALL_VALUE)
+      ? combinedValues
+      : [this.ENUM_ALL_VALUE, ...combinedValues];
   }
 
   private startDynamicViewportRequests() {
@@ -198,6 +246,7 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
 
     this.attachCurrentViewerListener();
     this.queueDynamicReload(true);
+    void this.preloadServiceQueryableValues();
   }
 
   private stopDynamicViewportRequests() {
@@ -237,9 +286,173 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
     }
   }
 
+  private getLoadedEnumValues(propertyName: string): string[] {
+    const queryableProperty = this.queryableProperties?.find(
+      (property) => property.propertyName === propertyName
+    );
+    if (!queryableProperty || !this.managedDataSource) return [];
+
+    const now = JulianDate.now();
+    const values = new Set<string>();
+
+    for (const entity of this.managedDataSource.entities.values) {
+      const rawValue = entity.properties?.[propertyName]?.getValue(now);
+      if (!isDefined(rawValue)) continue;
+
+      if (queryableProperty.enumMultiValue) {
+        String(rawValue)
+          .split(",")
+          .map((text) => text.trim())
+          .filter((text) => text.length > 0 && text !== this.ENUM_ALL_VALUE)
+          .forEach((text) => values.add(text));
+      } else {
+        const normalized = String(rawValue).trim();
+        if (normalized && normalized !== this.ENUM_ALL_VALUE) {
+          values.add(normalized);
+        }
+      }
+    }
+
+    return [this.ENUM_ALL_VALUE, ...Array.from(values)];
+  }
+
   private detachCurrentViewerListener() {
     this.removeCesiumCameraChangedListener?.();
     this.removeCesiumCameraChangedListener = undefined;
+  }
+
+  private async preloadServiceQueryableValues(): Promise<void> {
+    const propertiesToLoad = (this.queryableProperties ?? []).filter(
+      (property) =>
+        property.propertyType === "enum" &&
+        property.loadValuesFromService &&
+        !this.serviceEnumValues.has(property.propertyName)
+    );
+
+    if (propertiesToLoad.length === 0) {
+      return;
+    }
+
+    if (this.serviceEnumValuesLoadPromise) {
+      return this.serviceEnumValuesLoadPromise;
+    }
+
+    this.serviceEnumValuesLoadPromise = Promise.allSettled(
+      propertiesToLoad.map(async (property) => {
+        const values = await this.loadQueryableValuesFromService(
+          property.propertyName
+        );
+        this.serviceEnumValues.set(
+          property.propertyName,
+          this.buildEnumValuesFromService(values, property.enumMultiValue)
+        );
+      })
+    )
+      .then((results) => {
+        for (const result of results) {
+          if (result.status === "rejected") {
+            console.warn(
+              "[RerPoiCatalogItem] Failed to preload queryable values from service",
+              result.reason
+            );
+          }
+        }
+
+        this.updateEnumValues();
+        if (this.queryValues) {
+          this.sanitizeQueryValues();
+        }
+      })
+      .finally(() => {
+        this.serviceEnumValuesLoadPromise = undefined;
+      });
+
+    return this.serviceEnumValuesLoadPromise;
+  }
+
+  private async loadQueryableValuesFromService(
+    propertyName: string
+  ): Promise<string[]> {
+    const esriJson = await this.loadEsriJsonFromServer({
+      outFields: propertyName,
+      orderByFields: propertyName,
+      returnDistinctValues: true,
+      returnGeometry: false
+    });
+
+    return (esriJson.features ?? [])
+      .map((feature) => feature.attributes?.[propertyName])
+      .filter((value): value is string | number | boolean => isDefined(value))
+      .map((value) => String(value));
+  }
+
+  private buildEnumValuesFromService(
+    values: string[],
+    enumMultiValue: boolean
+  ): string[] {
+    const normalizedValues = values
+      .filter((value) => value !== this.ENUM_ALL_VALUE)
+      .flatMap((value) =>
+        enumMultiValue ? value.split(",").map((text) => text.trim()) : [value]
+      );
+
+    return [this.ENUM_ALL_VALUE, ...Array.from(new Set(normalizedValues))];
+  }
+
+  private async loadEsriJsonFromServer(
+    queryOptions?: EsriJsonQueryOptions
+  ): Promise<EsriJsonFeatureServerResponse> {
+    const supportsPagination = this.supportsPagination;
+    const featuresPerRequest = this.featuresPerRequest;
+    const maxFeatures = this.maxFeatures;
+    const objectIdField = this.objectIdField;
+
+    const fetchPage = async (
+      resultOffset?: number
+    ): Promise<EsriJsonFeatureServerResponse> => {
+      const urlString = runInAction(() =>
+        this.buildEsriJsonUrl({ ...queryOptions, resultOffset })
+      );
+      return loadJson(urlString);
+    };
+
+    const getObjectId = (feature: any): string | undefined =>
+      feature.attributes?.[objectIdField] ??
+      feature.attributes?.OBJECTID ??
+      feature.attributes?.objectid;
+
+    const extractIds = (features: any[]): string[] =>
+      features.map(getObjectId).filter((id): id is string => isDefined(id));
+
+    if (!supportsPagination) {
+      return fetchPage();
+    }
+
+    const combined = await fetchPage(0);
+    combined.features ??= [];
+
+    const seenIDs = new Set<string>(extractIds(combined.features));
+    let currentOffset = 0;
+    let exceededTransferLimit = combined.exceededTransferLimit === true;
+
+    while (exceededTransferLimit) {
+      currentOffset += featuresPerRequest;
+      const page = await fetchPage(currentOffset);
+      const pageFeatures = page.features ?? [];
+      if (!pageFeatures.length) break;
+
+      const newIds = extractIds(pageFeatures);
+      if (newIds.length > 0 && newIds.every((id) => seenIDs.has(id))) break;
+
+      if (combined.features.length + pageFeatures.length > maxFeatures)
+        throw new Error("RerPoi query exceeded the maximum feature limit");
+
+      newIds.forEach((id) => seenIDs.add(id));
+      combined.features = combined.features.concat(pageFeatures);
+      exceededTransferLimit = page.exceededTransferLimit === true;
+    }
+
+    return combined;
   }
 
   private isCameraPastTiltLimit(): boolean {
@@ -451,17 +664,22 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
     const entityProperties = entity.properties?.getValue(now);
     if (!entityProperties) return false;
 
+    const normalizeSelectedValues = (values: string[] | undefined): string[] =>
+      (values ?? [])
+        .map((selectedValue) => selectedValue.trim().toLowerCase())
+        .filter(
+          (selectedValue) =>
+            selectedValue !== "" &&
+            selectedValue !== this.ENUM_ALL_VALUE.toLowerCase()
+        );
+
     return Object.entries(this.queryValues).every(([key, value]) => {
       const property = this.queryProperties?.[key];
       if (!property) return true;
 
       if (!entity.properties?.hasProperty(key)) return false;
 
-      const queryValue = (value?.[0] ?? "").trim().toLowerCase();
-      if (queryValue === "" || queryValue === this.ENUM_ALL_VALUE) {
-        return true;
-      }
-
+      const selectedValues = normalizeSelectedValues(value);
       const entityValue = entityProperties[key];
       if (entityValue === undefined || entityValue === null) return false;
 
@@ -476,12 +694,28 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
         );
       }
 
-      const entityText = String(entityValue).trim().toLowerCase();
-      if (property.type === "enum" && property.enumMultiValue) {
-        return entityText.includes(queryValue);
+      if (selectedValues.length === 0) {
+        return true;
       }
 
-      return entityText === queryValue;
+      const entityText = String(entityValue).trim().toLowerCase();
+      if (property.type === "enum") {
+        if (property.enumMultiValue) {
+          const entityValues = entityText
+            .split(",")
+            .map((text) => text.trim())
+            .filter((text) => text.length > 0);
+          return selectedValues.some((selectedValue) =>
+            entityValues.includes(selectedValue)
+          );
+        }
+
+        return selectedValues.some(
+          (selectedValue) => entityText === selectedValue
+        );
+      }
+
+      return entityText === selectedValues[0];
     });
   }
 
@@ -621,77 +855,14 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
   ): Promise<
     FeatureCollectionWithCrs<Geometry | GeometryCollection, Properties>
   > {
-    const supportsPagination = this.supportsPagination;
-    const featuresPerRequest = this.featuresPerRequest;
-    const maxFeatures = this.maxFeatures;
-    const objectIdField = this.objectIdField;
+    const combined = await this.loadEsriJsonFromServer(queryOptions);
 
-    const fetchPage = async (
-      resultOffset?: number
-    ): Promise<EsriJsonFeatureServerResponse> => {
-      const urlString = runInAction(() =>
-        this.buildEsriJsonUrl({ ...queryOptions, resultOffset })
-      );
-      return loadJson(urlString);
-    };
-
-    const getObjectId = (feature: any): string | undefined =>
-      feature.attributes?.[objectIdField] ??
-      feature.attributes?.OBJECTID ??
-      feature.attributes?.objectid;
-
-    const extractIds = (features: any[]): string[] =>
-      features.map(getObjectId).filter((id): id is string => isDefined(id));
-
-    if (!supportsPagination) {
-      const page = await fetchPage();
-      const count = page.features?.length ?? 0;
-
-      if (count === 0) throw new Error("RerPoi query returned no features");
-      if (count > maxFeatures)
-        throw new Error("RerPoi query exceeded the maximum feature limit");
-      if (page.exceededTransferLimit === true)
-        throw new Error("RerPoi query exceeded transfer limit");
-
-      return (featureDataToGeoJson(page) ?? {
-        type: "FeatureCollection",
-        features: []
-      }) as any;
-    }
-
-    const combined = await fetchPage(0);
-    combined.features ??= [];
-
-    if (combined.features.length === 0)
+    if (!combined.features || combined.features.length === 0)
       throw new Error("RerPoi query returned no features");
-    if (combined.features.length > maxFeatures)
+    if (combined.features.length > this.maxFeatures)
       throw new Error("RerPoi query exceeded the maximum feature limit");
-
-    const seenIDs = new Set<string>(extractIds(combined.features));
-    let currentOffset = 0;
-    let exceededTransferLimit = combined.exceededTransferLimit === true;
-
-    while (exceededTransferLimit) {
-      currentOffset += featuresPerRequest;
-      const page = await fetchPage(currentOffset);
-      const pageFeatures = page.features ?? [];
-      if (!pageFeatures.length) break;
-
-      const newIds = extractIds(pageFeatures);
-      if (newIds.length > 0 && newIds.every((id) => seenIDs.has(id))) break;
-
-      if (combined.features.length + pageFeatures.length > maxFeatures)
-        throw new Error("RerPoi query exceeded the maximum feature limit");
-
-      newIds.forEach((id) => seenIDs.add(id));
-      combined.features = combined.features.concat(pageFeatures);
-      exceededTransferLimit = page.exceededTransferLimit === true;
-    }
-
-    if (combined.features.length === 0)
-      throw new Error("RerPoi query returned no features");
-    if (combined.features.length > maxFeatures)
-      throw new Error("RerPoi query exceeded the maximum feature limit");
+    if (combined.exceededTransferLimit === true)
+      throw new Error("RerPoi query exceeded transfer limit");
 
     return (featureDataToGeoJson(combined) ?? {
       type: "FeatureCollection",
@@ -729,8 +900,13 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
       .segment("query")
       .addQuery("f", "json")
       .addQuery("where", combinedWhere || "1=1")
-      .addQuery("outFields", "*")
       .addQuery("outSR", "4326");
+
+    uri.addQuery("outFields", queryOptions?.outFields ?? "*");
+
+    if (queryOptions?.returnDistinctValues) {
+      uri.addQuery("returnDistinctValues", "true");
+    }
 
     if (queryOptions?.bbox) {
       uri
@@ -739,6 +915,17 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
         .addQuery("inSR", "4326")
         .addQuery("spatialRel", "esriSpatialRelIntersects")
         .addQuery("returnGeometry", "true");
+    } else if (queryOptions?.returnGeometry !== undefined) {
+      uri.addQuery(
+        "returnGeometry",
+        queryOptions.returnGeometry ? "true" : "false"
+      );
+    } else if (queryOptions?.returnDistinctValues) {
+      uri.addQuery("returnGeometry", "false");
+    }
+
+    if (queryOptions?.orderByFields) {
+      uri.addQuery("orderByFields", queryOptions.orderByFields);
     }
 
     if (queryOptions?.resultOffset !== undefined) {

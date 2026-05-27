@@ -109,6 +109,14 @@ export class QueryablePropertyTraits extends ModelTraits {
       "If true, on aggregation use the properties to distribute values (only if type is 'dictionary')"
   })
   distributionOnAggregation: boolean = false;
+
+  @primitiveTrait({
+    type: "boolean",
+    name: "loadValuesFromService",
+    description:
+      "Loads filter values once from the service instead of dynamically from visible features."
+  })
+  loadValuesFromService = false;
 }
 
 export default class QueryableCatalogItemTraits extends ModelTraits {

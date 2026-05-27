@@ -904,7 +904,8 @@
       "missingUrlMessage": "Impossibile caricare l'endpoint ArcGis FeatureServer perché l'elemento del catalogo non ha un `url`."
     },
     "rerPoiCatalogItem": {
-      "exceededCameraTiltLimit": "Attenzione: Il limite dell'angolo di inclinazione della camera ({{cameraTiltLimitDegrees}}°) è stato superato. Per poter visualizzare nuovi POI è necessario reimpostare l'angolo di inclinazione della camera in maniera corretta."
+      "exceededCameraTiltLimit": "Attenzione: Il limite dell'angolo di inclinazione della camera ({{cameraTiltLimitDegrees}}°) è stato superato. Per poter visualizzare nuovi POI è necessario reimpostare l'angolo di inclinazione della camera in maniera corretta.",
+      "noVisiblePoints": "Attenzione: non ci sono POI visibili nella vista corrente."
     },
     "arcGisFeatureServerCatalogGroup": {
       "serviceDescription": "Descrizione del Servizio",
