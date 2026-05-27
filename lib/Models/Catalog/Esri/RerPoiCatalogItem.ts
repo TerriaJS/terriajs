@@ -1050,7 +1050,7 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
     }
 
     geodesic.setEndPoints(leftCartographic, rightCartographic);
-    return geodesic.surfaceDistance * 100;
+    return geodesic.surfaceDistance;
   }
 
   private getLeafletViewerScale(): number | undefined {
