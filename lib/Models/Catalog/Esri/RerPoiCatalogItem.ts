@@ -20,6 +20,7 @@ import ConstantProperty from "terriajs-cesium/Source/DataSources/ConstantPropert
 import SceneMode from "terriajs-cesium/Source/Scene/SceneMode";
 import URI from "urijs";
 import i18next from "i18next";
+import ViewerMode from "../../ViewerMode";
 import isDefined from "../../../Core/isDefined";
 import loadJson from "../../../Core/loadJson";
 import { networkRequestError } from "../../../Core/TerriaError";
@@ -587,6 +588,7 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
       );
 
       applyRerPoiEntityStyles(ds, newEntities, {
+        isCesium2D: this.terria.mainViewer.viewerMode === ViewerMode.Cesium2D,
         defaultMarkerColor: this.getRerPoiTrait("defaultMarkerColor"),
         markerSize: this.getRerPoiTrait("markerSize"),
         iconStrokeWidth: this.getRerPoiTrait("iconStrokeWidth"),
@@ -646,6 +648,7 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
     const dataSource = await super.loadGeoJsonDataSource(geoJson as any);
 
     applyRerPoiEntityStyles(dataSource, dataSource.entities.values, {
+      isCesium2D: this.terria.mainViewer.viewerMode === ViewerMode.Cesium2D,
       defaultMarkerColor: this.getRerPoiTrait("defaultMarkerColor"),
       markerSize: this.getRerPoiTrait("markerSize"),
       iconStrokeWidth: this.getRerPoiTrait("iconStrokeWidth"),

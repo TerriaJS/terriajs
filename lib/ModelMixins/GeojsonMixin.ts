@@ -16,6 +16,7 @@ import {
   Properties
 } from "@turf/helpers";
 import i18next from "i18next";
+import ViewerMode from "../Models/ViewerMode";
 import {
   action,
   computed,
@@ -1452,7 +1453,9 @@ function GeoJsonMixin<T extends Constructor<BaseType>>(Base: T) {
       this.applyMixedStyle(dataSource);
 
       if (isRerPoiUrl(this.url) && this.type !== RER_POI_CATALOG_ITEM_TYPE) {
-        applyRerPoiEntityStyles(dataSource, dataSource.entities.values);
+        applyRerPoiEntityStyles(dataSource, dataSource.entities.values, {
+          isCesium2D: this.terria.mainViewer.viewerMode === ViewerMode.Cesium2D
+        });
       }
 
       return dataSource;
