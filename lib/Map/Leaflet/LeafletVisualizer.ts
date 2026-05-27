@@ -20,6 +20,12 @@ import Property from "terriajs-cesium/Source/DataSources/Property";
 import isDefined from "../../Core/isDefined";
 import { getLineStyleLeaflet } from "../../Models/Catalog/Esri/esriLineStyle";
 import LeafletScene from "./LeafletScene";
+import "leaflet.markercluster";
+import PinBuilder from "terriajs-cesium/Source/Core/PinBuilder";
+import {
+  LeafletClusteringConfig,
+  LEAFLET_CLUSTERING_CONFIG_KEY
+} from "../../ModelMixins/GeojsonMixin";
 
 interface PointDetails {
   layer?: L.CircleMarker;
@@ -108,13 +114,14 @@ class LeafletGeomVisualizer {
 
   constructor(
     readonly leafletScene: LeafletScene,
-    readonly entityCollection: EntityCollection
+    readonly entityCollection: EntityCollection,
+    private readonly _clusteringConfig?: LeafletClusteringConfig
   ) {
     entityCollection.collectionChanged.addEventListener(
       this._onCollectionChanged,
       this
     );
-    this._featureGroup = L.featureGroup().addTo(leafletScene.map);
+    this._featureGroup = this._createFeatureGroup().addTo(leafletScene.map);
     this._entitiesToVisualize = new AssociativeArray();
     this._entityHash = {};
 
@@ -124,6 +131,44 @@ class LeafletGeomVisualizer {
       [],
       []
     );
+  }
+
+  private _createFeatureGroup(): L.FeatureGroup {
+    const cfg = this._clusteringConfig;
+
+    if (!cfg?.enabled || typeof (L as any).markerClusterGroup !== "function") {
+      return L.featureGroup();
+    }
+
+    const pinBuilder = new PinBuilder();
+    const pinColor = Color.fromCssColorString(cfg.pinBackgroundColor);
+    const pinSize = cfg.pinSize;
+    const pinCache = new Map<number, string>();
+
+    return (L as any).markerClusterGroup({
+      maxClusterRadius: cfg.pixelRange,
+      minimumClusterSize: cfg.minimumClusterSize,
+      showCoverageOnHover: false,
+      zoomToBoundsOnClick: true,
+      spiderfyOnMaxZoom: true,
+
+      iconCreateFunction: (cluster: any) => {
+        const count: number = cluster.getChildCount();
+
+        let dataUrl = pinCache.get(count);
+        if (!dataUrl) {
+          dataUrl = pinBuilder
+            .fromText(count.toLocaleString(), pinColor, pinSize)
+            .toDataURL();
+          pinCache.set(count, dataUrl);
+        }
+
+        return L.icon({
+          iconUrl: dataUrl,
+          iconSize: [pinSize, pinSize]
+        });
+      }
+    });
   }
 
   private _onCollectionChanged(
@@ -1358,6 +1403,11 @@ export default class LeafletVisualizer {
     dataSource: DataSource
   ) {
     const entities = dataSource.entities;
-    return [new LeafletGeomVisualizer(leafletScene, entities)];
+    const clusteringConfig: LeafletClusteringConfig | undefined = (
+      dataSource as any
+    )[LEAFLET_CLUSTERING_CONFIG_KEY];
+    return [
+      new LeafletGeomVisualizer(leafletScene, entities, clusteringConfig)
+    ];
   }
 }

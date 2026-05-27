@@ -731,6 +731,14 @@ function GeoJsonMixin<T extends Constructor<BaseType>>(Base: T) {
             });
           }
 
+          (dataSource as any)[LEAFLET_CLUSTERING_CONFIG_KEY] = {
+            enabled: clusteringEnabled,
+            pixelRange: clusteringPixelRange,
+            minimumClusterSize: clusteringMinSize,
+            pinSize: clusteringPinSize,
+            pinBackgroundColor: clusteringPinBackgroundColor
+          } as LeafletClusteringConfig;
+
           runInAction(() => {
             this._dataSource = dataSource;
             this._imageryProvider = undefined;
@@ -2746,6 +2754,16 @@ export function parseMarkerSize(sizeString?: string): number | undefined {
   }
   return parseInt(sizeString, 10); // SimpleStyle doesn't allow 'marker-size: 20', but people will do it.
 }
+
+export interface LeafletClusteringConfig {
+  enabled: boolean;
+  pixelRange: number;
+  minimumClusterSize: number;
+  pinSize: number;
+  pinBackgroundColor: string;
+}
+
+export const LEAFLET_CLUSTERING_CONFIG_KEY = "__leafletClusteringConfig__";
 
 function stringifyFeatureProperties(featureProps: JsonObject | undefined) {
   return Object.keys(featureProps ?? {}).reduce<{
