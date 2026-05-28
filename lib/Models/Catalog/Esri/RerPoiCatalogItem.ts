@@ -615,6 +615,10 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
   }
 
   private isProtectedLevelId(entity: any, now: JulianDate): boolean {
+    if (this.hasActiveFilters()) {
+      return false;
+    }
+
     const levelIdField = this.getRerPoiTrait("levelIdField");
     if (!levelIdField) return false;
 
@@ -622,6 +626,14 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
     if (!isDefined(raw)) return false;
 
     return Number(raw) === 7;
+  }
+
+  private hasActiveFilters(): boolean {
+    if (!this.queryValues) return false;
+
+    return Object.values(this.queryValues)
+      .flat()
+      .some((value) => value !== "" && value !== this.ENUM_ALL_VALUE);
   }
 
   private readObjectIdFromEntity(
