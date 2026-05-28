@@ -262,8 +262,9 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
       poiDomainStyleGroups: this.getRerPoiTraitForSnapshot(
         "poiDomainStyleGroups"
       ),
-      queryableProperties:
-        this.getRerPoiTraitForSnapshot("queryableProperties"),
+      queryableProperties: this.getRerPoiTraitForSnapshot(
+        "queryableProperties"
+      ),
       queryBboxPaddingRatio: this.getRerPoiTraitForSnapshot(
         "queryBboxPaddingRatio"
       ),
@@ -1039,11 +1040,9 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
   > {
     const combined = await this.loadEsriJsonFromServer(queryOptions);
 
-
     if (!combined.features || combined.features.length === 0)
       throw new Error("RerPoi query returned no features");
     if (combined.features.length > this.maxFeatures)
-
       throw new Error("RerPoi query exceeded the maximum feature limit");
     if (combined.exceededTransferLimit === true)
       throw new Error("RerPoi query exceeded transfer limit");
@@ -1416,9 +1415,7 @@ function createDefaultRerPoiTraitSnapshot(): RerPoiTraitSnapshot {
     cameraTiltLimitDegrees: getDefaultRerPoiTrait("cameraTiltLimitDegrees"),
     defaultMarkerColor: getDefaultRerPoiTrait("defaultMarkerColor"),
     domainIdField: getDefaultRerPoiTrait("domainIdField"),
-    dynamicRequestDebounceMs: getDefaultRerPoiTrait(
-      "dynamicRequestDebounceMs"
-    ),
+    dynamicRequestDebounceMs: getDefaultRerPoiTrait("dynamicRequestDebounceMs"),
     iconStrokeColor: getDefaultRerPoiTrait("iconStrokeColor"),
     iconStrokeWidth: getDefaultRerPoiTrait("iconStrokeWidth"),
     labelFontSize: getDefaultRerPoiTrait("labelFontSize"),
