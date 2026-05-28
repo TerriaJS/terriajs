@@ -32,6 +32,7 @@ export function isRerPoiUrl(url: string | undefined): boolean {
 }
 
 export interface RerPoiStylingOptions {
+  isCesium2D?: boolean;
   defaultMarkerColor?: string;
   markerSize?: number;
   iconStrokeWidth?: number;
@@ -48,8 +49,6 @@ export interface RerPoiStylingOptions {
 }
 
 const BILLBOARD_VERTICAL_ORIGIN = new ConstantProperty(VerticalOrigin.BOTTOM);
-const HEIGHT_REFERENCE = new ConstantProperty(HeightReference.CLAMP_TO_GROUND);
-const EYE_OFFSET = new ConstantProperty(new Cartesian3(0, 0, -12));
 const DEPTH_TEST_DISTANCE = new ConstantProperty(Number.POSITIVE_INFINITY);
 
 type PoiDomainStyle = { symbol: string; color?: string };
@@ -269,6 +268,14 @@ export function applyRerPoiEntityStyles(
   entitiesToStyle: any[],
   options?: RerPoiStylingOptions
 ): void {
+  const isCesium2D = options?.isCesium2D ?? false;
+  const heightReferenceProp = new ConstantProperty(
+    isCesium2D ? HeightReference.NONE : HeightReference.CLAMP_TO_GROUND
+  );
+  const eyeOffsetProp = new ConstantProperty(
+    isCesium2D ? Cartesian3.ZERO : new Cartesian3(0, 0, -12)
+  );
+
   const defaultMarkerColor =
     options?.defaultMarkerColor ??
     defaultRerPoiCatalogItemTraits.defaultMarkerColor;
@@ -354,10 +361,11 @@ export function applyRerPoiEntityStyles(
         if (!dataSource.entities.contains(entity)) return;
 
         entity.billboard = new BillboardGraphics({
+          show: new ConstantProperty(entity.show !== false),
           image: new ConstantProperty(dataUrl),
           verticalOrigin: BILLBOARD_VERTICAL_ORIGIN,
-          heightReference: HEIGHT_REFERENCE,
-          eyeOffset: EYE_OFFSET,
+          heightReference: heightReferenceProp,
+          eyeOffset: eyeOffsetProp,
           distanceDisplayCondition: visibilityProp,
           disableDepthTestDistance: DEPTH_TEST_DISTANCE
         });

@@ -16,8 +16,11 @@ import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import EllipsoidGeodesic from "terriajs-cesium/Source/Core/EllipsoidGeodesic";
 import GeoJsonDataSource from "terriajs-cesium/Source/DataSources/GeoJsonDataSource";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
+import ConstantProperty from "terriajs-cesium/Source/DataSources/ConstantProperty";
+import SceneMode from "terriajs-cesium/Source/Scene/SceneMode";
 import URI from "urijs";
 import i18next from "i18next";
+import ViewerMode from "../../ViewerMode";
 import isDefined from "../../../Core/isDefined";
 import loadJson from "../../../Core/loadJson";
 import { networkRequestError } from "../../../Core/TerriaError";
@@ -72,7 +75,10 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
   readonly traits = RerPoiCatalogItemTraits.traits;
 
   private removeCesiumCameraChangedListener: (() => void) | undefined;
+  private removeLeafletViewportChangedListener: (() => void) | undefined;
+  private removeBeforeViewerChangedListener: (() => void) | undefined;
   private removeViewerChangedListener: (() => void) | undefined;
+  private removeViewerModeReaction: (() => void) | undefined;
   private removeShowReaction: (() => void) | undefined;
   private removeLanguageChangedListener: (() => void) | undefined;
 
@@ -218,6 +224,13 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
   }
 
   private startDynamicViewportRequests() {
+    if (!this.removeBeforeViewerChangedListener) {
+      this.removeBeforeViewerChangedListener =
+        this.terria.mainViewer.beforeViewerChanged.addEventListener(() => {
+          this.detachCurrentViewerListener();
+        });
+    }
+
     if (!this.removeViewerChangedListener) {
       this.removeViewerChangedListener =
         this.terria.mainViewer.afterViewerChanged.addEventListener(() => {
@@ -225,6 +238,11 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
           this.queueDynamicReload(true);
         });
     }
+
+    this.removeViewerModeReaction ??= reaction(
+      () => this.terria.mainViewer.viewerMode,
+      () => this.queueDynamicReload(true)
+    );
 
     if (!this.removeLanguageChangedListener) {
       i18next.on("languageChanged", this.onLanguageChanged);
@@ -255,8 +273,12 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
     this.removeLanguageChangedListener = undefined;
     this.removeShowReaction?.();
     this.removeShowReaction = undefined;
+    this.removeBeforeViewerChangedListener?.();
+    this.removeBeforeViewerChangedListener = undefined;
     this.removeViewerChangedListener?.();
     this.removeViewerChangedListener = undefined;
+    this.removeViewerModeReaction?.();
+    this.removeViewerModeReaction = undefined;
 
     if (this.dynamicReloadTimer) {
       clearTimeout(this.dynamicReloadTimer);
@@ -272,6 +294,8 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
     this.managedDataSource = undefined;
     this.liveEntityByObjectId.clear();
     this.isFirstDynamicLoad = true;
+    this.pendingDynamicQuery = undefined;
+    this.activeDynamicQuery = undefined;
   }
 
   private attachCurrentViewerListener() {
@@ -282,6 +306,21 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
         cesium.scene.camera.changed.addEventListener(
           this.onDynamicViewportChanged
         );
+      this.onDynamicViewportChanged();
+      return;
+    }
+
+    const leaflet = this.terria.leaflet;
+    if (leaflet) {
+      const map = leaflet.map;
+      map.on("move", this.onDynamicViewportChanged);
+      map.on("zoom", this.onDynamicViewportChanged);
+      map.on("resize", this.onDynamicViewportChanged);
+      this.removeLeafletViewportChangedListener = () => {
+        map.off("move", this.onDynamicViewportChanged);
+        map.off("zoom", this.onDynamicViewportChanged);
+        map.off("resize", this.onDynamicViewportChanged);
+      };
       this.onDynamicViewportChanged();
     }
   }
@@ -319,6 +358,8 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
   private detachCurrentViewerListener() {
     this.removeCesiumCameraChangedListener?.();
     this.removeCesiumCameraChangedListener = undefined;
+    this.removeLeafletViewportChangedListener?.();
+    this.removeLeafletViewportChangedListener = undefined;
   }
 
   private async preloadServiceQueryableValues(): Promise<void> {
@@ -577,7 +618,7 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
       const isVisible =
         this.isProtectedLevelId(entity, now) ||
         (inRectangle && inLevelRange && matchesQueryableFilters);
-      entity.show = isVisible;
+      this.setEntityVisibility(entity, isVisible);
       if (isVisible) visiblePoiCount += 1;
     }
     console.log("[RerPoiCatalogItem] POI debug", {
@@ -592,6 +633,14 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
     this.numberOfVisibleElements = visiblePoiCount;
 
     this.terria.currentViewer.notifyRepaintRequired();
+  }
+
+  private setEntityVisibility(entity: any, isVisible: boolean) {
+    entity.show = isVisible;
+    const show = new ConstantProperty(isVisible);
+    if (entity.billboard) entity.billboard.show = show;
+    if (entity.point) entity.point.show = show;
+    if (entity.label) entity.label.show = show;
   }
 
   private isEntityInLevelRange(
@@ -745,7 +794,6 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
     }
 
     const newFeatures = (geoJson.features ?? []) as any[];
-    if (newFeatures.length === 0) return;
 
     const pruneRect = rectangleWithPadding(nextQuery.queryRectangle, 0.5);
     const now = JulianDate.now();
@@ -786,6 +834,7 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
       );
 
       applyRerPoiEntityStyles(ds, newEntities, {
+        isCesium2D: this.terria.mainViewer.viewerMode === ViewerMode.Cesium2D,
         defaultMarkerColor: this.getRerPoiTrait("defaultMarkerColor"),
         markerSize: this.getRerPoiTrait("markerSize"),
         iconStrokeWidth: this.getRerPoiTrait("iconStrokeWidth"),
@@ -845,6 +894,7 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
     const dataSource = await super.loadGeoJsonDataSource(geoJson as any);
 
     applyRerPoiEntityStyles(dataSource, dataSource.entities.values, {
+      isCesium2D: this.terria.mainViewer.viewerMode === ViewerMode.Cesium2D,
       defaultMarkerColor: this.getRerPoiTrait("defaultMarkerColor"),
       markerSize: this.getRerPoiTrait("markerSize"),
       iconStrokeWidth: this.getRerPoiTrait("iconStrokeWidth"),
@@ -869,9 +919,11 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
   > {
     const combined = await this.loadEsriJsonFromServer(queryOptions);
 
+
     if (!combined.features || combined.features.length === 0)
       throw new Error("RerPoi query returned no features");
     if (combined.features.length > this.maxFeatures)
+
       throw new Error("RerPoi query exceeded the maximum feature limit");
     if (combined.exceededTransferLimit === true)
       throw new Error("RerPoi query exceeded transfer limit");
@@ -975,6 +1027,11 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
     const camera = scene.camera;
     const canvas = scene.canvas;
     const ellipsoid = scene.globe.ellipsoid;
+
+    if (scene.mode === SceneMode.SCENE2D) {
+      const rect = camera.computeViewRectangle(ellipsoid);
+      return rect ?? currentView.rectangle;
+    }
 
     const w = canvas.clientWidth;
     const h = canvas.clientHeight;
@@ -1159,6 +1216,9 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
   }
 
   private getCurrentViewerScale(): number | undefined {
+    const leafletScale = this.getLeafletViewerScale();
+    if (isDefined(leafletScale)) return leafletScale;
+
     const scale = this.terria.mainViewer.scale;
     if (isDefined(scale) && Number.isFinite(scale)) {
       // Existing scale is in "hundreds of meters" units:
@@ -1200,6 +1260,23 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
 
     geodesic.setEndPoints(leftCartographic, rightCartographic);
     return geodesic.surfaceDistance;
+  }
+
+  private getLeafletViewerScale(): number | undefined {
+    const leaflet = this.terria.leaflet;
+    if (!leaflet) return undefined;
+
+    const map = leaflet.map;
+    const size = map.getSize();
+    if (size.x <= 1 || size.y <= 1) return undefined;
+
+    const y = size.y / 2;
+    const x = size.x / 2;
+    const pixelDistance = map
+      .containerPointToLatLng([x, y])
+      .distanceTo(map.containerPointToLatLng([x + 1, y]));
+
+    return Number.isFinite(pixelDistance) ? pixelDistance * 100 : undefined;
   }
 }
 

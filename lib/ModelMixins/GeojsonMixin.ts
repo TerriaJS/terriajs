@@ -16,6 +16,7 @@ import {
   Properties
 } from "@turf/helpers";
 import i18next from "i18next";
+import ViewerMode from "../Models/ViewerMode";
 import {
   action,
   computed,
@@ -729,6 +730,14 @@ function GeoJsonMixin<T extends Constructor<BaseType>>(Base: T) {
               cluster.billboard.image = image;
             });
           }
+
+          (dataSource as any)[LEAFLET_CLUSTERING_CONFIG_KEY] = {
+            enabled: clusteringEnabled,
+            pixelRange: clusteringPixelRange,
+            minimumClusterSize: clusteringMinSize,
+            pinSize: clusteringPinSize,
+            pinBackgroundColor: clusteringPinBackgroundColor
+          } as LeafletClusteringConfig;
 
           runInAction(() => {
             this._dataSource = dataSource;
@@ -1452,7 +1461,9 @@ function GeoJsonMixin<T extends Constructor<BaseType>>(Base: T) {
       this.applyMixedStyle(dataSource);
 
       if (isRerPoiUrl(this.url) && this.type !== RER_POI_CATALOG_ITEM_TYPE) {
-        applyRerPoiEntityStyles(dataSource, dataSource.entities.values);
+        applyRerPoiEntityStyles(dataSource, dataSource.entities.values, {
+          isCesium2D: this.terria.mainViewer.viewerMode === ViewerMode.Cesium2D
+        });
       }
 
       return dataSource;
@@ -2743,6 +2754,16 @@ export function parseMarkerSize(sizeString?: string): number | undefined {
   }
   return parseInt(sizeString, 10); // SimpleStyle doesn't allow 'marker-size: 20', but people will do it.
 }
+
+export interface LeafletClusteringConfig {
+  enabled: boolean;
+  pixelRange: number;
+  minimumClusterSize: number;
+  pinSize: number;
+  pinBackgroundColor: string;
+}
+
+export const LEAFLET_CLUSTERING_CONFIG_KEY = "__leafletClusteringConfig__";
 
 function stringifyFeatureProperties(featureProps: JsonObject | undefined) {
   return Object.keys(featureProps ?? {}).reduce<{

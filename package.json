@@ -137,6 +137,7 @@
     "javascript-natural-sort": "^0.7.1",
     "json5": "^2.1.0",
     "leaflet": "^1.8.0",
+    "leaflet.markercluster": "^1.5.3",
     "linkify-it": "^5.0.0",
     "lodash-es": "^4.17.11",
     "markdown-it": "^14.1.0",
