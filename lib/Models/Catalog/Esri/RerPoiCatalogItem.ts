@@ -9,6 +9,7 @@ import {
   observable,
   makeObservable
 } from "mobx";
+import { keepAlive } from "mobx-utils";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
@@ -66,6 +67,31 @@ interface EsriJsonFeatureServerResponse {
   exceededTransferLimit?: boolean;
 }
 
+interface RerPoiTraitSnapshot {
+  cameraTiltLimitDegrees: number;
+  defaultMarkerColor: string;
+  domainIdField: string;
+  dynamicRequestDebounceMs: number;
+  iconStrokeColor: string;
+  iconStrokeWidth: number;
+  labelFontSize: number;
+  labelOutlineColor: string;
+  labelOutlineWidth: number;
+  labelTextColor: string;
+  levelIdField: string;
+  levelIdMappings: LevelIdCameraHeightMapping[];
+  markerSize: number;
+  minLevelId: number;
+  nameField: string;
+  poiDomainStyleGroups: RerPoiCatalogItemTraits["poiDomainStyleGroups"];
+  queryableProperties: RerPoiCatalogItemTraits["queryableProperties"];
+  queryBboxPaddingRatio: number;
+  scaleField: string;
+  showDebugBBox: boolean;
+  showLabels: boolean;
+  where: string;
+}
+
 export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
   static readonly type = RER_POI_CATALOG_ITEM_TYPE;
   static readonly TraitsClass = RerPoiCatalogItemTraits;
@@ -81,6 +107,8 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
   private removeViewerModeReaction: (() => void) | undefined;
   private removeShowReaction: (() => void) | undefined;
   private removeLanguageChangedListener: (() => void) | undefined;
+  private removeTraitSnapshotReaction: (() => void) | undefined;
+  private readonly computedKeepAliveDisposers: Array<() => void> = [];
 
   private dynamicReloadTimer: ReturnType<typeof setTimeout> | undefined;
   private pendingDynamicQuery: DynamicViewportQuery | undefined;
@@ -91,6 +119,8 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
   @observable private cameraTiltLimitExceeded = false;
   @observable private activeLanguage =
     i18next.resolvedLanguage ?? i18next.language;
+  @observable.ref private rerPoiTraitSnapshot =
+    createDefaultRerPoiTraitSnapshot();
 
   private managedDataSource: GeoJsonDataSource | undefined;
   private liveEntityByObjectId = new Map<string, any>();
@@ -133,6 +163,17 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
     onBecomeUnobserved(this, "mapItems", () =>
       this.stopDynamicViewportRequests()
     );
+
+    this.keepImperativeComputedViewsAlive();
+    this.keepImperativeTraitSnapshotUpdated();
+  }
+
+  dispose() {
+    super.dispose();
+    this.stopDynamicViewportRequests();
+    this.removeTraitSnapshotReaction?.();
+    this.removeTraitSnapshotReaction = undefined;
+    this.disposeImperativeComputedViews();
   }
 
   @override
@@ -181,18 +222,91 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
     return report;
   }
 
-  private getRerPoiTrait<T extends keyof RerPoiCatalogItemTraits>(
+  private getRerPoiTrait<T extends keyof RerPoiTraitSnapshot>(
+    traitName: T
+  ): RerPoiTraitSnapshot[T] {
+    return this.rerPoiTraitSnapshot[traitName];
+  }
+
+  private getRerPoiTraitForSnapshot<T extends keyof RerPoiCatalogItemTraits>(
     traitName: T
   ): RerPoiCatalogItemTraits[T] {
     const trait = RerPoiCatalogItemTraits.traits[traitName as string];
     const value = trait?.getValue(this as unknown as BaseModel);
-    return value === undefined
-      ? defaultRerPoiCatalogItemTraits[traitName]
-      : (value as RerPoiCatalogItemTraits[T]);
+    return cloneTraitValue(
+      value === undefined ? defaultRerPoiCatalogItemTraits[traitName] : value
+    ) as RerPoiCatalogItemTraits[T];
+  }
+
+  private buildRerPoiTraitSnapshot(): RerPoiTraitSnapshot {
+    return {
+      cameraTiltLimitDegrees: this.getRerPoiTraitForSnapshot(
+        "cameraTiltLimitDegrees"
+      ),
+      defaultMarkerColor: this.getRerPoiTraitForSnapshot("defaultMarkerColor"),
+      domainIdField: this.getRerPoiTraitForSnapshot("domainIdField"),
+      dynamicRequestDebounceMs: this.getRerPoiTraitForSnapshot(
+        "dynamicRequestDebounceMs"
+      ),
+      iconStrokeColor: this.getRerPoiTraitForSnapshot("iconStrokeColor"),
+      iconStrokeWidth: this.getRerPoiTraitForSnapshot("iconStrokeWidth"),
+      labelFontSize: this.getRerPoiTraitForSnapshot("labelFontSize"),
+      labelOutlineColor: this.getRerPoiTraitForSnapshot("labelOutlineColor"),
+      labelOutlineWidth: this.getRerPoiTraitForSnapshot("labelOutlineWidth"),
+      labelTextColor: this.getRerPoiTraitForSnapshot("labelTextColor"),
+      levelIdField: this.getRerPoiTraitForSnapshot("levelIdField"),
+      levelIdMappings: this.getRerPoiTraitForSnapshot("levelIdMappings"),
+      markerSize: this.getRerPoiTraitForSnapshot("markerSize"),
+      minLevelId: this.getRerPoiTraitForSnapshot("minLevelId"),
+      nameField: this.getRerPoiTraitForSnapshot("nameField"),
+      poiDomainStyleGroups: this.getRerPoiTraitForSnapshot(
+        "poiDomainStyleGroups"
+      ),
+      queryableProperties:
+        this.getRerPoiTraitForSnapshot("queryableProperties"),
+      queryBboxPaddingRatio: this.getRerPoiTraitForSnapshot(
+        "queryBboxPaddingRatio"
+      ),
+      scaleField: this.getRerPoiTraitForSnapshot("scaleField"),
+      showDebugBBox: this.getRerPoiTraitForSnapshot("showDebugBBox"),
+      showLabels: this.getRerPoiTraitForSnapshot("showLabels"),
+      where: this.getRerPoiTraitForSnapshot("where")
+    };
+  }
+
+  private keepImperativeTraitSnapshotUpdated() {
+    this.removeTraitSnapshotReaction = reaction(
+      () => this.buildRerPoiTraitSnapshot(),
+      (snapshot) => {
+        runInAction(() => {
+          this.rerPoiTraitSnapshot = snapshot;
+        });
+      },
+      { fireImmediately: true }
+    );
+  }
+
+  private keepImperativeComputedViewsAlive() {
+    // These inherited computed trait views are read by imperative workbench
+    // and viewport reload paths, not only by MobX reactions.
+    [
+      "disableZoomTo",
+      "queryProperties",
+      "queryableProperties",
+      "where",
+      "zoomOnAddToWorkbench"
+    ].forEach((property) => {
+      this.computedKeepAliveDisposers.push(keepAlive(this, property));
+    });
+  }
+
+  private disposeImperativeComputedViews() {
+    this.computedKeepAliveDisposers.forEach((dispose) => dispose());
+    this.computedKeepAliveDisposers.length = 0;
   }
 
   getEnumValues(propertyName: string): string[] {
-    const queryableProperty = this.queryableProperties?.find(
+    const queryableProperty = this.getRerPoiTrait("queryableProperties")?.find(
       (property) => property.propertyName === propertyName
     );
 
@@ -202,7 +316,9 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
 
     const baseValues = this.getLoadedEnumValues(propertyName);
     const valuesFromData =
-      baseValues.length > 0 ? baseValues : super.getEnumValues(propertyName);
+      baseValues.length > 0
+        ? baseValues
+        : runInAction(() => super.getEnumValues(propertyName));
     const preservedValues = (this.queryValues?.[propertyName] ?? []).flatMap(
       (value) =>
         queryableProperty?.enumMultiValue
@@ -326,7 +442,7 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
   }
 
   private getLoadedEnumValues(propertyName: string): string[] {
-    const queryableProperty = this.queryableProperties?.find(
+    const queryableProperty = this.getRerPoiTrait("queryableProperties")?.find(
       (property) => property.propertyName === propertyName
     );
     if (!queryableProperty || !this.managedDataSource) return [];
@@ -363,7 +479,9 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
   }
 
   private async preloadServiceQueryableValues(): Promise<void> {
-    const propertiesToLoad = (this.queryableProperties ?? []).filter(
+    const propertiesToLoad = (
+      this.getRerPoiTrait("queryableProperties") ?? []
+    ).filter(
       (property) =>
         property.propertyType === "enum" &&
         property.loadValuesFromService &&
@@ -629,8 +747,10 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
       minLevelId,
       maxLevelId
     });
-    this.numberOfTotalElements = totalPoiCount;
-    this.numberOfVisibleElements = visiblePoiCount;
+    runInAction(() => {
+      this.numberOfTotalElements = totalPoiCount;
+      this.numberOfVisibleElements = visiblePoiCount;
+    });
 
     this.terria.currentViewer.notifyRepaintRequired();
   }
@@ -948,7 +1068,7 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
     }
 
     const combinedWhere = [
-      this.where,
+      this.getRerPoiTrait("where"),
       this.buildLevelFilterClause(
         queryOptions?.minLevelId,
         queryOptions?.maxLevelId
@@ -1181,7 +1301,12 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
     return {
       minLevelId,
       maxLevelId,
-      filterKey: [this.where, levelIdField, minLevelId, maxLevelId].join("|")
+      filterKey: [
+        this.getRerPoiTrait("where"),
+        levelIdField,
+        minLevelId,
+        maxLevelId
+      ].join("|")
     };
   }
 
@@ -1278,6 +1403,63 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
 
     return Number.isFinite(pixelDistance) ? pixelDistance * 100 : undefined;
   }
+}
+
+function getDefaultRerPoiTrait<T extends keyof RerPoiCatalogItemTraits>(
+  traitName: T
+): RerPoiCatalogItemTraits[T] {
+  return cloneTraitValue(defaultRerPoiCatalogItemTraits[traitName]);
+}
+
+function createDefaultRerPoiTraitSnapshot(): RerPoiTraitSnapshot {
+  return {
+    cameraTiltLimitDegrees: getDefaultRerPoiTrait("cameraTiltLimitDegrees"),
+    defaultMarkerColor: getDefaultRerPoiTrait("defaultMarkerColor"),
+    domainIdField: getDefaultRerPoiTrait("domainIdField"),
+    dynamicRequestDebounceMs: getDefaultRerPoiTrait(
+      "dynamicRequestDebounceMs"
+    ),
+    iconStrokeColor: getDefaultRerPoiTrait("iconStrokeColor"),
+    iconStrokeWidth: getDefaultRerPoiTrait("iconStrokeWidth"),
+    labelFontSize: getDefaultRerPoiTrait("labelFontSize"),
+    labelOutlineColor: getDefaultRerPoiTrait("labelOutlineColor"),
+    labelOutlineWidth: getDefaultRerPoiTrait("labelOutlineWidth"),
+    labelTextColor: getDefaultRerPoiTrait("labelTextColor"),
+    levelIdField: getDefaultRerPoiTrait("levelIdField"),
+    levelIdMappings: getDefaultRerPoiTrait("levelIdMappings"),
+    markerSize: getDefaultRerPoiTrait("markerSize"),
+    minLevelId: getDefaultRerPoiTrait("minLevelId"),
+    nameField: getDefaultRerPoiTrait("nameField"),
+    poiDomainStyleGroups: getDefaultRerPoiTrait("poiDomainStyleGroups"),
+    queryableProperties: getDefaultRerPoiTrait("queryableProperties"),
+    queryBboxPaddingRatio: getDefaultRerPoiTrait("queryBboxPaddingRatio"),
+    scaleField: getDefaultRerPoiTrait("scaleField"),
+    showDebugBBox: getDefaultRerPoiTrait("showDebugBBox"),
+    showLabels: getDefaultRerPoiTrait("showLabels"),
+    where: getDefaultRerPoiTrait("where")
+  };
+}
+
+function cloneTraitValue<T>(value: T): T {
+  if (value instanceof BaseModel) {
+    return Object.keys(value.traits).reduce((result, traitName) => {
+      result[traitName] = cloneTraitValue((value as any)[traitName]);
+      return result;
+    }, {} as any);
+  }
+
+  if (Array.isArray(value)) {
+    return value.map((item) => cloneTraitValue(item)) as T;
+  }
+
+  if (value !== null && typeof value === "object") {
+    return Object.keys(value as any).reduce((result, key) => {
+      result[key] = cloneTraitValue((value as any)[key]);
+      return result;
+    }, {} as any);
+  }
+
+  return value;
 }
 
 function rectangleWithPadding(
