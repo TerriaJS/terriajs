@@ -381,7 +381,6 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
 
     this.attachCurrentViewerListener();
     this.queueDynamicReload(true);
-    void this.preloadServiceQueryableValues();
   }
 
   private stopDynamicViewportRequests() {
@@ -683,6 +682,7 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
           this.buildLiveEntityMap(ds);
           this.activeDynamicQuery = nextQuery;
           this.isFirstDynamicLoad = false;
+          await this.preloadServiceQueryableValues();
           this.syncCachedEntityVisibility(nextQuery);
           this.updateEnumValues();
           this.sanitizeQueryValues();
