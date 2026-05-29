@@ -104,6 +104,7 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
   private removeLeafletViewportChangedListener: (() => void) | undefined;
   private removeBeforeViewerChangedListener: (() => void) | undefined;
   private removeViewerChangedListener: (() => void) | undefined;
+  private removeCurrentViewerReaction: (() => void) | undefined;
   private removeViewerModeReaction: (() => void) | undefined;
   private removeShowReaction: (() => void) | undefined;
   private removeLanguageChangedListener: (() => void) | undefined;
@@ -288,8 +289,6 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
   }
 
   private keepImperativeComputedViewsAlive() {
-    // These inherited computed trait views are read by imperative workbench
-    // and viewport reload paths, not only by MobX reactions.
     [
       "disableZoomTo",
       "queryProperties",
@@ -351,14 +350,22 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
     if (!this.removeViewerChangedListener) {
       this.removeViewerChangedListener =
         this.terria.mainViewer.afterViewerChanged.addEventListener(() => {
-          this.attachCurrentViewerListener();
-          this.queueDynamicReload(true);
+          this.refreshDynamicViewportRequestsForViewerChange();
         });
     }
 
+    this.removeCurrentViewerReaction ??= reaction(
+      () => this.terria.currentViewer,
+      () => {
+        this.refreshDynamicViewportRequestsForViewerChange();
+      }
+    );
+
     this.removeViewerModeReaction ??= reaction(
       () => this.terria.mainViewer.viewerMode,
-      () => this.queueDynamicReload(true)
+      () => {
+        this.refreshDynamicViewportRequestsForViewerChange();
+      }
     );
 
     if (!this.removeLanguageChangedListener) {
@@ -379,8 +386,32 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
       }
     );
 
+    this.refreshDynamicViewportRequestsForViewerChange();
+  }
+
+  private refreshDynamicViewportRequestsForViewerChange() {
+    this.resetDynamicViewportState();
     this.attachCurrentViewerListener();
     this.queueDynamicReload(true);
+  }
+
+  private resetDynamicViewportState() {
+    if (this.dynamicReloadTimer) {
+      clearTimeout(this.dynamicReloadTimer);
+      this.dynamicReloadTimer = undefined;
+    }
+
+    this.dynamicReloadQueued = false;
+    this.dynamicReloadInProgress = false;
+    this.managedDataSource = undefined;
+    this.liveEntityByObjectId.clear();
+    this.isFirstDynamicLoad = true;
+    this.pendingDynamicQuery = undefined;
+    this.activeDynamicQuery = undefined;
+
+    runInAction(() => {
+      this.debugDataSource = undefined;
+    });
   }
 
   private stopDynamicViewportRequests() {
@@ -393,6 +424,8 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
     this.removeBeforeViewerChangedListener = undefined;
     this.removeViewerChangedListener?.();
     this.removeViewerChangedListener = undefined;
+    this.removeCurrentViewerReaction?.();
+    this.removeCurrentViewerReaction = undefined;
     this.removeViewerModeReaction?.();
     this.removeViewerModeReaction = undefined;
 
@@ -752,7 +785,6 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
       this.numberOfTotalElements = totalPoiCount;
       this.numberOfVisibleElements = visiblePoiCount;
     });
-
     this.terria.currentViewer.notifyRepaintRequired();
   }
 
@@ -1136,7 +1168,6 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
     return undefined;
   }
 
-  // --- NEW CORE LOGIC: Dynamically calculate accurate rectangle based on literal screen pixels ---
   private getScreenBoundingBox(): Rectangle {
     const currentView = this.terria.currentViewer.getCurrentCameraView();
     const cesium = this.terria.cesium;
@@ -1155,7 +1186,6 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
     const w = canvas.clientWidth;
     const h = canvas.clientHeight;
 
-    // Sample a 3x3 grid across the screen to accurately trace the visible Earth surface
     const screenPoints = [
       new Cartesian2(0, 0),
       new Cartesian2(w / 2, 0),
@@ -1188,22 +1218,17 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
       }
     }
 
-    // If all 9 points successfully hit the globe, we have a geometrically perfect bounding box.
     if (validPoints === screenPoints.length) {
-      // Safety check to prevent wrap-around bugs if zoomed out near the poles or antimeridian
       if (maxLon - minLon < Math.PI) {
         return new Rectangle(minLon, minLat, maxLon, maxLat);
       }
     }
 
-    // Fallback: if the camera is pitched such that some rays miss the Earth (e.g. sky is visible),
-    // use Cesium's internal View Frustum calculator. It safely handles horizon calculations.
     const nativeRect = camera.computeViewRectangle(ellipsoid);
     if (nativeRect) {
       return nativeRect;
     }
 
-    // Absolute fallback to Terria's basic cache
     return currentView.rectangle;
   }
 
@@ -1262,7 +1287,6 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
       return undefined;
     }
 
-    // Inject our new precision screen calculating method here
     const screenRectangle = this.getScreenBoundingBox();
     const paddingRatio = this.getRerPoiTrait("queryBboxPaddingRatio");
     const queryRectangle = rectangleWithPadding(screenRectangle, paddingRatio);
@@ -1345,8 +1369,6 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
 
     const scale = this.terria.mainViewer.scale;
     if (isDefined(scale) && Number.isFinite(scale)) {
-      // Existing scale is in "hundreds of meters" units:
-      // 639 -> 63.9 km -> 63,900 m
       return scale * 100;
     }
 
