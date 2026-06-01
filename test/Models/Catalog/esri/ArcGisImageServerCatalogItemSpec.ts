@@ -96,7 +96,7 @@ describe("ArcGisImageServer", function () {
     expect(imageServerItem.disableAboutData).toBeFalsy();
   });
 
-  xdescribe("when tokenUrl is set", function () {
+  describe("when tokenUrl is set", function () {
     beforeEach(() => {
       imageServerItem.setTrait(
         CommonStrata.definition,
@@ -145,7 +145,7 @@ describe("ArcGisImageServer", function () {
     });
   });
 
-  xdescribe("when token is set", function () {
+  describe("when token is set", function () {
     beforeEach(() => {
       imageServerItem.setTrait(
         CommonStrata.definition,

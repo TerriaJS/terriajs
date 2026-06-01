@@ -14,7 +14,7 @@ import getRecordsPage1Xml from "../../../../wwwroot/test/csw/Example1GetRecordsP
 import getRecordsPage2Xml from "../../../../wwwroot/test/csw/Example1GetRecordsPage2.xml";
 import getRecordsPage3Xml from "../../../../wwwroot/test/csw/Example1GetRecordsPage3.xml";
 
-xdescribe("CswCatalogGroup", function () {
+describe("CswCatalogGroup", function () {
   let terria: Terria;
   let group: CswCatalogGroup;
   beforeEach(function () {

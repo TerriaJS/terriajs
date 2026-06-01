@@ -217,7 +217,7 @@ describe("ArcGisMapServerCatalogItem", function () {
       expect(item.layers).toBe("31");
     });
 
-    xdescribe("when tokenUrl is set", function () {
+    describe("when tokenUrl is set", function () {
       beforeEach(() => {
         runInAction(() => {
           item = new ArcGisMapServerCatalogItem(
@@ -287,7 +287,7 @@ describe("ArcGisMapServerCatalogItem", function () {
       });
     });
 
-    xdescribe("when token is set", function () {
+    describe("when token is set", function () {
       beforeEach(() => {
         runInAction(() => {
           item = new ArcGisMapServerCatalogItem(

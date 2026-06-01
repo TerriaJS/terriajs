@@ -15,7 +15,7 @@ import GetObservationResponseYearly from "../../../../wwwroot/test/sos/GetObserv
 
 import regionMapping from "../../../../wwwroot/data/regionMapping.json";
 
-xdescribe("SensorObservationServiceCatalogItem", function () {
+describe("SensorObservationServiceCatalogItem", function () {
   let item: SensorObservationServiceCatalogItem;
 
   beforeEach(function () {
