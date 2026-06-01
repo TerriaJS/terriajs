@@ -2,6 +2,7 @@
 
 #### next release (8.12.3)
 
+- Search result IDs are checked against workbench IDs to determine `add` or `remove` status.
 - [The next improvement]
 
 #### 8.12.2 - 2026-03-27
