@@ -27,8 +27,7 @@ export enum LaunchAction {
 
 export enum HelpAction {
   panelOpened = "Panel opened",
-  takeTour = "Take tour",
-  helpCenterOpened = "Help center opened"
+  takeTour = "Take tour"
 }
 
 export enum TimeLineAction {

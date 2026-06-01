@@ -107,7 +107,7 @@ class HelpPanel extends Component {
             )}
           </Text>
           <Spacing bottom={5} />
-          <Box centered column gap={4}>
+          <Box centered>
             <Button
               primary
               rounded
