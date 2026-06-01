@@ -25,7 +25,9 @@ class DataPreview extends Component {
     terria: PropTypes.object.isRequired,
     viewState: PropTypes.object,
     previewed: PropTypes.object,
-    t: PropTypes.func.isRequired
+    t: PropTypes.func.isRequired,
+    onToggleItemOnMap: PropTypes.func,
+    hideToggleItemOnMap: PropTypes.bool
   };
 
   backToMap() {
@@ -65,6 +67,8 @@ class DataPreview extends Component {
             previewed={previewed}
             terria={this.props.terria}
             viewState={this.props.viewState}
+            onToggleItemOnMap={this.props.onToggleItemOnMap}
+            hideToggleItemOnMap={this.props.hideToggleItemOnMap}
           />
         </div>
       );

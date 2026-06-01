@@ -9,6 +9,10 @@ import ViewState from "../../ReactViewModels/ViewState";
 import Terria from "../Terria";
 import { runInAction } from "mobx";
 
+export interface SelectableDimensionWorkflowOptions {
+  hideCloseButton?: boolean;
+}
+
 /**
  * Model for SelectableDimensionWorkflow. Basically just includes a bunch of selectableDimensions, name, icon and a catalog member.
  * This can be used to create "workflows" that display SelectableDimensions in a side panel above the Workbench
@@ -19,10 +23,10 @@ export default interface SelectableDimensionWorkflow {
   /** Human readable name - used as title */
   name: string;
   icon: IconProps["glyph"];
+  options?: SelectableDimensionWorkflowOptions;
 
   /** Item to which this workflow belongs **/
   item: BaseModel;
-
   onClose?: () => void;
   /** Footer button */
   footer?: { onClick: () => void; buttonText: string };
@@ -47,6 +51,19 @@ export function runWorkflow(
         ? viewStateOrTerria
         : viewStateOrTerria.terria;
     terria.selectableDimensionWorkflow = workflow;
+  });
+}
+
+/**
+ * Close any open workflow
+ */
+export function closeWorkflow(viewStateOrTerria: ViewState | Terria) {
+  runInAction(() => {
+    const terria =
+      viewStateOrTerria instanceof Terria
+        ? viewStateOrTerria
+        : viewStateOrTerria.terria;
+    terria.selectableDimensionWorkflow = undefined;
   });
 }
 

@@ -22,3 +22,6 @@ ts-out/
 
 # Catalog index generation files
 catalog-index*.json
+
+# inlang plugin cache
+project.inlang/cache/

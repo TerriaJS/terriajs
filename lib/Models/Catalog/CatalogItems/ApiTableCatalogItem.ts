@@ -91,14 +91,7 @@ export class ApiTableCatalogItem extends AutoRefreshingMixin(
     );
     return Promise.all(
       apisWithUrl.map(async (api, idx) => {
-        let data = await loadJson(
-          apiUrls[idx],
-          undefined,
-          api.requestData
-            ? saveModelToJson(api.requestData as unknown as BaseModel)
-            : undefined,
-          api.postRequestDataAsFormData
-        );
+        let data = await loadJson(apiUrls[idx]);
         if (api.responseDataPath !== undefined) {
           data = getResponseDataPath(data, api.responseDataPath);
         }

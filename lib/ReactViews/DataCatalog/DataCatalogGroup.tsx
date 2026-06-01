@@ -35,6 +35,7 @@ interface PropsType {
   /** Overrides whether to get the open state of the group from the group model or manage it internally */
   manageIsOpenLocally?: boolean;
   userData?: boolean;
+  hideActionButton?: boolean;
   onActionButtonClicked?: () => void;
   removable?: boolean;
   terria: Terria;
@@ -47,6 +48,7 @@ const DataCatalogGroup: React.FC<PropsType> = observer((props) => {
     viewState,
     manageIsOpenLocally = false,
     userData = false,
+    hideActionButton,
     onActionButtonClicked,
     removable,
     terria,
@@ -143,6 +145,7 @@ const DataCatalogGroup: React.FC<PropsType> = observer((props) => {
               userData={userData}
               overrideOpen={manageIsOpenLocally}
               onActionButtonClicked={onActionButtonClicked}
+              hideActionButton={hideActionButton}
             />
           ))
         : null}
