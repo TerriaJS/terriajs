@@ -24,6 +24,7 @@ import URI from "urijs";
 import AsyncLoader from "../Core/AsyncLoader";
 import Class from "../Core/Class";
 import CorsProxy from "../Core/CorsProxy";
+import { setPostRequestsDisabled } from "../Core/loadWithXhr";
 import JsonValue, {
   JsonArray,
   JsonObject,
@@ -283,6 +284,13 @@ export interface ConfigParameters {
    * True to disable the share embed panel.
    */
   disableShareEmbed?: boolean;
+
+  /**
+   * True to forbid non-GET (POST/PUT) requests made through `loadWithXhr`.
+   * Defaults to false (POST/PUT allowed). Set true to lock a deployment down
+   * to GET-only requests.
+   */
+  disablePostRequests?: boolean;
 
   /**
    * True to disable user added data.
@@ -623,6 +631,7 @@ export default class Terria {
     disablePedestrianMode: false,
     disableSharePanel: false,
     disableShareEmbed: false,
+    disablePostRequests: false,
     disableUserAddedData: false,
     keepCatalogOpen: false,
     experimentalFeatures: undefined,
@@ -1404,6 +1413,7 @@ export default class Terria {
 
     this.appName = this.configParameters.appName ?? this.appName;
     this.supportEmail = this.configParameters.supportEmail ?? this.supportEmail;
+    setPostRequestsDisabled(this.configParameters.disablePostRequests ?? false);
   }
 
   protected async forceLoadInitSources(): Promise<void> {
