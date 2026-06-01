@@ -100,20 +100,16 @@ export default class CartoMapV3CatalogItem extends GeoJsonMixin(
 
     // If cartoQuery is defined - use Query API (https://api-docs.carto.com/#8f2020d9-edf3-4b50-ae58-9edeaa34613c)
     if (this.cartoQuery) {
-      // const url = new URI(this.baseUrl)
-      //   .path("")
-      //   .path(`v3/maps/${this.connectionName}/query`);
+      const url = new URI(this.baseUrl)
+        .path("")
+        .path(`v3/maps/${this.connectionName}/query`);
 
-      // response = (
-      //   await callCartoApi(url.toString(), this.accessToken, {
-      //     q: this.cartoQuery,
-      //     geo_column: this.cartoGeoColumn
-      //   })
-      // )?.throwIfError();
-      throw new TerriaError({
-        title: "Carto Query API not supported",
-        message: "Carto Query API is not supported in Terria Product"
-      });
+      response = (
+        await callCartoApi(url.toString(), this.accessToken, {
+          q: this.cartoQuery,
+          geo_column: this.cartoGeoColumn
+        })
+      )?.throwIfError();
     }
     // If cartoTableName is defined - use Table API (https://api-docs.carto.com/#6a05d4d7-c6a1-4635-a8de-c91fa5e77fda)
     else if (this.cartoTableName) {
@@ -262,7 +258,7 @@ interface CartoApiErrorResponse {
 }
 
 /** Wrap loadJson calls to handle Carto API error messages */
-async function callCartoApi(url: string, auth?: string) {
+async function callCartoApi(url: string, auth?: string, body?: JsonObject) {
   try {
     return new Result(
       await loadJson(
@@ -271,7 +267,8 @@ async function callCartoApi(url: string, auth?: string) {
           ? {
               Authorization: `Bearer ${auth}`
             }
-          : {}
+          : {},
+        body
       )
     );
   } catch (e) {

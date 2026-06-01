@@ -1,13 +1,16 @@
 import i18next from "i18next";
 import { action, computed, makeObservable, override, runInAction } from "mobx";
+import Mustache from "mustache";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import TerriaError from "../../../Core/TerriaError";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
 import isDefined from "../../../Core/isDefined";
+import loadWithXhr from "../../../Core/loadWithXhr";
 import TableMixin from "../../../ModelMixins/TableMixin";
 import TableAutomaticStylesStratum from "../../../Table/TableAutomaticStylesStratum";
 import TableColumnType from "../../../Table/TableColumnType";
+import xml2json from "../../../ThirdParty/xml2json";
 import SensorObservationServiceCatalogItemTraits from "../../../Traits/TraitsClasses/SensorObservationCatalogItemTraits";
 import TableChartStyleTraits, {
   TableChartLineStyleTraits
@@ -22,6 +25,7 @@ import StratumOrder from "../../Definition/StratumOrder";
 import createStratumInstance from "../../Definition/createStratumInstance";
 import { SelectableDimension } from "../../SelectableDimensions/SelectableDimensions";
 import Terria from "../../Terria";
+import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import defaultRequestTemplate from "./SensorObservationServiceRequestTemplate.xml";
 
 interface GetFeatureOfInterestResponse {
@@ -642,51 +646,46 @@ async function loadSoapBody(
   requestTemplate: string,
   templateContext: TemplateContext
 ): Promise<any> {
-  throw new TerriaError({
-    title: "Sensor Observation Service API not supported",
-    message: "Sensor Observation Service API is not supported in Terria Product"
+  const requestXml = Mustache.render(requestTemplate, templateContext);
+
+  const responseXml = await loadWithXhr({
+    url: proxyCatalogItemUrl(item, url),
+    responseType: "document",
+    method: "POST",
+    overrideMimeType: "text/xml",
+    data: requestXml,
+    headers: { "Content-Type": "application/soap+xml" }
   });
 
-  // const requestXml = Mustache.render(requestTemplate, templateContext);
+  if (responseXml === undefined) {
+    return;
+  }
 
-  // const responseXml = await loadWithXhr({
-  //   url: proxyCatalogItemUrl(item, url),
-  //   responseType: "document",
-  //   method: "POST",
-  //   overrideMimeType: "text/xml",
-  //   data: requestXml,
-  //   headers: { "Content-Type": "application/soap+xml" }
-  // });
-
-  // if (responseXml === undefined) {
-  //   return;
-  // }
-
-  // const json = xml2json(responseXml);
-  // if (json.Exception) {
-  //   let errorMessage = i18next.t(
-  //     "models.sensorObservationService.unknownError"
-  //   );
-  //   if (json.Exception.ExceptionText) {
-  //     errorMessage = i18next.t(
-  //       "models.sensorObservationService.exceptionMessage",
-  //       { exceptionText: json.Exception.ExceptionText }
-  //     );
-  //   }
-  //   throw new TerriaError({
-  //     sender: item,
-  //     title: runInAction(() => item.name || ""),
-  //     message: errorMessage
-  //   });
-  // }
-  // if (json.Body === undefined) {
-  //   throw new TerriaError({
-  //     sender: item,
-  //     title: runInAction(() => item.name || ""),
-  //     message: i18next.t("models.sensorObservationService.missingBody")
-  //   });
-  // }
-  // return json.Body;
+  const json = xml2json(responseXml);
+  if (json.Exception) {
+    let errorMessage = i18next.t(
+      "models.sensorObservationService.unknownError"
+    );
+    if (json.Exception.ExceptionText) {
+      errorMessage = i18next.t(
+        "models.sensorObservationService.exceptionMessage",
+        { exceptionText: json.Exception.ExceptionText }
+      );
+    }
+    throw new TerriaError({
+      sender: item,
+      title: runInAction(() => item.name || ""),
+      message: errorMessage
+    });
+  }
+  if (json.Body === undefined) {
+    throw new TerriaError({
+      sender: item,
+      title: runInAction(() => item.name || ""),
+      message: i18next.t("models.sensorObservationService.missingBody")
+    });
+  }
+  return json.Body;
 }
 
 /**

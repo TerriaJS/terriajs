@@ -247,94 +247,89 @@ class CswStratum extends LoadableStratum(CswCatalogGroupTraits) {
       });
     }
 
-    throw new TerriaError({
-      title: "CSW GetRecords API not supported",
-      message: "CSW GetRecords API is not supported in Terria Product"
-    });
+    // Get Records
+    let paging = true;
+    let startPosition = 1;
 
-    // // Get Records
-    // let paging = true;
-    // let startPosition = 1;
+    const records: Records = [];
 
-    // const records: Records = [];
+    // We have to paginate through Records
+    while (paging) {
+      // Replace {startPosition}
+      const postData = (
+        catalogGroup.getRecordsTemplate ?? defaultGetRecordsTemplate
+      ).replace("{startPosition}", startPosition);
 
-    // // We have to paginate through Records
-    // while (paging) {
-    // Replace {startPosition}
-    // const postData = (
-    //   catalogGroup.getRecordsTemplate ?? defaultGetRecordsTemplate
-    // ).replace("{startPosition}", startPosition);
+      const xml = await loadWithXhr({
+        url: proxyCatalogItemUrl(
+          catalogGroup,
+          new URI(catalogGroup.url).query("").toString(),
+          "1d"
+        ),
+        responseType: "document",
+        method: "POST",
+        overrideMimeType: "text/xml",
+        data: postData,
+        headers: {
+          "Content-Type": "application/xml"
+        }
+      });
 
-    // const xml = await loadWithXhr({
-    //   url: proxyCatalogItemUrl(
-    //     catalogGroup,
-    //     new URI(catalogGroup.url).query("").toString(),
-    //     "1d"
-    //   ),
-    //   responseType: "document",
-    //   method: "POST",
-    //   overrideMimeType: "text/xml",
-    //   data: postData,
-    //   headers: {
-    //     "Content-Type": "application/xml"
-    //   }
-    // });
+      if (!isDefined(xml)) {
+        throw networkRequestError({
+          sender: catalogGroup,
+          title: i18next.t("models.csw.errorLoadingRecordsTitle"),
+          message: i18next.t("models.csw.errorLoadingRecordsMessage")
+        });
+      }
 
-    // if (!isDefined(xml)) {
-    //   throw networkRequestError({
-    //     sender: catalogGroup,
-    //     title: i18next.t("models.csw.errorLoadingRecordsTitle"),
-    //     message: i18next.t("models.csw.errorLoadingRecordsMessage")
-    //   });
-    // }
+      const json = xml2json(xml) as GetRecordsResponse;
 
-    // const json = xml2json(xml) as GetRecordsResponse;
+      if (json.Exception) {
+        let errorMessage = i18next.t("models.csw.unknownError");
+        if (json.Exception.ExceptionText) {
+          errorMessage = i18next.t("models.csw.exceptionMessage", {
+            exceptionText: json.Exception.ExceptionText
+          });
+        }
+        throw new TerriaError({
+          sender: catalogGroup,
+          title: i18next.t("models.csw.errorLoadingTitle"),
+          message: errorMessage
+        });
+      }
 
-    // if (json.Exception) {
-    //   let errorMessage = i18next.t("models.csw.unknownError");
-    //   if (json.Exception.ExceptionText) {
-    //     errorMessage = i18next.t("models.csw.exceptionMessage", {
-    //       exceptionText: json.Exception.ExceptionText
-    //     });
-    //   }
-    //   throw new TerriaError({
-    //     sender: catalogGroup,
-    //     title: i18next.t("models.csw.errorLoadingTitle"),
-    //     message: errorMessage
-    //   });
-    // }
+      records.push(...(json?.SearchResults?.Record ?? []));
 
-    // records.push(...(json?.SearchResults?.Record ?? []));
+      // Get next start position - or stop pageing
+      const nextRecord =
+        typeof json?.SearchResults?.nextRecord === "string"
+          ? parseInt(json?.SearchResults?.nextRecord ?? "0", 10)
+          : json?.SearchResults?.nextRecord;
 
-    // // Get next start position - or stop pageing
-    // const nextRecord =
-    //   typeof json?.SearchResults?.nextRecord === "string"
-    //     ? parseInt(json?.SearchResults?.nextRecord ?? "0", 10)
-    //     : json?.SearchResults?.nextRecord;
+      const numberOfRecordsMatched =
+        typeof json?.SearchResults?.numberOfRecordsMatched === "string"
+          ? parseInt(json?.SearchResults?.numberOfRecordsMatched ?? "0", 10)
+          : json?.SearchResults?.numberOfRecordsMatched;
+      if (
+        !isDefined(nextRecord) ||
+        nextRecord === 0 ||
+        nextRecord >= numberOfRecordsMatched
+      ) {
+        paging = false;
+      } else {
+        startPosition = nextRecord;
+      }
+    }
 
-    // const numberOfRecordsMatched =
-    //   typeof json?.SearchResults?.numberOfRecordsMatched === "string"
-    //     ? parseInt(json?.SearchResults?.numberOfRecordsMatched ?? "0", 10)
-    //     : json?.SearchResults?.numberOfRecordsMatched;
-    // if (
-    //   !isDefined(nextRecord) ||
-    //   nextRecord === 0 ||
-    //   nextRecord >= numberOfRecordsMatched
-    // ) {
-    //   paging = false;
-    // } else {
-    //   startPosition = nextRecord;
-    // }
-    //}
+    // If we have metadataGroups, add records to them
+    if (metadataGroups.length > 0) {
+      records.forEach((record) => {
+        findGroup(metadataGroups, record)?.records.push(record);
+      });
+    }
 
-    // // If we have metadataGroups, add records to them
-    // if (metadataGroups.length > 0) {
-    //   records.forEach((record) => {
-    //     findGroup(metadataGroups, record)?.records.push(record);
-    //   });
-    // }
-
-    // return new CswStratum(catalogGroup, metadataGroups, records);
+    return new CswStratum(catalogGroup, metadataGroups, records);
   }
 
   constructor(
