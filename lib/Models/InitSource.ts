@@ -32,15 +32,17 @@ export interface ModelJson extends JsonObject {
   type?: string;
   shareKeys?: string[];
   members?: (string | JsonObject)[];
+  strata?: { [stratumName: string]: Partial<ModelJson> };
 }
 
 export interface StoryData {
   title: string;
   text: string;
   id: string;
-  shareData: ShareInitSourceData;
+  shareData: StartData;
 }
-export interface ShareInitSourceData {
+
+export interface StartData {
   version: string;
   /** Share data initSources can be a mix of initUrls (string) and initData (InitDataSource/JsonObject) */
   initSources: (InitSourceData | string)[];

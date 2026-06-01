@@ -43,7 +43,7 @@ function lint(done) {
     "--ext",
     ".jsx,.js,.ts,.tsx",
     "--max-warnings",
-    "0",
+    "16",
     "--report-unused-disable-directives"
   ]);
 

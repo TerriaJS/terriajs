@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { http, HttpResponse } from "msw";
-import Terria from "../../../../../lib/Models/Terria";
+import { HttpResponse, http } from "msw";
+import Terria, { defaultLoadConfig } from "../../../../../lib/Models/Terria";
 import LangPanel from "../../../../../lib/ReactViews/Map/Panels/LangPanel/LangPanel";
 import { worker } from "../../../../mocks/browser";
 
@@ -41,7 +41,9 @@ describe("LangPanel", function () {
         })
       )
     );
-    await terria.start({ configUrl: "test-config.json" });
+    await terria.start({
+      loadConfig: async () => await defaultLoadConfig("./")
+    });
 
     render(<LangPanel terria={terria} smallScreen={false} />);
 

@@ -183,28 +183,37 @@ const SidePanel = observer<React.FC<SidePanelProps>>(
           />
           <Spacing bottom={2} />
           <Box justifySpaceBetween>
-            <SidePanelButton
-              ref={refForExploreMapData}
-              onClick={onAddDataClicked}
-              title={addData}
-              btnText={addData}
-              styledWidth={"152px"}
-            >
-              <StyledIcon glyph={Icon.GLYPHS.add} light styledWidth={"20px"} />
-            </SidePanelButton>
-            <SidePanelButton
-              ref={refForUploadData}
-              onClick={onAddLocalDataClicked}
-              title={t("addData.load")}
-              btnText={uploadText}
-              styledWidth={"152px"}
-            >
-              <StyledIcon
-                glyph={Icon.GLYPHS.uploadThin}
-                light
-                styledWidth={"20px"}
-              />
-            </SidePanelButton>
+            {terria.elements.get("side-panel-add-data")?.visible !== false && (
+              <SidePanelButton
+                ref={refForExploreMapData}
+                onClick={onAddDataClicked}
+                title={addData}
+                btnText={addData}
+                styledWidth={"152px"}
+              >
+                <StyledIcon
+                  glyph={Icon.GLYPHS.add}
+                  light
+                  styledWidth={"20px"}
+                />
+              </SidePanelButton>
+            )}
+            {terria.elements.get("side-panel-upload-data")?.visible !== false &&
+              !terria.configParameters.disableUserAddedData && (
+                <SidePanelButton
+                  ref={refForUploadData}
+                  onClick={onAddLocalDataClicked}
+                  title={t("addData.load")}
+                  btnText={uploadText}
+                  styledWidth={"152px"}
+                >
+                  <StyledIcon
+                    glyph={Icon.GLYPHS.uploadThin}
+                    light
+                    styledWidth={"20px"}
+                  />
+                </SidePanelButton>
+              )}
           </Box>
           <Spacing bottom={2} />
         </div>

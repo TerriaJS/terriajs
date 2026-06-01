@@ -22,6 +22,7 @@ type PropsType = {
     onClick: () => void;
     buttonText: string;
   };
+  hideCloseButton?: boolean;
   children?: ReactNode;
 };
 
@@ -54,13 +55,17 @@ const WorkflowPanel: FC<PropsType> = observer((props) => {
         <TitleBar>
           <TitleIcon glyph={props.icon} />
           <Title>{props.title}</Title>
-          {!props.closeButtonText && (
-            <CloseIconButton onClick={props.onClose} />
-          )}
-          {props.closeButtonText && (
-            <CloseTextButton onClick={props.onClose}>
-              {props.closeButtonText}
-            </CloseTextButton>
+          {!props.hideCloseButton && (
+            <>
+              {!props.closeButtonText && (
+                <CloseIconButton onClick={props.onClose} />
+              )}
+              {props.closeButtonText && (
+                <CloseTextButton onClick={props.onClose}>
+                  {props.closeButtonText}
+                </CloseTextButton>
+              )}
+            </>
           )}
         </TitleBar>
         <Content>

@@ -104,7 +104,9 @@ const DataPreviewMap: FC<DataPreviewMapProps> = observer((props) => {
 
   const mapContainerRef = useRef<HTMLDivElement>(null);
 
-  const isZoomedToExtentRef = useRef(false);
+  const isZoomedToExtentRef = useRef(
+    props.terria.configParameters.zoomMapOnPreviewedItem ?? false
+  );
 
   const homeCamera = useMemo(() => {
     return terria.mainViewer.homeCamera;

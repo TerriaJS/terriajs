@@ -24,7 +24,7 @@ import URI from "urijs";
 import AsyncLoader from "../Core/AsyncLoader";
 import Class from "../Core/Class";
 import CorsProxy from "../Core/CorsProxy";
-import {
+import JsonValue, {
   JsonArray,
   JsonObject,
   isJsonBoolean,
@@ -77,7 +77,7 @@ import SearchProviderTraits from "../Traits/SearchProviders/SearchProviderTraits
 import MappableTraits from "../Traits/TraitsClasses/MappableTraits";
 import MapNavigationModel from "../ViewModels/MapNavigation/MapNavigationModel";
 import TerriaViewer from "../ViewModels/TerriaViewer";
-import { BaseMapsModel } from "./BaseMaps/BaseMapsModel";
+import { BaseMapItem, BaseMapsModel } from "./BaseMaps/BaseMapsModel";
 import CameraView from "./CameraView";
 import Catalog from "./Catalog/Catalog";
 import CatalogGroup from "./Catalog/CatalogGroup";
@@ -104,7 +104,7 @@ import IElementConfig from "./IElementConfig";
 import InitSource, {
   InitSourceData,
   InitSourceFromData,
-  ShareInitSourceData,
+  StartData,
   StoryData,
   isInitFromData,
   isInitFromDataPromise,
@@ -164,12 +164,23 @@ export interface ConfigParameters {
    * @deprecated
    */
   proxyableDomainsUrl?: string;
+  /** URL to TerriaJS-server config. Defaults to `serverconfig/`. */
   serverConfigUrl?: string;
+  /**
+   * URL of the service used to generate share links. This defaults to `share` if not specified, which maps to TerriaJS Server `share` endpoint.
+   */
   shareUrl?: string;
+  shareRequestHeaders?: () => Promise<Record<string, string>>;
+  /**
+   * Base URL of the client application used to generate share links. If not specified, the current page base URI will be used.
+   * For example, if `shareClientBaseUrl` is `http://example.com/`, then a share link will be generated as `http://example.com/#share=...`.
+   */
+  shareClientBaseUrl?: string;
   /**
    * URL of the service used to send feedback.  If not specified, the "Give Feedback" button will not appear.
    */
   feedbackUrl?: string;
+  feedbackRequestHeaders?: () => Promise<Record<string, string>>;
   /**
    * An array of base paths to use to try to use to resolve init fragments in the URL.  For example, if this property is `[ "init/", "http://example.com/init/"]`, then a URL with `#test` will first try to load `init/test.json` and, if that fails, next try to load `http://example.com/init/test.json`.
    */
@@ -230,6 +241,11 @@ export interface ConfigParameters {
    * token will not be shared with others.
    */
   cesiumIonAllowSharingAddedAssets?: boolean;
+
+  /**
+   * Whether or not to disable the default Cesium ion token. If true, the user will be asked to select a Cesium ion token when adding assets.
+   */
+  cesiumIonDisableDefaultToken?: boolean;
   /**
    * A [Bing Maps API key](https://msdn.microsoft.com/en-us/library/ff428642.aspx) used for requesting Bing Maps base maps and using the Bing Maps geocoder for searching. It is your responsibility to request a key and comply with all terms and conditions.
    */
@@ -248,12 +264,30 @@ export interface ConfigParameters {
    */
   displayOneBrand?: number;
   /**
+   * True to disable the mobile interface.
+   */
+  disableMobileInterface?: boolean;
+  /**
    * True to disable the "Centre map at your current location" button.
    */
   disableMyLocation?: boolean;
   disableSplitter?: boolean;
 
   disablePedestrianMode?: boolean;
+
+  /**
+   * True to disable the share panel.
+   */
+  disableSharePanel?: boolean;
+  /**
+   * True to disable the share embed panel.
+   */
+  disableShareEmbed?: boolean;
+
+  /**
+   * True to disable user added data.
+   */
+  disableUserAddedData?: boolean;
 
   experimentalFeatures?: boolean;
   magdaReferenceHeaders?: MagdaReferenceHeaders;
@@ -267,6 +301,16 @@ export interface ConfigParameters {
    * Options for Google Analytics
    */
   googleAnalyticsOptions?: unknown;
+
+  /**
+   * PostHog analytics key
+   */
+  postHogAnalyticsKey?: string;
+
+  /**
+   * PostHog analytics host
+   */
+  postHogAnalyticsHost?: string;
 
   /**
    * Error service provider configuration.
@@ -379,13 +423,42 @@ export interface ConfigParameters {
    * Keep catalog open when adding / removing items
    */
   keepCatalogOpen: boolean;
+
+  /**
+   * Zoom preview map on previewed item
+   */
+  zoomMapOnPreviewedItem: boolean;
 }
 
-interface StartOptions {
-  configUrl: string;
-  configUrlHeaders?: {
-    [key: string]: string;
+const IS_DEVELOPMENT = process.env.NODE_ENV === "development";
+
+export const defaultLoadConfig = async (configUrl: string) => {
+  const hashProperties =
+    typeof window !== "undefined"
+      ? queryToObject(new URI(window.location).fragment())
+      : {};
+
+  // If in development environment, allow usage of #configUrl to set Terria config URL
+  if (IS_DEVELOPMENT) {
+    if (hashProperties["configUrl"] && hashProperties["configUrl"] !== "")
+      configUrl = hashProperties["configUrl"];
+  }
+
+  const baseUri = new URI(configUrl).filename("");
+
+  const config = await loadJson5(configUrl);
+
+  return {
+    config,
+    baseUri
   };
+};
+
+interface StartOptions {
+  loadConfig: (cb?: () => void) => Promise<{
+    config: JsonValue;
+    baseUri: URI;
+  }>;
   applicationUrl?: Location;
   shareDataService?: ShareDataService;
   errorService?: ErrorServiceProvider;
@@ -422,6 +495,8 @@ interface TerriaOptions {
   cesiumBaseUrl?: string;
 
   analytics?: Analytics;
+
+  corsProxy?: CorsProxy;
 }
 
 interface HomeCameraInit {
@@ -492,7 +567,7 @@ export default class Terria {
    * Gets or sets the {@link this.corsProxy} used to determine if a URL needs to be proxied and to proxy it if necessary.
    * @type {CorsProxy}
    */
-  corsProxy: CorsProxy = new CorsProxy();
+  corsProxy: CorsProxy;
 
   /**
    * Gets or sets the instance to which to report Google Analytics-style log
@@ -519,7 +594,10 @@ export default class Terria {
     proxyableDomainsUrl: "proxyabledomains/", // deprecated, will be determined from serverconfig
     serverConfigUrl: "serverconfig/",
     shareUrl: "share",
+    shareClientBaseUrl: undefined,
+    shareRequestHeaders: undefined,
     feedbackUrl: undefined,
+    feedbackRequestHeaders: undefined,
     initFragmentPaths: ["init/"],
     storyEnabled: true,
     showStorySaveInstructions: false,
@@ -533,19 +611,26 @@ export default class Terria {
     cesiumIonOAuth2ApplicationID: undefined,
     cesiumIonLoginTokenPersistence: "page",
     cesiumIonAllowSharingAddedAssets: false,
+    cesiumIonDisableDefaultToken: false,
     bingMapsKey: undefined,
     hideTerriaLogo: false,
     brandBarElements: undefined,
     brandBarSmallElements: undefined,
     displayOneBrand: 0,
+    disableMobileInterface: false,
     disableMyLocation: undefined,
     disableSplitter: undefined,
     disablePedestrianMode: false,
+    disableSharePanel: false,
+    disableShareEmbed: false,
+    disableUserAddedData: false,
     keepCatalogOpen: false,
     experimentalFeatures: undefined,
     magdaReferenceHeaders: undefined,
     locationSearchBoundingBox: undefined,
     googleAnalyticsKey: undefined,
+    postHogAnalyticsKey: undefined,
+    postHogAnalyticsHost: undefined,
     errorService: undefined,
     globalDisclaimer: undefined,
     theme: {},
@@ -590,7 +675,8 @@ export default class Terria {
     aboutButtonHrefUrl: "about.html",
     plugins: undefined,
     searchBarConfig: undefined,
-    searchProviders: []
+    searchProviders: [],
+    zoomMapOnPreviewedItem: false
   };
 
   @observable
@@ -746,6 +832,8 @@ export default class Terria {
     (buildModuleUrl as any).setBaseUrl(this.cesiumBaseUrl);
 
     this.analytics = options.analytics ?? new NoopAnalytics();
+
+    this.corsProxy = options.corsProxy ?? new CorsProxy();
   }
 
   /** Raise error to user.
@@ -986,7 +1074,10 @@ export default class Terria {
 
   async start(options: StartOptions): Promise<void> {
     // Some hashProperties need to be set before anything else happens
-    const hashProperties = queryToObject(new URI(window.location).fragment());
+    const hashProperties =
+      typeof window !== "undefined"
+        ? queryToObject(new URI(window.location).fragment())
+        : {};
 
     if (isDefined(hashProperties["ignoreErrors"])) {
       this.userProperties.set("ignoreErrors", hashProperties["ignoreErrors"]);
@@ -994,31 +1085,11 @@ export default class Terria {
 
     this.shareDataService = options.shareDataService;
 
-    // If in development environment, allow usage of #configUrl to set Terria config URL
-    if (this.developmentEnv) {
-      if (
-        isDefined(hashProperties["configUrl"]) &&
-        hashProperties["configUrl"] !== ""
-      )
-        options.configUrl = hashProperties["configUrl"];
-    }
-
-    const baseUri = new URI(options.configUrl).filename("");
-
-    const launchUrlForAnalytics =
-      options.applicationUrl?.href || getUriWithoutPath(baseUri);
+    let launchUrlForAnalytics = options.applicationUrl?.href;
 
     try {
-      const config = await loadJson5(
-        options.configUrl,
-        options.configUrlHeaders
-      );
-
-      // If it's a magda config, we only load magda config and parameters should never be a property on the direct
-      // config aspect (it would be under the `terria-config` aspect)
-      if (isJsonObject(config) && config.aspects) {
-        await this.loadMagdaConfig(options.configUrl, config, baseUri);
-      }
+      const { config, baseUri } = await options.loadConfig();
+      launchUrlForAnalytics ||= getUriWithoutPath(baseUri);
       runInAction(() => {
         if (isJsonObject(config) && isJsonObject(config.parameters)) {
           this.updateParameters(config.parameters);
@@ -1029,7 +1100,7 @@ export default class Terria {
       this.raiseErrorToUser(error, {
         sender: this,
         title: { key: "models.terria.loadConfigErrorTitle" },
-        message: `Couldn't load ${options.configUrl}`,
+        message: `Couldn't load configuration`,
         severity: TerriaErrorSeverity.Error
       });
     } finally {
@@ -1189,7 +1260,7 @@ export default class Terria {
   async loadPersistedOrInitBaseMap(): Promise<void> {
     const baseMapItems = this.baseMapsModel.baseMapItems;
     // Set baseMap fallback to first option
-    let baseMap = baseMapItems[0];
+    let baseMap = baseMapItems[0] as BaseMapItem | undefined;
     const persistedBaseMapId = this.getLocalProperty("basemap");
     const baseMapSearch = baseMapItems.find(
       (baseMapItem) => baseMapItem.item?.uniqueId === persistedBaseMapId
@@ -2166,7 +2237,7 @@ export default class Terria {
 
   getLocalProperty(key: string): string | boolean | null {
     try {
-      if (!defined(window.localStorage)) {
+      if (typeof window === "undefined" || !defined(window.localStorage)) {
         return null;
       }
     } catch (_e) {
@@ -2184,7 +2255,7 @@ export default class Terria {
 
   setLocalProperty(key: string, value: string | boolean): boolean {
     try {
-      if (!defined(window.localStorage)) {
+      if (typeof window === "undefined" || !defined(window.localStorage)) {
         return false;
       }
     } catch (_e) {
@@ -2303,7 +2374,7 @@ async function interpretStartData(
 ) {
   if (isJsonObject(startData, false)) {
     // Convert startData to v8 if necessary
-    let startDataV8: ShareInitSourceData | null;
+    let startDataV8: StartData | null;
     try {
       if (
         // If startData.version has version 0.x.x - user catalog-converter to convert startData

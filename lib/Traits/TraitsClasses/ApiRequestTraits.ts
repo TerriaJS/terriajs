@@ -45,20 +45,6 @@ export default class ApiRequestTraits extends mixTraits(UrlTraits) {
   })
   updateQueryParameters: QueryParamTraits[] = [];
 
-  @anyTrait({
-    name: "Request body",
-    description:
-      "JSON body to be sent with the HTTP request to the server. If provided, the request will be made as POST rather than a GET."
-  })
-  requestData?: any;
-
-  @primitiveTrait({
-    name: "POST as form data",
-    type: "boolean",
-    description: "Send the request data as form data instead of a JSON body."
-  })
-  postRequestDataAsFormData?: boolean = false;
-
   @primitiveTrait({
     name: "Response data path",
     type: "string",

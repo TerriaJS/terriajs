@@ -57,6 +57,10 @@ const DragDropFile: FC = observer(() => {
     []
   );
 
+  if (viewState.terria.configParameters.disableUserAddedData) {
+    return null;
+  }
+
   const handleDrop = async (e: DragEvent) => {
     e.persist();
     e.preventDefault();

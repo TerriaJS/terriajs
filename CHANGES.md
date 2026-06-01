@@ -64,8 +64,8 @@
 - Add `workbenchControlFlags` trait to all catalog members for enabling or disabling workbench controls.
 - Add `<settingspanel>` custom component to open Map settings panel from template code (like short report, feature info etc).
 - Add UI to show toast messages.
-- Fix "Add data" button width for some languages #7726.
 - Make `<StoryPanel>` draggable
+- Fix "Add data" button width for some languages #7726.
 
 #### 8.11.1 - 2025-12-04
 
@@ -109,6 +109,9 @@
   - Update mobx-react to version 9
     - It no longer convert props automatically to observable in class components. See [MobX React v9 class components guide](https://github.com/mobxjs/mobx/blob/mobx-react%409.2.0/packages/mobx-react/README.md#class-components) for more details on how to migrate
 
+- Set default value for date and datetime WPS fields only when the field is marked as required.
+- TSify MenuBar and Groups
+- Add elements config for MenuBar
 - Fix a bug where `.pmtiles` urls with a query string at the end was not being rendered as PMTILES.
 - Add internationalization support to tinymce editor used in story editor
 - Add `MapboxSearchProvider` for geocoding using Mapbox.

@@ -91,8 +91,12 @@ export const SharePanelContent: FC<ISharePanelContentProps> = ({
       </Checkbox>
       <Spacing bottom={4} />
       <PrintSection viewState={viewState} />
-      <Spacing bottom={4} />
-      <EmbedSection shareUrl={shareUrl} />
+      {terria.configParameters.disableShareEmbed ? null : (
+        <>
+          <Spacing bottom={4} />
+          <EmbedSection shareUrl={shareUrl} />
+        </>
+      )}
     </Box>
   );
 };
