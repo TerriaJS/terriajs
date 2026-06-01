@@ -77,6 +77,12 @@ export default observer(function DataCatalogReference({
     btnState = ButtonState.Preview;
   } else if (reference.isFunction) {
     btnState = ButtonState.Stats;
+  } else if (
+    reference.terria.workbench.contains(reference) ||
+    (reference.uniqueId !== undefined &&
+      reference.terria.workbench.itemIds.includes(reference.uniqueId))
+  ) {
+    btnState = ButtonState.Remove;
   } else {
     btnState = ButtonState.Add;
   }
