@@ -6,7 +6,7 @@ import { ViewStateProvider } from "./ViewStateContext";
 export const ContextProviders = (props: {
   viewState: ViewState;
   theme: DefaultTheme | ((theme: DefaultTheme) => DefaultTheme);
-  children: ReactNode[];
+  children: ReactNode | ReactNode[];
 }) => (
   <ViewStateProvider viewState={props.viewState}>
     <ThemeProvider theme={props.theme}>{props.children}</ThemeProvider>

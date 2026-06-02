@@ -54,7 +54,8 @@ import {
 } from "../SelectableDimensions/SelectableDimensions";
 import ViewingControls from "../ViewingControls";
 import SelectableDimensionWorkflow, {
-  SelectableDimensionWorkflowGroup
+  SelectableDimensionWorkflowGroup,
+  SelectableDimensionWorkflowOptions
 } from "../Workflows/SelectableDimensionWorkflow";
 
 /** The ColorSchemeType is used to change which SelectableDimensions are shown.
@@ -99,6 +100,7 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
    * See setColorSchemeTypeFromPalette and setColorSchemeType for how this is set. */
   @observable colorSchemeType: ColorSchemeType | undefined;
   @observable styleType: StyleType = "fill";
+  @observable options: SelectableDimensionWorkflowOptions;
 
   /** Which bin is currently open in `binMaximumsSelectableDims` or `enumColorsSelectableDim`.
    * This is used in `SelectableDimensionGroup.onToggle` and `SelectableDimensionGroup.isOpen` to make the groups act like an accordion - so only one bin can be edited at any given time.
@@ -111,7 +113,10 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
 
   private activeStyleDisposer: IReactionDisposer;
 
-  constructor(readonly item: TableMixin.Instance) {
+  constructor(
+    readonly item: TableMixin.Instance,
+    options?: SelectableDimensionWorkflowOptions
+  ) {
     makeObservable(this);
     // We need to reset colorSchemeType every time Table.activeStyle changes
     this.activeStyleDisposer = reaction(
@@ -131,6 +136,7 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
       }
     );
     this.setColorSchemeTypeFromPalette();
+    this.options = options ?? {};
   }
 
   onClose() {

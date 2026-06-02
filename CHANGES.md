@@ -2,6 +2,12 @@
 
 #### next release (8.12.3)
 
+- Add config parameters to optionally disable parts of the UI for locked-down deployments: `disableMobileInterface`, `disableSharePanel`, `disableShareEmbed`, `disableUserAddedData` and `cesiumIonDisableDefaultToken` (all default `false`).
+- Add `shareRequestHeaders`/`feedbackRequestHeaders` callbacks and `shareClientBaseUrl` config parameters to customise share-link and feedback requests, and show a dedicated "link not found" message on a `404` from the share service.
+- Add `zoomMapOnPreviewedItem` config parameter to zoom the catalogue preview map to the previewed item.
+- Add `postHogAnalyticsKey`/`postHogAnalyticsHost` config parameters.
+- TSify `MenuBar` and `Groups`, and add an elements config for `MenuBar`. Panels and buttons now support `withControlledVisibility`/`showCloseButton`.
+- Move catalogue-item `zoomTo` (incl. `idealZoom`) handling into `GlobeOrMap.zoomTo`.
 - Add `disablePostRequests` config parameter (default `false`) to optionally forbid non-GET requests made through `loadWithXhr`, allowing a deployment to lock down to GET-only requests.
 - **Breaking:** `Terria.start()` now takes a `loadConfig` callback (`() => Promise<{ config, baseUri, configUrl? }>`) instead of `configUrl`/`configUrlHeaders`. Use the exported `defaultLoadConfig(configUrl)` helper to preserve existing behaviour (including Magda config support). This allows hosting Terria in a non-browser environment (e.g. server-side rendering).
 - Add support for nested `strata` in model JSON: `updateModelFromJson` now recurses into a `strata` object, and `combineModelStrata` is exported from `createCombinedModel`.
