@@ -79,7 +79,10 @@ export default class Workbench {
    */
   @action
   remove(item: BaseModel): void {
-    const index = this.indexOf(item);
+    let index = this.indexOf(item);
+    if (index < 0 && item.uniqueId !== undefined) {
+      index = this._items.findIndex((i) => i.uniqueId === item.uniqueId);
+    }
     if (index >= 0) {
       this._items.splice(index, 1);
     }
