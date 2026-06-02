@@ -24,6 +24,7 @@ import URI from "urijs";
 import AsyncLoader from "../Core/AsyncLoader";
 import Class from "../Core/Class";
 import CorsProxy from "../Core/CorsProxy";
+import { setPostRequestsDisabled } from "../Core/loadWithXhr";
 import {
   JsonArray,
   JsonObject,
@@ -254,6 +255,13 @@ export interface ConfigParameters {
   disableSplitter?: boolean;
 
   disablePedestrianMode?: boolean;
+
+  /**
+   * True to forbid non-GET (POST/PUT) requests made through `loadWithXhr`.
+   * Defaults to false (POST/PUT allowed). Set true to lock a deployment down
+   * to GET-only requests.
+   */
+  disablePostRequests?: boolean;
 
   experimentalFeatures?: boolean;
   magdaReferenceHeaders?: MagdaReferenceHeaders;
@@ -541,6 +549,7 @@ export default class Terria {
     disableMyLocation: undefined,
     disableSplitter: undefined,
     disablePedestrianMode: false,
+    disablePostRequests: false,
     keepCatalogOpen: false,
     experimentalFeatures: undefined,
     magdaReferenceHeaders: undefined,
@@ -1333,6 +1342,7 @@ export default class Terria {
 
     this.appName = this.configParameters.appName ?? this.appName;
     this.supportEmail = this.configParameters.supportEmail ?? this.supportEmail;
+    setPostRequestsDisabled(this.configParameters.disablePostRequests ?? false);
   }
 
   protected async forceLoadInitSources(): Promise<void> {
