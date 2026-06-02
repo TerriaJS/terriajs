@@ -41,6 +41,108 @@ describe("updateModelFromJson", function () {
       expect(model.getTrait(CommonStrata.definition, "name")).toBe("B");
       expect(model.getTrait(CommonStrata.user, "name")).toBe("C");
     });
+
+    it("true only replaces the default stratum when nested strata are provided", function () {
+      updateModelFromJson(
+        model,
+        CommonStrata.definition,
+        {
+          url: "Z",
+          strata: {
+            [CommonStrata.user]: {
+              url: "Y"
+            }
+          }
+        },
+        true
+      );
+
+      expect(model.getTrait(CommonStrata.definition, "url")).toBe("Z");
+      expect(model.getTrait(CommonStrata.definition, "name")).toBeUndefined();
+      expect(model.getTrait(CommonStrata.user, "name")).toBe("C");
+      expect(model.getTrait(CommonStrata.user, "url")).toBe("Y");
+    });
+  });
+
+  describe("when json contains nested strata", function () {
+    beforeEach(function () {
+      model = new WebMapServiceCatalogItem("Test", new Terria());
+    });
+
+    it("updates the default and nested strata recursively", function () {
+      updateModelFromJson(model, CommonStrata.definition, {
+        url: "test/WMS/single_metadata_url.xml",
+        strata: {
+          [CommonStrata.user]: {
+            name: "User name",
+            strata: {
+              [CommonStrata.override]: {
+                description: "Override description"
+              }
+            }
+          }
+        }
+      });
+
+      expect(model.getTrait(CommonStrata.definition, "url")).toBe(
+        "test/WMS/single_metadata_url.xml"
+      );
+      expect(model.getTrait(CommonStrata.user, "name")).toBe("User name");
+      expect(model.getTrait(CommonStrata.override, "description")).toBe(
+        "Override description"
+      );
+    });
+
+    it("includes the nested stratum name in unknown property errors", function () {
+      const result = updateModelFromJson(model, CommonStrata.definition, {
+        strata: {
+          [CommonStrata.user]: {
+            someTrait: "What what"
+          }
+        }
+      });
+      const flattenedErrors = result.error?.flatten() ?? [];
+
+      expect(
+        flattenedErrors.find(
+          (error) =>
+            error.message === `Error updating stratum \`${CommonStrata.user}\``
+        )
+      ).toBeDefined();
+      expect(
+        flattenedErrors.find(
+          (error) =>
+            error.message ===
+            "The property `someTrait` is not valid for type `wms`."
+        )
+      ).toBeDefined();
+    });
+
+    it("reports invalid nested strata payloads with stratum context", function () {
+      const invalidJson = JSON.parse(
+        `{"strata":{"${CommonStrata.user}":"not-an-object"}}`
+      );
+      const result = updateModelFromJson(
+        model,
+        CommonStrata.definition,
+        invalidJson
+      );
+      const flattenedErrors = result.error?.flatten() ?? [];
+
+      expect(
+        flattenedErrors.find(
+          (error) =>
+            error.message === `Error updating stratum \`${CommonStrata.user}\``
+        )
+      ).toBeDefined();
+      expect(
+        flattenedErrors.find(
+          (error) =>
+            error.message ===
+            `The value for stratum \`${CommonStrata.user}\` must be a JSON object.`
+        )
+      ).toBeDefined();
+    });
   });
 
   describe("when id of group already exists", function () {

@@ -3,6 +3,9 @@
 #### next release (8.12.3)
 
 - Add `disablePostRequests` config parameter (default `false`) to optionally forbid non-GET requests made through `loadWithXhr`, allowing a deployment to lock down to GET-only requests.
+- **Breaking:** `Terria.start()` now takes a `loadConfig` callback (`() => Promise<{ config, baseUri, configUrl? }>`) instead of `configUrl`/`configUrlHeaders`. Use the exported `defaultLoadConfig(configUrl)` helper to preserve existing behaviour (including Magda config support). This allows hosting Terria in a non-browser environment (e.g. server-side rendering).
+- Add support for nested `strata` in model JSON: `updateModelFromJson` now recurses into a `strata` object, and `combineModelStrata` is exported from `createCombinedModel`.
+- Improve non-browser (Node) compatibility: guard `window`/`localStorage` access, fall back to the raw key in `TerriaError` when i18next is not initialised, allow injecting a `CorsProxy` via `TerriaOptions`, and make SDMX structure loading use `fetchText`.
 - Refactor analytics into `lib/Core/analytics/` module, make `analytics` always defined using `NoopAnalytics` default, and remove auto-detection logic from `Terria`. Analytics instance must now be supplied via `TerriaOptions` or defaults to no-op. ([7817](https://github.com/TerriaJS/terriajs/pull/7817))
 - Upgrade dev dependencies
   - Upgrade dompurify to version 3.3.3 to resolve security vulnerabilities.
