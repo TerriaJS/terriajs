@@ -50,7 +50,11 @@ export default async function toggleItemOnMapFromCatalog(
     [Op.Remove]: DataSourceAction;
   }
 ) {
-  const op = viewState.terria.workbench.contains(item) ? Op.Remove : Op.Add;
+  const isOnWorkbench =
+    viewState.terria.workbench.contains(item) ||
+    (item.uniqueId !== undefined &&
+      viewState.terria.workbench.itemIds.includes(item.uniqueId));
+  const op = isOnWorkbench ? Op.Remove : Op.Add;
 
   if (op === Op.Add) {
     (await viewState.terria.workbench.add(item)).raiseError(
