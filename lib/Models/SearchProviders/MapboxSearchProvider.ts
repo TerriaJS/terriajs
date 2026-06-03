@@ -1,11 +1,11 @@
 import { Feature, Point } from "geojson";
 import i18next from "i18next";
-import { makeObservable, override, runInAction } from "mobx";
+import { action, makeObservable, override, runInAction } from "mobx";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import Resource from "terriajs-cesium/Source/Core/Resource";
 import { Category, SearchAction } from "../../Core/Analytics/analyticEvents";
 import isDefined from "../../Core/isDefined";
-import loadJson from "../../Core/loadJson";
+import { loadJsonAbortable } from "../../Core/loadJson";
 import { applyTranslationIfExists } from "../../Language/languageHelpers";
 import prettifyCoordinates from "../../Map/Vector/prettifyCoordinates";
 import LocationSearchProviderMixin, {
@@ -15,7 +15,6 @@ import MapboxSearchProviderTraits from "../../Traits/SearchProviders/MapboxSearc
 import CommonStrata from "../Definition/CommonStrata";
 import CreateModel from "../Definition/CreateModel";
 import Terria from "../Terria";
-import SearchProviderResult from "./SearchProviderResults";
 import SearchResult from "./SearchResult";
 
 enum MapboxGeocodeDirection {
@@ -63,12 +62,13 @@ export default class MapboxSearchProvider extends LocationSearchProviderMixin(
     );
   }
 
-  protected doSearch(
+  @action
+  protected async doSearch(
     searchText: string,
-    searchResults: SearchProviderResult
+    abortSignal: AbortSignal
   ): Promise<void> {
-    searchResults.results.length = 0;
-    searchResults.message = undefined;
+    this.searchResult.clear();
+
     const isCoordinate = RegExp(
       /^-?([0-9]{1,2}|1[0-7][0-9]|180)(\.[0-9]{1,17})$/
     );
@@ -102,7 +102,7 @@ export default class MapboxSearchProvider extends LocationSearchProviderMixin(
 
         if (this.showCoordinatesInReverseGeocodeResult) {
           const prettyCoords = prettifyCoordinates(lonf, latf);
-          searchResults.results.push(
+          this.searchResult.results.push(
             new SearchResult({
               name: `${prettyCoords.latitude}, ${prettyCoords.longitude}`,
               clickAction: createZoomToFunction(this, {
@@ -188,10 +188,12 @@ export default class MapboxSearchProvider extends LocationSearchProviderMixin(
       });
     }
 
-    const promise: Promise<any> = loadJson(searchQuery);
+    const promise: Promise<any> = loadJsonAbortable(searchQuery, {
+      abortSignal
+    });
     return promise
       .then((result: MapboxGeocodingResponse) => {
-        if (searchResults.isCanceled) {
+        if (abortSignal.aborted) {
           // A new search has superseded this one, so ignore the result.
           return;
         }
@@ -205,9 +207,8 @@ export default class MapboxSearchProvider extends LocationSearchProviderMixin(
             searchDirection === MapboxGeocodeDirection.Reverse &&
             this.showCoordinatesInReverseGeocodeResult === false)
         ) {
-          searchResults.message = {
-            content: "translate#viewModels.searchNoLocations"
-          };
+          this.searchResult.noResults("translate#viewModels.searchNoLocations");
+
           return;
         }
 
@@ -228,13 +229,11 @@ export default class MapboxSearchProvider extends LocationSearchProviderMixin(
           });
 
         runInAction(() => {
-          searchResults.results.push(...locations);
+          this.searchResult.results.push(...locations);
         });
 
-        if (searchResults.results.length === 0) {
-          searchResults.message = {
-            content: "translate#viewModels.searchNoLocations"
-          };
+        if (this.searchResult.results.length === 0) {
+          this.searchResult.noResults("translate#viewModels.searchNoLocations");
         }
         const attribution = result.attribution;
         if (attribution) {
@@ -246,14 +245,12 @@ export default class MapboxSearchProvider extends LocationSearchProviderMixin(
         }
       })
       .catch(() => {
-        if (searchResults.isCanceled) {
-          // A new search has superseded this one, so ignore the result.
+        if (abortSignal.aborted) {
+          // This search was aborted, so ignore the result.
           return;
         }
 
-        searchResults.message = {
-          content: "translate#viewModels.searchErrorOccurred"
-        };
+        this.searchResult.errorOccurred();
       });
   }
 }

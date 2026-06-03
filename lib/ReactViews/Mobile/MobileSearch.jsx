@@ -32,8 +32,6 @@ class MobileSearch extends Component {
   searchInDataCatalog() {
     const { searchState } = this.props.viewState;
     runInAction(() => {
-      // Set text here so that it doesn't get batched up and the catalog
-      // search text has a chance to set isWaitingToStartCatalogSearch
       searchState.catalogSearchText = searchState.locationSearchText;
     });
     this.props.viewState.searchInCatalog(searchState.locationSearchText);

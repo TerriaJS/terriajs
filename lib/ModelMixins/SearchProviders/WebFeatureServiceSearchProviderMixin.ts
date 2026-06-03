@@ -4,7 +4,6 @@ import URI from "urijs";
 import AbstractConstructor from "../../Core/AbstractConstructor";
 import zoomRectangleFromPoint from "../../Map/Vector/zoomRectangleFromPoint";
 import Model from "../../Models/Definition/Model";
-import SearchProviderResult from "../../Models/SearchProviders/SearchProviderResults";
 import SearchResult from "../../Models/SearchProviders/SearchResult";
 import xml2json from "../../ThirdParty/xml2json";
 import WebFeatureServiceSearchProviderTraits from "../../Traits/SearchProviders/WebFeatureServiceSearchProviderTraits";
@@ -34,35 +33,20 @@ function WebFeatureServiceSearchProviderMixin<
       | ((feature: any, searchText: string) => number)
       | undefined;
 
-    cancelRequest?: () => void;
-
-    private _waitingForResults: boolean = false;
-
-    getXml(url: string): Promise<XMLDocument> {
+    getXml(url: string, abortSignal: AbortSignal): Promise<XMLDocument> {
       const resource = new Resource({ url });
-      this._waitingForResults = true;
       const xmlPromise = resource.fetchXML()!;
-      this.cancelRequest = resource.request.cancelFunction;
-      return xmlPromise.finally(() => {
-        this._waitingForResults = false;
+      abortSignal.addEventListener("abort", () => {
+        resource.request.cancelFunction();
       });
+      return xmlPromise;
     }
 
-    protected doSearch(
+    protected async doSearch(
       searchText: string,
-      results: SearchProviderResult
+      abortSignal: AbortSignal
     ): Promise<void> {
-      results.results.length = 0;
-      results.message = undefined;
-
-      if (this._waitingForResults) {
-        // There's been a new search! Cancel the previous one.
-        if (this.cancelRequest !== undefined) {
-          this.cancelRequest();
-          this.cancelRequest = undefined;
-        }
-        this._waitingForResults = false;
-      }
+      this.searchResult.clear();
 
       const originalSearchText = searchText;
 
@@ -89,14 +73,17 @@ function WebFeatureServiceSearchProviderMixin<
         filter: filter
       });
 
-      return this.getXml(_wfsServiceUrl.toString())
+      return this.getXml(_wfsServiceUrl.toString(), abortSignal)
         .then((xml: any) => {
+          if (abortSignal.aborted) {
+            // This search is aborted, so ignore the result.
+            return;
+          }
+
           const json: any = xml2json(xml);
           let features: any[];
           if (json === undefined) {
-            results.message = {
-              content: "translate#viewModels.searchErrorOccurred"
-            };
+            this.searchResult.errorOccurred();
             return;
           }
 
@@ -105,9 +92,10 @@ function WebFeatureServiceSearchProviderMixin<
           } else if (json.featureMember !== undefined) {
             features = json.featureMember;
           } else {
-            results.message = {
-              content: "translate#viewModels.searchNoPlaceNames"
-            };
+            this.searchResult.noResults(
+              "translate#viewModels.searchNoPlaceNames"
+            );
+
             return;
           }
 
@@ -124,9 +112,9 @@ function WebFeatureServiceSearchProviderMixin<
             }
 
             if (features.length === 0) {
-              results.message = {
-                content: "translate#viewModels.searchNoPlaceNames"
-              };
+              this.searchResult.noResults(
+                "translate#viewModels.searchNoPlaceNames"
+              );
               return;
             }
 
@@ -175,17 +163,15 @@ function WebFeatureServiceSearchProviderMixin<
             });
 
             // append new results to all results
-            results.results.push(...searchResults);
+            this.searchResult.results.push(...searchResults);
           });
         })
         .catch((_e) => {
-          if (results.isCanceled) {
-            // A new search has superseded this one, so ignore the result.
+          if (abortSignal.aborted) {
+            // This search is aborted, so ignore the result.
             return;
           }
-          results.message = {
-            content: "translate#viewModels.searchErrorOccurred"
-          };
+          this.searchResult.errorOccurred();
         });
     }
 

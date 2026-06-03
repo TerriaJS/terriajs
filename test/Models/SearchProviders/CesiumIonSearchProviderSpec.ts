@@ -1,4 +1,4 @@
-import { http, HttpResponse } from "msw";
+import { delay, http, HttpResponse } from "msw";
 import CesiumIonSearchProvider from "../../../lib/Models/SearchProviders/CesiumIonSearchProvider";
 import Terria from "../../../lib/Models//Terria";
 import CommonStrata from "../../../lib/Models/Definition/CommonStrata";
@@ -71,6 +71,38 @@ describe("CesiumIonSearchProvider", () => {
     expect(searchProvider.searchResult.results.length).toBe(0);
     expect(searchProvider.searchResult.message?.content).toBe(
       "translate#viewModels.searchErrorOccurred"
+    );
+  });
+
+  it("cancels previous requests when a new search is made", async () => {
+    worker.use(
+      http.get("http://api.test.com", async ({ request }) => {
+        const searchParams = new URL(request.url).searchParams;
+        const text = searchParams.get("text");
+        const accessToken = searchParams.get("access_token");
+        if (accessToken !== "testkey") {
+          return HttpResponse.json({}, { status: 401 });
+        }
+
+        if (text === "test1") {
+          await delay(1000);
+          return HttpResponse.json({});
+        } else if (text === "test2") {
+          return HttpResponse.json(fixture);
+        }
+
+        return HttpResponse.json({}, { status: 400 });
+      })
+    );
+
+    const searchPromise1 = searchProvider.search("test1", true);
+    const searchPromise2 = searchProvider.search("test2", true);
+
+    await Promise.all([searchPromise1, searchPromise2]);
+
+    expect(searchProvider.searchResult.results.length).toBe(1);
+    expect(searchProvider.searchResult.results[0].name).toBe(
+      "West End, Australia"
     );
   });
 });

@@ -1,10 +1,13 @@
-import { computed, makeObservable, observable } from "mobx";
+import { action, computed, makeObservable, observable } from "mobx";
 import SearchProviderMixin from "../../ModelMixins/SearchProviders/SearchProviderMixin";
 import SearchResult from "./SearchResult";
 
+type SearchState = "searching" | "waiting" | "idle";
+
 export default class SearchProviderResult<
-  SeachProviderType = SearchProviderMixin.Instance
+  SearchProviderType = SearchProviderMixin.Instance
 > {
+  @observable _state: SearchState = "idle";
   @observable results: SearchResult[] = [];
   @observable message?: {
     content: string;
@@ -12,20 +15,59 @@ export default class SearchProviderResult<
       [key: string]: string | number | undefined;
     };
   };
-  @observable isWaitingToStartSearch: boolean = false;
-  @observable _isSearching: boolean = false;
-  isCanceled = false;
 
-  constructor(readonly searchProvider: SeachProviderType) {
+  constructor(readonly searchProvider: SearchProviderType) {
     makeObservable(this);
   }
 
   @computed
-  get isSearching() {
-    return this._isSearching;
+  get state() {
+    return this._state;
   }
 
-  set isSearching(value: boolean) {
-    this._isSearching = value;
+  set state(newState: SearchState) {
+    this._state = newState;
+  }
+
+  @action
+  clear() {
+    this.results = [];
+    this.message = undefined;
+  }
+
+  @action
+  cancel() {
+    this.state = "idle";
+    this.clear();
+  }
+
+  @action
+  errorOccurred() {
+    this.state = "idle";
+    this.results = [];
+    this.message = {
+      content: "translate#viewModels.searchErrorOccurred"
+    };
+  }
+
+  setResults(results: SearchResult[]) {
+    this.state = "idle";
+    this.results = results;
+    if (results.length === 0) {
+      this.message = {
+        content: "translate#viewModels.searchNoResults"
+      };
+    } else {
+      this.message = undefined;
+    }
+    this.results = results;
+  }
+
+  noResults(message: string = "translate#viewModels.searchNoResults") {
+    this.state = "idle";
+    this.results = [];
+    this.message = {
+      content: message
+    };
   }
 }
