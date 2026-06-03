@@ -1,5 +1,8 @@
 import queryToObject from "terriajs-cesium/Source/Core/queryToObject";
 import { z } from "zod";
+import Terria from "./Terria";
+import isDefined from "../Core/isDefined";
+import { ConfigStrata } from "./ConfigStrata";
 
 const hashParamsSchema = z
   .looseObject({
@@ -121,3 +124,49 @@ export function parseHashParams(url: string): HashParams {
 }
 
 export const emptyHashParams: HashParams = hashParamsSchema.parse({});
+
+export const applyHashParamsToConfig = (
+  terria: Terria,
+  hashParams: HashParams
+) => {
+  if (isDefined(hashParams.hideWelcomeMessage)) {
+    terria.updateConfig(
+      {
+        showWelcomeMessage: !hashParams.hideWelcomeMessage
+      },
+      ConfigStrata.url
+    );
+  }
+  if (isDefined(hashParams.hideExplorerPanel)) {
+    terria.updateConfig(
+      {
+        hideExplorerPanel: hashParams.hideExplorerPanel
+      },
+      ConfigStrata.url
+    );
+  }
+  if (isDefined(hashParams.hideWorkbench)) {
+    terria.updateConfig(
+      {
+        hideWorkbench: hashParams.hideWorkbench
+      },
+      ConfigStrata.url
+    );
+  }
+  if (isDefined(hashParams.tools)) {
+    terria.updateConfig(
+      {
+        tools: hashParams.tools
+      },
+      ConfigStrata.url
+    );
+  }
+  if (isDefined(hashParams.map)) {
+    terria.updateConfig(
+      {
+        viewerMode: hashParams.map
+      },
+      ConfigStrata.url
+    );
+  }
+};

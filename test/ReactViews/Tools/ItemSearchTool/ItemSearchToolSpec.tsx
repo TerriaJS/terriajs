@@ -39,13 +39,11 @@ describe("ItemSearchTool", function () {
   let item: MockSearchableItem;
   let itemSearchProvider: ItemSearchProvider;
 
-  beforeAll(async function () {
-    await i18next.changeLanguage("en");
-  });
-
   beforeEach(async function () {
     registerItemSearchProvider("testProvider", TestItemSearchProvider);
     const terria: Terria = new Terria();
+    (await terria.initLanguage()).build();
+    await i18next.changeLanguage("en");
     viewState = new ViewState({
       terria,
       catalogSearchProvider: undefined
@@ -66,7 +64,7 @@ describe("ItemSearchTool", function () {
     }
   });
 
-  afterAll(async function () {
+  afterEach(async function () {
     await i18next.changeLanguage("cimode");
   });
 

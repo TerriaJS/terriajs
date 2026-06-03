@@ -1,88 +1,167 @@
-import { readLocalStorageSettings } from "../../lib/Models/PersistedSettings";
+import CommonStrata from "../../lib/Models/Definition/CommonStrata";
+import {
+  PersistedSettingsService,
+  StorageAdapter
+} from "../../lib/Models/PersistedSettings";
+import {
+  TerriaConfig,
+  createTerriaConfig
+} from "../../lib/Models/TerriaConfig";
 
-describe("readLocalStorageSettings", () => {
-  const makeGetLocalProp =
-    (store: Record<string, string | boolean | null>) => (key: string) =>
-      store[key] ?? null;
+type Store = Record<string, boolean | string | null>;
 
-  it("returns no viewerMode or baseMapId when storage is empty", () => {
-    const result = readLocalStorageSettings(makeGetLocalProp({}), true);
-    expect(result.viewerMode).toBeUndefined();
-    expect(result.baseMapId).toBeUndefined();
-    expect(result.useNativeResolution).toBeUndefined();
-    expect(result.baseMaximumScreenSpaceError).toBeUndefined();
-    expect(result.shortenShareUrls).toBeUndefined();
+const makeAdapter = (
+  initial: Store = {}
+): StorageAdapter & { store: Store } => {
+  const store: Store = { ...initial };
+  return {
+    store,
+    getItem: (key: string): boolean | string | null => store[key] ?? null,
+    setItem: (key: string, value: boolean | number | string) => {
+      store[key] = value as boolean | string;
+    }
+  };
+};
+
+describe("PersistedSettings", () => {
+  let config: TerriaConfig;
+
+  beforeEach(() => {
+    config = createTerriaConfig();
   });
 
-  it("reads baseMapId from storage", () => {
-    const result = readLocalStorageSettings(
-      makeGetLocalProp({ basemap: "basemap-bing-aerial" }),
-      true
-    );
-    expect(result.baseMapId).toBe("basemap-bing-aerial");
+  describe("read", () => {
+    it("reads a viewermode string from storage", () => {
+      const adapter = makeAdapter({ viewermode: "2d" });
+      const ps = new PersistedSettingsService(config, adapter);
+      expect(ps.read("viewermode")).toBe("2d");
+    });
+
+    it("reads useNativeResolution from storage", () => {
+      const adapter = makeAdapter({ useNativeResolution: "true" });
+      const ps = new PersistedSettingsService(config, adapter);
+      expect(ps.read("useNativeResolution")).toBe(true);
+    });
+
+    it("reads shortenShareUrls from storage", () => {
+      const adapter = makeAdapter({ shortenShareUrls: "true" });
+      const ps = new PersistedSettingsService(config, adapter);
+      expect(ps.read("shortenShareUrls")).toBe(true);
+    });
+
+    it("reads baseMaximumScreenSpaceError from storage", () => {
+      const adapter = makeAdapter({ baseMaximumScreenSpaceError: "4" });
+      const ps = new PersistedSettingsService(config, adapter);
+      expect(ps.read("baseMaximumScreenSpaceError")).toBe(4);
+    });
+
+    it("reads a basemap string from storage", () => {
+      const adapter = makeAdapter({ basemap: "basemap-bing-aerial" });
+      const ps = new PersistedSettingsService(config, adapter);
+      expect(ps.read("basemap")).toBe("basemap-bing-aerial");
+    });
+
+    it("reads a viewer mode string from storage", () => {
+      const adapter = makeAdapter({ viewermode: "2d" });
+      const ps = new PersistedSettingsService(config, adapter);
+      expect(ps.read("viewermode")).toBe("2d");
+    });
+
+    it("returns undefined when the key is absent from storage", () => {
+      const adapter = makeAdapter();
+      const ps = new PersistedSettingsService(config, adapter);
+      expect(ps.read("viewermode")).toBeUndefined();
+    });
+
+    it("returns undefined when the value fails schema validation", () => {
+      const adapter = makeAdapter({ viewermode: "4d" });
+      const ps = new PersistedSettingsService(config, adapter);
+      expect(ps.read("viewermode")).toBeUndefined();
+    });
   });
 
-  it("reads useNativeResolution from storage", () => {
-    const result = readLocalStorageSettings(
-      makeGetLocalProp({ useNativeResolution: true }),
-      true
-    );
-    expect(result.useNativeResolution).toBe(true);
+  describe("mapToConfigParams", () => {
+    it("reads useNativeResolution from storage as a boolean", () => {
+      const adapter = makeAdapter({ useNativeResolution: "true" });
+      const ps = new PersistedSettingsService(config, adapter);
+      expect(ps.mapToConfigParams().useNativeResolution).toBe(true);
+    });
+
+    it("reads baseMaximumScreenSpaceError from storage as a number", () => {
+      const adapter = makeAdapter({ baseMaximumScreenSpaceError: "4" });
+      const ps = new PersistedSettingsService(config, adapter);
+      expect(ps.mapToConfigParams().baseMaximumScreenSpaceError).toBe(4);
+    });
+
+    it("reads shortenShareUrls from storage as a boolean", () => {
+      const adapter = makeAdapter({ shortenShareUrls: "false" });
+      const ps = new PersistedSettingsService(config, adapter);
+      expect(ps.mapToConfigParams().shortenShareUrls).toBe(false);
+    });
+
+    it("reads all three config keys in a single call", () => {
+      const adapter = makeAdapter({
+        useNativeResolution: "true",
+        baseMaximumScreenSpaceError: "2",
+        shortenShareUrls: "false"
+      });
+      const ps = new PersistedSettingsService(config, adapter);
+      expect(ps.mapToConfigParams()).toEqual({
+        useNativeResolution: true,
+        baseMaximumScreenSpaceError: 2,
+        shortenShareUrls: false
+      });
+    });
   });
 
-  it("reads baseMaximumScreenSpaceError from storage", () => {
-    const result = readLocalStorageSettings(
-      makeGetLocalProp({ baseMaximumScreenSpaceError: "4" }),
-      true
-    );
-    expect(result.baseMaximumScreenSpaceError).toBe(4);
-  });
+  describe("initConfigSync", () => {
+    it("writes useNativeResolution to storage when config changes", () => {
+      const adapter = makeAdapter();
+      const ps = new PersistedSettingsService(config, adapter);
+      ps.initConfigSync();
 
-  it("ignores non-numeric baseMaximumScreenSpaceError", () => {
-    const result = readLocalStorageSettings(
-      makeGetLocalProp({ baseMaximumScreenSpaceError: "not-a-number" }),
-      true
-    );
-    expect(result.baseMaximumScreenSpaceError).toBeUndefined();
-  });
+      config.update(CommonStrata.user, { useNativeResolution: true });
 
-  it("reads a valid viewerMode when persistViewerMode is true", () => {
-    const result = readLocalStorageSettings(
-      makeGetLocalProp({ viewermode: "2d" }),
-      true
-    );
-    expect(result.viewerMode).toBe("2d");
-  });
+      expect(adapter.store["useNativeResolution"]).toBeDefined();
+    });
 
-  it("ignores viewerMode when persistViewerMode is false", () => {
-    const result = readLocalStorageSettings(
-      makeGetLocalProp({ viewermode: "2d" }),
-      false
-    );
-    expect(result.viewerMode).toBeUndefined();
-  });
+    it("writes baseMaximumScreenSpaceError to storage when config changes", () => {
+      const adapter = makeAdapter();
+      const ps = new PersistedSettingsService(config, adapter);
+      ps.initConfigSync();
 
-  it("ignores unknown viewerMode strings", () => {
-    const result = readLocalStorageSettings(
-      makeGetLocalProp({ viewermode: "unknown-mode" }),
-      true
-    );
-    expect(result.viewerMode).toBeUndefined();
-  });
+      config.update(CommonStrata.user, { baseMaximumScreenSpaceError: 4 });
 
-  it("reads shortenShareUrls from storage", () => {
-    const result = readLocalStorageSettings(
-      makeGetLocalProp({ shortenShareUrls: true }),
-      true
-    );
-    expect(result.shortenShareUrls).toBe(true);
-  });
+      expect(adapter.store["baseMaximumScreenSpaceError"]).toBeDefined();
+    });
 
-  it("ignores non-boolean shortenShareUrls", () => {
-    const result = readLocalStorageSettings(
-      makeGetLocalProp({ shortenShareUrls: "not-a-boolean" }),
-      true
-    );
-    expect(result.shortenShareUrls).toBeUndefined();
+    it("writes shortenShareUrls to storage when config changes", () => {
+      const adapter = makeAdapter();
+      const ps = new PersistedSettingsService(config, adapter);
+      ps.initConfigSync();
+
+      config.update(CommonStrata.user, { shortenShareUrls: true });
+
+      expect(adapter.store["shortenShareUrls"]).toBeDefined();
+    });
+
+    it("returns one disposer", () => {
+      const adapter = makeAdapter();
+      const ps = new PersistedSettingsService(config, adapter);
+      const disposers = ps.initConfigSync();
+      expect(disposers.length).toBe(1);
+      disposers.forEach((d) => d());
+    });
+
+    it("stops reacting after the disposer is called", () => {
+      const adapter = makeAdapter();
+      const ps = new PersistedSettingsService(config, adapter);
+      const disposers = ps.initConfigSync();
+      disposers.forEach((d) => d());
+
+      config.update(CommonStrata.user, { useNativeResolution: true });
+
+      expect("useNativeResolution" in adapter.store).toBe(false);
+    });
   });
 });

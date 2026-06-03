@@ -1,5 +1,5 @@
 import { TFunction } from "i18next";
-import { action, untracked } from "mobx";
+import { action } from "mobx";
 import { observer } from "mobx-react";
 import Slider from "rc-slider";
 import {

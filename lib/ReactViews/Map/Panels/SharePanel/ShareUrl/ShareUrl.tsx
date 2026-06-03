@@ -19,7 +19,6 @@ import {
   ShareAction
 } from "../../../../../Core/Analytics/analyticEvents";
 import Clipboard from "../../../../Clipboard";
-import { buildShareLink, buildShortShareLink } from "../BuildShareLink";
 import { ShareUrlWarning } from "./ShareUrlWarning";
 import TerriaError, {
   TerriaErrorSeverity
@@ -29,7 +28,6 @@ interface IShareUrlProps {
   terria: Terria;
   viewState: ViewState;
   includeStories: boolean;
-  shouldShorten: boolean;
   callback?: () => void;
 }
 
@@ -42,7 +40,7 @@ export const ShareUrl = forwardRef<
   IShareUrlRef,
   PropsWithChildren<IShareUrlProps>
 >(function ShareUrl(
-  { terria, viewState, includeStories, shouldShorten, children, callback },
+  { terria, viewState, includeStories, children, callback },
   forwardRef
 ) {
   const { t } = useTranslation();
@@ -63,52 +61,50 @@ export const ShareUrl = forwardRef<
 
   useEffect(() => {
     let cancelled = false;
-    if (shouldShorten) {
+    if (terria.shareLinkService?.shouldShorten) {
       setPlaceholder(t("share.shortLinkShortening"));
       setShorteningInProgress(true);
-      buildShortShareLink(terria, viewState, { includeStories })
-        .then((shareUrl) => {
-          if (!cancelled) setShareUrl(shareUrl);
-        })
-        .catch((error) => {
-          let userMessage = t("models.shareData.generateErrorMessage");
-          if (error instanceof TerriaError) {
-            const highestImportanceError = error.highestImportanceError;
-            const highestImportanceOriginalErrorMessage =
-              highestImportanceError.originalError?.[0].message;
-            if (highestImportanceOriginalErrorMessage?.includes("413")) {
-              userMessage = t(
-                "models.shareData.generateErrorDataExceedsLimitMessage"
-              );
-              terria.raiseErrorToUser(
-                TerriaError.from(error, {
-                  message: userMessage
-                }),
-                {
-                  severity: TerriaErrorSeverity.Error
-                }
-              );
-            }
-          }
-          if (!cancelled) {
-            setShareUrl(userMessage);
-          }
-        })
-        .finally(() => {
-          if (!cancelled) setShorteningInProgress(false);
-        });
-    } else {
-      setShareUrl(
-        buildShareLink(terria, viewState, {
-          includeStories
-        })
-      );
     }
+    terria.shareLinkService
+      ?.buildShareLink(viewState, {
+        includeStories
+      })
+      .then((shareUrl) => {
+        if (!cancelled) setShareUrl(shareUrl);
+      })
+      .catch((error) => {
+        let userMessage = t("models.shareData.generateErrorMessage");
+        if (error instanceof TerriaError) {
+          const highestImportanceError = error.highestImportanceError;
+          const highestImportanceOriginalErrorMessage =
+            highestImportanceError.originalError?.[0].message;
+          if (highestImportanceOriginalErrorMessage?.includes("413")) {
+            userMessage = t(
+              "models.shareData.generateErrorDataExceedsLimitMessage"
+            );
+            terria.raiseErrorToUser(
+              TerriaError.from(error, {
+                message: userMessage
+              }),
+              {
+                severity: TerriaErrorSeverity.Error
+              }
+            );
+          }
+        }
+        if (!cancelled) {
+          setShareUrl(userMessage);
+        }
+      })
+      .finally(() => {
+        if (!cancelled) setShorteningInProgress(false);
+      });
+
     return () => {
       cancelled = true;
     };
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [terria, viewState, shouldShorten, includeStories]);
+  }, [terria, viewState, includeStories]);
 
   return (
     <>

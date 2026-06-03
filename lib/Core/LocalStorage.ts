@@ -1,21 +1,19 @@
-import { defined } from "terriajs-cesium";
-import { TerriaConfig } from "./TerriaConfig";
-import { untracked } from "mobx";
+import isDefined from "./isDefined";
 
 export class LocalStorage {
-  constructor(private readonly _config: TerriaConfig) {}
+  constructor(private readonly _prefix: string) {}
 
   getItem(key: string): boolean | string | null {
     try {
-      if (!defined(window.localStorage)) {
+      if (!isDefined(window.localStorage)) {
         return null;
       }
     } catch (_e) {
       // SecurityError can arise if 3rd party cookies are blocked in Chrome and we're served in an iFrame
       return null;
     }
-    const appName = untracked(() => this._config.appName);
-    const v = window.localStorage.getItem(appName + "." + key);
+    const prefix = this._prefix;
+    const v = window.localStorage.getItem(prefix + "." + key);
     if (v === "true") {
       return true;
     } else if (v === "false") {
@@ -26,15 +24,15 @@ export class LocalStorage {
 
   setItem(key: string, value: boolean | number | string): boolean {
     try {
-      if (!defined(window.localStorage)) {
+      if (!isDefined(window.localStorage)) {
         return false;
       }
     } catch (_e) {
       // SecurityError can arise if 3rd party cookies are blocked in Chrome and we're served in an iFrame
       return false;
     }
-    const appName = untracked(() => this._config.appName);
-    window.localStorage.setItem(appName + "." + key, String(value));
+    const prefix = this._prefix;
+    window.localStorage.setItem(prefix + "." + key, String(value));
     return true;
   }
 }

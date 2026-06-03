@@ -1,128 +1,169 @@
-import { TerriaConfig } from "../../lib/Models/TerriaConfig";
+import CommonStrata from "../../lib/Models/Definition/CommonStrata";
+import { createTerriaConfig } from "../../lib/Models/TerriaConfig";
 
 describe("TerriaConfig", function () {
-  describe("defaults", () => {
+  describe("defaults (from configSchema via strata)", function () {
     it("has the expected default appName", function () {
-      const config = new TerriaConfig(jasmine.createSpy("setLocalProperty"));
-      expect(config.appName).toBe("TerriaJS App");
+      expect(createTerriaConfig().appName).toBe("TerriaJS App");
     });
 
-    // Viewer settings default to match former Terria observable defaults
     it("has false default for useNativeResolution", function () {
-      expect(
-        new TerriaConfig(jasmine.createSpy("setLocalProperty"))
-          .useNativeResolution
-      ).toBe(false);
+      expect(createTerriaConfig().useNativeResolution).toBe(false);
     });
 
     it("has default baseMaximumScreenSpaceError of 2", function () {
-      expect(
-        new TerriaConfig(jasmine.createSpy("setLocalProperty"))
-          .baseMaximumScreenSpaceError
-      ).toBe(2);
+      expect(createTerriaConfig().baseMaximumScreenSpaceError).toBe(2);
     });
 
     it("has undefined default for shortenShareUrls", function () {
-      expect(
-        new TerriaConfig(jasmine.createSpy("setLocalProperty")).shortenShareUrls
-      ).toBeUndefined();
+      expect(createTerriaConfig().shortenShareUrls).toBeUndefined();
     });
 
     it("has the expected default supportEmail", function () {
-      const config = new TerriaConfig(jasmine.createSpy("setLocalProperty"));
-      expect(config.supportEmail).toBe("info@terria.io");
+      expect(createTerriaConfig().supportEmail).toBe("info@terria.io");
     });
 
     it("has the expected default initFragmentPaths", function () {
-      const config = new TerriaConfig(jasmine.createSpy("setLocalProperty"));
-      expect(config.initFragmentPaths).toEqual(["init/"]);
+      expect(createTerriaConfig().initFragmentPaths).toEqual(["init/"]);
     });
 
     it("has the expected default storyEnabled", function () {
-      const config = new TerriaConfig(jasmine.createSpy("setLocalProperty"));
-      expect(config.storyEnabled).toBe(true);
+      expect(createTerriaConfig().storyEnabled).toBe(true);
     });
 
     it("has the expected default persistViewerMode", function () {
-      const config = new TerriaConfig(jasmine.createSpy("setLocalProperty"));
-      expect(config.persistViewerMode).toBe(true);
+      expect(createTerriaConfig().persistViewerMode).toBe(true);
     });
 
     it("has the expected default leafletMaxZoom", function () {
-      const config = new TerriaConfig(jasmine.createSpy("setLocalProperty"));
-      expect(config.leafletMaxZoom).toBe(18);
+      expect(createTerriaConfig().leafletMaxZoom).toBe(18);
     });
   });
 
-  describe("update config", function () {
+  describe("update (definition)", function () {
     it("updates only the specified fields, leaving others at default", function () {
-      const config = new TerriaConfig(jasmine.createSpy("setLocalProperty"));
-      config.update({ appName: "My App" });
+      const config = createTerriaConfig();
+      config.update(CommonStrata.definition, { appName: "My App" });
 
       expect(config.appName).toBe("My App");
       expect(config.supportEmail).toBe("info@terria.io"); // default unchanged
     });
 
-    it("uses last value when the same field is applied twice", function () {
-      const config = new TerriaConfig(jasmine.createSpy("setLocalProperty"));
-      config.update({ appName: "First" });
-      config.update({ appName: "Second" });
+    it("uses the last value when the same field is written twice", function () {
+      const config = createTerriaConfig();
+      config.update(CommonStrata.definition, { appName: "First" });
+      config.update(CommonStrata.definition, { appName: "Second" });
 
       expect(config.appName).toBe("Second");
     });
 
-    it("silently ignores unknown keys", function () {
-      const config = new TerriaConfig(jasmine.createSpy("setLocalProperty"));
-      expect(() => config.update({ unknownKey: "value" } as any)).not.toThrow();
-      expect((config as any).unknownKey).toBeUndefined();
-    });
-
-    it("accumulates multiple sequential updates", function () {
-      const config = new TerriaConfig(jasmine.createSpy("setLocalProperty"));
-      config.update({ appName: "My App" });
-      config.update({ supportEmail: "support@example.com" });
+    it("accumulates keys across multiple calls", function () {
+      const config = createTerriaConfig();
+      config.update(CommonStrata.definition, { appName: "My App" });
+      config.update(CommonStrata.definition, {
+        supportEmail: "support@example.com"
+      });
 
       expect(config.appName).toBe("My App");
       expect(config.supportEmail).toBe("support@example.com");
     });
 
     it("can override array fields", function () {
-      const config = new TerriaConfig(jasmine.createSpy("setLocalProperty"));
-      config.update({ initFragmentPaths: ["custom/", "fallback/"] });
+      const config = createTerriaConfig();
+      config.update(CommonStrata.definition, {
+        initFragmentPaths: ["custom/", "fallback/"]
+      });
 
       expect(config.initFragmentPaths).toEqual(["custom/", "fallback/"]);
     });
 
-    it('should update local storage when "shortenShareUrls" is updated', function () {
-      const setLocalPropertySpy = jasmine.createSpy("setLocalProperty");
-      const config = new TerriaConfig(setLocalPropertySpy);
-      config.update({ shortenShareUrls: true });
+    it("rejects the whole update when a value has an invalid type", function () {
+      const config = createTerriaConfig();
+      config.update(CommonStrata.definition, { appName: 42 as any });
 
-      expect(setLocalPropertySpy).toHaveBeenCalledWith(
-        "shortenShareUrls",
-        true
+      expect(config.appName).toBe("TerriaJS App"); // whole input rejected, falls to default
+    });
+  });
+
+  describe("strata priority", function () {
+    it("update applies values readable as direct properties", function () {
+      const config = createTerriaConfig();
+      config.update(CommonStrata.definition, { appName: "From Config" });
+      expect(config.appName).toBe("From Config");
+    });
+
+    it("user stratum wins over definition stratum", function () {
+      const config = createTerriaConfig();
+      config.update(CommonStrata.definition, { appName: "From Config" });
+      config.update(CommonStrata.user, { appName: "User Override" });
+      expect(config.appName).toBe("User Override");
+    });
+
+    it("setting definition after user does not lower the user value", function () {
+      const config = createTerriaConfig();
+      config.update(CommonStrata.user, { appName: "User Override" });
+      config.update(CommonStrata.definition, { appName: "From Config" });
+      expect(config.appName).toBe("User Override");
+    });
+
+    it("strata defaults are used when no stratum provides a value", function () {
+      const config = createTerriaConfig();
+      expect(config.appName).toBe("TerriaJS App"); // falls back to schema default
+    });
+
+    it("setting one stratum does not clear values in another stratum", function () {
+      const config = createTerriaConfig();
+      config.update(CommonStrata.definition, { appName: "Config" });
+      config.update(CommonStrata.user, { supportEmail: "user@example.com" });
+      expect(config.appName).toBe("Config");
+      expect(config.supportEmail).toBe("user@example.com");
+    });
+
+    it("setValue updates one key without disturbing others in the same stratum", function () {
+      const config = createTerriaConfig();
+      config.update(CommonStrata.user, {
+        appName: "User App",
+        ignoreErrors: true
+      });
+      config.setValue(CommonStrata.user, "appName", "Renamed");
+      expect(config.appName).toBe("Renamed");
+      expect(config.ignoreErrors).toBe(true); // untouched
+    });
+
+    it("setValue respects stratum priority", function () {
+      const config = createTerriaConfig();
+      config.setValue(CommonStrata.definition, "appName", "Config");
+      config.setValue(CommonStrata.user, "appName", "User");
+      expect(config.appName).toBe("User");
+    });
+  });
+
+  describe("stratum attribution", function () {
+    it("getProvidingStratum reports defaults before any stratum is set", function () {
+      const config = createTerriaConfig();
+      expect(config.getProvidingStratum("appName")).toBe(CommonStrata.defaults);
+    });
+
+    it("getProvidingStratum reports the stratum that provided the value", function () {
+      const config = createTerriaConfig();
+      config.update(CommonStrata.definition, { appName: "Config" });
+      expect(config.getProvidingStratum("appName")).toBe(
+        CommonStrata.definition
       );
     });
 
-    it('should update local storage when "useNativeResolution" is updated', function () {
-      const setLocalPropertySpy = jasmine.createSpy("setLocalProperty");
-      const config = new TerriaConfig(setLocalPropertySpy);
-      config.update({ useNativeResolution: true });
-
-      expect(setLocalPropertySpy).toHaveBeenCalledWith(
-        "useNativeResolution",
-        true
-      );
+    it("getProvidingStratum reports user when user wins", function () {
+      const config = createTerriaConfig();
+      config.update(CommonStrata.definition, { appName: "Config" });
+      config.update(CommonStrata.user, { appName: "User" });
+      expect(config.getProvidingStratum("appName")).toBe(CommonStrata.user);
     });
 
-    it('should update local storage when "baseMaximumScreenSpaceError" is updated', function () {
-      const setLocalPropertySpy = jasmine.createSpy("setLocalProperty");
-      const config = new TerriaConfig(setLocalPropertySpy);
-      config.update({ baseMaximumScreenSpaceError: 3 });
-
-      expect(setLocalPropertySpy).toHaveBeenCalledWith(
-        "baseMaximumScreenSpaceError",
-        "3"
+    it("update into definition is reported as definition by getProvidingStratum", function () {
+      const config = createTerriaConfig();
+      config.update(CommonStrata.definition, { appName: "My App" });
+      expect(config.getProvidingStratum("appName")).toBe(
+        CommonStrata.definition
       );
     });
   });

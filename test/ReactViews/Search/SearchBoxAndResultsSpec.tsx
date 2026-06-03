@@ -1,7 +1,6 @@
 import { screen } from "@testing-library/react";
 import { runInAction } from "mobx";
 import { ThemeProvider } from "styled-components";
-import CommonStrata from "../../../lib/Models/Definition/CommonStrata";
 import Terria from "../../../lib/Models/Terria";
 import ViewState from "../../../lib/ReactViewModels/ViewState";
 import SearchBoxAndResults from "../../../lib/ReactViews/Search/SearchBoxAndResults";
@@ -97,11 +96,9 @@ describe("SearchBoxAndResults", function () {
       viewState.searchState.showLocationSearchResults = true;
       viewState.searchState.locationSearchResults = [];
 
-      viewState.terria.searchBarModel.setTrait(
-        CommonStrata.user,
-        "showSearchInCatalog",
-        false
-      );
+      viewState.terria.searchBarModel.updateModelConfig({
+        showSearchInCatalog: false
+      });
     });
     renderWithContexts(
       <ThemeProvider theme={terriaTheme}>

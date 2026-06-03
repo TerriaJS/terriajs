@@ -1,18 +1,18 @@
 import { uniq } from "lodash-es";
-import { runInAction, toJS } from "mobx";
+import { computed, runInAction, toJS } from "mobx";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import URI from "urijs";
 import getDereferencedIfExists from "../../../../Core/getDereferencedIfExists";
 import hashEntity from "../../../../Core/hashEntity";
 import isDefined from "../../../../Core/isDefined";
-import TerriaError from "../../../../Core/TerriaError";
 import CatalogMemberMixin from "../../../../ModelMixins/CatalogMemberMixin";
 import ReferenceMixin from "../../../../ModelMixins/ReferenceMixin";
 import CommonStrata from "../../../../Models/Definition/CommonStrata";
 import { BaseModel } from "../../../../Models/Definition/Model";
 import saveStratumToJson from "../../../../Models/Definition/saveStratumToJson";
 import GlobeOrMap from "../../../../Models/GlobeOrMap";
+import { HashParams } from "../../../../Models/HashParams";
 import HasLocalData from "../../../../Models/HasLocalData";
 import {
   InitSourceData,
@@ -20,17 +20,19 @@ import {
   ShareInitSourceData,
   ViewModeJson
 } from "../../../../Models/InitSource";
+import ShareDataService from "../../../../Models/ShareDataService";
 import Terria from "../../../../Models/Terria";
 import ViewerMode from "../../../../Models/ViewerMode";
 import ViewState from "../../../../ReactViewModels/ViewState";
-import { HashParams } from "../../../../Models/HashParams";
+import Result from "../../../../Core/Result";
+import { JsonObject } from "../../../../Core/Json";
 
 const hashParamsToShare = ["hideExplorerPanel"] as const;
 
 export const SHARE_VERSION = "8.0.0";
 
 export function encodeHashParams(
-  hashParams: HashParams,
+  hashParams: Partial<HashParams>,
   paramsToEncode: (keyof HashParams)[] = [
     "clean",
     "hideWelcomeMessage",
@@ -53,8 +55,8 @@ export function encodeHashParams(
     hideExplorerPanel,
     configUrl,
     tools,
-    initFragments,
-    extra
+    initFragments = [],
+    extra = {}
   } = hashParams;
 
   const encoded: Record<string, string> = {
@@ -89,74 +91,124 @@ export function encodeHashParams(
   return encoded;
 }
 
-/** Create base share link URL - with `hashParameters` applied on top.
- * This will copy over some hash params - see `configParamsToShare`
- */
-function buildBaseShareUrl(terria: Terria, hashParams: Partial<HashParams>) {
-  const uri = new URI(document.baseURI).fragment("").search("");
+export interface IShareLinkService {
+  canShorten: boolean;
+  shouldShorten: boolean;
+  shareMaxRequestSize: string | undefined;
+  shareMaxRequestSizeBytes: number | undefined;
+  buildShareLink(
+    viewState?: ViewState,
+    options?: { includeStories: boolean }
+  ): Promise<string>;
+  resolveShareLink(shareToken: string): Promise<Result<JsonObject | undefined>>;
+}
 
-  if (terria.developmentEnv) {
-    const params = encodeHashParams(terria.hashParams);
+export class ShareLinkService implements IShareLinkService {
+  private _shareDataService: ShareDataService | undefined;
+  private _terria: Terria;
+  private _hashParams: Partial<HashParams>;
 
-    uri.addSearch(params);
-  } else {
-    const params = encodeHashParams(terria.hashParams, [
-      ...hashParamsToShare,
-      "initFragments"
-    ]);
-
-    uri.addSearch(params);
+  constructor(
+    terria: Terria,
+    shareDataService?: ShareDataService,
+    hashParams?: Partial<HashParams>
+  ) {
+    this._terria = terria;
+    this._hashParams = hashParams ?? {};
+    this._shareDataService = shareDataService;
   }
 
-  uri.addSearch(hashParams);
+  /**
+   * Is it currently possible to generate short URLs?
+   */
+  get canShorten(): boolean {
+    return !!this._shareDataService && !!this._shareDataService.isUsable;
+  }
 
-  return uri.fragment(uri.query()).query("").toString();
-}
+  @computed
+  get shouldShorten(): boolean {
+    return this.canShorten && !!this._terria.configParameters.shortenShareUrls;
+  }
 
-/**
- * Builds a share link that reflects the state of the passed Terria instance.
- *
- * @param terria The terria instance to serialize.
- * @param {ViewState} [viewState] The viewState to read whether we're viewing the catalog or not
- * @param {Object} [options] Options for building the share link.
- * @param {Boolean} [options.includeStories=true] True to include stories in the share link, false to exclude them.
- * @returns {String} A URI that will rebuild the current state when viewed in a browser.
- */
-export function buildShareLink(
-  terria: Terria,
-  viewState?: ViewState,
-  options = { includeStories: true }
-) {
-  return buildBaseShareUrl(terria, {
-    start: JSON.stringify(getShareData(terria, viewState, options))
-  });
-}
+  get shareDataService(): ShareDataService | undefined {
+    return this._shareDataService;
+  }
 
-/**
- * Like {@link buildShareLink}, but shortens the result using {@link Terria#urlShortener}.
- *
- * @returns {Promise<String>} A promise that will return the shortened url when complete.
- */
-export async function buildShortShareLink(
-  terria: Terria,
-  viewState?: ViewState,
-  options = { includeStories: true }
-) {
-  if (!isDefined(terria.shareDataService))
-    throw TerriaError.from(
-      "Could not generate share token - `shareDataService` is `undefined`"
-    );
+  get shareMaxRequestSize(): string | undefined {
+    return this._shareDataService?.shareMaxRequestSize;
+  }
 
-  const token = await terria.shareDataService?.getShareToken(
-    getShareData(terria, viewState, options)
-  );
+  get shareMaxRequestSizeBytes(): number | undefined {
+    return this._shareDataService?.shareMaxRequestSizeBytes;
+  }
 
-  if (typeof token === "string") {
-    return buildBaseShareUrl(terria, {
-      share: token
+  /**
+   * Builds a share link that reflects the state of the passed Terria instance.
+   * If `terria.configParameters.shortenShareUrls` is true and a `ShareDataService` is available, the share link will be shortened using the `ShareDataService`.
+   * Otherwise, the share link will include the full share data in the URL.
+   */
+  async buildShareLink(
+    viewState?: ViewState,
+    options = { includeStories: true }
+  ): Promise<string> {
+    const shareData = getShareData(this._terria, viewState, options);
+
+    if (this.shouldShorten) {
+      const token = await this._shareDataService!.getShareToken(shareData);
+      if (typeof token === "string") {
+        return this.buildBaseShareUrl(this._terria, {
+          share: token
+        });
+      }
+    }
+    return this.buildBaseShareUrl(this._terria, {
+      start: JSON.stringify(getShareData(this._terria, viewState, options))
     });
   }
-  throw TerriaError.from("Could not generate share token");
+
+  async resolveShareLink(
+    shareToken: string
+  ): Promise<Result<JsonObject | undefined>> {
+    if (!this._shareDataService) {
+      return Result.error(
+        new Error("No ShareDataService available to resolve share link")
+      );
+    }
+    try {
+      const shareData = await this._shareDataService.resolveData(shareToken);
+      return new Result(shareData);
+    } catch (error) {
+      return Result.error(
+        new Error(
+          `Failed to resolve share link: ${error instanceof Error ? error.message : String(error)}`
+        )
+      );
+    }
+  }
+
+  /** Create base share link URL - with `hashParameters` applied on top.
+   * This will copy over some hash params - see `configParamsToShare`
+   */
+  private buildBaseShareUrl(terria: Terria, extraParams: Partial<HashParams>) {
+    const uri = new URI(document.baseURI).fragment("").search("");
+
+    if (terria.developmentEnv) {
+      const params = encodeHashParams(this._hashParams);
+
+      uri.addSearch(params);
+    } else {
+      const params = encodeHashParams(this._hashParams, [
+        ...hashParamsToShare,
+        "initFragments"
+      ]);
+
+      uri.addSearch(params);
+    }
+
+    uri.addSearch(extraParams);
+
+    return uri.fragment(uri.query()).query("").toString();
+  }
 }
 
 /**
@@ -336,15 +388,6 @@ export function isShareable(terria: Terria) {
         !HasLocalData.is(dereferenced))
     );
   };
-}
-
-/**
- * Is it currently possible to generate short URLs?
- * @param  {Object} terria The Terria object.
- * @return {Boolean}
- */
-export function canShorten(terria: Terria) {
-  return terria.shareDataService && terria.shareDataService.isUsable;
 }
 
 /**

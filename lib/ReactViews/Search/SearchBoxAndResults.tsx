@@ -159,7 +159,7 @@ export const SearchBoxAndResults: FC<SearchBoxAndResultsProps> = observer(
               {/* search {searchterm} in data catalog */}
               {/* ~TODO: Put this back once we add a MobX DataCatalogSearch Provider~ */}
               {/* TODO2: Implement a more generic MobX DataCatalogSearch */}
-              {viewState.terria.searchBarModel.showSearchInCatalog &&
+              {viewState.terria.searchBarModel.config.showSearchInCatalog &&
                 searchState.catalogSearchProvider && (
                   <Box column paddedRatio={2}>
                     <SearchInDataCatalog

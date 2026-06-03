@@ -1,4 +1,5 @@
 import type { ShareResult } from "catalog-converter";
+import { runInAction } from "mobx";
 import URI from "urijs";
 import JsonValue, {
   isJsonObject,
@@ -6,16 +7,19 @@ import JsonValue, {
   JsonArray,
   JsonObject
 } from "../Core/Json";
+import loadJson from "../Core/loadJson";
 import loadJson5 from "../Core/loadJson5";
 import Result from "../Core/Result";
 import TerriaError, { TerriaErrorSeverity } from "../Core/TerriaError";
 import { ProviderCoordsMap } from "../Map/PickedFeatures/PickedFeatures";
-import { SHARE_VERSION } from "../ReactViews/Map/Panels/SharePanel/BuildShareLink";
+import {
+  IShareLinkService,
+  SHARE_VERSION
+} from "../ReactViews/Map/Panels/SharePanel/BuildShareLink";
 import { BaseMapsJson } from "./BaseMaps/BaseMapsModel";
 import { HashParams, parseHashParams } from "./HashParams";
 import IElementConfig from "./IElementConfig";
 import Terria from "./Terria";
-import loadJson from "../Core/loadJson";
 
 export interface InitSourcePickedFeatures {
   providerCoords?: ProviderCoordsMap;
@@ -309,10 +313,13 @@ export const buildInitSourcesFromStartData = async (
 
 export const buildInitSourcesFromShare = async (
   shareToken: string | undefined,
-  shareDataService: Terria["shareDataService"]
+  shareLinkService: IShareLinkService | undefined
 ): Promise<InitSource[]> => {
-  if (!shareToken || !shareDataService) return [];
-  const shareProps = await shareDataService.resolveData(shareToken);
+  if (!shareToken || !shareLinkService) return [];
+  const shareProps = (
+    await shareLinkService.resolveShareLink(shareToken)
+  ).throwIfError("Failed to resolve share link");
+
   const sources = await convertStartData(
     shareProps,
     `Start data from sharelink \`"${shareToken}"\``,
@@ -347,8 +354,9 @@ export const buildInitSourcesFromUrlFragments = async (
 export const buildInitSourcesFromSpaRoutes = async (
   url: string,
   storyRouteUrlPrefix: string | undefined
-): Promise<InitSource[]> => {
+): Promise<{ initSources: InitSource[]; hasStory: boolean }> => {
   const initSources: InitSource[] = [];
+  let hasStory = false;
 
   // SPA route: /catalog/:id and /story/:id
   const segments = url.split("/").filter((s) => s.length > 0);
@@ -382,10 +390,10 @@ export const buildInitSourcesFromSpaRoutes = async (
       TerriaErrorSeverity.Error
     );
     initSources.push(...sources);
-    // userProperties.set("playStory", "1");
+    hasStory = true;
   }
 
-  return initSources;
+  return { initSources, hasStory };
 };
 
 /**
@@ -429,7 +437,7 @@ export const updateInitSourcesFromUrl = async (
   const fromStartData = await buildInitSourcesFromStartData(hashParams.start);
   const fromShare = await buildInitSourcesFromShare(
     hashParams.share,
-    terria.shareDataService
+    terria.shareLinkService
   );
 
   const fromSpaRoutes = await buildInitSourcesFromSpaRoutes(
@@ -441,8 +449,13 @@ export const updateInitSourcesFromUrl = async (
     ...fromUrl,
     ...fromStartData,
     ...fromShare,
-    ...fromSpaRoutes
+    ...fromSpaRoutes.initSources
   ];
+  if (fromSpaRoutes.hasStory) {
+    runInAction(() => {
+      terria.playStoryOnInit = fromSpaRoutes.hasStory;
+    });
+  }
   terria.addInitSources(initSources);
 };
 

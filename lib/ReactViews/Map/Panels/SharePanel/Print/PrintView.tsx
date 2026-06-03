@@ -5,11 +5,6 @@ import { StyleSheetManager, ThemeProvider } from "styled-components";
 import { terriaTheme } from "../../../../StandardUserInterface";
 import { useViewState } from "../../../../Context";
 import { DistanceLegend } from "../../../BottomBar/DistanceLegend";
-import {
-  buildShareLink,
-  buildShortShareLink,
-  canShorten
-} from "../BuildShareLink";
 import PrintDatasets from "./PrintDatasets";
 import PrintSource from "./PrintSource";
 import PrintViewButtons from "./PrintViewButtons";
@@ -154,25 +149,13 @@ const PrintView = (props: Props) => {
   }, [props.window]);
 
   useEffect(() => {
-    if (canShorten(viewState.terria)) {
-      buildShortShareLink(viewState.terria, viewState, {
+    viewState.terria.shareLinkService
+      ?.buildShareLink(viewState, {
         includeStories: false
       })
-        .then((url) => {
-          setShareLink(url);
-        })
-        .catch(() =>
-          buildShareLink(viewState.terria, viewState, {
-            includeStories: false
-          })
-        );
-    } else {
-      setShareLink(
-        buildShareLink(viewState.terria, viewState, {
-          includeStories: false
-        })
-      );
-    }
+      .then((url) => {
+        setShareLink(url);
+      });
   }, [viewState.terria, viewState]);
 
   return ReactDOM.createPortal(

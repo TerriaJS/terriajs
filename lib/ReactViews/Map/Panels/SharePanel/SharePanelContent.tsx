@@ -1,18 +1,16 @@
+import { runInAction } from "mobx";
 import { FC, useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import Terria from "../../../../Models/Terria";
 import ViewState from "../../../../ReactViewModels/ViewState";
 import Box from "../../../../Styled/Box";
+import Checkbox from "../../../../Styled/Checkbox";
 import Spacing from "../../../../Styled/Spacing";
 import Text, { TextSpan } from "../../../../Styled/Text";
 import { useCallbackRef } from "../../../useCallbackRef";
-import { canShorten } from "./BuildShareLink";
-import { PrintSection } from "./Print/PrintSection";
-import { shouldShorten as shouldShortenDefault } from "./SharePanel";
-import { IShareUrlRef, ShareUrl, ShareUrlBookmark } from "./ShareUrl";
-import Checkbox from "../../../../Styled/Checkbox";
 import { EmbedSection } from "./Embed/EmbedSection";
-import { runInAction } from "mobx";
+import { PrintSection } from "./Print/PrintSection";
+import { IShareUrlRef, ShareUrl, ShareUrlBookmark } from "./ShareUrl";
 
 interface ISharePanelContentProps {
   terria: Terria;
@@ -26,12 +24,12 @@ export const SharePanelContent: FC<ISharePanelContentProps> = ({
   closePanel
 }) => {
   const { t } = useTranslation();
-  const canShortenUrl = useMemo(() => !!canShorten(terria), [terria]);
+  const canShortenUrl = useMemo(
+    () => !!terria.shareLinkService?.canShorten,
+    [terria]
+  );
 
   const [includeStoryInShare, setIncludeStoryInShare] = useState(true);
-  const [shouldShorten, setShouldShorten] = useState(
-    shouldShortenDefault(terria)
-  );
 
   const [_, update] = useState<object>();
   const shareUrlRef = useCallbackRef<IShareUrlRef>(null, () => update({}));
@@ -41,11 +39,9 @@ export const SharePanelContent: FC<ISharePanelContentProps> = ({
   }, []);
 
   const shouldShortenOnChange = useCallback(() => {
-    setShouldShorten((prevState) => {
-      runInAction(() => {
-        terria.configParameters.shortenShareUrls = !prevState;
-      });
-      return !prevState;
+    runInAction(() => {
+      terria.configParameters.shortenShareUrls =
+        !terria.configParameters.shortenShareUrls;
     });
   }, [terria]);
 
@@ -62,7 +58,6 @@ export const SharePanelContent: FC<ISharePanelContentProps> = ({
         terria={terria}
         viewState={viewState}
         includeStories={includeStoryInShare}
-        shouldShorten={shouldShorten}
         ref={shareUrlRef}
         callback={closePanel}
       >
@@ -86,7 +81,7 @@ export const SharePanelContent: FC<ISharePanelContentProps> = ({
       <Checkbox
         textProps={{ medium: true }}
         id="shortenUrl"
-        isChecked={shouldShorten}
+        isChecked={terria.configParameters.shortenShareUrls}
         onChange={shouldShortenOnChange}
         isDisabled={!canShortenUrl}
       >

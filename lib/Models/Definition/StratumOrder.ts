@@ -7,7 +7,7 @@ const million = 1000000;
 /**
  * Defines the relative ordering of strata.
  */
-export default class StratumOrder {
+export class BaseStratumOrder {
   /**
    * The priorities of each named stratum. Strata with higher priority values are "above" and override
    * strata with lower priority values.
@@ -33,14 +33,6 @@ export default class StratumOrder {
    * The next priority to assign to a user stratum.
    */
   nextUser: number = 4 * million;
-
-  constructor() {
-    this.addDefaultStratum(CommonStrata.defaults);
-    this.addDefinitionStratum(CommonStrata.underride);
-    this.addDefinitionStratum(CommonStrata.definition);
-    this.addDefinitionStratum(CommonStrata.override);
-    this.addUserStratum(CommonStrata.user);
-  }
 
   /**
    * Assigns a priority to a default stratum. If the stratum already has a priority, this function does nothing.
@@ -160,8 +152,19 @@ export default class StratumOrder {
   ): Map<string, T> {
     return new Map(Array.from(strata.entries()).sort(sortFunction));
   }
+}
 
+export default class StratumOrder extends BaseStratumOrder {
   static readonly instance = new StratumOrder();
+
+  constructor() {
+    super();
+    this.addDefaultStratum(CommonStrata.defaults);
+    this.addDefinitionStratum(CommonStrata.underride);
+    this.addDefinitionStratum(CommonStrata.definition);
+    this.addDefinitionStratum(CommonStrata.override);
+    this.addUserStratum(CommonStrata.user);
+  }
 
   /**
    * Assigns a priority to a default stratum. If the stratum already has a priority, this function does nothing.

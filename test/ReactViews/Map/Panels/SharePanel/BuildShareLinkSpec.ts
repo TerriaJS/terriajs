@@ -17,9 +17,9 @@ import Terria from "../../../../../lib/Models/Terria";
 import { setViewerMode } from "../../../../../lib/Models/ViewerMode";
 import ViewState from "../../../../../lib/ReactViewModels/ViewState";
 import {
-  buildShareLink,
   isShareable,
-  SHARE_VERSION
+  SHARE_VERSION,
+  ShareLinkService
 } from "../../../../../lib/ReactViews/Map/Panels/SharePanel/BuildShareLink";
 
 import bikeRacksGeoJson from "../../../../../wwwroot/test/GeoJSON/bike_racks.geojson" with { type: "json" };
@@ -56,8 +56,9 @@ const flattenInitSources = (initSources: InitSourceData[]): InitSourceData =>
   );
 
 describe("BuildShareLink", function () {
-  it("should generate a url with default catalog related flags missing/undefined", function () {
-    const shareLink = buildShareLink(terria, viewState);
+  it("should generate a url with default catalog related flags missing/undefined", async function () {
+    const shareLinkService = new ShareLinkService(terria);
+    const shareLink = await shareLinkService.buildShareLink(viewState);
     const params = decodeAndParseStartHash(shareLink);
     const initSources = flattenInitSources(params.initSources);
 
@@ -81,7 +82,8 @@ describe("BuildShareLink", function () {
       expect(isShareable(terria)(modelId)).toBe(false);
       await addUserCatalogMember(terria, model);
 
-      const shareLink = buildShareLink(terria, viewState);
+      const shareLinkService = new ShareLinkService(terria);
+      const shareLink = await shareLinkService.buildShareLink(viewState);
       const params = decodeAndParseStartHash(shareLink);
       const initSources = flattenInitSources(params.initSources);
 
@@ -104,7 +106,8 @@ describe("BuildShareLink", function () {
 
       await terria.workbench.add(model);
 
-      const shareLink = buildShareLink(terria, viewState);
+      const shareLinkService = new ShareLinkService(terria);
+      const shareLink = await shareLinkService.buildShareLink(viewState);
       const params = decodeAndParseStartHash(shareLink);
       const initSources = flattenInitSources(params.initSources);
 
@@ -129,7 +132,8 @@ describe("BuildShareLink", function () {
 
     it("should be serialized", async function () {
       await addUserCatalogMember(terria, model);
-      const shareLink = buildShareLink(terria, viewState);
+      const shareLinkService = new ShareLinkService(terria);
+      const shareLink = await shareLinkService.buildShareLink(viewState);
       const params = decodeAndParseStartHash(shareLink);
       const initSources = flattenInitSources(params.initSources);
 
@@ -145,7 +149,8 @@ describe("BuildShareLink", function () {
 
       await terria.workbench.add(model);
 
-      const shareLink = buildShareLink(terria, viewState);
+      const shareLinkService = new ShareLinkService(terria);
+      const shareLink = await shareLinkService.buildShareLink(viewState);
       const params = decodeAndParseStartHash(shareLink);
       const initSources = flattenInitSources(params.initSources);
 
@@ -196,14 +201,17 @@ describe("BuildShareLink", function () {
 
         // preview the user added item & the share link should reflect that
         await viewState.viewCatalogMember(model);
-        const shareLink = buildShareLink(terria, viewState);
+        const shareLinkService = new ShareLinkService(terria);
+        const shareLink = await shareLinkService.buildShareLink(viewState);
         let params = decodeAndParseStartHash(shareLink);
         let initSources = flattenInitSources(params.initSources);
         expect(initSources.previewedItemId).toBe(model.uniqueId);
 
         // close the catalog & the share link should reflect that
         viewState.closeCatalog();
-        params = decodeAndParseStartHash(buildShareLink(terria, viewState));
+        const shareLinkAfterClose =
+          await shareLinkService.buildShareLink(viewState);
+        params = decodeAndParseStartHash(shareLinkAfterClose);
         initSources = flattenInitSources(params.initSources);
         expect(initSources.previewedItemId).toBeUndefined();
       });
@@ -213,7 +221,7 @@ describe("BuildShareLink", function () {
   describe("sharing picked features", function () {
     it(
       "captures the picked position",
-      action(function () {
+      action(async function () {
         terria.pickedFeatures = new PickedFeatures();
         terria.pickedFeatures.pickPosition = new Cartesian3(
           17832.12,
@@ -221,7 +229,8 @@ describe("BuildShareLink", function () {
           952313.73
         );
         terria.pickedFeatures.features.push(new TerriaFeature({}));
-        const shareLink = buildShareLink(terria, viewState);
+        const shareLinkService = new ShareLinkService(terria);
+        const shareLink = await shareLinkService.buildShareLink(viewState);
         const params = decodeAndParseStartHash(shareLink);
         const initSources = flattenInitSources(params.initSources);
         const pickCoords = initSources.pickedFeatures?.pickCoords;
@@ -233,7 +242,7 @@ describe("BuildShareLink", function () {
 
     it(
       "captures the tile coordinates of the picked imagery providers",
-      action(function () {
+      action(async function () {
         terria.pickedFeatures = new PickedFeatures();
         terria.pickedFeatures.pickPosition = new Cartesian3(
           17832.12,
@@ -245,7 +254,8 @@ describe("BuildShareLink", function () {
           "https://bar": { x: 42, y: 42, level: 4 }
         };
         terria.pickedFeatures.features.push(new TerriaFeature({}));
-        const shareLink = buildShareLink(terria, viewState);
+        const shareLinkService = new ShareLinkService(terria);
+        const shareLink = await shareLinkService.buildShareLink(viewState);
         const params = decodeAndParseStartHash(shareLink);
         const initSources = flattenInitSources(params.initSources);
         const providerCoords = initSources.pickedFeatures?.providerCoords;
@@ -258,7 +268,7 @@ describe("BuildShareLink", function () {
 
     it(
       "captures the selected feature",
-      action(function () {
+      action(async function () {
         terria.pickedFeatures = new PickedFeatures();
         terria.pickedFeatures.pickPosition = new Cartesian3(
           17832.12,
@@ -268,7 +278,8 @@ describe("BuildShareLink", function () {
         const feature = new Entity({ name: "testFeature" }) as TerriaFeature;
         terria.pickedFeatures.features.push(feature);
         terria.selectedFeature = feature;
-        const shareLink = buildShareLink(terria, viewState);
+        const shareLinkService = new ShareLinkService(terria);
+        const shareLink = await shareLinkService.buildShareLink(viewState);
         const params = decodeAndParseStartHash(shareLink);
         const initSources = flattenInitSources(params.initSources);
         const current = initSources.pickedFeatures?.current;
@@ -279,7 +290,7 @@ describe("BuildShareLink", function () {
 
     it(
       "captures all picked vector features",
-      action(function () {
+      action(async function () {
         terria.pickedFeatures = new PickedFeatures();
         terria.pickedFeatures.pickPosition = new Cartesian3(
           17832.12,
@@ -292,7 +303,8 @@ describe("BuildShareLink", function () {
         terria.pickedFeatures.features.push(
           new TerriaFeature({ name: "testFeature2" })
         );
-        const shareLink = buildShareLink(terria, viewState);
+        const shareLinkService = new ShareLinkService(terria);
+        const shareLink = await shareLinkService.buildShareLink(viewState);
         const params = decodeAndParseStartHash(shareLink);
         const initSources = flattenInitSources(params.initSources);
         const entities = initSources.pickedFeatures?.entities;
@@ -327,7 +339,8 @@ describe("BuildShareLink", function () {
       terria.configParameters.terrainSplitDirection = SplitDirection.LEFT;
       terria.configParameters.depthTestAgainstTerrainEnabled = true;
 
-      const shareLink = buildShareLink(terria, viewState);
+      const shareLinkService = new ShareLinkService(terria);
+      const shareLink = await shareLinkService.buildShareLink(viewState);
       const params = decodeAndParseStartHash(shareLink);
       const initSources = flattenInitSources(params.initSources);
 

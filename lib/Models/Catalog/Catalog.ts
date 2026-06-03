@@ -59,7 +59,7 @@ export default class Catalog {
       new CatalogSearchProvider(
         "catalog-search-provider",
         terria,
-        terria.searchBarModel.minCharacters
+        terria.searchBarModel.config.minCharacters
       );
   }
 

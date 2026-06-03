@@ -1,14 +1,22 @@
 import i18next from "i18next";
 import loadWithXhr from "../Core/loadWithXhr";
 import TerriaError from "../Core/TerriaError";
-import {
-  buildShareLink,
-  buildShortShareLink,
-  canShorten
-} from "../ReactViews/Map/Panels/SharePanel/BuildShareLink";
 import Terria from "./Terria";
 
-export class FeedbackService {
+interface SendFeedbackOptions {
+  title?: string;
+  name: string;
+  email: string;
+  sendShareURL: boolean;
+  comment: string;
+  additionalParameters?: Record<string, string | undefined>;
+}
+
+export interface IFeedbackService {
+  sendFeedback(options: SendFeedbackOptions): Promise<boolean>;
+}
+
+export class FeedbackService implements IFeedbackService {
   private _feedbackUrl: string;
   private _additionalFeedbackParameters: {
     name: string;
@@ -30,19 +38,10 @@ export class FeedbackService {
     this._additionalFeedbackParameters = additionalFeedbackParameters;
   }
 
-  async sendFeedback(options: {
-    title?: string;
-    name: string;
-    email: string;
-    sendShareURL: boolean;
-    comment: string;
-    additionalParameters?: Record<string, string | undefined>;
-  }) {
+  async sendFeedback(options: SendFeedbackOptions) {
     try {
       const shareLinkPromise = options.sendShareURL
-        ? canShorten(this._terria)
-          ? buildShortShareLink(this._terria)
-          : Promise.resolve(buildShareLink(this._terria))
+        ? this._terria.shareLinkService?.buildShareLink()
         : Promise.resolve("Not shared");
 
       const shareLink = await shareLinkPromise;
