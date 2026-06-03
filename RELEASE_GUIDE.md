@@ -6,6 +6,8 @@
 
 - Checkout and pull `main` branch of `terriajs`, run `yarn install` if necessary.
 - Bump the version number in `package.json`.
+  - Release will happen only if that version number is not already published to npm.
+  - For a pre-release, add a pre-release tag to the version number, e.g. `8.12.3-alpha.0`. The pre-release tag can be any string, but it's common to use `alpha`, `beta`, `rc` (release candidate) etc. followed by a number that is incremented for each pre-release.
 - Review and edit CHANGES.md.
   - Ensure that entries for new changes are written in the right section by diffing against the last version. Make sure the section name matches the version you set in `package.json` above.
   - e.g. `git diff 8.2.25 HEAD -- CHANGES.md` (where `8.2.25` is the previous published version)

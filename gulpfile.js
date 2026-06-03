@@ -292,9 +292,9 @@ serveTests.description =
   "Start jasmine-browser-runner server for interactive testing.";
 serveTests.displayName = "serve-tests";
 
-const dev = gulp.parallel(terriajsServer, watch, serveTests);
+const dev = gulp.parallel(watch, serveTests);
 dev.description =
-  "Start TerriaJS server, watch for source changes, and serve tests.";
+  "Watch for source changes, and serve tests with jasmine-browser-runner.";
 
 const postNpmInstall = copyCesiumAssets;
 postNpmInstall.description = "Copy Cesium assets after installation.";

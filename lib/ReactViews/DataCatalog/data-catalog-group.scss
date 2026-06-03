@@ -33,8 +33,7 @@
 
   text-align: left;
   font-size: variables.$font-size-small;
-  padding: 10px 30px + variables.$padding;
-  padding-right: 0;
+  padding: 10px 0 10px (24px + variables.$padding);
   min-height: 35px;
   position: relative;
   width: 100%;
@@ -73,22 +72,14 @@
 .folder {
   position: absolute;
   left: 8px;
-  top: 5px;
+  top: 50%;
+  transform: translateY(-50%);
   opacity: 0.5;
 
   svg {
-    height: 30px;
-    width: 30px;
+    height: 17px;
+    width: 17px;
     display: block;
-  }
-
-  @media (min-width: variables.$sm) {
-    top: 11px;
-
-    svg {
-      height: 25px;
-      width: 25px;
-    }
   }
 }
 
@@ -117,7 +108,7 @@
   padding-top: calc(variables.$padding / 2);
 
   &--lower-level {
-    margin-left: 20px;
+    margin-left: 16px;
     border-left: 1px solid variables.$grey-lighter;
   }
 }
