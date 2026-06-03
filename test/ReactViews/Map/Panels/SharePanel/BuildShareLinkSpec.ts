@@ -1,3 +1,4 @@
+import i18next from "i18next";
 import { action, runInAction } from "mobx";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import queryToObject from "terriajs-cesium/Source/Core/queryToObject";
@@ -40,6 +41,11 @@ beforeEach(function () {
     catalogSearchProvider: undefined
   });
 });
+
+const getShareUrlQueryParams = (url: string): Record<string, string> => {
+  const query = URI.parse(url).query ?? "";
+  return URI.parseQuery(query) as Record<string, string>;
+};
 
 const decodeAndParseStartHash = (url: string) => {
   const parsed = URI.parse(url);
@@ -302,6 +308,54 @@ describe("BuildShareLink", function () {
         expect(entities?.[1].hash).toBeDefined();
       })
     );
+  });
+
+  describe("language (lng) query parameter", function () {
+    let originalLanguage: string;
+
+    beforeEach(async function () {
+      originalLanguage = i18next.language;
+    });
+
+    afterEach(async function () {
+      await i18next.changeLanguage(originalLanguage);
+    });
+
+    it("omits lng when no language configuration is set", function () {
+      const shareLink = buildShareLink(terria, viewState);
+      const params = getShareUrlQueryParams(shareLink);
+      expect(params["lng"]).toBeUndefined();
+    });
+
+    it("omits lng when only one language is configured", async function () {
+      (terria.configParameters as any).languageConfiguration = {
+        languages: { en: "English" }
+      };
+      await i18next.changeLanguage("en");
+      const shareLink = buildShareLink(terria, viewState);
+      const params = getShareUrlQueryParams(shareLink);
+      expect(params["lng"]).toBeUndefined();
+    });
+
+    it("adds lng when multiple languages are configured and current language is supported", async function () {
+      (terria.configParameters as any).languageConfiguration = {
+        languages: { en: "English", fr: "Français" }
+      };
+      await i18next.changeLanguage("fr");
+      const shareLink = buildShareLink(terria, viewState);
+      const params = getShareUrlQueryParams(shareLink);
+      expect(params["lng"]).toBe("fr");
+    });
+
+    it("omits lng when current language is not in the configured list", async function () {
+      (terria.configParameters as any).languageConfiguration = {
+        languages: { en: "English", fr: "Français" }
+      };
+      await i18next.changeLanguage("de");
+      const shareLink = buildShareLink(terria, viewState);
+      const params = getShareUrlQueryParams(shareLink);
+      expect(params["lng"]).toBeUndefined();
+    });
   });
 
   describe("map settings", function () {
