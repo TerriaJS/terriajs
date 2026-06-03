@@ -4,7 +4,7 @@ import URI from "urijs";
 import AbstractConstructor from "../../Core/AbstractConstructor";
 import zoomRectangleFromPoint from "../../Map/Vector/zoomRectangleFromPoint";
 import Model from "../../Models/Definition/Model";
-import SearchProviderResults from "../../Models/SearchProviders/SearchProviderResults";
+import SearchProviderResult from "../../Models/SearchProviders/SearchProviderResults";
 import SearchResult from "../../Models/SearchProviders/SearchResult";
 import xml2json from "../../ThirdParty/xml2json";
 import WebFeatureServiceSearchProviderTraits from "../../Traits/SearchProviders/WebFeatureServiceSearchProviderTraits";
@@ -50,7 +50,7 @@ function WebFeatureServiceSearchProviderMixin<
 
     protected doSearch(
       searchText: string,
-      results: SearchProviderResults
+      results: SearchProviderResult
     ): Promise<void> {
       results.results.length = 0;
       results.message = undefined;

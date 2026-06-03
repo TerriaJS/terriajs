@@ -1,8 +1,8 @@
-import { action, makeObservable } from "mobx";
-import { fromPromise } from "mobx-utils";
+import { debounce } from "lodash-es";
+import { action, makeObservable, observable } from "mobx";
 import AbstractConstructor from "../../Core/AbstractConstructor";
 import Model from "../../Models/Definition/Model";
-import SearchProviderResults from "../../Models/SearchProviders/SearchProviderResults";
+import SearchProviderResult from "../../Models/SearchProviders/SearchProviderResults";
 import SearchProviderTraits from "../../Traits/SearchProviders/SearchProviderTraits";
 
 type SearchProviderModel = Model<SearchProviderTraits>;
@@ -13,36 +13,74 @@ function SearchProviderMixin<
   abstract class SearchProviderMixin extends Base {
     abstract get type(): string;
 
+    protected debounceTime = 1000;
+    private _debouncedSearch: ReturnType<typeof debounce>;
+
     constructor(...args: any[]) {
       super(...args);
       makeObservable(this);
+      this.searchResult = new SearchProviderResult(this);
+
+      this._debouncedSearch = debounce((searchText: string) => {
+        this.performSearch(searchText);
+      }, this.debounceTime);
     }
+
+    @observable
+    public searchResult: SearchProviderResult;
 
     protected abstract logEvent(searchText: string): void;
 
     protected abstract doSearch(
       searchText: string,
-      results: SearchProviderResults
+      results: SearchProviderResult
     ): Promise<void>;
 
     @action
-    search(searchText: string): SearchProviderResults {
-      const result = new SearchProviderResults(this);
+    cancelSearch() {
+      this._debouncedSearch.cancel();
+
+      this.searchResult.isCanceled = true;
+      this.searchResult = new SearchProviderResult(this);
+    }
+
+    @action
+    async search(
+      searchText: string,
+      manuallyTriggered?: boolean
+    ): Promise<void> {
+      this.searchResult.isWaitingToStartSearch = true;
       if (!this.shouldRunSearch(searchText)) {
-        result.resultsCompletePromise = fromPromise(Promise.resolve());
-        result.message = {
+        this._debouncedSearch.cancel();
+
+        this.searchResult.isSearching = false;
+        this.searchResult.message = {
           content: "translate#viewModels.searchMinCharacters",
           params: {
             count: this.minCharacters
           }
         };
-        return result;
+        this.searchResult.isWaitingToStartSearch = false;
+        return;
       }
+
+      if (manuallyTriggered) {
+        this._debouncedSearch.cancel();
+        await this.performSearch(searchText);
+      } else {
+        await this._debouncedSearch(searchText);
+      }
+    }
+
+    @action
+    private async performSearch(searchText: string): Promise<void> {
       this.logEvent(searchText);
-      result.resultsCompletePromise = fromPromise(
-        this.doSearch(searchText, result)
-      );
-      return result;
+      this.searchResult.isWaitingToStartSearch = false;
+      this.searchResult.isSearching = true;
+
+      await this.doSearch(searchText, this.searchResult);
+
+      this.searchResult.isSearching = false;
     }
 
     private shouldRunSearch(searchText: string) {

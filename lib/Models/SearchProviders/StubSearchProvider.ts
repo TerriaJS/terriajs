@@ -4,7 +4,7 @@ import primitiveTrait from "../../Traits/Decorators/primitiveTrait";
 import LocationSearchProviderTraits from "../../Traits/SearchProviders/LocationSearchProviderTraits";
 import CreateModel from "../Definition/CreateModel";
 import { ModelConstructorParameters } from "../Definition/Model";
-import SearchProviderResults from "./SearchProviderResults";
+import SearchProviderResult from "./SearchProviderResults";
 
 export class StubSearchProviderTraits extends LocationSearchProviderTraits {
   @primitiveTrait({
@@ -36,7 +36,7 @@ export default class StubSearchProvider extends SearchProviderMixin(
 
   protected doSearch(
     _searchText: string,
-    _results: SearchProviderResults
+    _results: SearchProviderResult
   ): Promise<void> {
     return Promise.resolve();
   }

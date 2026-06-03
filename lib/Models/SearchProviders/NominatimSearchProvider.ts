@@ -9,7 +9,7 @@ import LocationSearchProviderMixin from "../../ModelMixins/SearchProviders/Locat
 import NominatimSearchProviderTraits from "../../Traits/SearchProviders/NominatimSearchProviderTraits";
 import CreateModel from "../Definition/CreateModel";
 import Terria from "../Terria";
-import SearchProviderResults from "./SearchProviderResults";
+import SearchProviderResult from "./SearchProviderResults";
 import SearchResult from "./SearchResult";
 
 export default class NominatimSearchProvider extends LocationSearchProviderMixin(
@@ -41,9 +41,9 @@ export default class NominatimSearchProvider extends LocationSearchProviderMixin
     );
   }
 
-  protected doSearch(
+  protected async doSearch(
     searchText: string,
-    searchResults: SearchProviderResults
+    searchResults: SearchProviderResult
   ): Promise<void> {
     searchResults.results.length = 0;
     searchResults.message = undefined;
@@ -126,10 +126,6 @@ export default class NominatimSearchProvider extends LocationSearchProviderMixin
           content: "translate#viewModels.searchErrorOccurred"
         };
       });
-  }
-
-  supportsAutocomplete(): boolean {
-    return false;
   }
 }
 
