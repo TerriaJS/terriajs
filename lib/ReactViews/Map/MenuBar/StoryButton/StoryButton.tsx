@@ -13,7 +13,7 @@ import { useRefForTerria } from "../../../Hooks/useRefForTerria";
 import Styles from "./story-button.scss";
 import withControlledVisibility from "../../../HOCs/withControlledVisibility";
 
-interface Props  {
+interface Props {
   terria: Terria;
   theme: DefaultTheme;
   viewState: ViewState;

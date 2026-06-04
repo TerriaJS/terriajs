@@ -180,7 +180,7 @@ class SharePanel extends Component<PropTypes, SharePanelState> {
   }
 }
 
-export default withControlledVisibility(withTranslation()(SharePanel))
+export default withControlledVisibility(withTranslation()(SharePanel));
 
 export function shouldShorten(terria: Terria) {
   return (

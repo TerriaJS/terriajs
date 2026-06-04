@@ -62,4 +62,4 @@ const LangPanel = (props: Props) => {
     </MenuPanel>
   );
 };
-export default withControlledVisibility (LangPanel);
+export default withControlledVisibility(LangPanel);
