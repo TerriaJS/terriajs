@@ -1,8 +1,6 @@
 /* eslint-disable prefer-rest-params */
-import fetch, { Headers, Request, Response } from "node-fetch";
 import Resource from "terriajs-cesium/Source/Core/Resource";
 import URI from "urijs";
-
 /** Cached lightweight JSDOM window reused across calls to avoid leaking instances. */
 let _cachedJsdomWindow: { XMLHttpRequest: any; DOMParser: any } | undefined;
 
@@ -44,15 +42,15 @@ export default function patchNetworkRequests(
 
   // Overwrite browser APIs (eg XMLHttpRequest and fetch)
   if (opts.jsDomGlobal) {
-    console.log(`${tag}Applying jsdom-global to ${baseUrl}`);
-    require("jsdom-global")(undefined, {
+    console.log(`${tag}Applying global-jsdom to ${baseUrl}`);
+    require("global-jsdom")(undefined, {
       url: baseUrl
     });
   }
 
   // Add basic auth token for all XMLHttpRequest/fetch that use baseUrl hostname
 
-  const baseHostname = URI(baseUrl).hostname();
+  const baseHostname = new URL(baseUrl).hostname;
 
   if (opts.xhr) {
     console.log(`${tag}Applying XMLHttpRequest patch to ${baseUrl}`);
@@ -82,7 +80,7 @@ export default function patchNetworkRequests(
       }
 
       if (logFailedRequest) {
-        this.onloadend = (req) => {
+        this.onloadend = (_req) => {
           if (this.status < 200 || this.status >= 300) {
             console.log(tag, "\n\n\n");
             console.log(tag, this.responseURL);
@@ -125,6 +123,9 @@ export default function patchNetworkRequests(
 
   if (opts.fetch) {
     console.log(`${tag}Applying fetch patch to ${baseUrl}`);
+    // Capture the original fetch before we replace the global, so the wrapper
+    // delegates to it rather than recursing into itself.
+    const originalFetch = globalThis.fetch;
     // A fun method to add Auth headers to all requests with baseUrl
     const newFetch = (
       input: RequestInfo,
@@ -168,11 +169,11 @@ export default function patchNetworkRequests(
         }
       }
 
-      return fetch(input as any, init as any) as any;
+      return originalFetch(input as any, init as any) as any;
     };
     global.fetch = newFetch as any;
 
-    // Set global fetch objects from node-fetch
+    // Expose the (native) fetch-related globals for code that references them
     global.Headers = Headers as any;
     global.Request = Request as any;
     global.Response = Response as any;
