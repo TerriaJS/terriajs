@@ -24,7 +24,7 @@ import URI from "urijs";
 import AsyncLoader from "../Core/AsyncLoader";
 import Class from "../Core/Class";
 import CorsProxy from "../Core/CorsProxy";
-import JsonValue, {
+import {
   JsonArray,
   JsonObject,
   isJsonBoolean,
@@ -77,7 +77,7 @@ import SearchProviderTraits from "../Traits/SearchProviders/SearchProviderTraits
 import MappableTraits from "../Traits/TraitsClasses/MappableTraits";
 import MapNavigationModel from "../ViewModels/MapNavigation/MapNavigationModel";
 import TerriaViewer from "../ViewModels/TerriaViewer";
-import { BaseMapItem, BaseMapsModel } from "./BaseMaps/BaseMapsModel";
+import { BaseMapsModel } from "./BaseMaps/BaseMapsModel";
 import CameraView from "./CameraView";
 import Catalog from "./Catalog/Catalog";
 import CatalogGroup from "./Catalog/CatalogGroup";
@@ -87,6 +87,7 @@ import MagdaReference, {
   MagdaReferenceHeaders
 } from "./Catalog/CatalogReferences/MagdaReference";
 import SplitItemReference from "./Catalog/CatalogReferences/SplitItemReference";
+import { defaultLoadConfig } from "./defaultLoadConfig";
 import CommonStrata from "./Definition/CommonStrata";
 import { BaseModel } from "./Definition/Model";
 import ModelPropertiesFromTraits from "./Definition/ModelPropertiesFromTraits";
@@ -381,39 +382,7 @@ export interface ConfigParameters {
   keepCatalogOpen: boolean;
 }
 
-const IS_DEVELOPMENT = process.env.NODE_ENV === "development";
-
-/**
- * Default {@link StartOptions.loadConfig} implementation: fetches and parses
- * the config (JSON5) at `configUrl` and derives the base URI. Returns the raw
- * `configUrl` as well so Magda configs can still be resolved (see
- * {@link Terria.loadMagdaConfig}).
- */
-export const defaultLoadConfig = async (
-  configUrl: string,
-  configUrlHeaders?: { [key: string]: string }
-) => {
-  const hashProperties =
-    typeof window !== "undefined"
-      ? queryToObject(new URI(window.location).fragment())
-      : {};
-
-  // If in development environment, allow usage of #configUrl to set Terria config URL
-  if (IS_DEVELOPMENT) {
-    if (hashProperties["configUrl"] && hashProperties["configUrl"] !== "")
-      configUrl = hashProperties["configUrl"];
-  }
-
-  const baseUri = new URI(configUrl).filename("");
-
-  const config = await loadJson5(configUrl, configUrlHeaders);
-
-  return {
-    config,
-    baseUri,
-    configUrl
-  };
-};
+export { defaultLoadConfig };
 
 interface StartOptions {
   /**
@@ -432,7 +401,7 @@ interface StartOptions {
    * `configUrl`/`configUrlHeaders` are loaded via {@link defaultLoadConfig}.
    */
   loadConfig?: () => Promise<{
-    config: JsonValue;
+    config: JsonObject;
     baseUri: URI;
     /** The URL the config was loaded from, if known. Required for Magda configs. */
     configUrl?: string;
@@ -1237,7 +1206,7 @@ export default class Terria {
   async loadPersistedOrInitBaseMap(): Promise<void> {
     const baseMapItems = this.baseMapsModel.baseMapItems;
     // Set baseMap fallback to first option
-    let baseMap = baseMapItems[0] as BaseMapItem | undefined;
+    let baseMap = baseMapItems.at(0);
     const persistedBaseMapId = this.getLocalProperty("basemap");
     const baseMapSearch = baseMapItems.find(
       (baseMapItem) => baseMapItem.item?.uniqueId === persistedBaseMapId
