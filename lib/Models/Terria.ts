@@ -77,7 +77,7 @@ import SearchProviderTraits from "../Traits/SearchProviders/SearchProviderTraits
 import MappableTraits from "../Traits/TraitsClasses/MappableTraits";
 import MapNavigationModel from "../ViewModels/MapNavigation/MapNavigationModel";
 import TerriaViewer from "../ViewModels/TerriaViewer";
-import { BaseMapsModel } from "./BaseMaps/BaseMapsModel";
+import { BaseMapItem, BaseMapsModel } from "./BaseMaps/BaseMapsModel";
 import CameraView from "./CameraView";
 import Catalog from "./Catalog/Catalog";
 import CatalogGroup from "./Catalog/CatalogGroup";
@@ -383,7 +383,16 @@ export interface ConfigParameters {
 
 const IS_DEVELOPMENT = process.env.NODE_ENV === "development";
 
-export const defaultLoadConfig = async (configUrl: string) => {
+/**
+ * Default {@link StartOptions.loadConfig} implementation: fetches and parses
+ * the config (JSON5) at `configUrl` and derives the base URI. Returns the raw
+ * `configUrl` as well so Magda configs can still be resolved (see
+ * {@link Terria.loadMagdaConfig}).
+ */
+export const defaultLoadConfig = async (
+  configUrl: string,
+  configUrlHeaders?: { [key: string]: string }
+) => {
   const hashProperties =
     typeof window !== "undefined"
       ? queryToObject(new URI(window.location).fragment())
@@ -397,18 +406,36 @@ export const defaultLoadConfig = async (configUrl: string) => {
 
   const baseUri = new URI(configUrl).filename("");
 
-  const config = await loadJson5(configUrl);
+  const config = await loadJson5(configUrl, configUrlHeaders);
 
   return {
     config,
-    baseUri
+    baseUri,
+    configUrl
   };
 };
 
 interface StartOptions {
-  loadConfig: (cb?: () => void) => Promise<{
+  /**
+   * URL of the Terria config to load. Used (via {@link defaultLoadConfig}) when
+   * `loadConfig` is not supplied.
+   */
+  configUrl?: string;
+  /** Headers to send when fetching `configUrl`. */
+  configUrlHeaders?: {
+    [key: string]: string;
+  };
+  /**
+   * Loads the Terria config. Supply this to load config from somewhere other
+   * than a URL (e.g. a non-browser/SSR environment). Use the exported
+   * {@link defaultLoadConfig} helper for the standard behaviour. When omitted,
+   * `configUrl`/`configUrlHeaders` are loaded via {@link defaultLoadConfig}.
+   */
+  loadConfig?: () => Promise<{
     config: JsonValue;
     baseUri: URI;
+    /** The URL the config was loaded from, if known. Required for Magda configs. */
+    configUrl?: string;
   }>;
   applicationUrl?: Location;
   shareDataService?: ShareDataService;
@@ -1028,8 +1055,18 @@ export default class Terria {
     let launchUrlForAnalytics = options.applicationUrl?.href;
 
     try {
-      const { config, baseUri } = await options.loadConfig();
+      const loadConfig =
+        options.loadConfig ??
+        (() =>
+          defaultLoadConfig(options.configUrl ?? "", options.configUrlHeaders));
+      const { config, baseUri, configUrl } = await loadConfig();
       launchUrlForAnalytics ||= getUriWithoutPath(baseUri);
+
+      // If it's a magda config, we only load magda config and parameters should never be a property on the direct
+      // config aspect (it would be under the `terria-config` aspect)
+      if (isJsonObject(config) && config.aspects && configUrl) {
+        await this.loadMagdaConfig(configUrl, config, baseUri);
+      }
       runInAction(() => {
         if (isJsonObject(config) && isJsonObject(config.parameters)) {
           this.updateParameters(config.parameters);
@@ -1200,7 +1237,7 @@ export default class Terria {
   async loadPersistedOrInitBaseMap(): Promise<void> {
     const baseMapItems = this.baseMapsModel.baseMapItems;
     // Set baseMap fallback to first option
-    let baseMap = baseMapItems[0];
+    let baseMap = baseMapItems[0] as BaseMapItem | undefined;
     const persistedBaseMapId = this.getLocalProperty("basemap");
     const baseMapSearch = baseMapItems.find(
       (baseMapItem) => baseMapItem.item?.uniqueId === persistedBaseMapId
@@ -2177,10 +2214,7 @@ export default class Terria {
 
   getLocalProperty(key: string): string | boolean | null {
     try {
-      if (
-        typeof window === "undefined" ||
-        !defined(window.localStorage)
-      ) {
+      if (typeof window === "undefined" || !defined(window.localStorage)) {
         return null;
       }
     } catch (_e) {
@@ -2198,10 +2232,7 @@ export default class Terria {
 
   setLocalProperty(key: string, value: string | boolean): boolean {
     try {
-      if (
-        typeof window === "undefined" ||
-        !defined(window.localStorage)
-      ) {
+      if (typeof window === "undefined" || !defined(window.localStorage)) {
         return false;
       }
     } catch (_e) {
