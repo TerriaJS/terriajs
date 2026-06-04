@@ -41,7 +41,6 @@ export interface StoryData {
   id: string;
   shareData: StartData;
 }
-
 export interface StartData {
   version: string;
   /** Share data initSources can be a mix of initUrls (string) and initData (InitDataSource/JsonObject) */
