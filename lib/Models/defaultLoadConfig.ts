@@ -11,6 +11,8 @@ const IS_DEVELOPMENT = process.env.NODE_ENV === "development";
  * config (JSON5) at `configUrl` and derives the base URI. Returns the raw
  * `configUrl` as well so Magda configs can still be resolved (see
  * `Terria.loadMagdaConfig`).
+ *
+ * @experimental - not ready for general consumption!
  */
 export const defaultLoadConfig = async (
   configUrl: string,

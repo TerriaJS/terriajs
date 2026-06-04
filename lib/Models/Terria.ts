@@ -382,6 +382,7 @@ export interface ConfigParameters {
   keepCatalogOpen: boolean;
 }
 
+/** Keep export for experimentation */
 export { defaultLoadConfig };
 
 interface StartOptions {
