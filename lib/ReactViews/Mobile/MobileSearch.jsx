@@ -80,15 +80,14 @@ class MobileSearch extends Component {
 
   renderLocationResult(theme) {
     const searchState = this.props.viewState.searchState;
-    return searchState.locationSearchResults.map((search) => (
+    return searchState.locationSearchProviders.map((searchProvider) => (
       <LocationSearchResults
-        key={search.searchProvider.name}
+        key={searchProvider.uniqueId}
         terria={this.props.terria}
         viewState={this.props.viewState}
-        search={search}
+        searchResult={searchProvider.searchResult}
         locationSearchText={searchState.locationSearchText}
         onLocationClick={this.onLocationClick.bind(this)}
-        isWaitingForSearchToStart={searchState.isWaitingToStartLocationSearch}
         theme={theme}
       />
     ));

@@ -102,11 +102,10 @@ describe("BingMapsSearchProvider", function () {
       )
     );
 
-    const result = bingMapsSearchProvider.search("test");
-    await result.resultsCompletePromise;
+    await bingMapsSearchProvider.search("test", true);
 
-    expect(result.message).toBeUndefined();
-    expect(result.results.length).toEqual(2);
+    expect(bingMapsSearchProvider.searchResult.message).toBeUndefined();
+    expect(bingMapsSearchProvider.searchResult.results.length).toEqual(2);
   });
 
   it(" - propperly sort the search results", async () => {
@@ -172,12 +171,15 @@ describe("BingMapsSearchProvider", function () {
       )
     );
 
-    const searchResult = bingMapsSearchProvider.search("test");
-    await searchResult.resultsCompletePromise;
+    await bingMapsSearchProvider.search("test", true);
 
-    expect(searchResult.results.length).toEqual(2);
-    expect(searchResult.message).toBeUndefined();
-    expect(searchResult.results[0].name).toEqual("test result 2");
-    expect(searchResult.results[1].name).toEqual("test result 1, Italy");
+    expect(bingMapsSearchProvider.searchResult.results.length).toEqual(2);
+    expect(bingMapsSearchProvider.searchResult.message).toBeUndefined();
+    expect(bingMapsSearchProvider.searchResult.results[0].name).toEqual(
+      "test result 2"
+    );
+    expect(bingMapsSearchProvider.searchResult.results[1].name).toEqual(
+      "test result 1, Italy"
+    );
   });
 });

@@ -1,6 +1,11 @@
 export default function highlightKeyword(searchResult, keywordToHighlight) {
   if (!keywordToHighlight) return searchResult;
-  const parts = searchResult.split(new RegExp(`(${keywordToHighlight})`, "gi"));
+  const escapedKeyword = keywordToHighlight.replace(
+    /[.*+?^${}()|[\]\\]/g,
+    "\\$&"
+  );
+
+  const parts = searchResult.split(new RegExp(`(${escapedKeyword})`, "gi"));
   return (
     <>
       {parts.map((part, i) => (

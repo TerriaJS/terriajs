@@ -15,7 +15,7 @@ import MapboxSearchProviderTraits from "../../Traits/SearchProviders/MapboxSearc
 import CommonStrata from "../Definition/CommonStrata";
 import CreateModel from "../Definition/CreateModel";
 import Terria from "../Terria";
-import SearchProviderResults from "./SearchProviderResults";
+import SearchProviderResult from "./SearchProviderResults";
 import SearchResult from "./SearchResult";
 
 enum MapboxGeocodeDirection {
@@ -23,7 +23,7 @@ enum MapboxGeocodeDirection {
   Reverse = "reverse"
 }
 
-interface MapboxGeocodingResponse {
+export interface MapboxGeocodingResponse {
   features: Feature<Point>[];
   type: string;
   attribution?: string;
@@ -65,7 +65,7 @@ export default class MapboxSearchProvider extends LocationSearchProviderMixin(
 
   protected doSearch(
     searchText: string,
-    searchResults: SearchProviderResults
+    searchResults: SearchProviderResult
   ): Promise<void> {
     searchResults.results.length = 0;
     searchResults.message = undefined;

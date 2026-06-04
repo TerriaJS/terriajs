@@ -13,7 +13,7 @@ import BingMapsSearchProviderTraits from "../../Traits/SearchProviders/BingMapsS
 import CreateModel from "../Definition/CreateModel";
 import Terria from "../Terria";
 import CommonStrata from "./../Definition/CommonStrata";
-import SearchProviderResults from "./SearchProviderResults";
+import SearchProviderResult from "./SearchProviderResults";
 import SearchResult from "./SearchResult";
 
 export default class BingMapsSearchProvider extends LocationSearchProviderMixin(
@@ -62,7 +62,7 @@ export default class BingMapsSearchProvider extends LocationSearchProviderMixin(
 
   protected doSearch(
     searchText: string,
-    searchResults: SearchProviderResults
+    searchResults: SearchProviderResult
   ): Promise<void> {
     searchResults.results.length = 0;
     searchResults.message = undefined;

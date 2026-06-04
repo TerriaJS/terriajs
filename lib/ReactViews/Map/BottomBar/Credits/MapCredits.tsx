@@ -25,34 +25,27 @@ export const MapCredits: FC<IMapCreditsProps> = observer(
     const [dataAttributionVisible, setDataAttributionVisible] = useState(false);
 
     const searchAttributions = searchBarModel.locationSearchProvidersArray
-      .map((provider) => {
-        return provider.attributions?.flat();
-      })
-      .flat()
-      .filter((attribution) => !!attribution);
+      .flatMap((provider) => provider.attributions ?? [])
+      .filter(Boolean);
 
     const showDataAttribution = useCallback(() => {
       setDataAttributionVisible(true);
-    }, [setDataAttributionVisible]);
+    }, []);
 
     const hideDataAttribution = useCallback(() => {
       setDataAttributionVisible(false);
-    }, [setDataAttributionVisible]);
+    }, []);
 
     useEffect(() => {
       return reaction(
-        () => currentViewer.attributions.length,
-        () => {
-          if (
-            currentViewer.attributions &&
-            currentViewer.attributions.length === 0
-          ) {
+        () => currentViewer.attributions.length + searchAttributions.length,
+        (value) => {
+          if (value === 0) {
             hideDataAttribution();
           }
         }
       );
-      /* eslint-disable-next-line react-hooks/exhaustive-deps */
-    }, [currentViewer]);
+    }, [currentViewer, hideDataAttribution, searchAttributions.length]);
 
     if (currentViewer.type === "none") {
       return <CreditsContainer />;
@@ -64,9 +57,8 @@ export const MapCredits: FC<IMapCreditsProps> = observer(
         <MapCreditLogo currentViewer={currentViewer} />
         <Credits credits={credits} />
         <Spacer />
-        {(currentViewer.attributions &&
-          currentViewer.attributions.length > 0) ||
-        currentViewer.attributions.length > 0 ? (
+        {currentViewer.attributions.length > 0 ||
+        searchAttributions.length > 0 ? (
           <a onClick={showDataAttribution}>
             {t("map.extraCreditLinks.credits")}
           </a>
