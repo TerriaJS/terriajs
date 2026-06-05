@@ -2,6 +2,8 @@
 
 #### next release (8.12.3)
 
+- Add `disableMobileInterface` config parameter (default `false`) to optionally disable the mobile UI for locked-down deployments.
+- TSify `MenuBar` and `Groups`, and add an elements config for `MenuBar`. Panels and buttons now support `withControlledVisibility`/`showCloseButton`.
 - `Terria.start()` now accepts an optional `loadConfig` callback (`() => Promise<{ config, baseUri, configUrl? }>`) as an alternative to `configUrl`/`configUrlHeaders`, enabling Terria to load its config in a non-browser environment (e.g. server-side rendering). The existing `configUrl`/`configUrlHeaders` options continue to work unchanged; the exported `defaultLoadConfig(configUrl, configUrlHeaders?)` helper reproduces the default behaviour (including Magda config support).
 - Add support for nested `strata` in model JSON: `updateModelFromJson` now recurses into a `strata` object, and `combineModelStrata` is exported from `createCombinedModel`.
 - Improve non-browser (Node) compatibility: guard `window`/`localStorage` access, fall back to the raw key in `TerriaError` when i18next is not initialised, allow injecting a `CorsProxy` via `TerriaOptions`, and make SDMX structure loading use `fetchText`.
