@@ -11,6 +11,7 @@
 - Upgrade eslint to v10 and migrate to eslint flat config.
 - Update `csv-geo-au` support to include the Australian Mesh Blocks 2021.
 - We no longer start terriajs-server when running `yarn gulp dev` as it is not needed for running tests in the browser with jasmine-browser-runner. If you need terriajs-server, you can start it separately by running `yarn gulp terriajs-server` in another terminal.
+- Search result IDs are checked against workbench IDs to determine `add` or `remove` status.
 - Search providers refactor:
   - Debounce logic is now handled on the search model level rather than in the UI component.
   - Fixed a bug where new search was trigger on every keystroke without respecting the debounce delay.
