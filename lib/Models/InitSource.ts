@@ -32,6 +32,7 @@ export interface ModelJson extends JsonObject {
   type?: string;
   shareKeys?: string[];
   members?: (string | JsonObject)[];
+  strata?: { [stratumName: string]: Partial<ModelJson> };
 }
 
 export interface StoryData {

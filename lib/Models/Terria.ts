@@ -87,6 +87,7 @@ import MagdaReference, {
   MagdaReferenceHeaders
 } from "./Catalog/CatalogReferences/MagdaReference";
 import SplitItemReference from "./Catalog/CatalogReferences/SplitItemReference";
+import { defaultLoadConfig } from "./defaultLoadConfig";
 import CommonStrata from "./Definition/CommonStrata";
 import { BaseModel } from "./Definition/Model";
 import ModelPropertiesFromTraits from "./Definition/ModelPropertiesFromTraits";
@@ -381,11 +382,31 @@ export interface ConfigParameters {
   keepCatalogOpen: boolean;
 }
 
+/** Keep export for experimentation */
+export { defaultLoadConfig };
+
 interface StartOptions {
-  configUrl: string;
+  /**
+   * URL of the Terria config to load. Used (via {@link defaultLoadConfig}) when
+   * `loadConfig` is not supplied.
+   */
+  configUrl?: string;
+  /** Headers to send when fetching `configUrl`. */
   configUrlHeaders?: {
     [key: string]: string;
   };
+  /**
+   * Loads the Terria config. Supply this to load config from somewhere other
+   * than a URL (e.g. a non-browser/SSR environment). Use the exported
+   * {@link defaultLoadConfig} helper for the standard behaviour. When omitted,
+   * `configUrl`/`configUrlHeaders` are loaded via {@link defaultLoadConfig}.
+   */
+  loadConfig?: () => Promise<{
+    config: JsonObject;
+    baseUri: URI;
+    /** The URL the config was loaded from, if known. Required for Magda configs. */
+    configUrl?: string;
+  }>;
   applicationUrl?: Location;
   shareDataService?: ShareDataService;
   errorService?: ErrorServiceProvider;
@@ -422,6 +443,8 @@ interface TerriaOptions {
   cesiumBaseUrl?: string;
 
   analytics?: Analytics;
+
+  corsProxy?: CorsProxy;
 }
 
 interface HomeCameraInit {
@@ -492,7 +515,7 @@ export default class Terria {
    * Gets or sets the {@link this.corsProxy} used to determine if a URL needs to be proxied and to proxy it if necessary.
    * @type {CorsProxy}
    */
-  corsProxy: CorsProxy = new CorsProxy();
+  corsProxy: CorsProxy;
 
   /**
    * Gets or sets the instance to which to report Google Analytics-style log
@@ -746,6 +769,8 @@ export default class Terria {
     (buildModuleUrl as any).setBaseUrl(this.cesiumBaseUrl);
 
     this.analytics = options.analytics ?? new NoopAnalytics();
+
+    this.corsProxy = options.corsProxy ?? new CorsProxy();
   }
 
   /** Raise error to user.
@@ -986,7 +1011,10 @@ export default class Terria {
 
   async start(options: StartOptions): Promise<void> {
     // Some hashProperties need to be set before anything else happens
-    const hashProperties = queryToObject(new URI(window.location).fragment());
+    const hashProperties =
+      typeof window !== "undefined"
+        ? queryToObject(new URI(window.location).fragment())
+        : {};
 
     if (isDefined(hashProperties["ignoreErrors"])) {
       this.userProperties.set("ignoreErrors", hashProperties["ignoreErrors"]);
@@ -994,30 +1022,20 @@ export default class Terria {
 
     this.shareDataService = options.shareDataService;
 
-    // If in development environment, allow usage of #configUrl to set Terria config URL
-    if (this.developmentEnv) {
-      if (
-        isDefined(hashProperties["configUrl"]) &&
-        hashProperties["configUrl"] !== ""
-      )
-        options.configUrl = hashProperties["configUrl"];
-    }
-
-    const baseUri = new URI(options.configUrl).filename("");
-
-    const launchUrlForAnalytics =
-      options.applicationUrl?.href || getUriWithoutPath(baseUri);
+    let launchUrlForAnalytics = options.applicationUrl?.href;
 
     try {
-      const config = await loadJson5(
-        options.configUrl,
-        options.configUrlHeaders
-      );
+      const loadConfig =
+        options.loadConfig ??
+        (() =>
+          defaultLoadConfig(options.configUrl ?? "", options.configUrlHeaders));
+      const { config, baseUri, configUrl } = await loadConfig();
+      launchUrlForAnalytics ||= getUriWithoutPath(baseUri);
 
       // If it's a magda config, we only load magda config and parameters should never be a property on the direct
       // config aspect (it would be under the `terria-config` aspect)
-      if (isJsonObject(config) && config.aspects) {
-        await this.loadMagdaConfig(options.configUrl, config, baseUri);
+      if (isJsonObject(config) && config.aspects && configUrl) {
+        await this.loadMagdaConfig(configUrl, config, baseUri);
       }
       runInAction(() => {
         if (isJsonObject(config) && isJsonObject(config.parameters)) {
@@ -1029,7 +1047,7 @@ export default class Terria {
       this.raiseErrorToUser(error, {
         sender: this,
         title: { key: "models.terria.loadConfigErrorTitle" },
-        message: `Couldn't load ${options.configUrl}`,
+        message: `Couldn't load configuration`,
         severity: TerriaErrorSeverity.Error
       });
     } finally {
@@ -1189,7 +1207,7 @@ export default class Terria {
   async loadPersistedOrInitBaseMap(): Promise<void> {
     const baseMapItems = this.baseMapsModel.baseMapItems;
     // Set baseMap fallback to first option
-    let baseMap = baseMapItems[0];
+    let baseMap = baseMapItems.at(0);
     const persistedBaseMapId = this.getLocalProperty("basemap");
     const baseMapSearch = baseMapItems.find(
       (baseMapItem) => baseMapItem.item?.uniqueId === persistedBaseMapId
@@ -2166,7 +2184,7 @@ export default class Terria {
 
   getLocalProperty(key: string): string | boolean | null {
     try {
-      if (!defined(window.localStorage)) {
+      if (typeof window === "undefined" || !defined(window.localStorage)) {
         return null;
       }
     } catch (_e) {
@@ -2184,7 +2202,7 @@ export default class Terria {
 
   setLocalProperty(key: string, value: string | boolean): boolean {
     try {
-      if (!defined(window.localStorage)) {
+      if (typeof window === "undefined" || !defined(window.localStorage)) {
         return false;
       }
     } catch (_e) {
