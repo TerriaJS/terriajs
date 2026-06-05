@@ -231,7 +231,7 @@
     "convertErrorMessage": "This share link is based on an older version of TerriaJS - the software powering this web map. An error has occurred trying to upgrade the share data.",
     "getShareSaveHelpMessage": "How to Bookmark Sharelinks",
     "shareStoryLink": "Share story link",
-    "storyLinkCreated": "Story link created",
+    "storyLinkCreated": "Saved as new story",
     "shareLinkCreated": "Share link created"
   },
   "countDatasets": {
@@ -625,6 +625,7 @@
     "unsuccessful": "Copy unsuccessful...",
     "shareURL": "Share link",
     "shareExplanation": "Anyone with this link will be able to access this map.",
+    "storyExplanation": "Anyone with this link will be able to access this map.",
     "copy": "Copy"
   },
   "includeStory": {
@@ -1318,7 +1319,9 @@
       "generateErrorMessage": "Something went wrong when trying to use the share data service to generate a short URL.",
       "generateErrorDataExceedsLimitMessage": "Error: Share data exceeds limit",
       "expandErrorTitle": "Couldn't expand URL",
-      "expandErrorMessage": "The share data service used to launch {{appName}} was not located. This may indicate an error in the link or that the service is unavailable at this time."
+      "expandErrorMessage": "The share data service used to launch {{appName}} was not located. This may indicate an error in the link or that the service is unavailable at this time.",
+      "shareNotFoundTitle": "Link not found",
+      "shareNotFoundMessage": "The story or share link doesn't exist. Either it was removed, or the URL is incorrect."
     },
     "socrataServer": {
       "name": "Socrata Server",

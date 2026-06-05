@@ -600,6 +600,9 @@ export default class ViewState {
 
   @action
   openUserData(): void {
+    if (this.terria.configParameters.disableUserAddedData) {
+      return;
+    }
     this.explorerPanelIsVisible = true;
     this.activeTabCategory = USER_DATA_NAME;
   }

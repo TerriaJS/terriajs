@@ -105,7 +105,7 @@ import IElementConfig from "./IElementConfig";
 import InitSource, {
   InitSourceData,
   InitSourceFromData,
-  ShareInitSourceData,
+  StartData,
   StoryData,
   isInitFromData,
   isInitFromDataPromise,
@@ -165,12 +165,23 @@ export interface ConfigParameters {
    * @deprecated
    */
   proxyableDomainsUrl?: string;
+  /** URL to TerriaJS-server config. Defaults to `serverconfig/`. */
   serverConfigUrl?: string;
+  /**
+   * URL of the service used to generate share links. This defaults to `share` if not specified, which maps to TerriaJS Server `share` endpoint.
+   */
   shareUrl?: string;
+  shareRequestHeaders?: () => Promise<Record<string, string>>;
+  /**
+   * Base URL of the client application used to generate share links. If not specified, the current page base URI will be used.
+   * For example, if `shareClientBaseUrl` is `http://example.com/`, then a share link will be generated as `http://example.com/#share=...`.
+   */
+  shareClientBaseUrl?: string;
   /**
    * URL of the service used to send feedback.  If not specified, the "Give Feedback" button will not appear.
    */
   feedbackUrl?: string;
+  feedbackRequestHeaders?: () => Promise<Record<string, string>>;
   /**
    * An array of base paths to use to try to use to resolve init fragments in the URL.  For example, if this property is `[ "init/", "http://example.com/init/"]`, then a URL with `#test` will first try to load `init/test.json` and, if that fails, next try to load `http://example.com/init/test.json`.
    */
@@ -231,6 +242,11 @@ export interface ConfigParameters {
    * token will not be shared with others.
    */
   cesiumIonAllowSharingAddedAssets?: boolean;
+
+  /**
+   * Whether or not to disable the default Cesium ion token. If true, the user will be asked to select a Cesium ion token when adding assets.
+   */
+  cesiumIonDisableDefaultToken?: boolean;
   /**
    * A [Bing Maps API key](https://msdn.microsoft.com/en-us/library/ff428642.aspx) used for requesting Bing Maps base maps and using the Bing Maps geocoder for searching. It is your responsibility to request a key and comply with all terms and conditions.
    */
@@ -260,6 +276,20 @@ export interface ConfigParameters {
 
   disablePedestrianMode?: boolean;
 
+  /**
+   * True to disable the share panel.
+   */
+  disableSharePanel?: boolean;
+  /**
+   * True to disable the share embed panel.
+   */
+  disableShareEmbed?: boolean;
+
+  /**
+   * True to disable user added data.
+   */
+  disableUserAddedData?: boolean;
+
   experimentalFeatures?: boolean;
   magdaReferenceHeaders?: MagdaReferenceHeaders;
   locationSearchBoundingBox?: number[];
@@ -272,6 +302,16 @@ export interface ConfigParameters {
    * Options for Google Analytics
    */
   googleAnalyticsOptions?: unknown;
+
+  /**
+   * PostHog analytics key
+   */
+  postHogAnalyticsKey?: string;
+
+  /**
+   * PostHog analytics host
+   */
+  postHogAnalyticsHost?: string;
 
   /**
    * Error service provider configuration.
@@ -384,6 +424,11 @@ export interface ConfigParameters {
    * Keep catalog open when adding / removing items
    */
   keepCatalogOpen: boolean;
+
+  /**
+   * Zoom preview map on previewed item
+   */
+  zoomMapOnPreviewedItem: boolean;
 }
 
 /** Keep export for experimentation */
@@ -546,7 +591,10 @@ export default class Terria {
     proxyableDomainsUrl: "proxyabledomains/", // deprecated, will be determined from serverconfig
     serverConfigUrl: "serverconfig/",
     shareUrl: "share",
+    shareClientBaseUrl: undefined,
+    shareRequestHeaders: undefined,
     feedbackUrl: undefined,
+    feedbackRequestHeaders: undefined,
     initFragmentPaths: ["init/"],
     storyEnabled: true,
     showStorySaveInstructions: false,
@@ -560,6 +608,7 @@ export default class Terria {
     cesiumIonOAuth2ApplicationID: undefined,
     cesiumIonLoginTokenPersistence: "page",
     cesiumIonAllowSharingAddedAssets: false,
+    cesiumIonDisableDefaultToken: false,
     bingMapsKey: undefined,
     hideTerriaLogo: false,
     brandBarElements: undefined,
@@ -569,11 +618,16 @@ export default class Terria {
     disableMyLocation: undefined,
     disableSplitter: undefined,
     disablePedestrianMode: false,
+    disableSharePanel: false,
+    disableShareEmbed: false,
+    disableUserAddedData: false,
     keepCatalogOpen: false,
     experimentalFeatures: undefined,
     magdaReferenceHeaders: undefined,
     locationSearchBoundingBox: undefined,
     googleAnalyticsKey: undefined,
+    postHogAnalyticsKey: undefined,
+    postHogAnalyticsHost: undefined,
     errorService: undefined,
     globalDisclaimer: undefined,
     theme: {},
@@ -618,7 +672,8 @@ export default class Terria {
     aboutButtonHrefUrl: "about.html",
     plugins: undefined,
     searchBarConfig: undefined,
-    searchProviders: []
+    searchProviders: [],
+    zoomMapOnPreviewedItem: false
   };
 
   @observable
@@ -2326,7 +2381,7 @@ async function interpretStartData(
 ) {
   if (isJsonObject(startData, false)) {
     // Convert startData to v8 if necessary
-    let startDataV8: ShareInitSourceData | null;
+    let startDataV8: StartData | null;
     try {
       if (
         // If startData.version has version 0.x.x - user catalog-converter to convert startData

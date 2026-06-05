@@ -137,6 +137,10 @@ class SharePanel extends Component<PropTypes, SharePanelState> {
         ? t("share.btnStoryShareTitle")
         : t("share.btnMapShareTitle");
 
+    if (this.props.terria.configParameters.disableSharePanel) {
+      return null;
+    }
+
     return !storyShare ? (
       //@ts-expect-error - not yet ready to tackle tsfying MenuPanel
       <MenuPanel

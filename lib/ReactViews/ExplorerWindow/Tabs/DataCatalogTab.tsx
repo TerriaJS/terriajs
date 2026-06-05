@@ -9,11 +9,18 @@ import DataPreview from "../../Preview/DataPreview";
 import Breadcrumbs from "../../Search/Breadcrumbs";
 import SearchBox from "../../Search/SearchBox";
 import Styles from "./data-catalog-tab.scss";
+import MappableMixin from "../../../ModelMixins/MappableMixin";
 
 interface DataCatalogTabProps {
   items?: unknown[];
   searchPlaceholder?: string;
   onActionButtonClicked?: (item: CatalogMemberMixin.Instance) => void;
+  /** Override the default toggleItemOnMap behavior (when "add/remove from map" button is clicked in the data preview panel) */
+  onToggleItemOnMap?: (item: MappableMixin.Instance) => void;
+  hideToggleItemOnMap?: boolean;
+  hideSearch?: boolean;
+  hideActionButton?: boolean;
+  hideBreadcrumbs?: boolean;
 }
 
 const DataCatalogTab = observer(function DataCatalogTab(
@@ -25,7 +32,7 @@ const DataCatalogTab = observer(function DataCatalogTab(
   const {
     searchState,
     previewedItem: previewed,
-    breadcrumbsShown: showBreadcrumbs,
+    breadcrumbsShown: viewStateBreadcrumbsShown,
     terria
   } = viewState;
 
@@ -47,7 +54,7 @@ const DataCatalogTab = observer(function DataCatalogTab(
       <Box fullHeight column>
         <Box fullHeight overflow="hidden">
           <Box className={Styles.dataExplorer} styledWidth="40%">
-            {searchState.catalogSearchProvider && (
+            {!props.hideSearch && searchState.catalogSearchProvider && (
               <SearchBox
                 searchText={searchState.catalogSearchText}
                 onSearchTextChanged={changeSearchText}
@@ -58,6 +65,7 @@ const DataCatalogTab = observer(function DataCatalogTab(
             <DataCatalog
               terria={terria}
               viewState={viewState}
+              hideActionButton={props.hideActionButton}
               onActionButtonClicked={props.onActionButtonClicked}
               items={props.items}
             />
@@ -67,11 +75,13 @@ const DataCatalogTab = observer(function DataCatalogTab(
               terria={terria}
               viewState={viewState}
               previewed={previewed}
+              onToggleItemOnMap={props.onToggleItemOnMap}
+              hideToggleItemOnMap={props.hideToggleItemOnMap}
             />
           </Box>
         </Box>
 
-        {showBreadcrumbs && (
+        {!props.hideBreadcrumbs && viewStateBreadcrumbsShown && (
           <Breadcrumbs
             terria={terria}
             viewState={viewState}
