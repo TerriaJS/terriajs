@@ -537,8 +537,6 @@ export default class Terria {
   readonly timelineClock = new Clock({ shouldAnimate: false });
   // readonly overrides: any = overrides; // TODO: add options.functionOverrides like in master
 
-  catalogIndex: CatalogIndex | undefined;
-
   readonly elements = observable.map<string, IElementConfig>();
 
   @observable
@@ -987,16 +985,16 @@ export default class Terria {
       // If no model exists, try to find it through Terria model sharekeys or CatalogIndex sharekeys
       if (model?.uniqueId !== undefined) {
         return new Result(model);
-      } else if (this.catalogIndex) {
+      } else if (this.catalog.index) {
         try {
-          await this.catalogIndex.load();
+          await this.catalog.index.load();
         } catch (e) {
           throw TerriaError.from(
             e,
             `Failed to load CatalogIndex while trying to load model \`${id}\``
           );
         }
-        const indexModel = this.catalogIndex.getModelByIdOrShareKey(id);
+        const indexModel = this.catalog.index.getModelByIdOrShareKey(id);
         if (indexModel) {
           (await indexModel.loadReference()).throwIfError();
           return new Result(indexModel.target);
@@ -1150,8 +1148,8 @@ export default class Terria {
 
     // Create catalog index if catalogIndexUrl is set
     // Note: this isn't loaded now, it is loaded in first CatalogSearchProvider.doSearch()
-    if (this.configParameters.catalogIndexUrl && !this.catalogIndex) {
-      this.catalogIndex = new CatalogIndex(
+    if (this.configParameters.catalogIndexUrl && !this.catalog.index) {
+      this.catalog.index = new CatalogIndex(
         this,
         this.configParameters.catalogIndexUrl
       );
