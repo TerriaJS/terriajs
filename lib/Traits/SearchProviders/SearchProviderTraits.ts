@@ -1,6 +1,7 @@
 import ModelTraits from "../ModelTraits";
 import primitiveTrait from "../Decorators/primitiveTrait";
 
+/* eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging */
 class SearchProviderTraits extends ModelTraits {
   @primitiveTrait({
     type: "string",

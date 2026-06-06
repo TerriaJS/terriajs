@@ -3,8 +3,7 @@ import {
   computed,
   isObservableArray,
   makeObservable,
-  observable,
-  reaction
+  observable
 } from "mobx";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import RuntimeError from "terriajs-cesium/Source/Core/RuntimeError";

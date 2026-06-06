@@ -1,11 +1,10 @@
-import { autorun, computed, makeObservable, override, runInAction } from "mobx";
+import { autorun, makeObservable, override, runInAction } from "mobx";
 import { Category, SearchAction } from "../../Core/Analytics/analyticEvents";
 import { TerriaErrorSeverity } from "../../Core/TerriaError";
 import GroupMixin from "../../ModelMixins/GroupMixin";
 import ReferenceMixin from "../../ModelMixins/ReferenceMixin";
 import CatalogSearchProviderMixin from "../../ModelMixins/SearchProviders/CatalogSearchProviderMixin";
 import CatalogSearchProviderTraits from "../../Traits/SearchProviders/CatalogSearchProviderTraits";
-import CommonStrata from "../Definition/CommonStrata";
 import CreateModel from "../Definition/CreateModel";
 import { BaseModel } from "../Definition/Model";
 import Terria from "../Terria";
