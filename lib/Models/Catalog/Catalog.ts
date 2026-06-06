@@ -30,11 +30,10 @@ export default class Catalog {
     if ("searchProvider" in options) {
       this.searchProvider = options.searchProvider;
     } else {
-      this.searchProvider = CatalogSearchProvider.fromOptions({
-        id: "catalog-search-provider",
-        terria,
-        minCharacters: this.terria.searchBarModel.minCharacters
-      });
+      this.searchProvider = new CatalogSearchProvider(
+        "catalog-search-provider",
+        terria
+      );
     }
 
     this.group = new CatalogGroup("/", this.terria);

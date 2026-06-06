@@ -29,17 +29,6 @@ export class SearchBarModel extends CreateModel(SearchBarTraits) {
   constructor(readonly terria: Terria) {
     super("search-bar-model", terria);
 
-    reaction(
-      () => this.minCharacters,
-      (minCharacters) => {
-        this.terria.catalog.searchProvider?.setTrait(
-          CommonStrata.defaults,
-          "minCharacters",
-          minCharacters
-        );
-      }
-    );
-
     makeObservable(this);
   }
 

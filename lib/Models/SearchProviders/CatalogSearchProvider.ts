@@ -1,4 +1,4 @@
-import { autorun, makeObservable, runInAction } from "mobx";
+import { autorun, computed, makeObservable, override, runInAction } from "mobx";
 import { Category, SearchAction } from "../../Core/Analytics/analyticEvents";
 import { TerriaErrorSeverity } from "../../Core/TerriaError";
 import GroupMixin from "../../ModelMixins/GroupMixin";
@@ -115,30 +115,13 @@ export default class CatalogSearchProvider extends CatalogSearchProviderMixin(
     makeObservable(this);
   }
 
-  static fromOptions({
-    id,
-    terria,
-    minCharacters
-  }: {
-    id: string | undefined;
-    terria: Terria;
-    minCharacters?: number;
-  }) {
-    const searchProvider = new CatalogSearchProvider(id, terria);
-
-    if (minCharacters !== undefined) {
-      searchProvider.setTrait(
-        CommonStrata.defaults,
-        "minCharacters",
-        minCharacters
-      );
-    }
-
-    return searchProvider;
-  }
-
   get type() {
     return CatalogSearchProvider.type;
+  }
+
+  @override
+  get minCharacters(): number | undefined {
+    return super.minCharacters ?? this.terria.searchBarModel.minCharacters;
   }
 
   protected logEvent(searchText: string) {
