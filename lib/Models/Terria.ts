@@ -21,6 +21,13 @@ import queryToObject from "terriajs-cesium/Source/Core/queryToObject";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import SplitDirection from "terriajs-cesium/Source/Scene/SplitDirection";
 import URI from "urijs";
+import NoopAnalytics from "../Core/Analytics/NoopAnalytics";
+import {
+  Category,
+  DataSourceAction,
+  LaunchAction
+} from "../Core/Analytics/analyticEvents";
+import { Analytics } from "../Core/Analytics/types";
 import AsyncLoader from "../Core/AsyncLoader";
 import Class from "../Core/Class";
 import CorsProxy from "../Core/CorsProxy";
@@ -40,13 +47,6 @@ import TerriaError, {
   TerriaErrorSeverity
 } from "../Core/TerriaError";
 import { Complete } from "../Core/TypeModifiers";
-import NoopAnalytics from "../Core/Analytics/NoopAnalytics";
-import {
-  Category,
-  DataSourceAction,
-  LaunchAction
-} from "../Core/Analytics/analyticEvents";
-import { Analytics } from "../Core/Analytics/types";
 import ensureSuffix from "../Core/ensureSuffix";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import getDereferencedIfExists from "../Core/getDereferencedIfExists";
@@ -61,7 +61,7 @@ import PickedFeatures, {
   featureBelongsToCatalogItem,
   isProviderCoordsMap
 } from "../Map/PickedFeatures/PickedFeatures";
-import CatalogMemberMixin, { getName } from "../ModelMixins/CatalogMemberMixin";
+import { getName } from "../ModelMixins/CatalogMemberMixin";
 import GroupMixin from "../ModelMixins/GroupMixin";
 import MappableMixin, { isDataSource } from "../ModelMixins/MappableMixin";
 import ReferenceMixin from "../ModelMixins/ReferenceMixin";
@@ -87,7 +87,6 @@ import MagdaReference, {
   MagdaReferenceHeaders
 } from "./Catalog/CatalogReferences/MagdaReference";
 import SplitItemReference from "./Catalog/CatalogReferences/SplitItemReference";
-import { defaultLoadConfig } from "./defaultLoadConfig";
 import CommonStrata from "./Definition/CommonStrata";
 import { BaseModel } from "./Definition/Model";
 import ModelPropertiesFromTraits from "./Definition/ModelPropertiesFromTraits";
@@ -127,6 +126,7 @@ import TimelineStack from "./TimelineStack";
 import { isViewerMode, setViewerMode } from "./ViewerMode";
 import Workbench from "./Workbench";
 import SelectableDimensionWorkflow from "./Workflows/SelectableDimensionWorkflow";
+import { defaultLoadConfig } from "./defaultLoadConfig";
 
 export interface ConfigParameters {
   /**
@@ -715,11 +715,8 @@ export default class Terria {
   @computed
   get baseMapContrastColor() {
     return (
-      this.baseMapsModel.baseMapItems.find(
-        (basemap) =>
-          isDefined(basemap.item?.uniqueId) &&
-          basemap.item?.uniqueId === this.mainViewer.baseMap?.uniqueId
-      )?.contrastColor ?? "#ffffff"
+      this.baseMapsModel.findBaseMapById(this.mainViewer.baseMap?.uniqueId)
+        ?.contrastColor ?? "#ffffff"
     );
   }
 
@@ -1268,30 +1265,29 @@ export default class Terria {
     const baseMapItems = this.baseMapsModel.baseMapItems;
     // Set baseMap fallback to first option
     let baseMap = baseMapItems.at(0);
-    const persistedBaseMapId = this.getLocalProperty("basemap");
-    const baseMapSearch = baseMapItems.find(
-      (baseMapItem) => baseMapItem.item?.uniqueId === persistedBaseMapId
-    );
-    if (baseMapSearch?.item && MappableMixin.isMixedInto(baseMapSearch.item)) {
-      baseMap = baseMapSearch;
+    const persistedBaseMapId = this.getLocalProperty("basemap") as string;
+    const persistedBaseMap =
+      this.baseMapsModel.findBaseMapById(persistedBaseMapId);
+    if (
+      persistedBaseMap?.item &&
+      MappableMixin.isMixedInto(persistedBaseMap.item)
+    ) {
+      baseMap = persistedBaseMap;
     } else {
       // Try to find basemap using defaultBaseMapId and defaultBaseMapName
-      const baseMapSearch =
-        baseMapItems.find(
-          (baseMapItem) =>
-            baseMapItem.item?.uniqueId === this.baseMapsModel.defaultBaseMapId
+      const defaultBaseMap =
+        this.baseMapsModel.findBaseMapById(
+          this.baseMapsModel.defaultBaseMapId
         ) ??
-        baseMapItems.find(
-          (baseMapItem) =>
-            CatalogMemberMixin.isMixedInto(baseMapItem) &&
-            (baseMapItem.item as any).name ===
-              this.baseMapsModel.defaultBaseMapName
+        this.baseMapsModel.findBaseMapByName(
+          this.baseMapsModel.defaultBaseMapName
         );
+
       if (
-        baseMapSearch?.item &&
-        MappableMixin.isMixedInto(baseMapSearch.item)
+        defaultBaseMap?.item &&
+        MappableMixin.isMixedInto(defaultBaseMap.item)
       ) {
-        baseMap = baseMapSearch;
+        baseMap = defaultBaseMap;
       }
     }
     if (baseMap?.item)
@@ -1882,9 +1878,7 @@ export default class Terria {
       }
       if (isJsonString(initData.settings.baseMapId)) {
         baseMapPromise = this.mainViewer.setBaseMap(
-          this.baseMapsModel.baseMapItems.find(
-            (item) => item.item.uniqueId === initData.settings!.baseMapId
-          )?.item
+          this.baseMapsModel.findBaseMapById(initData.settings.baseMapId)?.item
         );
       }
       if (isJsonNumber(initData.settings.terrainSplitDirection)) {
