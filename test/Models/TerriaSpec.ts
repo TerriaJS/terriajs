@@ -125,7 +125,6 @@ describe("TerriaSpec", function () {
       function verifyGroups(groupAspect: any, groupNum: number) {
         const ids = groupAspect.members.map((member: any) => member.id);
         expect(terria.catalog.group.uniqueId).toEqual("/");
-        // ensure user added data co-exists with dereferenced magda members
         expect(terria.catalog.group.members.length).toEqual(groupNum);
         expect(terria.catalog.userAddedDataGroup).toBeDefined();
         ids.forEach((id: string) => {
@@ -142,12 +141,12 @@ describe("TerriaSpec", function () {
         configUrl: "test/Magda/map-config-dereferenced.json",
         i18nOptions
       });
-      verifyGroups(mapConfigDereferencedJson.aspects["group"], 3);
+      verifyGroups(mapConfigDereferencedJson.aspects["group"], 2);
 
       await terria.refreshCatalogMembersFromMagda(
         "test/Magda/map-config-dereferenced-new.json"
       );
-      verifyGroups(mapConfigDereferencedNewJson.aspects["group"], 2);
+      verifyGroups(mapConfigDereferencedNewJson.aspects["group"], 1);
     });
   });
 
@@ -419,8 +418,7 @@ describe("TerriaSpec", function () {
         const groupAspect = mapConfigDereferencedJson.aspects["group"];
         const ids = groupAspect.members.map((member: any) => member.id);
         expect(terria.catalog.group.uniqueId).toEqual("/");
-        // ensure user added data co-exists with dereferenced magda members
-        expect(terria.catalog.group.members.length).toEqual(3);
+        expect(terria.catalog.group.members.length).toEqual(2);
         expect(terria.catalog.userAddedDataGroup).toBeDefined();
         ids.forEach((id: string) => {
           const model = terria.getModelById(MagdaReference, id);
