@@ -27,8 +27,7 @@ describe("DataCatalogItem", () => {
       baseUrl: "./"
     });
     viewState = new ViewState({
-      terria: terria,
-      catalogSearchProvider: undefined
+      terria: terria
     });
     wmsItem = new WebMapServiceCatalogItem("test", terria);
 

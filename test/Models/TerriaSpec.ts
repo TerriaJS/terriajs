@@ -565,8 +565,7 @@ describe("TerriaSpec", function () {
       beforeEach(function () {
         newTerria = new Terria({ appBaseHref: "/", baseUrl: "./" });
         viewState = new ViewState({
-          terria: terria,
-          catalogSearchProvider: undefined
+          terria: terria
         });
 
         UrlToCatalogMemberMapping.register(
@@ -793,8 +792,7 @@ describe("TerriaSpec", function () {
         )}`;
         newTerria = new Terria({ baseUrl: "./" });
         viewState = new ViewState({
-          terria: terria,
-          catalogSearchProvider: undefined
+          terria: terria
         });
 
         await Promise.all(
@@ -904,8 +902,7 @@ describe("TerriaSpec", function () {
           "https://magda.example.com/api/v0/registry/records/map-config-example?optionalAspect=terria-config&optionalAspect=terria-init&optionalAspect=group&dereference=true";
 
         viewState = new ViewState({
-          terria: terria,
-          catalogSearchProvider: undefined
+          terria: terria
         });
         newTerria = new Terria({ baseUrl: "./" });
 

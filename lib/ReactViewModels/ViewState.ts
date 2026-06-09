@@ -2,12 +2,12 @@ import {
   action,
   computed,
   IReactionDisposer,
+  makeObservable,
   observable,
   reaction,
-  runInAction,
-  makeObservable
+  runInAction
 } from "mobx";
-import { ReactNode, MouseEvent, ComponentType, Ref } from "react";
+import { ComponentType, MouseEvent, ReactNode, Ref } from "react";
 import defined from "terriajs-cesium/Source/Core/defined";
 import addedByUser from "../Core/addedByUser";
 import {
@@ -22,9 +22,12 @@ import CatalogMemberMixin, { getName } from "../ModelMixins/CatalogMemberMixin";
 import GroupMixin from "../ModelMixins/GroupMixin";
 import MappableMixin from "../ModelMixins/MappableMixin";
 import ReferenceMixin from "../ModelMixins/ReferenceMixin";
+import CatalogSearchProviderMixin from "../ModelMixins/SearchProviders/CatalogSearchProviderMixin";
+import CzmlCatalogItem from "../Models/Catalog/CatalogItems/CzmlCatalogItem";
 import CommonStrata from "../Models/Definition/CommonStrata";
 import { BaseModel } from "../Models/Definition/Model";
 import getAncestors from "../Models/getAncestors";
+import { getMarkerCatalogItem } from "../Models/LocationMarkerUtils";
 import { SelectableDimension } from "../Models/SelectableDimensions/SelectableDimensions";
 import Terria from "../Models/Terria";
 import { ViewingControl } from "../Models/ViewingControls";
@@ -37,9 +40,6 @@ import {
   TourPoint
 } from "./defaultTourPoints";
 import SearchState from "./SearchState";
-import CatalogSearchProviderMixin from "../ModelMixins/SearchProviders/CatalogSearchProviderMixin";
-import { getMarkerCatalogItem } from "../Models/LocationMarkerUtils";
-import CzmlCatalogItem from "../Models/Catalog/CatalogItems/CzmlCatalogItem";
 
 export const DATA_CATALOG_NAME = "data-catalog";
 export const USER_DATA_NAME = "my-data";
@@ -50,8 +50,10 @@ export const WORKBENCH_RESIZE_ANIMATION_DURATION = 500;
 
 interface ViewStateOptions {
   terria: Terria;
-  catalogSearchProvider: CatalogSearchProviderMixin.Instance | undefined;
-  errorHandlingProvider?: any;
+  /**
+   * @deprecated
+   */
+  catalogSearchProvider?: CatalogSearchProviderMixin.Instance;
 }
 
 /**
@@ -202,8 +204,6 @@ export default class ViewState {
       this.bottomDockHeight = height;
     }
   }
-
-  errorProvider: any | null = null;
 
   // default value is null, because user has not made decision to show or
   // not show story
@@ -391,13 +391,14 @@ export default class ViewState {
     makeObservable(this);
     const terria = options.terria;
     this.searchState = new SearchState({
-      terria,
-      catalogSearchProvider: options.catalogSearchProvider
+      terria
     });
+    if (options.catalogSearchProvider) {
+      runInAction(() => {
+        this.terria.catalog.searchProvider = options.catalogSearchProvider;
+      });
+    }
 
-    this.errorProvider = options.errorHandlingProvider
-      ? options.errorHandlingProvider
-      : null;
     this.terria = terria;
 
     // When features are picked, show the feature info panel.

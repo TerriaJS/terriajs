@@ -11,8 +11,7 @@ describe("FeatureInfoPanelViewModel", function () {
   beforeEach(function () {
     terria = new Terria();
     viewState = new ViewState({
-      terria,
-      catalogSearchProvider: undefined
+      terria
     });
   });
 

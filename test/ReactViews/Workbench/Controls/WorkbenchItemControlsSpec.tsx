@@ -19,8 +19,7 @@ describe("WorkbenchItemControls", function () {
       baseUrl: "./"
     });
     viewState = new ViewState({
-      terria: terria,
-      catalogSearchProvider: undefined
+      terria: terria
     });
 
     item = new WebMapServiceCatalogItem("test-item", terria);

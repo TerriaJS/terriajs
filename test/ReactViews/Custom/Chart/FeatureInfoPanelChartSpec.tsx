@@ -33,7 +33,7 @@ describe("FeatureInfoPanelChart", function () {
 
     context = {
       terria: new Terria(),
-      viewState: new ViewState({ terria, catalogSearchProvider: undefined }),
+      viewState: new ViewState({ terria }),
       feature: new TerriaFeature({}),
       catalogItem
     };

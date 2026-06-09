@@ -5,7 +5,6 @@ import GroupMixin from "../../ModelMixins/GroupMixin";
 import ReferenceMixin from "../../ModelMixins/ReferenceMixin";
 import CatalogSearchProviderMixin from "../../ModelMixins/SearchProviders/CatalogSearchProviderMixin";
 import CatalogSearchProviderTraits from "../../Traits/SearchProviders/CatalogSearchProviderTraits";
-import CommonStrata from "../Definition/CommonStrata";
 import CreateModel from "../Definition/CreateModel";
 import { BaseModel } from "../Definition/Model";
 import Terria from "../Terria";
@@ -107,18 +106,12 @@ export default class CatalogSearchProvider extends CatalogSearchProviderMixin(
   CreateModel(CatalogSearchProviderTraits)
 ) {
   static readonly type = "catalog-search-provider";
-  debounceTime = 300;
+  override debounceTime = 300;
 
   constructor(id: string | undefined, terria: Terria) {
     super(id, terria);
 
     makeObservable(this);
-
-    this.setTrait(
-      CommonStrata.defaults,
-      "minCharacters",
-      terria.searchBarModel.minCharacters
-    );
   }
 
   get type() {

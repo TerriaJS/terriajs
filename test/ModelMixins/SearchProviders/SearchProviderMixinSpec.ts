@@ -68,4 +68,44 @@ describe("SearchProviderMixin", () => {
     expect(searchProvider.logEvent).toHaveBeenCalled();
     expect(searchProvider.doSearch).toHaveBeenCalled();
   });
+
+  describe("searchBarModel minCharacters fallback", () => {
+    let freshProvider: TestSearchProvider;
+
+    beforeEach(() => {
+      freshProvider = new TestSearchProvider("fresh", terria);
+      freshProvider.logEvent.calls.reset();
+      freshProvider.doSearch.calls.reset();
+    });
+
+    it(" - uses searchBarModel minCharacters when provider trait is not set", () => {
+      terria.searchBarModel.setTrait(
+        CommonStrata.definition,
+        "minCharacters",
+        7
+      );
+      expect(freshProvider.minCharacters).toEqual(7);
+    });
+
+    it(" - provider minCharacters takes precedence over searchBarModel", () => {
+      terria.searchBarModel.setTrait(
+        CommonStrata.definition,
+        "minCharacters",
+        7
+      );
+      freshProvider.setTrait(CommonStrata.definition, "minCharacters", 2);
+      expect(freshProvider.minCharacters).toEqual(2);
+    });
+
+    it(" - does not search when text is shorter than searchBarModel minCharacters", () => {
+      terria.searchBarModel.setTrait(
+        CommonStrata.definition,
+        "minCharacters",
+        7
+      );
+      freshProvider.search("abc", true);
+      expect(freshProvider.searchResult.isSearching).toBeFalsy();
+      expect(freshProvider.doSearch).not.toHaveBeenCalled();
+    });
+  });
 });

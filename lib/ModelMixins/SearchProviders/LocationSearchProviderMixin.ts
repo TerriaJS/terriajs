@@ -50,6 +50,21 @@ function LocationSearchProviderMixin<
     get autocompleteEnabled() {
       return super.autocompleteEnabled ?? true;
     }
+
+    @override
+    get flightDurationSeconds() {
+      return (
+        super.flightDurationSeconds ??
+        this.terria.searchBarModel.flightDurationSeconds
+      );
+    }
+
+    get recommendedListLength() {
+      return (
+        super.recommendedListLength ??
+        this.terria.searchBarModel.recommendedListLength
+      );
+    }
   }
 
   return LocationSearchProviderMixin;

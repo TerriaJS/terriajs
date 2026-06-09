@@ -1,4 +1,5 @@
 import LocationSearchProviderMixin from "../../../lib/ModelMixins/SearchProviders/LocationSearchProviderMixin";
+import CommonStrata from "../../../lib/Models/Definition/CommonStrata";
 import BingMapsSearchProvider from "../../../lib/Models/SearchProviders/BingMapsSearchProvider";
 import Terria from "../../../lib/Models/Terria";
 
@@ -28,5 +29,53 @@ describe("LocationSearchProvider", function () {
 
   it(" - propperly defines default isOpen", function () {
     expect(bingMapsSearchProvider.isOpen).toEqual(true);
+  });
+
+  describe("searchBarModel fallback", function () {
+    it(" - reads recommendedListLength from searchBarModel when not set on provider", function () {
+      terria.searchBarModel.setTrait(
+        CommonStrata.definition,
+        "recommendedListLength",
+        10
+      );
+      expect(bingMapsSearchProvider.recommendedListLength).toEqual(10);
+    });
+
+    it(" - reads flightDurationSeconds from searchBarModel when not set on provider", function () {
+      terria.searchBarModel.setTrait(
+        CommonStrata.definition,
+        "flightDurationSeconds",
+        3.0
+      );
+      expect(bingMapsSearchProvider.flightDurationSeconds).toEqual(3.0);
+    });
+
+    it(" - provider recommendedListLength takes precedence over searchBarModel", function () {
+      terria.searchBarModel.setTrait(
+        CommonStrata.definition,
+        "recommendedListLength",
+        10
+      );
+      bingMapsSearchProvider.setTrait(
+        CommonStrata.definition,
+        "recommendedListLength",
+        3
+      );
+      expect(bingMapsSearchProvider.recommendedListLength).toEqual(3);
+    });
+
+    it(" - provider flightDurationSeconds takes precedence over searchBarModel", function () {
+      terria.searchBarModel.setTrait(
+        CommonStrata.definition,
+        "flightDurationSeconds",
+        3.0
+      );
+      bingMapsSearchProvider.setTrait(
+        CommonStrata.definition,
+        "flightDurationSeconds",
+        0.5
+      );
+      expect(bingMapsSearchProvider.flightDurationSeconds).toEqual(0.5);
+    });
   });
 });

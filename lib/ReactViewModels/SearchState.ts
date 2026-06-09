@@ -4,17 +4,14 @@ import {
   IReactionDisposer,
   makeObservable,
   observable,
-  reaction,
-  runInAction
+  reaction
 } from "mobx";
 import CatalogSearchProviderMixin from "../ModelMixins/SearchProviders/CatalogSearchProviderMixin";
 import LocationSearchProviderMixin from "../ModelMixins/SearchProviders/LocationSearchProviderMixin";
-import CatalogSearchProvider from "../Models/SearchProviders/CatalogSearchProvider";
 import Terria from "../Models/Terria";
 
 interface SearchStateOptions {
   terria: Terria;
-  catalogSearchProvider?: CatalogSearchProviderMixin.Instance;
 }
 
 export default class SearchState {
@@ -37,12 +34,6 @@ export default class SearchState {
     makeObservable(this);
 
     this.terria = options.terria;
-
-    runInAction(() => {
-      this.terria.searchBarModel.catalogSearchProvider =
-        options.catalogSearchProvider ||
-        new CatalogSearchProvider("catalog-search-provider", options.terria);
-    });
 
     this._workbenchItemsSubscription = reaction(
       () => this.terria.workbench.items,
@@ -89,7 +80,7 @@ export default class SearchState {
 
   @computed
   get catalogSearchProvider(): CatalogSearchProviderMixin.Instance | undefined {
-    return this.terria.searchBarModel.catalogSearchProvider;
+    return this.terria.catalog.searchProvider;
   }
 
   @action

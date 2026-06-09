@@ -27,9 +27,12 @@ describe("SearchBoxAndResults", function () {
       baseUrl: "./"
     });
     viewState = new ViewState({
-      terria: terria,
-      catalogSearchProvider: new CatalogSearchProvider("catalog", terria)
+      terria: terria
     });
+    terria.catalog.searchProvider = new CatalogSearchProvider(
+      "catalog-search-provider",
+      terria
+    );
   });
 
   it("renders with an input(SearchBox), but no SearchInDataCatalog without showLocationSearchResults", function () {
@@ -81,7 +84,7 @@ describe("SearchBoxAndResults", function () {
       viewState.searchState.locationSearchText = searchText;
       viewState.searchState.showLocationSearchResults = true;
 
-      viewState.terria.searchBarModel.catalogSearchProvider = undefined;
+      viewState.terria.catalog.searchProvider = undefined;
     });
     renderWithContexts(
       <ThemeProvider theme={terriaTheme}>

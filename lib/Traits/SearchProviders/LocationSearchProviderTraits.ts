@@ -16,17 +16,23 @@ class LocationSearchProviderTraits extends mixTraits(SearchProviderTraits) {
   @primitiveTrait({
     type: "number",
     name: "recommendedListLength",
-    description: "Maximum amount of entries in the suggestion list."
+    description:
+      "Maximum amount of entries in the suggestion list. If not defined fallbacks to recommendedListLength value defined as part of searchBarConfig."
   })
-  recommendedListLength: number = 5;
+  get recommendedListLength(): number | undefined {
+    return undefined;
+  }
 
   @primitiveTrait({
     type: "number",
-    name: "URL",
-    description: "Time to move to the result location.",
+    name: "flightDurationSeconds",
+    description:
+      "Time to move to the result location. If not defined fallbacks to flightDurationSeconds value defined as part of searchBarConfig.",
     isNullable: true
   })
-  flightDurationSeconds?: number = 1.5;
+  get flightDurationSeconds(): number | undefined {
+    return undefined;
+  }
 
   @primitiveTrait({
     type: "boolean",
