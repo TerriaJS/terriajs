@@ -13,17 +13,37 @@ function SearchProviderMixin<
   abstract class SearchProviderMixin extends Base {
     abstract get type(): string;
 
-    protected debounceTime = 1000;
-    private _debouncedSearch: ReturnType<typeof debounce>;
+    protected get debounceTime(): number {
+      return 1000;
+    }
+    private _debouncedSearch?: ReturnType<typeof debounce>;
+    private _debouncedSearchWait?: number;
 
     constructor(...args: any[]) {
       super(...args);
       makeObservable(this);
       this.searchResult = new SearchProviderResult(this);
+    }
 
-      this._debouncedSearch = debounce((searchText: string) => {
-        this.performSearch(searchText);
-      }, this.debounceTime);
+    /**
+     * Lazily build (and rebuild) the debounced search. lodash's `debounce`
+     * captures its wait time when created, so subclasses that vary
+     * `debounceTime` at runtime would otherwise never see the new value. We
+     * recreate the debounced function whenever the effective debounce time
+     * changes (cancelling any pending invocation against the old wait).
+     */
+    private get debouncedSearch(): ReturnType<typeof debounce> {
+      if (
+        !this._debouncedSearch ||
+        this._debouncedSearchWait !== this.debounceTime
+      ) {
+        this._debouncedSearch?.cancel();
+        this._debouncedSearchWait = this.debounceTime;
+        this._debouncedSearch = debounce((searchText: string) => {
+          this.performSearch(searchText);
+        }, this._debouncedSearchWait);
+      }
+      return this._debouncedSearch;
     }
 
     @observable
@@ -38,7 +58,7 @@ function SearchProviderMixin<
 
     @action
     cancelSearch() {
-      this._debouncedSearch.cancel();
+      this._debouncedSearch?.cancel();
 
       this.searchResult.isCanceled = true;
       this.searchResult = new SearchProviderResult(this);
@@ -51,7 +71,7 @@ function SearchProviderMixin<
     ): Promise<void> {
       this.searchResult.isWaitingToStartSearch = true;
       if (!this.shouldRunSearch(searchText)) {
-        this._debouncedSearch.cancel();
+        this._debouncedSearch?.cancel();
 
         this.searchResult.isSearching = false;
         this.searchResult.message = {
@@ -65,10 +85,10 @@ function SearchProviderMixin<
       }
 
       if (manuallyTriggered) {
-        this._debouncedSearch.cancel();
+        this._debouncedSearch?.cancel();
         await this.performSearch(searchText);
       } else {
-        await this._debouncedSearch(searchText);
+        await this.debouncedSearch(searchText);
       }
     }
 

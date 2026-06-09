@@ -107,7 +107,13 @@ export default class CatalogSearchProvider extends CatalogSearchProviderMixin(
   CreateModel(CatalogSearchProviderTraits)
 ) {
   static readonly type = "catalog-search-provider";
-  debounceTime = 300;
+
+  protected get debounceTime(): number {
+    // The first catalog search can trigger a slow recursive load of references,
+    // so debounce aggressively until that has happened. Once the references are
+    // loaded, searches are cheap, so make them snappy.
+    return this.terria.catalogReferencesLoaded ? 300 : 1000;
+  }
 
   constructor(id: string | undefined, terria: Terria) {
     super(id, terria);
