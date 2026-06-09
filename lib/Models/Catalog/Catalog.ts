@@ -7,14 +7,25 @@ import Terria from "../Terria";
 import Group from "./Group";
 import { BaseModel } from "../Definition/Model";
 import isDefined from "../../Core/isDefined";
+import CatalogIndex from "../SearchProviders/CatalogIndex";
 
 export default class Catalog {
+  private _index: CatalogIndex | undefined;
+
   @observable
   group: Group & BaseModel;
 
   readonly terria: Terria;
 
   private _disposeCreateUserAddedGroup: () => void;
+
+  get index(): CatalogIndex | undefined {
+    return this._index;
+  }
+
+  set index(index: CatalogIndex) {
+    this._index = index;
+  }
 
   constructor(terria: Terria) {
     makeObservable(this);
