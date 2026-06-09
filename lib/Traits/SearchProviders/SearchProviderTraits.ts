@@ -13,7 +13,8 @@ class SearchProviderTraits extends ModelTraits {
   @primitiveTrait({
     type: "number",
     name: "Minimum characters",
-    description: "Minimum number of characters required for search to start",
+    description:
+      "Minimum number of characters required for search to start. If not defined fallbacks to minCharacters value defined as part of searchBarConfig.",
     isNullable: true
   })
   get minCharacters(): number | undefined {

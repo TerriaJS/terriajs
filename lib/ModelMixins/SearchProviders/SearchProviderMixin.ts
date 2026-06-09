@@ -1,5 +1,5 @@
 import { debounce } from "lodash-es";
-import { action, makeObservable, observable } from "mobx";
+import { action, makeObservable, observable, override } from "mobx";
 import AbstractConstructor from "../../Core/AbstractConstructor";
 import Model from "../../Models/Definition/Model";
 import SearchProviderResult from "../../Models/SearchProviders/SearchProviderResults";
@@ -24,6 +24,11 @@ function SearchProviderMixin<
       this._debouncedSearch = debounce((searchText: string) => {
         this.performSearch(searchText);
       }, this.debounceTime);
+    }
+
+    @override
+    get minCharacters() {
+      return super.minCharacters ?? this.terria.searchBarModel.minCharacters;
     }
 
     @observable

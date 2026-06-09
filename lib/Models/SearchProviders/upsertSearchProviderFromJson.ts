@@ -1,5 +1,4 @@
 import i18next from "i18next";
-import { runInAction } from "mobx";
 import Result from "../../Core/Result";
 import TerriaError from "../../Core/TerriaError";
 import { applyTranslationIfExists } from "../../Language/languageHelpers";
@@ -61,8 +60,6 @@ export default function upsertSearchProviderFromJson(
     }
   }
 
-  setDefaultTraits(model);
-
   updateModelFromJson(model, stratumName, json).catchError((error) => {
     errors.push(error);
     model!.setTrait(CommonStrata.underride, "isExperiencingIssues", true);
@@ -78,28 +75,4 @@ export default function upsertSearchProviderFromJson(
       )}\``
     )
   );
-}
-
-function setDefaultTraits(model: BaseModel) {
-  const terria = model.terria;
-
-  runInAction(() => {
-    model.setTrait(
-      CommonStrata.defaults,
-      "flightDurationSeconds",
-      terria.searchBarModel.flightDurationSeconds
-    );
-
-    model.setTrait(
-      CommonStrata.defaults,
-      "minCharacters",
-      terria.searchBarModel.minCharacters
-    );
-
-    model.setTrait(
-      CommonStrata.defaults,
-      "recommendedListLength",
-      terria.searchBarModel.recommendedListLength
-    );
-  });
 }

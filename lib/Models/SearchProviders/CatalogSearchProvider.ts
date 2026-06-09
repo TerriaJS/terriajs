@@ -1,4 +1,4 @@
-import { autorun, makeObservable, override, runInAction } from "mobx";
+import { autorun, makeObservable, runInAction } from "mobx";
 import { Category, SearchAction } from "../../Core/Analytics/analyticEvents";
 import { TerriaErrorSeverity } from "../../Core/TerriaError";
 import GroupMixin from "../../ModelMixins/GroupMixin";
@@ -116,11 +116,6 @@ export default class CatalogSearchProvider extends CatalogSearchProviderMixin(
 
   get type() {
     return CatalogSearchProvider.type;
-  }
-
-  @override
-  get minCharacters(): number | undefined {
-    return super.minCharacters ?? this.terria.searchBarModel.minCharacters;
   }
 
   protected logEvent(searchText: string) {
