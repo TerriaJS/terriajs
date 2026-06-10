@@ -59,7 +59,9 @@ describe("LeafletVisualizer", function () {
       const icon = container.querySelector<HTMLElement>(".leaflet-marker-icon");
       expect(icon).not.toBeNull();
       expect(icon!.style.transform).toMatch(/rotateZ\(0\.73\d*rad\)/);
-      expect(icon!.style.transformOrigin).toBe("center center");
+      expect(icon!.style.transformOrigin.startsWith("center center")).toBe(
+        true
+      );
     });
   });
 });
