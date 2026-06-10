@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from "react";
+import { FC, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import heightControlsImage from "../../../../wwwroot/images/height-controls.svg";
@@ -25,10 +25,15 @@ const MovementControls: FC<MovementControlsProps> = (props) => {
 
   const toggleMaximized = () => setIsMaximized(!isMaximized);
 
+  // onMove could change on each render but we want to pass a stable callbac to
+  // MovementsController
+  const onMoveRef = useRef<() => void>();
+  onMoveRef.current = () => props.onMove();
+
   useEffect(() => {
     const movementsController = new MovementsController(
       props.cesium,
-      props.onMove,
+      () => onMoveRef.current?.(),
       props.pedestrianHeight,
       props.maxVerticalLookAngle
     );
