@@ -1,4 +1,5 @@
-import { action, autorun, computed } from "mobx";
+import { autorun, computed, runInAction } from "mobx";
+import { observer } from "mobx-react";
 import { FC, useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
@@ -26,7 +27,7 @@ export type MiniMapView = {
   rotation: number;
 };
 
-const MiniMap: FC<MiniMapProps> = (props) => {
+const MiniMap: FC<MiniMapProps> = observer((props) => {
   const { terria, baseMap, view } = props;
   const container = useRef<HTMLDivElement>(null);
   const [miniMapViewer, setMiniMapViewer] = useState<
@@ -34,33 +35,28 @@ const MiniMap: FC<MiniMapProps> = (props) => {
   >();
   const [locationMarker, setLocationMarker] = useState<Marker | undefined>();
 
-  /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  useEffect(
-    action(() => {
-      const marker = new Marker(
-        terria,
-        minimapNavIcon,
-        view.position,
-        view.rotation
-      );
-      const viewer = new TerriaViewer(
-        terria,
-        computed(() => [marker])
-      );
+  useEffect(() => {
+    const marker = new Marker(undefined, terria);
+    marker.iconUrl = minimapNavIcon;
 
+    const viewer = new TerriaViewer(
+      terria,
+      computed(() => [marker])
+    );
+
+    runInAction(() => {
       viewer.viewerMode = ViewerMode.Leaflet;
       viewer.disableInteraction = true;
-      if (container.current) viewer.attach(container.current);
+    });
+    if (container.current) viewer.attach(container.current);
 
-      viewer.setBaseMap(baseMap);
+    viewer.setBaseMap(baseMap);
 
-      setMiniMapViewer(viewer);
-      setLocationMarker(marker);
+    setMiniMapViewer(viewer);
+    setLocationMarker(marker);
 
-      return () => viewer.destroy();
-    }),
-    [terria, baseMap]
-  );
+    return () => viewer.destroy();
+  }, [terria, baseMap]);
 
   useEffect(() => {
     const disposer = autorun(() => {
@@ -74,7 +70,7 @@ const MiniMap: FC<MiniMapProps> = (props) => {
   }, [miniMapViewer, locationMarker, view]);
 
   return <MapContainer ref={container} />;
-};
+});
 
 const MapContainer = styled.div`
   height: 180px;

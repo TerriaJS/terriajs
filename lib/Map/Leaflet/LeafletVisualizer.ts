@@ -500,6 +500,16 @@ class LeafletGeomVisualizer {
         }
       }
     }
+
+    const rotation = getValueOrDefault(
+      markerGraphics.rotation,
+      time,
+      undefined
+    );
+
+    if (rotation !== undefined) {
+      rotateBillboardIcon(marker, rotation);
+    }
   }
 
   private _updateLabel(
@@ -1271,6 +1281,25 @@ function recolorBillboard(
 
   context.putImageData(image, 0, 0);
   return canvas.toDataURL();
+}
+
+/**
+ * Use CSS transform to rotate the billboard icon
+ */
+function rotateBillboardIcon(marker: L.Marker, rotation: number) {
+  const el: HTMLElement | undefined = marker.getElement();
+  if (!isDefined(el)) {
+    return;
+  }
+
+  // Rotate w.r.t to center point of the element
+  el.style.transformOrigin = "center center";
+
+  const pos = L.DomUtil.getPosition(el);
+  const translate = isDefined(pos)
+    ? `translate3d(${pos.x}px, ${pos.y}px, 0)`
+    : "";
+  el.style.transform = `${translate} rotateZ(${rotation}rad)`;
 }
 
 function featureClicked(
