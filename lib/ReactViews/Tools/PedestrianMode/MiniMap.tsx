@@ -1,4 +1,4 @@
-import { action, autorun, computed } from "mobx";
+import { autorun, computed, runInAction } from "mobx";
 import { observer } from "mobx-react";
 import { FC, useEffect, useRef, useState } from "react";
 import styled from "styled-components";
@@ -35,29 +35,28 @@ const MiniMap: FC<MiniMapProps> = observer((props) => {
   >();
   const [locationMarker, setLocationMarker] = useState<Marker | undefined>();
 
-  useEffect(
-    action(() => {
-      const marker = new Marker(undefined, terria);
-      marker.iconUrl = minimapNavIcon;
+  useEffect(() => {
+    const marker = new Marker(undefined, terria);
+    marker.iconUrl = minimapNavIcon;
 
-      const viewer = new TerriaViewer(
-        terria,
-        computed(() => [marker])
-      );
+    const viewer = new TerriaViewer(
+      terria,
+      computed(() => [marker])
+    );
 
+    runInAction(() => {
       viewer.viewerMode = ViewerMode.Leaflet;
       viewer.disableInteraction = true;
-      if (container.current) viewer.attach(container.current);
+    });
+    if (container.current) viewer.attach(container.current);
 
-      viewer.setBaseMap(baseMap);
+    viewer.setBaseMap(baseMap);
 
-      setMiniMapViewer(viewer);
-      setLocationMarker(marker);
+    setMiniMapViewer(viewer);
+    setLocationMarker(marker);
 
-      return () => viewer.destroy();
-    }),
-    [terria, baseMap]
-  );
+    return () => viewer.destroy();
+  }, [terria, baseMap]);
 
   useEffect(() => {
     const disposer = autorun(() => {
