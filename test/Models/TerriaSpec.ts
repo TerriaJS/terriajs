@@ -1,5 +1,6 @@
 import { action, runInAction, toJS, when } from "mobx";
 import { http, HttpResponse } from "msw";
+import URI from "urijs";
 import buildModuleUrl from "terriajs-cesium/Source/Core/buildModuleUrl";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import RequestScheduler from "terriajs-cesium/Source/Core/RequestScheduler";
@@ -459,6 +460,21 @@ describe("TerriaSpec", function () {
 
       expect(terria.mainViewer.viewerMode).toBe(ViewerMode.Leaflet);
       expect(beforeRestoreAppState).toHaveBeenCalledBefore(restoreAppState);
+    });
+
+    it("uses a supplied loadConfig callback instead of configUrl", async function () {
+      const loadConfig = jasmine.createSpy("loadConfig").and.returnValue(
+        Promise.resolve({
+          config: { parameters: { disableMobileInterface: true } },
+          baseUri: new URI("test-config.json").filename(""),
+          configUrl: "test-config.json"
+        })
+      );
+
+      await terria.start({ loadConfig, i18nOptions });
+
+      expect(loadConfig).toHaveBeenCalledTimes(1);
+      expect(terria.configParameters.disableMobileInterface).toBe(true);
     });
   });
 
