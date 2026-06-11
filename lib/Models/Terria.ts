@@ -447,7 +447,7 @@ interface StartOptions {
    * {@link defaultLoadConfig} helper for the standard behaviour. When omitted,
    * `configUrl`/`configUrlHeaders` are loaded via {@link defaultLoadConfig}.
    *
-   * @experimental
+   * @experimental - not ready for general consumption!
    */
   loadConfig?: () => Promise<{
     config: JsonObject;
