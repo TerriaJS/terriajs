@@ -28,6 +28,7 @@
   - Fixed a crash when searching for strings containing regex special characters (e.g. `mel\`) by escaping the search string before using it in the keyword highlight regex.
   - Nominatim default URL updated to `https://`.
 - Move catalog-search-provider instance from SearchBarModel to Catalog class. Setting catalog search provider from ViewState is now deprecated.
+- Simplify initialization of user added data group and make it a separate from the main catalog group.
 
 #### 8.12.2 - 2026-03-27
 
