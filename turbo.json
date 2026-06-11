@@ -5,6 +5,10 @@
       "dependsOn": ["^build"],
       "outputs": ["dist/**", "build/**", "ts-out/**", "wwwroot/build/**"]
     },
+    "dev": {
+      "cache": false,
+      "persistent": true
+    },
     "build-for-node": {
       "dependsOn": ["^build-for-node"],
       "outputs": ["build/**", "ts-out/**"]
