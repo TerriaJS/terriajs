@@ -19,9 +19,6 @@ export default class SearchState {
 
   @observable private _locationSearchText: string = "";
 
-  @observable unifiedSearchText: string = "";
-  @observable isWaitingToStartUnifiedSearch: boolean = false;
-
   @observable showLocationSearchResults: boolean = false;
   @observable showMobileLocationSearch: boolean = false;
   @observable showMobileCatalogSearch: boolean = false;

@@ -1,11 +1,11 @@
-import { render, screen } from "@testing-library/react";
+import { screen } from "@testing-library/react";
 import i18next from "i18next";
 import CatalogGroup from "../../lib/Models/Catalog/CatalogGroup";
 import CommonStrata from "../../lib/Models/Definition/CommonStrata";
 import Terria from "../../lib/Models/Terria";
 import ViewState from "../../lib/ReactViewModels/ViewState";
-import DataCatalog from "../../lib/ReactViews/DataCatalog/DataCatalog";
-import { withThemeContext } from "./withContext";
+import { ExplorerWindowComponents } from "../../lib/ReactViews/ExplorerWindow/ExplorerWindowComponents";
+import { renderWithContexts } from "./withContext";
 
 describe("DataCatalog", function () {
   let terria: Terria;
@@ -34,14 +34,11 @@ describe("DataCatalog", function () {
     terria.addModel(anotherGroup);
     terria.catalog.group.add(CommonStrata.definition, anotherGroup);
 
-    render(
-      withThemeContext(
-        <DataCatalog
-          terria={terria}
-          viewState={viewState}
-          items={terria.catalog.group.memberModels}
-        />
-      )
+    renderWithContexts(
+      <ExplorerWindowComponents.DataCatalog
+        items={terria.catalog.group.memberModels}
+      />,
+      viewState
     );
 
     expect(screen.getByText("Another Group")).toBeInTheDocument();

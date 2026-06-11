@@ -9,7 +9,7 @@ import combine from "terriajs-cesium/Source/Core/combine";
 import ViewState from "../../ReactViewModels/ViewState";
 import Disclaimer from "../Disclaimer";
 import DragDropFile from "../DragDropFile";
-import ExplorerWindow from "../ExplorerWindow/ExplorerWindow";
+import { ExplorerWindowComponents } from "../ExplorerWindow/ExplorerWindowComponents";
 import FeatureInfoPanel from "../FeatureInfo/FeatureInfoPanel";
 import FeedbackForm from "../Feedback/FeedbackForm";
 import { Medium, Small } from "../Generic/Responsive";
@@ -240,7 +240,7 @@ const StandardUserInterfaceBase: FC<StandardUserInterfaceProps> = observer(
                   />
                   <div id="map-data-attribution" />
                   <main>
-                    <ExplorerWindow />
+                    <ExplorerWindowComponents.ExplorerWindow />
                     {props.terria.configParameters.experimentalFeatures &&
                       !props.viewState.hideMapUi && (
                         <ExperimentalFeatures
