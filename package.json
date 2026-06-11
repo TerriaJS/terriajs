@@ -13,6 +13,7 @@
   ],
   "scripts": {
     "build": "turbo run build",
+    "predev": "kill $(lsof -tiTCP:3001 -sTCP:LISTEN) 2>/dev/null || true",
     "dev": "turbo run dev",
     "test": "turbo run test",
     "lint": "turbo run lint",
