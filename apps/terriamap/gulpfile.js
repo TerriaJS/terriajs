@@ -48,7 +48,9 @@ gulp.task("write-version", function (done) {
     nowDate.getMonth() + 1
   }-${nowDate.getDate()}`;
   const packageJson = require("./package.json");
-  const terriajsPackageJson = require("./node_modules/terriajs/package.json");
+  // Resolve terriajs by package name so this works whether terriajs is in this
+  // package's node_modules (standalone) or hoisted to the workspace root (monorepo).
+  const terriajsPackageJson = require("terriajs/package.json");
 
   const isClean =
     spawnSync("git", ["status", "--porcelain"]).stdout.toString().length === 0;
