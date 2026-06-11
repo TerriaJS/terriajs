@@ -3,7 +3,7 @@
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
-      "outputs": ["dist/**", "build/**", "ts-out/**"]
+      "outputs": ["dist/**", "build/**", "ts-out/**", "wwwroot/build/**"]
     },
     "build-for-node": {
       "dependsOn": ["^build-for-node"],
