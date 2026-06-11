@@ -24,7 +24,7 @@ jobs:
       - name: Detect a version change
         id: detect
         run: |
-          LOCAL_VERSION=$(node -p "require('./package.json').version")
+          LOCAL_VERSION=$(node -p "require('./packages/terriajs/package.json').version")
           echo "Current version in package.json: $LOCAL_VERSION"
 
           IS_ALREADY_PUBLISHED=$(npm view terriajs@$LOCAL_VERSION version 2>/dev/null || echo 'false')
@@ -77,12 +77,13 @@ jobs:
 
       - name: Lint and build terriajs
         if: steps.detect.outputs.should_publish == 'true'
-        run: npx gulp lint release
+        run: yarn workspace terriajs gulp lint release
         env:
           NODE_OPTIONS: "--max_old_space_size=8192"
 
       - name: Publish package to NPM
         if: steps.detect.outputs.should_publish == 'true'
+        working-directory: packages/terriajs
         run: npm publish --tag ${{ steps.detect.outputs.npm_tag }}
         env:
           NODE_OPTIONS: "--max_old_space_size=8192"

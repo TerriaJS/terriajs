@@ -32,7 +32,12 @@ jobs:
       - uses: azure/setup-helm@v4
         with:
           version: "v3.3.1"
-      - run: bash ./buildprocess/ci-deploy.sh
+      # FIXME(monorepo): this deploy flow does not yet work after the move.
+      # buildprocess/ci-deploy.sh moved to packages/terriajs/buildprocess/, and
+      # it injects terriajs into TerriaMap as a git dependency
+      # ("terriajs": "<repo>#<branch>"), which assumes terriajs is the repo
+      # root. Rework this when TerriaMap is imported as a workspace.
+      - run: bash ./packages/terriajs/buildprocess/ci-deploy.sh
         env:
           NODE_OPTIONS: --max_old_space_size=4096
           SHARE_S3_ACCESS_KEY_ID: ${{ secrets.SHARE_S3_ACCESS_KEY_ID }}

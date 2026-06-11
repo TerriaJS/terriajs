@@ -35,11 +35,11 @@ jobs:
         run: yarn prettier-check
 
       - name: Build TerriaJS tests
-        run: yarn gulp lint build --continue
+        run: yarn workspace terriajs gulp lint build --continue
         env:
           NODE_OPTIONS: --max_old_space_size=4096
 
       - name: Run tests using xvfb
         uses: GabrielBB/xvfb-action@v1
         with:
-          run: yarn gulp test-firefox
+          run: yarn workspace terriajs gulp test-firefox

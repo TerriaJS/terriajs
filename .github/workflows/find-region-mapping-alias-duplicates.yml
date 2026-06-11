@@ -4,12 +4,12 @@ name: Find region mapping alias duplicates
 on:
   push:
     paths:
-      - "wwwroot/data/regionMapping.json"
-      - "buildprocess/find-region-mapping-alias-duplicates.js"
+      - "packages/terriajs/wwwroot/data/regionMapping.json"
+      - "packages/terriajs/buildprocess/find-region-mapping-alias-duplicates.js"
   pull_request:
     paths:
-      - "wwwroot/data/regionMapping.json"
-      - "buildprocess/find-region-mapping-alias-duplicates.js"
+      - "packages/terriajs/wwwroot/data/regionMapping.json"
+      - "packages/terriajs/buildprocess/find-region-mapping-alias-duplicates.js"
 
 permissions:
   contents: read # to fetch code (actions/checkout)
@@ -28,10 +28,10 @@ jobs:
       - uses: actions/checkout@v6
         with:
           sparse-checkout: |
-            wwwroot/data/regionMapping.json
-            buildprocess/find-region-mapping-alias-duplicates.js
+            packages/terriajs/wwwroot/data/regionMapping.json
+            packages/terriajs/buildprocess/find-region-mapping-alias-duplicates.js
           sparse-checkout-cone-mode: false
 
       - name: Check aliases
         run: |
-          node buildprocess/find-region-mapping-alias-duplicates.js
+          node packages/terriajs/buildprocess/find-region-mapping-alias-duplicates.js
