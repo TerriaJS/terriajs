@@ -1,5 +1,6 @@
 import { action, runInAction, toJS, when } from "mobx";
 import { http, HttpResponse } from "msw";
+import URI from "urijs";
 import buildModuleUrl from "terriajs-cesium/Source/Core/buildModuleUrl";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import RequestScheduler from "terriajs-cesium/Source/Core/RequestScheduler";
@@ -124,7 +125,6 @@ describe("TerriaSpec", function () {
       function verifyGroups(groupAspect: any, groupNum: number) {
         const ids = groupAspect.members.map((member: any) => member.id);
         expect(terria.catalog.group.uniqueId).toEqual("/");
-        // ensure user added data co-exists with dereferenced magda members
         expect(terria.catalog.group.members.length).toEqual(groupNum);
         expect(terria.catalog.userAddedDataGroup).toBeDefined();
         ids.forEach((id: string) => {
@@ -141,12 +141,12 @@ describe("TerriaSpec", function () {
         configUrl: "test/Magda/map-config-dereferenced.json",
         i18nOptions
       });
-      verifyGroups(mapConfigDereferencedJson.aspects["group"], 3);
+      verifyGroups(mapConfigDereferencedJson.aspects["group"], 2);
 
       await terria.refreshCatalogMembersFromMagda(
         "test/Magda/map-config-dereferenced-new.json"
       );
-      verifyGroups(mapConfigDereferencedNewJson.aspects["group"], 2);
+      verifyGroups(mapConfigDereferencedNewJson.aspects["group"], 1);
     });
   });
 
@@ -418,8 +418,7 @@ describe("TerriaSpec", function () {
         const groupAspect = mapConfigDereferencedJson.aspects["group"];
         const ids = groupAspect.members.map((member: any) => member.id);
         expect(terria.catalog.group.uniqueId).toEqual("/");
-        // ensure user added data co-exists with dereferenced magda members
-        expect(terria.catalog.group.members.length).toEqual(3);
+        expect(terria.catalog.group.members.length).toEqual(2);
         expect(terria.catalog.userAddedDataGroup).toBeDefined();
         ids.forEach((id: string) => {
           const model = terria.getModelById(MagdaReference, id);
@@ -459,6 +458,21 @@ describe("TerriaSpec", function () {
 
       expect(terria.mainViewer.viewerMode).toBe(ViewerMode.Leaflet);
       expect(beforeRestoreAppState).toHaveBeenCalledBefore(restoreAppState);
+    });
+
+    it("uses a supplied loadConfig callback instead of configUrl", async function () {
+      const loadConfig = jasmine.createSpy("loadConfig").and.returnValue(
+        Promise.resolve({
+          config: { parameters: { disableMobileInterface: true } },
+          baseUri: new URI("test-config.json").filename(""),
+          configUrl: "test-config.json"
+        })
+      );
+
+      await terria.start({ loadConfig, i18nOptions });
+
+      expect(loadConfig).toHaveBeenCalledTimes(1);
+      expect(terria.configParameters.disableMobileInterface).toBe(true);
     });
   });
 

@@ -29,6 +29,7 @@
   - Nominatim default URL updated to `https://`.
 - Move catalog-search-provider instance from SearchBarModel to Catalog class. Setting catalog search provider from ViewState is now deprecated.
 - Fix to improve marker rotation rendering in pedestrian mode minimap [7860](https://github.com/TerriaJS/terriajs/pull/7860)
+- Simplify initialization of user added data group and make it a separate from the main catalog group.
 
 #### 8.12.2 - 2026-03-27
 
