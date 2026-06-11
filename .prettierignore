@@ -36,3 +36,10 @@ packages/terriajs/project.inlang/cache/
 # terriamap keeps its own Prettier config and is self-formatted; exclude it from
 # the root sweep for now (it also vendors a bundled yarn release under .yarn/).
 apps/terriamap/
+
+# Published verbatim to the standalone terriamap repo by mirror-terriamap.sh.
+# Must stay byte-identical to public main, so never reformat it.
+tooling/terriamap-public/
+
+# Agent scratch (also gitignored); not part of the project sources.
+__wing-agent__/
