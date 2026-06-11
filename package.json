@@ -1,0 +1,32 @@
+{
+  "name": "terria-monorepo",
+  "version": "0.0.0",
+  "private": true,
+  "description": "TerriaJS monorepo: terriajs, terriajs-server, and TerriaMap.",
+  "license": "Apache-2.0",
+  "packageManager": "yarn@1.22.22",
+  "engines": {
+    "node": ">= 22"
+  },
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "turbo run build",
+    "test": "turbo run test",
+    "lint": "turbo run lint",
+    "format": "prettier --write .",
+    "prettier-check": "prettier --check .",
+    "prepare": "husky"
+  },
+  "devDependencies": {
+    "husky": "^9.1.7",
+    "prettier": "3.8.1",
+    "pretty-quick": "^4.2.2",
+    "turbo": "2.9.16"
+  },
+  "resolutions": {
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.1"
+  }
+}

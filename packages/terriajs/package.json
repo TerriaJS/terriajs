@@ -10,10 +10,6 @@
     "type": "git",
     "url": "http://github.com/TerriaJS/terriajs"
   },
-  "resolutions": {
-    "@types/react": "^18.3.3",
-    "@types/react-dom": "^18.3.1"
-  },
   "dependencies": {
     "@babel/core": "^7.29.0",
     "@babel/plugin-proposal-decorators": "^7.29.0",
@@ -174,7 +170,6 @@
     "global-jsdom": "^29.0.0",
     "globals": "^17.4.0",
     "gulp": "^5.0.1",
-    "husky": "^9.1.7",
     "jasmine-browser-runner": "^4.0.0",
     "jasmine-core": "^6.1.0",
     "jsdom": "^29.0.1",
@@ -182,8 +177,6 @@
     "msw": "^2.12.14",
     "node-notifier": "^10.0.1",
     "plugin-error": "^2.0.1",
-    "prettier": "3.8.1",
-    "pretty-quick": "^4.2.2",
     "sass": "^1.98.0",
     "svg-sprite": "^2.0.4",
     "terriajs-server": "5.0.0-alpha.2",
@@ -199,11 +192,8 @@
     "watch-tools": "webpack --watch --config buildprocess/webpack-tools.config.js",
     "build-docs": "yarn build-tools && node build/generateDocs.js",
     "postinstall": "gulp post-npm-install",
-    "prettier": "prettier --write .",
-    "pretty-quick": "pretty-quick",
-    "prettier-check": "prettier --check .",
     "build-for-node": "tsc -b tsconfig-node.json",
-    "prepare": "yarn build-for-node && husky"
+    "prepare": "yarn build-for-node"
   },
   "msw": {
     "workerDirectory": [

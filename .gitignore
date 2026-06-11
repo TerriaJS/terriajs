@@ -1,0 +1,24 @@
+# Dependencies
+node_modules/
+
+# Turborepo
+.turbo/
+
+# Build output
+dist/
+build/
+ts-out/
+
+# Logs
+*.log
+npm-debug.log
+
+# Editor / OS
+.idea/
+.history/
+.DS_Store
+*.swp
+
+# Lockfiles from other package managers (this repo uses yarn)
+package-lock.json
+pnpm-lock.yaml
