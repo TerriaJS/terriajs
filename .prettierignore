@@ -32,3 +32,7 @@ packages/terriajs/wwwroot/third_party/
 packages/terriajs/wwwroot/mockServiceWorker.js
 packages/terriajs/doc/acknowledgements/attributions.md
 packages/terriajs/project.inlang/cache/
+
+# terriamap keeps its own Prettier config and is self-formatted; exclude it from
+# the root sweep for now (it also vendors a bundled yarn release under .yarn/).
+apps/terriamap/

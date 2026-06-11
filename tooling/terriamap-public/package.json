@@ -1,5 +1,17 @@
 {
   "private": true,
+  "workspaces": {
+    "packages": [
+      "packages/terriajs1",
+      "packages/terriajs-cesium/packages/engine",
+      "packages/terriajs-cesium/packages/widgets",
+      "packages/terriajs-server",
+      "packages/plugin-sample"
+    ],
+    "nohoist": [
+      "**/husky"
+    ]
+  },
   "name": "terriajs-map",
   "version": "0.4.6",
   "description": "Geospatial catalog explorer based on TerriaJS.",
@@ -61,7 +73,7 @@
     "sass-loader": "^16.0.7",
     "style-loader": "^4.0.0",
     "svg-sprite": "^2.0.4",
-    "terriajs": "*",
+    "terriajs": "terriajs/terriajs#main",
     "terriajs-cesium": "23.0.2",
     "terriajs-plugin-api": "0.0.1-alpha.17",
     "terriajs-plugin-sample": "0.0.1-alpha.7",
@@ -72,6 +84,7 @@
     "yargs": "^17.7.2"
   },
   "scripts": {
+    "prepare": "husky install",
     "docker-build-local": "node deploy/docker/create-docker-context.js --build --push --tag auto --local",
     "docker-build-prod": "node deploy/docker/create-docker-context.js --build --push --tag auto --repository=ghcr.io/terriajs",
     "docker-build-ci": "node deploy/docker/create-docker-context.js --build",
