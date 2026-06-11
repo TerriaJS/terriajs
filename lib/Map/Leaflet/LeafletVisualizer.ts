@@ -1287,7 +1287,7 @@ function recolorBillboard(
  * Use CSS transform to rotate the billboard icon
  */
 function rotateBillboardIcon(marker: L.Marker, rotation: number) {
-  const el: HTMLElement | undefined = (marker as any)._icon;
+  const el: HTMLElement | undefined = marker.getElement();
   if (!isDefined(el)) {
     return;
   }
