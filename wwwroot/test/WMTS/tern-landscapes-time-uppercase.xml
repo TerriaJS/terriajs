@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Variant of tern-landscapes-time.xml whose ResourceURL template uses an
+  uppercase `{Time}` placeholder (Cesium / NASA GIBS convention) instead of
+  lowercase `{time}` (TERN / GeoServer convention). Verifies that the
+  case-insensitive `/\{time\}/gi` regex in
+  WebMapTileServiceCatalogItem._createImageryProvider substitutes both
+  cases. Single layer, single time matrix — minimal surface for the assertion.
+-->
+<Capabilities xmlns="http://www.opengis.net/wmts/1.0"
+              xmlns:ows="http://www.opengis.net/ows/1.1"
+              xmlns:xlink="http://www.w3.org/1999/xlink"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://www.opengis.net/wmts/1.0
+                  http://schemas.opengis.net/wmts/1.0/wmtsGetCapabilities_response.xsd"
+              version="1.0.0">
+  <ows:ServiceIdentification>
+    <ows:Title>TERN Landscapes Time Series (uppercase placeholder)</ows:Title>
+    <ows:ServiceType>OGC WMTS</ows:ServiceType>
+    <ows:ServiceTypeVersion>1.0.0</ows:ServiceTypeVersion>
+  </ows:ServiceIdentification>
+  <Contents>
+    <Layer>
+      <ows:Title>Soil Moisture Daily</ows:Title>
+      <ows:Identifier>tern_soil_moisture_daily</ows:Identifier>
+      <ows:WGS84BoundingBox>
+        <ows:LowerCorner>112 -44</ows:LowerCorner>
+        <ows:UpperCorner>154 -10</ows:UpperCorner>
+      </ows:WGS84BoundingBox>
+      <Style isDefault="true">
+        <ows:Title>default</ows:Title>
+        <ows:Identifier>default</ows:Identifier>
+      </Style>
+      <Format>image/png</Format>
+      <Dimension>
+        <ows:Identifier>time</ows:Identifier>
+        <ows:UOM>ISO8601</ows:UOM>
+        <Default>2024-01-05T00:00:00Z</Default>
+        <Value>2024-01-01T00:00:00Z/2024-01-05T00:00:00Z/P1D</Value>
+      </Dimension>
+      <TileMatrixSetLink>
+        <TileMatrixSet>GoogleMapsCompatible_Level9</TileMatrixSet>
+      </TileMatrixSetLink>
+      <ResourceURL format="image/png" resourceType="tile"
+                   template="https://tern.example/wmts/tern_soil_moisture_daily/default/{Time}/{TileMatrixSet}/{TileMatrix}/{TileRow}/{TileCol}.png" />
+    </Layer>
+    <TileMatrixSet>
+      <ows:Identifier>GoogleMapsCompatible_Level9</ows:Identifier>
+      <ows:SupportedCRS>urn:ogc:def:crs:EPSG::3857</ows:SupportedCRS>
+      <!--
+        Two TileMatrix children: see comment in tern-landscapes-time.xml. The
+        capabilities parser only normalises `TileMatrix` to an array when
+        there are 2+ siblings; a single child trips a TypeError in
+        `usableTileMatrixSets`.
+      -->
+      <TileMatrix>
+        <ows:Identifier>0</ows:Identifier>
+        <ScaleDenominator>559082264.0287178</ScaleDenominator>
+        <TopLeftCorner>-20037508.3427892 20037508.3427892</TopLeftCorner>
+        <TileWidth>256</TileWidth>
+        <TileHeight>256</TileHeight>
+        <MatrixWidth>1</MatrixWidth>
+        <MatrixHeight>1</MatrixHeight>
+      </TileMatrix>
+      <TileMatrix>
+        <ows:Identifier>1</ows:Identifier>
+        <ScaleDenominator>279541132.0143589</ScaleDenominator>
+        <TopLeftCorner>-20037508.3427892 20037508.3427892</TopLeftCorner>
+        <TileWidth>256</TileWidth>
+        <TileHeight>256</TileHeight>
+        <MatrixWidth>2</MatrixWidth>
+        <MatrixHeight>2</MatrixHeight>
+      </TileMatrix>
+    </TileMatrixSet>
+  </Contents>
+</Capabilities>
