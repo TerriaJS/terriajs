@@ -19,6 +19,7 @@
     "lint": "turbo run lint",
     "format": "prettier --write .",
     "prettier-check": "prettier --check .",
+    "sync-readme": "node -e \"require('node:fs').copyFileSync('packages/terriajs/README.md','README.md')\"",
     "prepare": "husky"
   },
   "devDependencies": {

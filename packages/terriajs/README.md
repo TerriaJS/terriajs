@@ -4,7 +4,7 @@
 [![NPM Version](https://img.shields.io/npm/v/terriajs)](https://www.npmjs.com/package/terriajs)
 [![Docs](https://img.shields.io/badge/docs-online-blue.svg)](https://docs.terria.io/)
 
-![Terria logo](terria-logo.png "Terria logo")
+![Terria logo](https://raw.githubusercontent.com/TerriaJS/terriajs/main/packages/terriajs/terria-logo.png "Terria logo")
 
 TerriaJS is a library for building rich, web-based geospatial data explorers, used to drive [Digital Earth Australia Map](https://maps.dea.ga.gov.au/), [NSW Spatial Digital Twin](https://nsw.digitaltwin.terria.io/) (and many others). It uses [Cesium](https://cesiumjs.org) and WebGL for a full 3D globe in the browser with no plugins. It gracefully falls back to 2D with [Leaflet](https://leafletjs.com/) on systems that can't run Cesium. It can handle catalogs of tens of thousands of layers, with dozens of geospatial file and web service types supported. It is almost entirely JavaScript in the browser, meaning it can even be deployed as a static website, making it simple and cheap to host.
 
@@ -17,11 +17,11 @@ TerriaJS is a library for building rich, web-based geospatial data explorers, us
 - 3D globe (Cesium) or 2D mode (Leaflet). 3D objects supported in CZML format.
 - Time dimensions supported for CSV, CZML, WMS. Automatically animate layers, or slide the time control forward and backward.
 - Drag-and-drop files from your desktop to the browser, for instant visualisation (no file upload to server required).
-- All ASGS (Australian Statistical Geographic Standard) region types (LGA, SA2, commonwealth electoral district etc) supported for [CSV region mapping](https://github.com/TerriaJS/nationalmap/wiki/csv-geo-au), plus several others: Primary Health Networks, Statistical Local Areas, ISO 3 letter country codes, etc. Refer to the [active mappings](./doc/active_region_mapping_table.md) for a complete list of supported regions and how to reference them.
+- All ASGS (Australian Statistical Geographic Standard) region types (LGA, SA2, commonwealth electoral district etc) supported for [CSV region mapping](https://github.com/TerriaJS/nationalmap/wiki/csv-geo-au), plus several others: Primary Health Networks, Statistical Local Areas, ISO 3 letter country codes, etc. Refer to the [active mappings](https://github.com/TerriaJS/terriajs/blob/main/packages/terriajs/doc/active_region_mapping_table.md) for a complete list of supported regions and how to reference them.
 - Users can generate a reusable URL link of their current map view, to quickly share mashups of web-hosted data.
 - The interface is internationalised and translations are available for French, Italian and Japanese. Partial translations have also been contributed for other languages (see [TerriaJS weblate](https://hosted.weblate.org/engage/terriajs/))
 
-![Terria screenshot](terria-screenshot.png "Terria screenshot")
+![Terria screenshot](https://raw.githubusercontent.com/TerriaJS/terriajs/main/packages/terriajs/terria-screenshot.png "Terria screenshot")
 
 ### Who's using TerriaJS?
 
@@ -47,7 +47,7 @@ Sites we're aware of that are using TerriaJS. These are not endorsements or test
 - NodeJS v20 and later are supported
 - Built in TypeScript & ES2020+ JavaScript, compiled with Babel to ES5.
 - Supports modern browsers (recent versions of Microsoft Edge, Mozilla Firefox & Google Chrome).
-- [TerriaJS Server component](https://github.com/TerriajS/TerriaJS-Server) runs in NodeJS and provides proxying for web services that don't support CORS or require authentication. Instead of using TerriaJS-Sever proxy service, an alternative proxying service URL can be specified. See [Specify an alternative proxy server URL](/doc/connecting-to-data/cross-origin-resource-sharing.md)
+- [TerriaJS Server component](https://github.com/TerriajS/TerriaJS-Server) runs in NodeJS and provides proxying for web services that don't support CORS or require authentication. Instead of using TerriaJS-Sever proxy service, an alternative proxying service URL can be specified. See [Specify an alternative proxy server URL](https://github.com/TerriaJS/terriajs/blob/main/packages/terriajs/doc/connecting-to-data/cross-origin-resource-sharing.md)
 - Dependencies are [managed in NPM](https://www.npmjs.com/~terria) and assembled using WebPack.
 
 ### Getting Started

@@ -34,6 +34,12 @@ jobs:
       - name: Check formatting with prettier
         run: yarn prettier-check
 
+      # Root README.md mirrors packages/terriajs/README.md (interim parity: same
+      # content on the GitHub repo page and the npm terriajs page). Fail if the mirror
+      # is stale — run `yarn sync-readme` after editing the package README.
+      - name: Check README parity
+        run: yarn sync-readme && git diff --exit-code -- README.md
+
       - name: Build TerriaJS tests
         run: yarn workspace terriajs gulp lint build --continue
         env:
