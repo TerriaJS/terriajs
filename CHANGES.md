@@ -30,6 +30,8 @@
 - Move catalog-search-provider instance from SearchBarModel to Catalog class. Setting catalog search provider from ViewState is now deprecated.
 - Fix to improve marker rotation rendering in pedestrian mode minimap [7860](https://github.com/TerriaJS/terriajs/pull/7860)
 - Simplify initialization of user added data group and make it a separate from the main catalog group.
+- Deprecate MagdaReference model from terria core, as we are not aware of any implementations using it. If you need this model please reach out to the Terria team to discuss your use case and alternatives.
+- Drop support for loading magda config by default - If you need support for loading magda config, you can provide your own implementation of loadConfig function and load magda config in it.
 
 #### 8.12.2 - 2026-03-27
 

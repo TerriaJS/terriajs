@@ -40,6 +40,9 @@ export interface MagdaReferenceHeaders {
   [key: string]: string;
 }
 
+/**
+ * @deprecated - MagdaReference model is deprecated and will be removed in a future release. If you need this model please reach out to the Terria team to discuss your use case and alternatives.
+ */
 export default class MagdaReference extends AccessControlMixin(
   UrlMixin(ReferenceMixin(CreateModel(MagdaReferenceTraits)))
 ) {

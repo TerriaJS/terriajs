@@ -8,9 +8,7 @@ const IS_DEVELOPMENT = process.env.NODE_ENV === "development";
 
 /**
  * Default `StartOptions.loadConfig` implementation: fetches and parses the
- * config (JSON5) at `configUrl` and derives the base URI. Returns the raw
- * `configUrl` as well so Magda configs can still be resolved (see
- * `Terria.loadMagdaConfig`).
+ * config (JSON5) at `configUrl` and derives the base URI.
  *
  * @experimental - not ready for general consumption!
  */

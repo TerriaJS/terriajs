@@ -80,12 +80,9 @@ import TerriaViewer from "../ViewModels/TerriaViewer";
 import { BaseMapsModel } from "./BaseMaps/BaseMapsModel";
 import CameraView from "./CameraView";
 import Catalog from "./Catalog/Catalog";
-import CatalogGroup from "./Catalog/CatalogGroup";
 import CatalogMemberFactory from "./Catalog/CatalogMemberFactory";
 import CatalogProvider from "./Catalog/CatalogProvider";
-import MagdaReference, {
-  MagdaReferenceHeaders
-} from "./Catalog/CatalogReferences/MagdaReference";
+import { MagdaReferenceHeaders } from "./Catalog/CatalogReferences/MagdaReference";
 import SplitItemReference from "./Catalog/CatalogReferences/SplitItemReference";
 import CommonStrata from "./Definition/CommonStrata";
 import { BaseModel } from "./Definition/Model";
@@ -449,11 +446,13 @@ interface StartOptions {
    * than a URL (e.g. a non-browser/SSR environment). Use the exported
    * {@link defaultLoadConfig} helper for the standard behaviour. When omitted,
    * `configUrl`/`configUrlHeaders` are loaded via {@link defaultLoadConfig}.
+   *
+   * @experimental - not ready for general consumption!
    */
   loadConfig?: () => Promise<{
     config: JsonObject;
     baseUri: URI;
-    /** The URL the config was loaded from, if known. Required for Magda configs. */
+    /** The URL the config was loaded from, if known. */
     configUrl?: string;
   }>;
   applicationUrl?: Location;
@@ -1086,14 +1085,9 @@ export default class Terria {
         options.loadConfig ??
         (() =>
           defaultLoadConfig(options.configUrl ?? "", options.configUrlHeaders));
-      const { config, baseUri, configUrl } = await loadConfig();
+      const { config, baseUri } = await loadConfig();
       launchUrlForAnalytics ||= getUriWithoutPath(baseUri);
 
-      // If it's a magda config, we only load magda config and parameters should never be a property on the direct
-      // config aspect (it would be under the `terria-config` aspect)
-      if (isJsonObject(config) && config.aspects && configUrl) {
-        await this.loadMagdaConfig(configUrl, config, baseUri);
-      }
       runInAction(() => {
         if (isJsonObject(config) && isJsonObject(config.parameters)) {
           this.updateParameters(config.parameters);
@@ -2032,110 +2026,6 @@ export default class Terria {
   @action
   loadHomeCamera(homeCameraInit: JsonObject | HomeCameraInit): void {
     this.mainViewer.homeCamera = CameraView.fromJson(homeCameraInit);
-  }
-
-  /**
-   * This method can be used to refresh magda based catalogue configuration. Useful if the catalogue
-   * has items that are only available to authorised users.
-   *
-   * @param magdaCatalogConfigUrl URL of magda based catalogue configuration
-   * @param config Optional. If present, use this magda based catalogue config instead of reloading.
-   * @param configUrlHeaders  Optional. If present, the headers are added to above URL request.
-   */
-  async refreshCatalogMembersFromMagda(
-    magdaCatalogConfigUrl: string,
-    config?: any,
-    configUrlHeaders?: { [key: string]: string }
-  ): Promise<void> {
-    const theConfig = config
-      ? config
-      : await loadJson5(magdaCatalogConfigUrl, configUrlHeaders);
-
-    // force config (root group) id to be `/`
-    const id = "/";
-    this.removeModelReferences(this.catalog.group);
-
-    let existingReference = this.getModelById(MagdaReference, id);
-    if (existingReference === undefined) {
-      existingReference = new MagdaReference(id, this);
-      // Add model with terria aspects shareKeys
-      this.addModel(existingReference, theConfig.aspects?.terria?.shareKeys);
-    }
-
-    const reference = existingReference;
-
-    const magdaRoot = new URI(magdaCatalogConfigUrl)
-      .path("")
-      .query("")
-      .toString();
-
-    reference.setTrait(CommonStrata.definition, "url", magdaRoot);
-    reference.setTrait(CommonStrata.definition, "recordId", id);
-    reference.setTrait(
-      CommonStrata.definition,
-      "magdaRecord",
-      theConfig as JsonObject
-    );
-    (await reference.loadReference(true)).raiseError(
-      this,
-      `Failed to load MagdaReference for record ${id}`
-    );
-    if (reference.target instanceof CatalogGroup) {
-      runInAction(() => {
-        this.catalog.group.dispose();
-        this.catalog.group = reference.target as CatalogGroup;
-      });
-    }
-  }
-
-  async loadMagdaConfig(
-    configUrl: string,
-    config: any,
-    baseUri: URI
-  ): Promise<void> {
-    const aspects = config.aspects;
-    const configParams = aspects["terria-config"]?.parameters;
-
-    if (configParams) {
-      this.updateParameters(configParams);
-    }
-
-    const initObj = aspects["terria-init"];
-    if (isJsonObject(initObj)) {
-      const { catalog, ...initObjWithoutCatalog } = initObj;
-      /** Load the init data without the catalog yet, as we'll push the catalog
-       * source up as an init source later */
-      try {
-        await this.applyInitData({
-          initData: initObjWithoutCatalog
-        });
-      } catch (e) {
-        this.raiseErrorToUser(e, {
-          title: { key: "models.terria.loadingMagdaInitSourceErrorMessage" },
-          message: {
-            key: "models.terria.loadingMagdaInitSourceErrorMessage",
-            parameters: { url: configUrl }
-          }
-        });
-      }
-    }
-
-    if (aspects.group && aspects.group.members) {
-      await this.refreshCatalogMembersFromMagda(configUrl, config);
-    }
-
-    this.setupInitializationUrls(baseUri, config.aspects?.["terria-config"]);
-    /** Load up rest of terria catalog if one is inlined in terria-init */
-    if (config.aspects?.["terria-init"]) {
-      const { catalog } = initObj;
-      this.initSources.push({
-        name: `Magda map-config aspect terria-init from ${configUrl}`,
-        errorSeverity: TerriaErrorSeverity.Error,
-        data: {
-          catalog: catalog
-        }
-      });
-    }
   }
 
   @action
