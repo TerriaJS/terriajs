@@ -33,5 +33,6 @@ jobs:
           sparse-checkout-cone-mode: false
 
       - name: Check aliases
+        working-directory: packages/terriajs
         run: |
-          node packages/terriajs/buildprocess/find-region-mapping-alias-duplicates.js
+          node buildprocess/find-region-mapping-alias-duplicates.js

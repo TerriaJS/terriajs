@@ -46,3 +46,31 @@ packages/terriajs/doc/acknowledgements/attributions.md
 # inlang cache
 packages/terriajs/project.inlang/cache/
 
+# terriamap package. Comments below preserve the OG terriamap .prettierignore.
+
+# From .gitignore
+apps/terriamap/wwwroot/doc/
+apps/terriamap/wwwroot/index.html
+apps/terriamap/version.js
+apps/terriamap/wwwroot/init/nm.json
+apps/terriamap/datasources/00_National_Data_Sets.json
+apps/terriamap/terriajs.pid
+apps/terriamap/terriajs-server.log
+apps/terriamap/wwwroot/editor/
+apps/terriamap/privateserverconfig.json
+apps/terriamap/wwwroot/privateconfig.json
+apps/terriamap/deploy/packages/
+apps/terriamap/deploy/work/
+apps/terriamap/packages/
+apps/terriamap/pancake/
+
+# Generated files
+apps/terriamap/.yarn/releases/
+
+# wwwroot
+apps/terriamap/wwwroot/public/
+apps/terriamap/wwwroot/*.html
+
+apps/terriamap/ckanext-cesiumpreview
+apps/terriamap/deploy/helm/terria/charts/terriamap/templates/
+
