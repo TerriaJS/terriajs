@@ -316,8 +316,13 @@ function preparePackage(packageDir, destDir) {
         const env = Object.create(process.env);
         env.NODE_ENV = "production";
 
+        // Resolve the production dependency tree up to the workspace root. In a
+        // monorepo most of packageDir's deps are hoisted to the root node_modules
+        // (two levels up from packages/<pkg>), so the search root must reach it. In a
+        // standalone checkout the deps live in packageDir/node_modules and are found
+        // before any walk-up, so the wider search root is harmless there.
         const productionPackages = _.uniqBy(
-          getPackageList(packageDir, path.resolve(packageDir, "..")),
+          getPackageList(packageDir, path.resolve(packageDir, "..", "..")),
           (package) => package.path
         );
 
