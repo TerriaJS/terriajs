@@ -32,11 +32,8 @@ jobs:
       - uses: azure/setup-helm@v4
         with:
           version: "v3.3.1"
-      # FIXME(monorepo): this deploy flow does not yet work after the move.
-      # buildprocess/ci-deploy.sh moved to packages/terriajs/buildprocess/, and
-      # it injects terriajs into TerriaMap as a git dependency
-      # ("terriajs": "<repo>#<branch>"), which assumes terriajs is the repo
-      # root. Rework this when TerriaMap is imported as a workspace.
+      # Builds and deploys TerriaMap from the local monorepo copy (apps/terriamap,
+      # built against the in-repo terriajs workspace). No TerriaMap clone / sync-dependencies.
       - run: bash ./packages/terriajs/buildprocess/ci-deploy.sh
         env:
           NODE_OPTIONS: --max_old_space_size=4096
@@ -44,7 +41,7 @@ jobs:
           SHARE_S3_SECRET_ACCESS_KEY: ${{ secrets.SHARE_S3_SECRET_ACCESS_KEY }}
           FEEDBACK_GITHUB_TOKEN: ${{ secrets.FEEDBACK_GITHUB_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      # Upload new yarn.lock file (as it may change after `sync-dependencies`)
+      # Upload the resolved root yarn.lock for inspection.
       - uses: actions/upload-artifact@v7
         if: always()
         with:
