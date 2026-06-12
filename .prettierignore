@@ -1,4 +1,5 @@
-# Run from the monorepo root; paths are relative to this file.
+# =====================
+# From .gitignore. Update this list when .gitignore changes
 
 # Dependencies & build output (all packages)
 **/node_modules/
@@ -22,24 +23,26 @@ pnpm-lock.yaml
 # Catalog index generation files
 **/catalog-index*.json
 
-# terriajs package: generated, vendored, and third-party files
+# terriajs package. Comments below preserve the OG terriajs .prettierignore.
+
+# From .gitignore
 packages/terriajs/terria.lib.js
+packages/terriajs/terriajs.pid
+packages/terriajs/terriajs-server.log
 packages/terriajs/wwwroot/doc/
 packages/terriajs/wwwroot/schema/
 packages/terriajs/wwwroot/user-guide/
+
+# Generated files
 packages/terriajs/wwwroot/data/regionids
+
+# Third party files
 packages/terriajs/wwwroot/third_party/
 packages/terriajs/wwwroot/mockServiceWorker.js
+
+# Ignore some files
 packages/terriajs/doc/acknowledgements/attributions.md
+
+# inlang cache
 packages/terriajs/project.inlang/cache/
 
-# terriamap keeps its own Prettier config and is self-formatted; exclude it from
-# the root sweep for now (it also vendors a bundled yarn release under .yarn/).
-apps/terriamap/
-
-# Published verbatim to the standalone terriamap repo by mirror-terriamap.sh.
-# Must stay byte-identical to public main, so never reformat it.
-tooling/terriamap-public/
-
-# Agent scratch (also gitignored); not part of the project sources.
-__wing-agent__/

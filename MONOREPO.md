@@ -8,16 +8,10 @@ Brings the core Terria projects together in one place.
 | -------------------------- | ---------------------- | -------------------------------------------------------------- |
 | `packages/terriajs`        | `terriajs`             | The full TerriaJS library, moved here from its own repo.       |
 | `packages/terriajs-server` | `terriajs-server-stub` | Placeholder. Real package + git history imported as follow-up. |
-| `apps/terriamap`       | `terriamap`            | Placeholder. Real package + git history imported as follow-up. |
-
-The two stubs are temporary. A follow-up will pull in the real `terriajs-server`
-and `TerriaMap` git remotes so their full histories are preserved in this
-monorepo. Until then, `packages/terriajs` keeps depending on the published
-`terriajs-server` from npm.
+| `apps/terriamap`       | `terriamap`            | The OG TerriaMap, folded back in                               |
 
 > Yarn is kept here because it is the proven package manager across all three
-> projects. Migrating the monorepo to pnpm is tracked as a separate follow-up,
-> to be done once the three repositories are consolidated.
+> projects. Migrating the monorepo to pnpm is a desirable, separate follow-up.
 
 ## Prerequisites
 
