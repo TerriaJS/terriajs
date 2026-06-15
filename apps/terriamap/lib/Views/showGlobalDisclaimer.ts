@@ -10,11 +10,11 @@ export default function showGlobalDisclaimer(viewState: ViewState) {
   const terria = viewState.terria;
   const globalDisclaimer = terria.configParameters.globalDisclaimer;
   const hostname = window.location.hostname;
-  if (
-    globalDisclaimer &&
-    (globalDisclaimer.enableOnLocalhost || hostname.indexOf("localhost") === -1)
-  ) {
-    let message = "";
+  // if (
+  //   globalDisclaimer &&
+  //   (globalDisclaimer.enableOnLocalhost || hostname.indexOf("localhost") === -1)
+  // ) {
+    let message = "global disclaimer test branch3";
     // Sometimes we want to show a preamble if the user is viewing a site other than the official production instance.
     // This can be expressed as a devHostRegex ("any site starting with staging.") or a negative prodHostRegex ("any site not ending in .gov.au")
     if (
@@ -48,5 +48,5 @@ export default function showGlobalDisclaimer(viewState: ViewState) {
       viewState.disclaimerSettings = options;
       viewState.disclaimerVisible = true;
     });
-  }
+  // }
 }

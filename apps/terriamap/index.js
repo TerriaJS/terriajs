@@ -84,9 +84,9 @@ export default terria
       updateApplicationOnMessageFromParentWindow(terria, window);
 
       // Show a modal disclaimer before user can do anything else.
-      if (terria.configParameters.globalDisclaimer) {
+      // if (terria.configParameters.globalDisclaimer) {
         showGlobalDisclaimer(viewState);
-      }
+      // }
 
       // Add font-imports
       const fontImports = terria.configParameters.theme?.fontImports;
