@@ -8,7 +8,7 @@ Brings the core Terria projects together in one place.
 | -------------------------- | ---------------------- | -------------------------------------------------------------- |
 | `packages/terriajs`        | `terriajs`             | The full TerriaJS library, moved here from its own repo.       |
 | `packages/terriajs-server` | `terriajs-server-stub` | Placeholder. Real package + git history imported as follow-up. |
-| `apps/terriamap`       | `terriamap`            | The OG TerriaMap, folded back in                               |
+| `apps/terriamap`           | `terriamap`            | The OG TerriaMap, folded back in                               |
 
 > Yarn is kept here because it is the proven package manager across all three
 > projects. Migrating the monorepo to pnpm is a desirable, separate follow-up.
