@@ -85,7 +85,7 @@ export default terria
 
       // Show a modal disclaimer before user can do anything else.
       // if (terria.configParameters.globalDisclaimer) {
-        showGlobalDisclaimer(viewState);
+      showGlobalDisclaimer(viewState);
       // }
 
       // Add font-imports
