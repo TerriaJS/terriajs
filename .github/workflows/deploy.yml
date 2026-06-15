@@ -21,6 +21,15 @@ jobs:
       - uses: actions/setup-node@v6
         with:
           node-version-file: ".nvmrc"
+          cache: yarn
+      # Persist webpack's filesystem cache between runs so the terriamap bundle
+      # is incrementally rebuilt (~10s) instead of compiled from scratch (~1 min).
+      - uses: actions/cache@v4
+        with:
+          path: apps/terriamap/.webpack-cache
+          key: webpack-${{ runner.os }}-${{ hashFiles('yarn.lock') }}
+          restore-keys: |
+            webpack-${{ runner.os }}-
       - uses: google-github-actions/auth@v3
         with:
           credentials_json: "${{ secrets.GCP_CREDENTIALS }}"
