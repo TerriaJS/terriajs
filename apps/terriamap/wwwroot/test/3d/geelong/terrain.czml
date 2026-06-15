@@ -1,0 +1,28 @@
+[
+  {
+    "id":"document",
+    "version":"1.0"
+  },
+  {
+    "id":"GeelongBuildingsApproxTerrainHeight",
+    "position":{
+      "cartographicDegrees":[
+        144.35690, -38.14688, 8.5
+      ]
+    },
+    "model":{
+      "gltf":{
+        "uri":"./geelong_mini_demo_bin_linux_v1.0-draft_x64.gltf"
+      },
+      "scale":{
+        "number":[
+          1.0
+        ]
+      },
+      "show":{
+        "boolean":true
+      }
+    }
+  }
+]
+

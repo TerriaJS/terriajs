@@ -1,0 +1,14 @@
+To add Cesium Previewer
+
+Unzip cesiumpreview.zip and either place the cesieumpreview folder in the CKAN location below or make a virtual link in CKAN to the cesiumviewer.
+
+  ln -s ~/ausglobe/cesiumpreview ~/ckan/lib/default/src/ckanext-cesiumpreview
+
+In the CKAN development.ini under storage settings add the plugin as first in the list
+
+  edit /etc/ckan/default/development.ini
+  ckan.plugins = cesium_viewer ...
+  
+In the ckanext-cesiumpreview folder
+  
+  python setup.py develop

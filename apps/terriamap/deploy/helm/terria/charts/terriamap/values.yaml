@@ -1,0 +1,60 @@
+nodePort:
+image:
+  # By default this pulls ghcr.io/terriajs/terrimap:latest
+  # Set "full" to specify a custom terriamap image to be used
+  # Or you can set "repository" or "tag" if required
+  # full: "ghcr.io/terriajs/terriamap:0.1.1"
+  # repository: ghcr.io/terriajs
+  # tag: latest
+  pullPolicy: Always
+clientConfig:
+  initializationUrls:
+    - helm
+    - terria
+  parameters:
+    disclaimer:
+      text: "Disclaimer: This map must not be used for navigation or precise spatial analysis"
+      url: "http://google.com"
+    globalDisclaimer:
+      confirmationRequired: true
+      buttonTitle: "I agree"
+      title: "Disclaimer"
+      prodHostRegex: "gov.\\.au$"
+      devHostRegex: "\\b(staging|preview|test|dev)\\."
+      enableOnLocalhost: true
+    developerAttribution:
+      text: "Your organisation"
+      link: "http://www.example.com"
+    appName: "Terria Map"
+    brandBarElements:
+      [
+        "",
+        '<a target="_blank" href="http://terria.io"><img src="images/terria_logo.png" height="52" title="Version: {{version}}" /></a>',
+        ""
+      ]
+    supportEmail: "help@example.com"
+    mobileDefaultViewerMode: "2d"
+    experimentalFeatures: true
+initConfig:
+  homeCamera:
+    north: "-8"
+    east: "158"
+    south: "-45"
+    west: "109"
+  catalog: []
+serverConfig:
+  port: 3001
+  allowProxyFor: []
+  initPaths:
+    - "/etc/config/client"
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #  cpu: 100m
+  #  memory: 128Mi
+  # requests:
+  #  cpu: 100m
+  #  memory: 128Mi

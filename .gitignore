@@ -1,27 +1,24 @@
-# Update .prettierignore whenever this file changes
-docs/
+# Dependencies
 node_modules/
-.idea/
+
+# Turborepo
+.turbo/
+
+# Build output
+dist/
 build/
-error.log
-output.log
-npm-debug.log
-.DS_Store
-terria.lib.js
-terriajs-server.log
-terriajs.pid
-/wwwroot/doc/
-/wwwroot/schema/
-/wwwroot/user-guide/
-/coverage/
-package-lock.json
-*.swp
-dist
-.history/
 ts-out/
 
-# Catalog index generation files
-catalog-index*.json
+# Logs
+*.log
+npm-debug.log
 
-# inlang plugin cache
-project.inlang/cache/
+# Editor / OS
+.idea/
+.history/
+.DS_Store
+*.swp
+
+# Lockfiles from other package managers (this repo uses yarn)
+package-lock.json
+pnpm-lock.yaml
