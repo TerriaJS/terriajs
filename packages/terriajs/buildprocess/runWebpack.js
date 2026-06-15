@@ -31,7 +31,12 @@ function runWebpack(webpack, config, doneCallback) {
       }
     }
 
-    doneCallback(err);
+    // Close the compiler so webpack 5's filesystem cache is flushed to disk.
+    // Without this, `cache: { type: "filesystem" }` builds nothing persistent
+    // and every run (including CI) recompiles from scratch.
+    wp.close(function (closeErr) {
+      doneCallback(err || closeErr);
+    });
   });
 }
 
