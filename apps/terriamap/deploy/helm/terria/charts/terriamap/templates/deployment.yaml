@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ printf "%s-%s" .Release.Name "terriamap" | trunc 63 | trimSuffix "-" | quote }}
+spec:
+  replicas: {{ .Values.replicas | default 1 }}
+  strategy:
+    rollingUpdate:
+      maxUnavailable: {{ .Values.global.rollingUpdate.maxUnavailable | default 0 }}
+  selector:
+    matchLabels:
+      service: {{ printf "%s-%s" .Release.Name "terriamap" | trunc 63 | trimSuffix "-" | quote }}
+  template:
+    metadata:
+      labels:
+        service: {{ printf "%s-%s" .Release.Name "terriamap" | trunc 63 | trimSuffix "-" | quote }}
+    spec:
+      containers:
+      - name: terriamap
+        resources:
+{{ toYaml .Values.resources | indent 10 }}
+        command: [ "node", "./node_modules/terriajs-server/lib/app.js", "--config-file", "/etc/config/server/serverconfig.json"]
+        env:
+        - name: NODE_ENV
+          value: production
+        image: {{ template "dockerimage" . }}
+        imagePullPolicy: {{ .Values.image.pullPolicy | default .Values.global.image.pullPolicy }}
+        volumeMounts:
+          - name: terriamap-config-client
+            mountPath: /etc/config/client
+          - name: terriamap-config-server
+            mountPath: /etc/config/server
+          - name: terriamap-config-client
+            mountPath: /usr/src/app/component/wwwroot/config.json
+            subPath: config.json
+      volumes:
+        - name: terriamap-config-client
+          configMap:
+            name: {{ printf "%s-%s" .Release.Name "terriamap-config-client" | trunc 63 | trimSuffix "-" | quote }}
+        - name: terriamap-config-server
+          configMap:
+            name: {{ printf "%s-%s" .Release.Name "terriamap-config-server" | trunc 63 | trimSuffix "-" | quote }}

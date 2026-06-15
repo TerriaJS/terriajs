@@ -1,0 +1,97 @@
+{
+  "private": true,
+  "workspaces": {
+    "packages": [
+      "packages/terriajs1",
+      "packages/terriajs-cesium/packages/engine",
+      "packages/terriajs-cesium/packages/widgets",
+      "packages/terriajs-server",
+      "packages/plugin-sample"
+    ],
+    "nohoist": [
+      "**/husky"
+    ]
+  },
+  "name": "terriajs-map",
+  "version": "0.4.6",
+  "description": "Geospatial catalog explorer based on TerriaJS.",
+  "license": "Apache-2.0",
+  "engines": {
+    "node": ">= 20.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/TerriaJS/TerriaMap"
+  },
+  "dependencies": {
+    "terriajs-server": "5.0.0-alpha.2"
+  },
+  "config": {
+    "docker": {
+      "name": "terriamap",
+      "include": "wwwroot node_modules serverconfig.json index.js package.json version.js",
+      "dockerfile": "deploy/docker/Dockerfile"
+    }
+  },
+  "resolutions": {
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.29.0",
+    "@babel/preset-env": "^7.29.2",
+    "@babel/preset-react": "^7.28.5",
+    "@typescript-eslint/eslint-plugin": "^8.24.0",
+    "@typescript-eslint/parser": "^8.24.0",
+    "babel-loader": "^10.1.1",
+    "css-loader": "^7.1.4",
+    "eslint": "^8.57.1",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-react": "^7.37.4",
+    "eslint-plugin-react-hooks": "^5.1.0",
+    "fetch-mock": "^11.1.5",
+    "fork-ts-checker-notifier-webpack-plugin": "^9.0.0",
+    "fork-ts-checker-webpack-plugin": "^9.1.0",
+    "fs-extra": "^7.0.1",
+    "gulp": "^5.0.1",
+    "html-webpack-plugin": "^5.6.3",
+    "husky": "^9.1.7",
+    "is-subdir": "^1.2.0",
+    "json5": "^2.1.0",
+    "lodash": "^4.17.21",
+    "minimist": "^1.2.8",
+    "msw": "^2.12.14",
+    "node-notifier": "^10.0.1",
+    "plugin-error": "^2.0.1",
+    "prettier": "3.8.1",
+    "pretty-quick": "^4.2.2",
+    "prop-types": "^15.6.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "resolve-url-loader": "^5.0.0",
+    "sass": "^1.98.0",
+    "sass-loader": "^16.0.7",
+    "style-loader": "^4.0.0",
+    "svg-sprite": "^2.0.4",
+    "terriajs": "terriajs/terriajs#main",
+    "terriajs-cesium": "23.0.2",
+    "terriajs-plugin-api": "0.0.1-alpha.17",
+    "terriajs-plugin-sample": "0.0.1-alpha.7",
+    "typescript": "^5.9.2",
+    "urijs": "^1.18.12",
+    "webpack": "^5.105.4",
+    "webpack-cli": "^5.1.4",
+    "yargs": "^17.7.2"
+  },
+  "scripts": {
+    "prepare": "husky install",
+    "docker-build-local": "node deploy/docker/create-docker-context.js --build --push --tag auto --local",
+    "docker-build-prod": "node deploy/docker/create-docker-context.js --build --push --tag auto --repository=ghcr.io/terriajs",
+    "docker-build-ci": "node deploy/docker/create-docker-context.js --build",
+    "start": "terriajs-server --config-file serverconfig.json",
+    "gulp": "gulp",
+    "postinstall": "echo 'Installation successful. What to do next:\\n  yarn gulp dev   # Starts the server on port 3001, builds TerriaMap and dependencies, and rebuilds if files change.'",
+    "prettier": "prettier --write .",
+    "prettier-check": "prettier --check ."
+  }
+}

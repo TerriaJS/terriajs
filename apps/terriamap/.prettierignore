@@ -1,0 +1,45 @@
+# =====================
+# From .gitignore. Update this list when .gitignore changes
+node_modules/
+.idea/
+wwwroot/build/
+wwwroot/doc/
+wwwroot/index.html
+npm-debug.log
+version.js
+wwwroot/init/nm.json
+datasources/00_National_Data_Sets.json
+.DS_Store
+.localized
+.sass-cache
+/terriajs.pid
+/terriajs-server.log
+
+/wwwroot/editor/
+/error.log
+/error.log
+/output.log
+privateserverconfig.json
+wwwroot/privateconfig.json
+deploy/packages/
+deploy/work/
+packages/
+pancake/
+yarn-error.log
+
+package-lock.json
+
+# End of .gitignore copy
+# =====================
+
+# Generated files
+yarn.lock
+.yarn/releases/
+
+# wwwroot
+wwwroot/public/
+wwwroot/*.html
+
+
+ckanext-cesiumpreview
+deploy/helm/terria/charts/terriamap/templates/

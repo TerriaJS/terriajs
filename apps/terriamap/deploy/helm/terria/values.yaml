@@ -1,0 +1,9 @@
+global:
+  rollingUpdate:
+    maxUnavailable: 0
+  exposeNodePorts: false
+  image:
+    repository: "ghcr.io/terriajs"
+    pullPolicy: Always
+tags:
+  all:
