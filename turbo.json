@@ -13,8 +13,12 @@
       "dependsOn": ["^build-for-node"],
       "outputs": ["build/**", "ts-out/**"]
     },
+    "build-specs": {
+      "outputs": ["wwwroot/build/**"]
+    },
     "test": {
-      "dependsOn": ["build"]
+      "dependsOn": ["build-specs"],
+      "cache": false
     },
     "lint": {}
   }

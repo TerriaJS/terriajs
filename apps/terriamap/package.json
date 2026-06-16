@@ -29,14 +29,8 @@
     "@babel/core": "^7.29.0",
     "@babel/preset-env": "^7.29.2",
     "@babel/preset-react": "^7.28.5",
-    "@typescript-eslint/eslint-plugin": "^8.24.0",
-    "@typescript-eslint/parser": "^8.24.0",
     "babel-loader": "^10.1.1",
     "css-loader": "^7.1.4",
-    "eslint": "^8.57.1",
-    "eslint-config-prettier": "^9.1.0",
-    "eslint-plugin-react": "^7.37.4",
-    "eslint-plugin-react-hooks": "^5.1.0",
     "fetch-mock": "^11.1.5",
     "fork-ts-checker-notifier-webpack-plugin": "^9.0.0",
     "fork-ts-checker-webpack-plugin": "^9.1.0",
@@ -81,6 +75,7 @@
     "dev": "gulp dev",
     "postinstall": "echo 'Installation successful. What to do next:\\n  yarn gulp dev   # Starts the server on port 3001, builds TerriaMap and dependencies, and rebuilds if files change.'",
     "prettier": "prettier --write .",
-    "prettier-check": "prettier --check ."
+    "prettier-check": "prettier --check .",
+    "lint": "gulp lint"
   }
 }

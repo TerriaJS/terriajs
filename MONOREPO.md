@@ -4,13 +4,12 @@ Brings the core Terria projects together in one place.
 
 ## Packages
 
-| Path                       | Package                | Status                                                         |
-| -------------------------- | ---------------------- | -------------------------------------------------------------- |
-| `packages/terriajs`        | `terriajs`             | The full TerriaJS library, moved here from its own repo.       |
-| `packages/terriajs-server` | `terriajs-server-stub` | Placeholder. Real package + git history imported as follow-up. |
-| `apps/terriamap`           | `terriamap`            | The OG TerriaMap, folded back in                               |
+| Path                | Package     | Status                                                   |
+| ------------------- | ----------- | -------------------------------------------------------- |
+| `packages/terriajs` | `terriajs`  | The full TerriaJS library, moved here from its own repo. |
+| `apps/terriamap`    | `terriamap` | The OG TerriaMap, folded back in                         |
 
-> Yarn is kept here because it is the proven package manager across all three
+> Yarn is kept here because it is the proven package manager across the current stack
 > projects. Migrating the monorepo to pnpm is a desirable, separate follow-up.
 
 ## Prerequisites
@@ -26,27 +25,48 @@ yarn install
 
 ## Common tasks
 
-Build, test, and lint run through Turborepo from the repo root:
+The everyday loop is "build TerriaMap, serve it from terriajs-server":
 
 ```bash
-yarn build          # turbo run build
-yarn test           # turbo run test
+yarn dev   # builds TerriaMap (+ terriajs), watches, serves on http://localhost:3001
+```
+
+Other tasks run through Turborepo from the repo root:
+
+```bash
+yarn build          # production build of every package
+yarn test           # lint + spec build (cached) + headless-Chrome tests
 yarn lint           # turbo run lint
 yarn format         # prettier --write .
 yarn prettier-check # prettier --check .
 ```
 
-Run a task for a single package with a filter, e.g.:
+Build and serve the built map:
 
 ```bash
-yarn turbo run build --filter=terriajs
+yarn start   # turbo run build, then terriajs-server on :3001
 ```
 
-Run a script inside one workspace directly:
+### What the Turbo tasks actually run
 
-```bash
-yarn workspace terriajs gulp build
-```
+`turbo.json` fans each task out to the matching package script. Today the
+mapping is:
+
+| Turbo task       | Package     | Underlying command                                         |
+| ---------------- | ----------- | ---------------------------------------------------------- |
+| `build`          | `terriamap` | `gulp build` — copy TerriaJS assets, then webpack the app  |
+| `dev`            | `terriamap` | `gulp dev` — watch assets + app, serve via terriajs-server |
+| `build-for-node` | `terriajs`  | `tsc -b tsconfig-node.json`                                |
+| `lint`           | both        | `gulp lint` (ESLint) in each package                       |
+| `build-specs`    | `terriajs`  | `gulp build` — copy Cesium assets + webpack the test specs |
+| `test`           | `terriajs`  | `gulp test` — jasmine-browser-runner on headless Chrome    |
+
+`terriajs` has no `build` script of its own; it builds for Node via
+`build-for-node`, and its browser assets are pulled in by terriamap's
+`gulp build`.
+
+`yarn test` runs the whole chain in one go: `test` depends on `build-specs`,
+whose outputs (`wwwroot/build/**`) are Turbo-cached.
 
 ## Formatting
 
