@@ -13,6 +13,7 @@ datasources/00_National_Data_Sets.json
 .sass-cache
 /terriajs.pid
 /terriajs-server.log
+/terriajs-server.pid
 
 /wwwroot/editor/
 /error.log

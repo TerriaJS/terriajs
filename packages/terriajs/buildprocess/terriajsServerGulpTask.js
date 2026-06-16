@@ -11,6 +11,7 @@ const terriajsServerGulpTask = (defaultPort = undefined) => {
     const { spawn } = require("child_process");
     const fs = require("fs");
     const minimist = require("minimist");
+    const pidFile = "./terriajs-server.pid";
     // Arguments written in skewer-case can cause problems (unsure why), so stick to camelCase
     const options = minimist(process.argv.slice(2), {
       string: ["terriajsServerArg"],
@@ -23,6 +24,17 @@ const terriajsServerGulpTask = (defaultPort = undefined) => {
       : [options.terriajsServerArg];
     if (defaultPort !== undefined) {
       serverArgs.splice(0, 0, `port=${defaultPort}`);
+    }
+    // Stop the server left running by a previous dev run so a restart doesn't
+    // hit EADDRINUSE. We track our own PID rather than scanning the port, so
+    // it remains OS agnostic across macOS/Linux/Windows.
+    try {
+      const prevPid = parseInt(fs.readFileSync(pidFile, "utf8"), 10);
+      if (prevPid) {
+        process.kill(prevPid, "SIGTERM");
+      }
+    } catch {
+      // no pid file, or the process is already gone — nothing to stop
     }
     const child = spawn(
       "node",
@@ -43,6 +55,7 @@ const terriajsServerGulpTask = (defaultPort = undefined) => {
       );
     });
     child.on("spawn", () => {
+      fs.writeFileSync(pidFile, String(child.pid));
       console.log(
         "✅ terriajs-server started - see terriajs-server.log for logs"
       );
@@ -54,6 +67,11 @@ const terriajsServerGulpTask = (defaultPort = undefined) => {
     // SIGHUP: terminal closed
     function stopServer() {
       child.kill("SIGTERM");
+      try {
+        fs.rmSync(pidFile);
+      } catch {
+        // already removed — ignore
+      }
       console.log("terriajs-server stopped");
     }
     process.once("SIGINT", () => {
