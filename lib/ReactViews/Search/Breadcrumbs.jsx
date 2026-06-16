@@ -13,6 +13,7 @@ import getAncestors from "../../Models/getAncestors";
 import getDereferencedIfExists from "../../Core/getDereferencedIfExists";
 import { runInAction } from "mobx";
 import CommonStrata from "../../Models/Definition/CommonStrata";
+import { applyTranslationIfExists } from "../../Language/languageHelpers";
 
 const RawButtonAndUnderline = RawButton;
 
@@ -39,6 +40,7 @@ class Breadcrumbs extends Component {
   }
 
   renderCrumb(parent, i, parentGroups) {
+    const { i18n } = this.props;
     const ancestors = getAncestors(this.props.previewed).map((ancestor) =>
       getDereferencedIfExists(ancestor)
     );
@@ -47,7 +49,7 @@ class Breadcrumbs extends Component {
     if (i === parentGroups.length - 1) {
       return (
         <Text small textDark>
-          {parent}
+          {applyTranslationIfExists(parent || "", i18n)}
         </Text>
       );
       /* The first and last two groups use the full name */
@@ -58,7 +60,7 @@ class Breadcrumbs extends Component {
           onClick={() => this.openInCatalog(ancestors.slice(i, i + 1))}
         >
           <TextSpan small textDark isLink>
-            {parent}
+            {applyTranslationIfExists(parent || "", i18n)}
           </TextSpan>
         </RawButtonAndUnderline>
       );
@@ -76,7 +78,7 @@ class Breadcrumbs extends Component {
 
   render() {
     const parentGroups = this.props.previewed
-      ? getParentGroups(this.props.previewed)
+      ? getParentGroups(this.props.previewed, this.props.i18n)
       : undefined;
 
     return (

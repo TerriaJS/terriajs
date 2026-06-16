@@ -15,6 +15,7 @@ import DataPreviewMap from "./DataPreviewMap";
 import Description from "./Description";
 import Styles from "./mappable-preview.scss";
 import WarningBox from "./WarningBox";
+import { applyTranslationIfExists } from "../../Language/languageHelpers";
 
 /**
  * @typedef {object} Props
@@ -72,7 +73,7 @@ class MappablePreview extends Component {
   }
 
   render() {
-    const { t } = this.props;
+    const { t, i18n } = this.props;
     const catalogItem = this.props.previewed;
     return (
       <div className={Styles.root}>
@@ -100,7 +101,9 @@ class MappablePreview extends Component {
             className={Styles.titleAndShareWrapper}
             ref={(component) => (this.refToMeasure = component)}
           >
-            <h3 className={Styles.h3}>{catalogItem.name}</h3>
+            <h3 className={Styles.h3}>
+              {applyTranslationIfExists(catalogItem.name || "", i18n)}
+            </h3>
             {!catalogItem.hasLocalData &&
               !this.props.viewState.useSmallScreenInterface && (
                 <div className={Styles.shareLinkWrapper}>

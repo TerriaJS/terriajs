@@ -8,7 +8,7 @@ import CustomComponent, {
   DomElement,
   ProcessNodeContext
 } from "./CustomComponent";
-import parseCustomMarkdownToReact from "./parseCustomMarkdownToReact";
+import { parseCustomMarkdownToReactWithOptions } from "./parseCustomMarkdownToReact";
 
 function showFeedback(viewState: ViewState) {
   runInAction(() => {
@@ -34,22 +34,24 @@ export const FeedbackLink = (props: {
       `}
     >
       <Text bold isLink>
-        {parseCustomMarkdownToReact(
+        {parseCustomMarkdownToReactWithOptions(
           props.feedbackMessage
             ? props.feedbackMessage
-            : i18next.t("models.raiseError.notificationFeedback")
+            : i18next.t("models.raiseError.notificationFeedback"),
+          { inline: true }
         )}
       </Text>
     </RawButton>
   ) : (
     // If we only have supportEmail - show message and the email address
     <>
-      {parseCustomMarkdownToReact(
+      {parseCustomMarkdownToReactWithOptions(
         props.emailMessage
           ? `${props.emailMessage} ${props.viewState.terria.supportEmail}`
           : i18next.t("models.raiseError.notificationFeedbackEmail", {
               email: props.viewState.terria.supportEmail
-            })
+            }),
+        { inline: true }
       )}
     </>
   );

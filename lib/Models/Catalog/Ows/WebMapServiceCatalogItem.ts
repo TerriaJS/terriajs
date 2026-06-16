@@ -321,11 +321,16 @@ class WebMapServiceCatalogItem
         this.uri.clone()
       );
 
+      const lng = i18next.resolvedLanguage ?? i18next.language;
+      const fallbackLng = Array.isArray(i18next.options.fallbackLng)
+        ? i18next.options.fallbackLng[0]
+        : (i18next.options.fallbackLng as string);
       return baseUrl
         .setSearch({
           service: "WMS",
           version: this.useWmsVersion130 ? "1.3.0" : "1.1.1",
-          request: "GetCapabilities"
+          request: "GetCapabilities",
+          ...(lng ? { AcceptLanguages: `${lng} ${fallbackLng} *` } : {})
         })
         .toString();
     } else {
@@ -379,6 +384,9 @@ class WebMapServiceCatalogItem
       new URI(this.url)
     );
 
+    if (i18next.language) {
+      baseUrl.addSearch("LANGUAGE", i18next.language);
+    }
     return baseUrl.toString();
   }
 
@@ -400,6 +408,9 @@ class WebMapServiceCatalogItem
       .addQuery("styles", encodeURIComponent(styleId));
     if (time) {
       uri.addQuery("time", time);
+    }
+    if (i18next.language) {
+      uri.addQuery("LANGUAGE", i18next.language);
     }
     return uri.toString();
   }

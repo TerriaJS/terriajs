@@ -164,6 +164,24 @@ export default class WebMapServiceCapabilities {
       return Promise.resolve(loadXML(url)).then(function (capabilitiesXml) {
         const json = xml2json(capabilitiesXml);
         if (!capabilitiesXml || !defined(json.Capability)) {
+          // The server may answer with a ServiceExceptionReport instead of a
+          // Capabilities document (e.g. GeoServer rejecting `AcceptLanguages`
+          // when no internationalized content is defined). Surface its text so
+          // the cause is visible rather than the generic message below.
+          const serviceException =
+            json?.ServiceExceptionReport?.ServiceException ??
+            json?.ServiceException;
+          if (defined(serviceException)) {
+            const message =
+              typeof serviceException === "string"
+                ? serviceException
+                : serviceException?.toString?.() ??
+                  JSON.stringify(serviceException);
+            throw networkRequestError({
+              title: "Server refused the request",
+              message: `The URL ${url} returned a WMS ServiceException:\n\n${message}`
+            });
+          }
           throw networkRequestError({
             title: "Invalid GetCapabilities",
             message:
@@ -190,10 +208,7 @@ export default class WebMapServiceCapabilities {
     readonly [name: string]: CapabilitiesLayer;
   };
 
-  private constructor(
-    readonly xml: XMLDocument,
-    readonly json: any
-  ) {
+  private constructor(readonly xml: XMLDocument, readonly json: any) {
     this.allLayers = [];
     this.rootLayers = [];
     this.topLevelNamedLayers = [];

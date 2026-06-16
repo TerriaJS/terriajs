@@ -36,7 +36,7 @@ const WorkbenchItemRaw: React.FC<IProps> = observer((props) => {
   const { item, style, className, viewState, onMouseDown, onTouchStart } =
     props;
 
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const theme = useTheme();
 
   const toggleDisplay = action(() => {
@@ -72,7 +72,7 @@ const WorkbenchItemRaw: React.FC<IProps> = observer((props) => {
             <DraggableBox
               onMouseDown={onMouseDown}
               onTouchStart={onTouchStart}
-              title={getPath(item, " → ")}
+              title={getPath(item, " → ", i18n)}
               fullWidth
             >
               {!(item as any).isMappable && !isLoading && (

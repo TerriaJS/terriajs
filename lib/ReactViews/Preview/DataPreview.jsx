@@ -7,6 +7,7 @@ import { Component } from "react";
 import { Trans, withTranslation } from "react-i18next";
 import CatalogFunctionMixin from "../../ModelMixins/CatalogFunctionMixin";
 import ReferenceMixin from "../../ModelMixins/ReferenceMixin";
+import { applyTranslationIfExists } from "../../Language/languageHelpers";
 import InvokeFunction from "../Analytics/InvokeFunction";
 import Loader from "../Loader";
 import Description from "./Description";
@@ -37,7 +38,7 @@ class DataPreview extends Component {
   }
 
   renderInner() {
-    const { t } = this.props;
+    const { t, i18n } = this.props;
     let previewed = this.props.previewed;
     if (previewed !== undefined && ReferenceMixin.isMixedInto(previewed)) {
       // We are loading the nested target because we could be dealing with a nested reference here
@@ -56,7 +57,9 @@ class DataPreview extends Component {
     if (previewed && previewed.isLoadingMetadata) {
       return (
         <div className={Styles.previewInner}>
-          <h3 className={Styles.h3}>{previewed.name}</h3>
+          <h3 className={Styles.h3}>
+            {applyTranslationIfExists(previewed.name || "", i18n)}
+          </h3>
           <Loader />
         </div>
       );
@@ -75,7 +78,9 @@ class DataPreview extends Component {
     } else if (chartData) {
       return (
         <div className={Styles.previewInner}>
-          <h3 className={Styles.h3}>{previewed.name}</h3>
+          <h3 className={Styles.h3}>
+            {applyTranslationIfExists(previewed.name || "", i18n)}
+          </h3>
           <p>{t("preview.doesNotContainGeospatialData")}</p>
           <div className={Styles.previewChart}>
             {/* TODO: Show a preview chart

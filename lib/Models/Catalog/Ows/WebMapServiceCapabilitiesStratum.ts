@@ -61,14 +61,36 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
       });
     }
 
-    if (!isDefined(capabilities))
-      capabilities = await WebMapServiceCapabilities.fromUrl(
-        proxyCatalogItemUrl(
-          catalogItem,
-          catalogItem.getCapabilitiesUrl,
-          catalogItem.getCapabilitiesCacheDuration
-        )
-      );
+    if (!isDefined(capabilities)) {
+      const getCapabilitiesUrl = catalogItem.getCapabilitiesUrl;
+      try {
+        capabilities = await WebMapServiceCapabilities.fromUrl(
+          proxyCatalogItemUrl(
+            catalogItem,
+            getCapabilitiesUrl,
+            catalogItem.getCapabilitiesCacheDuration
+          )
+        );
+      } catch (e) {
+        // Some WMS servers reject the `AcceptLanguages` parameter with a
+        // ServiceException when no internationalized content is defined for the
+        // requested language(s). Retry once without it before giving up.
+        const urlWithoutLanguage = new URI(getCapabilitiesUrl)
+          .removeQuery("AcceptLanguages")
+          .toString();
+        // Param wasn't present, so there's nothing to retry - rethrow original error.
+        if (urlWithoutLanguage === getCapabilitiesUrl) {
+          throw e;
+        }
+        capabilities = await WebMapServiceCapabilities.fromUrl(
+          proxyCatalogItemUrl(
+            catalogItem,
+            urlWithoutLanguage,
+            catalogItem.getCapabilitiesCacheDuration
+          )
+        );
+      }
+    }
 
     return new WebMapServiceCapabilitiesStratum(catalogItem, capabilities);
   }
@@ -876,8 +898,8 @@ export default class WebMapServiceCapabilitiesStratum extends LoadableStratum(
     const formatsArray = isJsonArray(formats)
       ? formats
       : isJsonString(formats)
-        ? [formats]
-        : [];
+      ? [formats]
+      : [];
 
     if (this.catalogItem.supportsGetTimeseries) {
       return { format: "text/csv", type: "text" };
