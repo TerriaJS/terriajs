@@ -69,7 +69,7 @@ Values provided when a model is created. This takes higher priority than `defaul
 
 #### Use case 1 - Init file
 
-Values from [initialization files](https://github.com/TerriaJS/terriajs/blob/main/doc/customizing/initialization-files.md). For example a WMS item with `opacity = 1`.
+Values from [initialization files](https://github.com/TerriaJS/terriajs/blob/main/packages/terriajs/doc/customizing/initialization-files.md). For example a WMS item with `opacity = 1`.
 
 ```json
 {
