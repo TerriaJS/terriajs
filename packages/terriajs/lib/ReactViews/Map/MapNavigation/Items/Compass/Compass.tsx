@@ -260,12 +260,12 @@ class Compass extends PureComponent<PropTypes, IStateTypes> {
     const nominalTotalRadius = compassRectangle.width;
 
     // width of the inner side of the ring (encircling the arrows icon)
-    // when user drags this part we need to trigger rotate()
+    // when user drags this part we need to trigger orbit
     const nominalGyroRadius = gyroWidth(this.props.theme);
 
     if (distanceFraction < nominalGyroRadius / nominalTotalRadius) {
       orbit(this, compassElement, vector);
-    } else if (distanceFraction < 1.0) {
+    } else if (distanceFraction < 1.4) {
       rotate(this, compassElement, vector);
     } else {
       return true;
