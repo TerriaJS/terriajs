@@ -1,6 +1,8 @@
 # Change Log
 
-#### next release (8.12.3)
+#### next release (8.12.4)
+
+#### 8.12.3 - 2026-06-17
 
 - Add config parameters to optionally disable parts of the UI for locked-down deployments: `disableMobileInterface`, `disableSharePanel`, `disableShareEmbed`, `disableUserAddedData` and `cesiumIonDisableDefaultToken` (all default `false`).
 - Add `shareRequestHeaders`/`feedbackRequestHeaders` callbacks and `shareClientBaseUrl` config parameters to customise share-link and feedback requests, and show a dedicated "link not found" message on a `404` from the share service.
