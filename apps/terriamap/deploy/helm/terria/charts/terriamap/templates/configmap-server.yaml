@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ printf "%s-%s" .Release.Name "terriamap-config-server" | trunc 63 | trimSuffix "-" | quote }}
+  labels:
+    pod: {{ printf "%s-%s" .Release.Name "terriamap" | trunc 63 | trimSuffix "-" | quote }}
+data:
+  serverconfig.json: {{ toJson .Values.serverConfig | indent 2 | quote }}

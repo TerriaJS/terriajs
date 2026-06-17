@@ -1,0 +1,31 @@
+.loader-ui img {
+  display: block;
+  margin: calc(50vh - 150px) auto;
+}
+
+@media (min-width: 768px) {
+  .loader-ui {
+    display: flex;
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+  }
+}
+
+.loader-ui {
+  transition: opacity, 2s;
+  opacity: 1;
+  height: 100vh;
+  width: 100vw;
+  position: fixed;
+  z-index: 9999;
+  left: 0;
+  top: 0;
+  pointer-events: none;
+}
+
+.loader-ui-hide {
+  opacity: 0;
+}

@@ -1,0 +1,372 @@
+{
+  /* Names of init files (in wwwroot/init), without the .json extension, to load by default */
+  "initializationUrls": ["simple"],
+  "parameters": {
+    "googleUrlShortenerKey": null,
+    "googleAnalyticsKey": null,
+    "googleAnalyticsOptions": null,
+    // Log ConsoleAnalytics events to console
+    // logToConsole: true,
+    /* Text that appears at the bottom of the map */
+    "disclaimer": {
+      "text": "Disclaimer: This map must not be used for navigation or precise spatial analysis",
+      "url": ""
+    },
+    /*
+        // Text that will be added to any pages printed from your site.
+        printDisclaimer:{
+            text:"Put your print disclaimer here.",
+            url: "#"
+        },
+        */
+    // Pop-up disclaimer that will be shown at the start
+    // The text of the disclaimer is in lib/Views/GlobalDisclaimer.html
+    // globalDisclaimer: {
+    //     confirmationRequired: false,
+    //     buttonTitle: "I agree",
+    //     title: "Disclaimer",
+    //     // If the current browser location is not prod, or is dev, then show a "not the real site" warning.
+    //     // The text of that is in lib/Views/DevelopmentDisclaimerPreamble.html
+    //     //prodHostRegex: "gov.\\.au$",
+    //     //devHostRegex: "\\b(staging|preview|test|dev)\\.",
+    //     enableOnLocalhost: true // If false, don't show this when running on localhost
+    // },
+    /*
+        developerAttribution: {
+            text: "Your organisation",
+            link: "http://www.example.com"
+        },*/
+    // This is used in various text messages. You should also set <title> in index.html
+    "appName": "Terria Map",
+    // See comments in lib/Views/global.scss for further information about customising colors, logos, fonts etc.
+    "brandBarElements": [
+      "",
+      "<a target=\"_blank\" href=\"https://terria.io\"><img src=\"images/terria_logo.png\" height=\"52\" title=\"Version: {{version}}\" /></a>",
+      ""
+    ],
+    // Shown when things go wrong.
+    "supportEmail": "help@example.com",
+    // You probably shouldn't change this.
+    "proj4ServiceBaseUrl": "proj4def/",
+    // Or this
+    "feedbackUrl": "feedback",
+    // Default mobile viewer mode when loading the map for the first time on mobile platforms.
+    // Options are: "3DTerrain", "3DSmooth", "2D"
+    "mobileDefaultViewerMode": "2d",
+    // Enable experimental features, since its nice to have the bleeding edge.
+    // Disable it if things go wrong with the experimental features or your users aren't robust to features which might change or disapear completly.
+    "experimentalFeatures": true,
+    // To enable welcome message when map first loads
+    // "showWelcomeMessage": true,
+    // To override the welcome message video displayed on the welcome message
+    // By default, the Getting Started to Terria video is displayed
+    // "welcomeMessageVideo": {
+    //     "videoTitle": "Getting started with the map",
+    //     "videoUrl": "https://www.youtube-nocookie.com/embed/NTtSM70rIvI", // use an embedded video link
+    //     "placeholderImage": "https://img.youtube.com/vi/NTtSM70rIvI/maxresdefault.jpg"
+    // },
+    // True to display in-app guides.
+    // "showInAppGuides": false,
+    // see `languageOverrides.json` in languages/en
+    "languageConfiguration": {
+      "enabled": false,
+      "debug": false,
+      "languages": {
+        "en": "English",
+        "fr": "Français"
+      },
+      "fallbackLanguage": "en"
+    },
+    "searchBarConfig": {},
+    "searchProviders": [
+      {
+        "id": "search-provider/cesium-ion",
+        "type": "cesium-ion-search-provider",
+        "name": "translate#viewModels.searchLocations",
+        "flightDurationSeconds": 1.5,
+        "minCharacters": 3
+      }
+    ],
+    "helpContent": [
+      {
+        "title": "translate#gettingstarted.title",
+        "itemName": "gettingstarted",
+        "paneMode": "videoAndContent",
+        "markdownText": "translate#gettingstarted.markdownText",
+        "icon": "video",
+        "videoUrl": "translate#gettingstarted.videoUrl",
+        "placeholderImage": "translate#gettingstarted.placeholderImage"
+      },
+      {
+        "title": "translate#stepbystepguide.title",
+        "itemName": "stepbystepguide",
+        "paneMode": "trainer",
+        "markdownText": "translate#stepbystepguide.markdownText",
+        "icon": "oneTwoThree",
+        "trainerItems": [
+          {
+            "title": "translate#stepbystepguide.gettingstarted.title",
+            "footnote": "translate#stepbystepguide.gettingstarted.footnote",
+            "steps": [
+              {
+                "title": "translate#stepbystepguide.gettingstarted.step1.title",
+                "markdownDescription": "translate#stepbystepguide.gettingstarted.step1.markdownDescription"
+              },
+              {
+                "title": "translate#stepbystepguide.gettingstarted.step2.title",
+                "markdownDescription": "translate#stepbystepguide.gettingstarted.step2.markdownDescription"
+              },
+              {
+                "title": "translate#stepbystepguide.gettingstarted.step3.title",
+                "markdownDescription": "translate#stepbystepguide.gettingstarted.step3.markdownDescription"
+              },
+              {
+                "title": "translate#stepbystepguide.gettingstarted.step4.title"
+              },
+              {
+                "title": "translate#stepbystepguide.gettingstarted.step5.title"
+              },
+              {
+                "title": "translate#stepbystepguide.gettingstarted.step6.title"
+              },
+              {
+                "title": "translate#stepbystepguide.gettingstarted.step7.title"
+              },
+              {
+                "title": "translate#stepbystepguide.gettingstarted.step8.title"
+              }
+            ]
+          }
+          // -- Uncomment to enable the following trainer guides --
+          // {
+          //   "title": "translate#stepbystepguide.satelliteimagery.title",
+          //   "footnote": "translate#stepbystepguide.satelliteimagery.footnote",
+          //   "steps": [
+          //     {
+          //       "title": "translate#stepbystepguide.satelliteimagery.step1.title",
+          //       "markdownDescription": "translate#stepbystepguide.satelliteimagery.step1.markdownDescription"
+          //     },
+          //     {
+          //       "title": "translate#stepbystepguide.satelliteimagery.step2.title",
+          //       "markdownDescription": "translate#stepbystepguide.satelliteimagery.step2.markdownDescription"
+          //     },
+          //     {
+          //       "title": "translate#stepbystepguide.satelliteimagery.step3.title",
+          //     "markdownDescription": "translate#stepbystepguide.satelliteimagery.step3.markdownDescription"
+          //     },
+          //     {
+          //       "title": "translate#stepbystepguide.satelliteimagery.step4.title",
+          //       "markdownDescription": "translate#stepbystepguide.satelliteimagery.step4.markdownDescription"
+          //     }
+          //   ]
+          // },
+          // {
+          //   "title": "translate#stepbystepguide.comparetimeseries.title",
+          //   "footnote": "translate#stepbystepguide.comparetimeseries.footnote",
+          //   "steps": [
+          //     {
+          //       "title": "translate#stepbystepguide.comparetimeseries.step1.title",
+          //       "markdownDescription": "translate#stepbystepguide.comparetimeseries.step1.markdownDescription"
+          //     },
+          //     {
+          //       "title": "translate#stepbystepguide.comparetimeseries.step2.title",
+          //       "markdownDescription": "translate#stepbystepguide.comparetimeseries.step2.markdownDescription"
+          //     },
+          //     {
+          //       "title": "translate#stepbystepguide.comparetimeseries.step3.title",
+          //       "markdownDescription": "translate#stepbystepguide.comparetimeseries.step3.markdownDescription"
+          //     },
+          //     {
+          //       "title": "translate#stepbystepguide.comparetimeseries.step4.title",
+          //       "markdownDescription": "translate#stepbystepguide.comparetimeseries.step4.markdownDescription"
+          //     }
+          //   ]
+          // }
+        ]
+      },
+      {
+        "icon": "story",
+        "itemName": "storymigration",
+        "markdownText": "## Share & Story Migration\n\n### Guide on updating share links, including stories\n\nIf you've received a warning telling you that a share link was based off an older version of TerriaJS, you'll want to do a few things to recreate them in the latest version of Terria!\n\n#### Creators\n\n1. Identify the share URL which causes a notification of share preservation effort when loading them into Terria. e.g. you may know where they are embedded, or come across them accidentally\n2. Open them in the newer (v8) based map application \n3. Check that everything is sharing as you expect, tweak the layers to fit if some are missing or not behaving correctly.\n4. Update the share link by clicking the Share/Print button and copy the new link\n5. If distribution of share link is known, update the url in your web page (if embedded), or send the new link to users \n\n#### Consumers\n1. Load the share URL\n2. If it doesn't quite look right, notify the provider so they can follow the above steps to recreate it in the latest version of Terria",
+        "title": "Share & Story migration"
+      }
+      // For maps with satellite imagery, also see `showInAppGuides`
+      // {
+      //     "itemName": "satelliteimagery",
+      //     "title": "Satellite Imagery",
+      //     "paneMode": "slider",
+      //     "icon": "satellite"
+      // }
+    ],
+    "helpContentTerms": [
+      {
+        "term": "translate#helpContentTerm1.term",
+        "aliases": "translate#helpContentTerm1.aliases",
+        "content": "translate#helpContentTerm1.content"
+      },
+      {
+        "term": "translate#helpContentTerm2.term",
+        "aliases": "translate#helpContentTerm2.aliases",
+        "content": "translate#helpContentTerm1.content"
+      },
+      {
+        "term": "translate#helpContentTerm3.term",
+        "content": "translate#helpContentTerm3.content"
+      },
+      {
+        "term": "translate#helpContentTerm4.term",
+        "content": "translate#helpContentTerm4.content"
+      },
+      {
+        "term": "translate#helpContentTerm5.term",
+        "aliases": ["catalogue"],
+        "content": "translate#helpContentTerm5.content"
+      },
+      {
+        "term": "translate#helpContentTerm6.term",
+        "aliases": "translate#helpContentTerm6.aliases",
+        "content": "translate#helpContentTerm6.content"
+      },
+      {
+        "term": "translate#helpContentTerm7.term",
+        "content": "translate#helpContentTerm7.content"
+      },
+      {
+        "term": "translate#helpContentTerm8.term",
+        "content": "translate#helpContentTerm8.content"
+      }
+    ]
+    // Or direct strings
+    // "helpContent": [
+    //   {
+    //       "title": "Getting started with the map",
+    //       "itemName": "gettingstarted",
+    //       "paneMode": "videoAndContent",
+    //       "markdownText": "# Getting started with the map\n\nIf you're new to the map or using spatial data, our Getting Started video quickly covers the basic functionality you'll need to use to add and interrogate data sets.\n\nIf you don't have time to watch the video, we suggest exploring the following areas:\n\n1. Search for a location to quickly find an area of interest\n2. Use 'Explore map data' to view the catalogue of available data sets and add them to the map\n3. Interact with the data layer, including opacity and toggling on and off on the left in your workbench\n4. Click on the data on the map to view more detailed data, including the raw data\n5. Change your basemap using options in 'Map Settings' to help make some data sets more visible\n6. Zoom and change your view, including tilting the view angle using the controls on the right-hand side of the screen",
+    //       "icon": "video",
+    //       "videoUrl": "https://www.youtube-nocookie.com/embed/FjSxaviSLhc",
+    //       "placeholderImage": "https://img.youtube.com/vi/FjSxaviSLhc/maxresdefault.jpg"
+    //   },
+    //   {
+    //       "title": "Step by step guide",
+    //       "itemName": "stepbystepguide",
+    //       "paneMode": "trainer",
+    //       "markdownText": "# Step by step guide\n\nLaunch a step by step guide for various popular workflows below:",
+    //       "icon": "oneTwoThree",
+    //       "trainerItems": [
+    //           {
+    //               "title": "Adding satellite imagery",
+    //               "footnote": "Important: Satellite imagery can take a little while to load so please be patient. If images don’t seem to be loading, zoom out a little bit",
+    //               "steps": [
+    //                   {
+    //                       "title": "Find the location to view satellite imagery",
+    //                       "markdownDescription": "- Use the location search or zoom and pan around the map using your mouse or the zoom controls"
+    //                   },
+    //                   {
+    //                       "title": "Add the satellite imagery to the map",
+    //                       "markdownDescription": "- Open the data catalogue using \"Explore map data\" button\n- Navigate through datasets to select your satellite option: Landsat or Sentinel, and daily or composite images. This can depend on resolution of the image you need (10m or 25m) and whether you want daily, 16 day composite, or annual average images\n - Select \"Add to the map\" to view the satellite imagery"
+    //                   },
+    //                   {
+    //                       "title": "Filter images to find satellite imagery",
+    //                       "markdownDescription": "- Filter images by location to quickly find satellite images for that location\n - Satellites circle the globe many times a day. You can expect satellite imagery to be available for one location every two weeks\n - If you haven't already selected your point of interest on the map, zoom in to select one. You will see the filter applied in blue in the Workbench on the left"
+    //                   },
+    //                   {
+    //                       "title": "Select a time and date",
+    //                       "markdownDescription": "- Use the date picker to select a time and date. Cycle backwards through previous years using the back arrow\n - Choose another date if your imagery is obscured by clouds. You can quickly cycle back and forward using the arrows next to the date picker"
+    //                   }
+    //               ]
+    //           },
+    //           {
+    //               "title": "View and compare different points in time",
+    //               "footnote": "Important: Any time series data can be compared using the Split Screen Mode, not just satellite imagery",
+    //               "steps": [
+    //                   {
+    //                       "title": "Add a time series dataset to the map",
+    //                       "markdownDescription": "- Satellite imagery is a good example of time series data, with many satellites going back decades\n- Find your location of interest and filter available imagery by this location\n-See our Adding Satellite Imagery to the Map guide for more"
+    //                   },
+    //                   {
+    //                       "title": "Select the time and date",
+    //                       "markdownDescription": "- In the workbench on the left, select the time and date which will open the date picker\n- Select a year, month and date, or navigate back to other years and even centuries using the back arrow\n- Available dates appear in blue"
+    //                   },
+    //                   {
+    //                       "title": "Compare different dates at one location",
+    //                       "markdownDescription": "- From the 3 dots drop-down menu in the workbench, press 'Compare' to activate Split Screen Mode\n- A duplicate copy of your dataset will appear in the workbench\n- Choose the dates you want to compare on the left and right of the screen\n- Drag the slider using the white button to swipe and compare the two image dates"
+    //                   },
+    //                   {
+    //                       "title": "Close Split Screen Mode",
+    //                       "markdownDescription": "- Escape the Split Screen Mode by pressing the 'x' of Split Screen Mode title in the workbench\n- Remove the duplicate copy of your dataset in the workbench using the 3 dots drop-down menu"
+    //                   }
+    //               ]
+    //           },
+    //           // Only for maps with delta-enabled catalog items
+    //           // {
+    //           //     "title": "Detecting change between two points in time",
+    //           //     "steps": [
+    //           //         {
+    //           //             "title": "Add a Change Detection / Difference-enabled dataset to the map",
+    //           //             "markdownDescription": "- This includes the dataset Delta Blended Service\n- Search or scroll to find the location where you want to perform change detection"
+    //           //         },
+    //           //         {
+    //           //             "title": "Turn on Difference mode",
+    //           //             "markdownDescription": "-  Behind the 3 dots in the workbench, select the menu item 'Difference'\n-   Difference mode will activate, splitting the screen and adding new options on the left"
+    //           //         },
+    //           //         {
+    //           //             "title": "Select your Difference variables",
+    //           //             "markdownDescription": "-   Use the date pickers at the bottom to choose your dates for screen A and B\n -   The Preview style defaults to True colour to help you find cloud-free images, change if required\n -   If you have previously searched for a location, this will be used to refine the imagery to only show available images for that location\n -   If you didn't search for a location, select a point on the map in your area of interest to refine the imagery for that area only\n -   Select your Difference Output, e.g. NDVI\n -   Select Generate Change Detection"
+    //           //         },
+    //           //         {
+    //           //             "title": "View the change detection results on-screen",
+    //           //             "markdownDescription": "-   The legend for the Difference calculation will appear on the left to help your analysis\n -   You can change dates using the date pickers to toggle between dates and a new Change Detection calculation will be run\n -   Close or exit Difference mode when you are finished your analysis"
+    //           //         }
+    //           //     ]
+    //           // }
+    //       ]
+    //   },
+    //   // For maps with satellite imagery, also see `showInAppGuides`
+    //   // {
+    //   //     "itemName": "satelliteimagery",
+    //   //     "title": "Satellite Imagery",
+    //   //     "paneMode": "slider",
+    //   //     "icon": "satellite"
+    //   // }
+    // ],
+    // "helpContentTerms": [
+    //   {
+    //       term: "dataset",
+    //       aliases: ["data set", "data sets", "datasets"],
+    //       content: "A collection of related information, organised as one using a common data structure, e.g. \"average house prices in Sydney for 2019\" or \"minimum and maximum daily temperature\""
+    //   },
+    //   {
+    //       term: "time series",
+    //       aliases: ["timeseries"],
+    //       content: "A sequence of data collected over different points in time, e.g. temperature sensor data or a gallery of images of the same location"
+    //   },
+    //   {
+    //       term: "workbench",
+    //       content: "The panel on the left side of the screen that shows what datasets you have added to the map"
+    //   },
+    //   {
+    //       term: "4D",
+    //       content: "3D data that also has a time-series component"
+    //   },
+    //   {
+    //       term: "catalog",
+    //       aliases: ["catalogue"],
+    //       content: "the inventory of all datasets available to be added to the map"
+    //   },
+    //   {
+    //       term: "base maps",
+    //       aliases: ["basemap", "base map", "basemaps"],
+    //       content: "Different map options for the blank base map, such as Bing imagery, roads, dark or light maps"
+    //   },
+    //   {
+    //       term: "source dataset",
+    //       content: "The dataset you added to your workbench that allows for difference calculations"
+    //   },
+    //   {
+    //       term: "preview style",
+    //       content: "The way the dataset appears in the preview window. We recommend true colour to search for cloud-free images"
+    //   }
+    // ]
+  }
+}

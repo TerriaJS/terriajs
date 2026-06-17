@@ -1,0 +1,3 @@
+geelong_mini_demo_bin_linux_v1.0-draft_x64.gltf was created using a dataset obtained from the City of Greater Geelong (gis@geelongcity.vic.gov.au). The original dataset is licensed under the following Creative Commons license:
+http://creativecommons.org/licenses/by/3.0/au/
+

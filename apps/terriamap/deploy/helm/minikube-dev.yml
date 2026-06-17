@@ -1,0 +1,7 @@
+global:
+  rollingUpdate:
+    maxUnavailable: 1
+  exposeNodePorts: true
+  image:
+    repository: "localhost:5000/data61"
+    tag: "latest"

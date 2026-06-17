@@ -1,0 +1,727 @@
+{
+  "homeCamera": {
+    "north": -8,
+    "east": 158,
+    "south": -45,
+    "west": 109
+  },
+  "catalog": [
+    {
+      "id": "aB3dE4FgHi",
+      "type": "group",
+      "name": "Featured Examples",
+      "members": [
+        {
+          "type": "esri-mapServer-group",
+          "name": "Catchment Scale Land Use",
+          "id": "354db2f2",
+          "url": "https://www.asris.csiro.au/arcgis/rest/services/abares/clum_50m_2018/MapServer",
+          "forceProxy": true
+        },
+        {
+          "id": "5z6OTFssaW",
+          "name": "CSIRO Soil and Landscape Grid",
+          "url": "https://www.asris.csiro.au/arcgis/rest/services/TERN",
+          "type": "esri-group"
+        },
+        {
+          "id": "IaRi3Qn1pj",
+          "type": "group",
+          "name": "Hydro Energy Storage",
+          "members": [
+            {
+              "id": "uhsE72",
+              "type": "group",
+              "name": "ANU STORES Worldwide",
+              "members": [
+                {
+                  "type": "wms",
+                  "name": "Pumped hydro: 150GWh 18h",
+                  "id": "c855dca8",
+                  "info": [
+                    {
+                      "name": "Description",
+                      "content": "This information has been developed by the 100% Renewable Energy group from the Research School of Electrical, Energy and Materials Engineering at the Australia National University.  http://re100.eng.anu.edu.au<p>Potential sites for off-river PHES are identified using GIS algorithms with defined search criteria. The surveyed latitude range is up to 60 degrees north and south. Each identified site comprises an upper and lower reservoir pair plus a hypothetical tunnel route between the reservoirs, and includes data such as latitude, longitude, altitude, head, slope, water volume, water area, rock volume, dam wall length, water/rock ratio, energy storage potential and approximate relative cost (categories A-E).</p><p>Wall heights are adjusted for each reservoir in a pair to yield equal water volumes to achieve the targeted energy storage. Energy (= head * usable volume * g * efficiency) and storage-length combinations are provided in Table 1. The approximate number of people that a reservoirs could service for a 100% renewable electricity grid is listed in the third line.</p><style>  table, th, td {    border: 1px solid black;    padding: 5px;    text-align: center;  }</style><center><table>  <tr>    <th>Table 1</th> <th>2 GWh</th> <th>5 GWh</th> <th>15 GWh</th> <th>50 GWh</th> <th>150 GWh</th>  </tr>  <tr>    <th>6 hours</th> <td>✓</td> <td>✓</td> <td>✓</td> <td>✓</td> <td>-</td>  </tr>  <tr>    <th>18 hours</th> <td>-</td> <td>✓</td> <td>✓</td> <td>✓</td> <td>✓</td>  </tr>  <tr>    <th>Millions of people</th> <td>0.1</td> <td>0.25</td> <td>0.75</td> <td>2.5</td> <td>7.5</td>  </tr></table></center><p>Virtually all upper reservoirs are away from rivers, and none intrude on protected area or urban areas listed in the databases that we use below.  There may be local constraints that prevent use of a particular site that is not reflected in these databases. Please refer to the ANU 100% Renewable Energy website for additional information: http://re100.eng.anu.edu.au/global</p>"
+                    },
+                    {
+                      "name": "Disclaimer",
+                      "content": "None of the PHES sites discussed in this study have been the subject of geological, hydrological, environmental, heritage and other studies, and it is not known whether any particular site would be suitable. The commercial feasibility of developing these sites is unknown. As with all major engineering projects, diligent attention to quality assurance would be required for safety and efficacy.<p>There has been no investigation of land tenure apart from exclusion of some environmental areas and urban areas, and no discussions with land owners and managers. Nothing in this list of potential site locations implies any rights for development of these locations. Accuracy of the sites depends on the accuracy of the source data. There may be sites that fall into local protected areas or urban areas that are not identified by the source data.</p>"
+                    },
+                    {
+                      "name": "Access and acknowledgements",
+                      "content": "In publications that use this information please acknowledge the RE100 Group, Australian National University, http://re100.eng.anu.edu.au/"
+                    },
+                    {
+                      "name": "Source Data",
+                      "content": "Digital Terrain Model (DTM) https://earthexplorer.usgs.gov/ <p>World Database Protected Areas: https://www.protectedplanet.net/</p> <p>Urban extent:  HBASE http://sedac.ciesin.columbia.edu/data/set/ulandsat-hbase-v1/data-download</p> "
+                    }
+                  ],
+                  "infoSectionOrder": [
+                    "Disclaimer",
+                    "Description",
+                    "Access and acknowledgements",
+                    "Source Data"
+                  ],
+                  "url": "https://gis.aremi.data61.io/anu/wms",
+                  "opacity": 1,
+                  "layers": "150gwh_18h",
+                  "featureInfoTemplate": {
+                    "template": "<div>  <style>    tr {background-color: transparent; ! important;}  </style>  {{description}}</div>"
+                  },
+                  "tileErrorHandlingOptions": {
+                    "ignoreUnknownTileErrors": true
+                  },
+                  "shareKeys": [
+                    "Root Group/Renewable Energy/Hydro/Storage/ANU STORES Worldwide/Pumped hydro: 150GWh 18h"
+                  ]
+                }
+              ],
+              "description": "As the proportion of wind and solar photovoltaics (PV) in an electrical grid extends into the 50-100% range a combination of additional long-distance high voltage transmission, demand management and local storage is required for stability. Pumped Hydro Energy Storage (PHES) constitutes 97% of electricity storage worldwide because of its low cost.<p>The <a href='http://re100.eng.anu.edu.au/global'>RE100 Group ANU</a> found about 530,000 potentially feasible PHES sites with storage potential of about 22 million Gigawatt-hours (GWh) by using geographic information system (GIS) analysis. This is about one hundred times greater than required to support a 100% global renewable electricity system. Brownfield sites (existing reservoirs, old mining sites) will be included in a future analysis.</p>This information has been developed by the 100% Renewable Energy group from the Research School of Electrical, Energy and Materials Engineering at the Australia National University.  http://re100.eng.anu.edu.au<p>Potential sites for off-river PHES are identified using GIS algorithms with defined search criteria. The surveyed latitude range is up to 60 degrees north and south. Each identified site comprises an upper and lower reservoir pair plus a hypothetical tunnel route between the reservoirs, and includes data such as latitude, longitude, altitude, head, slope, water volume, water area, rock volume, dam wall length, water/rock ratio, energy storage potential and approximate relative cost (categories A-E).</p><p>Wall heights are adjusted for each reservoir in a pair to yield equal water volumes to achieve the targeted energy storage. Energy (= head * usable volume * g * efficiency) and storage-length combinations are provided in Table 1. The approximate number of people that a reservoirs could service for a 100% renewable electricity grid is listed in the third line.</p><style>  table, th, td {    border: 1px solid black;    padding: 5px;    text-align: center;  }</style><center><table>  <tr>    <th>Table 1</th> <th>2 GWh</th> <th>5 GWh</th> <th>15 GWh</th> <th>50 GWh</th> <th>150 GWh</th>  </tr>  <tr>    <th>6 hours</th> <td>✓</td> <td>✓</td> <td>✓</td> <td>✓</td> <td>-</td>  </tr>  <tr>    <th>18 hours</th> <td>-</td> <td>✓</td> <td>✓</td> <td>✓</td> <td>✓</td>  </tr>  <tr>    <th>Millions of people</th> <td>0.1</td> <td>0.25</td> <td>0.75</td> <td>2.5</td> <td>7.5</td>  </tr></table></center><p>Virtually all upper reservoirs are away from rivers, and none intrude on protected area or urban areas listed in the databases that we use below.  There may be local constraints that prevent use of a particular site that is not reflected in these databases. Please refer to the ANU 100% Renewable Energy website for additional information: http://re100.eng.anu.edu.au/global</p><h4>DISCLAIMER</h4>None of the PHES sites discussed in this study have been the subject of geological, hydrological, environmental, heritage and other studies, and it is not known whether any particular site would be suitable. The commercial feasibility of developing these sites is unknown. As with all major engineering projects, diligent attention to quality assurance would be required for safety and efficacy.<p>There has been no investigation of land tenure apart from exclusion of some environmental areas and urban areas, and no discussions with land owners and managers. Nothing in this list of potential site locations implies any rights for development of these locations. Accuracy of the sites depends on the accuracy of the source data. There may be sites that fall into local protected areas or urban areas that are not identified by the source data.</p>",
+              "shareKeys": [
+                "Root Group/Renewable Energy/Hydro/Storage/ANU STORES Worldwide"
+              ]
+            },
+            {
+              "type": "wms",
+              "name": "Australia Upper Reservoir Locations - ANU STORES",
+              "info": [
+                {
+                  "name": "Disclaimer",
+                  "content": "None of the PHES sites discussed in this study have been the subject of geological, hydrological, environmental and other studies, and it is not known whether any particular site would be suitable.<p>Please refer to the ANU 100% Renewable Energy website for additional information:</p><p><a href='http://re100.eng.anu.edu.au/'>http://re100.eng.anu.edu.au/</a></p><p>There has been no investigation of land tenure apart from exclusion of national parks and urban areas, and no discussions with land owners and managers. Nothing in this list of potential site locations implies any rights for development of these locations.</p><p>The commercial feasibility of developing these sites is unknown. As with all major engineering projects, diligent attention to quality assurance would be required for safety and efficacy.</p>"
+                }
+              ],
+              "initialMessage": {
+                "title": "Australia Upper Reservoir Locations Disclaimer",
+                "content": "None of the PHES sites discussed in this study have been the subject of geological, hydrological, environmental and other studies, and it is not known whether any particular site would be suitable.<p>Please refer to the ANU 100% Renewable Energy website for additional information:</p><p><a href='http://re100.eng.anu.edu.au/'>http://re100.eng.anu.edu.au/</a></p><p>There has been no investigation of land tenure apart from exclusion of national parks and urban areas, and no discussions with land owners and managers. Nothing in this list of potential site locations implies any rights for development of these locations.</p><p>The commercial feasibility of developing these sites is unknown. As with all major engineering projects, diligent attention to quality assurance would be required for safety and efficacy.</p>",
+                "confirmation": true,
+                "width": 600,
+                "height": 550,
+                "confirmText": "I Agree"
+              },
+              "url": "https://gis.aremi.data61.io/ANU_STORES/wms",
+              "opacity": 1,
+              "rectangle": {
+                "west": 112,
+                "south": -48,
+                "east": 155,
+                "north": -5
+              },
+              "layers": "all_reservoirs",
+              "featureInfoTemplate": {
+                "name": "{{Index}}{{#Dam_volume}}: {{Stored_Ene}} GWh {{/Dam_volume}}",
+                "template": "<h3>{{#Dam_volume}}Reservoir:{{/Dam_volume}} {{^Dam_volume}}Dam wall:{{/Dam_volume}} {{Index}}</h3><table>{{#Dam_volume}}  <tr>    <th>Stored energy:</th>    <td>{{Stored_Ene}} GWh</td>  </tr>{{/Dam_volume}}  <tr>    <th>Elevation:</th>    <td>{{Elevation_}} metres</td>  </tr>{{#Dam_volume}}  <tr>    <th>Water area:</th>    <td>{{Water_area}} hectares</td>  </tr>  <tr>    <th>Reservoir volume:&nbsp;</th>    <td>{{Reservoir_}} gigalitres</td>  </tr>  <tr>    <th>Dam length:</th>    <td>{{Dam_length}} metres</td>  </tr>  <tr>    <th>Dam area:</th>    <td>{{Dam_area_h}} hectares</td>  </tr>  <tr>    <th>Dam volume:</th>    <td>{{Dam_volume}} gigalitres</td>  </tr>  <tr>    <th>Water to rock ratio:</th>    <td>{{Water_rock}}</td>  </tr>{{/Dam_volume}}</table>"
+              },
+              "tileErrorHandlingOptions": {
+                "ignoreUnknownTileErrors": true
+              },
+              "id": "RqnKAv",
+              "shareKeys": [
+                "Root Group/Renewable Energy/Hydro/Storage/Australia Upper Reservoir Locations - ANU STORES"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "gtfs",
+          "url": "https://api.transport.nsw.gov.au/v1/gtfs/vehiclepos/buses",
+          "image": "build/TerriaJS/images/icons/sydney_bus_icon_smaller.png",
+          "name": "NSW Live Transport - Buses",
+          "headers": [
+            {
+              "name": "Authorization",
+              "value": "apikey l4VnvZi4uQLSvD7lwN2ac7vIDJUJ3epYva4l"
+            }
+          ],
+          "refreshInterval": 5,
+          "featureInfoTemplate": {
+            "name": "{{vehicle_trip_bus_number}}",
+            "template": "<b>Bus:</b> {{route_short_name}}<br><b>Occupancy:</b> {{occupancy_status_str}}<br><b>Speed:</b> {{speed_km}} km/h<br><b style='padding-right: 5px'>Direction:</b> <span style='transform: rotate({{bearing}}deg); width: 10px; display: inline-block' aria-label='{{bearing}} degrees' role='img' title='{{bearing}} degrees'>&#x2B06;</div>"
+          },
+          "model": {
+            "url": "lowpoly_bus/scene.gltf",
+            "scale": 0.3048,
+            "maximumDistance": 500.0
+          }
+        },
+        {
+          "id": "QwErTyUiOp",
+          "type": "group",
+          "name": "Sentinel-2 cloudless world",
+          "members": [
+            {
+              "id": "lIvVnuKJA9",
+              "name": "Sentinel-2 cloudless world 2016",
+              "type": "wmts",
+              "url": "https://tiles.maps.eox.at/wmts/1.0.0/WMTSCapabilities.xml",
+              "layer": "s2cloudless_3857",
+              "style": "default",
+              "opacity": 1
+            },
+            {
+              "id": "jCJmccfll6",
+              "name": "Sentinel-2 cloudless world 2018",
+              "type": "wmts",
+              "url": "https://tiles.maps.eox.at/wmts/1.0.0/WMTSCapabilities.xml",
+              "layer": "s2cloudless-2018_3857",
+              "style": "default",
+              "opacity": 1
+            },
+            {
+              "id": "HrWLyyyo6V",
+              "name": "Sentinel-2 cloudless world 2019",
+              "type": "wmts",
+              "url": "https://tiles.maps.eox.at/wmts/1.0.0/WMTSCapabilities.xml",
+              "layer": "s2cloudless-2019_3857",
+              "style": "default",
+              "opacity": 1
+            },
+            {
+              "id": "B8gpm2I3gB",
+              "name": "Sentinel-2 cloudless world 2020",
+              "type": "wmts",
+              "url": "https://tiles.maps.eox.at/wmts/1.0.0/WMTSCapabilities.xml",
+              "layer": "s2cloudless-2020_3857",
+              "style": "default",
+              "opacity": 1
+            }
+          ]
+        },
+        {
+          "url": "http://services.ga.gov.au/gis/rest/services/GA_Surface_Geology/MapServer",
+          "type": "esri-mapServer",
+          "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+          "name": "Surface Geology",
+          "rectangle": { "west": 106, "south": -52, "east": 172, "north": -8 },
+          "info": [
+            {
+              "name": "Licence",
+              "content": "[Creative Commons Attribution 4.0 International (CC BY 4.0)](http://creativecommons.org/licenses/by/4.0/)"
+            }
+          ]
+        },
+        {
+          "id": "3chNzj13TB",
+          "type": "wms-group",
+          "name": "WMS layers for the Australian Renewable Energy Mapping Infrastructure project.",
+          "url": "https://gis.aremi.data61.io/bom/wms"
+        }
+      ]
+    },
+    {
+      "id": "kP9xV2LmQz",
+      "type": "group",
+      "name": "Basic Examples",
+      "isOpen": true,
+      "members": [
+        {
+          "id": "DL4Av6wY5h",
+          "type": "geojson",
+          "name": "GeoJSON Test",
+          "url": "test/bike_racks.geojson"
+        },
+        {
+          "name": "CSV",
+          "type": "group",
+          "members": [
+            {
+              "type": "csv",
+              "name": "CSV Test",
+              "id": "zrPtHVJcPi",
+              "url": "test/incidents_notime.csv"
+            },
+            {
+              "name": "ABC Photo Stories (2009-2014)",
+              "description": "Australia Broadcasting Company stories from 2009-2014 with accompanying photos.\n\nThis dataset demonstrates the ability to show users a custom feature info panel when they click on a feature on the map.",
+              "type": "csv",
+              "id": "cJiWroyAzU",
+              "url": "test/localphotostories20092014.csv",
+              "featureInfoTemplate": {
+                "template": "<div class='abc'><small>{{Date}}</small>{{#Primary image}}<figure><img src='{{Primary image}}'/><figcaption>{{Primary image caption}}</figcaption></figure>{{/Primary image}}<p><a target='_blank' href={{URL}}>Read More</a></div>"
+              }
+            },
+            {
+              "type": "csv",
+              "name": "Pacific Earthquakes (CSV)",
+              "url": "test/earthquakes.csv",
+              "activeStyle": "Magnitude",
+              "id": "u3nGNh"
+            },
+            {
+              "type": "csv",
+              "name": "Auto Incidents (CSV)",
+              "url": "test/incidents.csv",
+              "activeStyle": "incident_duration",
+              "defaultStyle": {
+                "color": {
+                  "binColors": [
+                    "rgba(0,0,200,1.0)",
+                    "rgba(200,200,200,1.00)",
+                    "rgba(200,0,0,1.00)"
+                  ],
+                  "numberOfBins": 3
+                }
+              },
+              "id": "xtjL6E"
+            },
+            {
+              "type": "csv",
+              "name": "All generation types",
+              "id": "54a553b4",
+              "info": [
+                {
+                  "name": "Description",
+                  "content": "The AEMO Actual Generation and Load data represents actual generation data for each scheduled generation unit, semi-scheduled generation unit, and non-scheduled generating systems (a non-scheduled generating system comprising non-scheduled generating units) for registered units in the National Electricity Market (NEM). The data is given in MegaWatt (MW). <br/> <br/>Detailed information about the AEMO Generation and Load data is available here: <br/> <br/>[http://aemo.com.au/Electricity/Data/Market-Management-System-MMS/Generation-and-Load](http://aemo.com.au/Electricity/Data/Market-Management-System-MMS/Generation-and-Load) <br/> <br/>Visualisation of AEMO current generation data is based on data files generated every 5 minutes available here: <br/> <br/>[http://www.nemweb.com.au/REPORTS/CURRENT/Dispatch_SCADA/](http://www.nemweb.com.au/REPORTS/CURRENT/Dispatch_SCADA/) <br/> <br/>Visualisation of AEMO historic data is based on daily data files available here: <br/> <br/>[http://www.nemweb.com.au/REPORTS/ARCHIVE/Dispatch_SCADA/](http://www.nemweb.com.au/REPORTS/ARCHIVE/Dispatch_SCADA/) <br/> <br/>AEMO provides a range of data. Raw data is provided in Comma Separated Values (CSV) flat file format to enable access to a range of market data. Recent files are stored in a directory for current reports, and older files are moved into the respective archive reports directory. <br/> <br/>All electricity data provided by AEMO is available here: <br/> <br/>[http://aemo.com.au/Electricity/Data](http://aemo.com.au/Electricity/Data)"
+                },
+                {
+                  "name": "Updates",
+                  "content": "The Actual Generation and Load data is updated in 5-minute intervals."
+                },
+                {
+                  "name": "Data Custodian",
+                  "content": "AEMO is the data custodian of electricity generation data displayed on AREMI. Please refer to attribution, licensing and copyrights provisions further on this page. <br/> <br/>The Australian Energy Market Operator (AEMO) was established by the Council of Australian Governments (COAG) to manage the National Electricity Market (NEM) and gas markets from 1 July 2009. <br/> <br/>AEMO’s core functions can be grouped into the following areas: 1) Electricity Market Operator; 2) Gas Markets Operator; 3) National Transmission Planner; 4) Transmission Services; 5) Energy Market Development. <br/> <br/>AEMO operates on a cost recovery basis as a corporate entity limited by guarantee under the Corporations Law. Its membership structure is split between government and industry, respectively 60 and 40 percent. Government members of AEMO include the Queensland, New South Wales, Victorian, South Australian and Tasmanian state governments, the Commonwealth and the Australian Capital Territory. <br/> <br/>As part of the role of managing the NEM and assisting industry, AEMO publishes electricity market data updated in 5 minute intervals and on a daily, monthly and annual basis. Categories of data published are: <br/> <br/>1) Price and demand; <br/>2) Forecast supply and demand; <br/>3) Market notices; <br/>4) Ancillary services; <br/>5) Network data; <br/>6) Pre-dispatch demand forecasting performance; <br/>7) Settlements; <br/>8) Market management system (MMS) (which includes Generation & Load data). <br/> <br/>More information on AEMO and services provided is available here: <br/> <br/>[http://aemo.com.au/About-AEMO](http://aemo.com.au/About-AEMO)"
+                },
+                {
+                  "name": "Licensing, Terms & Conditions",
+                  "content": "Australian Energy Market Operator (AEMO) is the data custodian for Generation & Load data sets, available on AEMO’s website. <br/><br/>AREMI is displaying the data under AEMO’s licencing and copyright conditions detailed below. <br/><br/>The data is provided for information only and is not intended for commercial use. AEMO does not guarantee the accuracy of the data or its availability at all times.<br/><br/>AEMO, or its licensors, are the owners of all copyright and all other intellectual property rights in the contents of the AEMO website (including text and images). Users may only use such contents for personal use or as authorised by AEMO. Here are the details of the AEMO’s copyright permissions: <br/><br/>AEMO Material comprises documents, reports, sound and video recordings and any other material created by or on behalf of AEMO and made publicly available by AEMO. All AEMO Material is protected by copyright under Australian law. A publication is protected even if it does not display the © symbol.  <br/><br/>In addition to the uses permitted under copyright laws, AEMO confirms its general permission for anyone to use AEMO Material for any purpose, but only with accurate and appropriate attribution of the relevant AEMO Material and AEMO as its author. There is no need to obtain specific permission to use AEMO Material in this way. Confidential documents and any reports commissioned by another person or body who may own the copyright in them and NOT AEMO Material, and these permissions do not apply to those documents. <br/><br/>More information on conditions of use of AEMO generated data and information is available on the AEMO website: [http://aemo.com.au/About-AEMO/Legal-Notices](http://aemo.com.au/About-AEMO/Legal-Notices)"
+                }
+              ],
+              "url": "https://services.aremi.data61.io/aemo/v6/csv/all",
+              "cacheDuration": "5m",
+              "rectangle": {
+                "west": 134,
+                "south": -47,
+                "east": 155,
+                "north": -13
+              },
+              "polling": {
+                "seconds": 300,
+                "shouldReplaceData": true
+              },
+              "columns": [
+                {
+                  "name": "Station Name",
+                  "type": "hidden"
+                },
+                {
+                  "name": "Participant",
+                  "type": "hidden"
+                },
+                {
+                  "name": "Physical Unit No.",
+                  "type": "hidden"
+                },
+                {
+                  "name": "Aggregation",
+                  "type": "hidden"
+                },
+                {
+                  "name": "DUID",
+                  "type": "hidden"
+                },
+                {
+                  "name": "CSV for last 24h",
+                  "type": "hidden"
+                },
+                {
+                  "name": "CSV for all data",
+                  "type": "hidden"
+                },
+                {
+                  "name": "Latest 24h generation",
+                  "type": "hidden"
+                },
+                {
+                  "name": "Unit Size (MW)",
+                  "type": "hidden"
+                }
+              ],
+              "activeStyle": "Current % of Max Cap",
+              "defaultColumn": {
+                "replaceWithZeroValues": [],
+                "replaceWithNullValues": ["-"]
+              },
+              "defaultStyle": {
+                "time": {
+                  "timeColumn": null
+                },
+                "color": {
+                  "nullColor": "rgba(255,255,255,0.1)",
+                  "nullLabel": "No value",
+                  "numberOfBins": 10,
+                  "binColors": [
+                    "rgb(94,79,162)",
+                    "rgb(50,136,189)",
+                    "rgb(102,194,165)",
+                    "rgb(171,221,164)",
+                    "rgb(230,245,152)",
+                    "rgb(254,224,139)",
+                    "rgb(253,174,97)",
+                    "rgb(244,109,67)",
+                    "rgb(213,62,79)",
+                    "rgb(158,1,66)"
+                  ]
+                }
+              },
+              "featureInfoTemplate": {
+                "name": "{{DUID}} - {{Station Name}}: {{Current % of Max Cap}}%",
+                "template": "<h3>{{Station Name}} ({{DUID}})</h3><p><strong>{{Participant}}</strong><div><strong>{{Current Output (MW)}}MW</strong> at {{Most Recent Output Time (AEST)}}</div><div><strong>{{Current % of Reg Cap}}%</strong> of {{Reg Cap (MW)}}MW registered capacity</div><div><strong>{{Current % of Max Cap}}%</strong> of {{Max Cap (MW)}}MW maximum capacity</div></p><table>  <tbody>    <tr>      <td>Category</td>      <td class='strong'>{{Category}}</td>    </tr>    <tr>      <td>Classification</td>      <td class='strong'>{{Classification}}</td>    </tr>    <tr>      <td>Fuel Source</td>      <td class='strong'>{{Fuel Source - Primary}} ({{Fuel Source - Descriptor}})</td>    </tr>    <tr>      <td>Technology Type</td>      <td class='strong'>{{Technology Type - Primary}} ({{Technology Type - Descriptor}})</td>    </tr>    <tr>      <td>Physical Unit No.</td>      <td class='strong'>{{Physical Unit No_}}</td>    </tr>    <tr>      <td>Unit Size (MW)</td>      <td class='strong'>{{Unit Size (MW)}}</td>    </tr>    <tr>      <td>Aggregation</td>      <td class='strong'>{{Aggregation}}</td>    </tr>    <tr>      <td>Region</td>      <td class='strong'>{{Region}}</td>    </tr>    <tr><td>Power generation</td><td><chart id='{{DUID}}' title='{{Station Name}} ({{DUID}})' poll-seconds='300' poll-replace='true' sources='https://services.aremi.data61.io/aemo/v6/duidcsv/{{#terria.urlEncodeComponent}}{{DUID}}{{/terria.urlEncodeComponent}}?offset=1D,https://services.aremi.data61.io/aemo/v6/duidcsv/{{#terria.urlEncodeComponent}}{{DUID}}{{/terria.urlEncodeComponent}}?offset=7D,https://services.aremi.data61.io/aemo/v6/duidcsv/{{#terria.urlEncodeComponent}}{{DUID}}{{/terria.urlEncodeComponent}}?offset=1M,https://services.aremi.data61.io/aemo/v6/duidcsv/{{#terria.urlEncodeComponent}}{{DUID}}{{/terria.urlEncodeComponent}}?offset=3M' source-names='1d,7d,1m,3m' downloads='https://services.aremi.data61.io/aemo/v6/duidcsv/{{#terria.urlEncodeComponent}}{{DUID}}{{/terria.urlEncodeComponent}}?offset=7D,https://services.aremi.data61.io/aemo/v6/duidcsv/{{#terria.urlEncodeComponent}}{{DUID}}{{/terria.urlEncodeComponent}}?offset=1M,https://services.aremi.data61.io/aemo/v6/duidcsv/{{#terria.urlEncodeComponent}}{{DUID}}{{/terria.urlEncodeComponent}}?offset=3M,https://services.aremi.data61.io/aemo/v6/duidcsv/{{#terria.urlEncodeComponent}}{{DUID}}{{/terria.urlEncodeComponent}}' download-names='7d,1m,3m,All available' preview-x-label='Last 24 hours' column-names='Time,Power Generation' column-units='Date,MW'></chart></td></tr>  </tbody></table>"
+              }
+            },
+            {
+              "name": "Charts",
+              "type": "group",
+              "members": [
+                {
+                  "name": "Sheep Stations",
+                  "type": "csv",
+                  "id": "lF2xGFgl7V",
+                  "url": "build/TerriaJS/test/csv/lat_lon_nullvalue.csv",
+                  "featureInfoTemplate": {
+                    "name": "Number {{value}}",
+                    "template": "<p>All sheep stations have the same time series plot.</p><chart src='build/TerriaJS/test/csv_nongeo/time_series.csv' column-units=',litres,horsepower' y-column='1'></chart>"
+                  }
+                },
+                {
+                  "id": "zdjwipNdnA",
+                  "name": "XY Plot",
+                  "type": "csv",
+                  "url": "build/TerriaJS/test/csv_nongeo/xy.csv"
+                },
+                {
+                  "id": "jiE3seDFUz",
+                  "name": "Time series",
+                  "type": "csv",
+                  "url": "build/TerriaJS/test/csv_nongeo/time_series.csv"
+                },
+                {
+                  "id": "xrD8v0H4cn",
+                  "name": "Train Stations",
+                  "type": "csv",
+                  "url": "build/TerriaJS/test/csv/lat_lon_nullvalue.csv",
+                  "featureInfoTemplate": {
+                    "name": "Number {{value}}",
+                    "template": "<p>All train stations have the same x-y plot.</p><chart src='build/TerriaJS/test/csv_nongeo/xy.csv'></chart>"
+                  }
+                },
+                {
+                  "id": "tBRj9qi1b6",
+                  "name": "Chart with inline data",
+                  "type": "csv",
+                  "url": "build/TerriaJS/test/csv/lat_lon_name_value.csv",
+                  "featureInfoTemplate": {
+                    "template": "<p>Chart with inline data</p><chart>x,y\n1,3\n5,10\n8,-2\n10,{{value}}\n</chart>"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "vliQsF",
+              "type": "group",
+              "name": "Region mapping (CSV)",
+              "members": [
+                {
+                  "id": "hWvbL27nGK",
+                  "type": "terria-reference",
+                  "name": "Other ASGS 2021 region types",
+                  "url": "https://tile-test.terria.io/region-test-csvs/asgs-2021-leftovers-catalog.json",
+                  "isGroup": true
+                },
+                {
+                  "type": "csv",
+                  "name": "SEIFA 2011 (POA)",
+                  "url": "test/SEIFA_POA_2011.csv",
+                  "activeStyle": "Socio-economic_Disadvantage",
+                  "defaultStyle": {
+                    "color": {
+                      "binColors": ["rgba(0,0,0,1.00)", "rgba(0,200,0,1.0)"],
+                      "numberOfBins": 2
+                    }
+                  },
+                  "id": "xy7CLN"
+                },
+                {
+                  "type": "csv",
+                  "name": "2011 Census AUST (STE)",
+                  "url": "test/2011Census_AUST_STE.csv",
+                  "id": "gdXiXM"
+                },
+                {
+                  "type": "csv",
+                  "name": "2011 Census AUST (CED)",
+                  "url": "test/2011Census_AUST_CED.csv",
+                  "columns": [
+                    {
+                      "name": "ced",
+                      "regionType": "CED_CODE_2011"
+                    }
+                  ],
+                  "id": "5Gp6JZ"
+                },
+                {
+                  "type": "csv",
+                  "name": "2011 Census AUST (SA4)",
+                  "url": "test/2011Census_AUST_SA4.csv",
+                  "columns": [
+                    {
+                      "name": "sa4",
+                      "regionType": "SA4_2011"
+                    }
+                  ],
+                  "id": "IiYNss"
+                },
+                {
+                  "type": "csv",
+                  "name": "States STEM 2013",
+                  "url": "test/states_stem_2013.csv",
+                  "id": "wJJzvz"
+                },
+                {
+                  "type": "csv",
+                  "name": "Country Regions",
+                  "url": "test/countries.csv",
+                  "activeStyle": "ITU-T Telephone Code",
+                  "id": "xcEqRI"
+                },
+                {
+                  "type": "csv",
+                  "name": "Droughts by Country",
+                  "url": "test/droughts.csv",
+                  "activeStyle": "Total affected",
+                  "id": "WAx8gl"
+                },
+                {
+                  "type": "csv",
+                  "name": "State Mask Test",
+                  "url": "test/states_stem_2013.csv",
+                  "opacity": 1,
+                  "activeStyle": "Mask",
+                  "defaultStyle": {
+                    "color": {
+                      "binColors": ["rgba(0,0,0,0.0)", "rgba(0,0,0,1.0)"],
+                      "numberOfBins": 2
+                    }
+                  },
+                  "id": "3Wtr3E"
+                },
+                {
+                  "type": "csv",
+                  "name": "SA1_2021",
+                  "id": "ccbHOTMZnM",
+                  "url": "https://tile-test.terria.io/region-test-csvs/SA1_2021_SA1_2021.csv"
+                },
+                {
+                  "type": "csv",
+                  "name": "SA2_2021",
+                  "id": "K3VrITMGe4",
+                  "url": "https://tile-test.terria.io/region-test-csvs/SA2_2021_SA2_2021.csv"
+                },
+                {
+                  "type": "csv",
+                  "name": "SA2_NAME_2021",
+                  "id": "rWE8gKC7Pb",
+                  "url": "https://tile-test.terria.io/region-test-csvs/SA2_2021_SA2_NAME_2021.csv"
+                },
+                {
+                  "type": "csv",
+                  "name": "SA3_2021",
+                  "id": "PUvcYBKZRD",
+                  "url": "https://tile-test.terria.io/region-test-csvs/SA3_2021_SA3_2021.csv"
+                },
+                {
+                  "type": "csv",
+                  "name": "SA3_NAME_2021",
+                  "id": "zy1XT2Tozd",
+                  "url": "https://tile-test.terria.io/region-test-csvs/SA3_2021_SA3_NAME_2021.csv"
+                },
+                {
+                  "type": "csv",
+                  "name": "SA4_2021",
+                  "id": "XgfiF4hqub",
+                  "url": "https://tile-test.terria.io/region-test-csvs/SA4_2021_SA4_2021.csv"
+                },
+                {
+                  "type": "csv",
+                  "name": "SA4_NAME_2021",
+                  "id": "Ep0MRHLxMm",
+                  "url": "https://tile-test.terria.io/region-test-csvs/SA4_2021_SA4_NAME_2021.csv"
+                },
+                {
+                  "type": "csv",
+                  "name": "GCCSA_2021",
+                  "id": "JjiFvunrMF",
+                  "url": "https://tile-test.terria.io/region-test-csvs/GCCSA_2021_GCCSA_2021.csv"
+                },
+                {
+                  "type": "csv",
+                  "name": "GCCSA_NAME_2021",
+                  "id": "7wfxltvumA",
+                  "url": "https://tile-test.terria.io/region-test-csvs/GCCSA_2021_GCCSA_NAME_2021.csv"
+                },
+                {
+                  "type": "csv",
+                  "name": "LGA_2019",
+                  "id": "YSK6at0rVn",
+                  "url": "https://tile-test.terria.io/region-test-csvs/LGA_2019_LGA_2019.csv"
+                },
+                {
+                  "type": "csv",
+                  "name": "LGA_2021",
+                  "id": "VlepKgBjtp",
+                  "url": "https://tile-test.terria.io/region-test-csvs/LGA_2021_LGA_2021.csv"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "KML/KMZ files",
+          "type": "group",
+          "members": [
+            {
+              "id": "GRdrd3M2KY",
+              "name": "Simple Test (KML)",
+              "type": "kml",
+              "url": "test/simple.kml"
+            },
+            {
+              "id": "Pdo7xbE1EF",
+              "name": "Vic Police (KML)",
+              "type": "kml",
+              "url": "test/vic_police.kml"
+            },
+            {
+              "id": "uIVB6p3eBm",
+              "name": "Vic Police (KMZ)",
+              "type": "kml",
+              "url": "test/vic_police.kmz"
+            }
+          ]
+        },
+        {
+          "name": "CZML files",
+          "type": "group",
+          "members": [
+            {
+              "id": "rd4YAInjh1",
+              "name": "Simple Test (CZML)",
+              "type": "czml",
+              "url": "test/simple.czml"
+            },
+            {
+              "id": "wqEHOmOnto",
+              "name": "Large feature info box (CZML)",
+              "type": "czml",
+              "url": "test/bigInfobox.czml"
+            },
+            {
+              "id": "1Zv1WlgUt0",
+              "name": "Embedded CZML",
+              "type": "czml",
+              "czmlData": [
+                {
+                  "id": "document",
+                  "version": "1.0"
+                },
+                {
+                  "position": {
+                    "cartographicDegrees": [133.0, -25.0, 0.0]
+                  },
+                  "point": {
+                    "pixelSize": 5,
+                    "color": {
+                      "rgba": [255, 0, 0, 255]
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "GeoJSON",
+          "type": "group",
+          "members": [
+            {
+              "name": "Test styled and unstyled features",
+              "type": "geojson",
+              "url": "build/TerriaJS/test/GeoJSON/test-styles.geojson"
+            },
+            {
+              "name": "Test overriding styled and unstyled features",
+              "type": "geojson",
+              "url": "build/TerriaJS/test/GeoJSON/test-styles.geojson",
+              "style": {
+                "marker-size": "200",
+                "marker-color": "#ff3333",
+                "marker-symbol": "rail"
+              }
+            },
+            {
+              "name": "Testing stroke styles applied to embedded unstyled point.",
+              "type": "geojson",
+              "url": "build/TerriaJS/test/GeoJSON/test-styles.geojson",
+              "style": {
+                "stroke-width": 20,
+                "stroke": "red",
+                "marker-size": "200"
+              },
+              "geoJsonData": {
+                "type": "FeatureCollection",
+                "features": [
+                  {
+                    "type": "Feature",
+                    "properties": {
+                      "name": "Thick red border, unspecified centre"
+                    },
+                    "geometry": {
+                      "type": "Point",
+                      "coordinates": [146.469, -40.83]
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Small glTF 3D Models",
+          "description": "Demonstrations of adding 3D building data to the map using glTF.",
+          "type": "group",
+          "members": [
+            {
+              "name": "Smooth Geelong Buildings glTF Mini Demo",
+              "description": "geelong_mini_demo_bin_linux_v1.0-draft_x64.gltf was created using data made available from the [City of Greater Geelong](mailto:gis@geelongcity.vic.gov.au) under a Creative Commons license. The data used to create this demo was originally obtained via email in .skp format (> 100MB so not suitable for inclusion in this repo), however there is also a lower quality dataset of the same region available on data.gov.au in .kml/.dae format (this dataset does not seem to contain building textures).\n\nSee [readme.txt](test/3d/geelong/readme.txt) for more information.",
+              "attribution": "geelong_mini_demo_bin_linux_v1.0-draft_x64.gltf was created using a dataset obtained from the City of Greater Geelong. The original dataset is licensed under the CC BY 3.0 AU.",
+              "type": "czml",
+              "url": "test/3d/geelong/smooth.czml",
+              "rectangle": {
+                "west": 144.354,
+                "south": -38.147,
+                "east": 144.358,
+                "north": -38.15
+              }
+            },
+            {
+              "name": "Terrain Geelong Buildings glTF Mini Demo",
+              "description": "geelong_mini_demo_bin_linux_v1.0-draft_x64.gltf was created using data made available from the [City of Greater Geelong](mailto:gis@geelongcity.vic.gov.au) under a Creative Commons license. The data used to create this demo was originally obtained via email in .skp format (> 100MB so not suitable for inclusion in this repo), however there is also a lower quality dataset of the same region available on data.gov.au in .kml/.dae format (this dataset does not seem to contain building textures).\n\nSee [readme.txt](test/3d/geelong/readme.txt) for more information.",
+              "attribution": "geelong_mini_demo_bin_linux_v1.0-draft_x64.gltf was created using a dataset obtained from the City of Greater Geelong. The original dataset is licensed under the CC BY 3.0 AU.",
+              "type": "czml",
+              "url": "test/3d/geelong/terrain.czml",
+              "rectangle": {
+                "west": 144.354,
+                "south": -38.147,
+                "east": 144.358,
+                "north": -38.15
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "viewerMode": "3dSmooth",
+  "baseMaps": {
+    "defaultBaseMapId": "basemap-openstreetmap",
+    "previewBaseMapId": "basemap-natural-earth-II"
+  }
+}

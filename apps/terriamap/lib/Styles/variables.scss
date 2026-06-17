@@ -1,0 +1,7 @@
+@use "./variables-overrides" as variables;
+
+$focus-border-light-color: variables.$text-light;
+$focus-border-dark-color: variables.$text-dark;
+$focus-border-width: 2px;
+$focus-border: solid $focus-border-width $focus-border-light-color;
+$focus-border-dark: solid $focus-border-width $focus-border-dark-color;

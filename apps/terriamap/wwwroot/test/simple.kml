@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<kml xmlns="http://earth.google.com/kml/2.0">
+  <Document>
+  <Placemark>
+   <name>my office</name>
+   <LookAt>
+      <longitude>151.0</longitude>
+      <latitude>-35.0</latitude>
+      <range>500000</range><tilt>0</tilt><heading>0</heading>
+   </LookAt>
+   <Point>
+     <coordinates>150.0,-35.0,500</coordinates>
+   </Point>
+  </Placemark>
+ </Document>
+</kml>
+
+

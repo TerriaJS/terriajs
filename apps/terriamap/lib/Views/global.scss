@@ -1,0 +1,155 @@
+@use "../Styles/variables.scss";
+@use "~terriajs/lib/Sass/global/global";
+
+body {
+  margin: 0;
+  overflow: hidden;
+}
+
+:global {
+  @media print {
+    .nationalmap-print-disclaimer {
+      color: #000;
+      display: block;
+    }
+  }
+
+  // To customise the look of your Terria Map, uncomment this section and make changes to your heart's content
+  // You will also want to uncomment and change values in lib/Styles/variables.scss
+  /*
+    // Import any custom fonts here
+    //@import url(https://fonts.googleapis.com/css?family=Josefin+Sans:300,400,700);
+
+    html {
+        font-family: $font-base;
+    }
+
+    // Logo area in top left
+    .tjs-branding__branding {
+        a:first-child, a:last-child {
+            display: none;
+
+            @media screen and (min-width: $sm) {
+                display: inline;
+            }
+        }
+        // Different font size for the branding
+        font-weight: 300;
+        color: white;
+        font-size: 26px;
+        padding-top:2px;
+        padding-left:6px;
+
+        // To make the logo clickable, it should be instead set in config.json, at "brandBarElements"
+        // background:$dark url(http://www.public-domain-image.com/backgrounds/slides/abstract-waves-on-a-blue-background.jpg);
+        // background-position: top right;
+        // background-size: 100%;
+        // background-repeat: no-repeat;
+
+    }
+    // Background of whole left panel
+    .tjs-standard-user-interface__sidePanel {
+        background:$dark-darker;
+    }
+    // Individual sections within the left panel
+    .tjs-side-panel__workBench {
+        font-family:$font-base;
+        font-weight:400;
+        font-size:18px;
+        background:$dark-darker;
+    }
+
+    // All kinds of buttons in various screens
+    .tjs-_buttons__btn {
+        &-primary {
+            font-family: $font-base;
+        }
+        &:hover {
+            color: $color-primary;
+        }
+    }
+
+    // Buttons like "Share" within the map area.
+    .tjs-_buttons__btn--map {
+        background: $dark;
+        &:focus, &:hover { color: white; }
+    }
+
+    // Lat/lon buttons
+    .tjs-legend__locationBar, .tjs-legend__distanceLegend {
+
+        background:$dark;
+        color:white;
+        &:hover,&:focus { background: $dark; color: white; }
+
+    }
+
+    // Progress bar while datasets are loading
+    .tjs-progress-bar__progress-bar {
+        background: $color-primary;
+    }
+
+    // Flatten and simplify display of timeline controls
+    .tjs-timeline-controls__timeline__control {
+        background:$dark-lighter;
+        border:none;
+    }
+
+    .tjs-timeline__text-cell {
+        font-family: $font-base;
+    }
+
+    .tjs-timeline__timeline {
+        background:$dark-lighter;
+    }
+
+    .cesium-timeline-bar {
+        background:$dark-with-overlay;
+    }
+
+    // Feature info table
+    .tjs-feature-info-section__content {
+        h1 {
+            color: $color-primary;
+        }
+        table th {
+            // font-family: $font-base; // if you don't want monospaced
+            font-weight:200; // not bold
+            padding-right:0.5em;
+        }
+
+        table td {
+            border:none;
+            // font-family: $font-base; // if you don't want monospaced
+            font-weight:normal; // not bold
+            color:hsl(0,0%,90%);
+
+        }
+        a {
+            color:$color-secondary;
+        }
+    }
+
+    // The Data Catalog ("Add Data") page
+      // expandable catalog groups
+    .tjs-data-catalog-group__btn--catalog {
+        &:hover { background: $color-secondary; color: white; }
+        &:focus { background: $color-primary; color: white;}
+    }
+      // The currently selected item in the list
+    .tjs-data-catalog-item__btn-catalog-item--is-previewed {
+        ,&:focus {color: $color-primary; }
+    }
+      // The tabs at the top
+    .tjs-tabs__btn--tab {
+        font-family:$font-base
+    }
+
+    .tjs-tabs__btn--selected {
+        color:$color-primary-dark;
+    }
+    .tjs-tabs__btn--tab:hover {
+        color:$color-secondary;
+    }
+    */
+}

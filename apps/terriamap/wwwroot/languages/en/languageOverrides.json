@@ -1,0 +1,119 @@
+{
+  "gettingstarted": {
+    "title": "Getting started with the map",
+    "markdownText": "## Getting started with the map\n\nIf you're new to the map or using spatial data, our Getting Started video quickly covers the basic functionality you'll need to use to add and interrogate data sets.\n\nIf you don't have time to watch the video, we suggest exploring the following areas:\n\n1. Search for a location to quickly find an area of interest\n2. Use 'Explore map data' to view the catalogue of available data sets and add them to the map\n3. Interact with the data layer, including opacity and toggling on and off on the left in your workbench\n4. Click on the data on the map to view more detailed data, including the raw data\n5. Change your basemap using options in 'Map Settings' to help make some data sets more visible\n6. Zoom and change your view, including tilting the view angle using the controls on the right-hand side of the screen",
+    "videoUrl": "https://www.youtube-nocookie.com/embed/FjSxaviSLhc",
+    "placeholderImage": "https://img.youtube.com/vi/FjSxaviSLhc/maxresdefault.jpg"
+  },
+  "stepbystepguide": {
+    "title": "Step by step guide",
+    "markdownText": "## Step by step guide\n\nLaunch a step by step guide for various popular workflows below:",
+    "gettingstarted": {
+      "title": "Getting started with the map",
+      "step1": {
+        "markdownDescription": "The search is at the top of the workbench on the left.",
+        "title": "Search for a location to find an area of interest"
+      },
+      "step2": {
+        "markdownDescription": "You can view the catalogue at any time",
+        "title": "Use \"Explore map data\" to view data catalogue"
+      },
+      "step3": {
+        "markdownDescription": "Find a dataset of interest",
+        "title": "Search for data or browse catalogue"
+      },
+      "step4": {
+        "title": "Add data to map by clicking on + sign or \"Add to map\" button in preview window",
+        "markdownDescription": ""
+      },
+      "step5": {
+        "title": "Interact with data, including opacity and toggling on & off on the left in your workbench"
+      },
+      "step6": {
+        "title": "Click on data on the map to view more details by triggering Feature Information panel"
+      },
+      "step7": {
+        "title": "Change your basemap using options in \"Map Settings\" to improve contrast"
+      },
+      "step8": {
+        "title": "Zoom and change view using the controls on the right-hand side of the screen"
+      }
+    },
+    "satelliteimagery": {
+      "title": "Adding satellite imagery",
+      "footnote": "Important: Satellite imagery can take a little while to load so please be patient. If images don’t seem to be loading, zoom out a little bit",
+      "step1": {
+        "title": "Find the location to view satellite imagery",
+        "markdownDescription": "- Use the location search or zoom and pan around the map using your mouse or the zoom controls"
+      },
+      "step2": {
+        "title": "Add the satellite imagery to the map",
+        "markdownDescription": "- Open the data catalogue using \"Explore map data\" button\n- Navigate through datasets to select your satellite option: Landsat or Sentinel, and daily or composite images. This can depend on resolution of the image you need (10m or 25m) and whether you want daily, 16 day composite, or annual average images\n - Select \"Add to the map\" to view the satellite imagery"
+      },
+      "step3": {
+        "title": "Filter images to find satellite imagery",
+        "markdownDescription": "- Filter images by location to quickly find satellite images for that location\n - Satellites circle the globe many times a day. You can expect satellite imagery to be available for one location every two weeks\n - If you haven't already selected your point of interest on the map, zoom in to select one. You will see the filter applied in blue in the Workbench on the left"
+      },
+      "step4": {
+        "title": "Select a time and date",
+        "markdownDescription": "- Use the date picker to select a time and date. Cycle backwards through previous years using the back arrow\n - Choose another date if your imagery is obscured by clouds. You can quickly cycle back and forward using the arrows next to the date picker"
+      }
+    },
+    "comparetimeseries": {
+      "title": "View and compare different points in time",
+      "footnote": "Important: Any time series data can be compared using the Split Screen Mode, not just satellite imagery",
+      "step1": {
+        "title": "Add a time series dataset to the map",
+        "markdownDescription": "- Satellite imagery is a good example of time series data, with many satellites going back decades\n- Find your location of interest and filter available imagery by this location\n-See our Adding Satellite Imagery to the Map guide for more"
+      },
+      "step2": {
+        "title": "Select the time and date",
+        "markdownDescription": "- In the workbench on the left, select the time and date which will open the date picker\n- Select a year, month and date, or navigate back to other years and even centuries using the back arrow\n- Available dates appear in blue"
+      },
+      "step3": {
+        "title": "Compare different dates at one location",
+        "markdownDescription": "- From the 3 dots drop-down menu in the workbench, press 'Compare' to activate Split Screen Mode\n- A duplicate copy of your dataset will appear in the workbench\n- Choose the dates you want to compare on the left and right of the screen\n- Drag the slider using the white button to swipe and compare the two image dates"
+      },
+      "step4": {
+        "title": "Close Split Screen Mode",
+        "markdownDescription": "- Escape the Split Screen Mode by pressing the 'x' of Split Screen Mode title in the workbench\n- Remove the duplicate copy of your dataset in the workbench using the 3 dots drop-down menu"
+      }
+    }
+  },
+  "helpContentTerm1": {
+    "term": "dataset",
+    "aliases": ["data set", "data sets", "datasets"],
+    "content": "A collection of related information, organised as one using a common data structure, e.g. \"average house prices in Sydney for 2019\" or \"minimum and maximum daily temperature\""
+  },
+  "helpContentTerm2": {
+    "term": "time series",
+    "aliases": ["timeseries"],
+    "content": "A sequence of data collected over different points in time, e.g. temperature sensor data or a gallery of images of the same location"
+  },
+  "helpContentTerm3": {
+    "term": "workbench",
+    "content": "The panel on the left side of the screen that shows what datasets you have added to the map"
+  },
+  "helpContentTerm4": {
+    "term": "4D",
+    "content": "3D data that also has a time-series component"
+  },
+  "helpContentTerm5": {
+    "term": "catalog",
+    "aliases": ["catalogue"],
+    "content": "the inventory of all datasets available to be added to the map"
+  },
+  "helpContentTerm6": {
+    "term": "base maps",
+    "aliases": ["basemap", "base map", "basemaps"],
+    "content": "Different map options for the blank base map, such as Bing imagery, roads, dark or light maps"
+  },
+  "helpContentTerm7": {
+    "term": "source dataset",
+    "content": "The dataset you added to your workbench that allows for difference calculations"
+  },
+  "helpContentTerm8": {
+    "term": "preview style",
+    "content": "The way the dataset appears in the preview window. We recommend true colour to search for cloud-free images"
+  }
+}

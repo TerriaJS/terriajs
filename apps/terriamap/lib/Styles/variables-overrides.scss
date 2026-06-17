@@ -1,0 +1,28 @@
+@forward "~terriajs/lib/Sass/common/_default_variables.scss";
+/**
+// To customise the look of your map, uncomment and change values here (remove line above after uncommenting) and in lib/Views/global.scss
+
+@forward "~terriajs/lib/Sass/common/_default_variables.scss" with ( 
+    // If your logo is big, set this to give it more room.
+    //$logo-height: 120px;
+    
+    // If using a non-standard font, remember to include an @import statement in global.scss
+    $font-base: 'Josefin Sans', sans-serif;
+    $font-pop: $font-base; // If you just want to use one font throughout, do this.
+    
+    // These variables are for buttons and text.
+    // "color-secondary" should be a lighter color than "color-primary" but still readable contrasted with white.
+    $color-primary: maroon;
+    $color-secondary: hsl(60,80%,60%); // or: lighten($color-primary, 20%);
+    
+    // These variables set background panel colors
+    $dark: hsl(0,30%,30%);
+    $dark-with-overlay: hsl(0,30%,30%);;
+    $dark-lighter: hsl(0,30%,50%);
+    
+    // You might find it helpful to define these and use them.
+    $color-primary-light:lighten($color-primary,10%);
+    $color-primary-dark:darken($color-primary,10%);
+    $dark-darker: hsl(0,30%,15%);
+);
+*/
