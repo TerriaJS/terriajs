@@ -268,7 +268,7 @@ const StandardUserInterfaceBase: FC<StandardUserInterfaceProps> = observer(
             <Notification />
             <MapInteractionWindow />
             {!customElements.feedback.length &&
-              props.terria.configParameters.feedbackUrl &&
+              props.terria.feedbackService &&
               !props.viewState.hideMapUi &&
               props.viewState.feedbackFormIsVisible && <FeedbackForm />}
             <div

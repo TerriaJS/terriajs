@@ -15,7 +15,6 @@ import {
 } from "react";
 import { withTranslation, WithTranslation } from "react-i18next";
 import styled, { DefaultTheme, withTheme } from "styled-components";
-import sendFeedback from "../../Models/sendFeedback";
 import ViewState from "../../ReactViewModels/ViewState";
 import Box from "../../Styled/Box";
 import Button, { RawButton } from "../../Styled/Button";
@@ -151,27 +150,28 @@ class FeedbackForm extends Component<IProps, IState> {
       this.setState({
         isSending: true
       });
-      sendFeedback({
-        terria: this.props.viewState.terria,
-        name: this.state.name,
-        email: this.state.email,
-        sendShareURL: this.state.sendShareURL,
-        comment: this.state.comment
-      })!.then((succeeded: boolean) => {
-        if (succeeded) {
-          this.setState({
-            isSending: false,
-            comment: ""
-          });
-          runInAction(() => {
-            this.props.viewState.feedbackFormIsVisible = false;
-          });
-        } else {
-          this.setState({
-            isSending: false
-          });
-        }
-      });
+      this.props.viewState.terria.feedbackService
+        ?.sendFeedback({
+          name: this.state.name,
+          email: this.state.email,
+          sendShareURL: this.state.sendShareURL,
+          comment: this.state.comment
+        })!
+        .then((succeeded: boolean) => {
+          if (succeeded) {
+            this.setState({
+              isSending: false,
+              comment: ""
+            });
+            runInAction(() => {
+              this.props.viewState.feedbackFormIsVisible = false;
+            });
+          } else {
+            this.setState({
+              isSending: false
+            });
+          }
+        });
     }
   }
 

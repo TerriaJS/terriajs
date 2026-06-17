@@ -2,6 +2,8 @@
 
 #### next release (8.12.4)
 
+- Refactor feedback sending into a `FeedbackService` class instantiated on `Terria` when `feedbackUrl` is configured. The `sendFeedback` standalone function has been removed; consumers should use `terria.feedbackService?.sendFeedback(...)` instead.
+
 #### 8.12.3 - 2026-06-17
 
 - Add config parameters to optionally disable parts of the UI for locked-down deployments: `disableMobileInterface`, `disableSharePanel`, `disableShareEmbed`, `disableUserAddedData` and `cesiumIonDisableDefaultToken` (all default `false`).
