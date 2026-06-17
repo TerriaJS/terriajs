@@ -6,7 +6,7 @@ import { Component } from "react";
 import { withTranslation } from "react-i18next";
 import Box from "../../Styled/Box";
 import Icon from "../../Styled/Icon";
-import DataCatalog from "../DataCatalog/DataCatalog";
+import { ExplorerWindowComponents } from "../ExplorerWindow/ExplorerWindowComponents";
 import DataPreview from "../Preview/DataPreview";
 import WorkbenchList from "../Workbench/WorkbenchList";
 import Styles from "./mobile-modal-window.scss";
@@ -42,9 +42,7 @@ class MobileModalWindow extends Component {
       case viewState.mobileViewOptions.data:
         // No multiple catalogue tabs in mobile
         return (
-          <DataCatalog
-            terria={this.props.terria}
-            viewState={this.props.viewState}
+          <ExplorerWindowComponents.DataCatalog
             items={this.props.terria.catalog.group.memberModels}
           />
         );

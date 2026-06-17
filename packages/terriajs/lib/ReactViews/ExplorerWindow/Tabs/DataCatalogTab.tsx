@@ -2,17 +2,17 @@ import { runInAction } from "mobx";
 import { observer } from "mobx-react";
 import { useTranslation } from "react-i18next";
 import type CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
+import MappableMixin from "../../../ModelMixins/MappableMixin";
+import { BaseModel } from "../../../Models/Definition/Model";
 import Box from "../../../Styled/Box";
 import { useViewState } from "../../Context";
-import DataCatalog from "../../DataCatalog/DataCatalog";
 import DataPreview from "../../Preview/DataPreview";
 import Breadcrumbs from "../../Search/Breadcrumbs";
-import SearchBox from "../../Search/SearchBox";
+import { ExplorerWindowComponents } from "../ExplorerWindowComponents";
 import Styles from "./data-catalog-tab.scss";
-import MappableMixin from "../../../ModelMixins/MappableMixin";
 
 interface DataCatalogTabProps {
-  items?: unknown[];
+  items?: readonly BaseModel[];
   searchPlaceholder?: string;
   onActionButtonClicked?: (item: CatalogMemberMixin.Instance) => void;
   /** Override the default toggleItemOnMap behavior (when "add/remove from map" button is clicked in the data preview panel) */
@@ -36,7 +36,7 @@ const DataCatalogTab = observer(function DataCatalogTab(
     terria
   } = viewState;
 
-  const searchPlaceholder =
+  const searchPlaceholder: string =
     props.searchPlaceholder || t("addData.searchPlaceholder");
 
   const changeSearchText = (newText: string) => {
@@ -55,16 +55,14 @@ const DataCatalogTab = observer(function DataCatalogTab(
         <Box fullHeight overflow="hidden">
           <Box className={Styles.dataExplorer} styledWidth="40%">
             {!props.hideSearch && searchState.catalogSearchProvider && (
-              <SearchBox
+              <ExplorerWindowComponents.DataCatalogSearch
                 searchText={searchState.catalogSearchText}
                 onSearchTextChanged={changeSearchText}
                 onDoSearch={search}
-                placeholder={searchPlaceholder}
+                searchPlaceholder={searchPlaceholder}
               />
             )}
-            <DataCatalog
-              terria={terria}
-              viewState={viewState}
+            <ExplorerWindowComponents.DataCatalog
               hideActionButton={props.hideActionButton}
               onActionButtonClicked={props.onActionButtonClicked}
               items={props.items}
