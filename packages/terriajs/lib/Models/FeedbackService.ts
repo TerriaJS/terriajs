@@ -1,13 +1,13 @@
 import i18next from "i18next";
 import loadWithXhr from "../Core/loadWithXhr";
-import TerriaError from "../Core/TerriaError";
+import { Notification } from "../ReactViewModels/NotificationState";
 import {
   buildShareLink,
   buildShortShareLink,
   canShorten
 } from "../ReactViews/Map/Panels/SharePanel/BuildShareLink";
 import Terria from "./Terria";
-import isDefined from "../Core/isDefined";
+import TerriaError from "../Core/TerriaError";
 
 interface SendFeedbackOptions {
   title?: string;
@@ -18,8 +18,18 @@ interface SendFeedbackOptions {
   additionalParameters?: Record<string, string | undefined>;
 }
 
+type SendFeedbackResponse =
+  | {
+      result: "SUCCESS";
+      notification?: Notification;
+    }
+  | {
+      result: "FAILED";
+      error?: TerriaError;
+    };
+
 export interface IFeedbackService {
-  sendFeedback(options: SendFeedbackOptions): Promise<boolean>;
+  sendFeedback(options: SendFeedbackOptions): Promise<SendFeedbackResponse>;
 }
 
 export class FeedbackService implements IFeedbackService {
@@ -47,7 +57,9 @@ export class FeedbackService implements IFeedbackService {
     this._additionalFeedbackParameters = additionalFeedbackParameters;
   }
 
-  async sendFeedback(options: SendFeedbackOptions): Promise<boolean> {
+  async sendFeedback(
+    options: SendFeedbackOptions
+  ): Promise<SendFeedbackResponse> {
     try {
       const shareLinkPromise = options.sendShareURL
         ? canShorten(this._terria)
@@ -88,32 +100,30 @@ export class FeedbackService implements IFeedbackService {
       }
 
       if (!json || !json.result || json.result !== "SUCCESS") {
-        raiseError(
-          this._terria,
+        return createErrorResponse(
           `Failed to parse response from server: \`${JSON.stringify(json)}\``
         );
-        return false;
       } else {
-        this._terria.notificationState.addNotificationToQueue({
-          title: i18next.t("models.feedback.thanksTitle"),
-          message: i18next.t("models.feedback.thanksMessage", {
-            appName: this._terria.appName
-          })
-        });
-        return true;
+        return {
+          result: "SUCCESS",
+          notification: {
+            title: i18next.t("models.feedback.thanksTitle"),
+            message: i18next.t("models.feedback.thanksMessage", {
+              appName: this._terria.appName
+            })
+          }
+        };
       }
     } catch (e) {
-      raiseError(this._terria, e);
+      return createErrorResponse(e);
     }
-    return false;
   }
 }
 
-function raiseError(terria: Terria, error: unknown) {
-  terria.raiseErrorToUser(
-    TerriaError.from(error, {
-      title: i18next.t("models.feedback.unableToSendTitle"),
-      message: i18next.t("models.feedback.unableToSendTitle")
-    })
-  );
-}
+const createErrorResponse = (error: unknown): SendFeedbackResponse => ({
+  result: "FAILED",
+  error: TerriaError.from(error, {
+    title: i18next.t("models.feedback.unableToSendTitle"),
+    message: i18next.t("models.feedback.unableToSendTitle")
+  })
+});

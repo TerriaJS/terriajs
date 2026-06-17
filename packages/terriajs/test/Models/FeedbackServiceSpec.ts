@@ -41,7 +41,7 @@ describe("FeedbackService", function () {
   });
 
   describe("sendFeedback", function () {
-    it("returns true when the server responds with SUCCESS", async function () {
+    it("returns SUCCESS result when the server responds with SUCCESS", async function () {
       const terria = createTerria();
       const service = createService(terria);
 
@@ -50,49 +50,29 @@ describe("FeedbackService", function () {
       );
 
       const result = await service.sendFeedback(defaultOptions());
-      expect(result).toBe(true);
+      expect(result.result).toBe("SUCCESS");
     });
 
-    it("queues a thank-you notification on success", async function () {
+    it("returns FAILED result when the server responds with non-SUCCESS", async function () {
       const terria = createTerria();
       const service = createService(terria);
-      const addNotification = spyOn(
-        terria.notificationState,
-        "addNotificationToQueue"
-      );
-
-      worker.use(
-        http.post(FEEDBACK_URL, () => HttpResponse.json({ result: "SUCCESS" }))
-      );
-
-      await service.sendFeedback(defaultOptions());
-      expect(addNotification).toHaveBeenCalledTimes(1);
-    });
-
-    it("returns false and raises an error when the server responds with non-SUCCESS", async function () {
-      const terria = createTerria();
-      const service = createService(terria);
-      const raiseError = spyOn(terria, "raiseErrorToUser");
 
       worker.use(
         http.post(FEEDBACK_URL, () => HttpResponse.json({ result: "FAILURE" }))
       );
 
       const result = await service.sendFeedback(defaultOptions());
-      expect(result).toBe(false);
-      expect(raiseError).toHaveBeenCalledTimes(1);
+      expect(result.result).toBe("FAILED");
     });
 
-    it("returns false and raises an error on network failure", async function () {
+    it("returns FAILED result on network failure", async function () {
       const terria = createTerria();
       const service = createService(terria);
-      const raiseError = spyOn(terria, "raiseErrorToUser");
 
       worker.use(http.post(FEEDBACK_URL, () => HttpResponse.error()));
 
       const result = await service.sendFeedback(defaultOptions());
-      expect(result).toBe(false);
-      expect(raiseError).toHaveBeenCalledTimes(1);
+      expect(result.result).toBe("FAILED");
     });
 
     it("sends 'Not shared' as shareLink when sendShareURL is false", async function () {
@@ -115,7 +95,7 @@ describe("FeedbackService", function () {
         ...defaultOptions(),
         sendShareURL: false
       });
-      expect(result).toBe(true);
+      expect(result.result).toBe("SUCCESS");
     });
 
     it("sends a URL as shareLink when sendShareURL is true", async function () {
@@ -139,7 +119,7 @@ describe("FeedbackService", function () {
         ...defaultOptions(),
         sendShareURL: true
       });
-      expect(result).toBe(true);
+      expect(result.result).toBe("SUCCESS");
     });
 
     it("posts name, email, comment, and title in the request body", async function () {
@@ -168,7 +148,7 @@ describe("FeedbackService", function () {
         comment: "Looks good",
         title: "Review"
       });
-      expect(result).toBe(true);
+      expect(result.result).toBe("SUCCESS");
     });
 
     it("includes custom request headers from feedbackRequestHeaders", async function () {
@@ -190,7 +170,7 @@ describe("FeedbackService", function () {
       );
 
       const result = await service.sendFeedback(defaultOptions());
-      expect(result).toBe(true);
+      expect(result.result).toBe("SUCCESS");
     });
 
     it("only forwards additional parameters whose names are in the constructor list", async function () {
@@ -220,7 +200,7 @@ describe("FeedbackService", function () {
         ...defaultOptions(),
         additionalParameters: { param1: "value1", unlisted: "ignored" }
       });
-      expect(result).toBe(true);
+      expect(result.result).toBe("SUCCESS");
     });
   });
 });

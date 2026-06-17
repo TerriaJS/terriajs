@@ -157,8 +157,13 @@ class FeedbackForm extends Component<IProps, IState> {
           sendShareURL: this.state.sendShareURL,
           comment: this.state.comment
         })!
-        .then((succeeded: boolean) => {
-          if (succeeded) {
+        .then((response) => {
+          if (response.result === "SUCCESS") {
+            if (response.notification) {
+              this.props.viewState.terria.notificationState.addNotificationToQueue(
+                response.notification
+              );
+            }
             this.setState({
               isSending: false,
               comment: ""
@@ -170,6 +175,9 @@ class FeedbackForm extends Component<IProps, IState> {
             this.setState({
               isSending: false
             });
+            if (response.error) {
+              this.props.viewState.terria.raiseErrorToUser(response.error);
+            }
           }
         });
     }
