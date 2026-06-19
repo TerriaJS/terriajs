@@ -1,6 +1,10 @@
 # Change Log
 
-#### next release (8.12.4)
+#### next release (8.x.x)
+
+#### 8.12.4 - 2026-06-19
+
+- Fix story editor rich-text toolbar dropdowns (paragraph style, alignment, table, text colour) and dialogs (image/media/link) being rendered invisibly behind the editor modal due to z-index stacking context. Add `underline` and `subscript` buttons to the toolbar.
 
 #### 8.12.3 - 2026-06-17
 
