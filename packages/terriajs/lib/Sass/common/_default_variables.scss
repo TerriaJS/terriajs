@@ -201,6 +201,9 @@ $lg: 1300px !default;
 
 $front-component-z-index: 99 !default;
 $notification-window-z-index: 99999 !default;
+// TinyMCE editor popups (menus/dialogs) mount on document.body, outside the
+// story editor modal, so they must sit just above $notification-window-z-index.
+$editor-popup-z-index: $notification-window-z-index + 1 !default;
 
 $chart-area-color: rgba(#fff, 0.075) !default;
 $chart-axis-color: #fff !default;
