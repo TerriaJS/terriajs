@@ -11,6 +11,7 @@ import "tinymce/models/dom";
 /* Import a skin (can be a custom skin instead of the default) */
 // import "!!style-loader!css-loader!tinymce/skins/ui/oxide/skin.min.css";
 import "!!style-loader!css-loader!./editor.skin.min.css"; // Custom borderless skin
+import "!!style-loader!css-loader!sass-loader!./editor.skin.overrides.scss"; // lift TinyMCE popups above the story modal
 
 /* Import TinyMCE plugins */
 import "tinymce/plugins/media";
@@ -54,7 +55,7 @@ export default function TinyEditor({
         statusbar: false,
         plugins: ["link", "image", "media", "table", "lists", "autolink"],
         toolbar:
-          "blocks | bold italic forecolor | align |" +
+          "blocks | bold italic underline subscript forecolor | align |" +
           " bullist numlist table |" +
           "image media link |" +
           "undo redo | removeformat",

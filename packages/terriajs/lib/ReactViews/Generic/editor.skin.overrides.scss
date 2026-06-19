@@ -1,0 +1,9 @@
+@use "../../Sass/common/_variables";
+
+/* TinyMCE 7 mounts every menu/dialog in a body-level .tox-tinymce-aux portal,
+   which the skin caps at z-index 1300. The story editor modal sits far higher,
+   so the popups rendered behind it (invisible). Keep the portal one step above
+   the modal via the shared variable instead of a hardcoded number. */
+.tox-tinymce-aux {
+  z-index: variables.$editor-popup-z-index;
+}
