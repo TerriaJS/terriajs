@@ -4,12 +4,12 @@ import isDefined from "../isDefined";
 import { Analytics } from "./types";
 
 type GoogleAnalyticsConfigParameters = {
-  googleAnalyticsKey?: string;
-  googleAnalyticsOptions?: unknown;
+  googleAnalyticsKey?: string | null;
+  googleAnalyticsOptions?: unknown | null;
 };
 
 export default class GoogleAnalytics implements Analytics {
-  key: string | undefined = undefined;
+  key: string | undefined | null = undefined;
   options: any = undefined;
 
   start(configParameters: GoogleAnalyticsConfigParameters): void {

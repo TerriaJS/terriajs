@@ -49,7 +49,6 @@ describe("Disclaimer", function () {
   describe("with disclaimerVisible set to false", function () {
     it("does not render", function () {
       runInAction(() => {
-        terria.configParameters.globalDisclaimer = undefined;
         viewState.disclaimerVisible = false;
       });
       renderWithContexts(<Disclaimer />, viewState);

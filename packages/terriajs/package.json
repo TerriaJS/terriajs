@@ -100,6 +100,7 @@
     "d3-zoom": "catalog:d3",
     "dateformat": "^5.0.3",
     "dompurify": "catalog:runtime",
+    "eslint-plugin-zod": "catalog:lint",
     "file-saver": "^2.0.5",
     "flexsearch": "0.7.21",
     "geojson-vt": "^3.2.1",

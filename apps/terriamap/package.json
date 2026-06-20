@@ -12,7 +12,8 @@
     "url": "http://github.com/TerriaJS/TerriaMap"
   },
   "dependencies": {
-    "terriajs-server": "workspace:*"
+    "terriajs-server": "workspace:*",
+    "zod": "catalog:runtime"
   },
   "resolutions": {
     "@types/react": "^18.3.3",

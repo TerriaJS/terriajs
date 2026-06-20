@@ -4,7 +4,6 @@ import i18next from "i18next";
 import { runInAction } from "mobx";
 import { http, HttpResponse } from "msw";
 import { I18nextProvider } from "react-i18next";
-import CommonStrata from "../../../lib/Models/Definition/CommonStrata";
 import CatalogSearchProvider from "../../../lib/Models/SearchProviders/CatalogSearchProvider";
 import MapboxSearchProvider, {
   MapboxGeocodingResponse
@@ -105,11 +104,9 @@ describe("SearchBoxAndResults", function () {
       viewState.searchState.locationSearchText = searchText;
       viewState.searchState.showLocationSearchResults = true;
 
-      viewState.terria.searchBarModel.setTrait(
-        CommonStrata.user,
-        "showSearchInCatalog",
-        false
-      );
+      runInAction(() => {
+        viewState.terria.searchBarModel.config.showSearchInCatalog = false;
+      });
     });
     renderWithContexts(
       <TerriaThemeProvider>
