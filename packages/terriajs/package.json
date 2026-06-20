@@ -92,6 +92,7 @@
     "d3-zoom": "^3.0.0",
     "dateformat": "^5.0.3",
     "dompurify": "^3.3.3",
+    "eslint-plugin-zod": "^4.7.0",
     "file-saver": "^2.0.5",
     "flexsearch": "0.7.21",
     "geojson-vt": "^3.2.1",

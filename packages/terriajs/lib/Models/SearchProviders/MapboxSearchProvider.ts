@@ -155,9 +155,9 @@ export default class MapboxSearchProvider extends LocationSearchProviderMixin(
 
     if (
       searchDirection === MapboxGeocodeDirection.Forward &&
-      this.terria.searchBarModel.boundingBoxLimit
+      this.terria.searchBarModel.config.boundingBoxLimit
     ) {
-      const bbox = this.terria.searchBarModel.boundingBoxLimit;
+      const bbox = this.terria.searchBarModel.config.boundingBoxLimit;
       if (
         isDefined(bbox.west) &&
         isDefined(bbox.north) &&

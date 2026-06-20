@@ -1,7 +1,8 @@
-import i18next, { ReactOptions, TFunction } from "i18next";
+import i18next, { TFunction } from "i18next";
 import LanguageDetector from "i18next-browser-languagedetector";
 import HttpApi, { RequestCallback } from "i18next-http-backend";
 import { initReactI18next } from "react-i18next";
+import * as z from "zod";
 import isDefined from "../Core/isDefined";
 
 export interface I18nBackendOptions {
@@ -31,22 +32,28 @@ export interface I18nStartOptions {
   skipInit?: boolean; // skip initialising i18next. Used in CI
 }
 
-export interface LanguageConfiguration {
-  enabled: boolean;
-  debug: boolean;
-  react: ReactOptions;
-  languages: object;
-  fallbackLanguage: string;
-  changeLanguageOnStartWhen: string[];
-  lookupCookie?: string;
+export const LanguageConfigurationSchema = z.object({
+  enabled: z.boolean(),
+  debug: z.boolean(),
+  languages: z.record(z.string(), z.string()),
+  fallbackLanguage: z.string(),
+  react: z
+    .object({
+      useSuspense: z.boolean()
+    })
+    .optional(),
+  changeLanguageOnStartWhen: z.array(z.string()).optional(),
+  lookupCookie: z.string().optional(),
 
   /** Base URL for override namespace translation files. If set, this makes up the base URL for translation override files. Should end in /
    *
    * For example, if `overridesBaseUrl = "test/path/"`, then the full path for translation override files will be `"test/path/{{lng}}.json"`
    **/
-  overridesBaseUrl?: string;
-}
-const defaultLanguageConfiguration = {
+  overridesBaseUrl: z.string().optional()
+});
+export type LanguageConfiguration = z.infer<typeof LanguageConfigurationSchema>;
+
+const defaultLanguageConfiguration: LanguageConfiguration = {
   enabled: false,
   debug: false,
   react: {

@@ -8,37 +8,73 @@ import {
 } from "mobx";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import RuntimeError from "terriajs-cesium/Source/Core/RuntimeError";
-import { JsonObject } from "../../Core/Json";
+import * as z from "zod";
 import Result from "../../Core/Result";
 import TerriaError from "../../Core/TerriaError";
 import LocationSearchProviderMixin from "../../ModelMixins/SearchProviders/LocationSearchProviderMixin";
-import { SearchBarTraits } from "../../Traits/SearchProviders/SearchBarTraits";
 import SearchProviderTraits from "../../Traits/SearchProviders/SearchProviderTraits";
 import CommonStrata from "../Definition/CommonStrata";
-import CreateModel from "../Definition/CreateModel";
 import { BaseModel } from "../Definition/Model";
 import ModelPropertiesFromTraits from "../Definition/ModelPropertiesFromTraits";
-import updateModelFromJson from "../Definition/updateModelFromJson";
 import Terria from "../Terria";
 import SearchProviderFactory from "./SearchProviderFactory";
 import upsertSearchProviderFromJson from "./upsertSearchProviderFromJson";
 
-export class SearchBarModel extends CreateModel(SearchBarTraits) {
+export const SearchBarConfigSchema = z.object({
+  placeholder: z.string().default("translate#search.placeholder").meta({
+    description:
+      "Input text field placeholder shown when no input has been given yet. The string is translateable."
+  }),
+  recommendedListLength: z
+    .number()
+    .default(5)
+    .meta({ description: "Maximum amount of entries in the suggestion list." }),
+  flightDurationSeconds: z.number().default(1.5).meta({
+    description:
+      "The duration of the camera flight to an entered location, in seconds."
+  }),
+  minCharacters: z.number().default(3).meta({
+    description: "Minimum number of characters required for search to start"
+  }),
+  showSearchInCatalog: z.boolean().default(true).meta({
+    description: "Whether to show 'Search In Catalog' in search results"
+  }),
+  boundingBoxLimit: z
+    .object({
+      west: z.number(),
+      south: z.number(),
+      east: z.number(),
+      north: z.number()
+    })
+    .optional()
+    .meta({
+      description:
+        "Bounding box limits for the search results {west, south, east, north}"
+    })
+});
+
+const defaultConfig = SearchBarConfigSchema.parse({});
+
+export class SearchBarModel {
+  @observable
+  private _config: z.infer<typeof SearchBarConfigSchema> = defaultConfig;
   private locationSearchProviders = observable.map<string, BaseModel>();
 
   constructor(readonly terria: Terria) {
-    super("search-bar-model", terria);
-
     makeObservable(this);
   }
 
-  updateModelConfig(config?: ModelPropertiesFromTraits<SearchBarTraits>) {
+  get config() {
+    return this._config;
+  }
+
+  @action
+  updateModelConfig(config?: Partial<z.infer<typeof SearchBarConfigSchema>>) {
     if (config) {
-      updateModelFromJson(
-        this,
-        CommonStrata.definition,
-        config as never as JsonObject
-      );
+      this._config = SearchBarConfigSchema.parse({
+        ...this._config,
+        ...config
+      });
     }
     return this;
   }

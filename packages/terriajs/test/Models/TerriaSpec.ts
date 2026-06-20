@@ -1,12 +1,12 @@
 import { action, runInAction, toJS, when } from "mobx";
 import { http, HttpResponse } from "msw";
-import URI from "urijs";
 import buildModuleUrl from "terriajs-cesium/Source/Core/buildModuleUrl";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import RequestScheduler from "terriajs-cesium/Source/Core/RequestScheduler";
 import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import SplitDirection from "terriajs-cesium/Source/Scene/SplitDirection";
+import URI from "urijs";
 import hashEntity from "../../lib/Core/hashEntity";
 import Result from "../../lib/Core/Result";
 import TerriaError from "../../lib/Core/TerriaError";
@@ -35,6 +35,7 @@ import { buildShareLink } from "../../lib/ReactViews/Map/Panels/SharePanel/Build
 import SimpleCatalogItem from "../Helpers/SimpleCatalogItem";
 import { worker } from "../mocks/browser";
 
+import { ConfigStrata } from "../../lib/Models/Config/ConfigStrata";
 import configProxy from "../../wwwroot/test/init/configProxy.json";
 import serverConfig from "../../wwwroot/test/init/serverconfig.json";
 import storyJson from "../../wwwroot/test/stories/TerriaJS App/my-story.json";
@@ -523,7 +524,7 @@ describe("TerriaSpec", function () {
       beforeEach(function () {
         // These specs must run with a Terria constructed with "appBaseHref": "/"
         // to make the specs work with browser runner
-        terria.updateParameters({
+        terria.configParameters.update(ConfigStrata.definition, {
           storyRouteUrlPrefix: "test/stories/TerriaJS%20App/"
         });
 
