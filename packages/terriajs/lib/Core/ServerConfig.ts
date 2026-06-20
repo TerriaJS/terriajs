@@ -1,12 +1,21 @@
 import i18next from "i18next";
 import loadJson from "./loadJson";
 
+import type { ServerConfigResponse } from "terriajs-server";
+
 const DEFAULT_URL = "serverconfig/";
+
+export interface IServerConfig {
+  config: ServerConfigResponse | undefined;
+  init(
+    serverConfigUrl: string | undefined
+  ): Promise<ServerConfigResponse | undefined>;
+}
 
 /**
  * Provides information about the configuration of the Terria server, by querying /serverconfig
  */
-class ServerConfig {
+class ServerConfig implements IServerConfig {
   /**
    * Contains configuration information retrieved from the server. The attributes are defined by TerriaJS-Server but include:
    *   version: current version of server
@@ -17,9 +26,9 @@ class ServerConfig {
    *   shareUrlPrefixes: object defining share URL prefixes that can be resolved
    *   additionalFeedbackParameters: array of additional feedback parameters that can be used
    */
-  config: unknown;
+  config: ServerConfigResponse | undefined = undefined;
 
-  serverConfigUrl?: string;
+  private _serverConfigUrl?: string;
 
   /**
    * Initialises the object by fetching the configuration from the server. Note
@@ -29,19 +38,21 @@ class ServerConfig {
    * @param  serverConfigUrl Optional override URL.
    * @return Promise that resolves to the configuration object itself.
    */
-  async init(serverConfigUrl: string) {
+  async init(
+    serverConfigUrl: string | undefined
+  ): Promise<ServerConfigResponse | undefined> {
     if (this.config !== undefined) {
       return Promise.resolve(this.config);
     }
-    this.serverConfigUrl = serverConfigUrl ?? DEFAULT_URL;
+    this._serverConfigUrl = serverConfigUrl ?? DEFAULT_URL;
 
     try {
-      this.config = await loadJson(this.serverConfigUrl);
+      this.config = await loadJson(this._serverConfigUrl);
       return this.config;
     } catch {
       console.error(
         i18next.t("core.serverConfig.failedToGet", {
-          serverConfigUrl: this.serverConfigUrl
+          serverConfigUrl: this._serverConfigUrl
         })
       );
     }

@@ -46,7 +46,7 @@ export default async function sendFeedback(options: {
     };
     if (
       options.additionalParameters &&
-      terria.serverConfig.config &&
+      terria.serverConfig?.config &&
       terria.serverConfig.config.additionalFeedbackParameters
     ) {
       terria.serverConfig.config.additionalFeedbackParameters.forEach(

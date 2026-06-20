@@ -3,54 +3,85 @@ import { isJsonObject, JsonObject } from "../Core/Json";
 import loadJson from "../Core/loadJson";
 import loadWithXhr from "../Core/loadWithXhr";
 import TerriaError from "../Core/TerriaError";
+import { StartData } from "./InitSource";
 import Terria from "./Terria";
 
-export const DEFAULT_MAX_SHARE_SIZE = 200 * 1024; // 200 KB
+export const DEFAULT_MAX_SHARE_SIZE_BYTES = 200 * 1024; // 200 KB
+export const DEFAULT_MAX_SHARE_SIZE = "200kb";
+
+export interface IShareDataService {
+  /**
+   * @deprecated Use the constructor instead. This method is kept for backwards compatibility.
+   */
+  init(params: {
+    sharePrefix?: string;
+    shareMaxRequestSize?: string;
+    shareMaxRequestSizeBytes?: number;
+  }): void;
+  getShareToken: (shareData: StartData) => Promise<string>;
+  resolveData: (token: string) => Promise<JsonObject>;
+
+  get isUsable(): boolean;
+  get shareMaxRequestSize(): string | undefined;
+  get shareMaxRequestSizeBytes(): number | undefined;
+}
 
 interface ShareDataServiceOptions {
   terria: Terria;
   url?: string;
+  sharePrefix?: string;
+  shareMaxRequestSize?: string;
+  shareMaxRequestSizeBytes?: number;
 }
 
 /**
  * Interface to the terriajs-server service for creating short share links.
- * @param {*} options
- *
- * @alias ShareDataService
- * @constructor
  */
-export default class ShareDataService {
+export default class ShareDataService implements IShareDataService {
   readonly terria: Terria;
   url: string | undefined;
-  private _serverConfig: any;
+  private _sharePrefix?: string;
+  private _shareMaxRequestSize?: string;
+  private _shareMaxRequestSizeBytes?: number;
 
   constructor(options: ShareDataServiceOptions) {
     this.terria = options.terria;
     this.url = options.url;
+    this._sharePrefix = options.sharePrefix;
+    this._shareMaxRequestSize = options.shareMaxRequestSize;
+    this._shareMaxRequestSizeBytes = options.shareMaxRequestSizeBytes;
   }
 
-  init(serverConfig: any): void {
-    this.url = this.url ?? this.terria.configParameters.shareUrl ?? "share";
-    this._serverConfig = serverConfig;
+  /**
+   * @deprecated Use the constructor instead. This method is kept for backwards compatibility.
+   */
+  init(params: {
+    sharePrefix?: string;
+    shareMaxRequestSize?: string;
+    shareMaxRequestSizeBytes?: number;
+  }) {
+    this.url ??= this.terria.configParameters.shareUrl ?? "share";
+    this._sharePrefix ??= params.sharePrefix;
+
+    this._shareMaxRequestSize ??=
+      params.shareMaxRequestSize ?? DEFAULT_MAX_SHARE_SIZE;
+    this._shareMaxRequestSizeBytes ??=
+      params.shareMaxRequestSizeBytes ?? DEFAULT_MAX_SHARE_SIZE_BYTES;
   }
 
   get isUsable(): boolean {
     return (
-      (this.url !== undefined &&
-        typeof this._serverConfig === "object" &&
-        typeof this._serverConfig.newShareUrlPrefix === "string") ||
+      (this.url !== undefined && typeof this._sharePrefix === "string") ||
       this.url !== "share"
     );
   }
 
-  // get the raw string from serverConfig.shareMaxRequestSize
   get shareMaxRequestSize(): string | undefined {
-    return this._serverConfig.shareMaxRequestSize;
+    return this._shareMaxRequestSize;
   }
 
-  // get the parsed value in bytes from the server
   get shareMaxRequestSizeBytes(): number | undefined {
-    return this._serverConfig.shareMaxRequestSizeBytes;
+    return this._shareMaxRequestSizeBytes;
   }
 
   /**
@@ -58,7 +89,7 @@ export default class ShareDataService {
    * @param shareData JSON to store.
    * @return A promise for the token (which can later be resolved at /share/TOKEN).
    */
-  async getShareToken(shareData: any): Promise<string> {
+  async getShareToken(shareData: StartData): Promise<string> {
     if (!this.isUsable || !this.url) {
       throw TerriaError.from("`ShareDataService` is not usable");
     }

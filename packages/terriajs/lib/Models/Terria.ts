@@ -41,7 +41,7 @@ import {
 } from "../Core/Json";
 import { isLatLonHeight } from "../Core/LatLonHeight";
 import Result from "../Core/Result";
-import ServerConfig from "../Core/ServerConfig";
+import ServerConfig, { IServerConfig } from "../Core/ServerConfig";
 import TerriaError, {
   TerriaErrorOverrides,
   TerriaErrorSeverity
@@ -117,7 +117,7 @@ import NoViewer from "./NoViewer";
 import { RelatedMap } from "./RelatedMaps";
 import CatalogIndex from "./SearchProviders/CatalogIndex";
 import { SearchBarModel } from "./SearchProviders/SearchBarModel";
-import ShareDataService from "./ShareDataService";
+import ShareDataService, { IShareDataService } from "./ShareDataService";
 import { StoryVideoSettings } from "./StoryVideoSettings";
 import TimelineStack from "./TimelineStack";
 import { isViewerMode, setViewerMode } from "./ViewerMode";
@@ -456,7 +456,7 @@ interface StartOptions {
     configUrl?: string;
   }>;
   applicationUrl?: Location;
-  shareDataService?: ShareDataService;
+  shareDataService?: IShareDataService;
   errorService?: ErrorServiceProvider;
   /**
    * i18nOptions is explicitly a separate option from `languageConfiguration`,
@@ -728,8 +728,8 @@ export default class Terria {
     this.forceLoadInitSources.bind(this)
   );
 
-  @observable serverConfig: any; // TODO
-  @observable shareDataService: ShareDataService | undefined;
+  @observable serverConfig: IServerConfig | undefined;
+  @observable shareDataService: IShareDataService | undefined;
 
   /* Splitter controls */
   @observable showSplitter = false;
@@ -1136,7 +1136,12 @@ export default class Terria {
     );
     await this.initCorsProxy(this.configParameters, serverConfig);
     if (this.shareDataService && this.serverConfig.config) {
-      this.shareDataService.init(this.serverConfig.config);
+      this.shareDataService.init({
+        sharePrefix: this.serverConfig.config.newShareUrlPrefix,
+        shareMaxRequestSize: this.serverConfig.config.shareMaxRequestSize,
+        shareMaxRequestSizeBytes:
+          this.serverConfig.config.shareMaxRequestSizeBytes
+      });
     }
 
     // Create catalog index if catalogIndexUrl is set
