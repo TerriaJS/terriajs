@@ -1,28 +1,29 @@
-import "../../../SpecMain";
-import { reaction, runInAction } from "mobx";
 import i18next from "i18next";
+import { reaction, runInAction } from "mobx";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
+import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
+import HeadingPitchRoll from "terriajs-cesium/Source/Core/HeadingPitchRoll";
 import IonResource from "terriajs-cesium/Source/Core/IonResource";
+import Matrix3 from "terriajs-cesium/Source/Core/Matrix3";
+import Matrix4 from "terriajs-cesium/Source/Core/Matrix4";
+import Quaternion from "terriajs-cesium/Source/Core/Quaternion";
+import Cesium3DTileColorBlendMode from "terriajs-cesium/Source/Scene/Cesium3DTileColorBlendMode";
+import Cesium3DTileContent from "terriajs-cesium/Source/Scene/Cesium3DTileContent";
 import Cesium3DTileFeature from "terriajs-cesium/Source/Scene/Cesium3DTileFeature";
 import Cesium3DTileset from "terriajs-cesium/Source/Scene/Cesium3DTileset";
 import Cesium3DTileStyle from "terriajs-cesium/Source/Scene/Cesium3DTileStyle";
-import Cesium3DTileColorBlendMode from "terriajs-cesium/Source/Scene/Cesium3DTileColorBlendMode";
 import ShadowMode from "terriajs-cesium/Source/Scene/ShadowMode";
 import Cesium3DTilesCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/Cesium3DTilesCatalogItem";
+import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
 import createStratumInstance from "../../../../lib/Models/Definition/createStratumInstance";
 import Terria from "../../../../lib/Models/Terria";
-import Matrix4 from "terriajs-cesium/Source/Core/Matrix4";
+import {
+  FilterTraits,
+  OptionsTraits
+} from "../../../../lib/Traits/TraitsClasses/Cesium3dTilesTraits";
 import HeadingPitchRollTraits from "../../../../lib/Traits/TraitsClasses/HeadingPitchRollTraits";
 import LatLonHeightTraits from "../../../../lib/Traits/TraitsClasses/LatLonHeightTraits";
-import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
-import Quaternion from "terriajs-cesium/Source/Core/Quaternion";
-import Matrix3 from "terriajs-cesium/Source/Core/Matrix3";
-import HeadingPitchRoll from "terriajs-cesium/Source/Core/HeadingPitchRoll";
-import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
-import {
-  OptionsTraits,
-  FilterTraits
-} from "../../../../lib/Traits/TraitsClasses/Cesium3dTilesTraits";
+import "../../../SpecMain";
 
 describe("Cesium3DTilesCatalogItemSpec", function () {
   let item: Cesium3DTilesCatalogItem;
@@ -312,7 +313,7 @@ describe("Cesium3DTilesCatalogItemSpec", function () {
   });
 
   it("correctly builds `Feature` from picked Cesium3DTileFeature", async function () {
-    const picked = new Cesium3DTileFeature();
+    const picked = new Cesium3DTileFeature({} as Cesium3DTileContent, 0);
     spyOn(picked, "getPropertyIds").and.returnValue([]);
     const feature = await item.buildFeatureFromPickResult(
       Cartesian2.ZERO,
@@ -325,9 +326,9 @@ describe("Cesium3DTilesCatalogItemSpec", function () {
   });
 
   it("can change the visibility of a feature", function () {
-    const feature = new Cesium3DTileFeature();
+    const feature = new Cesium3DTileFeature({} as Cesium3DTileContent, 0);
     spyOn(feature, "getProperty").and.callFake((prop: string) => {
-      const props: any = { doorNumber: 10, color: "red" };
+      const props: Record<string, unknown> = { doorNumber: 10, color: "red" };
       return props[prop];
     });
     item.setTrait(CommonStrata.user, "featureIdProperties", [
