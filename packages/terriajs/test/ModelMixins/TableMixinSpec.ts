@@ -1,8 +1,10 @@
-import { http, HttpResponse } from "msw";
 import { runInAction } from "mobx";
+import { http, HttpResponse } from "msw";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
+import HorizontalOrigin from "terriajs-cesium/Source/Scene/HorizontalOrigin";
 import LabelStyle from "terriajs-cesium/Source/Scene/LabelStyle";
+import VerticalOrigin from "terriajs-cesium/Source/Scene/VerticalOrigin";
 import { getMakiIcon } from "../../lib/Map/Icons/Maki/MakiIcons";
 import { ImageryParts } from "../../lib/ModelMixins/MappableMixin";
 import CsvCatalogItem from "../../lib/Models/Catalog/CatalogItems/CsvCatalogItem";
@@ -12,7 +14,7 @@ import updateModelFromJson from "../../lib/Models/Definition/updateModelFromJson
 import TerriaFeature from "../../lib/Models/Feature/Feature";
 import { TerriaFeatureData } from "../../lib/Models/Feature/FeatureData";
 import Terria from "../../lib/Models/Terria";
-import { worker } from "../mocks/browser";
+import ScaleByDistanceTraits from "../../lib/Traits/TraitsClasses/ScaleByDistanceTraits";
 import TableColorStyleTraits from "../../lib/Traits/TraitsClasses/Table/ColorStyleTraits";
 import TableLabelStyleTraits, {
   EnumLabelSymbolTraits,
@@ -33,25 +35,24 @@ import TableTrailStyleTraits, {
   BinTrailSymbolTraits,
   EnumTrailSymbolTraits
 } from "../../lib/Traits/TraitsClasses/Table/TrailStyleTraits";
-import HorizontalOrigin from "terriajs-cesium/Source/Scene/HorizontalOrigin";
-import VerticalOrigin from "terriajs-cesium/Source/Scene/VerticalOrigin";
-import ScaleByDistanceTraits from "../../lib/Traits/TraitsClasses/ScaleByDistanceTraits";
-import LatLonValCsv from "../../wwwroot/test/csv/lat_lon_val.csv";
 import LatLonEnumCsv from "../../wwwroot/test/csv/lat_lon_enum.csv";
-import LatLonValCsvDuplicate from "../../wwwroot/test/csv/lat_lon_val_with_duplicate_row.csv";
 import LatLonEnumDateIdCsv from "../../wwwroot/test/csv/lat_lon_enum_date_id.csv";
 import LatLonEnumDateIdWithRegionCsv from "../../wwwroot/test/csv/lat_lon_enum_date_id_with_regions.csv";
+import LatLonValCsv from "../../wwwroot/test/csv/lat_lon_val.csv";
+import LatLonValCsvDuplicate from "../../wwwroot/test/csv/lat_lon_val_with_duplicate_row.csv";
+import { worker } from "../mocks/browser";
 
+import { ConfigStrata } from "../../lib/Models/Config/ConfigStrata";
+import regionIdsLgaName from "../../wwwroot/data/regionids/region_map-FID_LGA_2011_AUST_LGA_NAME11.json";
+import regionIdsLgaNameStates from "../../wwwroot/data/regionids/region_map-FID_LGA_2011_AUST_STE_NAME11.json";
+import regionIdsLgaCode from "../../wwwroot/data/regionids/region_map-FID_LGA_2015_AUST_LGA_CODE15.json";
+import regionIdsSte from "../../wwwroot/data/regionids/region_map-STE_2016_AUST_STE_NAME16.json";
+import regionMapping from "../../wwwroot/data/regionMapping.json";
+import BadDatesCsv from "../../wwwroot/test/csv/bad-dates.csv";
+import LegendDecimalPlacesCsv from "../../wwwroot/test/csv/legend-decimal-places.csv";
 import LgaWithDisambigCsv from "../../wwwroot/test/csv/lga_state_disambig.csv";
 import ParkingSensorDataCsv from "../../wwwroot/test/csv/parking-sensor-data.csv";
-import LegendDecimalPlacesCsv from "../../wwwroot/test/csv/legend-decimal-places.csv";
-import BadDatesCsv from "../../wwwroot/test/csv/bad-dates.csv";
-import regionMapping from "../../wwwroot/data/regionMapping.json";
 import additionalRegionMapping from "../../wwwroot/test/regionMapping/additionalRegion.json";
-import regionIdsSte from "../../wwwroot/data/regionids/region_map-STE_2016_AUST_STE_NAME16.json";
-import regionIdsLgaName from "../../wwwroot/data/regionids/region_map-FID_LGA_2011_AUST_LGA_NAME11.json";
-import regionIdsLgaCode from "../../wwwroot/data/regionids/region_map-FID_LGA_2015_AUST_LGA_CODE15.json";
-import regionIdsLgaNameStates from "../../wwwroot/data/regionids/region_map-FID_LGA_2011_AUST_STE_NAME11.json";
 
 const NUMBER_OF_REGION_MAPPING_TYPES = 155;
 
@@ -601,7 +602,7 @@ describe("TableMixin", function () {
         )
       );
 
-      terria.updateParameters({
+      terria.configParameters.update(ConfigStrata.definition, {
         regionMappingDefinitionsUrls: [
           "additionalRegion.json",
           "build/TerriaJS/data/regionMapping.json"
@@ -647,7 +648,7 @@ describe("TableMixin", function () {
         )
       );
 
-      terria.updateParameters({
+      terria.configParameters.update(ConfigStrata.definition, {
         regionMappingDefinitionsUrl: "build/TerriaJS/data/regionMapping.json",
         regionMappingDefinitionsUrls: [
           "additionalRegion.json",

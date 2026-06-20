@@ -1,10 +1,12 @@
-type TranslationKey = string;
+import * as z from "zod";
 
-export interface Term {
-  term: string;
-  content: string;
-  aliases?: string[] | TranslationKey;
-}
+export const TermSchema = z.object({
+  term: z.string(),
+  content: z.string(),
+  aliases: z.union([z.array(z.string()), z.string()]).optional()
+});
+
+export type Term = z.infer<typeof TermSchema>;
 
 export const defaultTerms: Term[] = [
   {

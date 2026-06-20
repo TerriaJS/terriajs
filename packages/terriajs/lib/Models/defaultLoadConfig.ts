@@ -1,9 +1,10 @@
 import { keyFromSelector } from "i18next";
 import queryToObject from "terriajs-cesium/Source/Core/queryToObject";
 import URI from "urijs";
-import { JsonObject, isJsonObject } from "../Core/Json";
+import { isJsonObject } from "../Core/Json";
 import TerriaError from "../Core/TerriaError";
 import loadJson5 from "../Core/loadJson5";
+import type { LoadConfigResponse } from "./Terria";
 
 const IS_DEVELOPMENT = process.env.NODE_ENV === "development";
 
@@ -16,7 +17,7 @@ const IS_DEVELOPMENT = process.env.NODE_ENV === "development";
 export const defaultLoadConfig = async (
   configUrl: string,
   configUrlHeaders?: { [key: string]: string }
-): Promise<{ config: JsonObject; baseUri: URI; configUrl: string }> => {
+): Promise<LoadConfigResponse> => {
   const hashProperties =
     typeof window !== "undefined"
       ? queryToObject(new URI(window.location).fragment())
@@ -30,8 +31,12 @@ export const defaultLoadConfig = async (
 
   const baseUri = new URI(configUrl).filename("");
 
-  const config = await loadJson5(configUrl, configUrlHeaders);
-  if (!isJsonObject(config, false)) {
+  const raw = await loadJson5<LoadConfigResponse["config"]>(
+    configUrl,
+    configUrlHeaders
+  );
+
+  if (!isJsonObject(raw, false)) {
     throw new TerriaError({
       title: {
         key: keyFromSelector(($) => $.models.terria.loadConfigErrorTitle)
@@ -40,9 +45,24 @@ export const defaultLoadConfig = async (
     });
   }
 
+  if (
+    raw.parameters &&
+    (typeof raw.parameters !== "object" ||
+      raw.parameters === null ||
+      Array.isArray(raw.parameters))
+  ) {
+    throw new TerriaError({
+      title: { key: "models.terria.loadConfigErrorTitle" },
+      message: `Config at "${configUrl}" has a "parameters" property that is not a JSON object.`
+    });
+  }
+
   return {
-    config,
-    baseUri,
-    configUrl
+    config: {
+      parameters: raw.parameters,
+      initializationUrls: raw.initializationUrls,
+      v7initializationUrls: raw.v7initializationUrls
+    },
+    baseUri
   };
 };

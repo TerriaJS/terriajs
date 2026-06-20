@@ -151,7 +151,7 @@ export const SearchBoxAndResults: FC<SearchBoxAndResultsProps> = observer(
                 overflow: hidden;
               `}
             >
-              {viewState.terria.searchBarModel.showSearchInCatalog &&
+              {viewState.terria.searchBarModel.config.showSearchInCatalog &&
                 searchState.catalogSearchProvider && (
                   <Box column paddedRatio={2}>
                     <SearchInDataCatalog

@@ -55,14 +55,14 @@ function LocationSearchProviderMixin<
     get flightDurationSeconds() {
       return (
         super.flightDurationSeconds ??
-        this.terria.searchBarModel.flightDurationSeconds
+        this.terria.searchBarModel.config.flightDurationSeconds
       );
     }
 
     get recommendedListLength() {
       return (
         super.recommendedListLength ??
-        this.terria.searchBarModel.recommendedListLength
+        this.terria.searchBarModel.config.recommendedListLength
       );
     }
   }
