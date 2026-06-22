@@ -23,7 +23,7 @@ WORKDIR /app
 COPY --from=build --chown=node:node /app/wwwroot wwwroot
 COPY --from=build --chown=node:node /app/node_modules node_modules
 COPY --from=build /app/serverconfig.json serverconfig.json
-COPY --from=build /app/index.js index.js
+COPY --from=build /app/index.ts index.ts
 COPY --from=build /app/package.json package.json
 COPY --from=build /app/version.js version.js
 

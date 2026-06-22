@@ -3,17 +3,27 @@ import GoogleAnalytics from "terriajs/lib/Core/Analytics/GoogleAnalytics";
 import registerCatalogMembers from "terriajs/lib/Models/Catalog/registerCatalogMembers";
 import registerSearchProviders from "terriajs/lib/Models/SearchProviders/registerSearchProviders";
 import ShareDataService from "terriajs/lib/Models/ShareDataService";
-import Terria from "terriajs/lib/Models/Terria";
+import Terria, { TerriaOptions } from "terriajs/lib/Models/Terria";
 import ViewState from "terriajs/lib/ReactViewModels/ViewState";
 import registerCustomComponentTypes from "terriajs/lib/ReactViews/Custom/registerCustomComponentTypes";
 import updateApplicationOnHashChange from "terriajs/lib/ViewModels/updateApplicationOnHashChange";
+//@ts-expect-error: no types for this module
 import updateApplicationOnMessageFromParentWindow from "terriajs/lib/ViewModels/updateApplicationOnMessageFromParentWindow";
 import loadPlugins from "./lib/Core/loadPlugins";
 import showGlobalDisclaimer from "./lib/Views/showGlobalDisclaimer";
 import plugins from "./plugins";
+import { createTerriaConfig } from "terriajs/lib/Models/Config/TerriaConfig";
+import { TerriaMapConfigOptions } from "./lib/Core/config";
 
-const terriaOptions = {
-  baseUrl: "build/TerriaJS"
+declare global {
+  interface Window {
+    viewState: ViewState;
+  }
+}
+
+const terriaOptions: TerriaOptions<typeof TerriaMapConfigOptions> = {
+  baseUrl: "build/TerriaJS",
+  config: createTerriaConfig(TerriaMapConfigOptions)
 };
 
 // we check exact match for development to reduce chances that production flag isn't set on builds(?)
@@ -93,12 +103,12 @@ export default terria
       if (fontImports) {
         const styleSheet = document.createElement("style");
         styleSheet.type = "text/css";
-        styleSheet.innerText = fontImports;
+        styleSheet.innerText = fontImports as string;
         document.head.appendChild(styleSheet);
       }
     } catch (e) {
       console.error(e);
-      console.error(e.stack);
+      console.error((e as Error).stack);
     }
   })
   .then(() => {
