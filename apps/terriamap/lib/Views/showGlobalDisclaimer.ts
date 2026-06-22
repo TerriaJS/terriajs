@@ -35,8 +35,8 @@ export default function showGlobalDisclaimer(viewState: ViewState) {
       confirmText: globalDisclaimer.buttonTitle || "Ok",
       denyText: globalDisclaimer.denyText || "Cancel",
       denyAction: globalDisclaimer.afterDenyLocation
-        ? function () {
-            window.location = globalDisclaimer.afterDenyLocation;
+        ? () => {
+            window.location = globalDisclaimer.afterDenyLocation as never;
           }
         : undefined,
       width: 600,
