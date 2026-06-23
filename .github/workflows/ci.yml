@@ -46,6 +46,4 @@ jobs:
           NODE_OPTIONS: --max_old_space_size=4096
 
       - name: Run tests using xvfb
-        uses: GabrielBB/xvfb-action@b706e4e27b14669b486812790492dc50ca16b465 # v1.7
-        with:
-          run: yarn workspace terriajs gulp test-firefox
+        run: xvfb-run --auto-servernum yarn workspace terriajs gulp test-firefox
