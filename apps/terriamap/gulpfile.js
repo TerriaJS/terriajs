@@ -280,9 +280,37 @@ function checkForDuplicateCesium() {
 
 gulp.task("terriajs-server", terriajsServerGulpTask(3001));
 
-gulp.task("build", gulp.series("copy-terriajs-assets", "build-app"));
-gulp.task("release", gulp.series("copy-terriajs-assets", "release-app"));
-gulp.task("watch", gulp.parallel("watch-terriajs-assets", "watch-app"));
+gulp.task("generate-i18n-types", function (done) {
+  var generateI18nTypes = require("terriajs/buildprocess/generateI18nTypes");
+  generateI18nTypes(getPackageRoot("terriajs"));
+  done();
+});
+
+gulp.task("watch-i18n-types", function () {
+  var generateI18nTypes = require("terriajs/buildprocess/generateI18nTypes");
+  var terriaDir = getPackageRoot("terriajs");
+  return gulp.watch(
+    [path.join(terriaDir, "wwwroot/languages/en/**/*.json")],
+    { ignoreInitial: false },
+    function (done) {
+      generateI18nTypes(terriaDir);
+      done();
+    }
+  );
+});
+
+gulp.task(
+  "build",
+  gulp.series("copy-terriajs-assets", "generate-i18n-types", "build-app")
+);
+gulp.task(
+  "release",
+  gulp.series("copy-terriajs-assets", "generate-i18n-types", "release-app")
+);
+gulp.task(
+  "watch",
+  gulp.parallel("watch-terriajs-assets", "watch-i18n-types", "watch-app")
+);
 // Simple task that waits for index.html then starts server
 gulp.task(
   "dev",

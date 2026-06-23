@@ -35,6 +35,7 @@ packages/terriajs/wwwroot/user-guide/
 
 # Generated files
 packages/terriajs/wwwroot/data/regionids
+packages/terriajs/lib/ThirdParty/i18n/resources.d.ts
 
 # Third party files
 packages/terriajs/wwwroot/third_party/
