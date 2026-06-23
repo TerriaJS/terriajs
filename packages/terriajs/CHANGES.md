@@ -3,6 +3,7 @@
 #### next release (8.x.x)
 
 - Upgraded `terriajs-cesium` to `26.0.0` and `terriajs-cesium-widgets` to `16.0.0`. We are now using cesium 1.142.
+- Upgraded terriajs-server to v5.0.0-alpha.3
 
 #### 8.12.4 - 2026-06-19
 
