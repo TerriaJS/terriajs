@@ -33,7 +33,7 @@ import { Analytics } from "../Core/Analytics/types";
 import AsyncLoader from "../Core/AsyncLoader";
 import Class from "../Core/Class";
 import CorsProxy from "../Core/CorsProxy";
-import JsonValue, {
+import {
   JsonArray,
   JsonObject,
   isJsonBoolean,
@@ -125,8 +125,8 @@ export { defaultLoadConfig };
 export interface LoadConfigResponse {
   config: {
     parameters: ConfigParameters;
-    initializationUrls: JsonValue | undefined;
-    v7initializationUrls: JsonValue | undefined;
+    initializationUrls: string[] | undefined;
+    v7initializationUrls: string[] | undefined;
   };
   baseUri: URI;
 }
@@ -191,6 +191,10 @@ export interface TerriaOptions<
 
   corsProxy?: CorsProxy;
 
+  /**
+   * Used to enable extending configuration schema definition from external source i.e. TerriaMap.
+   * @experimental
+   */
   config?: TerriaConfig<TSchema>;
 }
 
@@ -676,7 +680,10 @@ export default class Terria<
       this.modelIdShareKeysMap.set(id, [shareKey]);
   }
 
-  setupInitializationUrls(baseUri: URI, config: any): void {
+  setupInitializationUrls(
+    baseUri: URI,
+    config: LoadConfigResponse["config"]
+  ): void {
     const initializationUrls: string[] = config?.initializationUrls || [];
     const initSources: InitSource[] = initializationUrls.map((url) => ({
       name: `Init URL from config ${url}`,
@@ -758,10 +765,21 @@ export default class Terria<
       launchUrlForAnalytics ||= getUriWithoutPath(baseUri);
 
       runInAction(() => {
-        this.configParameters.update(
+        const updateResult = this.configParameters.update(
           ConfigStrata.definition,
           config.parameters
         );
+        if (typeof updateResult === "string") {
+          this.raiseErrorToUser(undefined, {
+            sender: this,
+            title: {
+              key: keyFromSelector(($) => $.models.terria.configParseErrorTitle)
+            },
+            message: `Config validation has failed, map might not function properly.\n<pre>${updateResult}</pre>`,
+            severity: TerriaErrorSeverity.Error,
+            showDetails: false
+          });
+        }
         this.setupInitializationUrls(baseUri, config);
       });
     } catch (error) {

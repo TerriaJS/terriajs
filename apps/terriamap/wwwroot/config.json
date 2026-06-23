@@ -2,16 +2,8 @@
   /* Names of init files (in wwwroot/init), without the .json extension, to load by default */
   "initializationUrls": ["simple"],
   "parameters": {
-    "googleUrlShortenerKey": null,
     "googleAnalyticsKey": null,
     "googleAnalyticsOptions": null,
-    // Log ConsoleAnalytics events to console
-    // logToConsole: true,
-    /* Text that appears at the bottom of the map */
-    "disclaimer": {
-      "text": "Disclaimer: This map must not be used for navigation or precise spatial analysis",
-      "url": ""
-    },
     /*
         // Text that will be added to any pages printed from your site.
         printDisclaimer:{
@@ -50,9 +42,6 @@
     "proj4ServiceBaseUrl": "proj4def/",
     // Or this
     "feedbackUrl": "feedback",
-    // Default mobile viewer mode when loading the map for the first time on mobile platforms.
-    // Options are: "3DTerrain", "3DSmooth", "2D"
-    "mobileDefaultViewerMode": "2d",
     // Enable experimental features, since its nice to have the bleeding edge.
     // Disable it if things go wrong with the experimental features or your users aren't robust to features which might change or disapear completly.
     "experimentalFeatures": true,

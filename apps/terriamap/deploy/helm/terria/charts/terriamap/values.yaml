@@ -12,9 +12,6 @@ clientConfig:
     - helm
     - terria
   parameters:
-    disclaimer:
-      text: "Disclaimer: This map must not be used for navigation or precise spatial analysis"
-      url: "http://google.com"
     globalDisclaimer:
       confirmationRequired: true
       buttonTitle: "I agree"

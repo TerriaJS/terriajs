@@ -1,6 +1,6 @@
 import * as z from "zod";
 
-export const RelatedMapSchema = z.object({
+export const RelatedMapSchema = z.strictObject({
   imageUrl: z.string(),
   url: z.string(),
   title: z.string(),

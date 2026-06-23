@@ -275,7 +275,6 @@ describe("TerriaSpec", function () {
           HttpResponse.json({
             initializationUrls: ["something"],
             parameters: {
-              applicationUrl: "https://application.url/",
               initFragmentPaths: [
                 "path/to/init/",
                 "https://hostname.com/some/other/path/"
@@ -370,7 +369,6 @@ describe("TerriaSpec", function () {
           HttpResponse.json({
             initializationUrls: ["something"],
             parameters: {
-              applicationUrl: "https://application.url/",
               initFragmentPaths: [
                 "path/to/init/",
                 "https://hostname.com/some/other/path/"

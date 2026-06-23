@@ -20,7 +20,7 @@ import Terria from "../Terria";
 import SearchProviderFactory from "./SearchProviderFactory";
 import upsertSearchProviderFromJson from "./upsertSearchProviderFromJson";
 
-export const SearchBarConfigSchema = z.object({
+export const SearchBarConfigSchema = z.strictObject({
   placeholder: z.string().default("translate#search.placeholder").meta({
     description:
       "Input text field placeholder shown when no input has been given yet. The string is translateable."
