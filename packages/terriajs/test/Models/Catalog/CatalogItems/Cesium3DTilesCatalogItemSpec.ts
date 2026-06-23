@@ -39,7 +39,7 @@ describe("Cesium3DTilesCatalogItemSpec", function () {
   it("should have a type and a typeName", function () {
     expect(Cesium3DTilesCatalogItem.type).toBe("3d-tiles");
     expect(item.type).toBe("3d-tiles");
-    expect(item.typeName).toBe(i18next.t("models.cesiumTerrain.name3D"));
+    expect(item.typeName).toBe(i18next.t(($) => $.models.cesiumTerrain.name3D));
   });
 
   it("supports zooming", function () {

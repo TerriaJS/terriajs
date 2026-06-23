@@ -86,7 +86,7 @@ export const Splitter: FC<ISplitterProps> = observer(
           onClick={(e) => e.preventDefault()}
           onMouseDown={startDrag}
           onTouchStart={startDrag}
-          title={t("splitterTool.title")}
+          title={t(($) => $.splitterTool.title)}
         >
           <StyledIcon
             glyph={GLYPHS.splitter}

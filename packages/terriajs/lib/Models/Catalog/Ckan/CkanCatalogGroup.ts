@@ -487,7 +487,7 @@ export default class CkanCatalogGroup extends UrlMixin(
   }
 
   get typeName() {
-    return i18next.t("models.ckan.nameServer");
+    return i18next.t(($) => $.models.ckan.nameServer);
   }
 
   @override
@@ -607,8 +607,8 @@ async function paginateThroughResults(
     !ckanServerResponse.help
   ) {
     throw networkRequestError({
-      title: i18next.t("models.ckan.errorLoadingTitle"),
-      message: i18next.t("models.ckan.errorLoadingMessage")
+      title: i18next.t(($) => $.models.ckan.errorLoadingTitle),
+      message: i18next.t(($) => $.models.ckan.errorLoadingMessage)
     });
   }
   let nextResultStart = 1001;

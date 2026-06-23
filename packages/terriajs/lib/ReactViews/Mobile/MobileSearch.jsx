@@ -67,7 +67,7 @@ class MobileSearch extends Component {
               clickAction={() => this.searchInDataCatalog()}
               icon={null}
               locationSearchText={searchState.locationSearchText}
-              name={t("search.search", {
+              name={t(($) => $.search.search, {
                 searchText: searchState.locationSearchText
               })}
               searchResultTheme={theme}

@@ -115,7 +115,7 @@ class MobileModalWindow extends Component {
                 className={Styles.doneButton}
                 onClick={() => this.onClearMobileUI()}
               >
-                {t("mobile.doneBtnText")}
+                {t(($) => $.mobile.doneBtnText)}
               </button>
             )}
             <button

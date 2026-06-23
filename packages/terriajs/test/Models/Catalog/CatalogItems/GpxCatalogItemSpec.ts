@@ -20,7 +20,7 @@ describe("GpxCatalogItem", function () {
 
   it("has type and type name", function () {
     expect(item.type).toBe("gpx");
-    expect(item.typeName).toBe(i18next.t("models.gpx.name"));
+    expect(item.typeName).toBe(i18next.t(($) => $.models.gpx.name));
   });
 
   it("supports zooming to extent", async function () {

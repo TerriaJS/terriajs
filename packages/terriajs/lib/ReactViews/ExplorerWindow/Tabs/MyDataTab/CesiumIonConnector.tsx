@@ -309,7 +309,7 @@ function CesiumIonConnector() {
   return (
     <>
       <label className={AddDataStyles.label}>
-        <strong>{t("addData.cesiumIonStep2")}</strong>
+        <strong>{t(($) => $.addData.cesiumIonStep2)}</strong>
       </label>
       {error && <WarningBox error={error} viewState={viewState} />}
       {loginToken.length > 0
@@ -391,7 +391,9 @@ function CesiumIonConnector() {
     return (
       <>
         <label className={AddDataStyles.label}>
-          <Trans i18nKey="addData.cesiumIonToken">Cesium ion token:</Trans>
+          <Trans i18nKey={($) => $.addData.cesiumIonToken}>
+            Cesium ion token:
+          </Trans>
         </label>
         {isLoadingTokens ? (
           <label className={AddDataStyles.label}>Loading token list...</label>
@@ -563,7 +565,7 @@ function CesiumIonConnector() {
                 ? () => viewState.terria.removeModelReferences(existingItem)
                 : addToMap.bind(undefined, viewState.terria, asset)
             }
-            title={t("catalogItem.add")}
+            title={t(($) => $.catalogItem.add)}
           >
             {existingItem ? (
               <Icon

@@ -175,7 +175,7 @@ function GltfMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
     @override
     get shortReport(): string | undefined {
       if (this.terria.currentViewer.type === "Leaflet") {
-        return i18next.t("models.commonModelErrors.3dTypeIn2dMode");
+        return i18next.t(($) => $.models.commonModelErrors["3dTypeIn2dMode"]);
       }
       return super.shortReport;
     }

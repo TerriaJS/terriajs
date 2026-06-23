@@ -77,8 +77,10 @@ class ArcGisServerStratum extends LoadableStratum(ArcGisCatalogGroupTraits) {
           (!arcgisServer.folders && !arcgisServer.services)
         ) {
           throw networkRequestError({
-            title: i18next.t("models.arcGisService.invalidServerTitle"),
-            message: i18next.t("models.arcGisService.invalidServerMessage")
+            title: i18next.t(($) => $.models.arcGisService.invalidServerTitle),
+            message: i18next.t(
+              ($) => $.models.arcGisService.invalidServerMessage
+            )
           });
         }
 
@@ -88,8 +90,12 @@ class ArcGisServerStratum extends LoadableStratum(ArcGisCatalogGroupTraits) {
       .catch(() => {
         throw networkRequestError({
           sender: catalogGroup,
-          title: i18next.t("models.arcGisService.groupNotAvailableTitle"),
-          message: i18next.t("models.arcGisService.groupNotAvailableMessage")
+          title: i18next.t(
+            ($) => $.models.arcGisService.groupNotAvailableTitle
+          ),
+          message: i18next.t(
+            ($) => $.models.arcGisService.groupNotAvailableMessage
+          )
         });
       });
   }
@@ -269,7 +275,7 @@ export default class ArcGisCatalogGroup extends UrlMixin(
   }
 
   get typeName() {
-    return i18next.t("models.arcGisService.name");
+    return i18next.t(($) => $.models.arcGisService.name);
   }
 
   @override

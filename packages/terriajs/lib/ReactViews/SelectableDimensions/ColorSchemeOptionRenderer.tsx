@@ -7,7 +7,7 @@ import { OptionRenderer } from "../../Models/SelectableDimensions/SelectableDime
 
 const Invalid: VFC<object> = () => {
   const { t } = useTranslation();
-  return <span>{t("selectableDimensions.invalid")}</span>;
+  return <span>{t(($) => $.selectableDimensions.invalid)}</span>;
 };
 
 /* The ramp and swatches functions are adapted from https://observablehq.com/@d3/color-schemes?collection=@d3/d3-scale-chromatic

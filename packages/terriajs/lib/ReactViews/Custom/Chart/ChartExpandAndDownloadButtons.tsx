@@ -169,11 +169,11 @@ const ExpandAndDownloadDropdowns = function (props: {
         options={props.sourceNames.map((name) => ({ name }))}
         theme={expandDropdownTheme}
       >
-        {props.t("chart.expand") + " ▾"}
+        {props.t(($) => $.chart.expand) + " ▾"}
       </Dropdown>
       {props.canDownload && (
         <Dropdown options={props.downloads} theme={downloadDropdownTheme}>
-          {props.t("chart.download") + " ▾"}
+          {props.t(($) => $.chart.download) + " ▾"}
         </Dropdown>
       )}
     </ExpandAndDownloadContainer>
@@ -189,7 +189,7 @@ const ExpandAndDownloadButtons = function (props: {
   return (
     <ExpandAndDownloadContainer>
       <ButtonChartExpand type="button" onClick={props.onExpand}>
-        {props.t("chart.expand")}
+        {props.t(($) => $.chart.expand)}
       </ButtonChartExpand>
       {props.downloadUrl && (
         <DownloadLink download href={props.downloadUrl}>

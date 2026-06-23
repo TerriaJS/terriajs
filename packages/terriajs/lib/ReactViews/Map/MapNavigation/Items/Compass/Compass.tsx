@@ -347,7 +347,7 @@ class Compass extends PureComponent<PropTypes, IStateTypes> {
     };
     const { t } = this.props;
     const active = this.state.active;
-    const description = t("compass.description");
+    const description = t(($) => $.compass.description);
     const showGuidance = !this.props.viewState.terria.getLocalProperty(
       COMPASS_LOCAL_PROPERTY_KEY
     );
@@ -386,7 +386,7 @@ class Compass extends PureComponent<PropTypes, IStateTypes> {
         </StyledCompassOuterRing>
 
         {/* "Center circle icon" */}
-        <StyledCompassInnerRing title={t("compass.title")}>
+        <StyledCompassInnerRing title={t(($) => $.compass.title)}>
           <StyledIcon
             fillColor={this.props.theme.darkWithOverlay}
             glyph={

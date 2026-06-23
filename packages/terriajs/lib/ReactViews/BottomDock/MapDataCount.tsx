@@ -32,10 +32,10 @@ const MapDataCount = observer(function (props: Props) {
   }).length;
   const hasMapData = numberOfDatasets !== 0;
   const mapDataText = hasMapData
-    ? t("countDatasets.mapDataState", {
+    ? t(($) => $.countDatasets.mapDataState, {
         count: numberOfDatasets
       })
-    : t("countDatasets.noMapDataEnabled");
+    : t(($) => $.countDatasets.noMapDataEnabled);
 
   return (
     <Box css={"flex-shrink 0.5;"}>

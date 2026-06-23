@@ -23,9 +23,9 @@ const ToolsPanel = observer(() => {
   return (
     <MenuPanel
       theme={dropdownTheme}
-      btnText={t("toolsPanel.btnText")}
+      btnText={t(($) => $.toolsPanel.btnText)}
       viewState={viewState}
-      btnTitle={t("toolsPanel.btnTitle")}
+      btnTitle={t(($) => $.toolsPanel.btnTitle)}
       onOpenChanged={setIsOpen}
       isOpen={isOpen}
       smallScreen={viewState.useSmallScreenInterface}

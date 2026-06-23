@@ -8,7 +8,7 @@ declare module "i18next" {
   interface CustomTypeOptions {
     // custom namespace type, if you changed it
     defaultNS: "translation";
-    enableSelector: "optimize";
+    enableSelector: true;
     returnObjects: false;
     allowObjectInHTMLChildren: true;
     // custom resources type

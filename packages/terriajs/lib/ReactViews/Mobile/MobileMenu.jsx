@@ -158,14 +158,14 @@ class MobileMenu extends Component {
           {this.props.showFeedback && (
             <MobileMenuItem>
               <MobileMenuItem.Button onClick={() => this.onFeedbackFormClick()}>
-                {t("feedback.feedbackBtnText")}
+                {t(($) => $.feedback.feedbackBtnText)}
               </MobileMenuItem.Button>
             </MobileMenuItem>
           )}
           {hasStories && (
             <MobileMenuItem>
               <MobileMenuItem.Button onClick={() => this.runStories()}>
-                {t("story.mobileViewStory", {
+                {t(($) => $.story.mobileViewStory, {
                   storiesLength: this.props.terria.stories.length
                 })}
               </MobileMenuItem.Button>

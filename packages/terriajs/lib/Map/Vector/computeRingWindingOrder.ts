@@ -18,7 +18,9 @@ export default function computeRingWindingOrder(ring: Point[]): WindingOrder {
     twiceArea += ring[i].x * (ring[i + 1].y - ring[i - 1].y);
   }
   if (isNaN(twiceArea)) {
-    throw new DeveloperError(i18next.t("map.computeRingWindingOrder.devError"));
+    throw new DeveloperError(
+      i18next.t(($) => $.map.computeRingWindingOrder.devError)
+    );
   }
   return twiceArea > 0.0
     ? WindingOrder.COUNTER_CLOCKWISE

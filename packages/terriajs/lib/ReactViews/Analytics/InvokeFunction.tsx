@@ -141,7 +141,7 @@ const InvokeFunction: FC<PropsType> = observer(({ previewed }) => {
           disabled={invalidParameters}
           onClick={runAnalysis}
         >
-          {t("analytics.runAnalysis")}
+          {t(($) => $.analytics.runAnalysis)}
         </Button>
       </Footer>
     </Wrapper>

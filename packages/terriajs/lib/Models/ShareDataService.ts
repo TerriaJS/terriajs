@@ -78,8 +78,8 @@ export default class ShareDataService {
       return json.id;
     } catch (error) {
       throw TerriaError.from(error, {
-        title: i18next.t("models.shareData.generateErrorTitle"),
-        message: i18next.t("models.shareData.generateErrorMessage"),
+        title: i18next.t(($) => $.models.shareData.generateErrorTitle),
+        message: i18next.t(($) => $.models.shareData.generateErrorMessage),
         importance: 1
       });
     }
@@ -106,15 +106,15 @@ export default class ShareDataService {
       const error: Error & { statusCode?: number } = e || {};
       if (error.statusCode === 404) {
         throw TerriaError.from(error, {
-          title: i18next.t("models.shareData.shareNotFoundTitle"),
-          message: i18next.t("models.shareData.shareNotFoundMessage"),
+          title: i18next.t(($) => $.models.shareData.shareNotFoundTitle),
+          message: i18next.t(($) => $.models.shareData.shareNotFoundMessage),
           importance: 1
         });
       }
 
       throw TerriaError.from(error, {
-        title: i18next.t("models.shareData.expandErrorTitle"),
-        message: i18next.t("models.shareData.expandErrorMessage", {
+        title: i18next.t(($) => $.models.shareData.expandErrorTitle),
+        message: i18next.t(($) => $.models.shareData.expandErrorMessage, {
           appName: this.terria.appName
         }),
         importance: 1

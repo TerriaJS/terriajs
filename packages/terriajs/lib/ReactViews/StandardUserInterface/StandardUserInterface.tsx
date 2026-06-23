@@ -105,10 +105,10 @@ const StandardUserInterfaceBase: FC<StandardUserInterfaceProps> = observer(
         !props.viewState.storyShown
       ) {
         props.terria.notificationState.addNotificationToQueue({
-          title: t("sui.notifications.title"),
-          message: t("sui.notifications.message"),
-          confirmText: t("sui.notifications.confirmText"),
-          denyText: t("sui.notifications.denyText"),
+          title: t(($) => $.sui.notifications.title),
+          message: t(($) => $.sui.notifications.message),
+          confirmText: t(($) => $.sui.notifications.confirmText),
+          denyText: t(($) => $.sui.notifications.denyText),
           confirmAction: action(() => {
             props.viewState.storyShown = true;
           }),
@@ -195,7 +195,7 @@ const StandardUserInterfaceBase: FC<StandardUserInterfaceProps> = observer(
                           <FullScreenButton
                             minified
                             animationDuration={250}
-                            btnText={t("addData.btnHide")}
+                            btnText={t(($) => $.addData.btnHide)}
                           />
                           <Branding version={props.version} />
                           <SidePanel />
@@ -217,7 +217,7 @@ const StandardUserInterfaceBase: FC<StandardUserInterfaceProps> = observer(
                   >
                     <FullScreenButton
                       minified={false}
-                      btnText={t("sui.showWorkbench", {
+                      btnText={t(($) => $.sui.showWorkbench, {
                         count: props.viewState.terria.workbench.items.length
                       })}
                       animationDuration={animationDuration}

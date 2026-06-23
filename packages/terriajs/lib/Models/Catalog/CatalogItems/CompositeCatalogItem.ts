@@ -32,7 +32,7 @@ export default class CompositeCatalogItem extends MappableMixin(
   }
 
   get typeName() {
-    return i18next.t("models.composite.name");
+    return i18next.t(($) => $.models.composite.name);
   }
 
   @computed

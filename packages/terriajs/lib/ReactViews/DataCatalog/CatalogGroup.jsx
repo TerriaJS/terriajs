@@ -56,8 +56,8 @@ const CatalogGroup = observer((props) => {
               className={Styles.addRemoveButton}
               title={
                 props.allItemsLoaded
-                  ? t("models.catalog.removeAll")
-                  : t("models.catalog.addAll")
+                  ? t(($) => $.models.catalog.removeAll)
+                  : t(($) => $.models.catalog.addAll)
               }
               // onClick should call addAll function which I should move out of GroupPreview to separate service file
               onClick={props.addRemoveButtonFunction}
@@ -113,7 +113,7 @@ const CatalogGroup = observer((props) => {
                 <button
                   type="button"
                   className={Styles.trashGroup}
-                  title={t("dataCatalog.groupRemove")}
+                  title={t(($) => $.dataCatalog.groupRemove)}
                   onClick={props.removeUserAddedData}
                 >
                   <Icon glyph={Icon.GLYPHS.trashcan} />

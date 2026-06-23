@@ -75,8 +75,8 @@ class KmlCatalogItem
       if (!kmlLoadInput) {
         throw networkRequestError({
           sender: this,
-          title: i18next.t("models.kml.unableToLoadItemTitle"),
-          message: i18next.t("models.kml.unableToLoadItemMessage")
+          title: i18next.t(($) => $.models.kml.unableToLoadItemTitle),
+          message: i18next.t(($) => $.models.kml.unableToLoadItemMessage)
         });
       }
       this._dataSource = await KmlDataSource.load(kmlLoadInput, {
@@ -89,8 +89,8 @@ class KmlCatalogItem
       throw networkRequestError(
         TerriaError.from(e, {
           sender: this,
-          title: i18next.t("models.kml.errorLoadingTitle"),
-          message: i18next.t("models.kml.errorLoadingMessage", {
+          title: i18next.t(($) => $.models.kml.errorLoadingTitle),
+          message: i18next.t(($) => $.models.kml.errorLoadingMessage, {
             appName: this.terria.appName
           })
         })

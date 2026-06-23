@@ -76,7 +76,7 @@ class DataPreview extends Component {
       return (
         <div className={Styles.previewInner}>
           <h3 className={Styles.h3}>{previewed.name}</h3>
-          <p>{t("preview.doesNotContainGeospatialData")}</p>
+          <p>{t(($) => $.preview.doesNotContainGeospatialData)}</p>
           <div className={Styles.previewChart}>
             {/* TODO: Show a preview chart
                 <Chart
@@ -112,9 +112,9 @@ class DataPreview extends Component {
     } else {
       return (
         <div className={Styles.placeholder}>
-          <p>{t("preview.selectToPreviewDataset")}</p>
+          <p>{t(($) => $.preview.selectToPreviewDataset)}</p>
           <p>
-            <Trans i18nKey="preview.selectMultipleDatasets">
+            <Trans i18nKey={($) => $.preview.selectMultipleDatasets}>
               <span>
                 Press <strong>Shift</strong> and click
               </span>
@@ -131,12 +131,12 @@ class DataPreview extends Component {
               <span>to add multiple datasets</span>
             </Trans>
           </p>
-          <p>- {t("preview.selectToPreviewSeparator")} -</p>
+          <p>- {t(($) => $.preview.selectToPreviewSeparator)} -</p>
           <button
             className={Styles.btnBackToMap}
             onClick={() => this.backToMap()}
           >
-            {t("preview.goToTheMap")}
+            {t(($) => $.preview.goToTheMap)}
           </button>
         </div>
       );

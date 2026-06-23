@@ -107,8 +107,8 @@ export class FeedbackService implements IFeedbackService {
         return {
           result: "SUCCESS",
           notification: {
-            title: i18next.t("models.feedback.thanksTitle"),
-            message: i18next.t("models.feedback.thanksMessage", {
+            title: i18next.t((t) => t.models.feedback.thanksTitle),
+            message: i18next.t((t) => t.models.feedback.thanksMessage, {
               appName: this._terria.appName
             })
           }
@@ -123,7 +123,7 @@ export class FeedbackService implements IFeedbackService {
 const createErrorResponse = (error: unknown): SendFeedbackResponse => ({
   result: "FAILED",
   error: TerriaError.from(error, {
-    title: i18next.t("models.feedback.unableToSendTitle"),
-    message: i18next.t("models.feedback.unableToSendTitle")
+    title: i18next.t((t) => t.models.feedback.unableToSendTitle),
+    message: i18next.t((t) => t.models.feedback.unableToSendTitle)
   })
 });

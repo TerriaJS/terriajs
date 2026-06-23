@@ -180,7 +180,7 @@ export class CkanDatasetStratum extends LoadableStratum(
     if (this.ckanDataset.license_url !== undefined) {
       outArray.push(
         createStratumInstance(InfoSectionTraits, {
-          name: i18next.t("models.ckan.licence"),
+          name: i18next.t(($) => $.models.ckan.licence),
           content: `[${
             this.ckanDataset.license_title || this.ckanDataset.license_url
           }](${this.ckanDataset.license_url})`
@@ -189,7 +189,7 @@ export class CkanDatasetStratum extends LoadableStratum(
     } else if (this.ckanDataset.license_title !== undefined) {
       outArray.push(
         createStratumInstance(InfoSectionTraits, {
-          name: i18next.t("models.ckan.licence"),
+          name: i18next.t(($) => $.models.ckan.licence),
           content: this.ckanDataset.license_title
         })
       );
@@ -197,15 +197,15 @@ export class CkanDatasetStratum extends LoadableStratum(
 
     outArray.push(
       createStratumInstance(InfoSectionTraits, {
-        name: i18next.t("models.ckan.contact_point"),
+        name: i18next.t(($) => $.models.ckan.contact_point),
         content: this.ckanDataset.contact_point
       }),
       createStratumInstance(InfoSectionTraits, {
-        name: i18next.t("models.ckan.datasetDescription"),
+        name: i18next.t(($) => $.models.ckan.datasetDescription),
         content: this.ckanDataset.notes
       }),
       createStratumInstance(InfoSectionTraits, {
-        name: i18next.t("models.ckan.author"),
+        name: i18next.t(($) => $.models.ckan.author),
         content: this.ckanDataset.author
       })
     );
@@ -213,7 +213,7 @@ export class CkanDatasetStratum extends LoadableStratum(
     if (this.ckanDataset.organization) {
       outArray.push(
         createStratumInstance(InfoSectionTraits, {
-          name: i18next.t("models.ckan.datasetCustodian"),
+          name: i18next.t(($) => $.models.ckan.datasetCustodian),
           content:
             this.ckanDataset.organization.description ||
             this.ckanDataset.organization.title
@@ -223,15 +223,15 @@ export class CkanDatasetStratum extends LoadableStratum(
 
     outArray.push(
       createStratumInstance(InfoSectionTraits, {
-        name: i18next.t("models.ckan.metadata_created"),
+        name: i18next.t(($) => $.models.ckan.metadata_created),
         content: prettifyDate(this.ckanDataset.metadata_created)
       }),
       createStratumInstance(InfoSectionTraits, {
-        name: i18next.t("models.ckan.metadata_modified"),
+        name: i18next.t(($) => $.models.ckan.metadata_modified),
         content: prettifyDate(this.ckanDataset.metadata_modified)
       }),
       createStratumInstance(InfoSectionTraits, {
-        name: i18next.t("models.ckan.update_freq"),
+        name: i18next.t(($) => $.models.ckan.update_freq),
         content: this.ckanDataset.update_freq
       })
     );
@@ -275,7 +275,7 @@ export default class CkanItemReference extends UrlMixin(
   }
 
   get typeName() {
-    return i18next.t("models.ckan.name");
+    return i18next.t(($) => $.models.ckan.name);
   }
 
   _ckanDataset: CkanDataset | undefined = undefined;

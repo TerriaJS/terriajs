@@ -55,9 +55,11 @@ class GetCapabilitiesStratum extends LoadableStratum(
   ): Promise<GetCapabilitiesStratum> {
     if (!isDefined(catalogItem.getCapabilitiesUrl)) {
       throw new TerriaError({
-        title: i18next.t("models.webMapTileServiceCatalogItem.missingUrlTitle"),
+        title: i18next.t(
+          ($) => $.models.webMapTileServiceCatalogItem.missingUrlTitle
+        ),
         message: i18next.t(
-          "models.webMapTileServiceCatalogItem.missingUrlMessage"
+          ($) => $.models.webMapTileServiceCatalogItem.missingUrlMessage
         )
       });
     }
@@ -106,7 +108,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
     const result: StratumFromTraits<InfoSectionTraits>[] = [
       createStratumInstance(InfoSectionTraits, {
         name: i18next.t(
-          "models.webMapTileServiceCatalogItem.getCapabilitiesUrl"
+          ($) => $.models.webMapTileServiceCatalogItem.getCapabilitiesUrl
         ),
         content: this.catalogItem.getCapabilitiesUrl
       })
@@ -124,7 +126,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
       result.push(
         createStratumInstance(InfoSectionTraits, {
           name: i18next.t(
-            "models.webMapTileServiceCatalogItem.dataDescription"
+            ($) => $.models.webMapTileServiceCatalogItem.dataDescription
           ),
           content: layer.Abstract
         })
@@ -146,7 +148,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
         result.push(
           createStratumInstance(InfoSectionTraits, {
             name: i18next.t(
-              "models.webMapTileServiceCatalogItem.serviceDescription"
+              ($) => $.models.webMapTileServiceCatalogItem.serviceDescription
             ),
             content: serviceIdentification.Abstract
           })
@@ -161,7 +163,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
         result.push(
           createStratumInstance(InfoSectionTraits, {
             name: i18next.t(
-              "models.webMapTileServiceCatalogItem.accessConstraints"
+              ($) => $.models.webMapTileServiceCatalogItem.accessConstraints
             ),
             content: serviceIdentification.AccessConstraints
           })
@@ -175,7 +177,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
       ) {
         result.push(
           createStratumInstance(InfoSectionTraits, {
-            name: i18next.t("models.webMapTileServiceCatalogItem.fees"),
+            name: i18next.t(($) => $.models.webMapTileServiceCatalogItem.fees),
             content: serviceIdentification.Fees
           })
         );
@@ -187,7 +189,9 @@ class GetCapabilitiesStratum extends LoadableStratum(
     if (serviceProvider) {
       result.push(
         createStratumInstance(InfoSectionTraits, {
-          name: i18next.t("models.webMapTileServiceCatalogItem.serviceContact"),
+          name: i18next.t(
+            ($) => $.models.webMapTileServiceCatalogItem.serviceContact
+          ),
           content: getServiceContactInformation(serviceProvider) || ""
         })
       );
@@ -197,10 +201,11 @@ class GetCapabilitiesStratum extends LoadableStratum(
       result.push(
         createStratumInstance(InfoSectionTraits, {
           name: i18next.t(
-            "models.webMapTileServiceCatalogItem.noUsableTileMatrixTitle"
+            ($) => $.models.webMapTileServiceCatalogItem.noUsableTileMatrixTitle
           ),
           content: i18next.t(
-            "models.webMapTileServiceCatalogItem.noUsableTileMatrixMessage"
+            ($) =>
+              $.models.webMapTileServiceCatalogItem.noUsableTileMatrixMessage
           )
         })
       );
@@ -211,25 +216,29 @@ class GetCapabilitiesStratum extends LoadableStratum(
   @computed
   get infoSectionOrder(): string[] {
     return [
-      i18next.t("preview.disclaimer"),
-      i18next.t("models.webMapTileServiceCatalogItem.noUsableTileMatrixTitle"),
-      i18next.t("description.name"),
-      i18next.t("preview.datasetDescription"),
-      i18next.t("models.webMapTileServiceCatalogItem.dataDescription"),
-      i18next.t("preview.serviceDescription"),
-      i18next.t("models.webMapTileServiceCatalogItem.serviceDescription"),
-      i18next.t("preview.resourceDescription"),
-      i18next.t("preview.licence"),
-      i18next.t("preview.accessConstraints"),
-      i18next.t("models.webMapTileServiceCatalogItem.accessConstraints"),
-      i18next.t("models.webMapTileServiceCatalogItem.fees"),
-      i18next.t("preview.author"),
-      i18next.t("preview.contact"),
-      i18next.t("models.webMapTileServiceCatalogItem.serviceContact"),
-      i18next.t("preview.created"),
-      i18next.t("preview.modified"),
-      i18next.t("preview.updateFrequency"),
-      i18next.t("models.webMapTileServiceCatalogItem.getCapabilitiesUrl")
+      i18next.t(($) => $.preview.disclaimer),
+      i18next.t(
+        ($) => $.models.webMapTileServiceCatalogItem.noUsableTileMatrixTitle
+      ),
+      i18next.t(($) => $.description.name),
+      i18next.t(($) => $.preview.datasetDescription),
+      i18next.t(($) => $.models.webMapTileServiceCatalogItem.dataDescription),
+      i18next.t(($) => $.preview.serviceDescription),
+      i18next.t(
+        ($) => $.models.webMapTileServiceCatalogItem.serviceDescription
+      ),
+      i18next.t(($) => $.preview.resourceDescription),
+      i18next.t(($) => $.preview.licence),
+      i18next.t(($) => $.preview.accessConstraints),
+      i18next.t(($) => $.models.webMapTileServiceCatalogItem.accessConstraints),
+      i18next.t(($) => $.models.webMapTileServiceCatalogItem.fees),
+      i18next.t(($) => $.preview.author),
+      i18next.t(($) => $.preview.contact),
+      i18next.t(($) => $.models.webMapTileServiceCatalogItem.serviceContact),
+      i18next.t(($) => $.preview.created),
+      i18next.t(($) => $.preview.modified),
+      i18next.t(($) => $.preview.updateFrequency),
+      i18next.t(($) => $.models.webMapTileServiceCatalogItem.getCapabilitiesUrl)
     ];
   }
 
@@ -237,9 +246,9 @@ class GetCapabilitiesStratum extends LoadableStratum(
   get shortReport() {
     return !isDefined(this.catalogItem.tileMatrixSet)
       ? `${i18next.t(
-          "models.webMapTileServiceCatalogItem.noUsableTileMatrixTitle"
+          ($) => $.models.webMapTileServiceCatalogItem.noUsableTileMatrixTitle
         )}: ${i18next.t(
-          "models.webMapTileServiceCatalogItem.noUsableTileMatrixMessage"
+          ($) => $.models.webMapTileServiceCatalogItem.noUsableTileMatrixMessage
         )}`
       : undefined;
   }
@@ -440,7 +449,7 @@ class WebMapTileServiceCatalogItem extends MappableMixin(
 
   // hide elements in the info section which might show information about the datasource
   _sourceInfoItemNames = [
-    i18next.t("models.webMapTileServiceCatalogItem.getCapabilitiesUrl")
+    i18next.t(($) => $.models.webMapTileServiceCatalogItem.getCapabilitiesUrl)
   ];
 
   static readonly type = "wmts";

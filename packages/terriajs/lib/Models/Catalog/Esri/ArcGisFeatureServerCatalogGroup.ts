@@ -83,18 +83,20 @@ export class FeatureServerStratum extends LoadableStratum(
     return [
       createStratumInstance(InfoSectionTraits, {
         name: i18next.t(
-          "models.arcGisFeatureServerCatalogGroup.serviceDescription"
+          ($) => $.models.arcGisFeatureServerCatalogGroup.serviceDescription
         ),
         content: this._featureServer.serviceDescription
       }),
       createStratumInstance(InfoSectionTraits, {
         name: i18next.t(
-          "models.arcGisFeatureServerCatalogGroup.dataDescription"
+          ($) => $.models.arcGisFeatureServerCatalogGroup.dataDescription
         ),
         content: this._featureServer.description
       }),
       createStratumInstance(InfoSectionTraits, {
-        name: i18next.t("models.arcGisFeatureServerCatalogGroup.copyrightText"),
+        name: i18next.t(
+          ($) => $.models.arcGisFeatureServerCatalogGroup.copyrightText
+        ),
         content: this._featureServer.copyrightText
       })
     ];
@@ -132,10 +134,12 @@ export class FeatureServerStratum extends LoadableStratum(
         if (!featureServer || !featureServer.layers) {
           throw networkRequestError({
             title: i18next.t(
-              "models.arcGisFeatureServerCatalogGroup.invalidServiceTitle"
+              ($) =>
+                $.models.arcGisFeatureServerCatalogGroup.invalidServiceTitle
             ),
             message: i18next.t(
-              "models.arcGisFeatureServerCatalogGroup.invalidServiceMessage"
+              ($) =>
+                $.models.arcGisFeatureServerCatalogGroup.invalidServiceMessage
             )
           });
         }
@@ -147,10 +151,12 @@ export class FeatureServerStratum extends LoadableStratum(
         throw networkRequestError({
           sender: catalogGroup,
           title: i18next.t(
-            "models.arcGisFeatureServerCatalogGroup.groupNotAvailableTitle"
+            ($) =>
+              $.models.arcGisFeatureServerCatalogGroup.groupNotAvailableTitle
           ),
           message: i18next.t(
-            "models.arcGisFeatureServerCatalogGroup.groupNotAvailableMessage"
+            ($) =>
+              $.models.arcGisFeatureServerCatalogGroup.groupNotAvailableMessage
           )
         });
       });
@@ -238,7 +244,7 @@ export default class ArcGisFeatureServerCatalogGroup extends UrlMixin(
   }
 
   get typeName() {
-    return i18next.t("models.arcGisFeatureServerCatalogGroup.name");
+    return i18next.t(($) => $.models.arcGisFeatureServerCatalogGroup.name);
   }
 
   protected forceLoadMetadata(): Promise<void> {

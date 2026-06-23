@@ -148,8 +148,8 @@ class ToolErrorBoundary extends Component<
     const { terria, toolName, t } = this.props;
     terria.raiseErrorToUser(
       new TerriaError({
-        title: t("tool.loadingError.title", { toolName }),
-        message: t("tool.loadingError.message")
+        title: t(($) => $.tool.loadingError.title, { toolName }),
+        message: t(($) => $.tool.loadingError.message)
       })
     );
     this.setState({ hasError: true });

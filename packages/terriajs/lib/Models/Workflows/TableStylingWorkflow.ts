@@ -149,15 +149,15 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
       options: filterOutUndefined([
         {
           text: this.showAdvancedOptions
-            ? i18next.t("models.tableStyling.hideAdvancedOptions")
-            : i18next.t("models.tableStyling.showAdvancedOptions"),
+            ? i18next.t(($) => $.models.tableStyling.hideAdvancedOptions)
+            : i18next.t(($) => $.models.tableStyling.showAdvancedOptions),
           onSelect: action(() => {
             this.showAdvancedOptions = !this.showAdvancedOptions;
           })
         },
         this.showAdvancedOptions
           ? {
-              text: i18next.t("models.tableStyling.copyUserStratum"),
+              text: i18next.t(($) => $.models.tableStyling.copyUserStratum),
               onSelect: () => {
                 const stratum = JSON.stringify(
                   this.item.strata.get(CommonStrata.user)
@@ -182,7 +182,7 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
   }
 
   get name() {
-    return i18next.t("models.tableStyling.name");
+    return i18next.t(($) => $.models.tableStyling.name);
   }
 
   get icon() {
@@ -191,7 +191,7 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
 
   get footer() {
     return {
-      buttonText: i18next.t("models.tableStyling.reset"),
+      buttonText: i18next.t(($) => $.models.tableStyling.reset),
       /** Delete all user strata values for TableColumnTraits and TableStyleTraits for the current activeStyle */
       onClick: action(() => {
         this.getTableColumnTraits(CommonStrata.user)?.strata.delete(
@@ -490,14 +490,14 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
       type: "group",
       id: "data",
 
-      name: i18next.t("models.tableStyling.data.name"),
+      name: i18next.t(($) => $.models.tableStyling.data.name),
       selectableDimensions: filterOutUndefined([
         {
           type: "select",
           id: "dataset",
 
           name: i18next.t(
-            "models.tableStyling.data.selectableDimensions.dataset.name"
+            ($) => $.models.tableStyling.data.selectableDimensions.dataset.name
           ),
           selectedId: this.item.uniqueId,
 
@@ -536,7 +536,8 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
           id: "table-style",
 
           name: i18next.t(
-            "models.tableStyling.data.selectableDimensions.tableStyle.name"
+            ($) =>
+              $.models.tableStyling.data.selectableDimensions.tableStyle.name
           ),
           selectedId: this.tableStyle.id,
           options: this.item.tableStyles.map((style) => ({
@@ -558,7 +559,9 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
           id: "table-style-type",
 
           name: i18next.t(
-            "models.tableStyling.data.selectableDimensions.tableStyleType.name"
+            ($) =>
+              $.models.tableStyling.data.selectableDimensions.tableStyleType
+                .name
           ),
           selectedId: this.styleType,
           options: filterOutUndefined([
@@ -566,7 +569,9 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
               id: "fill",
 
               name: i18next.t(
-                "models.tableStyling.data.selectableDimensions.tableStyleType.options.fill.name"
+                ($) =>
+                  $.models.tableStyling.data.selectableDimensions.tableStyleType
+                    .options.fill.name
               )
             },
             showPointSize
@@ -574,7 +579,9 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
                   id: "point-size",
 
                   name: i18next.t(
-                    "models.tableStyling.data.selectableDimensions.tableStyleType.options.pointSize.name"
+                    ($) =>
+                      $.models.tableStyling.data.selectableDimensions
+                        .tableStyleType.options.pointSize.name
                   )
                 }
               : undefined,
@@ -583,7 +590,9 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
                   id: "point",
 
                   name: i18next.t(
-                    "models.tableStyling.data.selectableDimensions.tableStyleType.options.point.name"
+                    ($) =>
+                      $.models.tableStyling.data.selectableDimensions
+                        .tableStyleType.options.point.name
                   )
                 }
               : undefined,
@@ -591,7 +600,9 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
               id: "outline",
 
               name: i18next.t(
-                "models.tableStyling.data.selectableDimensions.tableStyleType.options.outline.name"
+                ($) =>
+                  $.models.tableStyling.data.selectableDimensions.tableStyleType
+                    .options.outline.name
               )
             },
             showLabelStyles
@@ -599,7 +610,9 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
                   id: "label",
 
                   name: i18next.t(
-                    "models.tableStyling.data.selectableDimensions.tableStyleType.options.label.name"
+                    ($) =>
+                      $.models.tableStyling.data.selectableDimensions
+                        .tableStyleType.options.label.name
                   )
                 }
               : undefined,
@@ -608,7 +621,9 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
                   id: "trail",
 
                   name: i18next.t(
-                    "models.tableStyling.data.selectableDimensions.tableStyleType.options.trail.name"
+                    ($) =>
+                      $.models.tableStyling.data.selectableDimensions
+                        .tableStyleType.options.trail.name
                   )
                 }
               : undefined
@@ -654,7 +669,7 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
       type: "group",
       id: "fill",
 
-      name: i18next.t("models.tableStyling.fill.name"),
+      name: i18next.t(($) => $.models.tableStyling.fill.name),
       selectableDimensions: filterOutUndefined([
         // Show "Variable" selector to pick colorColumn if tableStyle ID is different from colorColumn ID
         // OR if we are in advanced mode
@@ -665,7 +680,9 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
               id: "table-color-column",
 
               name: i18next.t(
-                "models.tableStyling.fill.selectableDimensions.tableColorColumn.name"
+                ($) =>
+                  $.models.tableStyling.fill.selectableDimensions
+                    .tableColorColumn.name
               ),
               selectedId: this.tableStyle.colorColumn?.name,
               options: this.item.tableColumns.map((col) => ({
@@ -705,7 +722,8 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
               id: "data-type",
 
               name: i18next.t(
-                "models.tableStyling.fill.selectableDimensions.dataType.name"
+                ($) =>
+                  $.models.tableStyling.fill.selectableDimensions.dataType.name
               ),
               options: Object.keys(TableColumnType)
                 .filter((type) => type.length > 1)
@@ -729,18 +747,22 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
               id: "type",
 
               name: i18next.t(
-                "models.tableStyling.fill.selectableDimensions.type.name"
+                ($) => $.models.tableStyling.fill.selectableDimensions.type.name
               ),
 
               undefinedLabel: i18next.t(
-                "models.tableStyling.fill.selectableDimensions.type.undefinedLabel"
+                ($) =>
+                  $.models.tableStyling.fill.selectableDimensions.type
+                    .undefinedLabel
               ),
               options: filterOutUndefined([
                 {
                   id: "no-style",
 
                   name: i18next.t(
-                    "models.tableStyling.fill.selectableDimensions.type.options.noStyle.name"
+                    ($) =>
+                      $.models.tableStyling.fill.selectableDimensions.type
+                        .options.noStyle.name
                   )
                 },
                 ...(this.tableStyle.colorColumn.type === TableColumnType.scalar
@@ -749,28 +771,36 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
                         id: "sequential-continuous",
 
                         name: i18next.t(
-                          "models.tableStyling.fill.selectableDimensions.type.options.sequentialContinuous.name"
+                          ($) =>
+                            $.models.tableStyling.fill.selectableDimensions.type
+                              .options.sequentialContinuous.name
                         )
                       },
                       {
                         id: "sequential-discrete",
 
                         name: i18next.t(
-                          "models.tableStyling.fill.selectableDimensions.type.options.sequentialDiscrete.name"
+                          ($) =>
+                            $.models.tableStyling.fill.selectableDimensions.type
+                              .options.sequentialDiscrete.name
                         )
                       },
                       {
                         id: "diverging-continuous",
 
                         name: i18next.t(
-                          "models.tableStyling.fill.selectableDimensions.type.options.divergingContinuous.name"
+                          ($) =>
+                            $.models.tableStyling.fill.selectableDimensions.type
+                              .options.divergingContinuous.name
                         )
                       },
                       {
                         id: "diverging-discrete",
 
                         name: i18next.t(
-                          "models.tableStyling.fill.selectableDimensions.type.options.divergingDiscrete.name"
+                          ($) =>
+                            $.models.tableStyling.fill.selectableDimensions.type
+                              .options.divergingDiscrete.name
                         )
                       }
                     ]
@@ -779,7 +809,9 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
                   id: "qualitative",
 
                   name: i18next.t(
-                    "models.tableStyling.fill.selectableDimensions.type.options.qualitative.name"
+                    ($) =>
+                      $.models.tableStyling.fill.selectableDimensions.type
+                        .options.qualitative.name
                   )
                 },
                 // Add options for "custom" color palettes if we are in "custom-qualitative" or "custom-discrete" mode
@@ -788,7 +820,9 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
                       id: "custom-qualitative",
 
                       name: i18next.t(
-                        "models.tableStyling.fill.selectableDimensions.type.options.customQualitative.name"
+                        ($) =>
+                          $.models.tableStyling.fill.selectableDimensions.type
+                            .options.customQualitative.name
                       )
                     }
                   : undefined,
@@ -797,7 +831,9 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
                       id: "custom-discrete",
 
                       name: i18next.t(
-                        "models.tableStyling.fill.selectableDimensions.type.options.customDiscrete.name"
+                        ($) =>
+                          $.models.tableStyling.fill.selectableDimensions.type
+                            .options.customDiscrete.name
                       )
                     }
                   : undefined
@@ -814,7 +850,7 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
           id: "scheme",
 
           name: i18next.t(
-            "models.tableStyling.fill.selectableDimensions.scheme.name"
+            ($) => $.models.tableStyling.fill.selectableDimensions.scheme.name
           ),
 
           selectedId:
@@ -858,7 +894,9 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
               id: "number-of-bins",
 
               name: i18next.t(
-                "models.tableStyling.fill.selectableDimensions.numberOfBins.name"
+                ($) =>
+                  $.models.tableStyling.fill.selectableDimensions.numberOfBins
+                    .name
               ),
               allowUndefined: true,
               min:
@@ -899,7 +937,7 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
       type: "numeric",
       id: "min",
 
-      name: i18next.t("models.tableStyling.min.name"),
+      name: i18next.t(($) => $.models.tableStyling.min.name),
       max: this.tableStyle.tableColorMap.maximumValue,
       value: this.tableStyle.tableColorMap.minimumValue,
       setDimensionValue: (stratumId, value) => {
@@ -928,7 +966,7 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
       type: "group",
       id: "display-range",
 
-      name: i18next.t("models.tableStyling.displayRange.name"),
+      name: i18next.t(($) => $.models.tableStyling.displayRange.name),
       isOpen: false,
       selectableDimensions: filterOutUndefined([
         this.minimumValueSelectableDim,
@@ -937,7 +975,8 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
           id: "max",
 
           name: i18next.t(
-            "models.tableStyling.displayRange.selectableDimensions.max.name"
+            ($) =>
+              $.models.tableStyling.displayRange.selectableDimensions.max.name
           ),
           min: this.tableStyle.tableColorMap.minimumValue,
           value: this.tableStyle.tableColorMap.maximumValue,
@@ -961,7 +1000,7 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
       type: "group",
       id: "bins",
 
-      name: i18next.t("models.tableStyling.bins.name"),
+      name: i18next.t(($) => $.models.tableStyling.bins.name),
       isOpen: false,
       selectableDimensions: [
         ...this.tableStyle.tableColorMap.binMaximums
@@ -970,33 +1009,43 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
               ({
                 type: "group",
                 id: `bin-${idx}-start`,
+
                 name: getColorPreview(
                   this.tableStyle.tableColorMap.binColors[idx] ?? "#aaa",
                   i18next.t(
-                    "models.tableStyling.bins.selectableDimensions.start.name",
+                    ($) =>
+                      $.models.tableStyling.bins.selectableDimensions.start
+                        .name,
                     {
-                      value1:
-                        idx === 0
-                          ? this.minimumValueSelectableDim.value
-                          : this.tableStyle.tableColorMap.binMaximums[idx - 1],
+                      value1: (idx === 0
+                        ? this.minimumValueSelectableDim.value
+                        : this.tableStyle.tableColorMap.binMaximums[
+                            idx - 1
+                          ]) as number,
+
                       value2: bin
                     }
                   )
                 ),
+
                 isOpen: this.openBinIndex.get("fill") === idx,
+
                 onToggle: (open) => {
                   if (open && this.openBinIndex.get("fill") !== idx) {
                     runInAction(() => this.openBinIndex.set("fill", idx));
                     return true;
                   }
                 },
+
                 selectableDimensions: [
                   {
                     type: "color",
                     id: `bin-${idx}-color`,
 
                     name: i18next.t(
-                      "models.tableStyling.bins.selectableDimensions.start.selectableDimensions.color.name"
+                      ($) =>
+                        $.models.tableStyling.bins.selectableDimensions.start
+                          .selectableDimensions.color.name
                     ),
                     value: this.tableStyle.tableColorMap.binColors[idx],
                     setDimensionValue: (stratumId, value) => {
@@ -1019,7 +1068,9 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
                         id: `bin-${idx}-start`,
 
                         name: i18next.t(
-                          "models.tableStyling.bins.selectableDimensions.start.selectableDimensions.start.name"
+                          ($) =>
+                            $.models.tableStyling.bins.selectableDimensions
+                              .start.selectableDimensions.start.name
                         ),
                         value:
                           this.tableStyle.tableColorMap.binMaximums[idx - 1],
@@ -1036,7 +1087,9 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
                     id: `bin-${idx}-stop`,
 
                     name: i18next.t(
-                      "models.tableStyling.bins.selectableDimensions.start.selectableDimensions.stop.name"
+                      ($) =>
+                        $.models.tableStyling.bins.selectableDimensions.start
+                          .selectableDimensions.stop.name
                     ),
                     value: bin,
                     setDimensionValue: (stratumId, value) => {
@@ -1061,7 +1114,7 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
       type: "group",
       id: "colors",
 
-      name: i18next.t("models.tableStyling.colors.name"),
+      name: i18next.t(($) => $.models.tableStyling.colors.name),
       isOpen: false,
       selectableDimensions: filterOutUndefined([
         ...this.tableStyle.tableColorMap.enumColors.map((enumCol, idx) => {
@@ -1083,7 +1136,8 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
                 id: `enum-${idx}-color`,
 
                 name: i18next.t(
-                  "models.tableStyling.colors.selectableDimensions.color.name"
+                  ($) =>
+                    $.models.tableStyling.colors.selectableDimensions.color.name
                 ),
                 value: enumCol.color,
                 setDimensionValue: (stratumId, value) => {
@@ -1096,7 +1150,8 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
                 id: `enum-${idx}-value`,
 
                 name: i18next.t(
-                  "models.tableStyling.colors.selectableDimensions.value.name"
+                  ($) =>
+                    $.models.tableStyling.colors.selectableDimensions.value.name
                 ),
                 selectedId: enumCol.value,
                 // Find unique column values which don't already have an enumCol
@@ -1122,7 +1177,9 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
                 id: `enum-${idx}-remove`,
 
                 value: i18next.t(
-                  "models.tableStyling.colors.selectableDimensions.remove.value"
+                  ($) =>
+                    $.models.tableStyling.colors.selectableDimensions.remove
+                      .value
                 ),
                 setDimensionValue: (stratumId) => {
                   this.colorSchemeType = "custom-qualitative";
@@ -1145,7 +1202,8 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
               id: `enum-add`,
 
               value: i18next.t(
-                "models.tableStyling.colors.selectableDimensions.add.value"
+                ($) =>
+                  $.models.tableStyling.colors.selectableDimensions.add.value
               ),
               setDimensionValue: (stratumId) => {
                 this.colorSchemeType = "custom-qualitative";
@@ -1193,7 +1251,7 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
       type: "color",
       id: `null-color`,
 
-      name: i18next.t("models.tableStyling.nullColor.name"),
+      name: i18next.t(($) => $.models.tableStyling.nullColor.name),
       value: this.tableStyle.colorTraits.nullColor,
       allowUndefined: true,
       setDimensionValue: (stratumId, value) => {
@@ -1211,7 +1269,7 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
       type: "color",
       id: `outlier-color`,
 
-      name: i18next.t("models.tableStyling.outlierColor.name"),
+      name: i18next.t(($) => $.models.tableStyling.outlierColor.name),
       allowUndefined: true,
       value:
         this.tableStyle.colorTraits.outlierColor ??
@@ -1236,7 +1294,7 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
       type: "group",
       id: "additional-colors",
 
-      name: i18next.t("models.tableStyling.additionalColors.name"),
+      name: i18next.t(($) => $.models.tableStyling.additionalColors.name),
       // Open group by default is no activeStyle is selected
       isOpen: !this.item.activeStyle || this.colorSchemeType === "no-style",
       selectableDimensions: filterOutUndefined([
@@ -1246,7 +1304,9 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
               id: `region-color`,
 
               name: i18next.t(
-                "models.tableStyling.additionalColors.selectableDimensions.regionColor.name"
+                ($) =>
+                  $.models.tableStyling.additionalColors.selectableDimensions
+                    .regionColor.name
               ),
               value: this.tableStyle.colorTraits.regionColor,
               allowUndefined: true,
@@ -1263,7 +1323,9 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
               id: `null-color`,
 
               name: i18next.t(
-                "models.tableStyling.additionalColors.selectableDimensions.nullColor.name"
+                ($) =>
+                  $.models.tableStyling.additionalColors.selectableDimensions
+                    .nullColor.name
               ),
               value: this.tableStyle.colorTraits.nullColor,
               allowUndefined: true,
@@ -1281,7 +1343,9 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
               id: `outlier-color`,
 
               name: i18next.t(
-                "models.tableStyling.additionalColors.selectableDimensions.outlierColor.name"
+                ($) =>
+                  $.models.tableStyling.additionalColors.selectableDimensions
+                    .outlierColor.name
               ),
               allowUndefined: true,
               value:
@@ -1305,7 +1369,7 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
       type: "group",
       id: "point-size",
 
-      name: i18next.t("models.tableStyling.pointSize.name"),
+      name: i18next.t(($) => $.models.tableStyling.pointSize.name),
       isOpen: true,
       selectableDimensions: [
         {
@@ -1313,7 +1377,9 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
           id: `point-size-column`,
 
           name: i18next.t(
-            "models.tableStyling.pointSize.selectableDimensions.pointSizeColumn.name"
+            ($) =>
+              $.models.tableStyling.pointSize.selectableDimensions
+                .pointSizeColumn.name
           ),
           selectedId: this.tableStyle.pointSizeTraits.pointSizeColumn,
           options: this.item.tableColumns
@@ -1338,7 +1404,9 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
                 id: "point-size-null",
 
                 name: i18next.t(
-                  "models.tableStyling.pointSize.selectableDimensions.pointSizeNull.name"
+                  ($) =>
+                    $.models.tableStyling.pointSize.selectableDimensions
+                      .pointSizeNull.name
                 ),
                 min: 0,
                 value: this.tableStyle.pointSizeTraits.nullSize,
@@ -1355,7 +1423,9 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
                 id: "point-sizes-factor",
 
                 name: i18next.t(
-                  "models.tableStyling.pointSize.selectableDimensions.pointSizesFactor.name"
+                  ($) =>
+                    $.models.tableStyling.pointSize.selectableDimensions
+                      .pointSizesFactor.name
                 ),
                 min: 0,
                 value: this.tableStyle.pointSizeTraits.sizeFactor,
@@ -1372,7 +1442,9 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
                 id: "point-size-offset",
 
                 name: i18next.t(
-                  "models.tableStyling.pointSize.selectableDimensions.pointSizeOffset.name"
+                  ($) =>
+                    $.models.tableStyling.pointSize.selectableDimensions
+                      .pointSizeOffset.name
                 ),
                 min: 0,
                 value: this.tableStyle.pointSizeTraits.sizeOffset,
@@ -1398,7 +1470,7 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
       type: "group",
       id: "region-mapping",
 
-      name: i18next.t("models.tableStyling.regionMapping.name"),
+      name: i18next.t(($) => $.models.tableStyling.regionMapping.name),
       isOpen: false,
       selectableDimensions: filterOutUndefined([
         this.item.regionColumnDimensions,
@@ -1421,7 +1493,7 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
         type: "group",
         id: "legend",
 
-        name: i18next.t("models.tableStyling.legend.name"),
+        name: i18next.t(($) => $.models.tableStyling.legend.name),
         isOpen: false,
         selectableDimensions: filterOutUndefined([
           {
@@ -1429,7 +1501,9 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
             id: "legend-title",
 
             name: i18next.t(
-              "models.tableStyling.legend.selectableDimensions.legendTitle.name"
+              ($) =>
+                $.models.tableStyling.legend.selectableDimensions.legendTitle
+                  .name
             ),
             value: this.tableStyle.colorTraits.legend.title,
             setDimensionValue: (stratumId, value) => {
@@ -1447,7 +1521,9 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
                 id: "legend-ticks",
 
                 name: i18next.t(
-                  "models.tableStyling.legend.selectableDimensions.legendTicks.name"
+                  ($) =>
+                    $.models.tableStyling.legend.selectableDimensions
+                      .legendTicks.name
                 ),
                 min: 2,
                 value: this.tableStyle.colorTraits.legendTicks,
@@ -1466,11 +1542,18 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
               ({
                 type: "text",
                 id: `legend-${idx}-title`,
+
                 name: i18next.t(
-                  "models.tableStyling.legend.selectableDimensions.title.name",
-                  { index: idx + 1 }
+                  ($) =>
+                    $.models.tableStyling.legend.selectableDimensions.title
+                      .name,
+                  {
+                    index: idx + 1
+                  }
                 ),
+
                 value: legendItem.title,
+
                 setDimensionValue: (stratumId, value) => {
                   legendItem.setTrait(stratumId, "title", value);
                 }
@@ -1482,7 +1565,7 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
         type: "group",
         id: "style-options",
 
-        name: i18next.t("models.tableStyling.styleOptions.name"),
+        name: i18next.t(($) => $.models.tableStyling.styleOptions.name),
         isOpen: false,
         selectableDimensions: filterOutUndefined([
           {
@@ -1490,7 +1573,9 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
             id: "style-title",
 
             name: i18next.t(
-              "models.tableStyling.styleOptions.selectableDimensions.styleTitle.name"
+              ($) =>
+                $.models.tableStyling.styleOptions.selectableDimensions
+                  .styleTitle.name
             ),
             value: this.tableStyle.title,
             setDimensionValue: (stratumId, value) => {
@@ -1506,7 +1591,9 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
             id: "longitude-column",
 
             name: i18next.t(
-              "models.tableStyling.styleOptions.selectableDimensions.longitudeColumn.name"
+              ($) =>
+                $.models.tableStyling.styleOptions.selectableDimensions
+                  .longitudeColumn.name
             ),
             selectedId: this.tableStyle.longitudeColumn?.name,
             allowUndefined: true,
@@ -1527,7 +1614,9 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
             id: "latitude-column",
 
             name: i18next.t(
-              "models.tableStyling.styleOptions.selectableDimensions.latitudeColumn.name"
+              ($) =>
+                $.models.tableStyling.styleOptions.selectableDimensions
+                  .latitudeColumn.name
             ),
             selectedId: this.tableStyle.latitudeColumn?.name,
             allowUndefined: true,
@@ -1549,7 +1638,7 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
         type: "group",
         id: "time-options",
 
-        name: i18next.t("models.tableStyling.timeOptions.name"),
+        name: i18next.t(($) => $.models.tableStyling.timeOptions.name),
         isOpen: false,
         selectableDimensions: filterOutUndefined([
           {
@@ -1557,7 +1646,9 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
             id: "table-time-column",
 
             name: i18next.t(
-              "models.tableStyling.timeOptions.selectableDimensions.tableTimeColumn.name"
+              ($) =>
+                $.models.tableStyling.timeOptions.selectableDimensions
+                  .tableTimeColumn.name
             ),
             selectedId: this.tableStyle.timeColumn?.name,
             allowUndefined: true,
@@ -1578,7 +1669,9 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
             id: "table-end-time-column",
 
             name: i18next.t(
-              "models.tableStyling.timeOptions.selectableDimensions.tableEndTimeColumn.name"
+              ($) =>
+                $.models.tableStyling.timeOptions.selectableDimensions
+                  .tableEndTimeColumn.name
             ),
             selectedId: this.tableStyle.endTimeColumn?.name,
             allowUndefined: true,
@@ -1600,7 +1693,9 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
             id: "table-time-id-columns",
 
             name: i18next.t(
-              "models.tableStyling.timeOptions.selectableDimensions.tableTimeIdColumns.name"
+              ($) =>
+                $.models.tableStyling.timeOptions.selectableDimensions
+                  .tableTimeIdColumns.name
             ),
             selectedIds: this.tableStyle.idColumns?.map((c) => c.name),
             allowUndefined: true,
@@ -1621,20 +1716,26 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
             id: "table-time-is-sampled",
 
             name: i18next.t(
-              "models.tableStyling.timeOptions.selectableDimensions.tableTimeIsSampled.name"
+              ($) =>
+                $.models.tableStyling.timeOptions.selectableDimensions
+                  .tableTimeIsSampled.name
             ),
             options: [
               {
                 id: "true",
                 name: i18next.t(
-                  "models.tableStyling.timeOptions.selectableDimensions.tableTimeIsSampled.options.true.name"
+                  ($) =>
+                    $.models.tableStyling.timeOptions.selectableDimensions
+                      .tableTimeIsSampled.options.true.name
                 )
               },
 
               {
                 id: "false",
                 name: i18next.t(
-                  "models.tableStyling.timeOptions.selectableDimensions.tableTimeIsSampled.options.false.name"
+                  ($) =>
+                    $.models.tableStyling.timeOptions.selectableDimensions
+                      .tableTimeIsSampled.options.false.name
                 )
               }
             ],
@@ -1652,7 +1753,9 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
             id: `table-time-display-duration`,
 
             name: i18next.t(
-              "models.tableStyling.timeOptions.selectableDimensions.tableTimeDisplayDuration.name"
+              ($) =>
+                $.models.tableStyling.timeOptions.selectableDimensions
+                  .tableTimeDisplayDuration.name
             ),
             value: this.tableStyle.timeTraits.displayDuration,
             setDimensionValue: (stratumId, value) => {
@@ -1668,20 +1771,26 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
             id: "table-time-spread-start-time",
 
             name: i18next.t(
-              "models.tableStyling.timeOptions.selectableDimensions.tableTimeSpreadStartTime.name"
+              ($) =>
+                $.models.tableStyling.timeOptions.selectableDimensions
+                  .tableTimeSpreadStartTime.name
             ),
             options: [
               {
                 id: "true",
                 name: i18next.t(
-                  "models.tableStyling.timeOptions.selectableDimensions.tableTimeSpreadStartTime.options.true.name"
+                  ($) =>
+                    $.models.tableStyling.timeOptions.selectableDimensions
+                      .tableTimeSpreadStartTime.options.true.name
                 )
               },
 
               {
                 id: "false",
                 name: i18next.t(
-                  "models.tableStyling.timeOptions.selectableDimensions.tableTimeSpreadStartTime.options.false.name"
+                  ($) =>
+                    $.models.tableStyling.timeOptions.selectableDimensions
+                      .tableTimeSpreadStartTime.options.false.name
                 )
               }
             ],
@@ -1701,20 +1810,26 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
             id: "table-time-spread-finish-time",
 
             name: i18next.t(
-              "models.tableStyling.timeOptions.selectableDimensions.tableTimeSpreadFinishTime.name"
+              ($) =>
+                $.models.tableStyling.timeOptions.selectableDimensions
+                  .tableTimeSpreadFinishTime.name
             ),
             options: [
               {
                 id: "true",
                 name: i18next.t(
-                  "models.tableStyling.timeOptions.selectableDimensions.tableTimeSpreadFinishTime.options.true.name"
+                  ($) =>
+                    $.models.tableStyling.timeOptions.selectableDimensions
+                      .tableTimeSpreadFinishTime.options.true.name
                 )
               },
 
               {
                 id: "false",
                 name: i18next.t(
-                  "models.tableStyling.timeOptions.selectableDimensions.tableTimeSpreadFinishTime.options.false.name"
+                  ($) =>
+                    $.models.tableStyling.timeOptions.selectableDimensions
+                      .tableTimeSpreadFinishTime.options.false.name
                 )
               }
             ],
@@ -1735,7 +1850,7 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
         type: "group",
         id: "workbench-options",
 
-        name: i18next.t("models.tableStyling.workbenchOptions.name"),
+        name: i18next.t(($) => $.models.tableStyling.workbenchOptions.name),
         isOpen: false,
         selectableDimensions: filterOutUndefined([
           {
@@ -1743,20 +1858,26 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
             id: "table-style-enabled",
 
             name: i18next.t(
-              "models.tableStyling.workbenchOptions.selectableDimensions.tableStyleEnalbed.name"
+              ($) =>
+                $.models.tableStyling.workbenchOptions.selectableDimensions
+                  .tableStyleEnalbed.name
             ),
             options: [
               {
                 id: "true",
                 name: i18next.t(
-                  "models.tableStyling.workbenchOptions.selectableDimensions.tableStyleEnalbed.options.true.name"
+                  ($) =>
+                    $.models.tableStyling.workbenchOptions.selectableDimensions
+                      .tableStyleEnalbed.options.true.name
                 )
               },
 
               {
                 id: "false",
                 name: i18next.t(
-                  "models.tableStyling.workbenchOptions.selectableDimensions.tableStyleEnalbed.options.false.name"
+                  ($) =>
+                    $.models.tableStyling.workbenchOptions.selectableDimensions
+                      .tableStyleEnalbed.options.false.name
                 )
               }
             ],
@@ -1774,7 +1895,9 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
             id: "show-disable-style-option",
 
             name: i18next.t(
-              "models.tableStyling.workbenchOptions.selectableDimensions.showDisableStyleOption.name"
+              ($) =>
+                $.models.tableStyling.workbenchOptions.selectableDimensions
+                  .showDisableStyleOption.name
             ),
             options: [{ id: "true" }, { id: "false" }],
             selectedId: this.item.showDisableStyleOption ? "true" : "false",
@@ -1791,7 +1914,9 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
             id: "show-disable-time-option",
 
             name: i18next.t(
-              "models.tableStyling.workbenchOptions.selectableDimensions.showDisableTimeOption.name"
+              ($) =>
+                $.models.tableStyling.workbenchOptions.selectableDimensions
+                  .showDisableTimeOption.name
             ),
             options: [{ id: "true" }, { id: "false" }],
             selectedId: this.item.showDisableTimeOption ? "true" : "false",
@@ -1808,7 +1933,9 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
             id: "enable-manual-region-mapping",
 
             name: i18next.t(
-              "models.tableStyling.workbenchOptions.selectableDimensions.enableManualRegionMapping.name"
+              ($) =>
+                $.models.tableStyling.workbenchOptions.selectableDimensions
+                  .enableManualRegionMapping.name
             ),
             options: [{ id: "true" }, { id: "false" }],
             selectedId: this.item.enableManualRegionMapping ? "true" : "false",
@@ -1826,7 +1953,7 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
         type: "group",
         id: "variable-and-column",
 
-        name: i18next.t("models.tableStyling.variableAndColumn.name"),
+        name: i18next.t(($) => $.models.tableStyling.variableAndColumn.name),
         isOpen: false,
         selectableDimensions: filterOutUndefined([
           {
@@ -1834,7 +1961,9 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
             id: "column-title",
 
             name: i18next.t(
-              "models.tableStyling.variableAndColumn.selectableDimensions.columnTitle.name"
+              ($) =>
+                $.models.tableStyling.variableAndColumn.selectableDimensions
+                  .columnTitle.name
             ),
             value: this.tableStyle.colorColumn?.title,
             setDimensionValue: (stratumId, value) => {
@@ -1850,7 +1979,9 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
             id: "column-units",
 
             name: i18next.t(
-              "models.tableStyling.variableAndColumn.selectableDimensions.columnUnits.name"
+              ($) =>
+                $.models.tableStyling.variableAndColumn.selectableDimensions
+                  .columnUnits.name
             ),
             value: this.tableStyle.colorColumn?.units,
             setDimensionValue: (stratumId, value) => {
@@ -1900,7 +2031,8 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
             id: `${key}-column`,
 
             name: i18next.t(
-              "models.tableStyling.style.selectableDimensions.column.name"
+              ($) =>
+                $.models.tableStyling.style.selectableDimensions.column.name
             ),
             selectedId: tableStyleMap.column?.name,
             allowUndefined: true,
@@ -1918,18 +2050,24 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
                 id: `${key}-style-type`,
 
                 name: i18next.t(
-                  "models.tableStyling.style.selectableDimensions.styleType.name"
+                  ($) =>
+                    $.models.tableStyling.style.selectableDimensions.styleType
+                      .name
                 ),
 
                 undefinedLabel: i18next.t(
-                  "models.tableStyling.style.selectableDimensions.styleType.undefinedLabel"
+                  ($) =>
+                    $.models.tableStyling.style.selectableDimensions.styleType
+                      .undefinedLabel
                 ),
                 options: filterOutUndefined([
                   {
                     id: "constant",
 
                     name: i18next.t(
-                      "models.tableStyling.style.selectableDimensions.styleType.constant.name"
+                      ($) =>
+                        $.models.tableStyling.style.selectableDimensions
+                          .styleType.constant.name
                     )
                   },
                   tableStyleMap.column.type === TableColumnType.scalar
@@ -1937,7 +2075,9 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
                         id: "bin",
 
                         name: i18next.t(
-                          "models.tableStyling.style.selectableDimensions.styleType.bin.name"
+                          ($) =>
+                            $.models.tableStyling.style.selectableDimensions
+                              .styleType.bin.name
                         )
                       }
                     : undefined,
@@ -1945,7 +2085,9 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
                     id: "enum",
 
                     name: i18next.t(
-                      "models.tableStyling.style.selectableDimensions.styleType.enum.name"
+                      ($) =>
+                        $.models.tableStyling.style.selectableDimensions
+                          .styleType.enum.name
                     )
                   }
                 ]),
@@ -1966,7 +2108,7 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
             id: `${key}-enum`,
 
             name: i18next.t(
-              "models.tableStyling.style.selectableDimensions.enum.name"
+              ($) => $.models.tableStyling.style.selectableDimensions.enum.name
             ),
             isOpen: true,
             selectableDimensions: filterOutUndefined([
@@ -1980,7 +2122,9 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
                     tableStyleMap.traitValues.null,
                     tableStyleMap.commonTraits.enum[idx].value ??
                       i18next.t(
-                        "models.tableStyling.style.selectableDimensions.enum.selectableDimensions.enum.noValue"
+                        ($) =>
+                          $.models.tableStyling.style.selectableDimensions.enum
+                            .selectableDimensions.enum.noValue
                       )
                   ),
                   isOpen: this.openBinIndex.get(key) === idx,
@@ -1996,7 +2140,10 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
                       id: `${key}-enum-${idx}-value`,
 
                       name: i18next.t(
-                        "models.tableStyling.style.selectableDimensions.enum.selectableDimensions.enum.selectableDimensions.value.name"
+                        ($) =>
+                          $.models.tableStyling.style.selectableDimensions.enum
+                            .selectableDimensions.enum.selectableDimensions
+                            .value.name
                       ),
                       selectedId: enumPoint.value ?? undefined,
                       // Find unique column values which don't already have an enumCol
@@ -2027,7 +2174,10 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
                       id: `${key}-enum-${idx}-remove`,
 
                       value: i18next.t(
-                        "models.tableStyling.style.selectableDimensions.enum.selectableDimensions.enum.selectableDimensions.remove.value"
+                        ($) =>
+                          $.models.tableStyling.style.selectableDimensions.enum
+                            .selectableDimensions.enum.selectableDimensions
+                            .remove.value
                       ),
                       setDimensionValue: (stratumId) => {
                         enumPoint.setTrait(stratumId, "value", null);
@@ -2048,7 +2198,9 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
                     id: `${key}-enum-add`,
 
                     value: i18next.t(
-                      "models.tableStyling.style.selectableDimensions.enum.selectableDimensions.enum.add.value"
+                      ($) =>
+                        $.models.tableStyling.style.selectableDimensions.enum
+                          .selectableDimensions.enum.add.value
                     ),
                     setDimensionValue: (stratumId) => {
                       const firstValue =
@@ -2081,7 +2233,7 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
             id: `${key}-bin`,
 
             name: i18next.t(
-              "models.tableStyling.style.selectableDimensions.bin.name"
+              ($) => $.models.tableStyling.style.selectableDimensions.bin.name
             ),
             isOpen: true,
             selectableDimensions: filterOutUndefined([
@@ -2090,7 +2242,9 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
                 id: `${key}-bin-add`,
 
                 value: i18next.t(
-                  "models.tableStyling.style.selectableDimensions.bin.selectableDimensions.add.value"
+                  ($) =>
+                    $.models.tableStyling.style.selectableDimensions.bin
+                      .selectableDimensions.add.value
                 ),
                 setDimensionValue: (stratumId) => {
                   const newModel = traits.addObject(stratumId, "bin");
@@ -2115,15 +2269,19 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
                       tableStyleMap.traitValues.null,
                       !isDefined(bin.maxValue ?? undefined)
                         ? i18next.t(
-                            "models.tableStyling.style.selectableDimensions.bin.selectableDimensions.bin.noValue"
+                            ($) =>
+                              $.models.tableStyling.style.selectableDimensions
+                                .bin.selectableDimensions.bin.noValue
                           )
                         : idx > 0 &&
                             isDefined(traits.bin[idx - 1].maxValue ?? undefined)
                           ? i18next.t(
-                              "models.tableStyling.style.selectableDimensions.bin.selectableDimensions.bin.range",
+                              ($) =>
+                                $.models.tableStyling.style.selectableDimensions
+                                  .bin.selectableDimensions.bin.range,
                               {
-                                value1: traits.bin[idx - 1].maxValue,
-                                value2: bin.maxValue
+                                value1: traits.bin[idx - 1].maxValue as number,
+                                value2: bin.maxValue as number
                               }
                             )
                           : `${bin.maxValue}`
@@ -2143,7 +2301,10 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
                             id: `${key}-bin-${idx}-start`,
 
                             name: i18next.t(
-                              "models.tableStyling.style.selectableDimensions.bin.selectableDimensions.bin.selectableDimensions.start.name"
+                              ($) =>
+                                $.models.tableStyling.style.selectableDimensions
+                                  .bin.selectableDimensions.bin
+                                  .selectableDimensions.start.name
                             ),
                             value: traits.bin[idx - 1].maxValue ?? undefined,
                             setDimensionValue: (stratumId, value) => {
@@ -2160,7 +2321,10 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
                         id: `${key}-bin-${idx}-stop`,
 
                         name: i18next.t(
-                          "models.tableStyling.style.selectableDimensions.bin.selectableDimensions.bin.selectableDimensions.stop.name"
+                          ($) =>
+                            $.models.tableStyling.style.selectableDimensions.bin
+                              .selectableDimensions.bin.selectableDimensions
+                              .stop.name
                         ),
                         value: bin.maxValue ?? undefined,
                         setDimensionValue: (stratumId, value) => {
@@ -2177,7 +2341,10 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
                         id: `${key}-bin-${idx}-remove`,
 
                         value: i18next.t(
-                          "models.tableStyling.style.selectableDimensions.bin.selectableDimensions.bin.selectableDimensions.remove.value"
+                          ($) =>
+                            $.models.tableStyling.style.selectableDimensions.bin
+                              .selectableDimensions.bin.selectableDimensions
+                              .remove.value
                         ),
                         setDimensionValue: (stratumId) => {
                           bin.setTrait(stratumId, "maxValue", null);
@@ -2195,7 +2362,7 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
         type: "group",
         id: `${key}-null`,
 
-        name: i18next.t("models.tableStyling.style.null.name"),
+        name: i18next.t(($) => $.models.tableStyling.style.null.name),
         isOpen:
           !tableStyleMap.column ||
           !traits.mapType ||
@@ -2211,7 +2378,7 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
 
   @computed get markerDims(): SelectableDimensionWorkflowGroup[] {
     return this.getStyleDims(
-      i18next.t("models.tableStyling.point.name"),
+      i18next.t(($) => $.models.tableStyling.point.name),
       "point",
       this.tableStyle.pointStyleMap,
       (id, pointTraits, nullValues) =>
@@ -2222,9 +2389,12 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
                 type: "select",
                 id: `${id}-marker`,
                 name: `<terriatooltip title="${i18next.t(
-                  "models.tableStyling.point.selectableDimensions.marker.name"
+                  ($) =>
+                    $.models.tableStyling.point.selectableDimensions.marker.name
                 )}">${i18next.t(
-                  "models.tableStyling.point.selectableDimensions.marker.tooltip"
+                  ($) =>
+                    $.models.tableStyling.point.selectableDimensions.marker
+                      .tooltip
                 )}</terriatooltip>`,
                 selectedId:
                   (pointTraits.marker ?? nullValues.marker) || "point",
@@ -2247,7 +2417,9 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
                 id: `${id}-rotation`,
 
                 name: i18next.t(
-                  "models.tableStyling.point.selectableDimensions.rotation.name"
+                  ($) =>
+                    $.models.tableStyling.point.selectableDimensions.rotation
+                      .name
                 ),
                 value: pointTraits.rotation ?? nullValues.rotation,
                 setDimensionValue: (stratumId, value) => {
@@ -2261,7 +2433,8 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
                 id: `${id}-height`,
 
                 name: i18next.t(
-                  "models.tableStyling.point.selectableDimensions.height.name"
+                  ($) =>
+                    $.models.tableStyling.point.selectableDimensions.height.name
                 ),
                 value: pointTraits.height ?? nullValues.height,
                 setDimensionValue: (stratumId, value) => {
@@ -2275,7 +2448,8 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
                 id: `${id}-width`,
 
                 name: i18next.t(
-                  "models.tableStyling.point.selectableDimensions.width.name"
+                  ($) =>
+                    $.models.tableStyling.point.selectableDimensions.width.name
                 ),
                 value: pointTraits.width ?? nullValues.width,
                 setDimensionValue: (stratumId, value) => {
@@ -2302,7 +2476,7 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
 
   @computed get outlineDims(): SelectableDimensionWorkflowGroup[] {
     return this.getStyleDims(
-      i18next.t("models.tableStyling.outline.name"),
+      i18next.t(($) => $.models.tableStyling.outline.name),
       "outline",
       this.tableStyle.outlineStyleMap,
       (id, outlineTraits, nullValues) => [
@@ -2311,7 +2485,7 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
           id: `${id}-color`,
 
           name: i18next.t(
-            "models.tableStyling.outline.selectableDimensions.color.name"
+            ($) => $.models.tableStyling.outline.selectableDimensions.color.name
           ),
           allowUndefined: true,
           value: outlineTraits.color ?? nullValues.color,
@@ -2324,7 +2498,7 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
           id: `${id}-width`,
 
           name: i18next.t(
-            "models.tableStyling.outline.selectableDimensions.width.name"
+            ($) => $.models.tableStyling.outline.selectableDimensions.width.name
           ),
           value: outlineTraits.width ?? nullValues.width,
           setDimensionValue: (stratumId, value) => {
@@ -2339,7 +2513,7 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
 
   @computed get labelDims(): SelectableDimensionWorkflowGroup[] {
     return this.getStyleDims(
-      i18next.t("models.tableStyling.label.name"),
+      i18next.t(($) => $.models.tableStyling.label.name),
       "label",
       this.tableStyle.labelStyleMap,
       (id, labelTraits, nullValues) =>
@@ -2349,7 +2523,8 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
             id: `${id}-column`,
 
             name: i18next.t(
-              "models.tableStyling.label.selectableDimensions.column.name"
+              ($) =>
+                $.models.tableStyling.label.selectableDimensions.column.name
             ),
             selectedId: labelTraits.labelColumn ?? nullValues.labelColumn,
             allowUndefined: true,
@@ -2366,7 +2541,7 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
             id: `${id}-font`,
 
             name: i18next.t(
-              "models.tableStyling.label.selectableDimensions.font.name"
+              ($) => $.models.tableStyling.label.selectableDimensions.font.name
             ),
             value: labelTraits.font ?? nullValues.font,
             setDimensionValue: (stratumId, value) => {
@@ -2378,7 +2553,7 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
             id: `${id}-style`,
 
             name: i18next.t(
-              "models.tableStyling.label.selectableDimensions.style.name"
+              ($) => $.models.tableStyling.label.selectableDimensions.style.name
             ),
             selectedId: labelTraits.style ?? nullValues.style,
             options: [
@@ -2386,21 +2561,27 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
                 id: "FILL",
 
                 name: i18next.t(
-                  "models.tableStyling.label.selectableDimensions.style.options.fill.name"
+                  ($) =>
+                    $.models.tableStyling.label.selectableDimensions.style
+                      .options.fill.name
                 )
               },
               {
                 id: "OUTLINE",
 
                 name: i18next.t(
-                  "models.tableStyling.label.selectableDimensions.style.options.outline.name"
+                  ($) =>
+                    $.models.tableStyling.label.selectableDimensions.style
+                      .options.outline.name
                 )
               },
               {
                 id: "FILL_AND_OUTLINE",
 
                 name: i18next.t(
-                  "models.tableStyling.label.selectableDimensions.style.options.fillAndOutline.name"
+                  ($) =>
+                    $.models.tableStyling.label.selectableDimensions.style
+                      .options.fillAndOutline.name
                 )
               }
             ],
@@ -2413,7 +2594,7 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
             id: `${id}-scale`,
 
             name: i18next.t(
-              "models.tableStyling.label.selectableDimensions.scale.name"
+              ($) => $.models.tableStyling.label.selectableDimensions.scale.name
             ),
             value: labelTraits.scale ?? nullValues.scale,
             setDimensionValue: (stratumId, value) => {
@@ -2429,7 +2610,9 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
                 id: `${id}-fill-color`,
 
                 name: i18next.t(
-                  "models.tableStyling.label.selectableDimensions.fillColor.name"
+                  ($) =>
+                    $.models.tableStyling.label.selectableDimensions.fillColor
+                      .name
                 ),
                 value: labelTraits.fillColor ?? nullValues.fillColor,
                 setDimensionValue: (stratumId, value) => {
@@ -2444,7 +2627,9 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
                 id: `${id}-outline-color`,
 
                 name: i18next.t(
-                  "models.tableStyling.label.selectableDimensions.outlineColor.name"
+                  ($) =>
+                    $.models.tableStyling.label.selectableDimensions
+                      .outlineColor.name
                 ),
                 value: labelTraits.outlineColor ?? nullValues.outlineColor,
                 setDimensionValue: (stratumId, value) => {
@@ -2459,7 +2644,9 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
                 id: `${id}-outline-width`,
 
                 name: i18next.t(
-                  "models.tableStyling.label.selectableDimensions.outlineWidth.name"
+                  ($) =>
+                    $.models.tableStyling.label.selectableDimensions
+                      .outlineWidth.name
                 ),
                 value: labelTraits.outlineWidth ?? nullValues.outlineWidth,
                 setDimensionValue: (stratumId, value) => {
@@ -2472,7 +2659,9 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
             id: `${id}-horizontal-origin`,
 
             name: i18next.t(
-              "models.tableStyling.label.selectableDimensions.horizontalOrigin.name"
+              ($) =>
+                $.models.tableStyling.label.selectableDimensions
+                  .horizontalOrigin.name
             ),
             selectedId:
               labelTraits.horizontalOrigin ?? nullValues.horizontalOrigin,
@@ -2481,21 +2670,27 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
                 id: "LEFT",
 
                 name: i18next.t(
-                  "models.tableStyling.label.selectableDimensions.horizontalOrigin.options.left.name"
+                  ($) =>
+                    $.models.tableStyling.label.selectableDimensions
+                      .horizontalOrigin.options.left.name
                 )
               },
               {
                 id: "CENTER",
 
                 name: i18next.t(
-                  "models.tableStyling.label.selectableDimensions.horizontalOrigin.options.center.name"
+                  ($) =>
+                    $.models.tableStyling.label.selectableDimensions
+                      .horizontalOrigin.options.center.name
                 )
               },
               {
                 id: "RIGHT",
 
                 name: i18next.t(
-                  "models.tableStyling.label.selectableDimensions.horizontalOrigin.options.right.name"
+                  ($) =>
+                    $.models.tableStyling.label.selectableDimensions
+                      .horizontalOrigin.options.right.name
                 )
               }
             ],
@@ -2508,7 +2703,9 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
             id: `${id}-vertical-origin`,
 
             name: i18next.t(
-              "models.tableStyling.label.selectableDimensions.verticalOrigin.name"
+              ($) =>
+                $.models.tableStyling.label.selectableDimensions.verticalOrigin
+                  .name
             ),
             selectedId: labelTraits.verticalOrigin ?? nullValues.verticalOrigin,
             options: [
@@ -2516,28 +2713,36 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
                 id: "TOP",
 
                 name: i18next.t(
-                  "models.tableStyling.label.selectableDimensions.verticalOrigin.options.top.name"
+                  ($) =>
+                    $.models.tableStyling.label.selectableDimensions
+                      .verticalOrigin.options.top.name
                 )
               },
               {
                 id: "CENTER",
 
                 name: i18next.t(
-                  "models.tableStyling.label.selectableDimensions.verticalOrigin.options.center.name"
+                  ($) =>
+                    $.models.tableStyling.label.selectableDimensions
+                      .verticalOrigin.options.center.name
                 )
               },
               {
                 id: "BASELINE",
 
                 name: i18next.t(
-                  "models.tableStyling.label.selectableDimensions.verticalOrigin.options.baseline.name"
+                  ($) =>
+                    $.models.tableStyling.label.selectableDimensions
+                      .verticalOrigin.options.baseline.name
                 )
               },
               {
                 id: "BOTTOM",
 
                 name: i18next.t(
-                  "models.tableStyling.label.selectableDimensions.verticalOrigin.options.bottom.name"
+                  ($) =>
+                    $.models.tableStyling.label.selectableDimensions
+                      .verticalOrigin.options.bottom.name
                 )
               }
             ],
@@ -2550,7 +2755,8 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
             id: `${id}-pixel-offset-x`,
 
             name: i18next.t(
-              "models.tableStyling.label.selectableDimensions.offsetX.name"
+              ($) =>
+                $.models.tableStyling.label.selectableDimensions.offsetX.name
             ),
             value: labelTraits.pixelOffset[0] ?? nullValues.pixelOffset[0],
             setDimensionValue: (stratumId, value) => {
@@ -2565,7 +2771,8 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
             id: `${id}-pixel-offset-y`,
 
             name: i18next.t(
-              "models.tableStyling.label.selectableDimensions.offsetY.name"
+              ($) =>
+                $.models.tableStyling.label.selectableDimensions.offsetY.name
             ),
             value: labelTraits.pixelOffset[1] ?? nullValues.pixelOffset[1],
             setDimensionValue: (stratumId, value) => {
@@ -2592,7 +2799,8 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
               type: "numeric",
               id: `${id}-lead-time`,
               name: i18next.t(
-                "models.tableStyling.trail.selectableDimensions.leadTime.name"
+                ($) =>
+                  $.models.tableStyling.trail.selectableDimensions.leadTime.name
               ),
               value: trailTraits.leadTime ?? nullValues.leadTime,
               setDimensionValue: (stratumId, value) => {
@@ -2604,7 +2812,9 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
               id: `${id}-trail-time`,
 
               name: i18next.t(
-                "models.tableStyling.trail.selectableDimensions.trailTime.name"
+                ($) =>
+                  $.models.tableStyling.trail.selectableDimensions.trailTime
+                    .name
               ),
               value: trailTraits.trailTime ?? nullValues.trailTime,
               setDimensionValue: (stratumId, value) => {
@@ -2616,7 +2826,8 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
               id: `${id}-width`,
 
               name: i18next.t(
-                "models.tableStyling.trail.selectableDimensions.width.name"
+                ($) =>
+                  $.models.tableStyling.trail.selectableDimensions.width.name
               ),
               value: trailTraits.width ?? nullValues.width,
               setDimensionValue: (stratumId, value) => {
@@ -2628,7 +2839,9 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
               id: `${id}-resolution`,
 
               name: i18next.t(
-                "models.tableStyling.trail.selectableDimensions.resolution.name"
+                ($) =>
+                  $.models.tableStyling.trail.selectableDimensions.resolution
+                    .name
               ),
               value: trailTraits.resolution ?? nullValues.resolution,
               setDimensionValue: (stratumId, value) => {
@@ -2645,7 +2858,9 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
                     id: `${id}-glow-color`,
 
                     name: i18next.t(
-                      "models.tableStyling.trail.selectableDimensions.growColor.name"
+                      ($) =>
+                        $.models.tableStyling.trail.selectableDimensions
+                          .growColor.name
                     ),
                     value:
                       trailTraits.polylineGlow.color ??
@@ -2663,7 +2878,9 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
                     id: `${id}-glow-power`,
 
                     name: i18next.t(
-                      "models.tableStyling.trail.selectableDimensions.growPower.name"
+                      ($) =>
+                        $.models.tableStyling.trail.selectableDimensions
+                          .growPower.name
                     ),
                     value:
                       trailTraits.polylineGlow.glowPower ??
@@ -2681,7 +2898,9 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
                     id: `${id}-taper-power`,
 
                     name: i18next.t(
-                      "models.tableStyling.trail.selectableDimensions.taperPower.name"
+                      ($) =>
+                        $.models.tableStyling.trail.selectableDimensions
+                          .taperPower.name
                     ),
                     value:
                       trailTraits.polylineGlow.taperPower ??
@@ -2701,7 +2920,9 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
                     id: `${id}-solid-color`,
 
                     name: i18next.t(
-                      "models.tableStyling.trail.selectableDimensions.solidColor.name"
+                      ($) =>
+                        $.models.tableStyling.trail.selectableDimensions
+                          .solidColor.name
                     ),
                     value:
                       trailTraits.solidColor.color ??
@@ -2723,7 +2944,9 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
         id: "trail-style-options",
 
         name: i18next.t(
-          "models.tableStyling.trail.selectableDimensions.trailStyleOptions.name"
+          ($) =>
+            $.models.tableStyling.trail.selectableDimensions.trailStyleOptions
+              .name
         ),
         isOpen: false,
         selectableDimensions: filterOutUndefined([
@@ -2732,7 +2955,9 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
             id: "trail-style-options-material",
 
             name: i18next.t(
-              "models.tableStyling.trail.selectableDimensions.trailStyleOptions.selectableDimensions.material.name"
+              ($) =>
+                $.models.tableStyling.trail.selectableDimensions
+                  .trailStyleOptions.selectableDimensions.material.name
             ),
             selectedId: this.tableStyle.trailStyleMap.traits.materialType,
             options: [
@@ -2740,14 +2965,20 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
                 id: "solidColor",
 
                 name: i18next.t(
-                  "models.tableStyling.trail.selectableDimensions.trailStyleOptions.selectableDimensions.material.options.solidColor.name"
+                  ($) =>
+                    $.models.tableStyling.trail.selectableDimensions
+                      .trailStyleOptions.selectableDimensions.material.options
+                      .solidColor.name
                 )
               },
               {
                 id: "polylineGlow",
 
                 name: i18next.t(
-                  "models.tableStyling.trail.selectableDimensions.trailStyleOptions.selectableDimensions.material.options.polylineGlow.name"
+                  ($) =>
+                    $.models.tableStyling.trail.selectableDimensions
+                      .trailStyleOptions.selectableDimensions.material.options
+                      .polylineGlow.name
                 )
               }
             ],

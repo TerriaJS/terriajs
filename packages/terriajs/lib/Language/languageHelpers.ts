@@ -24,7 +24,7 @@ export function applyTranslationIfExists(
     if (keyOrString.indexOf(TRANSLATE_KEY_PREFIX) === 0) {
       const translationKey = keyOrString.substring(TRANSLATE_KEY_PREFIX.length);
       return i18n.exists(translationKey)
-        ? i18n.t(translationKey, options)
+        ? (i18n.t(translationKey, options as never) as never)
         : translationKey;
     } else {
       return keyOrString;

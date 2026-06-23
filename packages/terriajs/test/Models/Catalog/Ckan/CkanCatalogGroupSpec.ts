@@ -47,7 +47,9 @@ describe("CkanCatalogGroup", function () {
 
   it("has a type and typeName", function () {
     expect(ckanCatalogGroup.type).toBe("ckan-group");
-    expect(ckanCatalogGroup.typeName).toBe(i18next.t("models.ckan.nameServer"));
+    expect(ckanCatalogGroup.typeName).toBe(
+      i18next.t(($) => $.models.ckan.nameServer)
+    );
   });
 
   it("add filter query correctly", function () {

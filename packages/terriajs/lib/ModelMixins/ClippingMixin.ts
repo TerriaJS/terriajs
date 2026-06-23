@@ -375,11 +375,11 @@ function ClippingMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
                 options: [
                   {
                     id: "true",
-                    name: i18next.t("models.clippingBox.showClippingBox")
+                    name: i18next.t(($) => $.models.clippingBox.showClippingBox)
                   },
                   {
                     id: "false",
-                    name: i18next.t("models.clippingBox.showClippingBox")
+                    name: i18next.t(($) => $.models.clippingBox.showClippingBox)
                   }
                 ],
                 setDimensionValue: (stratumId, value) => {
@@ -403,11 +403,15 @@ function ClippingMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
                 options: [
                   {
                     id: "true",
-                    name: i18next.t("models.clippingBox.keepBoxAboveGround")
+                    name: i18next.t(
+                      ($) => $.models.clippingBox.keepBoxAboveGround
+                    )
                   },
                   {
                     id: "false",
-                    name: i18next.t("models.clippingBox.keepBoxAboveGround")
+                    name: i18next.t(
+                      ($) => $.models.clippingBox.keepBoxAboveGround
+                    )
                   }
                 ],
                 setDimensionValue: (stratumId, value) => {
@@ -421,7 +425,7 @@ function ClippingMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
               {
                 // Dropdown to change the clipping direction
                 id: "clip-direction",
-                name: i18next.t("models.clippingBox.clipDirection.name"),
+                name: i18next.t(($) => $.models.clippingBox.clipDirection.name),
                 type: "select",
                 selectedId: this.clippingBox.clipDirection,
                 disable:
@@ -431,13 +435,13 @@ function ClippingMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
                   {
                     id: "inside",
                     name: i18next.t(
-                      "models.clippingBox.clipDirection.options.inside"
+                      ($) => $.models.clippingBox.clipDirection.options.inside
                     )
                   },
                   {
                     id: "outside",
                     name: i18next.t(
-                      "models.clippingBox.clipDirection.options.outside"
+                      ($) => $.models.clippingBox.clipDirection.options.outside
                     )
                   }
                 ],
@@ -457,11 +461,11 @@ function ClippingMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
           options: [
             {
               id: "true",
-              name: `${i18next.t("models.clippingBox.clipModel")}`
+              name: `${i18next.t(($) => $.models.clippingBox.clipModel)}`
             },
             {
               id: "false",
-              name: i18next.t("models.clippingBox.clipModel")
+              name: i18next.t(($) => $.models.clippingBox.clipModel)
             }
           ],
           emptyText: "Click on map to position clipping box",

@@ -101,7 +101,10 @@ const DragDropNotification: FC<DragDropNotificationProps> = observer(
           `}
         >
           <Text extraLarge breakWord>
-            <Trans i18nKey="dragDrop.notification" count={uploadedFiles.length}>
+            <Trans
+              i18nKey={($) => $.dragDrop.notification}
+              count={uploadedFiles.length}
+            >
               <TextSpan bold noFontSize>
                 &quot;{{ fileNames }}&quot;
               </TextSpan>

@@ -91,8 +91,8 @@ class MappablePreview extends Component {
             className={Styles.btnAdd}
           >
             {this.props.terria.workbench.contains(catalogItem)
-              ? t("preview.removeFromMap")
-              : t("preview.addToMap")}
+              ? t(($) => $.preview.removeFromMap)
+              : t(($) => $.preview.addToMap)}
           </button>
         )}
         <div className={Styles.previewedInfo}>

@@ -11,7 +11,7 @@ export default function PrivateIndicator(props: PropsType) {
   return (
     <IconWrapper
       marginRight={!props.inWorkbench}
-      title={t("catalogItem.privateIndicatorTitle")}
+      title={t(($) => $.catalogItem.privateIndicatorTitle)}
       css={`
         margin-top: -1px;
         svg {

@@ -187,44 +187,44 @@ const StoryMenu = (props: MenuProps) => {
         <li>
           <StoryMenuButton
             onClick={viewStory(props)}
-            title={t("story.viewStory")}
+            title={t(($) => $.story.viewStory)}
           >
             <StoryControl>
               <StyledIcon glyph={Icon.GLYPHS.viewStory} />
-              <span>{t("story.view")}</span>
+              <span>{t(($) => $.story.view)}</span>
             </StoryControl>
           </StoryMenuButton>
         </li>
         <li>
           <StoryMenuButton
             onClick={editStory(props)}
-            title={t("story.editStory")}
+            title={t(($) => $.story.editStory)}
           >
             <StoryControl>
               <StyledIcon glyph={Icon.GLYPHS.editStory} />
-              <span>{t("story.edit")}</span>
+              <span>{t(($) => $.story.edit)}</span>
             </StoryControl>
           </StoryMenuButton>
         </li>
         <li>
           <StoryMenuButton
             onClick={recaptureStory(props)}
-            title={t("story.recaptureStory")}
+            title={t(($) => $.story.recaptureStory)}
           >
             <StoryControl>
               <StyledIcon glyph={Icon.GLYPHS.story} />
-              <span>{t("story.recapture")}</span>
+              <span>{t(($) => $.story.recapture)}</span>
             </StoryControl>
           </StoryMenuButton>
         </li>
         <li>
           <StoryMenuButton
             onClick={deleteStory(props)}
-            title={t("story.deleteStory")}
+            title={t(($) => $.story.deleteStory)}
           >
             <StoryControl>
               <StyledIcon glyph={Icon.GLYPHS.cancel} />
-              <span>{t("story.delete")}</span>
+              <span>{t(($) => $.story.delete)}</span>
             </StoryControl>
           </StoryMenuButton>
         </li>
@@ -307,7 +307,7 @@ const Story = (props: Props) => {
             >
               {story.title && story.title.length > 0
                 ? story.title
-                : t("story.untitledScene")}
+                : t(($) => $.story.untitledScene)}
             </TextSpan>
           </div>
           <Box>

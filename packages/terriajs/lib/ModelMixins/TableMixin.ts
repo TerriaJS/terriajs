@@ -458,7 +458,7 @@ function TableMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
         ...super.viewingControls,
         {
           id: TableStylingWorkflow.type,
-          name: i18next.t("models.tableData.editStyle"),
+          name: i18next.t(($) => $.models.tableData.editStyle),
           onClick: action((viewState) =>
             SelectableDimensionWorkflow.runWorkflow(
               viewState,
@@ -498,7 +498,7 @@ function TableMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
       return {
         type: "select",
         id: "activeStyle",
-        name: i18next.t("models.tableData.activeStyle"),
+        name: i18next.t(($) => $.models.tableData.activeStyle),
         options: this.tableStyles
           .filter((style) => !style.hidden || this.activeStyle === style.id)
           .map((style) => {
@@ -510,7 +510,7 @@ function TableMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
         selectedId: this.activeStyle,
         allowUndefined: this.showDisableStyleOption,
         undefinedLabel: this.showDisableStyleOption
-          ? i18next.t("models.tableData.styleDisabledLabel")
+          ? i18next.t(($) => $.models.tableData.styleDisabledLabel)
           : undefined,
         setDimensionValue: (stratumId: string, styleId) => {
           this.setTrait(stratumId, "activeStyle", styleId);
@@ -536,7 +536,7 @@ function TableMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
 
       return {
         id: "regionMapping",
-        name: i18next.t("models.tableData.regionMapping"),
+        name: i18next.t(($) => $.models.tableData.regionMapping),
         options: allRegionProviders.map((regionProvider) => {
           return {
             name: regionProvider.description,
@@ -582,7 +582,7 @@ function TableMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
 
       return {
         id: "regionColumn",
-        name: i18next.t("models.tableData.regionColumn"),
+        name: i18next.t(($) => $.models.tableData.regionColumn),
         options: this.tableColumns.map((col) => {
           return {
             name: col.name,
@@ -602,7 +602,7 @@ function TableMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
     @computed get regionMappingDimensions(): SelectableDimensionGroup {
       return {
         id: "manual-region-mapping",
-        name: i18next.t("models.tableData.manualRegionMapping"),
+        name: i18next.t(($) => $.models.tableData.manualRegionMapping),
         type: "group",
         selectableDimensions: filterOutUndefined([
           this.regionColumnDimensions,
@@ -627,8 +627,14 @@ function TableMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
       return {
         id: "outlierFilter",
         options: [
-          { id: "true", name: i18next.t("models.tableData.zFilterEnabled") },
-          { id: "false", name: i18next.t("models.tableData.zFilterDisabled") }
+          {
+            id: "true",
+            name: i18next.t(($) => $.models.tableData.zFilterEnabled)
+          },
+          {
+            id: "false",
+            name: i18next.t(($) => $.models.tableData.zFilterDisabled)
+          }
         ],
         selectedId: this.activeTableStyle.colorTraits.zScoreFilterEnabled
           ? "true"
@@ -659,11 +665,11 @@ function TableMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
         options: [
           {
             id: "true",
-            name: i18next.t("models.tableData.timeDimensionEnabled")
+            name: i18next.t(($) => $.models.tableData.timeDimensionEnabled)
           },
           {
             id: "false",
-            name: i18next.t("models.tableData.timeDimensionDisabled")
+            name: i18next.t(($) => $.models.tableData.timeDimensionDisabled)
           }
         ],
         selectedId:
@@ -724,7 +730,7 @@ function TableMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
     @computed get legendButton() {
       return this.activeTableStyle.isCustom
         ? {
-            title: i18next.t("models.tableData.custom"),
+            title: i18next.t(($) => $.models.tableData.custom),
             onClick: action(() => {
               SelectableDimensionWorkflow.runWorkflow(
                 this.terria,

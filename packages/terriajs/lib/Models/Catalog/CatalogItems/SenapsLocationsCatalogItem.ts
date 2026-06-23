@@ -165,8 +165,8 @@ export class SenapsLocationsStratum extends LoadableStratum(
 
       if (!senapsLocationsCatalogItem.url) {
         throw new TerriaError({
-          title: i18next.t("models.senaps.retrieveErrorTitle"),
-          message: i18next.t("models.senaps.missingSenapsBaseUrl")
+          title: i18next.t(($) => $.models.senaps.retrieveErrorTitle),
+          message: i18next.t(($) => $.models.senaps.missingSenapsBaseUrl)
         });
       }
       const proxiedBaseUrl = proxyCatalogItemUrl(
@@ -177,10 +177,10 @@ export class SenapsLocationsStratum extends LoadableStratum(
 
       const featureInfo = createStratumInstance(FeatureInfoTemplateTraits, {
         template: `<h4>${i18next.t(
-          "models.senaps.locationHeadingFeatureInfo"
+          ($) => $.models.senaps.locationHeadingFeatureInfo
         )}: {{id}}</h4>
   <h5 style="margin-bottom:5px;">${i18next.t(
-    "models.senaps.availableStreamsHeadingFeatureInfo"
+    ($) => $.models.senaps.availableStreamsHeadingFeatureInfo
   )}</h5>
   {{#hasStreams}}
     <ul>{{#streamIds}}
@@ -215,11 +215,11 @@ export class SenapsLocationsStratum extends LoadableStratum(
       );
     } catch (e: any) {
       throw TerriaError.from(e, {
-        title: i18next.t("models.senaps.retrieveErrorTitle"),
-        message: i18next.t(
+        title: i18next.t(($) => $.models.senaps.retrieveErrorTitle),
+        message: i18next.t(($) =>
           e.statusCode === 401
-            ? "models.senaps.missingKeyErrorMessage"
-            : "models.senaps.generalErrorMessage"
+            ? $.models.senaps.missingKeyErrorMessage
+            : $.models.senaps.generalErrorMessage
         )
       });
     }
@@ -247,7 +247,7 @@ class SenapsLocationsCatalogItem extends MappableMixin(
   }
 
   get typeName() {
-    return i18next.t("models.senaps.name");
+    return i18next.t(($) => $.models.senaps.name);
   }
 
   protected forceLoadMapItems(): Promise<void> {
@@ -283,8 +283,8 @@ class SenapsLocationsCatalogItem extends MappableMixin(
   _constructLocationsUrl() {
     if (!this.url) {
       throw new TerriaError({
-        title: i18next.t("models.senaps.retrieveErrorTitle"),
-        message: i18next.t("models.senaps.missingSenapsBaseUrl")
+        title: i18next.t(($) => $.models.senaps.retrieveErrorTitle),
+        message: i18next.t(($) => $.models.senaps.missingSenapsBaseUrl)
       });
     }
     const uri = new URI(`${this.url}/locations`);
@@ -299,8 +299,8 @@ class SenapsLocationsCatalogItem extends MappableMixin(
   _constructStreamsUrl(locationId: string) {
     if (!this.url) {
       throw new TerriaError({
-        title: i18next.t("models.senaps.retrieveErrorTitle"),
-        message: i18next.t("models.senaps.missingSenapsBaseUrl")
+        title: i18next.t(($) => $.models.senaps.retrieveErrorTitle),
+        message: i18next.t(($) => $.models.senaps.missingSenapsBaseUrl)
       });
     }
     const uri = new URI(`${this.url}/streams`);

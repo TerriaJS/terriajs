@@ -121,8 +121,8 @@ export default class CzmlCatalogItem
     if (loadableData === undefined) {
       throw new TerriaError({
         sender: this,
-        title: i18next.t("models.czml.unableToLoadItemTitle"),
-        message: i18next.t("models.czml.unableToLoadItemMessage")
+        title: i18next.t(($) => $.models.czml.unableToLoadItemTitle),
+        message: i18next.t(($) => $.models.czml.unableToLoadItemMessage)
       });
     }
 
@@ -144,8 +144,8 @@ export default class CzmlCatalogItem
         } else {
           throw networkRequestError({
             sender: this,
-            title: i18next.t("models.czml.errorLoadingTitle"),
-            message: i18next.t("models.czml.errorLoadingMessage")
+            title: i18next.t(($) => $.models.czml.errorLoadingTitle),
+            message: i18next.t(($) => $.models.czml.errorLoadingMessage)
           });
         }
       });

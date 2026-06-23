@@ -25,7 +25,7 @@ export const ShareUrlBookmark: FC<IShareUrlBookmarkProps> = ({ viewState }) => {
         viewState.openHelpPanelItemFromSharePanel(evt, bookMarkHelpItemName)
       }
     >
-      {t("share.getShareSaveHelpMessage")}
+      {t(($) => $.share.getShareSaveHelpMessage)}
     </Text>
   ) : null;
 };

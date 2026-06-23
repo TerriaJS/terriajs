@@ -58,7 +58,7 @@ export function addMarker(
         location.height || 0.0
       ]
     },
-    description: `<table><tr><td>${i18next.t("featureInfo.latLon")}</td><td>${
+    description: `<table><tr><td>${i18next.t(($) => $.featureInfo.latLon)}</td><td>${
       displayCoords.latitude
     }, ${displayCoords.longitude}</td></tr></table>`,
     billboard: billboard

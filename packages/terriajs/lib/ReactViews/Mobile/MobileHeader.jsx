@@ -151,7 +151,7 @@ class MobileHeader extends Component {
             searchText={searchState.catalogSearchText}
             onSearchTextChanged={this.changeCatalogSearchText.bind(this)}
             onDoSearch={this.searchCatalog.bind(this)}
-            placeholder={t("search.searchCatalogue")}
+            placeholder={t(($) => $.search.searchCatalogue)}
             onClear={this.closeCatalogSearch.bind(this)}
             autoFocus
           />
@@ -191,7 +191,7 @@ class MobileHeader extends Component {
                   onClick={this.props.viewState.toggleMobileMenu.bind(
                     this.props.viewState
                   )}
-                  title={t("mobile.toggleNavigation")}
+                  title={t(($) => $.mobile.toggleNavigation)}
                 >
                   <StyledIcon
                     light
@@ -217,7 +217,7 @@ class MobileHeader extends Component {
                   className={Styles.btnAdd}
                   onClick={this.onMobileDataCatalogClicked.bind(this)}
                 >
-                  {t("mobile.addDataBtnText")}
+                  {t(($) => $.mobile.addDataBtnText)}
                   <StyledIcon
                     glyph={Icon.GLYPHS.increase}
                     styledWidth="20px"

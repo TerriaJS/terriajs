@@ -20,7 +20,7 @@ export function MyComponent() {
   const { t, i18n } = useTranslation();
   // or const [t, i18n] = useTranslation();
 
-  return <p>{t("key")}</p>; //returns corresponding translated text from translation files
+  return <p>{t(($) => $.key)}</p>; //returns corresponding translated text from translation files
 }
 ```
 
@@ -37,7 +37,7 @@ import React from "react";
 import { withTranslation } from "react-i18next";
 
 function MyComponent({ t, i18n }) {
-  return <p>{t("my translated text")}</p>;
+  return <p>{t(($) => $.my.translated.text)}</p>;
 }
 
 export default withTranslation()(MyComponent);

@@ -28,7 +28,7 @@ describe("ThreddsCatalogGroup", function () {
   it("has a type and typeName", function () {
     expect(threddsCatalogGroup.type).toBe("thredds-group");
     expect(threddsCatalogGroup.typeName).toBe(
-      i18next.t("models.thredds.nameGroup")
+      i18next.t(($) => $.models.thredds.nameGroup)
     );
   });
 

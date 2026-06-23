@@ -2126,7 +2126,9 @@ export default class Terria {
     serverConfig: any
   ): Promise<void> {
     if (config.proxyableDomainsUrl) {
-      console.warn(i18next.t("models.terria.proxyableDomainsDeprecation"));
+      console.warn(
+        i18next.t(($) => $.models.terria.proxyableDomainsDeprecation)
+      );
     }
     this.corsProxy.init(
       serverConfig,
@@ -2288,7 +2290,7 @@ async function interpretStartData(
         // Show warning messages if converted
         if (result.converted && showConversionWarning) {
           terria.notificationState.addNotificationToQueue({
-            title: i18next.t("share.convertNotificationTitle"),
+            title: i18next.t(($) => $.share.convertNotificationTitle),
             message: shareConvertNotification(result.messages)
           });
         }

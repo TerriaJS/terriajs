@@ -51,10 +51,10 @@ describe("WebFeatureServiceCatalogGroup", function () {
     it("defines info", async function () {
       (await wfs.loadMetadata()).throwIfError();
       const abstract = i18next.t(
-        "models.webFeatureServiceCatalogGroup.abstract"
+        ($) => $.models.webFeatureServiceCatalogGroup.abstract
       );
       const accessConstraints = i18next.t(
-        "models.webFeatureServiceCatalogGroup.accessConstraints"
+        ($) => $.models.webFeatureServiceCatalogGroup.accessConstraints
       );
 
       expect(wfs.info.map(({ name }) => name)).toEqual([

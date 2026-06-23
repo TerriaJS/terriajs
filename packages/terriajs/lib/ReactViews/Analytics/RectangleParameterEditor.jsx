@@ -53,7 +53,7 @@ class RectangleParameterEditor extends Component {
           onClick={this.selectPolygonOnMap.bind(this)}
           className={Styles.btnSelector}
         >
-          {t("analytics.clickToDrawRectangle")}
+          {t(($) => $.analytics.clickToDrawRectangle)}
         </button>
       </div>
     );

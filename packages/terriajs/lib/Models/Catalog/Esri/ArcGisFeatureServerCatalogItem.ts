@@ -36,7 +36,7 @@ export default class ArcGisFeatureServerCatalogItem extends MinMaxLevelMixin(
   }
 
   get typeName(): string {
-    return i18next.t("models.arcGisFeatureServerCatalogItem.name");
+    return i18next.t(($) => $.models.arcGisFeatureServerCatalogItem.name);
   }
 
   protected async forceLoadMetadata(): Promise<void> {

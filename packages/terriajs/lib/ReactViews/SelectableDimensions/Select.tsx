@@ -21,7 +21,8 @@ export const SelectableDimensionEnum: FC<{
   const undefinedOption = {
     value: undefined,
     label:
-      dim.undefinedLabel ?? i18next.t("selectableDimensions.undefinedLabel")
+      dim.undefinedLabel ??
+      i18next.t(($) => $.selectableDimensions.undefinedLabel)
   };
 
   let options = dim.options?.map((option) => ({

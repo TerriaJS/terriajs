@@ -51,7 +51,7 @@ export default observer<React.FC>(function ExplorerWindow() {
         fullWidth
       >
         <Text extraExtraLarge textLight css={{ fontWeight: 500 }}>
-          {t("addData.dataCatalogue")}
+          {t(($) => $.addData.dataCatalogue)}
         </Text>
       </Box>
       <Tabs terria={viewState.terria} viewState={viewState} />

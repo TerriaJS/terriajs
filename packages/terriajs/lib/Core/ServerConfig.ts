@@ -40,7 +40,7 @@ class ServerConfig {
       return this.config;
     } catch {
       console.error(
-        i18next.t("core.serverConfig.failedToGet", {
+        i18next.t(($) => $.core.serverConfig.failedToGet, {
           serverConfigUrl: this.serverConfigUrl
         })
       );

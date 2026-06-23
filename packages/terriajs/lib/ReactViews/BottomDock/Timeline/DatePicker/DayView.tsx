@@ -42,11 +42,17 @@ export const DayView = ({
       `}
     >
       <div>
-        <DTP.BackButton title={t("dateTime.back")} onClick={onBackToYear}>
+        <DTP.BackButton
+          title={t(($) => $.dateTime.back)}
+          onClick={onBackToYear}
+        >
           {year}
         </DTP.BackButton>
         &nbsp;
-        <DTP.BackButton title={t("dateTime.back")} onClick={onBackToMonth}>
+        <DTP.BackButton
+          title={t(($) => $.dateTime.back)}
+          onClick={onBackToMonth}
+        >
           {monthNames[month]}
         </DTP.BackButton>
         <Spacing bottom={1} />

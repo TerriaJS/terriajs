@@ -20,8 +20,8 @@ function getToken(terria: Terria, tokenUrl: string, url: string) {
 
       if (!defined(tokenResponse.token)) {
         throw new TerriaError({
-          title: i18next.t("models.getToken.errorTitle"),
-          message: i18next.t("models.getToken.invalidToken", {
+          title: i18next.t(($) => $.models.getToken.errorTitle),
+          message: i18next.t(($) => $.models.getToken.invalidToken, {
             email:
               '<a href="mailto:' +
               terria.supportEmail +
@@ -36,8 +36,8 @@ function getToken(terria: Terria, tokenUrl: string, url: string) {
     })
     .catch(() => {
       throw new TerriaError({
-        title: i18next.t("models.getToken.errorTitle"),
-        message: i18next.t("models.getToken.unableToRequest", {
+        title: i18next.t(($) => $.models.getToken.errorTitle),
+        message: i18next.t(($) => $.models.getToken.unableToRequest, {
           email:
             '<a href="mailto:' +
             terria.supportEmail +

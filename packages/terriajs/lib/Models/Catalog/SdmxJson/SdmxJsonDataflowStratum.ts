@@ -90,9 +90,13 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
     // Check response
     if (!isDefined(dataflowStructure.data)) {
       throw networkRequestError({
-        title: i18next.t("models.sdmxJsonDataflowStratum.loadDataErrorTitle"),
+        title: i18next.t(
+          ($) => $.models.sdmxJsonDataflowStratum.loadDataErrorTitle
+        ),
         message: i18next.t(
-          "models.sdmxJsonDataflowStratum.loadDataErrorMessage.invalidResponse"
+          ($) =>
+            $.models.sdmxJsonDataflowStratum.loadDataErrorMessage
+              .invalidResponse
         )
       });
     }
@@ -101,11 +105,16 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
       dataflowStructure.data.dataflows.length === 0
     ) {
       throw networkRequestError({
-        title: i18next.t("models.sdmxJsonDataflowStratum.loadDataErrorTitle"),
+        title: i18next.t(
+          ($) => $.models.sdmxJsonDataflowStratum.loadDataErrorTitle
+        ),
         message: i18next.t(
-          "models.sdmxJsonDataflowStratum.loadDataErrorMessage.noDataflow",
+          ($) =>
+            $.models.sdmxJsonDataflowStratum.loadDataErrorMessage.noDataflow,
           {
-            catalogItem: catalogItem
+            catalogItem: {
+              dataflowId: catalogItem.dataflowId as string
+            }
           }
         )
       });
@@ -115,11 +124,17 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
       dataflowStructure.data.dataStructures.length === 0
     ) {
       throw networkRequestError({
-        title: i18next.t("models.sdmxJsonDataflowStratum.loadDataErrorTitle"),
+        title: i18next.t(
+          ($) => $.models.sdmxJsonDataflowStratum.loadDataErrorTitle
+        ),
         message: i18next.t(
-          "models.sdmxJsonDataflowStratum.loadDataErrorMessage.noDatastructure",
+          ($) =>
+            $.models.sdmxJsonDataflowStratum.loadDataErrorMessage
+              .noDatastructure,
           {
-            catalogItem: catalogItem
+            catalogItem: {
+              dataflowId: catalogItem.dataflowId as string
+            }
           }
         )
       });
@@ -432,7 +447,7 @@ export class SdmxJsonDataflowStratum extends LoadableStratum(
 
     return `${
       unitMeasure ||
-      i18next.t("models.sdmxJsonDataflowStratum.defaultUnitMeasure")
+      i18next.t(($) => $.models.sdmxJsonDataflowStratum.defaultUnitMeasure)
     }${frequency ? ` (${frequency})` : ""}`;
   }
 

@@ -24,8 +24,8 @@ export default function upsertSearchProviderFromJson(
     if (id === undefined) {
       return Result.error(
         new TerriaError({
-          title: i18next.t("models.catalog.idForMatchingErrorTitle"),
-          message: i18next.t("models.catalog.idForMatchingErrorMessage")
+          title: i18next.t(($) => $.models.catalog.idForMatchingErrorTitle),
+          message: i18next.t(($) => $.models.catalog.idForMatchingErrorMessage)
         })
       );
     }
@@ -39,10 +39,13 @@ export default function upsertSearchProviderFromJson(
     if (model === undefined) {
       errors.push(
         new TerriaError({
-          title: i18next.t("searchProvider.models.unsupportedTypeTitle"),
-          message: i18next.t("searchProvider.models.unsupportedTypeMessage", {
-            type: json.type
-          })
+          title: i18next.t(($) => $.searchProvider.models.unsupportedTypeTitle),
+          message: i18next.t(
+            ($) => $.searchProvider.models.unsupportedTypeMessage,
+            {
+              type: json.type
+            }
+          )
         })
       );
       model = createStubSearchProvider(terria, uniqueId);

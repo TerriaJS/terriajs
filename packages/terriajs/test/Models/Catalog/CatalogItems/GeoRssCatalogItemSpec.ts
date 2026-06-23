@@ -16,7 +16,7 @@ describe("GeoRssCatalogItem", function () {
 
   it("has a type and typeName", function () {
     expect(item.type).toBe("georss");
-    expect(item.typeName).toBe(i18next.t("models.georss.name"));
+    expect(item.typeName).toBe(i18next.t(($) => $.models.georss.name));
   });
 
   it("supports zooming to extent", async function () {

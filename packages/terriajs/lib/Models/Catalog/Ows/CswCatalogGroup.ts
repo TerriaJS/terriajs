@@ -156,8 +156,8 @@ class CswStratum extends LoadableStratum(CswCatalogGroupTraits) {
   static async load(catalogGroup: CswCatalogGroup): Promise<CswStratum> {
     if (catalogGroup.url === undefined) {
       throw new TerriaError({
-        title: i18next.t("models.csw.missingUrlTitle"),
-        message: i18next.t("models.csw.missingUrlMessage")
+        title: i18next.t(($) => $.models.csw.missingUrlTitle),
+        message: i18next.t(($) => $.models.csw.missingUrlMessage)
       });
     }
 
@@ -211,16 +211,16 @@ class CswStratum extends LoadableStratum(CswCatalogGroupTraits) {
         console.log(error);
         throw networkRequestError({
           sender: catalogGroup,
-          title: i18next.t("models.csw.notUseableTitle"),
-          message: i18next.t("models.csw.notUseableMessage")
+          title: i18next.t(($) => $.models.csw.notUseableTitle),
+          message: i18next.t(($) => $.models.csw.notUseableMessage)
         });
       }
 
       if (!domainResponse) {
         throw networkRequestError({
           sender: catalogGroup,
-          title: i18next.t("models.csw.errorLoadingTitle"),
-          message: i18next.t("models.csw.checkCORSDomain")
+          title: i18next.t(($) => $.models.csw.errorLoadingTitle),
+          message: i18next.t(($) => $.models.csw.checkCORSDomain)
         });
       }
 
@@ -278,23 +278,23 @@ class CswStratum extends LoadableStratum(CswCatalogGroupTraits) {
       if (!isDefined(xml)) {
         throw networkRequestError({
           sender: catalogGroup,
-          title: i18next.t("models.csw.errorLoadingRecordsTitle"),
-          message: i18next.t("models.csw.errorLoadingRecordsMessage")
+          title: i18next.t(($) => $.models.csw.errorLoadingRecordsTitle),
+          message: i18next.t(($) => $.models.csw.errorLoadingRecordsMessage)
         });
       }
 
       const json = xml2json(xml) as GetRecordsResponse;
 
       if (json.Exception) {
-        let errorMessage: string = i18next.t("models.csw.unknownError");
+        let errorMessage: string = i18next.t(($) => $.models.csw.unknownError);
         if (json.Exception.ExceptionText) {
-          errorMessage = i18next.t("models.csw.exceptionMessage", {
+          errorMessage = i18next.t(($) => $.models.csw.exceptionMessage, {
             exceptionText: json.Exception.ExceptionText
           });
         }
         throw new TerriaError({
           sender: catalogGroup,
-          title: i18next.t("models.csw.errorLoadingTitle"),
+          title: i18next.t(($) => $.models.csw.errorLoadingTitle),
           message: errorMessage
         });
       }
@@ -509,13 +509,13 @@ class CswStratum extends LoadableStratum(CswCatalogGroupTraits) {
 
       if (record.contributor && toArray(record.contributor).length > 0) {
         infoSections.push({
-          name: i18next.t("models.csw.dataResponsibility"),
+          name: i18next.t(($) => $.models.csw.dataResponsibility),
           content: toArray(record.contributor)?.join("\n\n")
         });
       }
 
       infoSections.push({
-        name: i18next.t("models.csw.links"),
+        name: i18next.t(($) => $.models.csw.links),
         content: downloadUrls
           .map((d) => `[${d.description}](${d.url})`)
           .join("\n\n")
@@ -525,7 +525,7 @@ class CswStratum extends LoadableStratum(CswCatalogGroupTraits) {
 
       model.setTrait(CommonStrata.definition, "metadataUrls", [
         {
-          title: i18next.t("models.csw.metadataURL"),
+          title: i18next.t(($) => $.models.csw.metadataURL),
           url: new URI(
             proxyCatalogItemUrl(this.catalogGroup, this.catalogGroup.url!)
           )

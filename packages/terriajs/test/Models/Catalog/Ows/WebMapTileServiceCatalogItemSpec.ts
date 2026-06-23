@@ -36,7 +36,9 @@ describe("WebMapTileServiceCatalogItem", function () {
         const descSection = wmts.info.find(
           (section) =>
             section.name ===
-            i18next.t("models.webMapTileServiceCatalogItem.dataDescription")
+            i18next.t(
+              ($) => $.models.webMapTileServiceCatalogItem.dataDescription
+            )
         );
         if (
           descSection !== undefined &&

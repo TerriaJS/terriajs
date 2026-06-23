@@ -14,7 +14,9 @@ export const CollapseBtn = ({
   const { t } = useTranslation();
   return (
     <RawButton
-      title={isCollapsed ? t("story.expand") : t("story.collapse")}
+      title={
+        isCollapsed ? t(($) => $.story.expand) : t(($) => $.story.collapse)
+      }
       onClick={onClick}
     >
       {isCollapsed ? (
@@ -34,7 +36,7 @@ export const ExitBtn = ({ onClick }: BtnProp) => {
   const { t } = useTranslation();
   const theme = useTheme();
   return (
-    <RawButton onClick={onClick} title={t("story.exitBtn")}>
+    <RawButton onClick={onClick} title={t(($) => $.story.exitBtn)}>
       <StoryIcon
         styledWidth={"12px"}
         glyph={Icon.GLYPHS.close}

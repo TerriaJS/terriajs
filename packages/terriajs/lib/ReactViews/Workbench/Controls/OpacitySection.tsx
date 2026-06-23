@@ -47,7 +47,7 @@ class OpacitySection extends Component<OpacitySectionProps> {
     return (
       <Box verticalCenter paddedHorizontally={3} paddedVertically={2}>
         <StyledLabel medium htmlFor="opacity">
-          {t("workbench.opacity", {
+          {t(($) => $.workbench.opacity, {
             opacity: Math.round(item.opacity * 100)
           })}
         </StyledLabel>

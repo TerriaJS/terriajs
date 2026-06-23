@@ -34,10 +34,10 @@ class GetCapabilitiesStratum extends LoadableStratum(
     if (catalogItem.getCapabilitiesUrl === undefined) {
       throw networkRequestError({
         title: i18next.t(
-          "models.webFeatureServiceCatalogGroup.invalidWFSServerTitle"
+          ($) => $.models.webFeatureServiceCatalogGroup.invalidWFSServerTitle
         ),
         message: i18next.t(
-          "models.webFeatureServiceCatalogGroup.invalidWFSServerMessage"
+          ($) => $.models.webFeatureServiceCatalogGroup.invalidWFSServerMessage
         )
       });
     }
@@ -93,7 +93,9 @@ class GetCapabilitiesStratum extends LoadableStratum(
       ) {
         result.push(
           createStratumInstance(InfoSectionTraits, {
-            name: i18next.t("models.webFeatureServiceCatalogGroup.abstract"),
+            name: i18next.t(
+              ($) => $.models.webFeatureServiceCatalogGroup.abstract
+            ),
             content: this.capabilities.service.Abstract
           })
         );
@@ -108,7 +110,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
         result.push(
           createStratumInstance(InfoSectionTraits, {
             name: i18next.t(
-              "models.webFeatureServiceCatalogGroup.accessConstraints"
+              ($) => $.models.webFeatureServiceCatalogGroup.accessConstraints
             ),
             content: this.capabilities.service.AccessConstraints
           })
@@ -119,7 +121,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
       if (service && service.Fees && !/^none$/i.test(service.Fees)) {
         result.push(
           createStratumInstance(InfoSectionTraits, {
-            name: i18next.t("models.webFeatureServiceCatalogGroup.fees"),
+            name: i18next.t(($) => $.models.webFeatureServiceCatalogGroup.fees),
             content: this.capabilities.service.Fees
           })
         );

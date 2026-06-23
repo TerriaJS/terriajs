@@ -105,20 +105,20 @@ const DatePicker = forwardRef<IDatePickerHandle, PropsType>((props, ref) => {
       <Box>
         <PrevButton
           disabled={item.isPreviousDiscreteTimeAvailable === false}
-          title={t("diffTool.datePicker.previousDateTitle")}
+          title={t(($) => $.diffTool.datePicker.previousDateTitle)}
           onClick={moveToPreviousDate}
         />
         <DateButton
           primary
           isOpen={isOpen}
           onClick={toggleOpen}
-          title={t("diffTool.datePicker.dateButtonTitle")}
+          title={t(($) => $.diffTool.datePicker.dateButtonTitle)}
         >
           <TextSpan extraLarge>{formattedCurrentDate || "-"}</TextSpan>
         </DateButton>
         <NextButton
           disabled={item.isNextDiscreteTimeAvailable === false}
-          title={t("diffTool.datePicker.nextDateTitle")}
+          title={t(($) => $.diffTool.datePicker.nextDateTitle)}
           onClick={moveToNextDate}
         />
       </Box>

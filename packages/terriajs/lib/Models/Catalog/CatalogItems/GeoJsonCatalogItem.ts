@@ -42,7 +42,7 @@ class GeoJsonCatalogItem
   }
 
   get typeName() {
-    return i18next.t("models.geoJson.name");
+    return i18next.t(($) => $.models.geoJson.name);
   }
 
   @action
@@ -212,20 +212,23 @@ function mergeFeatureCollections(
 
 export function fileApiNotSupportedError(terria: Terria) {
   return new TerriaError({
-    title: i18next.t("models.userData.fileApiNotSupportedTitle"),
-    message: i18next.t("models.userData.fileApiNotSupportedTitle", {
+    title: i18next.t(($) => $.models.userData.fileApiNotSupportedTitle),
+    message: i18next.t(($) => $.models.userData.fileApiNotSupportedTitle, {
       appName: terria.appName,
+
       chrome:
         '<a href="http://www.google.com/chrome" target="_blank">' +
-        i18next.t("browsers.chrome") +
+        i18next.t(($) => $.browsers.chrome) +
         "</a>",
+
       firefox:
         '<a href="http://www.mozilla.org/firefox" target="_blank">' +
-        i18next.t("browsers.firefox") +
+        i18next.t(($) => $.browsers.firefox) +
         "</a>",
+
       edge:
         '<a href="http://www.microsoft.com/edge" target="_blank">' +
-        i18next.t("browsers.edge") +
+        i18next.t(($) => $.browsers.edge) +
         "</a>"
     })
   });

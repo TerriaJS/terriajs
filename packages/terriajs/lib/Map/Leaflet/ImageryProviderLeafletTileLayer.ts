@@ -181,10 +181,10 @@ export default class ImageryProviderLeafletTileLayer extends L.TileLayer {
 
     L.DomEvent.on(tile, "error", (e) => {
       const level = (this as any)._getLevelFromZ(coords);
-      const message = i18next.t("map.cesium.failedToObtain", {
+      const message = i18next.t(($) => $.map.cesium.failedToObtain, {
         x: coords.x,
         y: coords.y,
-        level: level
+        level
       });
       this._requestImageError = TileProviderError.reportError(
         this._requestImageError!, // TODO: Cesium type definitions incorrectly forbid undefined
@@ -246,7 +246,7 @@ export default class ImageryProviderLeafletTileLayer extends L.TileLayer {
         if (!(tilingScheme instanceof WebMercatorTilingScheme)) {
           this.errorEvent.raiseEvent(
             this,
-            i18next.t("map.cesium.notWebMercatorTilingScheme")
+            i18next.t(($) => $.map.cesium.notWebMercatorTilingScheme)
           );
           return;
         }
@@ -262,7 +262,7 @@ export default class ImageryProviderLeafletTileLayer extends L.TileLayer {
         ) {
           this.errorEvent.raiseEvent(
             this,
-            i18next.t("map.cesium.unusalTilingScheme")
+            i18next.t(($) => $.map.cesium.unusalTilingScheme)
           );
           return;
         }

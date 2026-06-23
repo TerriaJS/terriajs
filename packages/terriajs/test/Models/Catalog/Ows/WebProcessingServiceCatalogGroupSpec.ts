@@ -20,7 +20,7 @@ describe("WebProcessingServiceCatalogGroup", function () {
   it("should have a type and typeName", function () {
     expect(wpsGroup.type).toBe("wps-getCapabilities");
     expect(wpsGroup.typeName).toBe(
-      i18next.t("models.webProcessingServiceCatalogGroup.typeName")
+      i18next.t(($) => $.models.webProcessingServiceCatalogGroup.typeName)
     );
   });
 
@@ -104,7 +104,7 @@ describe("WebProcessingServiceCatalogGroup", function () {
       ).toEqual([
         {
           name: i18next.t(
-            "models.webProcessingServiceCatalogGroup.providerName"
+            ($) => $.models.webProcessingServiceCatalogGroup.providerName
           ),
           content: "CSIRO Ocean & Atmosphere"
         }

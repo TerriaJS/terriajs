@@ -45,11 +45,11 @@ interface Props {
 function CatalogItem(props: Props) {
   const { t } = useTranslation();
   const STATE_TO_TITLE = {
-    [ButtonState.Loading]: t("catalogItem.loading"),
-    [ButtonState.Remove]: t("catalogItem.remove"),
-    [ButtonState.Add]: t("catalogItem.add"),
-    [ButtonState.Trash]: t("catalogItem.trash"),
-    [ButtonState.Preview]: t("catalogItem.preview")
+    [ButtonState.Loading]: t(($) => $.catalogItem.loading),
+    [ButtonState.Remove]: t(($) => $.catalogItem.remove),
+    [ButtonState.Add]: t(($) => $.catalogItem.add),
+    [ButtonState.Trash]: t(($) => $.catalogItem.trash),
+    [ButtonState.Preview]: t(($) => $.catalogItem.preview)
   };
   const stateToTitle: Partial<Record<ButtonState, string>> =
     props.titleOverrides ?? STATE_TO_TITLE;

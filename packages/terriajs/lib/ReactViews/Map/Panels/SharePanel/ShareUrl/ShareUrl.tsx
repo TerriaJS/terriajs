@@ -64,21 +64,23 @@ export const ShareUrl = forwardRef<
   useEffect(() => {
     let cancelled = false;
     if (shouldShorten) {
-      setPlaceholder(t("share.shortLinkShortening"));
+      setPlaceholder(t(($) => $.share.shortLinkShortening));
       setShorteningInProgress(true);
       buildShortShareLink(terria, viewState, { includeStories })
         .then((shareUrl) => {
           if (!cancelled) setShareUrl(shareUrl);
         })
         .catch((error) => {
-          let userMessage: string = t("models.shareData.generateErrorMessage");
+          let userMessage: string = t(
+            ($) => $.models.shareData.generateErrorMessage
+          );
           if (error instanceof TerriaError) {
             const highestImportanceError = error.highestImportanceError;
             const highestImportanceOriginalErrorMessage =
               highestImportanceError.originalError?.[0].message;
             if (highestImportanceOriginalErrorMessage?.includes("413")) {
               userMessage = t(
-                "models.shareData.generateErrorDataExceedsLimitMessage"
+                ($) => $.models.shareData.generateErrorDataExceedsLimitMessage
               );
               terria.raiseErrorToUser(
                 TerriaError.from(error, {
@@ -116,15 +118,17 @@ export const ShareUrl = forwardRef<
     <>
       <Explanation>
         {hasStory
-          ? t("clipboard.storyExplanation")
-          : t("clipboard.shareExplanation")}
+          ? t(($) => $.clipboard.storyExplanation)
+          : t(($) => $.clipboard.shareExplanation)}
       </Explanation>
       <Spacing bottom={1} />
       <Clipboard
         text={shareUrl}
         inputPlaceholder={placeholder}
         createdMessage={
-          hasStory ? t("share.storyLinkCreated") : t("share.shareLinkCreated")
+          hasStory
+            ? t(($) => $.share.storyLinkCreated)
+            : t(($) => $.share.shareLinkCreated)
         }
         onCopy={(text) =>
           terria.analytics.logEvent(Category.share, ShareAction.storyCopy, text)

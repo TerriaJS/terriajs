@@ -37,7 +37,7 @@ describe("ArcGisFeatureServerCatalogGroup", function () {
   it("has a type and typeName", function () {
     expect(group.type).toBe("esri-featureServer-group");
     expect(group.typeName).toBe(
-      i18next.t("models.arcGisFeatureServerCatalogGroup.name")
+      i18next.t(($) => $.models.arcGisFeatureServerCatalogGroup.name)
     );
   });
 
@@ -51,13 +51,13 @@ describe("ArcGisFeatureServerCatalogGroup", function () {
 
     it("defines info", function () {
       const serviceDescription = i18next.t(
-        "models.arcGisFeatureServerCatalogGroup.serviceDescription"
+        ($) => $.models.arcGisFeatureServerCatalogGroup.serviceDescription
       );
       const dataDescription = i18next.t(
-        "models.arcGisFeatureServerCatalogGroup.dataDescription"
+        ($) => $.models.arcGisFeatureServerCatalogGroup.dataDescription
       );
       const copyrightText = i18next.t(
-        "models.arcGisFeatureServerCatalogGroup.copyrightText"
+        ($) => $.models.arcGisFeatureServerCatalogGroup.copyrightText
       );
 
       expect(group.info.map(({ name }) => name)).toEqual([

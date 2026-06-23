@@ -27,8 +27,8 @@ export const SelectableDimensionCheckbox: FC<{
       <Text>
         {dim.options?.find((opt) => opt.id === dim.selectedId)?.name ??
           (dim.selectedId === "true"
-            ? t("selectableDimensions.enabled")
-            : t("selectableDimensions.disabled"))}
+            ? t(($) => $.selectableDimensions.enabled)
+            : t(($) => $.selectableDimensions.disabled))}
       </Text>
     </Checkbox>
   );

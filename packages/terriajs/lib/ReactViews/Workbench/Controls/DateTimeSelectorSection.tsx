@@ -159,7 +159,7 @@ class DateTimeSelectorSection extends Component<IProps, IState> {
     return (
       <Box column paddedVertically>
         <Text medium textLight id={"dateTimeSelectorLabel"}>
-          {item.timeLabel ?? t("dateTime.selectorLabel")}
+          {item.timeLabel ?? t(($) => $.dateTime.selectorLabel)}
         </Text>
         <Spacing bottom={1} />
         <Box fullWidth justifySpaceBetween styledHeight={"40px"} gap>
@@ -173,7 +173,7 @@ class DateTimeSelectorSection extends Component<IProps, IState> {
             <StyledButton
               disabled={!item.isPreviousDiscreteTimeAvailable}
               onClick={this.onPreviousButtonClicked}
-              title={t("dateTime.previous")}
+              title={t(($) => $.dateTime.previous)}
               css={`
                 border-right: 1px solid rgba(255, 255, 255, 0.15);
                 border-radius: 2px 0 0 2px;
@@ -187,7 +187,7 @@ class DateTimeSelectorSection extends Component<IProps, IState> {
             </StyledButton>
             <StyledButton
               onClick={this.toggleOpen}
-              title={t("dateTime.selectTime")}
+              title={t(($) => $.dateTime.selectTime)}
               id="current-date-btn"
               css={`
                 flex-grow: 1;
@@ -197,13 +197,13 @@ class DateTimeSelectorSection extends Component<IProps, IState> {
               <TextSpan textLight id="current-date">
                 {isDefined(discreteTime)
                   ? discreteTime
-                  : t("dateTime.outOfRange")}
+                  : t(($) => $.dateTime.outOfRange)}
               </TextSpan>
             </StyledButton>
             <StyledButton
               disabled={!item.isNextDiscreteTimeAvailable}
               onClick={this.onNextButtonClicked}
-              title={t("dateTime.next")}
+              title={t(($) => $.dateTime.next)}
               css={`
                 border-left: 1px solid rgba(255, 255, 255, 0.15);
                 border-radius: 0 2px 2px 0;
@@ -216,7 +216,7 @@ class DateTimeSelectorSection extends Component<IProps, IState> {
                 width: 0;
                 height: 0;
               `}
-              title={t("dateTime.selectTime")}
+              title={t(($) => $.dateTime.selectTime)}
             >
               <DateTimePicker
                 currentDate={
@@ -237,7 +237,7 @@ class DateTimeSelectorSection extends Component<IProps, IState> {
             active={attachedToTimeline}
             type="button"
             onClick={this.onTimelineButtonClicked}
-            title={t("dateTime.useTimeline")}
+            title={t(($) => $.dateTime.useTimeline)}
           >
             <StyledIcon light styledWidth={"20px"} glyph={GLYPHS.timeline} />
           </TimelineButton>
@@ -245,7 +245,7 @@ class DateTimeSelectorSection extends Component<IProps, IState> {
             active={item.showInChartPanel}
             type="button"
             onClick={this.onShowOnChartButtonClicked}
-            title={t("dateTime.availableTimeChart")}
+            title={t(($) => $.dateTime.availableTimeChart)}
           >
             <StyledIcon light styledWidth={"20px"} glyph={GLYPHS.lineChart} />
           </TimelineButton>

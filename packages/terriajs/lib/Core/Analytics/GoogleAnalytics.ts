@@ -17,7 +17,9 @@ export default class GoogleAnalytics implements Analytics {
     this.options = configParameters.googleAnalyticsOptions;
 
     if (process.env.NODE_ENV === "development") {
-      console.log(i18next.t("core.googleAnalytics.logEnabledOnDevelopment"));
+      console.log(
+        i18next.t(($) => $.core.googleAnalytics.logEnabledOnDevelopment)
+      );
     }
     initializeGoogleAnalytics(this);
   }
@@ -45,7 +47,7 @@ export default class GoogleAnalytics implements Analytics {
 
 function initializeGoogleAnalytics(that: GoogleAnalytics) {
   if (!isDefined(that.key)) {
-    console.log(i18next.t("core.googleAnalytics.log"));
+    console.log(i18next.t(($) => $.core.googleAnalytics.log));
     return;
   }
   ReactGA.initialize(that.key, {

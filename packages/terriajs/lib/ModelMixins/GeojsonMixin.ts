@@ -600,8 +600,8 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
       } catch (e) {
         throw networkRequestError(
           TerriaError.from(e, {
-            title: i18next.t("models.geoJson.errorLoadingTitle"),
-            message: i18next.t("models.geoJson.errorParsingMessage")
+            title: i18next.t(($) => $.models.geoJson.errorLoadingTitle),
+            message: i18next.t(($) => $.models.geoJson.errorParsingMessage)
           })
         );
       }

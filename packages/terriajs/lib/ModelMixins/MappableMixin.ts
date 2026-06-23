@@ -210,7 +210,8 @@ function MappableMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
       this.initialMessageShown = true;
       return new Promise((resolve) => {
         this.terria.notificationState.addNotificationToQueue({
-          title: this.initialMessage.title ?? i18next.t("notification.title"),
+          title:
+            this.initialMessage.title ?? i18next.t(($) => $.notification.title),
           width: this.initialMessage.width,
           height: this.initialMessage.height,
           confirmText: this.initialMessage.confirmation

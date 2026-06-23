@@ -31,11 +31,14 @@ export default function createCatalogItemFromFileOrUrl(
       if (!isDefined(newItem)) {
         terria.raiseErrorToUser(
           new TerriaError({
-            title: i18next.t("models.catalog.unsupportedFileTypeTitle"),
-            message: i18next.t("models.catalog.unsupportedFileTypeMessage", {
-              appName: terria.appName,
-              link: '<a href="https://github.com/TerriaJS/nationalmap/wiki/csv-geo-au">csv-geo-au format</a>'
-            })
+            title: i18next.t(($) => $.models.catalog.unsupportedFileTypeTitle),
+            message: i18next.t(
+              ($) => $.models.catalog.unsupportedFileTypeMessage,
+              {
+                appName: terria.appName,
+                link: '<a href="https://github.com/TerriaJS/nationalmap/wiki/csv-geo-au">csv-geo-au format</a>'
+              }
+            )
           })
         );
         return undefined;

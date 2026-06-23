@@ -81,7 +81,7 @@ const DropPedestrianToGround: FC<DropPedestrianToGroundProps> = (props) => {
   return showMouseTooltip ? (
     <MouseTooltip
       scene={scene}
-      text={t("pedestrianMode.dropPedestrianTooltipMessage")}
+      text={t(($) => $.pedestrianMode.dropPedestrianTooltipMessage)}
     />
   ) : null;
 };

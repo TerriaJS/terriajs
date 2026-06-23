@@ -336,7 +336,7 @@ export default class Cesium extends GlobeOrMap {
 
           zoomUserDrawing = new UserDrawing({
             terria: this.terria,
-            messageHeader: i18next.t("map.drawExtentHelper.drawExtent"),
+            messageHeader: i18next.t(($) => $.map.drawExtentHelper.drawExtent),
             onPointClicked: () => {
               pointClickCount++;
               if (
@@ -476,8 +476,8 @@ export default class Cesium extends GlobeOrMap {
         setViewerMode("3dsmooth", this.terriaViewer);
         if (!this._terrainMessageViewed) {
           this.terria.raiseErrorToUser(err, {
-            title: i18next.t("map.cesium.terrainServerErrorTitle"),
-            message: i18next.t("map.cesium.terrainServerErrorMessage", {
+            title: i18next.t(($) => $.map.cesium.terrainServerErrorTitle),
+            message: i18next.t(($) => $.map.cesium.terrainServerErrorMessage, {
               appName: this.terria.appName,
               supportEmail: this.terria.supportEmail
             })
@@ -583,8 +583,8 @@ export default class Cesium extends GlobeOrMap {
       if (newError !== this.previousRenderError) {
         this.previousRenderError = error.toString();
         this.terria.raiseErrorToUser(error, {
-          title: i18next.t("map.cesium.stoppedRenderingTitle"),
-          message: i18next.t("map.cesium.stoppedRenderingMessage", {
+          title: i18next.t(($) => $.map.cesium.stoppedRenderingTitle),
+          message: i18next.t(($) => $.map.cesium.stoppedRenderingMessage, {
             appName: this.terria.appName
           })
         });

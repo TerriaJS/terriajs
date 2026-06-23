@@ -157,7 +157,7 @@ describe("ArcGisFeatureServerCatalogItem", function () {
   it("has a type and typeName", function () {
     expect(item.type).toBe("esri-featureServer");
     expect(item.typeName).toBe(
-      i18next.t("models.arcGisFeatureServerCatalogItem.name")
+      i18next.t(($) => $.models.arcGisFeatureServerCatalogItem.name)
     );
   });
 
@@ -221,10 +221,10 @@ describe("ArcGisFeatureServerCatalogItem", function () {
 
     it("defines info", function () {
       const dataDescription = i18next.t(
-        "models.arcGisMapServerCatalogItem.dataDescription"
+        ($) => $.models.arcGisMapServerCatalogItem.dataDescription
       );
       const copyrightText = i18next.t(
-        "models.arcGisMapServerCatalogItem.copyrightText"
+        ($) => $.models.arcGisMapServerCatalogItem.copyrightText
       );
 
       expect(item.info.map(({ name }) => name)).toEqual([

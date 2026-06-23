@@ -77,8 +77,8 @@ export class MyLocation extends MapNavigationItemController {
       this.terria.raiseErrorToUser(
         new TerriaError({
           sender: this,
-          title: t("location.errorGettingLocation"),
-          message: t("location.browserCannotProvide")
+          title: t(($) => $.location.errorGettingLocation),
+          message: t(($) => $.location.browserCannotProvide)
         })
       );
     }
@@ -113,7 +113,7 @@ export class MyLocation extends MapNavigationItemController {
     }
 
     runInAction(() => {
-      const name = t("location.myLocation");
+      const name = t(($) => $.location.myLocation);
       this._marker.setTrait(CommonStrata.user, "name", name);
       this._marker.setTrait(CommonStrata.user, "geoJsonData", {
         type: "Feature",
@@ -122,7 +122,7 @@ export class MyLocation extends MapNavigationItemController {
           coordinates: [longitude, latitude]
         },
         properties: {
-          title: t("location.location"),
+          title: t(($) => $.location.location),
           longitude: longitude,
           latitude: latitude
         }
@@ -163,18 +163,18 @@ export class MyLocation extends MapNavigationItemController {
       // https://developers.google.com/web/updates/2016/04/geolocation-on-secure-contexts-only
       const uri = new URI(window.location);
       const secureUrl = uri.protocol("https").toString();
-      message = t("location.originError", { secureUrl: secureUrl });
+      message = t(($) => $.location.originError, { secureUrl: secureUrl });
     } else if (err.code === err.PERMISSION_DENIED) {
-      message = t("location.permissionDenied");
+      message = t(($) => $.location.permissionDenied);
     } else if (err.code === err.POSITION_UNAVAILABLE) {
-      message = t("location.positionUnavailable");
+      message = t(($) => $.location.positionUnavailable);
     } else if (err.code === err.TIMEOUT) {
-      message = t("location.timeout");
+      message = t(($) => $.location.timeout);
     }
     this.terria.raiseErrorToUser(
       new TerriaError({
         sender: this,
-        title: t("location.errorGettingLocation"),
+        title: t(($) => $.location.errorGettingLocation),
         message: message,
         showDetails: false
       })

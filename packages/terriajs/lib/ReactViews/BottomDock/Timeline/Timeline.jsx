@@ -94,7 +94,7 @@ class Timeline extends Component {
         >
           <div
             className={Styles.textCell}
-            title={t("dateTime.timeline.textCell")}
+            title={t(($) => $.dateTime.timeline.textCell)}
           >
             <div className={Styles.layerNameTruncated}>{catalogItem.name}</div>
             {currentTime}

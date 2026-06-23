@@ -62,7 +62,7 @@ export default class ThreddsItemReference extends UrlMixin(
   }
 
   get typeName() {
-    return i18next.t("models.threddsItem.name");
+    return i18next.t(($) => $.models.threddsItem.name);
   }
 
   _threddsDataset: ThreddsDataset | undefined = undefined;

@@ -50,10 +50,10 @@ class GetCapabilitiesStratum extends LoadableStratum(
     if (model.getCapabilitiesUrl === undefined) {
       throw new TerriaError({
         title: i18next.t(
-          "models.webProcessingServiceCatalogGroup.missingUrlTitle"
+          ($) => $.models.webProcessingServiceCatalogGroup.missingUrlTitle
         ),
         message: i18next.t(
-          "models.webProcessingServiceCatalogGroup.missingUrlMessage"
+          ($) => $.models.webProcessingServiceCatalogGroup.missingUrlMessage
         )
       });
     }
@@ -84,7 +84,9 @@ class GetCapabilitiesStratum extends LoadableStratum(
     if (service.Abstract) {
       result.push(
         createStratumInstance(InfoSectionTraits, {
-          name: i18next.t("models.webProcessingServiceCatalogGroup.abstract"),
+          name: i18next.t(
+            ($) => $.models.webProcessingServiceCatalogGroup.abstract
+          ),
           content: service.Abstract
         })
       );
@@ -97,7 +99,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
       result.push(
         createStratumInstance(InfoSectionTraits, {
           name: i18next.t(
-            "models.webProcessingServiceCatalogGroup.accessConstraints"
+            ($) => $.models.webProcessingServiceCatalogGroup.accessConstraints
           ),
           content: service.AccessConstraints
         })
@@ -108,7 +110,9 @@ class GetCapabilitiesStratum extends LoadableStratum(
     if (service.Fees && !/^none$/i.test(service.Fees)) {
       result.push(
         createStratumInstance(InfoSectionTraits, {
-          name: i18next.t("models.webProcessingServiceCatalogGroup.fees"),
+          name: i18next.t(
+            ($) => $.models.webProcessingServiceCatalogGroup.fees
+          ),
           content: service.Fees
         })
       );
@@ -120,7 +124,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
         result.push(
           createStratumInstance(InfoSectionTraits, {
             name: i18next.t(
-              "models.webProcessingServiceCatalogGroup.providerName"
+              ($) => $.models.webProcessingServiceCatalogGroup.providerName
             ),
             content: serviceProvider.ProviderName
           })
@@ -131,7 +135,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
         result.push(
           createStratumInstance(InfoSectionTraits, {
             name: i18next.t(
-              "models.webProcessingServiceCatalogGroup.providerSite"
+              ($) => $.models.webProcessingServiceCatalogGroup.providerSite
             ),
             content: serviceProvider.ProviderSite["xlink:href"]
           })
@@ -227,7 +231,7 @@ export default class WebProcessingServiceCatalogGroup extends GroupMixin(
   }
 
   get typeName() {
-    return i18next.t("models.webProcessingServiceCatalogGroup.typeName");
+    return i18next.t(($) => $.models.webProcessingServiceCatalogGroup.typeName);
   }
 
   async forceLoadMetadata(): Promise<void> {

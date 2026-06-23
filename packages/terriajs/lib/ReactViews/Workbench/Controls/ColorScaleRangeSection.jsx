@@ -45,8 +45,8 @@ const ColorScaleRangeSection = createReactClass({
       this.props.item.terria.raiseErrorToUser(
         new TerriaError({
           sender: this.props.item,
-          title: t("workbench.colorScaleRangeTitle"),
-          message: t("workbench.colorScaleRangeMin")
+          title: t(($) => $.workbench.colorScaleRangeTitle),
+          message: t(($) => $.workbench.colorScaleRangeMin)
         })
       );
       return;
@@ -58,8 +58,8 @@ const ColorScaleRangeSection = createReactClass({
       this.props.item.terria.raiseErrorToUser(
         new TerriaError({
           sender: this.props.item,
-          title: t("workbench.colorScaleRangeTitle"),
-          message: t("workbench.colorScaleRangeMax")
+          title: t(($) => $.workbench.colorScaleRangeTitle),
+          message: t(($) => $.workbench.colorScaleRangeMax)
         })
       );
       return;
@@ -69,8 +69,8 @@ const ColorScaleRangeSection = createReactClass({
       this.props.item.terria.raiseErrorToUser(
         new TerriaError({
           sender: this.props.item,
-          title: t("workbench.colorScaleRangeTitle"),
-          message: t("workbench.colorScaleRangeMinSmallerThanMax")
+          title: t(($) => $.workbench.colorScaleRangeTitle),
+          message: t(($) => $.workbench.colorScaleRangeMinSmallerThanMax)
         })
       );
       return;
@@ -103,8 +103,10 @@ const ColorScaleRangeSection = createReactClass({
     const { t } = this.props;
     return (
       <form className={Styles.colorscalerange} onSubmit={this.updateRange}>
-        <div className={Styles.title}>{t("workbench.colorScaleRange")} </div>
-        <label htmlFor="rangeMax">{t("workbench.rangeMax")} </label>
+        <div className={Styles.title}>
+          {t(($) => $.workbench.colorScaleRange)}{" "}
+        </div>
+        <label htmlFor="rangeMax">{t(($) => $.workbench.rangeMax)} </label>
         <input
           className={Styles.field}
           type="text"
@@ -112,7 +114,7 @@ const ColorScaleRangeSection = createReactClass({
           value={this.state.maxRange}
           onChange={this.changeRangeMax}
         />
-        <label htmlFor="rangeMin">{t("workbench.rangeMin")} </label>
+        <label htmlFor="rangeMin">{t(($) => $.workbench.rangeMin)} </label>
         <input
           className={Styles.field}
           type="text"
@@ -122,10 +124,10 @@ const ColorScaleRangeSection = createReactClass({
         />
         <button
           type="submit"
-          title={t("workbench.colorScaleUpdateRange")}
+          title={t(($) => $.workbench.colorScaleUpdateRange)}
           className={Styles.btn}
         >
-          {t("workbench.colorScaleUpdateRange")}
+          {t(($) => $.workbench.colorScaleUpdateRange)}
         </button>
       </form>
     );

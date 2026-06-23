@@ -95,10 +95,10 @@ const ModalPopup: FC<IProps> = (props) => {
           type="button"
           onClick={props.onClose}
           className={Styles.btnCloseModal}
-          title={t("addData.closeDataPanel")}
+          title={t(($) => $.addData.closeDataPanel)}
           data-target="close-modal"
         >
-          {t("addData.done")}
+          {t(($) => $.addData.done)}
         </button>
         {props.children}
       </div>

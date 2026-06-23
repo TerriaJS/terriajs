@@ -48,12 +48,14 @@ describe("WebMapTileServiceCatalogGroup", function () {
     it("defines info", async function () {
       await wmts.loadMetadata();
       const abstract = i18next.t(
-        "models.webMapTileServiceCatalogGroup.abstract"
+        ($) => $.models.webMapTileServiceCatalogGroup.abstract
       );
       const accessConstraints = i18next.t(
-        "models.webMapTileServiceCatalogGroup.accessConstraints"
+        ($) => $.models.webMapTileServiceCatalogGroup.accessConstraints
       );
-      const fees = i18next.t("models.webMapTileServiceCatalogGroup.fees");
+      const fees = i18next.t(
+        ($) => $.models.webMapTileServiceCatalogGroup.fees
+      );
       expect(wmts.info.map(({ name }) => name)).toEqual([
         abstract,
         accessConstraints,

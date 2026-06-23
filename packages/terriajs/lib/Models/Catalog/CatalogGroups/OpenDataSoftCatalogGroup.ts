@@ -241,7 +241,7 @@ export class OpenDataSoftCatalogStratum extends LoadableStratum(
     );
     itemModel.setTrait(CommonStrata.definition, "metadataUrls", [
       createStratumInstance(MetadataUrlTraits, {
-        title: i18next.t("models.openDataSoft.viewDatasetPage"),
+        title: i18next.t(($) => $.models.openDataSoft.viewDatasetPage),
         url: `${this.catalogGroup.url}/explore/dataset/${dataset.dataset_id}/information/`
       })
     ]);

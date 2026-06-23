@@ -302,14 +302,14 @@ class MapNavigationBase extends Component<PropTypes> {
                 <MapIconButton
                   expandInPlace
                   iconElement={() => <Icon glyph={GLYPHS.moreItems} />}
-                  title={t("mapNavigation.additionalToolsTitle")}
+                  title={t(($) => $.mapNavigation.additionalToolsTitle)}
                   onClick={() =>
                     runInAction(() => {
                       viewState.showCollapsedNavigation = true;
                     })
                   }
                 >
-                  {t("mapNavigation.additionalTools")}
+                  {t(($) => $.mapNavigation.additionalTools)}
                 </MapIconButton>
               </Control>
             )}

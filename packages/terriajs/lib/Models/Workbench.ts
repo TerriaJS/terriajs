@@ -205,8 +205,8 @@ export default class Workbench {
     if (Array.isArray(item)) {
       const results = await Promise.all(item.reverse().map((i) => this.add(i)));
       return Result.combine(results, {
-        title: i18next.t("workbench.addItemErrorTitle"),
-        message: i18next.t("workbench.addItemErrorMessage"),
+        title: i18next.t(($) => $.workbench.addItemErrorTitle),
+        message: i18next.t(($) => $.workbench.addItemErrorMessage),
         importance: -1
       });
     }
@@ -255,8 +255,8 @@ export default class Workbench {
     }
 
     return Result.none(error, {
-      title: i18next.t("workbench.addItemErrorTitle"),
-      message: i18next.t("workbench.addItemErrorMessage"),
+      title: i18next.t(($) => $.workbench.addItemErrorTitle),
+      message: i18next.t(($) => $.workbench.addItemErrorMessage),
       importance: -1
     });
   }

@@ -432,22 +432,22 @@ export class SocrataCatalogStratum extends LoadableStratum(
       );
       resultModel.setTrait(CommonStrata.definition, "info", [
         createStratumInstance(InfoSectionTraits, {
-          name: i18next.t("models.socrataServer.licence"),
+          name: i18next.t(($) => $.models.socrataServer.licence),
           content: result.metadata.license
         }),
         createStratumInstance(InfoSectionTraits, {
-          name: i18next.t("models.socrataServer.tags"),
+          name: i18next.t(($) => $.models.socrataServer.tags),
           content: result.classification.tags.join(", ")
         }),
         createStratumInstance(InfoSectionTraits, {
-          name: i18next.t("models.socrataServer.attributes"),
+          name: i18next.t(($) => $.models.socrataServer.attributes),
           content: result.resource.columns_name.join(", ")
         })
       ]);
 
       resultModel.setTrait(CommonStrata.definition, "metadataUrls", [
         createStratumInstance(MetadataUrlTraits, {
-          title: i18next.t("models.openDataSoft.viewDatasetPage"),
+          title: i18next.t(($) => $.models.openDataSoft.viewDatasetPage),
           url: result.permalink
         })
       ]);

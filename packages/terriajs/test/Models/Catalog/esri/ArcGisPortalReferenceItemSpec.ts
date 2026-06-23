@@ -48,7 +48,7 @@ describe("ArcGisPortalItemReference", function () {
   it("has a type and typeName", function () {
     expect(arcGisPortalItemReference.type).toBe("arcgis-portal-item");
     expect(arcGisPortalItemReference.typeName).toBe(
-      i18next.t("models.arcgisPortal.name")
+      i18next.t(($) => $.models.arcgisPortal.name)
     );
   });
 
@@ -94,7 +94,7 @@ describe("ArcGisPortalItemReference", function () {
       );
 
       const licenceInfo = portalItemTarget.info.filter(
-        (i: any) => i.name === i18next.t("models.arcgisPortal.licence")
+        (i: any) => i.name === i18next.t(($) => $.models.arcgisPortal.licence)
       )[0];
       expect(licenceInfo.content).toBeDefined();
 

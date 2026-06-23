@@ -41,7 +41,7 @@ class ShapefileCatalogItem
   }
 
   get typeName() {
-    return i18next.t("models.shapefile.name");
+    return i18next.t(($) => $.models.shapefile.name);
   }
 
   @action

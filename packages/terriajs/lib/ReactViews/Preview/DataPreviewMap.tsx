@@ -300,10 +300,10 @@ const DataPreviewMap: FC<DataPreviewMapProps> = observer((props) => {
   ]);
 
   const previewBadgeLabels: Record<string, string> = {
-    loading: t("preview.loading"),
-    noPreviewAvailable: t("preview.noPreviewAvailable"),
-    dataPreview: t("preview.dataPreview"),
-    dataPreviewError: t("preview.dataPreviewError")
+    loading: t(($) => $.preview.loading),
+    noPreviewAvailable: t(($) => $.preview.noPreviewAvailable),
+    dataPreview: t(($) => $.preview.dataPreview),
+    dataPreviewError: t(($) => $.preview.dataPreviewError)
   };
 
   return (

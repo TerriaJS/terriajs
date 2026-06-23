@@ -137,7 +137,7 @@ const injectTerms = (string: string, termDictionary: Term[]): string => {
       const termObj = tooltipTerms.get(termToReplace.toLowerCase());
       const description = termObj
         ? applyTranslationIfExists(termObj.content, i18next)
-        : i18next.t("term.missingContent");
+        : i18next.t(($) => $.term.missingContent);
       // const injectedLink = `**${termToReplace}**`;
       const injectedLink = `<terriatooltip title="${termToReplace}">${description}</terriatooltip>`;
       string = currentText.substring(0, termIndex);

@@ -42,11 +42,13 @@ class CogLoadableStratum extends LoadableStratum(CogCatalogItemTraits) {
   get shortReport(): string | undefined {
     return this.model.terria.currentViewer.type === "Leaflet"
       ? // Warn for 2D mode
-        i18next.t("models.commonModelErrors.3dTypeIn2dMode")
+        i18next.t(($) => $.models.commonModelErrors["3dTypeIn2dMode"])
       : this.model._imageryProvider?.tilingScheme &&
           // Show warning for experimental reprojection freature if not using EPSG 3857 or 4326
           isCustomTilingScheme(this.model._imageryProvider?.tilingScheme)
-        ? i18next.t("models.cogCatalogItem.experimentalReprojectionWarning")
+        ? i18next.t(
+            ($) => $.models.cogCatalogItem.experimentalReprojectionWarning
+          )
         : undefined;
   }
 

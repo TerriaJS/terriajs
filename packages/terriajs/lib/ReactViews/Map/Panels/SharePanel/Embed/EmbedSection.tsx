@@ -35,7 +35,7 @@ export const EmbedSection: FC<IEmbedSectionProps> = ({ shareUrl }) => {
           `}
         >
           <TextSpan semiBold isLink medium>
-            {t("share.embedTitle")}
+            {t(($) => $.share.embedTitle)}
           </TextSpan>
           <StyledIcon
             glyph={isOpen ? Icon.GLYPHS.opened : Icon.GLYPHS.closed}
@@ -47,11 +47,11 @@ export const EmbedSection: FC<IEmbedSectionProps> = ({ shareUrl }) => {
       {isOpen && (
         <>
           <Spacing bottom={1} />
-          <Explanation>{t("share.embedDescription")}</Explanation>
+          <Explanation>{t(($) => $.share.embedDescription)}</Explanation>
           <Spacing bottom={1} />
           <Clipboard
             text={!shareUrl?.shorteningInProgress ? iframeCode : ""}
-            inputPlaceholder={t("share.shortLinkShortening")}
+            inputPlaceholder={t(($) => $.share.shortLinkShortening)}
           />
         </>
       )}

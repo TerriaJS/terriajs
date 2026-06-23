@@ -60,7 +60,7 @@ export const ShareUrlWarning: FC<IShareUrlWarningProps> = observer(
       <>
         <Spacing bottom={2} />
         <WarningBox>
-          <Trans t={t} i18nKey="share.localDataNote">
+          <Trans t={t} i18nKey={($) => $.share.localDataNote}>
             <Text bold>
               <strong>Note:</strong>
             </Text>
