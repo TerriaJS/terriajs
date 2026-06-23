@@ -1,6 +1,6 @@
 import * as z from "zod";
 
-export const TermSchema = z.object({
+export const TermSchema = z.strictObject({
   term: z.string(),
   content: z.string(),
   aliases: z.union([z.array(z.string()), z.string()]).optional()

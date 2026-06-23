@@ -52,7 +52,9 @@ export const createTerriaConfig = <
   schema: TSchema = ConfigParametersSchema as TSchema
 ): TerriaConfig<TSchema> => {
   const config = createStratifiedConfig(schema, configStratumOrder);
-  config.update(CommonStrata.defaults, CONFIG_DEFAULTS);
+  const updateStatus = config.update(CommonStrata.defaults, CONFIG_DEFAULTS);
+  if (typeof updateStatus !== "boolean") throw new Error(updateStatus);
+
   return config;
 };
 

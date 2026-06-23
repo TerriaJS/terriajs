@@ -24,7 +24,7 @@ import { SearchBarConfigSchema } from "../SearchProviders/SearchBarModel";
  *  - Fields that always have a value → plain type (e.g. `z.string()`)
  *  - Fields that can be absent → `.optional()`
  */
-export const ConfigParametersSchema = z.object({
+export const ConfigParametersSchema = z.strictObject({
   // ── Identity ────────────────────────────────────────────────────────
   /**
    * TerriaJS uses this name whenever it needs to display the name of the

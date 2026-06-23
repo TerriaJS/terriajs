@@ -17,7 +17,7 @@ const TrainerItemSchema = z.object({
   steps: z.array(StepItemSchema)
 });
 
-export const HelpContentItemSchema = z.object({
+export const HelpContentItemSchema = z.strictObject({
   itemName: z.string(),
   title: z.string().optional(),
 

@@ -5,6 +5,8 @@ import { initReactI18next } from "react-i18next";
 import * as z from "zod";
 import isDefined from "../Core/isDefined";
 
+z.config(z.locales.en());
+
 export interface I18nBackendOptions {
   /**
    *  A few overrides that would be useful from a TerriaMap. The
@@ -32,7 +34,7 @@ export interface I18nStartOptions {
   skipInit?: boolean; // skip initialising i18next. Used in CI
 }
 
-export const LanguageConfigurationSchema = z.object({
+export const LanguageConfigurationSchema = z.strictObject({
   enabled: z.boolean(),
   debug: z.boolean(),
   languages: z.record(z.string(), z.string()),
@@ -72,8 +74,19 @@ const defaultLanguageConfiguration: LanguageConfiguration = {
   lookupCookie: "i18next"
 };
 
+const loadLocale = async (locale: string) => {
+  const lang = locale.split("-")[0].toLowerCase();
+  try {
+    const { default: zodLocale } = await import(`zod/v4/locales/${lang}.js`);
+    z.config(zodLocale());
+  } catch {
+    const { default: enLocale } = await import("zod/v4/locales/en.js");
+    z.config(enLocale());
+  }
+};
+
 class Internationalization {
-  static initLanguage(
+  static async initLanguage(
     languageConfiguration: LanguageConfiguration | undefined,
     /**
      * i18nOptions is explicitly a separate option from `languageConfiguration`,
@@ -97,6 +110,10 @@ class Internationalization {
      * @param {Array} languageConfiguration.changeLanguageOnStartWhen
      * @param {String} languageConfiguration.lookupCookie name of the cookie that handles i18n
      */
+    await loadLocale("en");
+    i18next.on("languageChanged", (lng) => {
+      loadLocale(lng);
+    });
 
     return i18next
       .use(HttpApi)
