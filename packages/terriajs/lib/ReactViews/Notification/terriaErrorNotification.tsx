@@ -114,7 +114,7 @@ export const terriaErrorNotification = (error: TerriaError) =>
           })}
         </Text>
         {/* Show error details if there are more errors to show */}
-        {detailedErrors ? (
+        {detailedErrors && detailedErrors.length > 0 ? (
           <>
             <Spacing bottom={2} />
             <Collapsible
