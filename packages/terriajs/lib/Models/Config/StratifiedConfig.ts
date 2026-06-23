@@ -1,7 +1,16 @@
 import { observable, runInAction } from "mobx";
 import * as z from "zod";
 import { ConfigStratumOrder } from "./ConfigStrata";
-import CommonStrata from "../Definition/CommonStrata";
+
+type ValidationState<T> =
+  | {
+      status: "VALID";
+      data: T;
+    }
+  | {
+      status: "INVALID";
+      error: string;
+    };
 
 /**
  * A generic, priority-layered config store backed by a Zod schema.
@@ -88,17 +97,21 @@ export class StratifiedConfig<TSchema extends z.ZodObject> {
    * Writes directly mutate the per-key observable — only reactions that read
    * an updated key are invalidated, not the entire stratum.
    */
-  update(stratum: string, values: unknown): void {
+  update(stratum: string, values: unknown): string | true {
     const validated = this.parseInput(values);
+
+    if (validated.status === "INVALID") return validated.error;
+
     runInAction(() => {
       const stratumObj = this._getOrCreateStratum(stratum) as Record<
         string,
         unknown
       >;
-      for (const [key, value] of Object.entries(validated)) {
+      for (const [key, value] of Object.entries(validated.data)) {
         stratumObj[key] = value;
       }
     });
+    return true;
   }
 
   /**
@@ -157,20 +170,6 @@ export class StratifiedConfig<TSchema extends z.ZodObject> {
   }
 
   /**
-   * Returns the name of the stratum that currently provides `key`'s value,
-   * or `CommonStrata.defaults` when no stratum provides it at all.
-   */
-  getProvidingStratum<K extends keyof z.output<TSchema>>(key: K): string {
-    for (const [stratumName, stratumObj] of this.stratumOrder.sortTopToBottom(
-      this._strata
-    )) {
-      const value = stratumObj[key];
-      if (value !== undefined) return stratumName;
-    }
-    return CommonStrata.defaults;
-  }
-
-  /**
    * Parses `raw` through `schema.partial()` in a single pass, then filters
    * out `undefined` values — what remains is exactly what the raw input
    * provided (including keys produced by schema-level transforms) with no
@@ -179,28 +178,27 @@ export class StratifiedConfig<TSchema extends z.ZodObject> {
    * If any present value fails schema validation the whole input is rejected
    * and `{}` is returned.  Used internally by `update()`.
    */
-  parseInput(raw: unknown): Partial<z.output<TSchema>> {
+  parseInput(raw: unknown): ValidationState<Partial<z.output<TSchema>>> {
     if (typeof raw !== "object" || raw === null || Array.isArray(raw)) {
-      return {};
+      return {
+        status: "INVALID",
+        error: "Configuration needs to be an object"
+      };
     }
     const result = this._partialSchema.safeParse(raw);
-    if (!result.success) return {};
-    return Object.fromEntries(
-      Object.entries(result.data).filter(([, value]) => value !== undefined)
-    ) as Partial<z.output<TSchema>>;
-  }
-
-  /**
-   * Returns a fully resolved snapshot of every schema key, each resolved
-   * through the full strata chain.
-   */
-  resolveAll(): Partial<z.output<TSchema>> {
-    return Object.fromEntries(
-      Object.keys(this.schema.shape).map((key) => [
-        key,
-        this.get(key as keyof z.output<TSchema>)
-      ])
-    ) as Partial<z.output<TSchema>>;
+    if (!result.success) {
+      console.log(z.prettifyError(result.error));
+      return {
+        status: "INVALID",
+        error: z.prettifyError(result.error)
+      };
+    }
+    return {
+      status: "VALID",
+      data: Object.fromEntries(
+        Object.entries(result.data).filter(([, value]) => value !== undefined)
+      ) as Partial<z.output<TSchema>>
+    };
   }
 
   // ── Private helpers ──────────────────────────────────────────────────────────
