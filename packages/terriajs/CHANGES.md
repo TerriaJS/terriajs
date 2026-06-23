@@ -9,6 +9,8 @@
 
 - Fix story editor rich-text toolbar dropdowns (paragraph style, alignment, table, text colour) and dialogs (image/media/link) being rendered invisibly behind the editor modal due to z-index stacking context. Add `underline` and `subscript` buttons to the toolbar.
 
+- Refactor feedback sending into a `FeedbackService` class instantiated on `Terria` when `feedbackUrl` is configured. The `sendFeedback` standalone function has been removed; consumers should use `terria.feedbackService?.sendFeedback(...)` instead.
+
 #### 8.12.3 - 2026-06-17
 
 - Add config parameters to optionally disable parts of the UI for locked-down deployments: `disableMobileInterface`, `disableSharePanel`, `disableShareEmbed`, `disableUserAddedData` and `cesiumIonDisableDefaultToken` (all default `false`).

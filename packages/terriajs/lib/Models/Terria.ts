@@ -124,6 +124,7 @@ import { isViewerMode, setViewerMode } from "./ViewerMode";
 import Workbench from "./Workbench";
 import SelectableDimensionWorkflow from "./Workflows/SelectableDimensionWorkflow";
 import { defaultLoadConfig } from "./defaultLoadConfig";
+import { FeedbackService, IFeedbackService } from "./FeedbackService";
 
 export interface ConfigParameters {
   /**
@@ -729,6 +730,7 @@ export default class Terria {
   );
 
   @observable serverConfig: any; // TODO
+  @observable feedbackService: IFeedbackService | undefined;
   @observable shareDataService: ShareDataService | undefined;
 
   /* Splitter controls */
@@ -1137,6 +1139,13 @@ export default class Terria {
     await this.initCorsProxy(this.configParameters, serverConfig);
     if (this.shareDataService && this.serverConfig.config) {
       this.shareDataService.init(this.serverConfig.config);
+    }
+    if (this.configParameters.feedbackUrl) {
+      this.feedbackService = new FeedbackService({
+        terria: this,
+        feedbackUrl: this.configParameters.feedbackUrl,
+        additionalFeedbackParameters: serverConfig.additionalFeedbackParameters
+      });
     }
 
     // Create catalog index if catalogIndexUrl is set
