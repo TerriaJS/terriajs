@@ -719,7 +719,7 @@ export default class Terria<
           config.parameters
         );
         if (typeof updateResult === "string") {
-          this.raiseErrorToUser(updateResult, {
+          this.raiseErrorToUser(undefined, {
             sender: this,
             title: { key: "models.terria.configParseErrorTitle" },
             message: `Config validation has failed, map might not function properly.\n<pre>${updateResult}</pre>`,
