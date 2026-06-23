@@ -10,6 +10,7 @@ import ClippingPlaneCollection from "terriajs-cesium/Source/Scene/ClippingPlaneC
 import Cesium3DTilesCatalogItem from "../../lib/Models/Catalog/CatalogItems/Cesium3DTilesCatalogItem";
 import CommonStrata from "../../lib/Models/Definition/CommonStrata";
 import Terria from "../../lib/Models/Terria";
+import Cesium3DTileContent from "terriajs-cesium/Source/Scene/Cesium3DTileContent";
 
 describe("Cesium3dTilesMixin", function () {
   let terria: Terria;
@@ -161,7 +162,10 @@ describe("Cesium3dTilesMixin", function () {
         "locality",
         "building-no"
       ]);
-      const fakeTileFeature = new Cesium3DTileFeature();
+      const fakeTileFeature = new Cesium3DTileFeature(
+        {} as Cesium3DTileContent,
+        0
+      );
       spyOn(fakeTileFeature, "getProperty").and.callFake((property: string) =>
         property === "locality"
           ? "foo"

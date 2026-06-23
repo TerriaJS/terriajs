@@ -103,7 +103,7 @@ let prevBoundsType = 0;
  **/
 class LeafletGeomVisualizer {
   private readonly _featureGroup: L.FeatureGroup;
-  private readonly _entitiesToVisualize: AssociativeArray;
+  private readonly _entitiesToVisualize: AssociativeArray<Entity>;
   private readonly _entityHash: EntityHash;
 
   constructor(
@@ -203,7 +203,7 @@ class LeafletGeomVisualizer {
       const entity = entities[i];
       const entityDetails = entityHash[entity.id];
 
-      if (isDefined(entity._point)) {
+      if (isDefined(entity.point)) {
         this._updatePoint(
           entity,
           time,

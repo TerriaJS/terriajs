@@ -56,7 +56,7 @@
     "style-loader": "^4.0.0",
     "svg-sprite": "^2.0.4",
     "terriajs": "*",
-    "terriajs-cesium": "23.0.2",
+    "terriajs-cesium": "26.0.0",
     "terriajs-plugin-api": "0.0.1-alpha.17",
     "terriajs-plugin-sample": "0.0.1-alpha.7",
     "typescript": "^5.9.2",

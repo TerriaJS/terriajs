@@ -6,6 +6,7 @@
   - Requires node version 22 or above
   - Comes with a new version of proxy rewritten using undici instead of deprecated `request` package. This should improve the performance and reliability of the proxy. Please test your map with this new version of terriajs-server and report any issues you find.
   - For full changelog see [terriajs-server CHANGES.md](https://github.com/TerriaJS/terriajs-server/blob/master/CHANGES.md#next-release---unreleased)
+- Upgraded `terriajs-cesium` to `26.0.0`. We are now using cesium 1.142.
 
 #### 0.4.6
 
