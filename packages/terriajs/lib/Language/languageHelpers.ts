@@ -1,4 +1,4 @@
-import { TOptions, i18n } from "i18next";
+import type { SelectorKey, SelectorOptions, i18n } from "i18next";
 import { isJsonString } from "../Core/Json";
 
 export const TRANSLATE_KEY_PREFIX = "translate#";
@@ -17,15 +17,18 @@ export const TRANSLATE_KEY_PREFIX = "translate#";
 export function applyTranslationIfExists(
   keyOrString: string,
   i18n: i18n,
-  options?: TOptions
+  options?: SelectorOptions<"translation">
 ): string {
   // keyOrString could be undefined in some cases even if we type it as string
   if (isJsonString(keyOrString as unknown)) {
     if (keyOrString.indexOf(TRANSLATE_KEY_PREFIX) === 0) {
-      const translationKey = keyOrString.substring(TRANSLATE_KEY_PREFIX.length);
-      return i18n.exists(translationKey)
-        ? (i18n.t(translationKey, options as never) as never)
-        : translationKey;
+      const translationKey = keyOrString.substring(
+        TRANSLATE_KEY_PREFIX.length
+      ) as SelectorKey;
+      return i18n.t(translationKey, {
+        defaultValue: translationKey,
+        ...options
+      });
     } else {
       return keyOrString;
     }
