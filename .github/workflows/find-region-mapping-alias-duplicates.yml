@@ -25,7 +25,7 @@ jobs:
     steps:
       # Check out only 2 files
       # Use without cone mode as no git operations are executed past checkout
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           sparse-checkout: |
             packages/terriajs/wwwroot/data/regionMapping.json
