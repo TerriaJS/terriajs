@@ -265,6 +265,8 @@ export default class Cesium extends GlobeOrMap {
 
     this.scene.globe.depthTestAgainstTerrain = false;
 
+    (this.scene as any).pickTranslucentDepth = true;
+
     this.scene.renderError.addEventListener(this.onRenderError.bind(this));
 
     const inputHandler = this.cesiumWidget.screenSpaceEventHandler;
