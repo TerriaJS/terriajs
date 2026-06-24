@@ -47,58 +47,6 @@ import ClippingMixin from "./ClippingMixin";
 import MappableMixin from "./MappableMixin";
 import ShadowMixin from "./ShadowMixin";
 
-/**
- * terriajs-cesium 23.0.2 references `Cesium3DTileset#isGltfExtensionRequired` in its
- * Gaussian splat content routing (see Cesium's Cesium3DTileContentFactory +
- * GaussianSplat3DTileContent.tilesetRequiresGaussianSplattingExt) but never defines the
- * method. The routing guard `tileset.isGltfExtensionRequired instanceof Function` is
- * therefore always false, so every Gaussian splat (.glb) tile falls back to the regular
- * model loader: the tileset loads but renders nothing. Upstream CesiumJS defines these
- * methods, which is why the same Cesium ion asset renders in stock Cesium but is invisible
- * in Terria.
- *
- * We define the missing methods here, reading the glTF extension lists that Cesium ion
- * stores under the tileset's `3DTILES_content_gltf` extension. This runs once when the
- * module is imported (before any tileset instance is created) and is a no-op if a future
- * terriajs-cesium version provides the methods itself.
- */
-function ensureGltfExtensionDetection(): void {
-  const proto = Cesium3DTileset.prototype as unknown as {
-    isGltfExtensionUsed?: (extensionName: string) => boolean;
-    isGltfExtensionRequired?: (extensionName: string) => boolean;
-  };
-
-  const hasGltfExtension = (
-    tileset: { extensions?: Record<string, any> },
-    list: "extensionsUsed" | "extensionsRequired",
-    extensionName: string
-  ): boolean => {
-    const contentGltf = tileset.extensions?.["3DTILES_content_gltf"];
-    const extensions = contentGltf?.[list];
-    return Array.isArray(extensions) && extensions.indexOf(extensionName) > -1;
-  };
-
-  if (typeof proto.isGltfExtensionUsed !== "function") {
-    proto.isGltfExtensionUsed = function (
-      this: { extensions?: Record<string, any> },
-      extensionName: string
-    ): boolean {
-      return hasGltfExtension(this, "extensionsUsed", extensionName);
-    };
-  }
-
-  if (typeof proto.isGltfExtensionRequired !== "function") {
-    proto.isGltfExtensionRequired = function (
-      this: { extensions?: Record<string, any> },
-      extensionName: string
-    ): boolean {
-      return hasGltfExtension(this, "extensionsRequired", extensionName);
-    };
-  }
-}
-
-ensureGltfExtensionDetection();
-
 interface Cesium3DTilesCatalogItemIface extends InstanceType<
   ReturnType<typeof Cesium3dTilesMixin>
 > {}
