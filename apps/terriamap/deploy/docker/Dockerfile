@@ -1,5 +1,5 @@
 # Docker image for the primary terria map application server
-FROM node:20
+FROM node:22
 
 RUN mkdir -p /usr/src/app && mkdir -p /etc/config/client
 WORKDIR /usr/src/app/component
