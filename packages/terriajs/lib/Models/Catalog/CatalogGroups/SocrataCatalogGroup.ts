@@ -1,4 +1,4 @@
-import i18next from "i18next";
+import i18next, { keyFromSelector } from "i18next";
 import { action, computed, runInAction, makeObservable } from "mobx";
 import URI from "urijs";
 import isDefined from "../../../Core/isDefined";
@@ -490,7 +490,11 @@ export default class SocrataCatalogGroup extends UrlMixin(
     } catch (e) {
       networkRequestError(
         TerriaError.from(e, {
-          message: { key: "models.socrataServer.retrieveErrorMessage" }
+          message: {
+            key: keyFromSelector(
+              ($) => $.models.socrataServer.retrieveErrorMessage
+            )
+          }
         })
       );
     }

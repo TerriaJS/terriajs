@@ -1,5 +1,6 @@
-import URI from "urijs";
+import { keyFromSelector } from "i18next";
 import queryToObject from "terriajs-cesium/Source/Core/queryToObject";
+import URI from "urijs";
 import { JsonObject, isJsonObject } from "../Core/Json";
 import TerriaError from "../Core/TerriaError";
 import loadJson5 from "../Core/loadJson5";
@@ -32,7 +33,9 @@ export const defaultLoadConfig = async (
   const config = await loadJson5(configUrl, configUrlHeaders);
   if (!isJsonObject(config, false)) {
     throw new TerriaError({
-      title: { key: "models.terria.loadConfigErrorTitle" },
+      title: {
+        key: keyFromSelector(($) => $.models.terria.loadConfigErrorTitle)
+      },
       message: `Expected the config at ${configUrl} to be a JSON object`
     });
   }

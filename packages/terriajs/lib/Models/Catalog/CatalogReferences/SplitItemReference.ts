@@ -1,3 +1,4 @@
+import { keyFromSelector } from "i18next";
 import getDereferencedIfExists from "../../../Core/getDereferencedIfExists";
 import TerriaError from "../../../Core/TerriaError";
 import { getName } from "../../../ModelMixins/CatalogMemberMixin";
@@ -28,7 +29,7 @@ export default class SplitItemReference extends ReferenceMixin(
   ): Promise<BaseModel | undefined> {
     if (this.splitSourceItemId === undefined || this.uniqueId === undefined) {
       throw new TerriaError({
-        title: { key: "splitterTool.errorTitle" },
+        title: { key: keyFromSelector(($) => $.splitterTool.errorTitle) },
         message: "`splitSourceItemId` and `uniqueId` must be defined"
       });
     }
@@ -39,9 +40,9 @@ export default class SplitItemReference extends ReferenceMixin(
     );
     if (sourceItem === undefined) {
       throw new TerriaError({
-        title: { key: "splitterTool.errorTitle" },
+        title: { key: keyFromSelector(($) => $.splitterTool.errorTitle) },
         message: {
-          key: "splitterTool.modelNotFoundErrorMessage",
+          key: keyFromSelector(($) => $.splitterTool.modelNotFoundErrorMessage),
           parameters: {
             id: this.splitSourceItemId
           }
@@ -56,9 +57,11 @@ export default class SplitItemReference extends ReferenceMixin(
       return sourceItem.duplicateModel(this.uniqueId, this);
     } catch (e) {
       throw TerriaError.from(e, {
-        title: { key: "splitterTool.errorTitle" },
+        title: { key: keyFromSelector(($) => $.splitterTool.errorTitle) },
         message: {
-          key: "splitterTool.duplicateModelErrorMessage",
+          key: keyFromSelector(
+            ($) => $.splitterTool.duplicateModelErrorMessage
+          ),
           parameters: {
             name: getName(sourceItem)
           }

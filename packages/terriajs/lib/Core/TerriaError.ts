@@ -1,4 +1,4 @@
-import i18next from "i18next";
+import i18next, { keyFromSelector, SelectorKey } from "i18next";
 import { observable, makeObservable } from "mobx";
 import RequestErrorEvent from "terriajs-cesium/Source/Core/RequestErrorEvent";
 import Terria from "../Models/Terria";
@@ -12,7 +12,7 @@ import isDefined from "./isDefined";
  * This means we can create TerriaErrors before i18next has been initialised.
  */
 export interface I18nTranslateString {
-  key: string;
+  key: SelectorKey;
   parameters?: Record<string, string>;
 }
 
@@ -160,10 +160,10 @@ export default class TerriaError {
 
     // Try to find message/title from error object
     let message: string | I18nTranslateString = {
-      key: "core.terriaError.defaultMessage"
+      key: keyFromSelector(($) => $.core.terriaError.defaultMessage)
     };
     let title: string | I18nTranslateString = {
-      key: "core.terriaError.defaultTitle"
+      key: keyFromSelector(($) => $.core.terriaError.defaultTitle)
     };
     // Create original Error from `error` object
     let originalError: Error | undefined;
@@ -174,9 +174,11 @@ export default class TerriaError {
     }
     // If error is RequestErrorEvent - use networkRequestTitle and networkRequestMessage
     else if (error instanceof RequestErrorEvent) {
-      title = { key: "core.terriaError.networkRequestTitle" };
+      title = {
+        key: keyFromSelector(($) => $.core.terriaError.networkRequestTitle)
+      };
       message = {
-        key: "core.terriaError.networkRequestMessage"
+        key: keyFromSelector(($) => $.core.terriaError.networkRequestMessage)
       };
       originalError = new Error(error.toString());
     } else if (error instanceof Error) {
@@ -240,8 +242,12 @@ export default class TerriaError {
 
     return new TerriaError({
       // Set default title and message
-      title: { key: "core.terriaError.defaultCombineTitle" },
-      message: { key: "core.terriaError.defaultCombineMessage" },
+      title: {
+        key: keyFromSelector(($) => $.core.terriaError.defaultCombineTitle)
+      },
+      message: {
+        key: keyFromSelector(($) => $.core.terriaError.defaultCombineMessage)
+      },
 
       // Add original errors and overrides
       originalError: filteredErrors,
@@ -254,7 +260,9 @@ export default class TerriaError {
   constructor(options: TerriaErrorOptions) {
     makeObservable(this);
     this._message = options.message;
-    this._title = options.title ?? { key: "core.terriaError.defaultTitle" };
+    this._title = options.title ?? {
+      key: keyFromSelector(($) => $.core.terriaError.defaultTitle)
+    };
     this.sender = options.sender;
     this._raisedToUser = options.raisedToUser ?? false;
     this.overrideRaiseToUser = options.overrideRaiseToUser;
@@ -486,15 +494,19 @@ export function networkRequestError(error: TerriaError | TerriaErrorOptions) {
       error instanceof TerriaError ? error : new TerriaError(error),
       new TerriaError({
         message: {
-          key: "core.terriaError.networkRequestMessageDetailed"
+          key: keyFromSelector(
+            ($) => $.core.terriaError.networkRequestMessageDetailed
+          )
         }
       })
     ],
     // Override combined error with user-friendly title and message
     {
-      title: { key: "core.terriaError.networkRequestTitle" },
+      title: {
+        key: keyFromSelector(($) => $.core.terriaError.networkRequestTitle)
+      },
       message: {
-        key: "core.terriaError.networkRequestMessage"
+        key: keyFromSelector(($) => $.core.terriaError.networkRequestMessage)
       },
       importance: 1
     }

@@ -1,4 +1,4 @@
-import i18next from "i18next";
+import i18next, { keyFromSelector } from "i18next";
 import {
   action,
   computed,
@@ -1053,9 +1053,15 @@ export default class Terria {
                 });
               } catch (error) {
                 return Result.error(error, {
-                  title: { key: "models.catalog.convertErrorTitle" },
+                  title: {
+                    key: keyFromSelector(
+                      ($) => $.models.catalog.convertErrorTitle
+                    )
+                  },
                   message: {
-                    key: "models.catalog.convertErrorMessage",
+                    key: keyFromSelector(
+                      ($) => $.models.catalog.convertErrorMessage
+                    ),
                     parameters: { url: v7initUrl }
                   }
                 });
@@ -1099,7 +1105,9 @@ export default class Terria {
     } catch (error) {
       this.raiseErrorToUser(error, {
         sender: this,
-        title: { key: "models.terria.loadConfigErrorTitle" },
+        title: {
+          key: keyFromSelector(($) => $.models.terria.loadConfigErrorTitle)
+        },
         message: `Couldn't load configuration`,
         severity: TerriaErrorSeverity.Error
       });
@@ -1425,7 +1433,9 @@ export default class Terria {
           } catch (e) {
             throw TerriaError.from(e, {
               message: {
-                key: "models.terria.loadingInitJsonMessage",
+                key: keyFromSelector(
+                  ($) => $.models.terria.loadingInitJsonMessage
+                ),
                 parameters: { url: initSource.initUrl }
               }
             });
@@ -1468,7 +1478,9 @@ export default class Terria {
             TerriaError.from(e, {
               severity: initSource.errorSeverity,
               message: {
-                key: "models.terria.loadingInitSourceError2Message",
+                key: keyFromSelector(
+                  ($) => $.models.terria.loadingInitSourceError2Message
+                ),
                 parameters: { loadSource: initSource.name ?? "Unknown source" }
               }
             })
@@ -1494,7 +1506,9 @@ export default class Terria {
           TerriaError.from(e, {
             severity: initSource?.errorSeverity,
             message: {
-              key: "models.terria.loadingInitSourceError2Message",
+              key: keyFromSelector(
+                ($) => $.models.terria.loadingInitSourceError2Message
+              ),
               parameters: {
                 loadSource: initSource!.name ?? "Unknown source"
               }
@@ -1525,9 +1539,15 @@ export default class Terria {
     if (errors.length > 0) {
       // Note - this will get wrapped up in a Result object because it is called in AsyncLoader
       throw TerriaError.combine(errors, {
-        title: { key: "models.terria.loadingInitSourcesErrorTitle" },
+        title: {
+          key: keyFromSelector(
+            ($) => $.models.terria.loadingInitSourcesErrorTitle
+          )
+        },
         message: {
-          key: "models.terria.loadingInitSourcesErrorMessage",
+          key: keyFromSelector(
+            ($) => $.models.terria.loadingInitSourcesErrorMessage
+          ),
           parameters: { appName: this.appName, email: this.supportEmail }
         }
       });
@@ -1705,7 +1725,7 @@ export default class Terria {
             ? TerriaErrorSeverity.Error
             : TerriaErrorSeverity.Warning,
         message: {
-          key: "models.terria.loadModelErrorMessage",
+          key: keyFromSelector(($) => $.models.terria.loadModelErrorMessage),
           parameters: { model: modelId }
         }
       })
@@ -2025,7 +2045,9 @@ export default class Terria {
     if (errors.length > 0)
       throw TerriaError.combine(errors, {
         message: {
-          key: "models.terria.loadingInitSourceErrorTitle"
+          key: keyFromSelector(
+            ($) => $.models.terria.loadingInitSourceErrorTitle
+          )
         }
       });
 
@@ -2242,7 +2264,11 @@ async function interpretHash(
       );
     } catch (e) {
       throw TerriaError.from(e, {
-        message: { key: "models.terria.parsingStartDataErrorMessage" },
+        message: {
+          key: keyFromSelector(
+            ($) => $.models.terria.parsingStartDataErrorMessage
+          )
+        },
         importance: -1
       });
     }
@@ -2350,8 +2376,8 @@ async function interpretStartData(
       }
     } catch (error) {
       throw TerriaError.from(error, {
-        title: { key: "share.convertErrorTitle" },
-        message: { key: "share.convertErrorMessage" }
+        title: { key: keyFromSelector(($) => $.share.convertErrorTitle) },
+        message: { key: keyFromSelector(($) => $.share.convertErrorMessage) }
       });
     }
   }

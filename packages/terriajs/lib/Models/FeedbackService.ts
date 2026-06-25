@@ -1,4 +1,4 @@
-import i18next from "i18next";
+import i18next, { keyFromSelector } from "i18next";
 import loadWithXhr from "../Core/loadWithXhr";
 import { Notification } from "../ReactViewModels/NotificationState";
 import {
@@ -123,7 +123,11 @@ export class FeedbackService implements IFeedbackService {
 const createErrorResponse = (error: unknown): SendFeedbackResponse => ({
   result: "FAILED",
   error: TerriaError.from(error, {
-    title: i18next.t((t) => t.models.feedback.unableToSendTitle),
-    message: i18next.t((t) => t.models.feedback.unableToSendTitle)
+    title: {
+      key: keyFromSelector(($) => $.models.feedback.unableToSendTitle)
+    },
+    message: {
+      key: keyFromSelector(($) => $.models.feedback.unableToSendTitle)
+    }
   })
 });

@@ -1,4 +1,4 @@
-import i18next from "i18next";
+import i18next, { keyFromSelector } from "i18next";
 import { isEqual } from "lodash-es";
 import {
   action,
@@ -235,7 +235,9 @@ export default class Cesium extends GlobeOrMap {
     } catch (error) {
       throw TerriaError.from(error, {
         message: {
-          key: "terriaViewer.slowWebGLAvailableMessageII",
+          key: keyFromSelector(
+            ($) => $.terriaViewer.slowWebGLAvailableMessageII
+          ),
           parameters: { appName: this.terria.appName, webGL: "WebGL" }
         }
       });
