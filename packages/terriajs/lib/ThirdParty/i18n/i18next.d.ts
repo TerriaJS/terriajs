@@ -1,7 +1,7 @@
 // import the original type declarations
 import "i18next";
 // import all namespaces (for the default language, only)
-import Resources from "./resources";
+import type Resources from "../../../wwwroot/languages/en/translation.json";
 
 declare module "i18next" {
   // Extend CustomTypeOptions
@@ -13,8 +13,8 @@ declare module "i18next" {
     allowObjectInHTMLChildren: true;
     // custom resources type
     resources: {
-      translation: Resources["translation"];
-      languageOverrides: Resources["translation"];
+      translation: typeof Resources;
+      languageOverrides: typeof Resources;
       "": Record<string, string>;
     };
     // other

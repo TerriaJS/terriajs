@@ -270,32 +270,13 @@ const copyCesiumAssets = gulp.series(
   copyCesiumThirdparty
 );
 
-function generateI18nTypes(done) {
-  require("./buildprocess/generateI18nTypes")(__dirname);
-  done();
-}
-generateI18nTypes.description =
-  "Generate TypeScript types from i18n translation files.";
-generateI18nTypes.displayName = "generate-i18n-types";
-
-function watchI18nTypes() {
-  return gulp.watch(
-    ["./wwwroot/languages/en/**/*.json"],
-    { ignoreInitial: false },
-    generateI18nTypes
-  );
-}
-
-const build = gulp.series(copyCesiumAssets, generateI18nTypes, buildSpecs);
+const build = gulp.series(copyCesiumAssets, buildSpecs);
 build.description = "Build non-minified version of TerriaJS tests.";
 
-const release = gulp.series(copyCesiumAssets, generateI18nTypes, releaseSpecs);
+const release = gulp.series(copyCesiumAssets, releaseSpecs);
 release.description = "Build minified version of TerriaJS tests.";
 
-const watch = gulp.series(
-  copyCesiumAssets,
-  gulp.parallel(watchI18nTypes, watchSpecs)
-);
+const watch = gulp.series(copyCesiumAssets, gulp.parallel(watchSpecs));
 watch.description = "Build TerriaJS tests when there are source changes.";
 
 function serveTests(done) {
@@ -337,4 +318,3 @@ exports.testFirefox = testFirefox;
 exports.release = release;
 exports.postNpmInstall = postNpmInstall;
 exports.default = lintBuild;
-exports.generateI18nTypes = generateI18nTypes;
