@@ -1,5 +1,6 @@
 import { Component } from "react";
-import { withTranslation, TFunction } from "react-i18next";
+import { TFunction } from "i18next";
+import { withTranslation } from "react-i18next";
 import DataUri from "../../Core/DataUri";
 import filterOutUndefined from "../../Core/filterOutUndefined";
 import JsonValue, { JsonObject } from "../../Core/Json";

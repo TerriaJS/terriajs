@@ -194,7 +194,7 @@ class WebMapServiceCatalogItem
       this.tilingScheme instanceof GeographicTilingScheme &&
       this.terria.currentViewer.type === "Leaflet"
     ) {
-      return i18next.t("map.cesium.notWebMercatorTilingScheme", this);
+      return i18next.t("map.cesium.notWebMercatorTilingScheme");
     }
     return super.shortReport;
   }

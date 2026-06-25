@@ -10,7 +10,8 @@ import {
 } from "mobx";
 import { observer } from "mobx-react";
 import { createRef, Component } from "react";
-import { WithTranslation, withTranslation, TFunction } from "react-i18next";
+import { TFunction } from "i18next";
+import { WithTranslation, withTranslation } from "react-i18next";
 import styled, { DefaultTheme, withTheme } from "styled-components";
 import ViewState from "../../../ReactViewModels/ViewState";
 import Box from "../../../Styled/Box";

@@ -290,7 +290,7 @@ export class ArcGisFeatureServerStratum extends LoadableStratum(
     ) {
       return i18next.t(
         "models.arcGisFeatureServerCatalogItem.reachedMaxFeatureLimit",
-        this._item
+        { maxFeatures: this._item.maxFeatures }
       );
     }
     return undefined;

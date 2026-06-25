@@ -139,7 +139,7 @@ class MapServerStratum extends LoadableStratum(
           ),
           message: i18next.t(
             "models.arcGisMapServerCatalogItem.noLayersFoundMessage",
-            item
+            { name: item.name }
           )
         });
       }

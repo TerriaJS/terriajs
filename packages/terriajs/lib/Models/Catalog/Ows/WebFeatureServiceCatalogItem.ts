@@ -163,7 +163,7 @@ export class GetCapabilitiesStratum extends LoadableStratum(
 
   @computed
   get infoSectionOrder(): string[] {
-    let layerDescriptions = [
+    let layerDescriptions: string[] = [
       i18next.t("models.webFeatureServiceCatalogItem.abstract")
     ];
 
@@ -380,8 +380,7 @@ class WebFeatureServiceCatalogItem extends GetCapabilitiesMixin(
         sender: this,
         title: i18next.t("models.webFeatureServiceCatalogItem.missingUrlTitle"),
         message: i18next.t(
-          "models.webFeatureServiceCatalogItem.missingUrlMessage",
-          this
+          "models.webFeatureServiceCatalogItem.missingUrlMessage"
         )
       });
     }
@@ -487,7 +486,7 @@ class WebFeatureServiceCatalogItem extends GetCapabilitiesMixin(
     ) {
       return i18next.t(
         "models.webFeatureServiceCatalogItem.reachedMaxFeatureLimit",
-        this
+        { maxFeatures: this.maxFeatures }
       );
     }
     return undefined;

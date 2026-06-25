@@ -58,7 +58,7 @@ const EmptyWorkbench: FC<EmptyWorkbenchProps> = observer(() => {
           overflowY="auto"
           scroll
         >
-          {transContent.map((content, idx) => (
+          {transContent?.map((content, idx) => (
             <div key={idx}>
               {content.heading && (
                 <Text

@@ -37,8 +37,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
           "models.webFeatureServiceCatalogGroup.invalidWFSServerTitle"
         ),
         message: i18next.t(
-          "models.webFeatureServiceCatalogGroup.invalidWFSServerMessage",
-          this
+          "models.webFeatureServiceCatalogGroup.invalidWFSServerMessage"
         )
       });
     }

@@ -71,7 +71,7 @@ export const ShareUrl = forwardRef<
           if (!cancelled) setShareUrl(shareUrl);
         })
         .catch((error) => {
-          let userMessage = t("models.shareData.generateErrorMessage");
+          let userMessage: string = t("models.shareData.generateErrorMessage");
           if (error instanceof TerriaError) {
             const highestImportanceError = error.highestImportanceError;
             const highestImportanceOriginalErrorMessage =

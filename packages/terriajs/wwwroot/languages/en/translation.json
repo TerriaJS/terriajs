@@ -244,8 +244,8 @@
     "title": "Count Datasets",
     "btnCount": "Count datasets",
     "noMapDataEnabled": "No map data enabled",
-    "mapDataState": "{{count}} dataset enabled on map",
-    "mapDataState_plural": "{{count}} datasets enabled on map"
+    "mapDataState_one": "{{count}} dataset enabled on map",
+    "mapDataState_other": "{{count}} datasets enabled on map"
   },
   "toolsPanel": {
     "btnText": "Tool",
@@ -388,8 +388,8 @@
     "doesNotExist": "Story does not exist",
     "saveInstructions": "Click share to create a new story link.",
     "removeAllStories": "Remove all scenes",
-    "removeAllStoriesDialog": "Are you sure you wish to delete {{ count }} scene?",
-    "removeAllStoriesDialog_plural": "Are you sure you wish to delete {{ count }} scenes?",
+    "removeAllStoriesDialog_one": "Are you sure you wish to delete {{ count }} scene?",
+    "removeAllStoriesDialog_other": "Are you sure you wish to delete {{ count }} scenes?",
     "removeStoryDialog": "Are you sure you wish to delete '<1>{{storyName}}</1>'?",
     "preview": "preview stories",
     "play": "Play",
@@ -468,7 +468,9 @@
     "dragDrop": "Drag and Drop",
     "infoText": "<0>Drag and drop a file here to view it locally on the map</0><1>(it won’t be saved or uploaded to the internet)</1>",
     "back": "Back",
-    "note": "<0>Note: </0>Data added in this way is not saved or made visible to others."
+    "note": "<0>Note: </0>Data added in this way is not saved or made visible to others.",
+    "cesiumIonToken": "Cesium ion Token:",
+    "cesiumIonStep2": "Step 2:"
   },
   "search": {
     "resultsLabel": "Search Results",
@@ -633,8 +635,8 @@
   },
   "dragDrop": {
     "text": "<0>Drag & Drop</0><1>Your data anywhere to view on the map<1>",
-    "notification": "<0>\"{{fileNames}}\"</0> has been added to <4>My Data</4>.",
-    "notification_plural": "<0>\"{{fileNames}}\"</0> have been added to <4>My Data</4>."
+    "notification_one": "<0>\"{{fileNames}}\"</0> has been added to <4>My Data</4>.",
+    "notification_other": "<0>\"{{fileNames}}\"</0> have been added to <4>My Data</4>."
   },
   "loader": {
     "loadingMessage": "Loading"
@@ -691,8 +693,8 @@
   "viewModels": {
     "searchNoLocations": "Sorry, no locations match your search query.",
     "searchErrorOccurred": "An error occurred while searching.  Please check your internet connection or try again later.",
-    "searchMinCharacters": "You need to enter minimum {{count}} character",
-    "searchMinCharacters_plural": "You need to enter minimum {{count}} characters",
+    "searchMinCharacters_one": "You need to enter minimum {{count}} character",
+    "searchMinCharacters_other": "You need to enter minimum {{count}} characters",
     "searchAddresses": "Addresses",
     "searchPlaceNames": "Official Place Names",
     "searchNoPlaceNames": "Sorry, no official place names match your search query.",
@@ -971,6 +973,9 @@
       "exportFailedMessage": "The Web Coverage Service failed",
       "exportFailedMessageII": "The Web Coverage Service failed: {{error}}"
     },
+    "carto-v3": {
+      "name": "Carto V3"
+    },
     "cartoMap": {
       "name": "Carto Map",
       "noUrlTitle": "No URL",
@@ -1011,6 +1016,9 @@
       "notCompatibleTitle": "No compatible resources found",
       "notCompatibleMessageI": "The CKAN dataset does not have a resource with the ID {{resourceId}} or it does not have a supported format.",
       "notCompatibleMessageII": "The CKAN dataset does not have any resources with a supported format."
+    },
+    "composite": {
+      "name": "Composite Catalog Item"
     },
     "arcgisPortal": {
       "nameGroup": "ArcGIS Portal Group",
@@ -2154,8 +2162,8 @@
     "searchBtnText": "Search",
     "resetBtnText": "Clear input",
     "backBtnText": "Search again",
-    "resultsCount": "{{count}} match found",
-    "resultsCount_plural": "{{count}} matches found",
+    "resultsCount_one": "{{count}} match found",
+    "resultsCount_other": "{{count}} matches found",
     "actions": {
       "highlightAll": "Highlight all",
       "showMatchingOnly": "Show matching only"

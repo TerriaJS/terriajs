@@ -16,7 +16,9 @@ const sides = {
   left: "settingPanel.terrain.left",
   both: "settingPanel.terrain.both",
   right: "settingPanel.terrain.right"
-};
+} as const;
+
+type sides = (typeof sides)[keyof typeof sides];
 
 interface ITerrainSideProps {
   terria: Terria;
@@ -76,7 +78,7 @@ const TerrainSide: FC<ITerrainSideProps> = observer(
       ? t("settingPanel.terrain.showUndergroundFeatures")
       : t("settingPanel.terrain.hideUndergroundFeatures");
 
-    let currentSide = sides.both;
+    let currentSide: sides = sides.both;
     if (isCesiumWithTerrain) {
       switch (terria.terrainSplitDirection) {
         case SplitDirection.LEFT:

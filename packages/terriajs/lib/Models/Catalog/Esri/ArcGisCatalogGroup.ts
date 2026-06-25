@@ -77,8 +77,8 @@ class ArcGisServerStratum extends LoadableStratum(ArcGisCatalogGroupTraits) {
           (!arcgisServer.folders && !arcgisServer.services)
         ) {
           throw networkRequestError({
-            title: i18next.t("models.arcGisService.invalidServiceTitle"),
-            message: i18next.t("models.arcGisService.invalidServiceMessage")
+            title: i18next.t("models.arcGisService.invalidServerTitle"),
+            message: i18next.t("models.arcGisService.invalidServerMessage")
           });
         }
 

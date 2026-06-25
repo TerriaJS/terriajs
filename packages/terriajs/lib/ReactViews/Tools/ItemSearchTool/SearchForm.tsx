@@ -1,10 +1,10 @@
 import isEmpty from "lodash-es/isEmpty";
 import { FC, FormEvent, ChangeEvent, useEffect, useState } from "react";
+import { TFunction } from "i18next";
 import {
   useTranslation,
   WithTranslation,
-  withTranslation,
-  TFunction
+  withTranslation
 } from "react-i18next";
 import ReactSelect, { ActionMeta, OnChangeValue } from "react-select";
 import styled from "styled-components";

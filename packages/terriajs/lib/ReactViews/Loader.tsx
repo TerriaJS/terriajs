@@ -1,5 +1,6 @@
 import { FC } from "react";
-import { withTranslation, WithTranslation, TFunction } from "react-i18next";
+import { TFunction } from "i18next";
+import { withTranslation, WithTranslation } from "react-i18next";
 import Box from "../Styled/Box";
 import { TextSpan } from "../Styled/Text";
 import AnimatedSpinnerIcon from "../Styled/AnimatedSpinnerIcon";

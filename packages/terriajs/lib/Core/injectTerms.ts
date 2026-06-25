@@ -111,12 +111,15 @@ const injectTerms = (string: string, termDictionary: Term[]): string => {
          * and add a single string as plain strings should be provided in an
          * array
          */
-        const translated = i18next.t(termAliases, { returnObjects: true });
+        const translated = i18next.t(termAliases, {
+          returnObjects: true,
+          defaultValue: ""
+        });
         if (
           Array.isArray(translated) &&
           translated.every((item) => typeof item === "string")
         ) {
-          addAliasesToTooltipTerms(translated);
+          addAliasesToTooltipTerms(translated as string[]);
         }
       }
     });

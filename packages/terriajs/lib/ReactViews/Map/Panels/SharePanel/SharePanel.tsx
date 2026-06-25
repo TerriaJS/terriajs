@@ -1,11 +1,8 @@
 import classNames from "classnames";
 import { observer } from "mobx-react";
 import { Component } from "react";
-import {
-  WithTranslation,
-  withTranslation,
-  type TFunction
-} from "react-i18next";
+import { type TFunction } from "i18next";
+import { WithTranslation, withTranslation } from "react-i18next";
 import Terria from "../../../../Models/Terria";
 import ViewState from "../../../../ReactViewModels/ViewState";
 import Box from "../../../../Styled/Box";

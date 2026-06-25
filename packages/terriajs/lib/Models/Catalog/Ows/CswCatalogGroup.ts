@@ -286,7 +286,7 @@ class CswStratum extends LoadableStratum(CswCatalogGroupTraits) {
       const json = xml2json(xml) as GetRecordsResponse;
 
       if (json.Exception) {
-        let errorMessage = i18next.t("models.csw.unknownError");
+        let errorMessage: string = i18next.t("models.csw.unknownError");
         if (json.Exception.ExceptionText) {
           errorMessage = i18next.t("models.csw.exceptionMessage", {
             exceptionText: json.Exception.ExceptionText

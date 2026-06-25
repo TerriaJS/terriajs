@@ -151,7 +151,7 @@ export default class I3SCatalogItem extends Cesium3dTilesStyleMixin(
   @override
   get shortReport(): string | undefined {
     if (this.terria.currentViewer.type === "Leaflet") {
-      return i18next.t("models.commonModelErrors.3dTypeIn2dMode", this);
+      return i18next.t("models.commonModelErrors.3dTypeIn2dMode");
     }
     return super.shortReport;
   }

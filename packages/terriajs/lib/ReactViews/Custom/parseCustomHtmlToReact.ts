@@ -115,7 +115,7 @@ function getProcessingInstructions(context: ParseCustomHtmlToReactContext) {
         /* eslint-disable-next-line react/no-children-prop */
         return createElement(ExternalLinkWithWarning, {
           attributes: aElement.props,
-          children: aElement.props.children
+          children: aElement.props.children as React.ReactNode
         });
       }
 
