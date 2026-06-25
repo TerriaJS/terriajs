@@ -14,7 +14,7 @@ Brings the core Terria projects together in one place.
 
 ## Prerequisites
 
-- Node.js `>= 22` (see `.nvmrc`)
+- Node.js `>= 24` (see `.nvmrc`)
 - Yarn `1.x` (classic)
 
 ## Install
