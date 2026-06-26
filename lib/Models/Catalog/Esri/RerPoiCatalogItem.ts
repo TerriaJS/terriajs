@@ -150,7 +150,6 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
     });
   };
 
-
   private ensureCesiumImageryLevelWatcher():
     | (() => number | undefined)
     | undefined {
@@ -1433,7 +1432,6 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
   }
 
   private getCurrentViewerScale(): number | undefined {
-    
     const leafletScale = this.getLeafletViewerScale();
     if (isDefined(leafletScale)) return leafletScale;
 
