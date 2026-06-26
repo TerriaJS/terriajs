@@ -25,6 +25,22 @@ module.exports = function ({ devMode, baseHref = "/" }) {
     },
     devtool: devMode ? "eval-cheap-module-source-map" : false,
 
+    // Persistent filesystem cache. This is the single biggest win for CI deploy
+    // builds: it lets webpack reuse module compilation across runs instead of
+    // recompiling the whole bundle (~1 min cold) every time. Stored OUTSIDE
+    // node_modules so `yarn install` does not wipe it; CI persists this dir via
+    // actions/cache (see .github/workflows/deploy.yml). Dev builds only —
+    // production releases stay cache-free for reproducibility.
+    cache: devMode
+      ? {
+          type: "filesystem",
+          cacheDirectory: path.resolve(__dirname, "..", ".webpack-cache"),
+          buildDependencies: {
+            config: [__filename]
+          }
+        }
+      : false,
+
     module: {
       // following rules are for terriamap source files
       // rules for building terriajs are configured in configureWebpackForTerriaJS

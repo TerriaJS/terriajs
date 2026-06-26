@@ -17,7 +17,7 @@ clientConfig:
       url: "http://google.com"
     globalDisclaimer:
       confirmationRequired: true
-      buttonTitle: "I agree"
+      buttonTitle: "I agree deploy3"
       title: "Disclaimer"
       prodHostRegex: "gov.\\.au$"
       devHostRegex: "\\b(staging|preview|test|dev)\\."
