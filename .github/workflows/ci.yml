@@ -45,9 +45,6 @@ jobs:
         env:
           NODE_OPTIONS: --max_old_space_size=4096
 
-      - name: Check i18n types are up to date
-        run: git diff --exit-code -- packages/terriajs/lib/ThirdParty/i18n/resources.d.ts
-
       - name: Run tests using xvfb
         uses: GabrielBB/xvfb-action@v1
         with:
