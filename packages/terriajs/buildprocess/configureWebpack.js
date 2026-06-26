@@ -50,6 +50,14 @@ function configureWebpack({
       require.resolve("terriajs-cesium/package.json"),
       ".."
     ),
+    // Allow webpack to scan zod's locales directory for dynamic import context modules.
+    // Without this alias webpack can't enumerate files when building the context for
+    // `import(`zod/v4/locales/${lang}.js`)` because package.json `exports` wildcards
+    // don't expose a scannable filesystem path.
+    "zod/v4/locales": path.resolve(
+      require.resolve("zod/package.json"),
+      "../v4/locales"
+    ),
     ...config.resolve.alias
   };
   config.resolve.modules = config.resolve.modules || [];

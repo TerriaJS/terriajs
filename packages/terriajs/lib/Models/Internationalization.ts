@@ -4,8 +4,9 @@ import HttpApi, { RequestCallback } from "i18next-http-backend";
 import { initReactI18next } from "react-i18next";
 import * as z from "zod";
 import isDefined from "../Core/isDefined";
+import en from "zod/v4/locales/en.js";
 
-z.config(z.locales.en());
+z.config(en());
 
 export interface I18nBackendOptions {
   /**
@@ -80,8 +81,7 @@ const loadLocale = async (locale: string) => {
     const { default: zodLocale } = await import(`zod/v4/locales/${lang}.js`);
     z.config(zodLocale());
   } catch {
-    const { default: enLocale } = await import("zod/v4/locales/en.js");
-    z.config(enLocale());
+    z.config(z.locales.en());
   }
 };
 
@@ -100,6 +100,12 @@ class Internationalization {
       defaultLanguageConfiguration,
       languageConfiguration
     );
+
+    await loadLocale("en");
+    i18next.on("languageChanged", (lng) => {
+      loadLocale(lng);
+    });
+
     /**
      * initialization of the language with i18next
      *
@@ -110,11 +116,6 @@ class Internationalization {
      * @param {Array} languageConfiguration.changeLanguageOnStartWhen
      * @param {String} languageConfiguration.lookupCookie name of the cookie that handles i18n
      */
-    await loadLocale("en");
-    i18next.on("languageChanged", (lng) => {
-      loadLocale(lng);
-    });
-
     return i18next
       .use(HttpApi)
       .use(LanguageDetector)
