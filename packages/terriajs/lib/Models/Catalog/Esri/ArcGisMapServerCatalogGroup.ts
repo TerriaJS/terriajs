@@ -76,16 +76,20 @@ export class MapServerStratum extends LoadableStratum(
     return [
       createStratumInstance(InfoSectionTraits, {
         name: i18next.t(
-          "models.arcGisMapServerCatalogGroup.serviceDescription"
+          ($) => $.models.arcGisMapServerCatalogGroup.serviceDescription
         ),
         content: this._mapServer.serviceDescription
       }),
       createStratumInstance(InfoSectionTraits, {
-        name: i18next.t("models.arcGisMapServerCatalogGroup.dataDescription"),
+        name: i18next.t(
+          ($) => $.models.arcGisMapServerCatalogGroup.dataDescription
+        ),
         content: this._mapServer.description
       }),
       createStratumInstance(InfoSectionTraits, {
-        name: i18next.t("models.arcGisMapServerCatalogGroup.copyrightText"),
+        name: i18next.t(
+          ($) => $.models.arcGisMapServerCatalogGroup.copyrightText
+        ),
         content: this._mapServer.copyrightText
       })
     ];
@@ -118,10 +122,10 @@ export class MapServerStratum extends LoadableStratum(
     if (!mapServer || (!mapServer.layers && !mapServer.subLayers)) {
       throw networkRequestError({
         title: i18next.t(
-          "models.arcGisMapServerCatalogGroup.invalidServiceTitle"
+          ($) => $.models.arcGisMapServerCatalogGroup.invalidServiceTitle
         ),
         message: i18next.t(
-          "models.arcGisMapServerCatalogGroup.invalidServiceMessage"
+          ($) => $.models.arcGisMapServerCatalogGroup.invalidServiceMessage
         )
       });
     }
@@ -194,7 +198,10 @@ export class MapServerStratum extends LoadableStratum(
       CommonStrata.definition,
       "name",
       i18next
-        .t("models.arcGisMapServerCatalogGroup.singleFusedMapCacheLayerName")
+        .t(
+          ($) =>
+            $.models.arcGisMapServerCatalogGroup.singleFusedMapCacheLayerName
+        )
         .toString()
     );
     model.setTrait(CommonStrata.definition, "url", this._catalogGroup.url);
@@ -304,7 +311,7 @@ export default class ArcGisMapServerCatalogGroup extends UrlMixin(
   }
 
   get typeName() {
-    return i18next.t("models.arcGisMapServerCatalogGroup.name");
+    return i18next.t(($) => $.models.arcGisMapServerCatalogGroup.name);
   }
 
   @override

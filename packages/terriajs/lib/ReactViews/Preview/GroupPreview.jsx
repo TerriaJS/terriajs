@@ -62,8 +62,8 @@ class GroupPreview extends Component {
                   this.props.previewed.members,
                   this.props.terria
                 )
-                  ? t("models.catalog.removeAll")
-                  : t("models.catalog.addAll")}
+                  ? t(($) => $.models.catalog.removeAll)
+                  : t(($) => $.models.catalog.addAll)}
               </button>
             )}
             {!this.props.terria.configParameters.disableSharePanel && (
@@ -93,7 +93,7 @@ class GroupPreview extends Component {
             {this.props.previewed.description &&
               this.props.previewed.description.length > 0 && (
                 <div>
-                  <h4 className={Styles.h4}>{t("description.name")}</h4>
+                  <h4 className={Styles.h4}>{t(($) => $.description.name)}</h4>
                   {parseCustomMarkdownToReact(
                     this.props.previewed.description,
                     { catalogItem: this.props.previewed }
@@ -104,7 +104,9 @@ class GroupPreview extends Component {
 
             {metadataItem.dataCustodian && (
               <div>
-                <h4 className={Styles.h4}>{t("preview.dataCustodian")}</h4>
+                <h4 className={Styles.h4}>
+                  {t(($) => $.preview.dataCustodian)}
+                </h4>
                 {parseCustomMarkdownToReact(metadataItem.dataCustodian, {
                   catalogItem: metadataItem
                 })}

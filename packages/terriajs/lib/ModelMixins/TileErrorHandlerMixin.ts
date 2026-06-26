@@ -134,12 +134,14 @@ function TileErrorHandlerMixin<T extends AbstractConstructor<ModelType>>(
               new TerriaError({
                 sender: this,
                 title: i18next.t(
-                  "models.imageryLayer.accessingBaseMapErrorTitle"
+                  ($) => $.models.imageryLayer.accessingBaseMapErrorTitle
                 ),
                 message:
                   i18next.t(
-                    "models.imageryLayer.accessingBaseMapErrorMessage",
-                    { name: this.name }
+                    ($) => $.models.imageryLayer.accessingBaseMapErrorMessage,
+                    {
+                      name: this.name as string
+                    }
                   ) +
                   "<pre>" +
                   formatError(e) +
@@ -151,12 +153,15 @@ function TileErrorHandlerMixin<T extends AbstractConstructor<ModelType>>(
               new TerriaError({
                 sender: this,
                 title: i18next.t(
-                  "models.imageryLayer.accessingCatalogItemErrorTitle"
+                  ($) => $.models.imageryLayer.accessingCatalogItemErrorTitle
                 ),
                 message:
                   i18next.t(
-                    "models.imageryLayer.accessingCatalogItemErrorMessage",
-                    { name: this.name }
+                    ($) =>
+                      $.models.imageryLayer.accessingCatalogItemErrorMessage,
+                    {
+                      name: this.name as string
+                    }
                   ) +
                   "<pre>" +
                   formatError(e) +
@@ -253,15 +258,18 @@ function TileErrorHandlerMixin<T extends AbstractConstructor<ModelType>>(
               // stuck repeating the request forever in that scenario. Instead,
               // we should give up after a few attempts.
               failTile({
-                name: i18next.t("models.imageryLayer.tileErrorTitle"),
-                message: i18next.t("models.imageryLayer.tileErrorMessage", {
-                  url: getUrlForImageryTile(
-                    imageryProvider,
-                    tileProviderError.x,
-                    tileProviderError.y,
-                    tileProviderError.level
-                  )
-                })
+                name: i18next.t(($) => $.models.imageryLayer.tileErrorTitle),
+                message: i18next.t(
+                  ($) => $.models.imageryLayer.tileErrorMessage,
+                  {
+                    url: getUrlForImageryTile(
+                      imageryProvider,
+                      tileProviderError.x,
+                      tileProviderError.y,
+                      tileProviderError.level
+                    ) as string
+                  }
+                )
               });
             } else {
               // Either:
@@ -292,29 +300,34 @@ function TileErrorHandlerMixin<T extends AbstractConstructor<ModelType>>(
                 }
 
                 failTile({
-                  name: i18next.t("models.imageryLayer.tileErrorTitle"),
-                  message: i18next.t("models.imageryLayer.tileErrorMessageII", {
-                    url: getUrlForImageryTile(
-                      imageryProvider,
-                      tile.x,
-                      tile.y,
-                      tile.level
-                    )
-                  })
-                });
-              } else {
-                // Unknown error
-                failTile({
-                  name: i18next.t("models.imageryLayer.unknownTileErrorTitle"),
+                  name: i18next.t(($) => $.models.imageryLayer.tileErrorTitle),
                   message: i18next.t(
-                    "models.imageryLayer.unknownTileErrorMessage",
+                    ($) => $.models.imageryLayer.tileErrorMessageII,
                     {
                       url: getUrlForImageryTile(
                         imageryProvider,
                         tile.x,
                         tile.y,
                         tile.level
-                      )
+                      ) as string
+                    }
+                  )
+                });
+              } else {
+                // Unknown error
+                failTile({
+                  name: i18next.t(
+                    ($) => $.models.imageryLayer.unknownTileErrorTitle
+                  ),
+                  message: i18next.t(
+                    ($) => $.models.imageryLayer.unknownTileErrorMessage,
+                    {
+                      url: getUrlForImageryTile(
+                        imageryProvider,
+                        tile.x,
+                        tile.y,
+                        tile.level
+                      ) as string
                     }
                   )
                 });

@@ -1,3 +1,4 @@
+import { keyFromSelector } from "i18next";
 import {
   action,
   computed,
@@ -52,7 +53,9 @@ export class SearchBarModel extends CreateModel(SearchBarTraits) {
         new TerriaError({
           sender: SearchProviderFactory,
           title: "SearchProviders",
-          message: { key: "searchProvider.noSearchProviders" }
+          message: {
+            key: keyFromSelector(($) => $.searchProvider.noSearchProviders)
+          }
         })
       );
     }

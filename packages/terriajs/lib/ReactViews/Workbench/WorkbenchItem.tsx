@@ -92,7 +92,7 @@ const WorkbenchItemRaw: React.FC<IProps> = observer((props) => {
                     id="workbenchtoggleVisibility"
                     isChecked={item.show}
                     isSwitch
-                    title={t("workbench.toggleVisibility")}
+                    title={t(($) => $.workbench.toggleVisibility)}
                     onChange={toggleVisibility}
                     css={`
                       overflow-wrap: anywhere;

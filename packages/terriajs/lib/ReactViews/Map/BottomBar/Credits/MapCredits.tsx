@@ -60,7 +60,7 @@ export const MapCredits: FC<IMapCreditsProps> = observer(
         {currentViewer.attributions.length > 0 ||
         searchAttributions.length > 0 ? (
           <a onClick={showDataAttribution}>
-            {t("map.extraCreditLinks.credits")}
+            {t(($) => $.map.extraCreditLinks.credits)}
           </a>
         ) : null}
         {dataAttributionVisible ? (

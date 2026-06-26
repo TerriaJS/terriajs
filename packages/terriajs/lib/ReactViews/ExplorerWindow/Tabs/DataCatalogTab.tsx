@@ -37,7 +37,7 @@ const DataCatalogTab = observer(function DataCatalogTab(
   } = viewState;
 
   const searchPlaceholder: string =
-    props.searchPlaceholder || t("addData.searchPlaceholder");
+    props.searchPlaceholder || t(($) => $.addData.searchPlaceholder);
 
   const changeSearchText = (newText: string) => {
     runInAction(() => {

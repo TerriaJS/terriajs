@@ -194,7 +194,7 @@ export default class ThreddsCatalogGroup extends UrlMixin(
   }
 
   get typeName() {
-    return i18next.t("models.thredds.nameGroup");
+    return i18next.t(($) => $.models.thredds.nameGroup);
   }
 
   @override

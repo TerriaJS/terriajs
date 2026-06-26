@@ -220,7 +220,9 @@ const RegionPicker = createReactClass({
           that._selectedRegionCatalogItem = new GeoJsonCatalogItem(
             that.props.previewed.terria
           );
-          that._selectedRegionCatalogItem.name = t("analytics.selectedPolygon");
+          that._selectedRegionCatalogItem.name = t(
+            ($) => $.analytics.selectedPolygon
+          );
           that._selectedRegionCatalogItem.data = feature;
           that._selectedRegionCatalogItem.isEnabled = true;
           that._selectedRegionCatalogItem.zoomTo();
@@ -315,7 +317,7 @@ const RegionPicker = createReactClass({
             getDisplayValue(this.regionValue, this.props.parameter)
           }
           onChange={this.textChange}
-          placeholder={t("analytics.regionName")}
+          placeholder={t(($) => $.analytics.regionName)}
         />
         {this.renderOptions()}
       </div>

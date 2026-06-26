@@ -174,11 +174,11 @@ const SearchResultsFooter: FC<SearchResultsFooterProps> = (
 ) => {
   const { t, i18n } = useTranslation();
   if (props.isExpanded) {
-    return t("search.viewLess", {
+    return t(($) => $.search.viewLess, {
       name: applyTranslationIfExists(props.name, i18n)
     });
   }
-  return t("search.viewMore", {
+  return t(($) => $.search.viewMore, {
     name: applyTranslationIfExists(props.name, i18n)
   });
 };

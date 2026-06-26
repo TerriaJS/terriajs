@@ -92,7 +92,7 @@ export default class CartoMapV3CatalogItem extends GeoJsonMixin(
   }
 
   get typeName() {
-    return i18next.t("models.carto-v3.name");
+    return i18next.t(($) => $.models["carto-v3"].name);
   }
 
   protected async forceLoadMetadata() {

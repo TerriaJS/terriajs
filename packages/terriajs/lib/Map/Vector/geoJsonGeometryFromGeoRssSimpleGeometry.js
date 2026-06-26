@@ -13,8 +13,8 @@ function geoJsonGeometryFromGeoRssSimpleGeometry(geometry) {
   var creator = featureCreators[type];
   if (!defined(creator)) {
     throw new RuntimeError(
-      i18next.t("map.geoRssToGeoJson.containsUnsupportedFeatureType", {
-        type: type
+      i18next.t(($) => $.map.geoRssToGeoJson.containsUnsupportedFeatureType, {
+        type
       })
     );
   }

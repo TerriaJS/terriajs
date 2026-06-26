@@ -91,7 +91,7 @@ export const MapColumn: FC<IMapColumnProps> = observer(
               >
                 <Toast ref={loaderRef}>
                   <Loader
-                    message={t("toast.mapIsZooming")}
+                    message={t(($) => $.toast.mapIsZooming)}
                     textProps={{
                       style: {
                         padding: "0 5px"

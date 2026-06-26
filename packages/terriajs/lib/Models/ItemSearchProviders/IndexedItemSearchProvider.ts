@@ -35,7 +35,9 @@ export default class IndexedItemSearchProvider extends ItemSearchProvider {
     makeObservable(this);
     const indexRootUrl = options?.indexRootUrl;
     if (typeof indexRootUrl !== "string")
-      throw new Error(t("indexedItemSearchProvider.missingOptionIndexRootUrl"));
+      throw new Error(
+        t(($) => $.indexedItemSearchProvider.missingOptionIndexRootUrl)
+      );
     this.indexRootUrl = indexRootUrl;
   }
 
@@ -109,7 +111,9 @@ export default class IndexedItemSearchProvider extends ItemSearchProvider {
     } catch (parseError) {
       console.warn(parseError);
       throw new Error(
-        t("indexedItemSearchProvider.errorParsingIndexRoot", { indexRootUrl }),
+        t(($) => $.indexedItemSearchProvider.errorParsingIndexRoot, {
+          indexRootUrl
+        }),
         { cause: parseError }
       );
     }

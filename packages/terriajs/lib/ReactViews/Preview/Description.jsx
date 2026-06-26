@@ -28,7 +28,7 @@ class Description extends Component {
     if (catalogItem.type === "wms") {
       return (
         <p key="wms-description">
-          <Trans i18nKey="description.wms">
+          <Trans i18nKey={($) => $.description.wms}>
             This is a
             <a
               href="https://en.wikipedia.org/wiki/Web_Map_Service"
@@ -45,7 +45,7 @@ class Description extends Component {
     } else if (catalogItem.type === "wfs") {
       return (
         <p key="wfs-description">
-          <Trans i18nKey="description.wfs">
+          <Trans i18nKey={($) => $.description.wfs}>
             This is a
             <a
               href="https://en.wikipedia.org/wiki/Web_Feature_Service"
@@ -82,29 +82,31 @@ class Description extends Component {
         `}
       >
         {catalogItem.isExperiencingIssues && (
-          <WarningBox>{t("preview.mayBeExperiencingIssues")}</WarningBox>
+          <WarningBox>{t(($) => $.preview.mayBeExperiencingIssues)}</WarningBox>
         )}
 
         {catalogItem.description && catalogItem.description.length > 0 && (
           <div>
-            <h4 className={Styles.h4}>{t("description.name")}</h4>
+            <h4 className={Styles.h4}>{t(($) => $.description.name)}</h4>
             {parseCustomMarkdownToReact(catalogItem.description, {
               catalogItem: catalogItem
             })}
           </div>
         )}
 
-        {catalogItem.hasLocalData && <p>{t("description.dataLocal")}</p>}
+        {catalogItem.hasLocalData && <p>{t(($) => $.description.dataLocal)}</p>}
 
         {!catalogItem.hasLocalData &&
           !catalogItem.hasDescription &&
           !catalogItem.hideDefaultDescription && (
-            <p>{t("description.dataNotLocal")}</p>
+            <p>{t(($) => $.description.dataNotLocal)}</p>
           )}
 
         {metadataUrls && metadataUrls.length > 0 && (
           <>
-            <h4 className={Styles.h4}>{t("description.metadataUrls")}</h4>
+            <h4 className={Styles.h4}>
+              {t(($) => $.description.metadataUrls)}
+            </h4>
             {metadataUrls.map((metadataUrl, _i) => (
               <Box paddedVertically key={metadataUrl.url}>
                 <a
@@ -130,7 +132,9 @@ class Description extends Component {
 
         {catalogItem.dataCustodian && catalogItem.dataCustodian.length > 0 && (
           <div>
-            <h4 className={Styles.h4}>{t("description.dataCustodian")}</h4>
+            <h4 className={Styles.h4}>
+              {t(($) => $.description.dataCustodian)}
+            </h4>
             {parseCustomMarkdownToReact(catalogItem.dataCustodian, {
               catalogItem: catalogItem
             })}
@@ -161,7 +165,7 @@ class Description extends Component {
                   (catalogItem.type === "esri-mapServer" &&
                     defined(catalogItem.layers) && (
                       <p key="wms-layers">
-                        {t("description.layerName")}
+                        {t(($) => $.description.layerName)}
                         {(catalogItem.layers || "").split(",").length > 1
                           ? "s"
                           : ""}
@@ -171,7 +175,7 @@ class Description extends Component {
 
                 {catalogItem.type === "wfs" && (
                   <p key="wfs-typeNames">
-                    {t("description.typeName")}
+                    {t(($) => $.description.typeName)}
                     {(catalogItem.typeNames || "").split(",").length > 1
                       ? "s"
                       : ""}
@@ -183,7 +187,7 @@ class Description extends Component {
 
             {dataUrls && dataUrls.length > 0 && (
               <>
-                <h4 className={Styles.h4}>{t("description.dataUrl")}</h4>
+                <h4 className={Styles.h4}>{t(($) => $.description.dataUrl)}</h4>
                 {dataUrls.map(
                   (dataUrl, _i) =>
                     (dataUrl.type?.startsWith("wfs") ||
@@ -191,7 +195,7 @@ class Description extends Component {
                       <Fragment key={dataUrl.url}>
                         {dataUrl.type?.startsWith("wfs") &&
                           parseCustomMarkdownToReact(
-                            t("description.useLinkBelow", {
+                            t(($) => $.description.useLinkBelow, {
                               link: `
                           <a
                             href="http://docs.geoserver.org/latest/en/user/services/wfs/reference.html"
@@ -206,7 +210,7 @@ class Description extends Component {
                           )}
                         {dataUrl.type?.startsWith("wcs") &&
                           parseCustomMarkdownToReact(
-                            t("description.useLinkBelow", {
+                            t(($) => $.description.useLinkBelow, {
                               link: `
                           <a
                             href="http://docs.geoserver.org/latest/en/user/services/wcs/reference.html"
@@ -247,7 +251,7 @@ class Description extends Component {
                   catalogItem.metadata.dataSourceMetadata.items.length > 0 && (
                     <div className={Styles.metadata}>
                       <Collapsible
-                        title={t("description.dataSourceDetails")}
+                        title={t(($) => $.description.dataSourceDetails)}
                         isInverse
                       >
                         <MetadataTable
@@ -260,7 +264,7 @@ class Description extends Component {
                   catalogItem.metadata.dataSourceMetadata.items.length > 0 && (
                     <div className={Styles.metadata}>
                       <Collapsible
-                        title={t("description.dataServiceDetails")}
+                        title={t(($) => $.description.dataServiceDetails)}
                         isInverse
                       >
                         <MetadataTable

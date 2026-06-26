@@ -26,7 +26,7 @@ export const MonthView = ({
   return (
     <DTP.Grid>
       <DTP.GridHeading>
-        <DTP.BackButton title={t("dateTime.back")} onClick={onBack}>
+        <DTP.BackButton title={t(($) => $.dateTime.back)} onClick={onBack}>
           {year}
         </DTP.BackButton>
       </DTP.GridHeading>

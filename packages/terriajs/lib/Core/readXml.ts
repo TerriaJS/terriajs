@@ -19,7 +19,7 @@ function readXml(file: Blob) {
       !xml.documentElement ||
       xml.getElementsByTagName("parsererror").length > 0
     ) {
-      throw new RuntimeError(i18next.t("core.readXml.xmlError"));
+      throw new RuntimeError(i18next.t(($) => $.core.readXml.xmlError));
     }
     return xml;
   });

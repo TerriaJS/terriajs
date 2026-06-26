@@ -36,8 +36,12 @@ class GetCapabilitiesStratum extends LoadableStratum(
   ): Promise<GetCapabilitiesStratum> {
     if (catalogItem.getCapabilitiesUrl === undefined) {
       throw new TerriaError({
-        title: i18next.t("models.webMapServiceCatalogGroup.missingUrlTitle"),
-        message: i18next.t("models.webMapServiceCatalogGroup.missingUrlMessage")
+        title: i18next.t(
+          ($) => $.models.webMapServiceCatalogGroup.missingUrlTitle
+        ),
+        message: i18next.t(
+          ($) => $.models.webMapServiceCatalogGroup.missingUrlMessage
+        )
       });
     }
 
@@ -92,7 +96,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
       ) {
         result.push(
           createStratumInstance(InfoSectionTraits, {
-            name: i18next.t("models.webMapServiceCatalogGroup.abstract"),
+            name: i18next.t(($) => $.models.webMapServiceCatalogGroup.abstract),
             content: this.capabilities.Service.Abstract
           })
         );
@@ -107,7 +111,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
         result.push(
           createStratumInstance(InfoSectionTraits, {
             name: i18next.t(
-              "models.webMapServiceCatalogGroup.accessConstraints"
+              ($) => $.models.webMapServiceCatalogGroup.accessConstraints
             ),
             content: this.capabilities.Service.AccessConstraints
           })
@@ -118,7 +122,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
       if (service && service.Fees && !/^none$/i.test(service.Fees)) {
         result.push(
           createStratumInstance(InfoSectionTraits, {
-            name: i18next.t("models.webMapServiceCatalogGroup.fees"),
+            name: i18next.t(($) => $.models.webMapServiceCatalogGroup.fees),
             content: this.capabilities.Service.Fees
           })
         );
@@ -228,7 +232,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
       ) {
         model.setTrait(CommonStrata.definition, "info", [
           createStratumInstance(InfoSectionTraits, {
-            name: i18next.t("models.webMapServiceCatalogGroup.abstract"),
+            name: i18next.t(($) => $.models.webMapServiceCatalogGroup.abstract),
             content: layer.Abstract
           })
         ]);

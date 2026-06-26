@@ -95,7 +95,7 @@ const ItemSearchTool: FC<PropsType> = observer((props) => {
   return (
     <Frame
       viewState={viewState}
-      title={t("itemSearchTool.title", { itemName })}
+      title={t(($) => $.itemSearchTool.title, { itemName: itemName as string })}
     >
       <Main textLight light>
         <Box
@@ -105,13 +105,17 @@ const ItemSearchTool: FC<PropsType> = observer((props) => {
           `}
         >
           {state.is === "loadingParameters" && (
-            <Loading>{t("itemSearchTool.loading")}</Loading>
+            <Loading>{t(($) => $.itemSearchTool.loading)}</Loading>
           )}
           {state.is === "error" && (
-            <ErrorComponent>{t("itemSearchTool.loadError")}</ErrorComponent>
+            <ErrorComponent>
+              {t(($) => $.itemSearchTool.loadError)}
+            </ErrorComponent>
           )}
           {state.is === "search" && parameters.length === 0 && (
-            <ErrorComponent>{t("itemSearchTool.noParameters")}</ErrorComponent>
+            <ErrorComponent>
+              {t(($) => $.itemSearchTool.noParameters)}
+            </ErrorComponent>
           )}
         </Box>
         {state.is === "search" && parameters.length > 0 && (
@@ -132,7 +136,7 @@ const ItemSearchTool: FC<PropsType> = observer((props) => {
         )}
         {state.is === "results" && (
           <BackButton onClick={searchAgain}>
-            {t("itemSearchTool.backBtnText")}
+            {t(($) => $.itemSearchTool.backBtnText)}
           </BackButton>
         )}
       </Main>

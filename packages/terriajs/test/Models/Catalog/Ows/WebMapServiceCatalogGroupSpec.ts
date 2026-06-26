@@ -55,11 +55,13 @@ describe("WebMapServiceCatalogGroup", function () {
 
     it("defines info", async function () {
       await wms.loadMetadata();
-      const abstract = i18next.t("models.webMapServiceCatalogGroup.abstract");
-      const accessConstraints = i18next.t(
-        "models.webMapServiceCatalogGroup.accessConstraints"
+      const abstract = i18next.t(
+        ($) => $.models.webMapServiceCatalogGroup.abstract
       );
-      const fees = i18next.t("models.webMapServiceCatalogGroup.fees");
+      const accessConstraints = i18next.t(
+        ($) => $.models.webMapServiceCatalogGroup.accessConstraints
+      );
+      const fees = i18next.t(($) => $.models.webMapServiceCatalogGroup.fees);
 
       expect(wms.info.map(({ name }) => name)).toEqual([
         abstract,

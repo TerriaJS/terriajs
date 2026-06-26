@@ -276,7 +276,7 @@ build.description = "Build non-minified version of TerriaJS tests.";
 const release = gulp.series(copyCesiumAssets, releaseSpecs);
 release.description = "Build minified version of TerriaJS tests.";
 
-const watch = gulp.series(copyCesiumAssets, watchSpecs);
+const watch = gulp.series(copyCesiumAssets, gulp.parallel(watchSpecs));
 watch.description = "Build TerriaJS tests when there are source changes.";
 
 function serveTests(done) {

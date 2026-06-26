@@ -5,7 +5,7 @@ import primitiveTrait from "../Decorators/primitiveTrait";
 export default class TimeVaryingTraits extends mixTraits(CatalogMemberTraits) {
   @primitiveTrait({
     name: "Time label",
-    description: `Time label which is shown in workbench next to date/time selector (Will default to t("dateTime.selectorLabel") = "Time:").`,
+    description: `Time label which is shown in workbench next to date/time selector (Will default to t($ => $.dateTime.selectorLabel") = "Time:).`,
     type: "string"
   })
   timeLabel?: string;

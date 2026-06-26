@@ -119,7 +119,7 @@ export const terriaErrorNotification = (error: TerriaError) =>
             <Spacing bottom={2} />
             <Collapsible
               btnRight
-              title={i18next.t("models.raiseError.developerDetails")}
+              title={i18next.t(($) => $.models.raiseError.developerDetails)}
               titleTextProps={{ large: true }}
               bodyBoxProps={{ padded: true }}
               isOpen={error.showDetails}

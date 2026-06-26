@@ -24,7 +24,7 @@ function createLineStringFromGmlGeometry(geometry) {
 function createPointFromGmlGeometry(geometry) {
   var posNodes = geometry.getElementsByTagNameNS(gmlNamespace, "pos");
   if (posNodes.length < 1) {
-    throw new RuntimeError(i18next.t("map.gmlToGeoJson.missingPos"));
+    throw new RuntimeError(i18next.t(($) => $.map.gmlToGeoJson.missingPos));
   }
 
   return {
@@ -87,7 +87,9 @@ function createMultiPolygonFromGmlGeomtry(geometry) {
       "exterior"
     );
     if (exteriorNodes.length < 1) {
-      throw new RuntimeError(i18next.t("map.gmlToGeoJson.missingExteriorRing"));
+      throw new RuntimeError(
+        i18next.t(($) => $.map.gmlToGeoJson.missingExteriorRing)
+      );
     }
 
     var polygonCoordinates = [];
@@ -95,7 +97,9 @@ function createMultiPolygonFromGmlGeomtry(geometry) {
     var exterior = exteriorNodes[0];
     var posListNodes = exterior.getElementsByTagNameNS(gmlNamespace, "posList");
     if (posListNodes.length < 1) {
-      throw new RuntimeError(i18next.t("map.gmlToGeoJson.missingPosList"));
+      throw new RuntimeError(
+        i18next.t(($) => $.map.gmlToGeoJson.missingPosList)
+      );
     }
 
     polygonCoordinates.push(gml2coord(posListNodes[0].textContent));
@@ -128,12 +132,14 @@ function createPolygonFromGmlGeometry(geometry) {
 
   var exteriorNodes = geometry.getElementsByTagNameNS(gmlNamespace, "exterior");
   if (exteriorNodes.length < 1) {
-    throw new RuntimeError(i18next.t("map.gmlToGeoJson.missingExteriorRing"));
+    throw new RuntimeError(
+      i18next.t(($) => $.map.gmlToGeoJson.missingExteriorRing)
+    );
   }
   var exterior = exteriorNodes[0];
   var posListNodes = exterior.getElementsByTagNameNS(gmlNamespace, "posList");
   if (posListNodes.length < 1) {
-    throw new RuntimeError(i18next.t("map.gmlToGeoJson.missingPosList"));
+    throw new RuntimeError(i18next.t(($) => $.map.gmlToGeoJson.missingPosList));
   }
 
   polygonCoordinates.push(gml2coord(posListNodes[0].textContent));
@@ -189,8 +195,8 @@ function geoJsonGeometryFeatureFromGmlGeometry(geometry) {
   var creator = featureCreators[type];
   if (!defined(creator)) {
     throw new RuntimeError(
-      i18next.t("map.gmlToGeoJson.containsUnsupportedFeatureType", {
-        type: type
+      i18next.t(($) => $.map.gmlToGeoJson.containsUnsupportedFeatureType, {
+        type
       })
     );
   }

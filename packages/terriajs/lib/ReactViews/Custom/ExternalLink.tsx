@@ -17,12 +17,12 @@ export const ExternalLinkWithWarning: FC<Props> = (props: Props) => {
     evt.stopPropagation();
     evt.preventDefault();
     viewState.terria.notificationState.addNotificationToQueue({
-      title: t("core.unverifiedExternalLink.title"),
-      message: t("core.unverifiedExternalLink.message", {
-        url: props.attributes.href
+      title: t(($) => $.core.unverifiedExternalLink.title),
+      message: t(($) => $.core.unverifiedExternalLink.message, {
+        url: props.attributes.href as string
       }),
-      confirmText: t("core.unverifiedExternalLink.confirmText"),
-      denyText: t("core.unverifiedExternalLink.denyText"),
+      confirmText: t(($) => $.core.unverifiedExternalLink.confirmText),
+      denyText: t(($) => $.core.unverifiedExternalLink.denyText),
       confirmAction: () => window.open(props.attributes.href, "_blank")?.focus()
     });
   };

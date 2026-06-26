@@ -125,7 +125,7 @@ describe("ArcGisCatalogGroup", function () {
 
   it("has a type and typeName", function () {
     expect(group.type).toBe("esri-group");
-    expect(group.typeName).toBe(i18next.t("models.arcGisService.name"));
+    expect(group.typeName).toBe(i18next.t(($) => $.models.arcGisService.name));
   });
 
   describe("loadMembers", function () {

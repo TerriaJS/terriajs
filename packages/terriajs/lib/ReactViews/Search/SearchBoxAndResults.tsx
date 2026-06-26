@@ -37,8 +37,8 @@ export function SearchInDataCatalog({
         <StyledIcon styledWidth={"14px"} glyph={Icon.GLYPHS["dataCatalog"]} />
         <Spacing right={2} />
         <Text textAlignLeft textLight large fullWidth>
-          {t("search.searchInDataCatalog", {
-            locationSearchText: locationSearchText
+          {t(($) => $.search.searchInDataCatalog, {
+            locationSearchText
           })}
         </Text>
         <StyledIcon glyph={Icon.GLYPHS.right2} styledWidth={"14px"} light />

@@ -20,7 +20,7 @@ const Loader: FC<PropsType> = (props: PropsType) => {
     <Box fullWidth centered {...boxProps}>
       <AnimatedSpinnerIcon styledWidth={"15px"} css={"margin: 5px"} {...rest} />
       <TextSpan {...textProps}>
-        {!hideMessage && (message || t("loader.loadingMessage"))}
+        {!hideMessage && (message || t(($) => $.loader.loadingMessage))}
       </TextSpan>
     </Box>
   );

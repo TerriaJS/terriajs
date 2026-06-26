@@ -74,8 +74,12 @@ export class SdmxServerStratum extends LoadableStratum(SdmxCatalogGroupTraits) {
 
       if (!isDefined(dataflows)) {
         throw new TerriaError({
-          title: i18next.t("models.sdmxServerStratum.loadDataErrorTitle"),
-          message: i18next.t("models.sdmxServerStratum.loadDataErrorMessage")
+          title: i18next.t(
+            ($) => $.models.sdmxServerStratum.loadDataErrorTitle
+          ),
+          message: i18next.t(
+            ($) => $.models.sdmxServerStratum.loadDataErrorMessage
+          )
         });
       }
     }
@@ -453,7 +457,7 @@ export async function loadSdmxJsonStructure(
     if (response === undefined) {
       throw new TerriaError({
         title: i18next.t(
-          "models.sdmxServerStratum.sdmxStructureLoadErrorTitle"
+          ($) => $.models.sdmxServerStratum.sdmxStructureLoadErrorTitle
         ),
         message: `Failed to fetch SDMX structure from ${url}`
       });
@@ -465,7 +469,7 @@ export async function loadSdmxJsonStructure(
     if (error instanceof RequestErrorEvent && isDefined(error.response)) {
       const terriaError = new TerriaError({
         title: i18next.t(
-          "models.sdmxServerStratum.sdmxStructureLoadErrorTitle"
+          ($) => $.models.sdmxServerStratum.sdmxStructureLoadErrorTitle
         ),
         message: sdmxErrorString.has(error.statusCode)
           ? `${sdmxErrorString.get(error.statusCode)}: ${error.response}`
@@ -481,7 +485,9 @@ export async function loadSdmxJsonStructure(
       // Not sure what happened (maybe CORS)
     } else {
       const terriaError = TerriaError.from(error, {
-        title: i18next.t("models.sdmxServerStratum.sdmxStructureLoadErrorTitle")
+        title: i18next.t(
+          ($) => $.models.sdmxServerStratum.sdmxStructureLoadErrorTitle
+        )
       });
 
       if (!allowNotImplemented) {

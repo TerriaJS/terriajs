@@ -58,9 +58,9 @@ describe("UserDrawing", function () {
 
     expect(userDrawing.getDialogMessage()).toEqual(
       `<div><strong>${i18next.t(
-        "models.userDrawing.messageHeader"
+        ($) => $.models.userDrawing.messageHeader
       )}</strong></br><i>${i18next.t(
-        "models.userDrawing.clickToAddFirstPoint"
+        ($) => $.models.userDrawing.clickToAddFirstPoint
       )}</i></div>`
     );
   });
@@ -76,9 +76,9 @@ describe("UserDrawing", function () {
 
     expect(userDrawing.getDialogMessage()).toEqual(
       `<div><strong>${i18next.t(
-        "models.userDrawing.messageHeader"
+        ($) => $.models.userDrawing.messageHeader
       )}</strong></br>HELLO</br><i>${i18next.t(
-        "models.userDrawing.clickToAddFirstPoint"
+        ($) => $.models.userDrawing.clickToAddFirstPoint
       )}</i></div>`
     );
   });
@@ -240,15 +240,15 @@ describe("UserDrawing", function () {
     const userDrawing = new UserDrawing(options);
 
     expect(userDrawing.getButtonText()).toEqual(
-      i18next.t("models.userDrawing.btnCancel")
+      i18next.t(($) => $.models.userDrawing.btnCancel)
     );
     userDrawing.pointEntities.entities.values.push(new Entity());
     expect(userDrawing.getButtonText()).toEqual(
-      i18next.t("models.userDrawing.btnCancel")
+      i18next.t(($) => $.models.userDrawing.btnCancel)
     );
     userDrawing.pointEntities.entities.values.push(new Entity());
     expect(userDrawing.getButtonText()).toEqual(
-      i18next.t("models.userDrawing.btnDone")
+      i18next.t(($) => $.models.userDrawing.btnDone)
     );
   });
 

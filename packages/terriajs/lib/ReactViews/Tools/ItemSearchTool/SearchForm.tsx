@@ -96,10 +96,12 @@ const SearchForm: FC<SearchFormProps> = (props) => {
     <Form onSubmit={onSubmit}>
       <Box centered>
         {state.is === "searching" && (
-          <Loading>{t("itemSearchTool.searching")}</Loading>
+          <Loading>{t(($) => $.itemSearchTool.searching)}</Loading>
         )}
         {state.is === "error" && (
-          <ErrorComponent>{t("itemSearchTool.searchError")}</ErrorComponent>
+          <ErrorComponent>
+            {t(($) => $.itemSearchTool.searchError)}
+          </ErrorComponent>
         )}
       </Box>
       <FieldSet disabled={disabled}>
@@ -115,10 +117,10 @@ const SearchForm: FC<SearchFormProps> = (props) => {
           </Field>
         ))}
         <SearchButton primary type="submit" disabled={disabled}>
-          {t("itemSearchTool.searchBtnText")}
+          {t(($) => $.itemSearchTool.searchBtnText)}
         </SearchButton>
         <Button secondary type="reset" onClick={clearForm} disabled={disabled}>
-          {t("itemSearchTool.resetBtnText")}
+          {t(($) => $.itemSearchTool.resetBtnText)}
         </Button>
       </FieldSet>
     </Form>
@@ -175,7 +177,9 @@ export const NumericParameter: FC<NumericParameterProps> = (props) => {
       >
         <HalfWidthLabel>
           <Box column>
-            <Text small>{t("itemSearchTool.numericParameter.minimum")}</Text>
+            <Text small>
+              {t(($) => $.itemSearchTool.numericParameter.minimum)}
+            </Text>
             <Input
               type="number"
               name={`${parameter.id}-min`}
@@ -190,7 +194,9 @@ export const NumericParameter: FC<NumericParameterProps> = (props) => {
         </HalfWidthLabel>
         <HalfWidthLabel>
           <Box column>
-            <Text small>{t("itemSearchTool.numericParameter.maximum")}</Text>
+            <Text small>
+              {t(($) => $.itemSearchTool.numericParameter.maximum)}
+            </Text>
             <Input
               type="number"
               name={`${parameter.id}-max`}

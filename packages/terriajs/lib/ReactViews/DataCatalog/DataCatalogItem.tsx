@@ -36,11 +36,11 @@ export default observer(function DataCatalogItem({
 }: Props) {
   const { t } = useTranslation();
   const STATE_TO_TITLE = {
-    [ButtonState.Loading]: t("catalogItem.loading"),
-    [ButtonState.Remove]: t("catalogItem.removeFromMap"),
-    [ButtonState.Add]: t("catalogItem.add"),
-    [ButtonState.Trash]: t("catalogItem.trash"),
-    [ButtonState.Preview]: t("catalogItem.preview")
+    [ButtonState.Loading]: t(($) => $.catalogItem.loading),
+    [ButtonState.Remove]: t(($) => $.catalogItem.removeFromMap),
+    [ButtonState.Add]: t(($) => $.catalogItem.add),
+    [ButtonState.Trash]: t(($) => $.catalogItem.trash),
+    [ButtonState.Preview]: t(($) => $.catalogItem.preview)
   };
 
   const isSelected = addedByUser(item)

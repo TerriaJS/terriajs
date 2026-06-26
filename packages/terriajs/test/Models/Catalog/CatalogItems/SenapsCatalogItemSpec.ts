@@ -26,10 +26,10 @@ describe("SenapsLocationsCatalogItem", function () {
 
   function getExpectedFeatureInfoTemplate(url: string) {
     const expectedFeatureInfoTemplate: string = `<h4>${i18next.t(
-      "models.senaps.locationHeadingFeatureInfo"
+      ($) => $.models.senaps.locationHeadingFeatureInfo
     )}: {{id}}</h4>
       <h5 style="margin-bottom:5px;">${i18next.t(
-        "models.senaps.availableStreamsHeadingFeatureInfo"
+        ($) => $.models.senaps.availableStreamsHeadingFeatureInfo
       )}</h5>
       {{#hasStreams}}
       <ul>{{#streamIds}}
@@ -81,7 +81,7 @@ describe("SenapsLocationsCatalogItem", function () {
 
   it("- has a type and typename", function () {
     expect(item.type).toBe("senaps-locations");
-    expect(item.typeName).toBe(i18next.t("models.senaps.name"));
+    expect(item.typeName).toBe(i18next.t(($) => $.models.senaps.name));
   });
 
   it("- supports zooming to extent", function () {
@@ -107,7 +107,10 @@ describe("SenapsLocationsCatalogItem", function () {
         } catch (e: any) {
           errorMessage = e.message;
         }
-        return errorMessage === i18next.t("models.senaps.missingSenapsBaseUrl");
+        return (
+          errorMessage ===
+          i18next.t(($) => $.models.senaps.missingSenapsBaseUrl)
+        );
       }
 
       expect(foundError()).toBe(true);
@@ -121,7 +124,10 @@ describe("SenapsLocationsCatalogItem", function () {
         } catch (e: any) {
           errorMessage = e.message;
         }
-        return errorMessage === i18next.t("models.senaps.missingSenapsBaseUrl");
+        return (
+          errorMessage ===
+          i18next.t(($) => $.models.senaps.missingSenapsBaseUrl)
+        );
       }
 
       expect(foundError()).toBe(true);

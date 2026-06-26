@@ -332,7 +332,7 @@ const DateTimePicker: React.FC<PropsType> = ({
             `}
           >
             <BackButton
-              title={t("dateTime.back")}
+              title={t(($) => $.dateTime.back)}
               disabled={!store.canGoBack}
               type="button"
               onClick={store.goBack}

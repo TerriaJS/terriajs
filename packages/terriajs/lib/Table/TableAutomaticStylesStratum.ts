@@ -270,7 +270,7 @@ export default class TableAutomaticStylesStratum extends LoadableStratum(
     return this.catalogItem.mapItems.length === 0 &&
       this.catalogItem.chartItems.length === 0 &&
       !this.catalogItem.isLoading
-      ? i18next.t("models.tableData.noData")
+      ? i18next.t(($) => $.models.tableData.noData)
       : undefined;
   }
 

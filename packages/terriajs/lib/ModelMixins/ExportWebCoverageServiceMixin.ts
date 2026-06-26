@@ -404,9 +404,9 @@ function ExportWebCoverageServiceMixin<
           pendingWorkbenchItem.setTrait(
             CommonStrata.user,
             "shortReport",
-            i18next.t("models.wcs.asyncResultLoadingMetadata", {
+            i18next.t(($) => $.models.wcs.asyncResultLoadingMetadata, {
               name: getName(this),
-              timestamp: timestamp
+              timestamp
             })
           );
         });
@@ -434,9 +434,9 @@ function ExportWebCoverageServiceMixin<
           pendingWorkbenchItem.setTrait(
             CommonStrata.user,
             "shortReport",
-            i18next.t("models.wcs.asyncPendingDescription", {
+            i18next.t(($) => $.models.wcs.asyncPendingDescription, {
               name: getName(this),
-              timestamp: timestamp
+              timestamp
             })
           );
 
@@ -499,9 +499,9 @@ function ExportWebCoverageServiceMixin<
 
         throw new TerriaError({
           sender: this,
-          title: i18next.t("models.wcs.exportFailedTitle"),
-          message: i18next.t("models.wcs.exportFailedMessageII", {
-            error
+          title: i18next.t(($) => $.models.wcs.exportFailedTitle),
+          message: i18next.t(($) => $.models.wcs.exportFailedMessageII, {
+            error: error as string
           })
         });
       } finally {

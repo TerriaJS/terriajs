@@ -72,9 +72,11 @@ class MapServerStratum extends LoadableStratum(
   static async load(item: ArcGisMapServerCatalogItem) {
     if (!isDefined(item.uri) || !isDefined(item.url)) {
       throw new TerriaError({
-        title: i18next.t("models.arcGisMapServerCatalogItem.invalidUrlTitle"),
+        title: i18next.t(
+          ($) => $.models.arcGisMapServerCatalogItem.invalidUrlTitle
+        ),
         message: i18next.t(
-          "models.arcGisMapServerCatalogItem.invalidUrlMessage"
+          ($) => $.models.arcGisMapServerCatalogItem.invalidUrlMessage
         )
       });
     }
@@ -104,8 +106,8 @@ class MapServerStratum extends LoadableStratum(
 
     if (!isDefined(serviceMetadata)) {
       throw networkRequestError({
-        title: i18next.t("models.arcGisService.invalidServerTitle"),
-        message: i18next.t("models.arcGisService.invalidServerMessage")
+        title: i18next.t(($) => $.models.arcGisService.invalidServerTitle),
+        message: i18next.t(($) => $.models.arcGisService.invalidServerMessage)
       });
     }
 
@@ -135,11 +137,13 @@ class MapServerStratum extends LoadableStratum(
       if (!isDefined(layers) || layers.length === 0) {
         throw networkRequestError({
           title: i18next.t(
-            "models.arcGisMapServerCatalogItem.noLayersFoundTitle"
+            ($) => $.models.arcGisMapServerCatalogItem.noLayersFoundTitle
           ),
           message: i18next.t(
-            "models.arcGisMapServerCatalogItem.noLayersFoundMessage",
-            { name: item.name }
+            ($) => $.models.arcGisMapServerCatalogItem.noLayersFoundMessage,
+            {
+              name: item.name as string
+            }
           )
         });
       }
@@ -261,17 +265,21 @@ class MapServerStratum extends LoadableStratum(
       singleLayer
         ? createStratumInstance(InfoSectionTraits, {
             name: i18next.t(
-              "models.arcGisMapServerCatalogItem.dataDescription"
+              ($) => $.models.arcGisMapServerCatalogItem.dataDescription
             ),
             content: singleLayer.description
           })
         : undefined,
       createStratumInstance(InfoSectionTraits, {
-        name: i18next.t("models.arcGisMapServerCatalogItem.serviceDescription"),
+        name: i18next.t(
+          ($) => $.models.arcGisMapServerCatalogItem.serviceDescription
+        ),
         content: this.mapServer.description
       }),
       createStratumInstance(InfoSectionTraits, {
-        name: i18next.t("models.arcGisMapServerCatalogItem.copyrightText"),
+        name: i18next.t(
+          ($) => $.models.arcGisMapServerCatalogItem.copyrightText
+        ),
         content: singleLayer?.copyrightText ?? this.mapServer.copyrightText
       })
     ]);
@@ -364,7 +372,7 @@ export default class ArcGisMapServerCatalogItem extends UrlMixin(
   }
 
   get typeName() {
-    return i18next.t("models.arcGisMapServerCatalogItem.name");
+    return i18next.t(($) => $.models.arcGisMapServerCatalogItem.name);
   }
 
   get type() {

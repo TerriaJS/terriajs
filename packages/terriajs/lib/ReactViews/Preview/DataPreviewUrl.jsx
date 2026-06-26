@@ -25,7 +25,7 @@ const DataPreviewUrl = createReactClass({
         <h4 className={Styles.h4}>{this.props.metadataItem.typeName} URL</h4>
         {this.props.metadataItem.type === "wms" && (
           <p>
-            <Trans i18nKey="description.wms">
+            <Trans i18nKey={($) => $.description.wms}>
               This is a
               <a
                 href="https://en.wikipedia.org/wiki/Web_Map_Service"
@@ -41,7 +41,7 @@ const DataPreviewUrl = createReactClass({
         )}
         {this.props.metadataItem.type === "wfs" && (
           <p>
-            <Trans i18nKey="description.wfs">
+            <Trans i18nKey={($) => $.description.wfs}>
               This is a
               <a
                 href="https://en.wikipedia.org/wiki/Web_Feature_Service"

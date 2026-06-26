@@ -58,13 +58,13 @@ const BottomLeftBar: FC = observer(() => {
       {shouldShowPlayStoryButton(viewState) ? (
         <Box paddedHorizontally={2}>
           <MapIconButton
-            title={t("story.playStory")}
+            title={t(($) => $.story.playStory)}
             neverCollapse
             iconElement={() => <Icon glyph={Icon.GLYPHS.playStory} />}
             onClick={() => viewState.runStories()}
             primary={!isNotificationActive}
           >
-            {t("story.playStory")}
+            {t(($) => $.story.playStory)}
           </MapIconButton>
         </Box>
       ) : null}

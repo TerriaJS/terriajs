@@ -16,7 +16,7 @@ const FileInput = createReactClass({
   getInitialState() {
     const { t } = this.props;
     return {
-      value: t("addData.browse"),
+      value: t(($) => $.addData.browse),
       hovered: false
     };
   },
@@ -49,7 +49,7 @@ const FileInput = createReactClass({
             [Styles.btnHover]: this.state.hovered
           })}
         >
-          {this.state.value ? this.state.value : t("addData.browse")}
+          {this.state.value ? this.state.value : t(($) => $.addData.browse)}
         </label>
       </form>
     );

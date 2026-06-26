@@ -32,7 +32,7 @@ const LangPanel = (props: Props) => {
       }}
       btnText={
         props.smallScreen
-          ? t("languagePanel.changeLanguage")
+          ? t(($) => $.languagePanel.changeLanguage)
           : stripLangLocale(i18n.language)
       }
       mobileIcon={Icon.GLYPHS.globe}

@@ -55,11 +55,10 @@ const FooterBar = ({
               fillColor={"white"}
               glyph={Icon.GLYPHS.left}
             />
-            <Text medium>{t("story.prev")}</Text>
+            <Text medium>{t(($) => $.story.prev)}</Text>
           </NavigationButton>
         )}
       </Box>
-
       <Box flex={1} centered>
         <FooterButton onClick={listStories}>
           <StoryIcon
@@ -75,7 +74,7 @@ const FooterBar = ({
           </Text>
         </Box>
 
-        <FooterButton onClick={zoomTo} title={t("story.locationBtn")}>
+        <FooterButton onClick={zoomTo} title={t(($) => $.story.locationBtn)}>
           <StoryIcon styledWidth={"16px"} glyph={Icon.GLYPHS.location} />
         </FooterButton>
       </Box>
@@ -89,7 +88,7 @@ const FooterBar = ({
           >
             {isEnd ? (
               <>
-                <Text>{t("story.restart")}</Text>
+                <Text>{t(($) => $.story.restart)}</Text>
                 <StoryIcon
                   displayInline
                   styledWidth="15px"
@@ -99,7 +98,7 @@ const FooterBar = ({
               </>
             ) : (
               <>
-                <Text medium>{t("story.next")}</Text>
+                <Text medium>{t(($) => $.story.next)}</Text>
                 <StoryIcon
                   displayInline
                   styledWidth="15px"

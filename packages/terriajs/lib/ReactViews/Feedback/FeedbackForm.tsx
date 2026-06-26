@@ -213,9 +213,12 @@ class FeedbackForm extends Component<IProps, IState> {
               margin: 0;
             `}
           >
-            {t("feedback.title")}
+            {t(($) => $.feedback.title)}
           </Text>
-          <RawButton onClick={this.onDismiss} title={t("feedback.close")}>
+          <RawButton
+            onClick={this.onDismiss}
+            title={t(($) => $.feedback.close)}
+          >
             <StyledIcon styledWidth={"15px"} light glyph={GLYPHS.close} />
           </RawButton>
         </Box>
@@ -226,7 +229,7 @@ class FeedbackForm extends Component<IProps, IState> {
             textProps={{
               textDarker: true
             }}
-            label={t("feedback.yourName")}
+            label={t(($) => $.feedback.yourName)}
             spacingBottom
           >
             <Input
@@ -247,7 +250,7 @@ class FeedbackForm extends Component<IProps, IState> {
             textProps={{
               textDarker: true
             }}
-            label={t("feedback.email")}
+            label={t(($) => $.feedback.email)}
             spacingBottom
           >
             <Input
@@ -268,7 +271,7 @@ class FeedbackForm extends Component<IProps, IState> {
             textProps={{
               textDarker: true
             }}
-            label={t("feedback.commentQuestion")}
+            label={t(($) => $.feedback.commentQuestion)}
             spacingBottom
           >
             <TextArea
@@ -284,13 +287,15 @@ class FeedbackForm extends Component<IProps, IState> {
               onChange={this.updateComment}
               autoComplete="off"
             />
-            {!this.state.commentIsValid && (
-              <WarningText>
-                {t("feedback.minLength", {
-                  minLength: viewState.terria.configParameters.feedbackMinLength
-                })}
-              </WarningText>
-            )}
+            {!this.state.commentIsValid &&
+              viewState.terria.configParameters.feedbackMinLength && (
+                <WarningText>
+                  {t(($) => $.feedback.minLength, {
+                    minLength:
+                      viewState.terria.configParameters.feedbackMinLength
+                  })}
+                </WarningText>
+              )}
           </StyledLabel>
           <Checkbox
             isChecked={this.state.sendShareURL}
@@ -299,7 +304,7 @@ class FeedbackForm extends Component<IProps, IState> {
           >
             <Text>
               {
-                t("feedback.shareWithDevelopers", {
+                t(($) => $.feedback.shareWithDevelopers, {
                   appName: this.props.viewState.terria.appName
                 })!
               }
@@ -315,7 +320,7 @@ class FeedbackForm extends Component<IProps, IState> {
               styledMinWidth={"80px"}
               onClick={this.onDismiss}
             >
-              {t("feedback.cancel")}
+              {t(($) => $.feedback.cancel)}
             </Button>
             <Spacing right={1} />
             <Button
@@ -330,8 +335,8 @@ class FeedbackForm extends Component<IProps, IState> {
               }
             >
               {this.state.isSending
-                ? t("feedback.sending")
-                : t("feedback.send")}
+                ? t(($) => $.feedback.sending)
+                : t(($) => $.feedback.send)}
             </Button>
           </Box>
         </Form>

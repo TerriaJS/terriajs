@@ -128,7 +128,7 @@ describe("ArcGisMapServerCatalogItem", function () {
   it("has a type and type name", function () {
     expect(ArcGisMapServerCatalogItem.type).toBe("esri-mapServer");
     expect(item.typeName).toBe(
-      i18next.t("models.arcGisMapServerCatalogItem.name")
+      i18next.t(($) => $.models.arcGisMapServerCatalogItem.name)
     );
   });
 
@@ -673,11 +673,13 @@ describe("ArcGisMapServerCatalogItem", function () {
       // With no layer specified, we expect to only get description and copyright text from MapServer metadata
       expect(item.info.map(({ name, content }) => [name, content])).toEqual([
         [
-          i18next.t("models.arcGisMapServerCatalogItem.serviceDescription"),
+          i18next.t(
+            ($) => $.models.arcGisMapServerCatalogItem.serviceDescription
+          ),
           "This service has been created specifically for display in the National Map and the symbology displayed may not suit other mapping applications. The AusHydro dataset represents the Australia's surface hydrology at a national scale. It includes natural and man-made geographic features such as: watercourse areas, swamps, reservoirs, canals, etc. This product presents hydrology polygon, point and line features which topologically connect and forms a complete flow path network for the entire continent of Australia. The GEODATA 250K data are best suited to graphical applications. These data may vary greatly in quality depending on the method of capture and digitising specifications in place at the time of capture. These features include the culture, drainage, hydrography, waterbodies and marine themes. Some datasets reflects the increasing data from scale to scale. The data is sourced from Geoscience Australia 250K Topographic data and AusHydro_V_2_0 data."
         ],
         [
-          i18next.t("models.arcGisMapServerCatalogItem.copyrightText"),
+          i18next.t(($) => $.models.arcGisMapServerCatalogItem.copyrightText),
           "Geoscience Australia, AusHydro Contributors (Geoscience Australia, NSW Department Land and Property Information, Queensland Department of National Resources and Mines, Victorian Department of Environment, Land, Water and Planning, South Australia Department for Environment, Water and Natural Resources, Tasmanian Department of Primary Industries, Parks, Water and Environment and Western Australian Land Information Authority (Landgate) )"
         ]
       ]);
@@ -688,15 +690,17 @@ describe("ArcGisMapServerCatalogItem", function () {
       item.setTrait(CommonStrata.definition, "layers", "0");
       expect(item.info.map(({ name, content }) => [name, content])).toEqual([
         [
-          i18next.t("models.arcGisMapServerCatalogItem.dataDescription"),
+          i18next.t(($) => $.models.arcGisMapServerCatalogItem.dataDescription),
           "This is a customised layer to show the user of the web map service where the 250K data labels are not appropriate to use past between these scales (National Scale to 1:300,000 Scale)."
         ],
         [
-          i18next.t("models.arcGisMapServerCatalogItem.serviceDescription"),
+          i18next.t(
+            ($) => $.models.arcGisMapServerCatalogItem.serviceDescription
+          ),
           "This service has been created specifically for display in the National Map and the symbology displayed may not suit other mapping applications. The AusHydro dataset represents the Australia's surface hydrology at a national scale. It includes natural and man-made geographic features such as: watercourse areas, swamps, reservoirs, canals, etc. This product presents hydrology polygon, point and line features which topologically connect and forms a complete flow path network for the entire continent of Australia. The GEODATA 250K data are best suited to graphical applications. These data may vary greatly in quality depending on the method of capture and digitising specifications in place at the time of capture. These features include the culture, drainage, hydrography, waterbodies and marine themes. Some datasets reflects the increasing data from scale to scale. The data is sourced from Geoscience Australia 250K Topographic data and AusHydro_V_2_0 data."
         ],
         [
-          i18next.t("models.arcGisMapServerCatalogItem.copyrightText"),
+          i18next.t(($) => $.models.arcGisMapServerCatalogItem.copyrightText),
           "Geoscience Australia"
         ]
       ]);
@@ -708,11 +712,13 @@ describe("ArcGisMapServerCatalogItem", function () {
       item.setTrait(CommonStrata.definition, "layers", "0,1");
       expect(item.info.map(({ name, content }) => [name, content])).toEqual([
         [
-          i18next.t("models.arcGisMapServerCatalogItem.serviceDescription"),
+          i18next.t(
+            ($) => $.models.arcGisMapServerCatalogItem.serviceDescription
+          ),
           "This service has been created specifically for display in the National Map and the symbology displayed may not suit other mapping applications. The AusHydro dataset represents the Australia's surface hydrology at a national scale. It includes natural and man-made geographic features such as: watercourse areas, swamps, reservoirs, canals, etc. This product presents hydrology polygon, point and line features which topologically connect and forms a complete flow path network for the entire continent of Australia. The GEODATA 250K data are best suited to graphical applications. These data may vary greatly in quality depending on the method of capture and digitising specifications in place at the time of capture. These features include the culture, drainage, hydrography, waterbodies and marine themes. Some datasets reflects the increasing data from scale to scale. The data is sourced from Geoscience Australia 250K Topographic data and AusHydro_V_2_0 data."
         ],
         [
-          i18next.t("models.arcGisMapServerCatalogItem.copyrightText"),
+          i18next.t(($) => $.models.arcGisMapServerCatalogItem.copyrightText),
           "Geoscience Australia, AusHydro Contributors (Geoscience Australia, NSW Department Land and Property Information, Queensland Department of National Resources and Mines, Victorian Department of Environment, Land, Water and Planning, South Australia Department for Environment, Water and Natural Resources, Tasmanian Department of Primary Industries, Parks, Water and Environment and Western Australian Land Information Authority (Landgate) )"
         ]
       ]);
@@ -987,11 +993,13 @@ describe("ArcGisMapServerCatalogItem", function () {
     it("defines info", function () {
       expect(item.info.map(({ name, content }) => [name, content])).toEqual([
         [
-          i18next.t("models.arcGisMapServerCatalogItem.serviceDescription"),
+          i18next.t(
+            ($) => $.models.arcGisMapServerCatalogItem.serviceDescription
+          ),
           "Some test description"
         ],
         [
-          i18next.t("models.arcGisMapServerCatalogItem.copyrightText"),
+          i18next.t(($) => $.models.arcGisMapServerCatalogItem.copyrightText),
           "Some copyright"
         ]
       ]);

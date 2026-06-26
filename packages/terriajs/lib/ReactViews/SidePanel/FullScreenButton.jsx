@@ -86,17 +86,17 @@ class FullScreenButton extends Component {
           onClick={() => this.toggleFullScreen()}
           aria-label={
             this.props.viewState.isMapFullScreen
-              ? t("sui.showWorkbench", {
+              ? t(($) => $.sui.showWorkbench, {
                   count: this.props.viewState.terria.workbench.items.length
                 })
-              : t("sui.hideWorkbench")
+              : t(($) => $.sui.hideWorkbench)
           }
           title={
             this.props.viewState.isMapFullScreen
-              ? t("sui.showWorkbench", {
+              ? t(($) => $.sui.showWorkbench, {
                   count: this.props.viewState.terria.workbench.items.length
                 })
-              : t("sui.hideWorkbench")
+              : t(($) => $.sui.hideWorkbench)
           }
           renderIcon={() =>
             this.props.viewState.isMapFullScreen ? (

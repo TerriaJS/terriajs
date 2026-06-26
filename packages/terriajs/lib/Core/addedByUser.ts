@@ -15,8 +15,8 @@ export default function addedByUser(
   const depth = options.depth;
   if (depth > 100) {
     console.error(
-      i18next.t("core.errors.tooDeepAddedByUser", {
-        memberId: catalogMember.uniqueId
+      i18next.t(($) => $.core.errors.tooDeepAddedByUser, {
+        memberId: catalogMember.uniqueId!
       })
     );
     return false;

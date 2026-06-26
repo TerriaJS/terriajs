@@ -124,11 +124,13 @@ const CountDatasets: FC<CountDatasetsProps> = observer((props) => {
       stats: CounterStats,
       path: string[]
     ) {
-      stats.messages.push(path.join(" -> ") + t("countDatasets.loadError"));
+      stats.messages.push(
+        path.join(" -> ") + t(($) => $.countDatasets.loadError)
+      );
     }
 
     setBtnStringOrComponent(
-      <Loader message={t("countDatasets.countingMessage")} />
+      <Loader message={t(($) => $.countDatasets.countingMessage)} />
     );
 
     // ++countValue;
@@ -136,7 +138,7 @@ const CountDatasets: FC<CountDatasetsProps> = observer((props) => {
     const root = viewState.terria.catalog.group;
 
     counter(root as GroupAndMember, totals, []).then(function () {
-      let info = t("countDatasets.totals", {
+      let info = t(($) => $.countDatasets.totals, {
         items: totals.members,
         groups: totals.groups
       });
@@ -144,8 +146,8 @@ const CountDatasets: FC<CountDatasetsProps> = observer((props) => {
       let i;
       const subTotals = totals.subTotals;
       for (i = 0; i < subTotals.length; ++i) {
-        info += t("countDatasets.subTotals", {
-          name: subTotals[i].name,
+        info += t(($) => $.countDatasets.subTotals, {
+          name: subTotals[i].name as string,
           items: subTotals[i].members,
           groups: subTotals[i].groups
         });
@@ -164,12 +166,12 @@ const CountDatasets: FC<CountDatasetsProps> = observer((props) => {
   };
   return (
     <form>
-      {t("countDatasets.title")}
+      {t(($) => $.countDatasets.title)}
       <button
         className={Styles.submit}
         onClick={countDatasets}
         type="button"
-        value={t("countDatasets.btnCount") as string}
+        value={t(($) => $.countDatasets.btnCount) as string}
       >
         {typeof btnStringOrComponent === "string"
           ? applyTranslationIfExists(btnStringOrComponent, i18n)

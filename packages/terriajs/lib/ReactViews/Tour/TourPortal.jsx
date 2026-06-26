@@ -153,18 +153,18 @@ export const TourExplanation = ({
             {!isFirstTourPoint && (
               <>
                 <Button secondary shortMinHeight onClick={() => onPrevious?.()}>
-                  {t("general.back")}
+                  {t(($) => $.general.back)}
                 </Button>
                 <Spacing right={2} />
               </>
             )}
             {isLastTourPoint ? (
               <Button primary shortMinHeight onClick={() => onSkip?.()}>
-                {t("tour.finish")}
+                {t(($) => $.tour.finish)}
               </Button>
             ) : (
               <Button primary shortMinHeight onClick={() => onNext?.()}>
-                {t("general.next")}
+                {t(($) => $.general.next)}
               </Button>
             )}
           </Box>
@@ -310,11 +310,11 @@ export const TourPreface = () => {
         />
         <Spacing bottom={2} />
         <Text extraExtraLarge bold textDarker>
-          {t("tour.preface.title")}
+          {t(($) => $.tour.preface.title)}
         </Text>
         <Spacing bottom={3} />
         <Text light medium textDarker>
-          {t("tour.preface.content")}
+          {t(($) => $.tour.preface.content)}
         </Text>
         <Spacing bottom={4} />
         <Text medium>
@@ -327,7 +327,7 @@ export const TourPreface = () => {
                 viewState.closeTour();
               }}
             >
-              {t("tour.preface.close")}
+              {t(($) => $.tour.preface.close)}
             </Button>
             <Spacing right={3} />
             <Button
@@ -339,7 +339,7 @@ export const TourPreface = () => {
                 viewState.setShowTour(true);
               }}
             >
-              {t("tour.preface.start")}
+              {t(($) => $.tour.preface.start)}
             </Button>
           </Box>
         </Text>

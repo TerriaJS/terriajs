@@ -70,7 +70,7 @@ class SharePanel extends Component<PropTypes, SharePanelState> {
     if (this.props.catalogShare) {
       return (
         <Box fullWidth column paddedRatio={3}>
-          <Text medium>{t("clipboard.shareURL")}</Text>
+          <Text medium>{t(($) => $.clipboard.shareURL)}</Text>
           <Spacing bottom={1} />
           <ShareUrl
             terria={terria}
@@ -83,7 +83,7 @@ class SharePanel extends Component<PropTypes, SharePanelState> {
     } else if (this.props.storyShare) {
       return (
         <Box fullWidth column paddedRatio={3}>
-          <Text medium>{t("share.shareStoryLink")}</Text>
+          <Text medium>{t(($) => $.share.shareStoryLink)}</Text>
           <Spacing bottom={1} />
           <ShareUrl
             terria={terria}
@@ -124,15 +124,15 @@ class SharePanel extends Component<PropTypes, SharePanelState> {
     };
 
     const btnText = catalogShare
-      ? t("share.btnCatalogShareText")
+      ? t(($) => $.share.btnCatalogShareText)
       : storyShare
-        ? t("share.btnStoryShareText")
-        : t("share.btnMapShareText");
+        ? t(($) => $.share.btnStoryShareText)
+        : t(($) => $.share.btnMapShareText);
     const btnTitle = catalogShare
-      ? t("share.btnCatalogShareTitle")
+      ? t(($) => $.share.btnCatalogShareTitle)
       : storyShare
-        ? t("share.btnStoryShareTitle")
-        : t("share.btnMapShareTitle");
+        ? t(($) => $.share.btnStoryShareTitle)
+        : t(($) => $.share.btnMapShareTitle);
 
     if (this.props.terria.configParameters.disableSharePanel) {
       return null;

@@ -126,7 +126,7 @@ export class ColorStyleLegend extends LoadableStratum(LegendTraits) {
               addSpacingAbove: true,
               title:
                 style.colorTraits.nullLabel ||
-                i18next.t("models.tableData.legendNullLabel")
+                i18next.t(($) => $.models.tableData.legendNullLabel)
             })
           ]
         : [];
@@ -139,7 +139,7 @@ export class ColorStyleLegend extends LoadableStratum(LegendTraits) {
             addSpacingAbove: true,
             title:
               style.colorTraits.outlierLabel ||
-              i18next.t("models.tableData.legendZFilterLabel")
+              i18next.t(($) => $.models.tableData.legendZFilterLabel)
           })
         ]
       : [];

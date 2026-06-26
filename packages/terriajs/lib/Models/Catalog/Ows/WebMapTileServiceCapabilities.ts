@@ -117,12 +117,15 @@ export default class WebMapTileServiceCapabilities {
         if (!capabilitiesXml || !defined(json.ServiceIdentification)) {
           throw networkRequestError({
             title: i18next.t(
-              "models.webMapTileServiceCatalogGroup.invalidCapabilitiesTitle"
+              ($) =>
+                $.models.webMapTileServiceCatalogGroup.invalidCapabilitiesTitle
             ),
             message: i18next.t(
-              "models.webMapTileServiceCatalogGroup.invalidCapabilitiesMessage",
+              ($) =>
+                $.models.webMapTileServiceCatalogGroup
+                  .invalidCapabilitiesMessage,
               {
-                url: url
+                url
               }
             )
           });

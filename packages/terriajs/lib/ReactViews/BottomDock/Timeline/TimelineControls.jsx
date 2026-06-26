@@ -92,7 +92,7 @@ const TimelineControls = createReactClass({
           type="button"
           className={Styles.timelineControl}
           onClick={this.gotoStart}
-          title={t("dateTime.timeline.gotoStart")}
+          title={t(($) => $.dateTime.timeline.gotoStart)}
         >
           <Icon glyph={Icon.GLYPHS.backToStart} />
         </button>
@@ -100,7 +100,7 @@ const TimelineControls = createReactClass({
           type="button"
           className={Styles.timelineControl}
           onClick={this.togglePlay}
-          title={t("dateTime.timeline.togglePlay")}
+          title={t(($) => $.dateTime.timeline.togglePlay)}
         >
           {this.isPlaying() ? (
             <Icon glyph={Icon.GLYPHS.pause} />
@@ -112,7 +112,7 @@ const TimelineControls = createReactClass({
           type="button"
           className={Styles.timelineControl}
           onClick={this.playSlower}
-          title={t("dateTime.timeline.playSlower")}
+          title={t(($) => $.dateTime.timeline.playSlower)}
         >
           <Icon glyph={Icon.GLYPHS.backward} />
         </button>
@@ -120,7 +120,7 @@ const TimelineControls = createReactClass({
           type="button"
           className={Styles.timelineControl}
           onClick={this.playFaster}
-          title={t("dateTime.timeline.playFaster")}
+          title={t(($) => $.dateTime.timeline.playFaster)}
         >
           <Icon glyph={Icon.GLYPHS.forward} />
         </button>

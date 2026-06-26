@@ -112,7 +112,7 @@ class TimerSection extends Component {
       <div className={Styles.section}>
         <div className={Styles.timerContainer}>
           <Timer
-            tooltipText={t("timer.nextScheduledUpdateTime", {
+            tooltipText={t(($) => $.timer.nextScheduledUpdateTime, {
               scheduledUpdateTime: this.props.item.nextScheduledUpdateTime
             })}
             radius={10}
@@ -121,7 +121,7 @@ class TimerSection extends Component {
           />
         </div>
         <span>
-          {t("timer.nextScheduledUpdateCountdown", {
+          {t(($) => $.timer.nextScheduledUpdateCountdown, {
             timeCountdown: this.getCountdownString()
           })}
         </span>

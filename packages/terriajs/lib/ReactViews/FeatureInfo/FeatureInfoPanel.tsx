@@ -64,7 +64,7 @@ class FeatureInfoPanel extends Component<Props> {
         } else {
           terria.selectedFeature = TerriaFeature.fromEntity(
             new Entity({
-              id: t("featureInfo.pickLocation"),
+              id: t(($) => $.featureInfo.pickLocation),
               position: pickedFeatures.pickPosition
             })
           );
@@ -179,19 +179,19 @@ class FeatureInfoPanel extends Component<Props> {
         runInAction(() => {
           this.props.viewState.firstTimeAddingData = false;
         });
-        return t("featureInfo.clickMap");
+        return t(($) => $.featureInfo.clickMap);
       }
       // if clicking on somewhere that has no data
-      return t("featureInfo.noDataAvailable");
+      return t(($) => $.featureInfo.noDataAvailable);
     } else {
-      return t("featureInfo.clickToAddData");
+      return t(($) => $.featureInfo.clickToAddData);
     }
   }
 
   addManualMarker(longitude: number, latitude: number) {
     const { t } = this.props;
     addMarker(this.props.viewState.terria, {
-      name: t("featureInfo.userSelection"),
+      name: t(($) => $.featureInfo.userSelection),
       location: {
         latitude: latitude,
         longitude: longitude
@@ -345,7 +345,7 @@ class FeatureInfoPanel extends Component<Props> {
               <div
                 className={classNames("drag-handle", Styles.btnPanelHeading)}
               >
-                <span>{t("featureInfo.panelHeading")}</span>
+                <span>{t(($) => $.featureInfo.panelHeading)}</span>
                 <button
                   type="button"
                   onClick={this.toggleCollapsed}
@@ -362,7 +362,7 @@ class FeatureInfoPanel extends Component<Props> {
                 type="button"
                 onClick={this.close}
                 className={Styles.btnCloseFeature}
-                title={t("featureInfo.btnCloseFeature")}
+                title={t(($) => $.featureInfo.btnCloseFeature)}
               >
                 <Icon glyph={Icon.GLYPHS.close} />
               </button>
@@ -408,8 +408,8 @@ class FeatureInfoPanel extends Component<Props> {
                     )}
                     className={Styles.satelliteSuggestionBtn}
                   >
-                    {t("featureInfo.satelliteSuggestionBtn", {
-                      catalogItemName: pair.catalogItem.name
+                    {t(($) => $.featureInfo.satelliteSuggestionBtn, {
+                      catalogItemName: pair.catalogItem.name as string
                     })}
                   </button>
                 ) : null

@@ -211,7 +211,7 @@ describe("TileErrorHandlerMixin", function () {
       expect(item.tileFailures).toBe(1);
       expect(raiseEvent.calls.count()).toBe(1);
       expect(raiseEvent.calls.argsFor(0)[0]?.message).toContain(
-        i18next.t("models.imageryLayer.tileErrorMessageII")
+        i18next.t(($) => $.models.imageryLayer.tileErrorMessageII)
       );
     });
 
@@ -235,7 +235,7 @@ describe("TileErrorHandlerMixin", function () {
       expect(item.tileFailures).toBe(1);
       expect(raiseEvent.calls.count()).toBe(1);
       expect(raiseEvent.calls.argsFor(0)[0]?.message).toContain(
-        i18next.t("models.imageryLayer.unknownTileErrorMessage")
+        i18next.t(($) => $.models.imageryLayer.unknownTileErrorMessage)
       );
     });
   });

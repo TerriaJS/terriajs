@@ -96,12 +96,12 @@ class HelpPanel extends Component {
           `}
         >
           <Text extraBold heading textDark>
-            {t("helpPanel.menuPaneTitle")}
+            {t(($) => $.helpPanel.menuPaneTitle)}
           </Text>
           <Spacing bottom={4} />
           <Text medium textDark highlightLinks>
             {parseCustomMarkdownToReact(
-              t("helpPanel.menuPaneBody", {
+              t(($) => $.helpPanel.menuPaneBody, {
                 supportEmail: this.props.viewState.terria.supportEmail
               })
             )}
@@ -136,7 +136,7 @@ class HelpPanel extends Component {
                 ${(p) => p.theme.addTerriaPrimaryBtnStyles(p)}
               `}
             >
-              {t("helpPanel.takeTour")}
+              {t(($) => $.helpPanel.takeTour)}
             </Button>
           </Box>
         </Box>

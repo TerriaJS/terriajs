@@ -55,7 +55,7 @@ class FeatureInfoDownload extends Component<{
           icon: icon
         }}
       >
-        {t("featureInfo.download")}
+        {t(($) => $.featureInfo.download)}
       </Dropdown>
     );
   }

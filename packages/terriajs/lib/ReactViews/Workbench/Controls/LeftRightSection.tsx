@@ -82,26 +82,26 @@ const LeftRightSection: FC<ILeftRightSection> = observer(
           <LeftRightButton
             type="button"
             onClick={goLeft}
-            title={t("splitterTool.workbench.goleftTitle")}
+            title={t(($) => $.splitterTool.workbench.goleftTitle)}
             isActive={splitDirection === SplitDirection.LEFT}
           >
-            {t("splitterTool.workbench.goleft")}
+            {t(($) => $.splitterTool.workbench.goleft)}
           </LeftRightButton>
           <LeftRightButton
             type="button"
             onClick={goBoth}
-            title={t("splitterTool.workbench.bothTitle")}
+            title={t(($) => $.splitterTool.workbench.bothTitle)}
             isActive={splitDirection === SplitDirection.NONE}
           >
-            {t("splitterTool.workbench.both")}
+            {t(($) => $.splitterTool.workbench.both)}
           </LeftRightButton>
           <LeftRightButton
             type="button"
             onClick={goRight}
-            title={t("splitterTool.workbench.gorightTitle")}
+            title={t(($) => $.splitterTool.workbench.gorightTitle)}
             isActive={splitDirection === SplitDirection.RIGHT}
           >
-            {t("splitterTool.workbench.goright")}
+            {t(($) => $.splitterTool.workbench.goright)}
           </LeftRightButton>
         </Box>
       </>

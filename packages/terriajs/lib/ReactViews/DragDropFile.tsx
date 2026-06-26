@@ -176,7 +176,7 @@ const DragDropFile: FC = observer(() => {
         {viewState.isDraggingDroppingFile ? (
           <Box centered fullWidth fullHeight column>
             <StyledIcon glyph={Icon.GLYPHS.dragDrop} styledHeight="80px" />
-            <Trans i18nKey="dragDrop.text">
+            <Trans i18nKey={($) => $.dragDrop.text}>
               <Text
                 textLight
                 textAlignCenter

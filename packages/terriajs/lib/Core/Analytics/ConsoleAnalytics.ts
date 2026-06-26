@@ -19,18 +19,20 @@ export default class ConsoleAnalytics implements Analytics {
       configParameters.googleAnalyticsOptions
     ) {
       console.log(
-        i18next.t("core.consoleAnalytics.logStartedWithGAParameters")
+        i18next.t(($) => $.core.consoleAnalytics.logStartedWithGAParameters)
       );
     }
     if (isDefined(configParameters.enableConsoleAnalytics)) {
-      console.log(i18next.t("core.consoleAnalytics.started"));
+      console.log(i18next.t(($) => $.core.consoleAnalytics.started));
       this.enableConsoleAnalytics = configParameters.enableConsoleAnalytics;
     } else if (
       !isDefined(configParameters.enableConsoleAnalytics) ||
       !configParameters.enableConsoleAnalytics
     ) {
       console.log(
-        i18next.t("core.consoleAnalytics.startedNoenableConsoleAnalytics")
+        i18next.t(
+          ($) => $.core.consoleAnalytics.startedNoenableConsoleAnalytics
+        )
       );
     }
   }

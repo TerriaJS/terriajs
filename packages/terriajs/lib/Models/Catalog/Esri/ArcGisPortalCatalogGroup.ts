@@ -359,7 +359,7 @@ export default class ArcGisPortalCatalogGroup extends UrlMixin(
   }
 
   get typeName() {
-    return i18next.t("models.arcgisPortal.nameGroup");
+    return i18next.t(($) => $.models.arcgisPortal.nameGroup);
   }
 
   @override
@@ -463,8 +463,8 @@ async function paginateThroughResults(
   const arcgisPortalResponse = await getPortalInformation(uri, catalogGroup);
   if (arcgisPortalResponse === undefined || !arcgisPortalResponse) {
     throw networkRequestError({
-      title: i18next.t("models.arcgisPortal.errorLoadingTitle"),
-      message: i18next.t("models.arcgisPortal.errorLoadingMessage")
+      title: i18next.t(($) => $.models.arcgisPortal.errorLoadingTitle),
+      message: i18next.t(($) => $.models.arcgisPortal.errorLoadingMessage)
     });
   }
   let nextStart: number = arcgisPortalResponse.nextStart;

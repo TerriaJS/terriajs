@@ -23,7 +23,9 @@ const LazyItemSearchTool: FC<PropsType> = (props) => {
       fallback={
         <Frame
           viewState={viewState}
-          title={t("itemSearchTool.title", { itemName })}
+          title={t(($) => $.itemSearchTool.title, {
+            itemName: itemName as string
+          })}
         >
           <Wrapper>
             <AnimatedSpinnerIcon light styledWidth="25px" styledHeight="25px" />
@@ -34,7 +36,7 @@ const LazyItemSearchTool: FC<PropsType> = (props) => {
       <RaiseToUserErrorBoundary
         viewState={viewState}
         terriaErrorOptions={{
-          title: i18next.t("itemSearchTool.toolLoadError")
+          title: i18next.t(($) => $.itemSearchTool.toolLoadError)
         }}
       >
         <ItemSearchTool {...props} />

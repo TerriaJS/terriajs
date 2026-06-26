@@ -69,7 +69,7 @@ describe("ArcGisMapServerCatalogGroup", function () {
   it("has a type and typeName", function () {
     expect(group.type).toBe("esri-mapServer-group");
     expect(group.typeName).toBe(
-      i18next.t("models.arcGisMapServerCatalogGroup.name")
+      i18next.t(($) => $.models.arcGisMapServerCatalogGroup.name)
     );
   });
 
@@ -83,13 +83,13 @@ describe("ArcGisMapServerCatalogGroup", function () {
 
     it("defines info", function () {
       const serviceDescription = i18next.t(
-        "models.arcGisMapServerCatalogGroup.serviceDescription"
+        ($) => $.models.arcGisMapServerCatalogGroup.serviceDescription
       );
       const dataDescription = i18next.t(
-        "models.arcGisMapServerCatalogGroup.dataDescription"
+        ($) => $.models.arcGisMapServerCatalogGroup.dataDescription
       );
       const copyrightText = i18next.t(
-        "models.arcGisMapServerCatalogGroup.copyrightText"
+        ($) => $.models.arcGisMapServerCatalogGroup.copyrightText
       );
 
       expect(group.info.map(({ name }) => name)).toEqual([

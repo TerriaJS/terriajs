@@ -55,8 +55,8 @@ export default async function addUserCatalogMember(
     return newCatalogItem;
   } catch (e: any) {
     terria.raiseErrorToUser(e, {
-      title: i18next.t("models.userData.addingDataErrorTitle"),
-      message: i18next.t("models.userData.addingDataErrorTitle")
+      title: i18next.t(($) => $.models.userData.addingDataErrorTitle),
+      message: i18next.t(($) => $.models.userData.addingDataErrorTitle)
     });
     return e;
   }

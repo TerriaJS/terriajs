@@ -159,17 +159,17 @@ class StoryEditor extends Component {
         <div className={Styles.inner}>
           <div className={Styles.header}>
             <Text textLight as="h3" css={{ margin: "0" }}>
-              {t("story.editor.modalHeader")}
+              {t(($) => $.story.editor.modalHeader)}
             </Text>
           </div>
           <label htmlFor="title">
             <Text small textGreyLighter css={{ marginBottom: "8px" }}>
-              {t("story.editor.titleLabel")}
+              {t(($) => $.story.editor.titleLabel)}
             </Text>
           </label>
           <input
             ref={(titleInput) => (this.titleInput = titleInput)}
-            placeholder={t("story.editor.placeholder")}
+            placeholder={t(($) => $.story.editor.placeholder)}
             autoComplete="off"
             className={Styles.field}
             type="text"
@@ -179,7 +179,7 @@ class StoryEditor extends Component {
           />
           <div className={Styles.body}>
             <Text small textGreyLighter css={{ marginBottom: "8px" }}>
-              {t("story.editor.descriptionLabel")}
+              {t(($) => $.story.editor.descriptionLabel)}
             </Text>
             <Suspense fallback={<div>Loading...</div>}>
               <Editor
@@ -203,13 +203,13 @@ class StoryEditor extends Component {
               transparentBg
               onClick={this.cancelEditing}
               type="button"
-              title={t("story.editor.cancelBtn")}
+              title={t(($) => $.story.editor.cancelBtn)}
               textProps={{
                 textGreyLighter: true,
                 medium: true
               }}
             >
-              {t("story.editor.cancelEditing")}
+              {t(($) => $.story.editor.cancelEditing)}
             </Button>
             <Button
               styledWidth={"240px"}
@@ -217,12 +217,12 @@ class StoryEditor extends Component {
               disabled={!this.state.title.length}
               onClick={this.saveStory}
               type="button"
-              title={t("story.editor.saveBtn")}
+              title={t(($) => $.story.editor.saveBtn)}
               textProps={{
                 medium: true
               }}
             >
-              {t("story.editor.saveStory")}
+              {t(($) => $.story.editor.saveStory)}
             </Button>
           </Box>
         </div>

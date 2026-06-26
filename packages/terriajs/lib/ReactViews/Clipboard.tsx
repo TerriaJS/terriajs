@@ -69,9 +69,9 @@ const Clipboard: FC<ClipboardProps> = (props) => {
 
   const statusMessage =
     status === CopyStatus.Error
-      ? t("clipboard.unsuccessful")
+      ? t(($) => $.clipboard.unsuccessful)
       : status === CopyStatus.Success
-        ? t("clipboard.success")
+        ? t(($) => $.clipboard.success)
         : createdMessage;
 
   return (
@@ -83,7 +83,9 @@ const Clipboard: FC<ClipboardProps> = (props) => {
           large
           type="text"
           value={text}
-          placeholder={inputPlaceholder ?? t("share.shortLinkShortening")}
+          placeholder={
+            inputPlaceholder ?? t(($) => $.share.shortLinkShortening)
+          }
           readOnly
           onClick={(e) => e.currentTarget.select()}
         />
@@ -97,7 +99,7 @@ const Clipboard: FC<ClipboardProps> = (props) => {
             `}
             textProps={{ large: true }}
           >
-            {t("clipboard.copy")}
+            {t(($) => $.clipboard.copy)}
           </Button>
         )}
       </Box>

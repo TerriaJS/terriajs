@@ -11,8 +11,8 @@ function geoJsonGeometryFromW3cGeometry(geometry) {
   var creator = featureCreators[type];
   if (!defined(creator)) {
     throw new RuntimeError(
-      i18next.t("map.w3cToGeoJson.containsUnsupportedFeatureType", {
-        type: type
+      i18next.t(($) => $.map.w3cToGeoJson.containsUnsupportedFeatureType, {
+        type
       })
     );
   }

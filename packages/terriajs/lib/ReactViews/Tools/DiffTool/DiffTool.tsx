@@ -411,7 +411,7 @@ const Main: React.FC<MainPropsType> = observer((props) => {
   return (
     <WorkflowPanel
       viewState={viewState}
-      title={t("diffTool.title")}
+      title={t(($) => $.diffTool.title)}
       icon={GLYPHS.difference}
       onClose={() => {
         resetTool();
@@ -429,31 +429,44 @@ const Main: React.FC<MainPropsType> = observer((props) => {
       >
         {isShowingDiff && (
           <Text medium textLight>
-            {t("diffTool.differenceResultsTitle")}
+            {t(($) => $.diffTool.differenceResultsTitle)}
           </Text>
         )}
-        <Text textLight>{t("diffTool.instructions.paneDescription")}</Text>
+        <Text textLight>
+          {t(($) => $.diffTool.instructions.paneDescription)}
+        </Text>
         <Group>
           <LocationAndDatesDisplayBox>
             <Box>
-              <Text medium>{t("diffTool.labels.area")}:</Text>
+              <Text medium>{t(($) => $.diffTool.labels.area)}:</Text>
               <div>
                 <Text bold textLight>
                   {location
-                    ? t("diffTool.locationDisplay.locationSelected.title")
-                    : t("diffTool.locationDisplay.noLocationSelected.title")}
+                    ? t(
+                        ($) => $.diffTool.locationDisplay.locationSelected.title
+                      )
+                    : t(
+                        ($) =>
+                          $.diffTool.locationDisplay.noLocationSelected.title
+                      )}
                 </Text>
                 <Text light textLight small>
                   {location
-                    ? t("diffTool.locationDisplay.locationSelected.description")
+                    ? t(
+                        ($) =>
+                          $.diffTool.locationDisplay.locationSelected
+                            .description
+                      )
                     : t(
-                        "diffTool.locationDisplay.noLocationSelected.description"
+                        ($) =>
+                          $.diffTool.locationDisplay.noLocationSelected
+                            .description
                       )}
                 </Text>
               </div>
             </Box>
             <Box>
-              <Text medium>{t("diffTool.labels.dates")}:</Text>
+              <Text medium>{t(($) => $.diffTool.labels.dates)}:</Text>
               <Box column alignItemsFlexStart>
                 {currentLeftDate && (
                   <Text large>
@@ -469,7 +482,7 @@ const Main: React.FC<MainPropsType> = observer((props) => {
                     onClick={() => leftDatePickerHandle.current?.open()}
                   >
                     <TextSpan isLink small bold>
-                      {t("diffTool.instructions.setDateA")}
+                      {t(($) => $.diffTool.instructions.setDateA)}
                     </TextSpan>
                   </RawButton>
                 )}
@@ -487,7 +500,7 @@ const Main: React.FC<MainPropsType> = observer((props) => {
                     onClick={() => rightDatePickerHandle.current?.open()}
                   >
                     <TextSpan isLink small bold>
-                      {t("diffTool.instructions.setDateB")}
+                      {t(($) => $.diffTool.instructions.setDateB)}
                     </TextSpan>
                   </RawButton>
                 )}
@@ -496,7 +509,7 @@ const Main: React.FC<MainPropsType> = observer((props) => {
                   currentRightDate && (
                     <RawButton onClick={unsetDates}>
                       <TextSpan isLink small>
-                        {t("diffTool.instructions.changeDates")}
+                        {t(($) => $.diffTool.instructions.changeDates)}
                       </TextSpan>
                     </RawButton>
                   )}
@@ -510,7 +523,7 @@ const Main: React.FC<MainPropsType> = observer((props) => {
               viewState={viewState}
               value={sourceItem.uniqueId}
               onChange={handleChangeSourceItem}
-              label={t("diffTool.labels.sourceDataset")}
+              label={t(($) => $.diffTool.labels.sourceDataset)}
             >
               <option disabled>Select source item</option>
               {diffableItemsInWorkbench.map((item) => (
@@ -528,10 +541,10 @@ const Main: React.FC<MainPropsType> = observer((props) => {
               spacingBottom
               value={previewStyle}
               onChange={handleChangePreviewStyle}
-              label={t("diffTool.labels.previewStyle")}
+              label={t(($) => $.diffTool.labels.previewStyle)}
             >
               <option disabled value="">
-                {t("diffTool.choosePreview")}
+                {t(($) => $.diffTool.choosePreview)}
               </option>
               {diffItem.styleSelectableDimensions?.[0]?.options?.map(
                 (style) => (
@@ -551,10 +564,10 @@ const Main: React.FC<MainPropsType> = observer((props) => {
             viewState={viewState}
             value={currentDiffStyle || ""}
             onChange={handleChangeDiffStyle}
-            label={t("diffTool.labels.differenceOutput")}
+            label={t(($) => $.diffTool.labels.differenceOutput)}
           >
             <option disabled value="">
-              {t("diffTool.chooseDifference")}
+              {t(($) => $.diffTool.chooseDifference)}
             </option>
             {availableDiffStyles.map((style) => (
               <option key={style.id} value={style.id}>
@@ -574,7 +587,7 @@ const Main: React.FC<MainPropsType> = observer((props) => {
               aria-describedby="TJSDifferenceDisabledButtonPrompt"
             >
               <TextSpan large>
-                {t("diffTool.labels.generateDiffButtonText")}
+                {t(($) => $.diffTool.labels.generateDiffButtonText)}
               </TextSpan>
             </GenerateButton>
             {!isReadyToGenerateDiff && (
@@ -603,7 +616,7 @@ const Main: React.FC<MainPropsType> = observer((props) => {
                   textLight
                   id="TJSDifferenceDisabledButtonPrompt"
                 >
-                  {t("diffTool.labels.disabledButtonPrompt")}
+                  {t(($) => $.diffTool.labels.disabledButtonPrompt)}
                 </Text>
               </div>
             )}
@@ -626,7 +639,7 @@ const Main: React.FC<MainPropsType> = observer((props) => {
                   styledWidth="16px"
                   glyph={GLYPHS.arrowDown}
                 />
-                <TextSpan medium>{t("general.back")}</TextSpan>
+                <TextSpan medium>{t(($) => $.general.back)}</TextSpan>
               </BoxSpan>
             </BackButton>
             <Button
@@ -637,7 +650,9 @@ const Main: React.FC<MainPropsType> = observer((props) => {
                 margin-left: 10px;
               `}
             >
-              <TextSpan medium>{t("diffTool.labels.saveToWorkbench")}</TextSpan>
+              <TextSpan medium>
+                {t(($) => $.diffTool.labels.saveToWorkbench)}
+              </TextSpan>
             </Button>
           </Box>
         )}
@@ -654,7 +669,7 @@ const Main: React.FC<MainPropsType> = observer((props) => {
             <Box centered fullWidth flexWrap backgroundColor={theme.dark}>
               <DatePicker
                 ref={leftDatePickerHandle}
-                heading={t("diffTool.labels.dateComparisonA")}
+                heading={t(($) => $.diffTool.labels.dateComparisonA)}
                 item={leftItem}
                 onDateSet={() => showItem(leftItem)}
               />
@@ -664,7 +679,7 @@ const Main: React.FC<MainPropsType> = observer((props) => {
               />
               <DatePicker
                 ref={rightDatePickerHandle}
-                heading={t("diffTool.labels.dateComparisonB")}
+                heading={t(($) => $.diffTool.labels.dateComparisonB)}
                 item={rightItem}
                 onDateSet={() => showItem(rightItem)}
               />
@@ -737,7 +752,7 @@ const AreaFilterSelection = (props: {
         <StyledIcon light styledWidth="16px" glyph={GLYPHS.location2} />
         <Spacing right={2} />
         <Text textLight extraLarge>
-          {t("diffTool.labels.areaFilterSelection")}
+          {t(($) => $.diffTool.labels.areaFilterSelection)}
         </Text>
       </Box>
       <Spacing bottom={3} />

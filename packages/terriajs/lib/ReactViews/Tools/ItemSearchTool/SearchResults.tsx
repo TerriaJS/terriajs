@@ -55,13 +55,13 @@ const SearchResults: FC<SearchResultsProps> = (props) => {
           selected={currentMapEffect.is === "highlightAll"}
           onClick={() => toggleSelection({ is: "highlightAll" })}
         >
-          {t("itemSearchTool.actions.highlightAll")}
+          {t(($) => $.itemSearchTool.actions.highlightAll)}
         </ActionButton>
         <ActionButton
           selected={currentMapEffect.is === "showMatchingOnly"}
           onClick={() => toggleSelection({ is: "showMatchingOnly" })}
         >
-          {t("itemSearchTool.actions.showMatchingOnly")}
+          {t(($) => $.itemSearchTool.actions.showMatchingOnly)}
         </ActionButton>
       </ActionMenu>
       <List ref={parentRef} height={`250px`}>
@@ -174,7 +174,7 @@ export const ResultsCount: FC<{ count: number }> = ({ count }) => {
         ${count === 0 ? "align-self: center;" : ""}
       `}
     >
-      {t(`itemSearchTool.resultsCount`, { count })}
+      {t(($) => $.itemSearchTool.resultsCount, { count })}
     </Box>
   );
 };

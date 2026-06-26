@@ -44,7 +44,7 @@ describe("WebFeatureServiceCatalogItem", function () {
         wfs.info.find(
           (section) =>
             section.name ===
-            i18next.t("models.webFeatureServiceCatalogItem.abstract")
+            i18next.t(($) => $.models.webFeatureServiceCatalogItem.abstract)
         )?.content
       ).toBe("Abstract of feature type");
     });

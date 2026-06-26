@@ -36,8 +36,8 @@ export const SelectableDimensionGroup: FC<{
             ? (dim.name ?? dim.id ?? "")
             : (dim.options?.find((opt) => opt.id === dim.selectedId)?.name ??
               (dim.selectedId === "true"
-                ? t("selectableDimensions.enabled")
-                : t("selectableDimensions.disabled")))
+                ? t(($) => $.selectableDimensions.enabled)
+                : t(($) => $.selectableDimensions.disabled)))
         }
         titleTextProps={{ bold: false }}
         bodyBoxProps={{

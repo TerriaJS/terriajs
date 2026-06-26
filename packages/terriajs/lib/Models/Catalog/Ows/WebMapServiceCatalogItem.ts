@@ -135,7 +135,7 @@ class WebMapServiceCatalogItem
 
   // hide elements in the info section which might show information about the datasource
   _sourceInfoItemNames = [
-    i18next.t("models.webMapServiceCatalogItem.getCapabilitiesUrl")
+    i18next.t(($) => $.models.webMapServiceCatalogItem.getCapabilitiesUrl)
   ];
 
   _webMapServiceCatalogGroup: undefined | WebMapServiceCatalogGroup = undefined;
@@ -194,7 +194,7 @@ class WebMapServiceCatalogItem
       this.tilingScheme instanceof GeographicTilingScheme &&
       this.terria.currentViewer.type === "Leaflet"
     ) {
-      return i18next.t("map.cesium.notWebMercatorTilingScheme");
+      return i18next.t(($) => $.map.cesium.notWebMercatorTilingScheme);
     }
     return super.shortReport;
   }
@@ -223,10 +223,15 @@ class WebMapServiceCatalogItem
     if (this.invalidLayers.length > 0)
       throw new TerriaError({
         sender: this,
-        title: i18next.t("models.webMapServiceCatalogItem.noLayerFoundTitle"),
+        title: i18next.t(
+          ($) => $.models.webMapServiceCatalogItem.noLayerFoundTitle
+        ),
         message: i18next.t(
-          "models.webMapServiceCatalogItem.noLayerFoundMessage",
-          { name: getName(this), layers: this.invalidLayers.join(", ") }
+          ($) => $.models.webMapServiceCatalogItem.noLayerFoundMessage,
+          {
+            name: getName(this),
+            layers: this.invalidLayers.join(", ")
+          }
         )
       });
   }
@@ -697,7 +702,7 @@ class WebMapServiceCatalogItem
         // Therefore - we only add the "Default style" / undefined option if supportsGetLegendGraphic is true
         allowUndefined: this.supportsGetLegendGraphic && options.length > 1,
         undefinedLabel: i18next.t(
-          "models.webMapServiceCatalogItem.defaultStyleLabel"
+          ($) => $.models.webMapServiceCatalogItem.defaultStyleLabel
         ),
         disable: this.isShowingDiff
       };

@@ -11,14 +11,14 @@ import Group from "./Group";
 
 const createUserAddedDataGroup = (terria: Terria) => {
   const userAddedDataGroup = new CatalogGroup(USER_ADDED_CATEGORY_ID, terria);
-  const userAddedGroupName: string = i18next.t("core.userAddedData");
+  const userAddedGroupName: string = i18next.t(($) => $.core.userAddedData);
   userAddedDataGroup.setTrait(
     CommonStrata.definition,
     "name",
     userAddedGroupName
   );
   const userAddedGroupDescription: string = i18next.t(
-    "models.catalog.userAddedDataGroup"
+    ($) => $.models.catalog.userAddedDataGroup
   );
   userAddedDataGroup.setTrait(
     CommonStrata.definition,

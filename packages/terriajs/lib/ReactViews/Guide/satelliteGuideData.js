@@ -8,24 +8,24 @@ function satelliteGuideData(t) {
   return [
     {
       imageSrc: satelliteZoom,
-      title: t("satelliteGuidance.titleII"),
-      body: t("satelliteGuidance.bodyII"),
+      title: t(($) => $.satelliteGuidance.titleII),
+      body: t(($) => $.satelliteGuidance.bodyII),
       hidePrev: true
     },
     {
       imageSrc: satelliteTime,
-      title: t("satelliteGuidance.titleIII"),
-      body: t("satelliteGuidance.bodyIII")
+      title: t(($) => $.satelliteGuidance.titleIII),
+      body: t(($) => $.satelliteGuidance.bodyIII)
     },
     {
       imageSrc: satelliteLocation,
-      title: t("satelliteGuidance.titleIV"),
-      body: t("satelliteGuidance.bodyIV")
+      title: t(($) => $.satelliteGuidance.titleIV),
+      body: t(($) => $.satelliteGuidance.bodyIV)
     },
     {
       imageSrc: satelliteStyles,
-      title: t("satelliteGuidance.titleV"),
-      body: t("satelliteGuidance.bodyV"),
+      title: t(($) => $.satelliteGuidance.titleV),
+      body: t(($) => $.satelliteGuidance.bodyV),
       hideNext: true
     }
   ];

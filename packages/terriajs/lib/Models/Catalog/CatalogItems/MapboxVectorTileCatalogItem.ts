@@ -103,7 +103,7 @@ class MapboxVectorTileCatalogItem extends MappableMixin(
   }
 
   get typeName() {
-    return i18next.t("models.mapboxVectorTile.name");
+    return i18next.t(($) => $.models.mapboxVectorTile.name);
   }
 
   async forceLoadMetadata() {

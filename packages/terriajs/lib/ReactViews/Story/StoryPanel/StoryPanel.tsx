@@ -19,6 +19,7 @@ import StoryBody from "./StoryBody";
 import FooterBar from "./StoryFooterBar";
 import TitleBar from "./TitleBar";
 import DragWrapper from "../../Drag/DragWrapper";
+import { keyFromSelector } from "i18next";
 
 /**
  *
@@ -51,9 +52,9 @@ export async function activateStory(scene: Story, terria: Terria) {
     if (errors.length > 0) {
       terria.raiseErrorToUser(
         TerriaError.combine(errors, {
-          title: { key: "story.loadSceneErrorTitle" },
+          title: { key: keyFromSelector(($) => $.story.loadSceneErrorTitle) },
           message: {
-            key: "story.loadSceneErrorMessage",
+            key: keyFromSelector(($) => $.story.loadSceneErrorMessage),
             parameters: { title: scene.title ?? scene.id }
           }
         })

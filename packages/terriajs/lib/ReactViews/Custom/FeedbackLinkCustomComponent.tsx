@@ -37,7 +37,7 @@ export const FeedbackLink = (props: {
         {parseCustomMarkdownToReact(
           props.feedbackMessage
             ? props.feedbackMessage
-            : i18next.t("models.raiseError.notificationFeedback")
+            : i18next.t(($) => $.models.raiseError.notificationFeedback)
         )}
       </Text>
     </RawButton>
@@ -47,7 +47,7 @@ export const FeedbackLink = (props: {
       {parseCustomMarkdownToReact(
         props.emailMessage
           ? `${props.emailMessage} ${props.viewState.terria.supportEmail}`
-          : i18next.t("models.raiseError.notificationFeedbackEmail", {
+          : i18next.t(($) => $.models.raiseError.notificationFeedbackEmail, {
               email: props.viewState.terria.supportEmail
             })
       )}

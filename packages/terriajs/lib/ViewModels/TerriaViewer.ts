@@ -21,6 +21,7 @@ import GlobeOrMap from "../Models/GlobeOrMap";
 import NoViewer from "../Models/NoViewer";
 import Terria from "../Models/Terria";
 import ViewerMode, { getViewerType } from "../Models/ViewerMode";
+import { keyFromSelector } from "i18next";
 
 // Async loading of Leaflet and Cesium
 
@@ -84,7 +85,9 @@ export default class TerriaViewer {
       if (result.error) {
         result.raiseError(this.terria, {
           title: {
-            key: "models.terria.loadingBaseMapErrorTitle",
+            key: keyFromSelector(
+              ($) => $.models.terria.loadingBaseMapErrorTitle
+            ),
             parameters: {
               name:
                 (CatalogMemberMixin.isMixedInto(baseMap)

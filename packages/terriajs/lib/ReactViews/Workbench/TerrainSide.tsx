@@ -1,3 +1,4 @@
+import { keyFromSelector } from "i18next";
 import { runInAction } from "mobx";
 import { observer } from "mobx-react";
 import { FC } from "react";
@@ -7,15 +8,15 @@ import SplitDirection from "terriajs-cesium/Source/Scene/SplitDirection";
 import Terria from "../../Models/Terria";
 import ViewerMode from "../../Models/ViewerMode";
 import Box from "../../Styled/Box";
-import Checkbox from "../../Styled/Checkbox/Checkbox";
-import { TextSpan } from "../../Styled/Text";
 import { RawButton } from "../../Styled/Button";
+import Checkbox from "../../Styled/Checkbox/Checkbox";
 import { Spacing } from "../../Styled/Spacing";
+import { TextSpan } from "../../Styled/Text";
 
 const sides = {
-  left: "settingPanel.terrain.left",
-  both: "settingPanel.terrain.both",
-  right: "settingPanel.terrain.right"
+  left: keyFromSelector(($) => $.settingPanel.terrain.left),
+  both: keyFromSelector(($) => $.settingPanel.terrain.both),
+  right: keyFromSelector(($) => $.settingPanel.terrain.right)
 } as const;
 
 type sides = (typeof sides)[keyof typeof sides];
@@ -75,8 +76,8 @@ const TerrainSide: FC<ITerrainSideProps> = observer(
       supportsDepthTestAgainstTerrain && terria.depthTestAgainstTerrainEnabled;
 
     const depthTestAgainstTerrainLabel = depthTestAgainstTerrainEnabled
-      ? t("settingPanel.terrain.showUndergroundFeatures")
-      : t("settingPanel.terrain.hideUndergroundFeatures");
+      ? t(($) => $.settingPanel.terrain.showUndergroundFeatures)
+      : t(($) => $.settingPanel.terrain.hideUndergroundFeatures);
 
     let currentSide: sides = sides.both;
     if (isCesiumWithTerrain) {
@@ -94,7 +95,7 @@ const TerrainSide: FC<ITerrainSideProps> = observer(
 
     return (
       <Box padded column fullWidth>
-        <TextSpan>{t("settingPanel.terrain.sideLabel")}</TextSpan>
+        <TextSpan>{t(($) => $.settingPanel.terrain.sideLabel)}</TextSpan>
         <Spacing bottom={1} />
         <Box
           css={`
@@ -130,7 +131,6 @@ const TerrainSide: FC<ITerrainSideProps> = observer(
           ))}
         </Box>
         <Spacing bottom={1} />
-
         {supportsDepthTestAgainstTerrain && (
           <Checkbox
             id="depthTestAgainstTerrain"
@@ -138,7 +138,9 @@ const TerrainSide: FC<ITerrainSideProps> = observer(
             title={depthTestAgainstTerrainLabel}
             onChange={toggleDepthTestAgainstTerrainEnabled}
           >
-            <TextSpan>{t("settingPanel.terrain.hideUnderground")}</TextSpan>
+            <TextSpan>
+              {t(($) => $.settingPanel.terrain.hideUnderground)}
+            </TextSpan>
           </Checkbox>
         )}
       </Box>

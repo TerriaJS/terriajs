@@ -49,7 +49,7 @@ describe("WebProcessingServiceCatalogFunctionJob", function () {
   it("has a type & typeName", function () {
     expect(WebProcessingServiceCatalogFunctionJob.type).toBe("wps-result");
     expect(item.typeName).toBe(
-      i18next.t("models.webProcessingService.wpsResult")
+      i18next.t(($) => $.models.webProcessingService.wpsResult)
     );
   });
 

@@ -118,7 +118,7 @@ export class ArcGisPortalItemStratum extends LoadableStratum(
     if (this.arcgisPortalItem.licenseInfo !== undefined) {
       outArray.push(
         createStratumInstance(InfoSectionTraits, {
-          name: i18next.t("models.arcgisPortal.licence"),
+          name: i18next.t(($) => $.models.arcgisPortal.licence),
           content: DOMPurify.sanitize(this.arcgisPortalItem.licenseInfo, {
             FORBID_ATTR: ["style"],
             FORBID_TAGS: ["font"]
@@ -129,9 +129,9 @@ export class ArcGisPortalItemStratum extends LoadableStratum(
 
     outArray.push(
       createStratumInstance(InfoSectionTraits, {
-        name: i18next.t("models.arcgisPortal.openInPortal"),
+        name: i18next.t(($) => $.models.arcgisPortal.openInPortal),
         content: `<a href="${this.portalItemUrl}"><button>${i18next.t(
-          "models.arcgisPortal.openInPortal"
+          ($) => $.models.arcgisPortal.openInPortal
         )}</button></a>`
       })
     );
@@ -219,7 +219,7 @@ export default class ArcGisPortalItemReference extends AccessControlMixin(
   }
 
   get typeName() {
-    return i18next.t("models.arcgisPortal.name");
+    return i18next.t(($) => $.models.arcgisPortal.name);
   }
 
   _arcgisItem: ArcGisItem | undefined = undefined;

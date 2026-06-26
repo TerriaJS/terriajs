@@ -72,7 +72,7 @@ function GyroscopeGuidancePanel(props) {
         min-width: 295px;
       `}
     >
-      <Text large>{t("compass.guidance.title")}</Text>
+      <Text large>{t(($) => $.compass.guidance.title)}</Text>
       <Spacing bottom={4} />
       <Text medium>
         <Box>
@@ -83,10 +83,10 @@ function GyroscopeGuidancePanel(props) {
           <Spacing right={2} />
           <Box column>
             <Text bold uppercase>
-              {t("compass.guidance.outerRingTitle")}
+              {t(($) => $.compass.guidance.outerRingTitle)}
             </Text>
             <Spacing bottom={1} />
-            <Text>{t("compass.guidance.outerRingDescription")}</Text>
+            <Text>{t(($) => $.compass.guidance.outerRingDescription)}</Text>
           </Box>
         </Box>
         <Spacing bottom={4} />
@@ -103,20 +103,20 @@ function GyroscopeGuidancePanel(props) {
           <Spacing right={2} />
           <Box column>
             <Text bold uppercase>
-              {t("compass.guidance.innerCircleTitle")}
+              {t(($) => $.compass.guidance.innerCircleTitle)}
             </Text>
             <Spacing bottom={1} />
-            <Text>{t("compass.guidance.innerCircleDescription1")}</Text>
+            <Text>{t(($) => $.compass.guidance.innerCircleDescription1)}</Text>
             <Spacing bottom={2} />
-            <Text>{t("compass.guidance.innerCircleDescription2")}</Text>
+            <Text>{t(($) => $.compass.guidance.innerCircleDescription2)}</Text>
           </Box>
         </Box>
         <Spacing bottom={4} />
-        <Text>{t("compass.guidance.ctrlDragDescription")}</Text>
+        <Text>{t(($) => $.compass.guidance.ctrlDragDescription)}</Text>
         <Spacing bottom={4} />
         <RawButton onClick={props.onClose}>
           <TextSpan displayBlock primary isLink>
-            {t("compass.guidance.dismissText")}
+            {t(($) => $.compass.guidance.dismissText)}
           </TextSpan>
         </RawButton>
       </Text>
@@ -180,8 +180,8 @@ export function GyroscopeGuidance(props) {
           isOpen={controlPanelOpen}
           onOpenChanged={() => controlPanelOpen}
           // onDismissed={() => setControlPanelOpen(false)}
-          btnTitle={t("compass.guidanceBtnTitle")}
-          btnText={t("compass.guidanceBtnText")}
+          btnTitle={t(($) => $.compass.guidanceBtnTitle)}
+          btnText={t(($) => $.compass.guidanceBtnText)}
           viewState={props.viewState}
           smallScreen={props.viewState.useSmallScreenInterface}
         >

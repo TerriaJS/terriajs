@@ -154,19 +154,19 @@ class CatalogMemberTraits extends ModelTraits {
     description: `An array of section titles defining the display order of info sections. If this property is not defined, {@link DataPreviewSections}'s DEFAULT_SECTION_ORDER is used`
   })
   infoSectionOrder?: string[] = [
-    i18next.t("preview.disclaimer"),
-    i18next.t("description.name"),
-    i18next.t("preview.dataDescription"),
-    i18next.t("preview.datasetDescription"),
-    i18next.t("preview.serviceDescription"),
-    i18next.t("preview.resourceDescription"),
-    i18next.t("preview.licence"),
-    i18next.t("preview.accessConstraints"),
-    i18next.t("preview.author"),
-    i18next.t("preview.contact"),
-    i18next.t("preview.created"),
-    i18next.t("preview.modified"),
-    i18next.t("preview.updateFrequency")
+    i18next.t(($) => $.preview.disclaimer),
+    i18next.t(($) => $.description.name),
+    i18next.t(($) => $.preview.dataDescription),
+    i18next.t(($) => $.preview.datasetDescription),
+    i18next.t(($) => $.preview.serviceDescription),
+    i18next.t(($) => $.preview.resourceDescription),
+    i18next.t(($) => $.preview.licence),
+    i18next.t(($) => $.preview.accessConstraints),
+    i18next.t(($) => $.preview.author),
+    i18next.t(($) => $.preview.contact),
+    i18next.t(($) => $.preview.created),
+    i18next.t(($) => $.preview.modified),
+    i18next.t(($) => $.preview.updateFrequency)
   ];
 
   @primitiveTrait({

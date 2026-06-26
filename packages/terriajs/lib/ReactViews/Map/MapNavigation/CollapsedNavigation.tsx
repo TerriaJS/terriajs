@@ -95,7 +95,7 @@ const CollapsedNavigationPanel: FC<PropTypes> = observer((props: PropTypes) => {
         onClick={() => viewState.closeCollapsedNavigation()}
       />
       <Text extraExtraLarge bold textDarker>
-        {t("mapNavigation.additionalTools")}
+        {t(($) => $.mapNavigation.additionalTools)}
       </Text>
       <Spacing bottom={5} />
       <ButtonsBox>

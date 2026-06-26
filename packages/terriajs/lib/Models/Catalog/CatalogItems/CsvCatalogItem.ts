@@ -156,8 +156,8 @@ export default class CsvCatalogItem
       return Promise.reject(
         new TerriaError({
           sender: this,
-          title: i18next.t("models.csv.unableToLoadItemTitle"),
-          message: i18next.t("models.csv.unableToLoadItemMessage")
+          title: i18next.t(($) => $.models.csv.unableToLoadItemTitle),
+          message: i18next.t(($) => $.models.csv.unableToLoadItemMessage)
         })
       );
     }

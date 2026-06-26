@@ -89,7 +89,8 @@ export default class UserDrawing extends MappableMixin(
      * Text that appears at the top of the dialog when drawmode is active.
      */
     this.messageHeader =
-      options.messageHeader ?? i18next.t("models.userDrawing.messageHeader");
+      options.messageHeader ??
+      i18next.t(($) => $.models.userDrawing.messageHeader);
 
     /**
      * If true, user can click on first point to close the line, turning it into a polygon.
@@ -572,13 +573,19 @@ export default class UserDrawing extends MappableMixin(
 
     if (this.drawRectangle && this.pointEntities.entities.values.length >= 2) {
       message +=
-        "<i>" + i18next.t("models.userDrawing.clickToRedrawRectangle") + "</i>";
+        "<i>" +
+        i18next.t(($) => $.models.userDrawing.clickToRedrawRectangle) +
+        "</i>";
     } else if (this.pointEntities.entities.values.length > 0) {
       message +=
-        "<i>" + i18next.t("models.userDrawing.clickToAddAnotherPoint") + "</i>";
+        "<i>" +
+        i18next.t(($) => $.models.userDrawing.clickToAddAnotherPoint) +
+        "</i>";
     } else {
       message +=
-        "<i>" + i18next.t("models.userDrawing.clickToAddFirstPoint") + "</i>";
+        "<i>" +
+        i18next.t(($) => $.models.userDrawing.clickToAddFirstPoint) +
+        "</i>";
     }
     // htmlToReactParser will fail if html doesn't have only one root element.
     return "<div>" + message + "</div>";
@@ -591,8 +598,8 @@ export default class UserDrawing extends MappableMixin(
     return (
       this.buttonText ??
       (this.pointEntities.entities.values.length >= 2
-        ? i18next.t("models.userDrawing.btnDone")
-        : i18next.t("models.userDrawing.btnCancel"))
+        ? i18next.t(($) => $.models.userDrawing.btnDone)
+        : i18next.t(($) => $.models.userDrawing.btnCancel))
     );
   }
 

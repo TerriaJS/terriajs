@@ -142,8 +142,8 @@ export const GuidePure = ({
   const currentGuide = guideData[currentGuideIndex] || {};
   const hidePrev = currentGuide.hidePrev || false;
   const hideNext = currentGuide.hideNext || false;
-  const prevButtonText = currentGuide.prevText || t("general.prev");
-  const nextButtonText = currentGuide.nextText || t("general.next");
+  const prevButtonText = currentGuide.prevText || t(($) => $.general.prev);
+  const nextButtonText = currentGuide.nextText || t(($) => $.general.next);
   const maxStepCount = hasIntroSlide ? guideData.length - 1 : guideData.length;
   const currentStepCount = hasIntroSlide
     ? currentGuideIndex

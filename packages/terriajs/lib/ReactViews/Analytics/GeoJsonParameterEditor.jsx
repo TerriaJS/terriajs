@@ -41,7 +41,7 @@ class GeoJsonParameterEditor extends Component {
         this.props.previewed.terria,
         this.props.viewState,
         this.props.parameter,
-        this.props.t("analytics.selectLocation")
+        this.props.t(($) => $.analytics.selectLocation)
       );
       this.props.parameter.subtype = GeoJsonParameter.PointType;
     });
@@ -76,7 +76,7 @@ class GeoJsonParameterEditor extends Component {
     return (
       <div>
         <div>
-          <strong>{t("analytics.selectLocation")}</strong>
+          <strong>{t(($) => $.analytics.selectLocation)}</strong>
         </div>
         <div
           className="container"
@@ -92,7 +92,7 @@ class GeoJsonParameterEditor extends Component {
             onClick={() => this.selectPointOnMap()}
             className={Styles.btnLocationSelector}
           >
-            <strong>{t("analytics.point")}</strong>
+            <strong>{t(($) => $.analytics.point)}</strong>
           </button>
           <button
             type="button"
@@ -100,14 +100,14 @@ class GeoJsonParameterEditor extends Component {
             onClick={() => this.selectPolygonOnMap()}
             className={Styles.btnLocationSelector}
           >
-            <strong>{t("analytics.polygon")}</strong>
+            <strong>{t(($) => $.analytics.polygon)}</strong>
           </button>
           <button
             type="button"
             onClick={() => this.selectExistingPolygonOnMap()}
             className={Styles.btnLocationSelector}
           >
-            <strong>{t("analytics.existingPolygon")}</strong>
+            <strong>{t(($) => $.analytics.existingPolygon)}</strong>
           </button>
         </div>
         <input
@@ -120,7 +120,7 @@ class GeoJsonParameterEditor extends Component {
           )}
         />
         {getDisplayValue(this.props.parameter.value, this.props.parameter) ===
-          "" && <div>{t("analytics.nothingSelected")}</div>}
+          "" && <div>{t(($) => $.analytics.nothingSelected)}</div>}
       </div>
     );
   }

@@ -62,20 +62,20 @@ class Tabs extends Component {
             panel: (
               <DataCatalogTab
                 items={member.memberModels || [member]}
-                searchPlaceholder={t("addData.searchPlaceholderWhole")}
+                searchPlaceholder={t(($) => $.addData.searchPlaceholderWhole)}
               />
             )
           }))
       );
     } else {
       tabs.push({
-        name: t("addData.data"),
+        name: t(($) => $.addData.data),
         title: "data-catalog",
         category: "data-catalog",
         panel: (
           <DataCatalogTab
             items={this.props.terria.catalog.group.memberModels}
-            searchPlaceholder={t("addData.searchPlaceholder")}
+            searchPlaceholder={t(($) => $.addData.searchPlaceholder)}
           />
         )
       });
@@ -84,7 +84,7 @@ class Tabs extends Component {
     if (!this.props.terria.configParameters.disableUserAddedData) {
       tabs.push({
         title: "my-data",
-        name: t("addData.myData"),
+        name: t(($) => $.addData.myData),
         category: "my-data",
         panel: (
           <MyDataTab

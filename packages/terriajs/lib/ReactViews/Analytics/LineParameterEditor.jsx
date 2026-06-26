@@ -75,7 +75,7 @@ const LineParameterEditor = createReactClass({
           onClick={this.selectLineOnMap}
           className={Styles.btnSelector}
         >
-          {t("analytics.clickToDrawLine")}
+          {t(($) => $.analytics.clickToDrawLine)}
         </button>
       </div>
     );

@@ -155,10 +155,13 @@ export default class SdmxJsonCatalogItem
 
       if (!isDefined(csvString)) {
         throw new TerriaError({
-          title: i18next.t("models.sdmxCatalogItem.loadDataErrorTitle"),
-          message: i18next.t("models.sdmxCatalogItem.loadDataErrorMessage", {
-            csvUrl: this.url
-          })
+          title: i18next.t(($) => $.models.sdmxCatalogItem.loadDataErrorTitle),
+          message: i18next.t(
+            ($) => $.models.sdmxCatalogItem.loadDataErrorMessage,
+            {
+              csvUrl: this.url
+            }
+          )
         });
       }
 
@@ -176,7 +179,7 @@ export default class SdmxJsonCatalogItem
         ) {
           throw new TerriaError({
             message: i18next.t(
-              "models.sdmxCatalogItem.noResultsWithDimensions",
+              ($) => $.models.sdmxCatalogItem.noResultsWithDimensions,
               {
                 dimensions: filterEnums(this.selectableDimensions)
                   .filter((dim) => !dim.disable && dim.options?.length !== 1)
@@ -192,9 +195,12 @@ export default class SdmxJsonCatalogItem
                   .join("\n")
               }
             ),
-            title: i18next.t("models.sdmxCatalogItem.loadDataErrorTitle", {
-              name: this.name
-            }),
+            title: i18next.t(
+              ($) => $.models.sdmxCatalogItem.loadDataErrorTitle,
+              {
+                name: this.name as string
+              }
+            ),
             severity: TerriaErrorSeverity.Warning,
             importance: 1,
             overrideRaiseToUser: true
@@ -204,15 +210,18 @@ export default class SdmxJsonCatalogItem
           message: sdmxErrorString.has(error.statusCode)
             ? `${sdmxErrorString.get(error.statusCode)}: ${error.response}`
             : `${error.response}`,
-          title: i18next.t("models.sdmxCatalogItem.loadDataErrorTitle", {
-            name: this.name
+          title: i18next.t(($) => $.models.sdmxCatalogItem.loadDataErrorTitle, {
+            name: this.name as string
           })
         });
       } else {
         throw TerriaError.from(error, {
-          message: i18next.t("models.sdmxCatalogItem.loadDataErrorTitle", {
-            name: this.name
-          })
+          message: i18next.t(
+            ($) => $.models.sdmxCatalogItem.loadDataErrorTitle,
+            {
+              name: this.name as string
+            }
+          )
         });
       }
     }

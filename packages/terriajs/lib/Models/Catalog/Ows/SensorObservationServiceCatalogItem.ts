@@ -368,7 +368,9 @@ export default class SensorObservationServiceCatalogItem extends TableMixin(
       throw new TerriaError({
         sender: this,
         title: itemName,
-        message: i18next.t("models.sensorObservationService.unknownFormat")
+        message: i18next.t(
+          ($) => $.models.sensorObservationService.unknownFormat
+        )
       });
     }
 
@@ -664,12 +666,14 @@ async function loadSoapBody(
   const json = xml2json(responseXml);
   if (json.Exception) {
     let errorMessage: string = i18next.t(
-      "models.sensorObservationService.unknownError"
+      ($) => $.models.sensorObservationService.unknownError
     );
     if (json.Exception.ExceptionText) {
       errorMessage = i18next.t(
-        "models.sensorObservationService.exceptionMessage",
-        { exceptionText: json.Exception.ExceptionText }
+        ($) => $.models.sensorObservationService.exceptionMessage,
+        {
+          exceptionText: json.Exception.ExceptionText
+        }
       );
     }
     throw new TerriaError({
@@ -682,7 +686,7 @@ async function loadSoapBody(
     throw new TerriaError({
       sender: item,
       title: runInAction(() => item.name || ""),
-      message: i18next.t("models.sensorObservationService.missingBody")
+      message: i18next.t(($) => $.models.sensorObservationService.missingBody)
     });
   }
   return json.Body;

@@ -1,5 +1,6 @@
 import { runInAction } from "mobx";
 import TerriaViewer from "../ViewModels/TerriaViewer";
+import { keyFromSelector } from "i18next";
 
 enum ViewerMode {
   Cesium = "cesium",
@@ -10,19 +11,23 @@ export const MapViewers = Object.seal({
   "3d": {
     viewerMode: ViewerMode.Cesium,
     terrain: true,
-    label: "settingPanel.viewerModeLabels.CesiumTerrain" as const,
+    label: keyFromSelector(
+      ($) => $.settingPanel.viewerModeLabels.CesiumTerrain
+    ),
     available: true
   },
   "3dsmooth": {
     viewerMode: ViewerMode.Cesium,
     terrain: false,
-    label: "settingPanel.viewerModeLabels.CesiumEllipsoid" as const,
+    label: keyFromSelector(
+      ($) => $.settingPanel.viewerModeLabels.CesiumEllipsoid
+    ),
     available: true
   },
   "2d": {
     viewerMode: ViewerMode.Leaflet,
     terrain: false,
-    label: "settingPanel.viewerModeLabels.Leaflet" as const,
+    label: keyFromSelector(($) => $.settingPanel.viewerModeLabels.Leaflet),
     available: true
   }
 });

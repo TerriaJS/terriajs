@@ -87,31 +87,31 @@ class GeoRssStratum extends LoadableStratum(GeoRssCatalogItemTraits) {
     }
     return [
       createStratumInstance(InfoSectionTraits, {
-        name: i18next.t("models.georss.subtitle"),
+        name: i18next.t(($) => $.models.georss.subtitle),
         content: this._feed.subtitle
       }),
       createStratumInstance(InfoSectionTraits, {
-        name: i18next.t("models.georss.updated"),
+        name: i18next.t(($) => $.models.georss.updated),
         content: this._feed.updated?.toString()
       }),
       createStratumInstance(InfoSectionTraits, {
-        name: i18next.t("models.georss.category"),
+        name: i18next.t(($) => $.models.georss.category),
         content: this._feed.category?.join(", ")
       }),
       createStratumInstance(InfoSectionTraits, {
-        name: i18next.t("models.georss.description"),
+        name: i18next.t(($) => $.models.georss.description),
         content: this._feed.description
       }),
       createStratumInstance(InfoSectionTraits, {
-        name: i18next.t("models.georss.copyrightText"),
+        name: i18next.t(($) => $.models.georss.copyrightText),
         content: this._feed.copyright
       }),
       createStratumInstance(InfoSectionTraits, {
-        name: i18next.t("models.georss.author"),
+        name: i18next.t(($) => $.models.georss.author),
         content: this._feed.author?.name
       }),
       createStratumInstance(InfoSectionTraits, {
-        name: i18next.t("models.georss.link"),
+        name: i18next.t(($) => $.models.georss.link),
         content:
           typeof this._feed.link === "string"
             ? this._feed.link
@@ -139,7 +139,7 @@ export default class GeoRssCatalogItem
   }
 
   get typeName() {
-    return i18next.t("models.georss.name");
+    return i18next.t(($) => $.models.georss.name);
   }
 
   @action
@@ -191,8 +191,8 @@ export default class GeoRssCatalogItem
     if (!data) {
       throw networkRequestError({
         sender: this,
-        title: i18next.t("models.georss.errorLoadingTitle"),
-        message: i18next.t("models.georss.errorLoadingMessage", {
+        title: i18next.t(($) => $.models.georss.errorLoadingTitle),
+        message: i18next.t(($) => $.models.georss.errorLoadingMessage, {
           appName: this.terria.appName
         })
       });

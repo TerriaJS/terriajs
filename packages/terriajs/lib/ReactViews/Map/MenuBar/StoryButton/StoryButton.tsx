@@ -39,13 +39,13 @@ export const onStoryButtonClick = (props: Props) => () => {
 const promptHtml = (hasStories: boolean) => (
   <Text textLight textAlignCenter>
     {hasStories ? (
-      <Trans i18nKey="story.promptHtml1">
+      <Trans i18nKey={($) => $.story.promptHtml1}>
         <Text extraLarge>
           You can view and create stories at any time by clicking here.
         </Text>
       </Trans>
     ) : (
-      <Trans i18nKey="story.promptHtml2">
+      <Trans i18nKey={($) => $.story.promptHtml2}>
         <div>
           <Text>INTRODUCING</Text>
           <Text bold extraExtraLarge styledLineHeight={"32px"}>
@@ -96,7 +96,7 @@ const StoryButton = (props: Props) => {
         `}
       >
         <Icon glyph={Icon.GLYPHS.story} />
-        <span>{t("story.story")}</span>
+        <span>{t(($) => $.story.story)}</span>
       </button>
       <Prompt
         centered
@@ -105,7 +105,7 @@ const StoryButton = (props: Props) => {
         }
         content={promptHtml(props.terria.stories.length > 0)}
         displayDelay={delayTime}
-        dismissText={t("story.dismissText")}
+        dismissText={t(($) => $.story.dismissText)}
         dismissAction={dismissAction}
       />
     </div>

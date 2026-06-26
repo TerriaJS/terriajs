@@ -289,8 +289,10 @@ export class ArcGisFeatureServerStratum extends LoadableStratum(
       this._item.readyData!.features.length >= this._item.maxFeatures
     ) {
       return i18next.t(
-        "models.arcGisFeatureServerCatalogItem.reachedMaxFeatureLimit",
-        { maxFeatures: this._item.maxFeatures }
+        ($) => $.models.arcGisFeatureServerCatalogItem.reachedMaxFeatureLimit,
+        {
+          maxFeatures: this._item.maxFeatures
+        }
       );
     }
     return undefined;
@@ -357,11 +359,15 @@ export class ArcGisFeatureServerStratum extends LoadableStratum(
   @computed get info() {
     return [
       createStratumInstance(InfoSectionTraits, {
-        name: i18next.t("models.arcGisMapServerCatalogItem.dataDescription"),
+        name: i18next.t(
+          ($) => $.models.arcGisMapServerCatalogItem.dataDescription
+        ),
         content: this._featureServer?.description
       }),
       createStratumInstance(InfoSectionTraits, {
-        name: i18next.t("models.arcGisMapServerCatalogItem.copyrightText"),
+        name: i18next.t(
+          ($) => $.models.arcGisMapServerCatalogItem.copyrightText
+        ),
         content: this._featureServer?.copyrightText
       })
     ];

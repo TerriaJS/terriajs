@@ -52,11 +52,11 @@ class MyDataTab extends Component {
     const tabs = [
       {
         id: "local",
-        caption: t("addData.localTitle")
+        caption: t(($) => $.addData.localTitle)
       },
       {
         id: "web",
-        caption: t("addData.webTitle")
+        caption: t(($) => $.addData.webTitle)
       }
     ];
     return (
@@ -97,7 +97,7 @@ class MyDataTab extends Component {
         <div className={Styles.dataTypeTab}>
           <div className={Styles.dndBox}>
             <Icon glyph={Icon.GLYPHS.upload} />
-            {t("addData.dragDrop")}
+            {t(($) => $.addData.dragDrop)}
           </div>
         </div>
       );
@@ -106,7 +106,7 @@ class MyDataTab extends Component {
     return (
       <div className={Styles.dataTypeTab}>
         <div className={Styles.dndBoxInfo}>
-          <Trans i18nKey="addData.infoText">
+          <Trans i18nKey={($) => $.addData.infoText}>
             <div>Drag and drop a file here to view it locally on the map</div>
             <div>(it won’t be saved or uploaded to the internet)</div>
           </Trans>
@@ -152,7 +152,7 @@ class MyDataTab extends Component {
                 `}
               >
                 <Icon glyph={Icon.GLYPHS.left} />
-                {t("addData.back")}
+                {t(($) => $.addData.back)}
               </button>
               <AddData
                 terria={this.props.terria}
@@ -169,7 +169,7 @@ class MyDataTab extends Component {
           {showTwoColumn && (
             <Box flexShrinkZero column>
               <p className={Styles.explanation}>
-                <Trans i18nKey="addData.note">
+                <Trans i18nKey={($) => $.addData.note}>
                   <strong>Note: </strong>Data added in this way is not saved or
                   made visible to others.
                 </Trans>

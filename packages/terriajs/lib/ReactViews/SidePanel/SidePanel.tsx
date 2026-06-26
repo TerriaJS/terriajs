@@ -42,7 +42,7 @@ type TransContent = {
 const EmptyWorkbench: FC<EmptyWorkbenchProps> = observer(() => {
   const { t } = useTranslation();
   const viewState = useViewState();
-  const transContent = t("emptyWorkbenchInfo", {
+  const transContent = t(($) => $.emptyWorkbenchInfo, {
     returnObjects: true
   }) as TransContent;
 
@@ -106,7 +106,7 @@ const EmptyWorkbench: FC<EmptyWorkbenchProps> = observer(() => {
               }}
               css={``}
             >
-              {t("helpPanel.takeTour")}
+              {t(($) => $.helpPanel.takeTour)}
             </Button>
           </Box>
         </BoxHelpfulHints>
@@ -165,8 +165,8 @@ const SidePanel = observer<React.FC<SidePanelProps>>(
       viewState.openUserData();
     };
 
-    const addData = t("addData.addDataBtnText");
-    const uploadText = t("models.catalog.upload");
+    const addData = t(($) => $.addData.addDataBtnText);
+    const uploadText = t(($) => $.models.catalog.upload);
     return (
       <Box column styledMinHeight={"0"} flex={1}>
         <div
@@ -203,7 +203,7 @@ const SidePanel = observer<React.FC<SidePanelProps>>(
                 <SidePanelButton
                   ref={refForUploadData}
                   onClick={onAddLocalDataClicked}
-                  title={t("addData.load")}
+                  title={t(($) => $.addData.load)}
                   btnText={uploadText}
                   styledWidth={"152px"}
                 >

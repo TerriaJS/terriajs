@@ -26,7 +26,7 @@ class GpxCatalogItem extends GeoJsonMixin(CreateModel(GpxCatalogItemTraits)) {
   }
 
   get typeName() {
-    return i18next.t("models.gpx.name");
+    return i18next.t(($) => $.models.gpx.name);
   }
 
   @action
@@ -59,8 +59,8 @@ class GpxCatalogItem extends GeoJsonMixin(CreateModel(GpxCatalogItemTraits)) {
     if (!data) {
       throw networkRequestError({
         sender: this,
-        title: i18next.t("models.gpx.errorLoadingTitle"),
-        message: i18next.t("models.gpx.errorLoadingMessage", {
+        title: i18next.t(($) => $.models.gpx.errorLoadingTitle),
+        message: i18next.t(($) => $.models.gpx.errorLoadingMessage, {
           appName: this.terria.appName
         })
       });

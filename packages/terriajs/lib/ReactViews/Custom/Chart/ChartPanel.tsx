@@ -97,14 +97,14 @@ const ChartPanel: FC<ChartPanelProps> = observer(({ onHeightChange }) => {
           <div>
             <div className={Styles.header}>
               <label className={Styles.sectionLabel}>
-                {isLoading ? <Loader /> : t("chart.sectionLabel")}
+                {isLoading ? <Loader /> : t(($) => $.chart.sectionLabel)}
               </label>
               <ChartPanelDownloadButton
                 chartableItems={chartableCatalogItems}
               />
               <button
                 type="button"
-                title={t("chart.closePanel")}
+                title={t(($) => $.chart.closePanel)}
                 className={Styles.btnCloseChartPanel}
                 onClick={closePanel}
               >

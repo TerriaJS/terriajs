@@ -21,7 +21,7 @@ export default function LocationItem(props) {
   const { t } = useTranslation();
   return (
     <div className={Styles.location}>
-      <span>{t("featureInfo.latLon")}</span>
+      <span>{t(($) => $.featureInfo.latLon)}</span>
       <span>{latitude + ", " + longitude}</span>
     </div>
   );

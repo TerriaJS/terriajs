@@ -52,7 +52,7 @@ class PolygonParameterEditor extends Component {
           onClick={this.selectPolygonOnMap.bind(this)}
           className={Styles.btnSelector}
         >
-          {t("analytics.clickToDrawPolygon")}
+          {t(($) => $.analytics.clickToDrawPolygon)}
         </button>
       </div>
     );

@@ -44,7 +44,9 @@ export const DataCatalog = observer(
       <ul className={Styles.dataCatalog}>
         {isSearching && catalogSearchProvider && (
           <>
-            <label className={Styles.label}>{t("search.resultsLabel")}</label>
+            <label className={Styles.label}>
+              {t(($) => $.search.resultsLabel)}
+            </label>
             <SearchHeader searchResult={catalogSearchProvider.searchResult} />
           </>
         )}

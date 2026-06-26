@@ -70,9 +70,11 @@ class ImageServerStratum extends LoadableStratum(
   static async load(item: ArcGisImageServerCatalogItem) {
     if (!isDefined(item.uri)) {
       throw new TerriaError({
-        title: i18next.t("models.arcGisImageServerCatalogItem.invalidUrlTitle"),
+        title: i18next.t(
+          ($) => $.models.arcGisImageServerCatalogItem.invalidUrlTitle
+        ),
         message: i18next.t(
-          "models.arcGisImageServerCatalogItem.invalidUrlMessage"
+          ($) => $.models.arcGisImageServerCatalogItem.invalidUrlMessage
         )
       });
     }
@@ -97,18 +99,18 @@ class ImageServerStratum extends LoadableStratum(
 
     if (!isDefined(serviceMetadata)) {
       throw new TerriaError({
-        title: i18next.t("models.arcGisService.invalidServerTitle"),
-        message: i18next.t("models.arcGisService.invalidServerMessage")
+        title: i18next.t(($) => $.models.arcGisService.invalidServerTitle),
+        message: i18next.t(($) => $.models.arcGisService.invalidServerMessage)
       });
     }
 
     if (!serviceMetadata.capabilities?.includes("Image"))
       throw new TerriaError({
         title: i18next.t(
-          "models.arcGisImageServerCatalogItem.invalidServiceTitle"
+          ($) => $.models.arcGisImageServerCatalogItem.invalidServiceTitle
         ),
         message: i18next.t(
-          "models.arcGisImageServerCatalogItem.invalidServiceMessage"
+          ($) => $.models.arcGisImageServerCatalogItem.invalidServiceMessage
         )
       });
 
@@ -290,9 +292,11 @@ class ImageServerLegendStratum extends LoadableStratum(
   static async load(item: ArcGisImageServerCatalogItem) {
     if (!isDefined(item.uri)) {
       throw new TerriaError({
-        title: i18next.t("models.arcGisImageServerCatalogItem.invalidUrlTitle"),
+        title: i18next.t(
+          ($) => $.models.arcGisImageServerCatalogItem.invalidUrlTitle
+        ),
         message: i18next.t(
-          "models.arcGisImageServerCatalogItem.invalidUrlMessage"
+          ($) => $.models.arcGisImageServerCatalogItem.invalidUrlMessage
         )
       });
     }
@@ -369,7 +373,7 @@ export default class ArcGisImageServerCatalogItem extends UrlMixin(
   }
 
   get typeName() {
-    return i18next.t("models.arcGisImageServerCatalogItem.name");
+    return i18next.t(($) => $.models.arcGisImageServerCatalogItem.name);
   }
 
   get type() {
@@ -556,7 +560,9 @@ export default class ArcGisImageServerCatalogItem extends UrlMixin(
     if (this.disableRasterFunctionSelectors) return undefined;
     return {
       id: "raster-functions",
-      name: i18next.t("models.arcGisImageServerCatalogItem.rasterFunction"),
+      name: i18next.t(
+        ($) => $.models.arcGisImageServerCatalogItem.rasterFunction
+      ),
       options: this.availableRasterFunctions.map((rasterFn) => ({
         id: rasterFn.name,
         name: rasterFn.name,

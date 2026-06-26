@@ -33,13 +33,13 @@ export default observer((props: Props) => {
         {hiddenNumber === 1 ? (
           <li className={Styles.messageItem}>
             <strong>
-              {t("featureInfo.catalogItem.moreThanMax", {
+              {t(($) => $.featureInfo.catalogItem.moreThanMax, {
                 maximum: maximumShownFeatureInfos,
                 catalogItemName: getName(catalogItem)
               })}
             </strong>
             <br />
-            {t("featureInfo.catalogItem.featureInfoShown", {
+            {t(($) => $.featureInfo.catalogItem.featureInfoShown, {
               maximum: maximumShownFeatureInfos
             })}
           </li>
@@ -48,13 +48,13 @@ export default observer((props: Props) => {
         {hiddenNumber > 1 ? (
           <li className={Styles.messageItem}>
             <strong>
-              {t("featureInfo.catalogItem.featuresFound", {
+              {t(($) => $.featureInfo.catalogItem.featuresFound, {
                 featCount: features.length,
                 catalogItemName: getName(catalogItem)
               })}
             </strong>
             <br />
-            {t("featureInfo.catalogItem.featureInfoShown", {
+            {t(($) => $.featureInfo.catalogItem.featureInfoShown, {
               maximum: maximumShownFeatureInfos
             })}
           </li>

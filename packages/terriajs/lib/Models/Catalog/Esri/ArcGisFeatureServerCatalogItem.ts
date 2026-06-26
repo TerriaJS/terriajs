@@ -1,6 +1,6 @@
 import { featureCollection } from "@turf/helpers";
 import { GeoJsonProperties, Geometry, GeometryCollection } from "geojson";
-import i18next from "i18next";
+import i18next, { keyFromSelector } from "i18next";
 import { computed, makeObservable, override, runInAction } from "mobx";
 import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
 import URI from "urijs";
@@ -36,7 +36,7 @@ export default class ArcGisFeatureServerCatalogItem extends MinMaxLevelMixin(
   }
 
   get typeName(): string {
-    return i18next.t("models.arcGisFeatureServerCatalogItem.name");
+    return i18next.t(($) => $.models.arcGisFeatureServerCatalogItem.name);
   }
 
   protected async forceLoadMetadata(): Promise<void> {
@@ -215,10 +215,15 @@ export default class ArcGisFeatureServerCatalogItem extends MinMaxLevelMixin(
       return Result.error(
         networkRequestError({
           title: {
-            key: "models.arcGisFeatureServerCatalogItem.invalidServiceTitle"
+            key: keyFromSelector(
+              ($) => $.models.arcGisFeatureServerCatalogItem.invalidServiceTitle
+            )
           },
           message: {
-            key: "models.arcGisFeatureServerCatalogItem.invalidServiceMessage"
+            key: keyFromSelector(
+              ($) =>
+                $.models.arcGisFeatureServerCatalogItem.invalidServiceMessage
+            )
           }
         })
       );

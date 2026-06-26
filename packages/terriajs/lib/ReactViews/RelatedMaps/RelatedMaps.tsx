@@ -31,14 +31,14 @@ class RelatedMaps extends Component<PropTypes> {
       //@ts-expect-error - not yet ready to tackle tsfying MenuPanel
       <MenuPanel
         theme={dropdownTheme}
-        btnText={t("relatedMaps.buttonText")}
+        btnText={t(($) => $.relatedMaps.buttonText)}
         smallScreen={smallScreen}
         viewState={this.props.viewState}
-        btnTitle={t("relatedMaps.buttonTitle")}
+        btnTitle={t(($) => $.relatedMaps.buttonTitle)}
         showDropdownInCenter
       >
-        <h2>{t("relatedMaps.panelHeading")}</h2>
-        <p>{t("relatedMaps.panelText")}</p>
+        <h2>{t(($) => $.relatedMaps.panelHeading)}</h2>
+        <p>{t(($) => $.relatedMaps.panelText)}</p>
         {this.props.relatedMaps.map((map, i) => (
           <Box flex key={i}>
             <Box>

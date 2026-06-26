@@ -79,12 +79,12 @@ export const DataAttributionModal: FC<IDataAttributionModalProps> = observer(
         <DataAttributionBox>
           <CloseButton color="#red" topRight onClick={closeModal} />
           <Text extraExtraLarge bold textDarker>
-            {t("map.extraCreditLinks.mapCredits")}
+            {t(($) => $.map.extraCreditLinks.mapCredits)}
           </Text>
           <Spacing bottom={2} />
           <Box column>
             <Text extraLarge medium textDarker>
-              {t("map.extraCreditLinks.dataProvider")}
+              {t(($) => $.map.extraCreditLinks.dataProvider)}
             </Text>
             <Spacing bottom={2} />
             <Box paddedHorizontally={4}>
@@ -102,7 +102,7 @@ export const DataAttributionModal: FC<IDataAttributionModalProps> = observer(
           <Spacing bottom={4} />
           <Box column>
             <Text extraLarge medium textDarker>
-              {t("map.extraCreditLinks.searchProvider")}
+              {t(($) => $.map.extraCreditLinks.searchProvider)}
             </Text>
             <Spacing bottom={2} />
             <Box paddedHorizontally={4}>

@@ -1,3 +1,4 @@
+import { keyFromSelector } from "i18next";
 import filterOutUndefined from "../../../Core/filterOutUndefined";
 import flatten from "../../../Core/flatten";
 import TerriaError from "../../../Core/TerriaError";
@@ -101,7 +102,7 @@ export default class CatalogIndexReference extends ReferenceMixin(
     const parentErrorMessage = new TerriaError({
       title: `Failed to find dataset "${this.name ?? this.uniqueId}"`,
       message: {
-        key: "core.terriaError.networkRequestMessage"
+        key: keyFromSelector(($) => $.core.terriaError.networkRequestMessage)
       },
       importance: 1
     });

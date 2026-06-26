@@ -51,7 +51,9 @@ const TitleBar = ({
       `}
     >
       <TitleContainer>
-        <ClampedTitle>{title ? title : t("story.untitled")}</ClampedTitle>
+        <ClampedTitle>
+          {title ? title : t(($) => $.story.untitled)}
+        </ClampedTitle>
       </TitleContainer>
       <CollapseBtn isCollapsed={isCollapsed} onClick={collapseHandler} />
       <ExitBtn onClick={closeHandler} />

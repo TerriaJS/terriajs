@@ -10,6 +10,7 @@ import ChartableMixin, { ChartItem } from "../../../ModelMixins/ChartableMixin";
 import MappableMixin from "../../../ModelMixins/MappableMixin";
 import LineChart from "./LineChart";
 import Styles from "./chart-preview.scss";
+import { keyFromSelector } from "i18next";
 
 type CatalogItemType = ChartableMixin.Instance;
 
@@ -62,13 +63,13 @@ const FeatureInfoPanelChart: FC<FeatureInfoPanelChartPropTypes> = observer(
 
     // Text to show when chart is not ready or available
     const chartStatus = notChartable
-      ? "chart.noData"
+      ? keyFromSelector(($) => $.chart.noData)
       : isLoading
-        ? "chart.loading"
+        ? keyFromSelector(($) => $.chart.loading)
         : loadingFailed
-          ? "chart.noData"
+          ? keyFromSelector(($) => $.chart.noData)
           : noData
-            ? "chart.noData"
+            ? keyFromSelector(($) => $.chart.noData)
             : undefined;
 
     const canShowChart = chartStatus === undefined;

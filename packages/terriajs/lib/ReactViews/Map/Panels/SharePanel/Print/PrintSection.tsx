@@ -38,10 +38,10 @@ export const PrintSection: FC<IPrintSectionProps> = ({ viewState }) => {
   return (
     <Box column>
       <TextSpan semiBold medium>
-        {t("share.printTitle")}
+        {t(($) => $.share.printTitle)}
       </TextSpan>
       <Spacing bottom={1} />
-      <Explanation>{t("share.printExplanation")}</Explanation>
+      <Explanation>{t(($) => $.share.printExplanation)}</Explanation>
       <Spacing bottom={1} />
       <Box gap={2}>
         <PrintButton
@@ -50,10 +50,10 @@ export const PrintSection: FC<IPrintSectionProps> = ({ viewState }) => {
           disabled={isDownloading}
           onClick={downloadMap}
         >
-          <TextSpan medium>{t("share.downloadMap")}</TextSpan>
+          <TextSpan medium>{t(($) => $.share.downloadMap)}</TextSpan>
         </PrintButton>
         <PrintButton primary fullWidth onClick={printView}>
-          <TextSpan medium>{t("share.printViewButton")}</TextSpan>
+          <TextSpan medium>{t(($) => $.share.printViewButton)}</TextSpan>
         </PrintButton>
       </Box>
     </Box>

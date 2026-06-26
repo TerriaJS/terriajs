@@ -102,7 +102,7 @@ export default class SensorObservationCatalogItemTraits extends mixTraits(
       "Gets or sets the name seen by the user for the list of procedures. Defaults to `Procedure`, but eg. for BoM, `Frequency` would be better."
   })
   proceduresName: string = i18next.t(
-    "models.sensorObservationService.procedure"
+    ($) => $.models.sensorObservationService.procedure
   );
 
   @primitiveTrait({
@@ -112,7 +112,7 @@ export default class SensorObservationCatalogItemTraits extends mixTraits(
       "Gets or sets the name seen by the user for the list of observable properties. Defaults to `Property`, but eg. for BoM, `Observation type` would be better."
   })
   observablePropertiesName: string = i18next.t(
-    "models.sensorObservationService.property"
+    ($) => $.models.sensorObservationService.property
   );
 
   @primitiveArrayTrait({

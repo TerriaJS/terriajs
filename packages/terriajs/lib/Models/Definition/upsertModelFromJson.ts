@@ -56,8 +56,8 @@ export default function upsertModelFromJson(
     if (localId === undefined) {
       return Result.error(
         new TerriaError({
-          title: i18next.t("models.catalog.idForMatchingErrorTitle"),
-          message: i18next.t("models.catalog.idForMatchingErrorMessage")
+          title: i18next.t(($) => $.models.catalog.idForMatchingErrorTitle),
+          message: i18next.t(($) => $.models.catalog.idForMatchingErrorMessage)
         })
       );
     }
@@ -85,9 +85,9 @@ export default function upsertModelFromJson(
       if (model === undefined) {
         errors.push(
           new TerriaError({
-            title: i18next.t("models.catalog.unsupportedTypeTitle"),
-            message: i18next.t("models.catalog.unsupportedTypeMessage", {
-              type: json.type
+            title: i18next.t(($) => $.models.catalog.unsupportedTypeTitle),
+            message: i18next.t(($) => $.models.catalog.unsupportedTypeMessage, {
+              type: json.type as string
             })
           })
         );

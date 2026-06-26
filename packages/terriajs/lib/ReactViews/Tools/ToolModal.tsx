@@ -99,7 +99,7 @@ const ToolCloseButton: FC<ToolCloseButtonProps> = (props) => {
   return (
     <RawButton onClick={() => props.viewState.closeTool()}>
       <Text textLight small semiBold uppercase>
-        {props.t("tool.exitBtnTitle")}
+        {props.t(($) => $.tool.exitBtnTitle)}
       </Text>
     </RawButton>
   );
