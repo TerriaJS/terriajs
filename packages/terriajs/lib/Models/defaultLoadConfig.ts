@@ -52,7 +52,9 @@ export const defaultLoadConfig = async (
       Array.isArray(raw.parameters))
   ) {
     throw new TerriaError({
-      title: { key: "models.terria.loadConfigErrorTitle" },
+      title: {
+        key: keyFromSelector(($) => $.models.terria.loadConfigErrorTitle)
+      },
       message: `Config at "${configUrl}" has a "parameters" property that is not a JSON object.`
     });
   }
