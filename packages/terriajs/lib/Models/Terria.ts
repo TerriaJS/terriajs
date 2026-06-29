@@ -116,7 +116,6 @@ import Workbench from "./Workbench";
 import SelectableDimensionWorkflow from "./Workflows/SelectableDimensionWorkflow";
 import { defaultLoadConfig } from "./defaultLoadConfig";
 import { FeedbackService, IFeedbackService } from "./FeedbackService";
-import withControlledVisibility from "../ReactViews/HOCs/withControlledVisibility";
 
 /** Keep export for experimentation */
 export { defaultLoadConfig };
