@@ -14,7 +14,7 @@ import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
-import EllipsoidGeodesic from "terriajs-cesium/Source/Core/EllipsoidGeodesic";
+import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
 import GeoJsonDataSource from "terriajs-cesium/Source/DataSources/GeoJsonDataSource";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import ConstantProperty from "terriajs-cesium/Source/DataSources/ConstantProperty";
@@ -42,8 +42,6 @@ import RerPoiCatalogItemTraits, {
 } from "../../../Traits/TraitsClasses/RerPoiCatalogItemTraits";
 import Color from "terriajs-cesium/Source/Core/Color";
 import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
-
-const geodesic = new EllipsoidGeodesic();
 
 interface EsriJsonQueryOptions {
   resultOffset?: number;
@@ -117,6 +115,10 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
   private dynamicReloadQueued = false;
   private dynamicReloadInProgress = false;
   private currentViewportLevelId: number | undefined;
+  private readonly webMercatorTilingScheme = new WebMercatorTilingScheme();
+  private readonly patchedImageryProviders = new WeakSet<object>();
+  private removeCesiumImageryLayerListeners: Array<() => void> = [];
+  private centerCartographic: Cartographic | undefined;
 
   @observable private cameraTiltLimitExceeded = false;
   @observable private activeLanguage =
@@ -133,6 +135,7 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
   @observable private debugDataSource: CustomDataSource | undefined;
 
   private readonly onDynamicViewportChanged = () => {
+    this.updateCesiumCenterCartographic();
     const isPastLimit = this.isCameraPastTiltLimit();
     runInAction(() => {
       this.cameraTiltLimitExceeded = isPastLimit;
@@ -147,61 +150,119 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
     });
   };
 
-  /**
-   * Fetches the exact Level ID directly from Cesium's internal rendering cache.
-   * Finds the map coordinate at the exact center of the viewport, then scans
-   * globe._surface._tilesToRender to match which active terrain/imagery tile bounds
-   * contain that point.
-   */
   private getCesiumLevelFromTilesToRender(): number | undefined {
+    return this.currentViewportLevelId;
+  }
+
+  /**
+   * Updates the cached center-point cartographic so imagery requests can be
+   * matched against the exact tile currently under the middle of the screen.
+   */
+  private updateCesiumCenterCartographic(): Cartographic | undefined {
     const cesium = this.terria.cesium;
     if (!cesium) return undefined;
 
     const scene = cesium.scene;
     const camera = scene.camera;
     const globe = scene.globe;
-
-    // 1. Calculate the center point of the current viewport canvas
     const centerCanvas = new Cartesian2(
       scene.canvas.clientWidth / 2,
       scene.canvas.clientHeight / 2
     );
 
-    // 2. Cast a ray from the camera lens directly through the screen center
     const ray = camera.getPickRay(centerCanvas);
     if (!isDefined(ray)) return undefined;
 
     const targetCartesian = globe.pick(ray, scene);
-    if (!isDefined(targetCartesian)) return undefined; // Looks off into open space/skybox
+    if (!isDefined(targetCartesian)) return undefined;
 
-    // 3. Convert the 3D surface intersection point to Earth coordinates (lat/lon in radians)
     const cartographic =
       globe.ellipsoid.cartesianToCartographic(targetCartesian);
-    if (!isDefined(cartographic)) return undefined;
-
-    // 4. Access Cesium's private surface abstraction cache safely
-    const surface = (globe as any)._surface;
-    const renderedTiles = surface?._tilesToRender;
-    if (!renderedTiles) return undefined;
-
-    // 5. Scan active tiles to find which one bounds the center coordinate
-    for (let i = 0; i < renderedTiles.length; i++) {
-      const tile = renderedTiles[i];
-      const rect = tile.rectangle;
-
-      if (
-        cartographic.longitude >= rect.west &&
-        cartographic.longitude <= rect.east &&
-        cartographic.latitude >= rect.south &&
-        cartographic.latitude <= rect.north
-      ) {
-        return tile.level; // Return the exact Level ID assigned by the renderer loop
-      }
-    }
-
-    return undefined;
+    this.centerCartographic = isDefined(cartographic)
+      ? cartographic
+      : undefined;
+    return this.centerCartographic;
   }
 
+  private attachCesiumImageryTracking(scene: any) {
+    this.detachCesiumImageryTracking();
+
+    const imageryLayers = scene?.imageryLayers;
+    if (!imageryLayers) return;
+
+    const patchAllLayers = () => {
+      for (let i = 0; i < imageryLayers.length; i++) {
+        const layer = imageryLayers.get(i);
+        this.patchImageryProvider(layer?.imageryProvider);
+      }
+    };
+
+    patchAllLayers();
+
+    if (imageryLayers.layerAdded?.addEventListener) {
+      this.removeCesiumImageryLayerListeners.push(
+        imageryLayers.layerAdded.addEventListener((layer: any) => {
+          this.patchImageryProvider(layer?.imageryProvider);
+          patchAllLayers();
+        })
+      );
+    }
+
+    if (imageryLayers.layerRemoved?.addEventListener) {
+      this.removeCesiumImageryLayerListeners.push(
+        imageryLayers.layerRemoved.addEventListener(() => {
+          patchAllLayers();
+        })
+      );
+    }
+  }
+
+  private detachCesiumImageryTracking() {
+    this.removeCesiumImageryLayerListeners.forEach((remove) => {
+      try {
+        remove();
+      } catch {
+        // Ignore cleanup errors.
+      }
+    });
+    this.removeCesiumImageryLayerListeners = [];
+  }
+
+  private patchImageryProvider(provider: any) {
+    if (!provider || this.patchedImageryProviders.has(provider)) return;
+    if (typeof provider.requestImage !== "function") return;
+
+    const originalRequestImage = provider.requestImage.bind(provider);
+
+    provider.requestImage = (
+      x: number,
+      y: number,
+      level: number,
+      request?: any
+    ) => {
+      const result = originalRequestImage(x, y, level, request);
+
+      const center =
+        this.centerCartographic ?? this.updateCesiumCenterCartographic();
+      if (center) {
+        const tilingScheme =
+          provider.tilingScheme ?? this.webMercatorTilingScheme;
+
+        try {
+          const tileRectangle = tilingScheme.tileXYToRectangle(x, y, level);
+          if (Rectangle.contains(tileRectangle, center)) {
+            this.currentViewportLevelId = level;
+          }
+        } catch {
+          // Some providers may not use a compatible tiling scheme.
+        }
+      }
+
+      return result;
+    };
+
+    this.patchedImageryProviders.add(provider);
+  }
   constructor(...args: ModelConstructorParameters) {
     super(...args);
     makeObservable(this);
@@ -465,6 +526,7 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
     this.pendingDynamicQuery = undefined;
     this.activeDynamicQuery = undefined;
     this.currentViewportLevelId = undefined;
+    this.centerCartographic = undefined;
 
     runInAction(() => {
       this.debugDataSource = undefined;
@@ -473,6 +535,7 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
 
   private stopDynamicViewportRequests() {
     this.detachCurrentViewerListener();
+    this.detachCesiumImageryTracking();
     this.removeLanguageChangedListener?.();
     this.removeLanguageChangedListener = undefined;
     this.removeShowReaction?.();
@@ -503,6 +566,7 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
     this.pendingDynamicQuery = undefined;
     this.activeDynamicQuery = undefined;
     this.currentViewportLevelId = undefined;
+    this.centerCartographic = undefined;
   }
 
   private attachCurrentViewerListener() {
@@ -513,6 +577,7 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
         cesium.scene.camera.changed.addEventListener(
           this.onDynamicViewportChanged
         );
+      this.attachCesiumImageryTracking(cesium.scene);
       this.onDynamicViewportChanged();
       return;
     }
@@ -565,6 +630,7 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
   private detachCurrentViewerListener() {
     this.removeCesiumCameraChangedListener?.();
     this.removeCesiumCameraChangedListener = undefined;
+    this.detachCesiumImageryTracking();
     this.removeLeafletViewportChangedListener?.();
     this.removeLeafletViewportChangedListener = undefined;
   }
@@ -1377,7 +1443,10 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
 
     let maxLevelId: number;
 
-    if (this.terria.mainViewer.viewerMode === ViewerMode.Cesium) {
+    if (
+      this.terria.mainViewer.viewerMode === ViewerMode.Cesium ||
+      this.terria.mainViewer.viewerMode === ViewerMode.Cesium2D
+    ) {
       this.currentViewportLevelId = this.getCesiumLevelFromTilesToRender();
       maxLevelId =
         this.currentViewportLevelId === undefined
@@ -1386,10 +1455,7 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
     } else {
       this.currentViewportLevelId = undefined;
       const viewerScale = this.getCurrentViewerScale();
-      maxLevelId =
-        viewerScale === undefined
-          ? minLevelId - 1
-          : this.getProgressiveLevelIdFromScale(viewerScale, minLevelId);
+      maxLevelId = viewerScale === undefined ? minLevelId - 1 : viewerScale;
     }
 
     return {
@@ -1404,80 +1470,10 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
     };
   }
 
-  private getProgressiveLevelIdMappings(): LevelIdCameraHeightMapping[] {
-    const mappings = this.getRerPoiTrait("levelIdMappings");
-    return mappings.length > 0
-      ? mappings
-      : defaultRerPoiCatalogItemTraits.levelIdMappings;
-  }
-
-  private getProgressiveLevelIdFromScale(
-    viewerScale: number,
-    minimumLevelId: number
-  ): number {
-    const levelIdMappings = this.getProgressiveLevelIdMappings();
-
-    if (levelIdMappings.length === 0) {
-      return minimumLevelId - 1;
-    }
-
-    let lastLevelId = levelIdMappings[levelIdMappings.length - 1].levelId;
-
-    for (const mapping of levelIdMappings) {
-      lastLevelId = mapping.levelId;
-
-      if (viewerScale >= mapping.cameraHeightThreshold) {
-        return mapping.levelId;
-      }
-    }
-
-    return lastLevelId;
-  }
-
   private getCurrentViewerScale(): number | undefined {
     const leafletScale = this.getLeafletViewerScale();
     if (isDefined(leafletScale)) return leafletScale;
-
-    const scale = this.terria.mainViewer.scale;
-    if (isDefined(scale) && Number.isFinite(scale)) {
-      return scale * 100;
-    }
-
-    const cesium = this.terria.cesium;
-    if (!cesium) return undefined;
-
-    const scene = cesium.scene;
-
-    const width = scene.canvas.clientWidth;
-    const height = scene.canvas.clientHeight;
-
-    if (width <= 1 || height <= 1) return undefined;
-
-    const left = scene.camera.getPickRay(
-      new Cartesian2((width / 2) | 0, height - 1)
-    );
-    const right = scene.camera.getPickRay(
-      new Cartesian2((1 + width / 2) | 0, height - 1)
-    );
-
-    if (!isDefined(left) || !isDefined(right)) return undefined;
-
-    const leftPosition = scene.globe.pick(left, scene);
-    const rightPosition = scene.globe.pick(right, scene);
-
-    if (!isDefined(leftPosition) || !isDefined(rightPosition)) return undefined;
-
-    const leftCartographic =
-      scene.globe.ellipsoid.cartesianToCartographic(leftPosition);
-    const rightCartographic =
-      scene.globe.ellipsoid.cartesianToCartographic(rightPosition);
-
-    if (!isDefined(leftCartographic) || !isDefined(rightCartographic)) {
-      return undefined;
-    }
-
-    geodesic.setEndPoints(leftCartographic, rightCartographic);
-    return geodesic.surfaceDistance;
+    return undefined;
   }
 
   private getLeafletViewerScale(): number | undefined {
@@ -1485,16 +1481,9 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
     if (!leaflet) return undefined;
 
     const map = leaflet.map;
-    const size = map.getSize();
-    if (size.x <= 1 || size.y <= 1) return undefined;
-
-    const y = size.y / 2;
-    const x = size.x / 2;
-    const pixelDistance = map
-      .containerPointToLatLng([x, y])
-      .distanceTo(map.containerPointToLatLng([x + 1, y]));
-
-    return Number.isFinite(pixelDistance) ? pixelDistance * 100 : undefined;
+    const level = Math.round(map.getZoom());
+    console.log("[RerPoiCatalogItem] Leaflet zoom level:", level);
+    return level;
   }
 }
 
