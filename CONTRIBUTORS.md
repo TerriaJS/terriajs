@@ -68,3 +68,4 @@ The following people have contributed to TerriaJS:
 - [Andrew Cleland](https://github.com/aclel)
 - [Sidney Gijzen](https://github.com/sidneygijzen)
 - [Yuri Vyatkin](https://github.com/niktayv)
+- [Israr A.](https://github.com/Israr-11)
