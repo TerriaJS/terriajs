@@ -111,15 +111,12 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
   private removeTraitSnapshotReaction: (() => void) | undefined;
   private readonly computedKeepAliveDisposers: Array<() => void> = [];
 
-  private watchedCesiumImageryProvider: any | undefined;
-  private getCesiumLastImageryLevel: (() => number | undefined) | undefined;
-  private restoreCesiumImageryWatcher: (() => void) | undefined;
-
   private dynamicReloadTimer: ReturnType<typeof setTimeout> | undefined;
   private pendingDynamicQuery: DynamicViewportQuery | undefined;
   private activeDynamicQuery: DynamicViewportQuery | undefined;
   private dynamicReloadQueued = false;
   private dynamicReloadInProgress = false;
+  private currentViewportLevelId: number | undefined;
 
   @observable private cameraTiltLimitExceeded = false;
   @observable private activeLanguage =
@@ -150,49 +147,59 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
     });
   };
 
-  private ensureCesiumImageryLevelWatcher():
-    | (() => number | undefined)
-    | undefined {
+  /**
+   * Fetches the exact Level ID directly from Cesium's internal rendering cache.
+   * Finds the map coordinate at the exact center of the viewport, then scans
+   * globe._surface._tilesToRender to match which active terrain/imagery tile bounds
+   * contain that point.
+   */
+  private getCesiumLevelFromTilesToRender(): number | undefined {
     const cesium = this.terria.cesium;
     if (!cesium) return undefined;
 
-    const provider = cesium.scene.imageryLayers.get(0)?.imageryProvider as any;
-    if (!provider?.requestImage) return undefined;
+    const scene = cesium.scene;
+    const camera = scene.camera;
+    const globe = scene.globe;
 
-    if (
-      this.watchedCesiumImageryProvider === provider &&
-      this.getCesiumLastImageryLevel
-    ) {
-      return this.getCesiumLastImageryLevel;
+    // 1. Calculate the center point of the current viewport canvas
+    const centerCanvas = new Cartesian2(
+      scene.canvas.clientWidth / 2,
+      scene.canvas.clientHeight / 2
+    );
+
+    // 2. Cast a ray from the camera lens directly through the screen center
+    const ray = camera.getPickRay(centerCanvas);
+    if (!isDefined(ray)) return undefined;
+
+    const targetCartesian = globe.pick(ray, scene);
+    if (!isDefined(targetCartesian)) return undefined; // Looks off into open space/skybox
+
+    // 3. Convert the 3D surface intersection point to Earth coordinates (lat/lon in radians)
+    const cartographic =
+      globe.ellipsoid.cartesianToCartographic(targetCartesian);
+    if (!isDefined(cartographic)) return undefined;
+
+    // 4. Access Cesium's private surface abstraction cache safely
+    const surface = (globe as any)._surface;
+    const renderedTiles = surface?._tilesToRender;
+    if (!renderedTiles) return undefined;
+
+    // 5. Scan active tiles to find which one bounds the center coordinate
+    for (let i = 0; i < renderedTiles.length; i++) {
+      const tile = renderedTiles[i];
+      const rect = tile.rectangle;
+
+      if (
+        cartographic.longitude >= rect.west &&
+        cartographic.longitude <= rect.east &&
+        cartographic.latitude >= rect.south &&
+        cartographic.latitude <= rect.north
+      ) {
+        return tile.level; // Return the exact Level ID assigned by the renderer loop
+      }
     }
 
-    this.restoreCesiumImageryWatcher?.();
-
-    const originalRequestImage = provider.requestImage.bind(provider);
-    let lastRequestedLevel: number | undefined;
-
-    provider.requestImage = (
-      x: number,
-      y: number,
-      level: number,
-      request?: any
-    ) => {
-      lastRequestedLevel = level;
-      console.log("Cesium requested imagery level:", level, "x:", x, "y:", y);
-      return originalRequestImage(x, y, level, request);
-    };
-
-    this.watchedCesiumImageryProvider = provider;
-    this.getCesiumLastImageryLevel = () => lastRequestedLevel;
-
-    this.restoreCesiumImageryWatcher = () => {
-      provider.requestImage = originalRequestImage;
-      this.watchedCesiumImageryProvider = undefined;
-      this.getCesiumLastImageryLevel = undefined;
-      this.restoreCesiumImageryWatcher = undefined;
-    };
-
-    return this.getCesiumLastImageryLevel;
+    return undefined;
   }
 
   constructor(...args: ModelConstructorParameters) {
@@ -457,6 +464,7 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
     this.isFirstDynamicLoad = true;
     this.pendingDynamicQuery = undefined;
     this.activeDynamicQuery = undefined;
+    this.currentViewportLevelId = undefined;
 
     runInAction(() => {
       this.debugDataSource = undefined;
@@ -494,13 +502,13 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
     this.isFirstDynamicLoad = true;
     this.pendingDynamicQuery = undefined;
     this.activeDynamicQuery = undefined;
+    this.currentViewportLevelId = undefined;
   }
 
   private attachCurrentViewerListener() {
     this.detachCurrentViewerListener();
     const cesium = this.terria.cesium;
     if (cesium) {
-      this.ensureCesiumImageryLevelWatcher();
       this.removeCesiumCameraChangedListener =
         cesium.scene.camera.changed.addEventListener(
           this.onDynamicViewportChanged
@@ -559,7 +567,6 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
     this.removeCesiumCameraChangedListener = undefined;
     this.removeLeafletViewportChangedListener?.();
     this.removeLeafletViewportChangedListener = undefined;
-    this.restoreCesiumImageryWatcher?.();
   }
 
   private async preloadServiceQueryableValues(): Promise<void> {
@@ -824,10 +831,6 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
       this.setEntityVisibility(entity, isVisible);
       if (isVisible) visiblePoiCount += 1;
     }
-    const imageryLevel =
-      this.terria.mainViewer.viewerMode === ViewerMode.Cesium
-        ? this.ensureCesiumImageryLevelWatcher()?.()
-        : undefined;
 
     console.log("[RerPoiCatalogItem] POI debug", {
       cachedPoiCount: this.liveEntityByObjectId.size,
@@ -836,7 +839,7 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
       viewerScale: this.getCurrentViewerScale(),
       minLevelId,
       maxLevelId,
-      imageryLevel
+      imageryLevel: this.currentViewportLevelId
     });
     runInAction(() => {
       this.numberOfTotalElements = totalPoiCount;
@@ -1367,20 +1370,21 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
   private getLevelFilterForViewport(): {
     minLevelId: number;
     maxLevelId: number;
-    imageryLevel?: number;
     filterKey: string;
   } {
     const minLevelId = this.getRerPoiTrait("minLevelId");
     const levelIdField = this.getRerPoiTrait("levelIdField");
 
     let maxLevelId: number;
-    let imageryLevel: number | undefined;
 
     if (this.terria.mainViewer.viewerMode === ViewerMode.Cesium) {
-      const imageryGetter = this.ensureCesiumImageryLevelWatcher();
-      imageryLevel = imageryGetter?.();
-      maxLevelId = imageryLevel === undefined ? minLevelId - 1 : imageryLevel;
+      this.currentViewportLevelId = this.getCesiumLevelFromTilesToRender();
+      maxLevelId =
+        this.currentViewportLevelId === undefined
+          ? minLevelId - 1
+          : this.currentViewportLevelId;
     } else {
+      this.currentViewportLevelId = undefined;
       const viewerScale = this.getCurrentViewerScale();
       maxLevelId =
         viewerScale === undefined
@@ -1391,7 +1395,6 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
     return {
       minLevelId,
       maxLevelId,
-      imageryLevel,
       filterKey: [
         this.getRerPoiTrait("where"),
         levelIdField,
