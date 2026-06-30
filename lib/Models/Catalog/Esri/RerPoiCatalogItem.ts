@@ -90,6 +90,9 @@ interface RerPoiTraitSnapshot {
   where: string;
 }
 
+/** Tile size of the Google-standard / Leaflet Web Mercator pyramid. */
+const WEB_MERCATOR_TILE_SIZE = 256;
+
 export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
   static readonly type = RER_POI_CATALOG_ITEM_TYPE;
   static readonly TraitsClass = RerPoiCatalogItemTraits;
@@ -116,9 +119,6 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
   private dynamicReloadInProgress = false;
   private currentViewportLevelId: number | undefined;
   private readonly webMercatorTilingScheme = new WebMercatorTilingScheme();
-  private readonly patchedImageryProviders = new WeakSet<object>();
-  private removeCesiumImageryLayerListeners: Array<() => void> = [];
-  private centerCartographic: Cartographic | undefined;
 
   @observable private cameraTiltLimitExceeded = false;
   @observable private activeLanguage =
@@ -135,7 +135,6 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
   @observable private debugDataSource: CustomDataSource | undefined;
 
   private readonly onDynamicViewportChanged = () => {
-    this.updateCesiumCenterCartographic();
     const isPastLimit = this.isCameraPastTiltLimit();
     runInAction(() => {
       this.cameraTiltLimitExceeded = isPastLimit;
@@ -150,118 +149,64 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
     });
   };
 
-  private getCesiumLevelFromTilesToRender(): number | undefined {
-    return this.currentViewportLevelId;
-  }
-
   /**
-   * Updates the cached center-point cartographic so imagery requests can be
-   * matched against the exact tile currently under the middle of the screen.
+   * Computes the Web Mercator (EPSG:3857) tile level for the point currently
+   * under the centre of the screen, matching the "Google standard" / Leaflet
+   * zoom returned by `LeafletMap.getZoom()`.
+   *
+   * Derives the level analytically from the camera:
+   *   1. Pick two screen pixels a known gap apart onto the globe.
+   *   2. Project both onto EPSG:3857 metres via the Web Mercator projection.
+   *   3. resolution (metres/pixel) = projectedDistance / pixelGap.
+   *   4. zoom = log2( zeroLevelResolution / resolution ), where
+   *      zeroLevelResolution = 2*pi*R / 256 (256px Google-standard tiles).
+   *
+   * Using the projected (conformal) distance keeps this correct under camera
+   * heading/rotation, since Web Mercator is locally isotropic.
    */
-  private updateCesiumCenterCartographic(): Cartographic | undefined {
+  private getCesiumWebMercatorLevel(): number | undefined {
     const cesium = this.terria.cesium;
     if (!cesium) return undefined;
 
     const scene = cesium.scene;
     const camera = scene.camera;
     const globe = scene.globe;
-    const centerCanvas = new Cartesian2(
-      scene.canvas.clientWidth / 2,
-      scene.canvas.clientHeight / 2
-    );
+    const canvas = scene.canvas;
 
-    const ray = camera.getPickRay(centerCanvas);
-    if (!isDefined(ray)) return undefined;
+    const width = canvas.clientWidth;
+    const height = canvas.clientHeight;
+    if (!(width > 0) || !(height > 0)) return undefined;
 
-    const targetCartesian = globe.pick(ray, scene);
-    if (!isDefined(targetCartesian)) return undefined;
+    const pixelGap = Math.max(2, Math.round(width * 0.05));
+    const xCenter = width / 2;
+    const yCenter = height / 2;
 
-    const cartographic =
-      globe.ellipsoid.cartesianToCartographic(targetCartesian);
-    this.centerCartographic = isDefined(cartographic)
-      ? cartographic
-      : undefined;
-    return this.centerCartographic;
-  }
-
-  private attachCesiumImageryTracking(scene: any) {
-    this.detachCesiumImageryTracking();
-
-    const imageryLayers = scene?.imageryLayers;
-    if (!imageryLayers) return;
-
-    const patchAllLayers = () => {
-      for (let i = 0; i < imageryLayers.length; i++) {
-        const layer = imageryLayers.get(i);
-        this.patchImageryProvider(layer?.imageryProvider);
-      }
+    const projectPixelOffset = (offsetX: number) => {
+      const ray = camera.getPickRay(new Cartesian2(xCenter + offsetX, yCenter));
+      if (!isDefined(ray)) return undefined;
+      const cartesian = globe.pick(ray, scene);
+      if (!isDefined(cartesian)) return undefined;
+      const cartographic = globe.ellipsoid.cartesianToCartographic(cartesian);
+      if (!isDefined(cartographic)) return undefined;
+      return this.webMercatorTilingScheme.projection.project(cartographic);
     };
 
-    patchAllLayers();
+    const left = projectPixelOffset(-pixelGap / 2);
+    const right = projectPixelOffset(pixelGap / 2);
+    if (!isDefined(left) || !isDefined(right)) return undefined;
 
-    if (imageryLayers.layerAdded?.addEventListener) {
-      this.removeCesiumImageryLayerListeners.push(
-        imageryLayers.layerAdded.addEventListener((layer: any) => {
-          this.patchImageryProvider(layer?.imageryProvider);
-          patchAllLayers();
-        })
-      );
-    }
+    const projectedDistance = Math.hypot(right.x - left.x, right.y - left.y);
+    if (!(projectedDistance > 0)) return undefined;
 
-    if (imageryLayers.layerRemoved?.addEventListener) {
-      this.removeCesiumImageryLayerListeners.push(
-        imageryLayers.layerRemoved.addEventListener(() => {
-          patchAllLayers();
-        })
-      );
-    }
-  }
+    const resolution = projectedDistance / pixelGap;
+    const zeroLevelResolution =
+      (CesiumMath.TWO_PI *
+        this.webMercatorTilingScheme.ellipsoid.maximumRadius) /
+      WEB_MERCATOR_TILE_SIZE;
 
-  private detachCesiumImageryTracking() {
-    this.removeCesiumImageryLayerListeners.forEach((remove) => {
-      try {
-        remove();
-      } catch {
-        // Ignore cleanup errors.
-      }
-    });
-    this.removeCesiumImageryLayerListeners = [];
-  }
-
-  private patchImageryProvider(provider: any) {
-    if (!provider || this.patchedImageryProviders.has(provider)) return;
-    if (typeof provider.requestImage !== "function") return;
-
-    const originalRequestImage = provider.requestImage.bind(provider);
-
-    provider.requestImage = (
-      x: number,
-      y: number,
-      level: number,
-      request?: any
-    ) => {
-      const result = originalRequestImage(x, y, level, request);
-
-      const center =
-        this.centerCartographic ?? this.updateCesiumCenterCartographic();
-      if (center) {
-        const tilingScheme =
-          provider.tilingScheme ?? this.webMercatorTilingScheme;
-
-        try {
-          const tileRectangle = tilingScheme.tileXYToRectangle(x, y, level);
-          if (Rectangle.contains(tileRectangle, center)) {
-            this.currentViewportLevelId = level;
-          }
-        } catch {
-          // Some providers may not use a compatible tiling scheme.
-        }
-      }
-
-      return result;
-    };
-
-    this.patchedImageryProviders.add(provider);
+    const level = Math.log2(zeroLevelResolution / resolution);
+    if (!Number.isFinite(level)) return undefined;
+    return Math.max(0, Math.round(level));
   }
   constructor(...args: ModelConstructorParameters) {
     super(...args);
@@ -526,7 +471,6 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
     this.pendingDynamicQuery = undefined;
     this.activeDynamicQuery = undefined;
     this.currentViewportLevelId = undefined;
-    this.centerCartographic = undefined;
 
     runInAction(() => {
       this.debugDataSource = undefined;
@@ -535,7 +479,6 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
 
   private stopDynamicViewportRequests() {
     this.detachCurrentViewerListener();
-    this.detachCesiumImageryTracking();
     this.removeLanguageChangedListener?.();
     this.removeLanguageChangedListener = undefined;
     this.removeShowReaction?.();
@@ -566,7 +509,6 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
     this.pendingDynamicQuery = undefined;
     this.activeDynamicQuery = undefined;
     this.currentViewportLevelId = undefined;
-    this.centerCartographic = undefined;
   }
 
   private attachCurrentViewerListener() {
@@ -577,7 +519,6 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
         cesium.scene.camera.changed.addEventListener(
           this.onDynamicViewportChanged
         );
-      this.attachCesiumImageryTracking(cesium.scene);
       this.onDynamicViewportChanged();
       return;
     }
@@ -630,7 +571,6 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
   private detachCurrentViewerListener() {
     this.removeCesiumCameraChangedListener?.();
     this.removeCesiumCameraChangedListener = undefined;
-    this.detachCesiumImageryTracking();
     this.removeLeafletViewportChangedListener?.();
     this.removeLeafletViewportChangedListener = undefined;
   }
@@ -1447,7 +1387,7 @@ export default class RerPoiCatalogItem extends ArcGisFeatureServerCatalogItem {
       this.terria.mainViewer.viewerMode === ViewerMode.Cesium ||
       this.terria.mainViewer.viewerMode === ViewerMode.Cesium2D
     ) {
-      this.currentViewportLevelId = this.getCesiumLevelFromTilesToRender();
+      this.currentViewportLevelId = this.getCesiumWebMercatorLevel();
       maxLevelId =
         this.currentViewportLevelId === undefined
           ? minLevelId - 1
