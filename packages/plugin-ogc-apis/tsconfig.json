@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "declaration": true,
+    "outDir": "dist/",
+    "strict": true,
+    "experimentalDecorators": true,
+    "jsx": "react-jsx",
+    "resolveJsonModule": true,
+    "stripInternal": true
+  },
+  "include": ["src"]
+}
