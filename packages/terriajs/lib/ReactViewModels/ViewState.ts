@@ -683,10 +683,28 @@ export default class ViewState {
           runInAction(() => {
             this.openAddData();
             if (this.terria.configParameters.tabbedCatalog) {
-              const parentGroups = getAncestors(item);
-              if (parentGroups.length > 0) {
+              let parentGroup = getAncestors(item).at(0);
+              if (!parentGroup) {
+                // It is possible that the loadMembers() was not called on the
+                // top level tab groups and therefore the parent -> member
+                // links were not established. Manually call
+                // refreshKnownContainerUniqueIds on the top level tab groups
+                // and retry getting the ancestors.
+                this.terria.catalog.group.memberModels.forEach((m) => {
+                  if (GroupMixin.isMixedInto(m)) {
+                    m.refreshKnownContainerUniqueIds(m.uniqueId);
+                  }
+                });
+                parentGroup = getAncestors(item).at(0);
+              }
+              if (parentGroup) {
                 // Go to specific tab
-                this.activeTabIdInCategory = parentGroups[0].uniqueId;
+                this.activeTabIdInCategory = parentGroup.uniqueId;
+                if (GroupMixin.isMixedInto(parentGroup)) {
+                  parentGroup
+                    .loadMembers()
+                    .then((result) => result.throwIfError());
+                }
               }
             }
           });
@@ -697,6 +715,12 @@ export default class ViewState {
           this.switchMobileView(this.mobileViewOptions.preview);
         }
       }
+
+      getAncestors(item).forEach((ancestor) => {
+        if (GroupMixin.isMixedInto(ancestor)) {
+          ancestor.setTrait(stratum, "isOpen", isOpen);
+        }
+      });
 
       if (GroupMixin.isMixedInto(item)) {
         item.setTrait(stratum, "isOpen", isOpen);
