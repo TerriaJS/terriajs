@@ -6,6 +6,7 @@
 - Upgraded `terriajs-cesium` to `26.0.0` and `terriajs-cesium-widgets` to `16.0.0`. We are now using cesium 1.142.
 - Upgraded terriajs-server to v5.0.0-alpha.3
 - Upgraded to i18next v26 and migrated to i18next select pattern `(t($ => translation.key))` #7882
+- Harden the custom markdown/HTML sanitizer: replaced the blanket `ALLOW_UNKNOWN_PROTOCOLS` DOMPurify option (which preserved OS/app-handler schemes such as `vscode:`, `ms-its:` and `slack:` on links and images) with a scoped `uponSanitizeAttribute` hook. The hook keeps custom components' free-text attributes verbatim (so values may contain `:`, e.g. a chart's `column-titles`) while scheme-validating their URL attributes per URL, closing a gap where a dangerous scheme could hide in a comma-separated `sources`/`downloads` list.
 
 #### 8.12.4 - 2026-06-19
 
