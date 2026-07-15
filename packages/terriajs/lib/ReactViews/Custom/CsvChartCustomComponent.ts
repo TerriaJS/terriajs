@@ -50,6 +50,10 @@ export default class CsvChartCustomComponent extends ChartCustomComponent<CsvCat
     ]);
   }
 
+  get urlAttributes(): string[] {
+    return super.urlAttributes.concat(["poll-sources"]);
+  }
+
   protected constructCatalogItem(
     id: string | undefined,
     context: ProcessNodeContext,

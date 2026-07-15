@@ -117,6 +117,17 @@ export const ChartAttributes = [
 ];
 
 /**
+ * The subset of {@link ChartAttributes} whose values are URLs. These are
+ * scheme-validated by the sanitizer rather than preserved verbatim.
+ */
+export const ChartUrlAttributes = [
+  "src",
+  "src-preview",
+  "sources",
+  "downloads"
+];
+
+/**
  * A chart custom component. It displays an interactive chart along with
  * "expand" and "download" buttons. The expand button adds a catalog item with
  * the data to the workbench, causing it to be displayed on the Chart Panel.
@@ -148,6 +159,10 @@ export default abstract class ChartCustomComponent<
 
   get attributes(): Array<string> {
     return ChartAttributes;
+  }
+
+  get urlAttributes(): string[] {
+    return ChartUrlAttributes;
   }
 
   abstract get name(): string;
