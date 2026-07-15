@@ -7,6 +7,13 @@
     "moduleResolution": "bundler",
     "sourceMap": true,
     "strict": true,
+    // Skip type-checking of declaration (.d.ts) files. Required because
+    // react-i18next (v17+) augments React's `HTMLAttributes.children` with
+    // `ReactI18NextChildren` (which includes `Record<string, unknown>` when
+    // `allowObjectInHTMLChildren` is enabled) but not the base
+    // `DOMAttributes.children`, so `@types/react` reports `HTMLAttributes`
+    // as "incorrectly extending" `DOMAttributes`. See lib/ThirdParty/i18n/i18next.d.ts.
+    "skipLibCheck": true,
     "allowJs": true,
     "jsx": "react-jsx",
     "esModuleInterop": true,
