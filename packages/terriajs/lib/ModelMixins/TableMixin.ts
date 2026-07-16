@@ -1,4 +1,5 @@
 import i18next from "i18next";
+import Papa from "papaparse";
 import {
   action,
   computed,
@@ -22,6 +23,7 @@ import TerriaError from "../Core/TerriaError";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import flatten from "../Core/flatten";
 import isDefined from "../Core/isDefined";
+import sanitizeCsvValue from "../Core/sanitizeCsvValue";
 import ConstantColorMap from "../Map/ColorMap/ConstantColorMap";
 import RegionProvider from "../Map/Region/RegionProvider";
 import RegionProviderList from "../Map/Region/RegionProviderList";
@@ -215,12 +217,13 @@ function TableMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
 
     protected async _exportData(): Promise<ExportData | undefined> {
       if (isDefined(this.dataColumnMajor)) {
-        // I am assuming all columns have the same length -> so use first column
-        const csvString = this.dataColumnMajor[0]
-          .map((_row, rowIndex) =>
-            this.dataColumnMajor!.map((col) => col[rowIndex]).join(",")
-          )
-          .join("\n");
+        // I am assuming all columns have the same length -> so use first column.
+        // `sanitizeCsvValue` guards against CSV/formula injection; `Papa.unparse`
+        // performs the CSV structural escaping (quotes, commas, newlines).
+        const rows = this.dataColumnMajor[0].map((_row, rowIndex) =>
+          this.dataColumnMajor!.map((col) => sanitizeCsvValue(col[rowIndex]))
+        );
+        const csvString = Papa.unparse(rows);
 
         // Make sure we have .csv file extension
         let name = this.name || this.uniqueId || "data.csv";

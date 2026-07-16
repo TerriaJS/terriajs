@@ -6,6 +6,8 @@
 - Upgraded `terriajs-cesium` to `26.0.0` and `terriajs-cesium-widgets` to `16.0.0`. We are now using cesium 1.142.
 - Upgraded terriajs-server to v5.0.0-alpha.3
 - Upgraded to i18next v26 and migrated to i18next select pattern `(t($ => translation.key))` #7882
+- Upgraded `papaparse` to `5.5.4` (and `@types/papaparse` to `5.5.2`).
+- Guard CSV exports against spreadsheet formula injection (CWE-1236): the feature-info "Download" CSV, table data export, and `CsvCatalogItem`'s inline `csvString` export now prefix cells a spreadsheet would treat as a formula (`= + - @`, tab, CR) with a `'`, while leaving legitimate numbers (e.g. `-5`) untouched. `TableMixin` table exports now also structurally escape values via `papaparse` (previously they were joined with `,` unescaped). Downloads of a remote `url` are unchanged (the original file is served directly).
 
 #### 8.12.4 - 2026-06-19
 

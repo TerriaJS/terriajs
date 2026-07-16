@@ -1,9 +1,11 @@
 import { Component } from "react";
 import { TFunction } from "i18next";
+import Papa from "papaparse";
 import { withTranslation } from "react-i18next";
 import DataUri from "../../Core/DataUri";
 import filterOutUndefined from "../../Core/filterOutUndefined";
-import JsonValue, { JsonObject } from "../../Core/Json";
+import { JsonObject } from "../../Core/Json";
+import sanitizeCsvValue from "../../Core/sanitizeCsvValue";
 import ViewState from "../../ReactViewModels/ViewState";
 import Icon from "../../Styled/Icon";
 import { withViewState } from "../Context";
@@ -66,8 +68,8 @@ class FeatureInfoDownload extends Component<{
  * row being the data. If the object is too hierarchical to be made into a CSV, returns undefined.
  */
 function generateCsvData(data: JsonObject) {
-  const row1 = [];
-  const row2 = [];
+  const row1: string[] = [];
+  const row2: string[] = [];
   const keys = Object.keys(data);
 
   for (let i = 0; i < keys.length; i++) {
@@ -84,21 +86,13 @@ function generateCsvData(data: JsonObject) {
       continue;
     }
 
-    row1.push(makeSafeForCsv(key));
-    row2.push(makeSafeForCsv(data[key]));
+    // `sanitizeCsvValue` guards against CSV/formula injection; `Papa.unparse`
+    // performs the CSV structural escaping (quotes, commas, newlines).
+    row1.push(sanitizeCsvValue(key));
+    row2.push(sanitizeCsvValue(data[key]));
   }
 
-  return row1.join(",") + "\n" + row2.join(",");
-}
-
-/**
- * Makes a string safe for insertion into a CSV by wrapping it in inverted commas (") and changing inverted commas within
- * it to double-inverted-commas ("") as per CSV convention.
- */
-function makeSafeForCsv(value: JsonValue) {
-  value = value ? `${value}` : "";
-
-  return '"' + value.replace(/"/g, '""') + '"';
+  return Papa.unparse([row1, row2]);
 }
 
 export default withTranslation()(withViewState(FeatureInfoDownload));
