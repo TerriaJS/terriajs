@@ -21,6 +21,7 @@ interface DataCatalogTabProps {
   hideSearch?: boolean;
   hideActionButton?: boolean;
   hideBreadcrumbs?: boolean;
+  isLoadingTab?: boolean;
 }
 
 const DataCatalogTab = observer(function DataCatalogTab(
@@ -66,6 +67,7 @@ const DataCatalogTab = observer(function DataCatalogTab(
               hideActionButton={props.hideActionButton}
               onActionButtonClicked={props.onActionButtonClicked}
               items={props.items}
+              isLoading={props.isLoadingTab}
             />
           </Box>
           <Box styledWidth="60%">
