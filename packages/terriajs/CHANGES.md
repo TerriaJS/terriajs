@@ -5,6 +5,7 @@
 - Upgraded `terriajs-cesium` to `26.0.0` and `terriajs-cesium-widgets` to `16.0.0`. We are now using cesium 1.142.
 - Upgraded terriajs-server to v5.0.0-alpha.3
 - Upgraded to i18next v26 and migrated to i18next select pattern `(t($ => translation.key))` #7882
+- Changed `disablePreview` to also hide `Add to map` in preview modal.
 
 #### 8.12.4 - 2026-06-19
 
