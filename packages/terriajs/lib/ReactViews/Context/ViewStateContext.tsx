@@ -20,7 +20,7 @@ export const useViewState = () => {
   return viewState;
 };
 
-export const withViewState = <P extends WithViewState>(
+export const withViewState = <P extends Partial<WithViewState>>(
   Component: ComponentType<P>
 ): FC<Omit<P, "viewState">> =>
   function withViewState(props) {
