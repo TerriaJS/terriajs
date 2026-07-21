@@ -166,6 +166,15 @@ export interface ConfigParameters {
   /** URL to TerriaJS-server config. Defaults to `serverconfig/`. */
   serverConfigUrl?: string;
   /**
+   * Origins (eg. `"https://embedder.example"`) that are permitted to send start
+   * data to this application via `window.postMessage` (see
+   * `updateApplicationOnMessageFromParentWindow`). The application's own origin
+   * is always permitted; any other embedder must be listed here. Empty by
+   * default, so cross-origin pages that frame or open the app cannot inject
+   * start data.
+   */
+  parentMessageAllowedOrigins?: string[];
+  /**
    * URL of the service used to generate share links. This defaults to `share` if not specified, which maps to TerriaJS Server `share` endpoint.
    */
   shareUrl?: string;
@@ -590,6 +599,7 @@ export default class Terria {
     corsProxyBaseUrl: "proxy/",
     proxyableDomainsUrl: "proxyabledomains/", // deprecated, will be determined from serverconfig
     serverConfigUrl: "serverconfig/",
+    parentMessageAllowedOrigins: [],
     shareUrl: "share",
     shareClientBaseUrl: undefined,
     shareRequestHeaders: undefined,
