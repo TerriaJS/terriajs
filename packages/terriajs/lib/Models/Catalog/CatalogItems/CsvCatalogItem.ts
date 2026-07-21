@@ -1,7 +1,7 @@
 import i18next from "i18next";
 import { action, computed, makeObservable, override, runInAction } from "mobx";
 import isDefined from "../../../Core/isDefined";
-import sanitizeCsvString from "../../../Core/sanitizeCsvString";
+import { sanitizeCsvString } from "../../../Core/sanitizeCsv";
 import TerriaError from "../../../Core/TerriaError";
 import AutoRefreshingMixin from "../../../ModelMixins/AutoRefreshingMixin";
 import TableMixin from "../../../ModelMixins/TableMixin";

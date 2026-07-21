@@ -1,3 +1,4 @@
+import Papa from "papaparse";
 // Characters that cause a spreadsheet (Excel, LibreOffice, Google Sheets) to
 // treat a cell as a formula when it is the first character of the value.
 const FORMULA_TRIGGER = /^[=+\-@\t\r]/;
@@ -15,10 +16,21 @@ const FORMULA_TRIGGER = /^[=+\-@\t\r]/;
  * CSV structural escaping (quoting fields containing commas/quotes/newlines),
  * e.g. by passing the result through `Papa.unparse`.
  */
-export default function sanitizeCsvValue(value: unknown): string {
+export function sanitizeCsvValue(value: unknown): string {
   const str = value === undefined || value === null ? "" : String(value);
   if (FORMULA_TRIGGER.test(str) && Number.isNaN(Number(str))) {
     return "'" + str;
   }
   return str;
+}
+
+/**
+ * Parses a CSV string and re-serialises it with every cell passed through
+ * {@link sanitizeCsvValue}, neutralising CSV/formula injection (CWE-1236) while
+ * preserving cell values. The CSV is re-serialised (via papaparse), so exact
+ * byte-for-byte formatting of the source is not preserved.
+ */
+export function sanitizeCsvString(csv: string): string {
+  const rows = Papa.parse<string[]>(csv).data;
+  return Papa.unparse(rows.map((row) => row.map(sanitizeCsvValue)));
 }

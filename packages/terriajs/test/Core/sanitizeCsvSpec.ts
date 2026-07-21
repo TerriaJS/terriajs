@@ -1,4 +1,4 @@
-import sanitizeCsvValue from "../../lib/Core/sanitizeCsvValue";
+import { sanitizeCsvValue } from "../../lib/Core/sanitizeCsv";
 
 // CSV/formula injection (CWE-1236): spreadsheet apps interpret a cell whose
 // value starts with = + - @ (or tab/CR) as a formula. We neutralise those by

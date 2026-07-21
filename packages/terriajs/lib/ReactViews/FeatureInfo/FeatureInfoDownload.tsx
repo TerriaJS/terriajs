@@ -5,7 +5,7 @@ import { withTranslation } from "react-i18next";
 import DataUri from "../../Core/DataUri";
 import filterOutUndefined from "../../Core/filterOutUndefined";
 import { JsonObject } from "../../Core/Json";
-import sanitizeCsvValue from "../../Core/sanitizeCsvValue";
+import { sanitizeCsvValue } from "../../Core/sanitizeCsv";
 import ViewState from "../../ReactViewModels/ViewState";
 import Icon from "../../Styled/Icon";
 import { withViewState } from "../Context";

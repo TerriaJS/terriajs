@@ -23,7 +23,7 @@ import TerriaError from "../Core/TerriaError";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import flatten from "../Core/flatten";
 import isDefined from "../Core/isDefined";
-import sanitizeCsvValue from "../Core/sanitizeCsvValue";
+import { sanitizeCsvValue } from "../Core/sanitizeCsv";
 import ConstantColorMap from "../Map/ColorMap/ConstantColorMap";
 import RegionProvider from "../Map/Region/RegionProvider";
 import RegionProviderList from "../Map/Region/RegionProviderList";
