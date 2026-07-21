@@ -1,8 +1,8 @@
-import { render, screen } from "@testing-library/react";
+import { screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import Terria from "../../../../../lib/Models/Terria";
 import ViewState from "../../../../../lib/ReactViewModels/ViewState";
 import { GyroscopeGuidance } from "../../../../../lib/ReactViews/Map/MapNavigation/Items/Compass/GyroscopeGuidance";
-import userEvent from "@testing-library/user-event";
 import { renderWithContexts } from "../../../withContext";
 
 describe("GyroscopeGuidance", function () {
