@@ -1,8 +1,7 @@
 import updateApplicationOnMessageFromParentWindow from "../../lib/ViewModels/updateApplicationOnMessageFromParentWindow";
 
-// The handler must only accept start data from an allowed origin. It must NOT
-// trust the frame relationship (window.parent / window.opener), because a page
-// that frames or opens TerriaJS is the parent/opener.
+// The handler must only accept start data from an allowed origin and the actual
+// parent or opener window.
 describe("updateApplicationOnMessageFromParentWindow", function () {
   let updateFromStartData: jasmine.Spy;
   let dispatchMessage: (event: any) => Promise<void> | void;
@@ -73,6 +72,36 @@ describe("updateApplicationOnMessageFromParentWindow", function () {
       data: { initSources: [] }
     });
     expect(updateFromStartData).toHaveBeenCalled();
+  });
+
+  it("rejects a same-origin message from an unrelated window", async function () {
+    install("https://victim.example");
+    await dispatchMessage({
+      origin: "https://victim.example",
+      source: { postMessage: jasmine.createSpy("unrelatedPostMessage") },
+      data: { initSources: ["pwn.json"] }
+    });
+    expect(updateFromStartData).not.toHaveBeenCalled();
+  });
+
+  it("rejects an allow-listed message from an unrelated window", async function () {
+    install("https://victim.example", ["https://embedder.example"]);
+    await dispatchMessage({
+      origin: "https://embedder.example",
+      source: { postMessage: jasmine.createSpy("unrelatedPostMessage") },
+      data: { initSources: ["pwn.json"] }
+    });
+    expect(updateFromStartData).not.toHaveBeenCalled();
+  });
+
+  it("rejects opaque origins", async function () {
+    install("null", ["null"]);
+    await dispatchMessage({
+      origin: "null",
+      source: parent,
+      data: { initSources: ["pwn.json"] }
+    });
+    expect(updateFromStartData).not.toHaveBeenCalled();
   });
 
   it("does not grant trust via event.data.allowOrigin", async function () {

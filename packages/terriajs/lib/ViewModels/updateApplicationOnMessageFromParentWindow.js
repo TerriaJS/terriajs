@@ -8,7 +8,9 @@ function getAllowedOrigins(terria, window) {
 
   // Same-origin is always allowed.
   const selfOrigin = window.location && window.location.origin;
-  if (selfOrigin) {
+  // Opaque origins are reported as the literal string "null". They cannot be
+  // safely allow-listed because unrelated opaque-origin documents share it.
+  if (selfOrigin && selfOrigin !== "null") {
     allowedOrigins.push(selfOrigin);
   }
 
@@ -18,7 +20,11 @@ function getAllowedOrigins(terria, window) {
     terria.configParameters.parentMessageAllowedOrigins;
   if (Array.isArray(configured)) {
     configured.forEach(function (origin) {
-      if (typeof origin === "string" && allowedOrigins.indexOf(origin) === -1) {
+      if (
+        typeof origin === "string" &&
+        origin !== "null" &&
+        allowedOrigins.indexOf(origin) === -1
+      ) {
         allowedOrigins.push(origin);
       }
     });
@@ -35,12 +41,14 @@ const updateApplicationOnMessageFromParentWindow = function (terria, window) {
     async function (event) {
       const origin = event.origin;
 
-      // Only accept messages from an allowed origin. The frame relationship
-      // (window.parent / window.opener) is deliberately NOT trusted: a page that
-      // frames or opens TerriaJS is the parent/opener, so trusting it would let
-      // any such page inject start data. Same-origin is always allowed; other
-      // origins must be listed in `config.parentMessageAllowedOrigins`.
-      if (!defined(origin) || allowedOrigins.indexOf(origin) === -1) {
+      // Require both an allowed origin and the expected window relationship.
+      // The source check prevents unrelated windows on an allowed origin from
+      // injecting start data.
+      if (
+        !defined(origin) ||
+        allowedOrigins.indexOf(origin) === -1 ||
+        (event.source !== window.parent && event.source !== window.opener)
+      ) {
         return;
       }
 
