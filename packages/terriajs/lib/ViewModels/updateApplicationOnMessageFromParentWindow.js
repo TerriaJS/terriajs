@@ -33,11 +33,7 @@ const updateApplicationOnMessageFromParentWindow = function (terria, window) {
   window.addEventListener(
     "message",
     async function (event) {
-      var origin = event.origin;
-      if (!defined(origin) && defined(event.originalEvent)) {
-        // For Chrome, the origin property is in the event.originalEvent object.
-        origin = event.originalEvent.origin;
-      }
+      const origin = event.origin;
 
       // Only accept messages from an allowed origin. The frame relationship
       // (window.parent / window.opener) is deliberately NOT trusted: a page that
