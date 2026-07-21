@@ -101,25 +101,36 @@ jobs:
       #  action-detect-and-tag-new-version. It also allows for a bit better message customisation
       - name: Send success notification on Slack
         if: steps.detect.outputs.should_publish == 'true'
-        uses: 8398a7/action-slack@v3
+        uses: slackapi/slack-github-action@45a88b9581bfab2566dc881e2cd66d334e621e2c # v3.0.3
         with:
-          status: ${{ job.status }}
-          fields: repo,commit,action,ref
-          author_name: ${{ github.workflow }}
-          mention: here
-          if_mention: always
-          text: ":white_check_mark: Published v${{ steps.detect.outputs.version }} to https://www.npmjs.com/package/terriajs"
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
+          webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
+          webhook-type: incoming-webhook
+          payload: |
+            text: "<!here> :white_check_mark: Published v${{ steps.detect.outputs.version }} to https://www.npmjs.com/package/terriajs"
+            blocks:
+              - type: section
+                text:
+                  type: mrkdwn
+                  text: "<!here> :white_check_mark: Published v${{ steps.detect.outputs.version }} to <https://www.npmjs.com/package/terriajs|npmjs>"
+              - type: context
+                elements:
+                  - type: mrkdwn
+                    text: "*Repo:* ${{ github.repository }} | *Ref:* ${{ github.ref }} | *Commit:* <https://github.com/${{ github.repository }}/commit/${{ github.sha }}|${{ github.sha }}> | <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|View run>"
 
       - name: Send failure or cancellation notification on Slack
         if: failure() || cancelled() # Pick up events even if the job fails or is canceled.
-        uses: 8398a7/action-slack@v3
+        uses: slackapi/slack-github-action@45a88b9581bfab2566dc881e2cd66d334e621e2c # v3.0.3
         with:
-          status: ${{ job.status }}
-          fields: repo,commit,action,ref
-          author_name: ${{ github.workflow }}
-          mention: here
-          if_mention: always
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
+          webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
+          webhook-type: incoming-webhook
+          payload: |
+            text: "<!here> :x: ${{ github.workflow }} ${{ job.status }}"
+            blocks:
+              - type: section
+                text:
+                  type: mrkdwn
+                  text: "<!here> :x: *${{ github.workflow }}* ${{ job.status }}"
+              - type: context
+                elements:
+                  - type: mrkdwn
+                    text: "*Repo:* ${{ github.repository }} | *Ref:* ${{ github.ref }} | *Commit:* <https://github.com/${{ github.repository }}/commit/${{ github.sha }}|${{ github.sha }}> | <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|View run>"
