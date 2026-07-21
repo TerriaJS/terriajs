@@ -3,6 +3,7 @@ import Terria from "../../../../../lib/Models/Terria";
 import ViewState from "../../../../../lib/ReactViewModels/ViewState";
 import { GyroscopeGuidance } from "../../../../../lib/ReactViews/Map/MapNavigation/Items/Compass/GyroscopeGuidance";
 import userEvent from "@testing-library/user-event";
+import { renderWithContexts } from "../../../withContext";
 
 describe("GyroscopeGuidance", function () {
   let terria: Terria;
@@ -19,14 +20,20 @@ describe("GyroscopeGuidance", function () {
 
   describe("with basic props", function () {
     it("renders the guidance button", async function () {
-      render(<GyroscopeGuidance onClose={() => {}} viewState={viewState} />);
+      renderWithContexts(
+        <GyroscopeGuidance onClose={() => {}} viewState={viewState} />,
+        viewState
+      );
 
       const button = screen.getByRole("button");
       expect(button).toBeVisible();
     });
 
     it("opens the guidance when the button is clicked", async function () {
-      render(<GyroscopeGuidance onClose={() => {}} viewState={viewState} />);
+      renderWithContexts(
+        <GyroscopeGuidance onClose={() => {}} viewState={viewState} />,
+        viewState
+      );
 
       const button = screen.getByRole("button");
       await userEvent.click(button);
@@ -54,7 +61,10 @@ describe("GyroscopeGuidance", function () {
     });
 
     it("closes the guidance when the dismiss button is clicked", async function () {
-      render(<GyroscopeGuidance onClose={() => {}} viewState={viewState} />);
+      renderWithContexts(
+        <GyroscopeGuidance onClose={() => {}} viewState={viewState} />,
+        viewState
+      );
 
       const openButton = screen.getByRole("button");
       await userEvent.click(openButton);
