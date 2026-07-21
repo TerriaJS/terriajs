@@ -236,7 +236,7 @@ export const Text = styled.div<ITextProps>`
 
 export const TextSpan = styled(Text).attrs<{
   as?: React.ElementType | keyof JSX.IntrinsicElements;
-}>((props: { as?: ElementType | keyof JSX.IntrinsicElements }) => ({
+}>((props) => ({
   as: props.as || "span"
 }))``;
 

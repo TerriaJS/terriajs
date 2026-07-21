@@ -1,10 +1,9 @@
 import {
-  ReactChild,
-  ReactChildren,
-  Ref,
   ComponentPropsWithoutRef,
   FC,
-  forwardRef
+  forwardRef,
+  ReactNode,
+  Ref
 } from "react";
 import styled from "styled-components";
 import { BoxSpan } from "./Box";
@@ -170,7 +169,7 @@ export const RawButton = styled.button<IButtonProps>`
 `;
 
 export type ButtonProps = {
-  renderIcon?: () => ReactChild;
+  renderIcon?: () => ReactNode;
   iconProps?: any;
   primary?: boolean;
   secondary?: boolean;
@@ -178,7 +177,7 @@ export type ButtonProps = {
   textLight?: boolean;
   rightIcon?: boolean;
   textProps?: any;
-  children?: ReactChildren;
+  children?: ReactNode;
   buttonRef?: Ref<HTMLButtonElement>;
   title?: string;
 } & ComponentPropsWithoutRef<typeof StyledButton>;

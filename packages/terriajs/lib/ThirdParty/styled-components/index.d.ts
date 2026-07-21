@@ -1,6 +1,3 @@
-// Pull in the css prop type addition to react attributes
-/// <reference types="styled-components/cssprop" />
-
 // import your custom theme
 import { CSSProp } from "styled-components";
 import { terriaTheme } from "../../ReactViews/StandardUserInterface/StandardTheme";

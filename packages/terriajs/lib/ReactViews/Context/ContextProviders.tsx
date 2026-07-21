@@ -5,7 +5,7 @@ import { ViewStateProvider } from "./ViewStateContext";
 
 export const ContextProviders = (props: {
   viewState: ViewState;
-  theme: DefaultTheme | ((theme: DefaultTheme) => DefaultTheme);
+  theme: DefaultTheme | ((theme: DefaultTheme | undefined) => DefaultTheme);
   children: ReactNode[] | ReactNode;
 }) => (
   <ViewStateProvider viewState={props.viewState}>
