@@ -215,7 +215,41 @@ function Cesium3dTilesMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
               if (observableTileset.root !== undefined) {
                 this.originalRootTransform =
                   observableTileset.root.transform.clone();
-                observableTileset.root.transform = Matrix4.IDENTITY.clone();
+                // Normally we move the root transform into `tileset.modelMatrix`
+                // and reset the root transform to identity, so the origin/rotation/
+                // scale traits can drive the whole tileset.
+                //
+                // Gaussian splat tilesets must NOT be treated this way. Cesium's
+                // GaussianSplatPrimitive bakes splat positions into a local frame
+                // derived from `tileset.modelMatrix * ENU(boundingSphere.center)`.
+                // If the full ECEF root transform lives in modelMatrix, that local
+                // frame ends up ~6,371 km from the splats (the Earth's translation is
+                // effectively counted twice), so the baked float32 positions lose all
+                // precision and the splats render as oversized "fog".
+                //
+                // So when this is a Gaussian splat tileset and no transformation
+                // traits are set, we leave the root transform in place and keep
+                // modelMatrix identity (originalRootTransform = identity).
+                const isGaussianSplat =
+                  typeof (observableTileset as any).isGltfExtensionRequired ===
+                    "function" &&
+                  (observableTileset as any).isGltfExtensionRequired(
+                    "KHR_gaussian_splatting"
+                  );
+                const hasTransformTraits =
+                  this.origin?.latitude !== undefined ||
+                  this.origin?.longitude !== undefined ||
+                  this.origin?.height !== undefined ||
+                  this.rotation?.heading !== undefined ||
+                  this.rotation?.pitch !== undefined ||
+                  this.rotation?.roll !== undefined ||
+                  this.scale !== undefined;
+
+                if (isGaussianSplat && !hasTransformTraits) {
+                  this.originalRootTransform = Matrix4.IDENTITY.clone();
+                } else {
+                  observableTileset.root.transform = Matrix4.IDENTITY.clone();
+                }
               }
             }
           });
