@@ -1,5 +1,6 @@
 import { screen } from "@testing-library/react";
 import { runInAction } from "mobx";
+import { ConfigStrata } from "../../../../lib/Models/Config/ConfigStrata";
 import Terria from "../../../../lib/Models/Terria";
 import ViewState from "../../../../lib/ReactViewModels/ViewState";
 import TrainerBar from "../../../../lib/ReactViews/StandardUserInterface/TrainerBar/TrainerBar";
@@ -28,7 +29,7 @@ describe("TrainerBar", function () {
 
     it("renders nothing when setTrainerBarVisible is false", function () {
       runInAction(() => {
-        terria.updateParameters({
+        terria.configParameters.update(ConfigStrata.definition, {
           regionMappingDefinitionsUrl: "",
           initFragmentPaths: [],
           storyEnabled: false,
@@ -46,7 +47,7 @@ describe("TrainerBar", function () {
 
     it("renders a button to toggle visibility", function () {
       runInAction(() => {
-        terria.updateParameters({
+        terria.configParameters.update(ConfigStrata.definition, {
           regionMappingDefinitionsUrl: "",
           initFragmentPaths: [],
           storyEnabled: false,
