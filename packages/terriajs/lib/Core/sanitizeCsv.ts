@@ -31,6 +31,7 @@ export function sanitizeCsvValue(value: unknown): string {
  * byte-for-byte formatting of the source is not preserved.
  */
 export function sanitizeCsvString(csv: string): string {
-  const rows = Papa.parse<string[]>(csv).data;
-  return Papa.unparse(rows.map((row) => row.map(sanitizeCsvValue)));
+  return Papa.unparse(
+    Papa.parse<string[]>(csv, { transform: sanitizeCsvValue }).data
+  );
 }
