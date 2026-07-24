@@ -22,6 +22,8 @@
 * Create the Express router per invocation in the `feedback`, `esri-token-auth`, `initfile` and `single-page-routing` controllers instead of sharing a module-level router. This prevents route handlers and middleware from accumulating on a shared router when a controller factory is called more than once (e.g. in tests).
 * Prevent open redirect via the `Host` header when `redirectToHttps` is enabled. The http→https redirect target is now validated against the configured `hostName` plus an optional `trustedHosts` list; requests with an unrecognized `Host` receive a 400 instead of being redirected to it.
 * Reject cross-origin (CSRF) requests to the state-changing endpoints `/share`, `/feedback` and `/esri-token-auth`. Their `Origin` (or `Referer`) is validated against the `trustedHosts` list; requests from an untrusted origin receive a 403. Requests without an `Origin`/`Referer` (non-browser clients) are unaffected.
+* Add security response headers via `helmet`: `X-Content-Type-Options: nosniff`, a `Referrer-Policy`, and a TerriaJS-tuned Content-Security-Policy. The CSP is sent in report-only mode by default (violations are logged via a new `/csp-report` endpoint) so it never breaks the map; it can be enforced or customised via the `securityHeaders` config. Framing and cross-origin isolation headers are intentionally left off to preserve iframe embedding and the cross-origin `/proxy`.
+
 
 ### 4.0.3 - 2025-12-04
 

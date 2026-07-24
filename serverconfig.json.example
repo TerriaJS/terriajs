@@ -253,6 +253,33 @@
         "maps.example.com"
     ],
 
+    // Security response headers (via helmet). Enabled by default; set to false to disable entirely.
+    // A Content-Security-Policy tuned for TerriaJS/Cesium is sent in REPORT-ONLY mode by default, so
+    // it never blocks - it only reports violations to the /csp-report endpoint (logged server-side),
+    // letting you see what a deployment actually loads before enforcing. X-Frame-Options and the
+    // cross-origin isolation headers are intentionally left off, because iframe embedding is a
+    // supported feature and the /proxy endpoint serves resources cross-origin.
+    "securityHeaders": {
+        // Set to false to stop sending the Content-Security-Policy header at all.
+        "contentSecurityPolicy": true,
+        // Set to false to ENFORCE the CSP instead of report-only. Only do this after reviewing
+        // /csp-report output for your deployment - an over-tight CSP will silently break the map.
+        "cspReportOnly": true,
+        // Extra sources to add to `script-src` (e.g. an analytics host).
+        "cspScriptSrc": [],
+        // `frame-ancestors` directive. Defaults to ["'self'"]. Set to ["*"] (or specific origins)
+        // if this deployment is embedded in third-party sites via an iframe.
+        "cspFrameAncestors": ["'self'"],
+        // Raw helmet options, applied last, to override ANY policy for this deployment.
+        // See https://helmetjs.github.io/ . Examples:
+        //   Enable HSTS:            "hsts": { "maxAge": 31536000, "includeSubDomains": true }
+        //   Enforce frame denial:   "frameguard": { "action": "deny" }
+        //   Restrict cross-origin:  "crossOriginResourcePolicy": { "policy": "same-origin" }
+        // (HSTS is off by default here because it is a sticky, non-reversible commitment with no
+        //  report mode; it is also set by `redirectToHttps`/`strictTransportSecurity` on https.)
+        "helmet": {}
+    },
+
     // An array of options which you to inform which additional parameters are appended to the url querystring.
     // By default no additional parameters are appended.
     // A regex pattern is used to test whether parameters should be attached. Set to "." to match everything

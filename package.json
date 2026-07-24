@@ -47,6 +47,7 @@
     "compression": "^1.8.1",
     "cors": "^2.8.6",
     "express": "^5.2.1",
+    "helmet": "^8.2.0",
     "json5": "^2.2.3",
     "morgan": "^1.11.0",
     "proj4-cli-defs": "^2.1.0",
