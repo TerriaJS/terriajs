@@ -2,6 +2,8 @@
 
 #### next release (8.x.x)
 
+#### 8.12.5 - 2026-07-28
+
 - Automatically detect I3S layers by URL when adding web data, so ArcGIS `SceneServer` URLs resolve to an `I3SCatalogItem`.
 - Upgraded `terriajs-cesium` to `26.0.0` and `terriajs-cesium-widgets` to `16.0.0`. We are now using cesium 1.142.
 - Upgraded terriajs-server to v5.0.0-alpha.3
