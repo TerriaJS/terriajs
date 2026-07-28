@@ -3,6 +3,9 @@
 #### next release (8.x.x)
 
 - **Breaking:** `updateApplicationOnMessageFromParentWindow` now validates the `window.postMessage` sender's `event.origin` against an allowlist instead of trusting `window.parent`/`window.opener`. The application's own origin is always allowed; cross-origin pages that embed or open the app must be listed in the new `parentMessageAllowedOrigins` config parameter (empty by default) to send start data. The `event.data.allowOrigin` mechanism has been removed, and the `"ready"` message is now posted only to allowed origins rather than `"*"`. This prevents any page that frames or opens TerriaJS from injecting start data.
+
+#### 8.12.5 - 2026-07-28
+
 - Automatically detect I3S layers by URL when adding web data, so ArcGIS `SceneServer` URLs resolve to an `I3SCatalogItem`.
 - Upgraded `terriajs-cesium` to `26.0.0` and `terriajs-cesium-widgets` to `16.0.0`. We are now using cesium 1.142.
 - Upgraded terriajs-server to v5.0.0-alpha.3

@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "terriajs-map",
-  "version": "0.4.6",
+  "version": "0.4.7",
   "description": "Geospatial catalog explorer based on TerriaJS.",
   "license": "Apache-2.0",
   "engines": {
