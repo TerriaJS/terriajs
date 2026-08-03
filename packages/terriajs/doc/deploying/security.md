@@ -259,6 +259,75 @@ sent to the browser, but a user who can access the configured proxy may still
 be able to use the upstream service through that credential. Use narrowly
 scoped, preferably read-only credentials and a narrow proxy allowlist.
 
+### Private upstream credentials with `proxyAuth`
+
+TerriaJS Server can add a fixed authorization value when it proxies requests to
+an upstream host. For example, a protected `proxyauth.json` file can provide a
+Bearer token:
+
+```json5
+{
+  "data.example.gov": {
+    authorization: "Bearer <server-side-token>"
+  }
+}
+```
+
+It can also provide one or more custom authentication headers:
+
+```json5
+{
+  "data.example.gov": {
+    headers: [
+      {
+        name: "X-API-Key",
+        value: "<server-side-token>"
+      }
+    ]
+  }
+}
+```
+
+Pass the protected file to TerriaJS Server:
+
+```bash
+terriajs-server \
+  --config-file serverconfig.json \
+  --proxy-auth /run/secrets/proxyauth.json
+```
+
+The same object may be supplied as `proxyAuth` in the main server
+configuration. A separate file mounted from the deployment platform's secret
+manager is preferable because it can be protected and rotated independently.
+
+When configuring proxy authentication:
+
+- never put `proxyauth.json` under `wwwroot`;
+- never commit real credentials to source control;
+- make the object key match the target URL host, including a non-default port;
+- also add the required target host to `allowProxyFor`;
+- use a narrowly scoped, preferably read-only upstream credential; and
+- restrict the upstream account to only the resources the application needs.
+
+The `authorization` value may use schemes such as `Basic` or `Bearer`.
+`headers` may be used for API keys or other fixed headers expected by the
+upstream service.
+
+Proxy authentication keeps the credential out of client configuration and
+browser requests to the upstream service. It is not user-specific
+authorization: any user who can make an allowed request through this TerriaJS
+proxy can potentially exercise the configured upstream credential. If access
+must depend on the identity or permissions of the current user, use a separate
+authenticated application proxy.
+
+To rotate a proxy credential:
+
+1. Create a replacement with the same or narrower access.
+2. Update the protected file or secret.
+3. Restart or redeploy TerriaJS Server.
+4. Verify the affected catalog and data requests.
+5. Revoke the previous credential.
+
 See the
 [TerriaJS Server documentation](https://github.com/TerriaJS/terriajs-server)
 for `proxyAuth`, `appendParamToQueryString`, `allowProxyFor`, and other backend
