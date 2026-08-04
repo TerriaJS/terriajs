@@ -1,23 +1,12 @@
 import { render, RenderOptions } from "@testing-library/react";
 import { ReactElement, ReactNode } from "react";
-import { StyleSheetManager, ThemeProvider } from "styled-components";
+import { ThemeProvider } from "styled-components";
 import ViewState from "../../lib/ReactViewModels/ViewState";
 import { ViewStateProvider } from "../../lib/ReactViews/Context/ViewStateContext";
 import { terriaTheme } from "../../lib/ReactViews/StandardUserInterface";
-import { shouldForwardProp } from "../../lib/Styled/shouldForwardProp";
-
-/**
- * The styled-components half of `ContextProviders`, for specs that render a
- * component without the full app shell.
- */
-export const TerriaThemeProvider = (props: { children: ReactNode }) => (
-  <StyleSheetManager shouldForwardProp={shouldForwardProp}>
-    <ThemeProvider theme={terriaTheme}>{props.children}</ThemeProvider>
-  </StyleSheetManager>
-);
 
 export function withThemeContext(node: ReactNode) {
-  return <TerriaThemeProvider>{node}</TerriaThemeProvider>;
+  return <ThemeProvider theme={terriaTheme}>{node}</ThemeProvider>;
 }
 
 export function renderWithContexts(
@@ -28,7 +17,7 @@ export function renderWithContexts(
   return render(node, {
     wrapper: ({ children }) => (
       <ViewStateProvider viewState={viewState}>
-        <TerriaThemeProvider>{children}</TerriaThemeProvider>
+        <ThemeProvider theme={terriaTheme}>{children}</ThemeProvider>
       </ViewStateProvider>
     ),
     ...renderOptions

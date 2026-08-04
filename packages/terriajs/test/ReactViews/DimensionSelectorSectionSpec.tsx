@@ -2,6 +2,7 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { runInAction } from "mobx";
 import { http, HttpResponse } from "msw";
+import { ThemeProvider } from "styled-components";
 import CatalogMemberMixin from "../../lib/ModelMixins/CatalogMemberMixin";
 import CsvCatalogItem from "../../lib/Models/Catalog/CatalogItems/CsvCatalogItem";
 import WebMapServiceCatalogItem from "../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
@@ -13,6 +14,7 @@ import SelectableDimensions, {
   SelectableDimension as SelectableDimensionModel
 } from "../../lib/Models/SelectableDimensions/SelectableDimensions";
 import Terria from "../../lib/Models/Terria";
+import { terriaTheme } from "../../lib/ReactViews/StandardUserInterface";
 import SelectableDimensionSection from "../../lib/ReactViews/Workbench/Controls/SelectableDimensionSection";
 import CatalogMemberTraits from "../../lib/Traits/TraitsClasses/CatalogMemberTraits";
 import { worker } from "../mocks/browser";
@@ -20,7 +22,6 @@ import { worker } from "../mocks/browser";
 import lgaCode2015 from "../../wwwroot/test/csv/lga_code_2015.csv";
 import lgaCodeJson from "../../wwwroot/data/regionids/region_map-FID_LGA_2015_AUST_LGA_CODE15.json";
 import regionMapping from "../../wwwroot/data/regionMapping.json";
-import { TerriaThemeProvider } from "./withContext";
 
 export default class TestCatalogItem
   extends CatalogMemberMixin(CreateModel(CatalogMemberTraits))
@@ -99,12 +100,12 @@ describe("DimensionSelectorSection", function () {
     const mockItem = new TestCatalogItem("what", terria);
 
     render(
-      <TerriaThemeProvider>
+      <ThemeProvider theme={terriaTheme}>
         <SelectableDimensionSection
           item={mockItem}
           placement={DEFAULT_PLACEMENT}
         />
-      </TerriaThemeProvider>
+      </ThemeProvider>
     );
 
     // 2 select dropdowns (3rd has disable:true so not rendered)
@@ -139,12 +140,12 @@ describe("DimensionSelectorSection", function () {
     await wmsItem.loadMetadata();
 
     const { container } = render(
-      <TerriaThemeProvider>
+      <ThemeProvider theme={terriaTheme}>
         <SelectableDimensionSection
           item={wmsItem}
           placement={DEFAULT_PLACEMENT}
         />
-      </TerriaThemeProvider>
+      </ThemeProvider>
     );
 
     // Expect 5 dimensions (elevation, custom, another + 2 styles)
@@ -188,12 +189,12 @@ describe("DimensionSelectorSection", function () {
     await csvItem.loadMapItems();
 
     render(
-      <TerriaThemeProvider>
+      <ThemeProvider theme={terriaTheme}>
         <SelectableDimensionSection
           item={csvItem}
           placement={DEFAULT_PLACEMENT}
         />
-      </TerriaThemeProvider>
+      </ThemeProvider>
     );
 
     expect(
@@ -318,12 +319,12 @@ describe("DimensionSelectorSection", function () {
 
     it("renders the group", function () {
       render(
-        <TerriaThemeProvider>
+        <ThemeProvider theme={terriaTheme}>
           <SelectableDimensionSection
             item={mockItem}
             placement={DEFAULT_PLACEMENT}
           />
-        </TerriaThemeProvider>
+        </ThemeProvider>
       );
 
       expect(
@@ -340,12 +341,12 @@ describe("DimensionSelectorSection", function () {
       ).isOpen = false;
 
       render(
-        <TerriaThemeProvider>
+        <ThemeProvider theme={terriaTheme}>
           <SelectableDimensionSection
             item={mockItem}
             placement={DEFAULT_PLACEMENT}
           />
-        </TerriaThemeProvider>
+        </ThemeProvider>
       );
 
       expect(screen.queryAllByRole("checkbox").length).toBe(0);

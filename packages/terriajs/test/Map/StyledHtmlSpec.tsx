@@ -1,10 +1,11 @@
 import { render, screen } from "@testing-library/react";
 import { runInAction } from "mobx";
+import { ThemeProvider } from "styled-components";
 import Terria from "../../lib/Models/Terria";
 import ViewState from "../../lib/ReactViewModels/ViewState";
+import { terriaTheme } from "../../lib/ReactViews/StandardUserInterface";
 import { StyledHtmlRaw } from "../../lib/ReactViews/Map/Panels/HelpPanel/StyledHtml";
 import registerCustomComponentTypes from "../../lib/ReactViews/Custom/registerCustomComponentTypes";
-import { TerriaThemeProvider } from "../ReactViews/withContext";
 
 describe("StyledHtml", function () {
   let terria: Terria;
@@ -22,12 +23,12 @@ describe("StyledHtml", function () {
   describe("with basic props", function () {
     it("mounts without problems", function () {
       render(
-        <TerriaThemeProvider>
+        <ThemeProvider theme={terriaTheme}>
           <StyledHtmlRaw
             markdown={"something something spatial data mochi"}
             viewState={viewState}
           />
-        </TerriaThemeProvider>
+        </ThemeProvider>
       );
 
       expect(
@@ -49,12 +50,12 @@ describe("StyledHtml", function () {
         });
       });
       render(
-        <TerriaThemeProvider>
+        <ThemeProvider theme={terriaTheme}>
           <StyledHtmlRaw
             markdown={"something something spatial data mochi"}
             viewState={viewState}
           />
-        </TerriaThemeProvider>
+        </ThemeProvider>
       );
 
       expect(

@@ -2,25 +2,9 @@
 
 #### next release (8.x.x)
 
-- `UrlTemplateImageryCatalogItem` now uses `TileErrorHandlerMixin`, so tile load failures are handled gracefully (out-of-extent tiles are ignored, 403/404 handling follows `tileErrorHandlingOptions`, retries use backoff) instead of Cesium logging an uncaught "Failed to obtain image tile" error for every missing tile.
-- Fixed React "unknown prop" console warnings introduced by the styled-components 6 upgrade.
-- Fixed the share panel showing a false "link created"/"saved" success message when generating a short share link actually failed.
-- The share panel now surfaces the real HTTP status of a failed share-link request (a data-too-large message for 413, otherwise a generic message that includes the status code) instead of string-matching `"413"` in the error text.
-- A failed share link now also raises an error notification, not just an inline message.
 - **Breaking:** `updateApplicationOnMessageFromParentWindow` now validates the `window.postMessage` sender's `event.origin` against an allowlist instead of trusting `window.parent`/`window.opener`. The application's own origin is always allowed; cross-origin pages that embed or open the app must be listed in the new `parentMessageAllowedOrigins` config parameter (empty by default) to send start data. The `event.data.allowOrigin` mechanism has been removed, and the `"ready"` message is now posted only to allowed origins rather than `"*"`. This prevents any page that frames or opens TerriaJS from injecting start data.
-
 - Harden the custom markdown/HTML sanitizer: replaced the blanket `ALLOW_UNKNOWN_PROTOCOLS` DOMPurify option (which preserved OS/app-handler schemes such as `vscode:`, `ms-its:` and `slack:` on links and images) with a scoped `uponSanitizeAttribute` hook. The hook keeps custom components' free-text attributes verbatim (so values may contain `:`, e.g. a chart's `column-titles`) while scheme-validating their URL attributes per URL, closing a gap where a dangerous scheme could hide in a comma-separated `sources`/`downloads` list.
 - Upgrade terriajs-server to 5.0.0-alpha.4
-- Document security best practices for production deployment of terriajs
-- Fix an error when picking features on a Mapbox vector tile layer: `@mapbox/vector-tile` now builds feature props with a null prototype, which broke Cesium's `ImageryLayerFeatureInfo` methods that call `hasOwnProperty` directly. Props are now copied into a plain object before use.
-- Move catalog index from terria.ts class to catalog instance
-- Fix data preview title not wrapping long unbroken names (e.g. URLs), which caused a horizontal scrollbar in the preview panel and embedded iframes.
-- Improved ideal zoom behaviour when zooming to a mappable items rectangle.
-- Show spinner when loading tab group members
-- Changed `disablePreview` to also hide `Add to map` in preview modal.
-- Changed `About data` button to `About job` in workbench for CatalogFunctionJob instances.
-- Add `edit` stratum for tracking temporary user changes that shouldn't be captured in share link - example form edits.
-- Fix viewCatalogMember to correctly switch to the parent tab
 
 #### 8.12.5 - 2026-07-28
 

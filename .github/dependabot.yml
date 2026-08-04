@@ -5,13 +5,3 @@ updates:
     schedule:
       interval: "weekly"
     target-branch: "main"
-    cooldown:
-      default-days: 5
-  - package-ecosystem: npm
-    directory: "/packages/terriajs-server"
-    schedule:
-      interval: "daily"
-    target-branch: "master"
-    versioning-strategy: increase
-    cooldown:
-      default-days: 5

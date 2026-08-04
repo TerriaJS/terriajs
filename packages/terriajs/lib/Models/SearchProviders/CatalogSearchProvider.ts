@@ -141,9 +141,9 @@ export default class CatalogSearchProvider extends CatalogSearchProviderMixin(
     }
 
     // Load catalogIndex if needed
-    if (this.terria.catalog.index && !this.terria.catalog.index.loadPromise) {
+    if (this.terria.catalogIndex && !this.terria.catalogIndex.loadPromise) {
       try {
-        await this.terria.catalog.index.load();
+        await this.terria.catalogIndex.load();
       } catch (e) {
         this.terria.raiseErrorToUser(
           e,
@@ -155,8 +155,8 @@ export default class CatalogSearchProvider extends CatalogSearchProviderMixin(
     const resultMap: ResultMap = new Map();
 
     try {
-      if (this.terria.catalog.index?.searchIndex) {
-        const results = await this.terria.catalog.index.search(searchText);
+      if (this.terria.catalogIndex?.searchIndex) {
+        const results = await this.terria.catalogIndex.search(searchText);
         runInAction(() => (searchResults.results = results));
       } else {
         await loadAndSearchCatalogRecursively(

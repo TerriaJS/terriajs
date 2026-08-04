@@ -8,7 +8,6 @@ import CatalogSearchProvider from "../SearchProviders/CatalogSearchProvider";
 import Terria from "../Terria";
 import CatalogGroup from "./CatalogGroup";
 import Group from "./Group";
-import CatalogIndex from "../SearchProviders/CatalogIndex";
 
 const createUserAddedDataGroup = (terria: Terria) => {
   const userAddedDataGroup = new CatalogGroup(USER_ADDED_CATEGORY_ID, terria);
@@ -30,8 +29,6 @@ const createUserAddedDataGroup = (terria: Terria) => {
 };
 
 export default class Catalog {
-  private _index: CatalogIndex | undefined;
-
   @observable
   group: Group & BaseModel;
 
@@ -40,14 +37,6 @@ export default class Catalog {
 
   readonly terria: Terria;
   private _userAddedDataGroup: CatalogGroup;
-
-  get index(): CatalogIndex | undefined {
-    return this._index;
-  }
-
-  set index(index: CatalogIndex) {
-    this._index = index;
-  }
 
   constructor(
     terria: Terria,

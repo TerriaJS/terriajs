@@ -1,9 +1,10 @@
 import { render, screen } from "@testing-library/react";
+import { ThemeProvider } from "styled-components";
+import { terriaTheme } from "../../../../../lib/ReactViews/StandardUserInterface";
 import Terria from "../../../../../lib/Models/Terria";
 import ViewState from "../../../../../lib/ReactViewModels/ViewState";
 import VideoGuide from "../../../../../lib/ReactViews/Map/Panels/HelpPanel/VideoGuide";
 import { runInAction } from "mobx";
-import { TerriaThemeProvider } from "../../../withContext";
 
 describe("VideoGuide", function () {
   let terria: Terria;
@@ -25,14 +26,14 @@ describe("VideoGuide", function () {
       viewState.setVideoGuideVisible(videoName);
     });
     render(
-      <TerriaThemeProvider>
+      <ThemeProvider theme={terriaTheme}>
         <VideoGuide
           viewState={viewState}
           videoLink={"some.url"}
           background={"some_image.png"}
           videoName={videoName}
         />
-      </TerriaThemeProvider>
+      </ThemeProvider>
     );
 
     expect(screen.getByTitle(videoName)).toBeVisible();
@@ -44,14 +45,14 @@ describe("VideoGuide", function () {
       viewState.setVideoGuideVisible("");
     });
     render(
-      <TerriaThemeProvider>
+      <ThemeProvider theme={terriaTheme}>
         <VideoGuide
           viewState={viewState}
           videoLink={"some.url"}
           background={"some_image.png"}
           videoName={videoName}
         />
-      </TerriaThemeProvider>
+      </ThemeProvider>
     );
 
     expect(screen.queryByTitle(videoName)).not.toBeInTheDocument();
@@ -62,14 +63,14 @@ describe("VideoGuide", function () {
       viewState.setVideoGuideVisible("someRandomString");
     });
     render(
-      <TerriaThemeProvider>
+      <ThemeProvider theme={terriaTheme}>
         <VideoGuide
           viewState={viewState}
           videoLink={"some.url"}
           background={"some_image.png"}
           videoName={videoName}
         />
-      </TerriaThemeProvider>
+      </ThemeProvider>
     );
     expect(screen.queryByTitle(videoName)).not.toBeInTheDocument();
   });

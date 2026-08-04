@@ -7,7 +7,6 @@ import { withTranslation } from "react-i18next";
 import styled from "styled-components";
 import defined from "terriajs-cesium/Source/Core/defined";
 import MappableMixin from "../../ModelMixins/MappableMixin";
-import GroupMixin from "../../ModelMixins/GroupMixin";
 import DataCatalogTab from "./Tabs/DataCatalogTab";
 import MyDataTab from "./Tabs/MyDataTab/MyDataTab";
 import Styles from "./tabs.scss";
@@ -64,9 +63,6 @@ class Tabs extends Component {
               <DataCatalogTab
                 items={member.memberModels || [member]}
                 searchPlaceholder={t(($) => $.addData.searchPlaceholderWhole)}
-                isLoadingTab={
-                  GroupMixin.isMixedInto(member) && member.isLoadingMembers
-                }
               />
             )
           }))

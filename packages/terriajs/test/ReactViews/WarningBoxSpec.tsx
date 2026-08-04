@@ -1,6 +1,7 @@
 import { render, screen } from "@testing-library/react";
+import { ThemeProvider } from "styled-components";
+import { terriaTheme } from "../../lib/ReactViews/StandardUserInterface";
 import WarningBox from "../../lib/ReactViews/Preview/WarningBox";
-import { TerriaThemeProvider } from "./withContext";
 
 describe("WarningBox", function () {
   beforeEach(function () {
@@ -9,9 +10,9 @@ describe("WarningBox", function () {
 
   it("renders", function () {
     render(
-      <TerriaThemeProvider>
+      <ThemeProvider theme={terriaTheme}>
         <WarningBox>Test text</WarningBox>
-      </TerriaThemeProvider>
+      </ThemeProvider>
     );
     expect(screen.getByText("Test text")).toBeTruthy();
   });
