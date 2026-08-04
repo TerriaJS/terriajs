@@ -1,5 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import Terria from "../../../lib/Models/Terria";
+import { ConfigStrata } from "../../../lib/Models/Config/ConfigStrata";
 import ViewState from "../../../lib/ReactViewModels/ViewState";
 import { runInAction } from "mobx";
 import Prompt from "../../../lib/ReactViews/Generic/Prompt";
@@ -20,7 +21,11 @@ describe("HelpPrompt", function () {
   describe("with basic props, when welcome message is enabled on startup", function () {
     it("does not render when welcome message is visible", function () {
       runInAction(() => {
-        terria.configParameters.showWelcomeMessage = true;
+        terria.configParameters.setValue(
+          ConfigStrata.definition,
+          "showWelcomeMessage",
+          true
+        );
         viewState.showWelcomeMessage = true;
       });
       render(
@@ -40,7 +45,11 @@ describe("HelpPrompt", function () {
 
     it("renders when welcome message is not visible", function () {
       runInAction(() => {
-        terria.configParameters.showWelcomeMessage = true;
+        terria.configParameters.setValue(
+          ConfigStrata.definition,
+          "showWelcomeMessage",
+          true
+        );
         viewState.showWelcomeMessage = false;
       });
       render(
@@ -63,7 +72,11 @@ describe("HelpPrompt", function () {
   describe("when welcome message is disabled on startup", function () {
     it("does not render", function () {
       runInAction(() => {
-        terria.configParameters.showWelcomeMessage = false;
+        terria.configParameters.setValue(
+          ConfigStrata.definition,
+          "showWelcomeMessage",
+          false
+        );
       });
       render(
         <Prompt

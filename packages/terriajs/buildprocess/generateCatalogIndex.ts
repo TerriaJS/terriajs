@@ -22,6 +22,7 @@ import Terria, { defaultLoadConfig } from "../lib/Models/Terria";
 import CatalogMemberReferenceTraits from "../lib/Traits/TraitsClasses/CatalogMemberReferenceTraits";
 import patchNetworkRequests from "./patchNetworkRequests";
 import { program } from "commander";
+import { ConfigStrata } from "../lib/Models/Config/ConfigStrata";
 
 const writeFileSync = (...args: Parameters<typeof fs.writeFileSync>) => {
   const path = args[0];
@@ -324,8 +325,17 @@ export default async function generateCatalogIndex(
   registerSearchProviders();
 
   try {
-    terria.configParameters.serverConfigUrl = `${baseUrl}serverconfig`;
-    terria.configParameters.corsProxyBaseUrl = `${baseUrl}proxy/`;
+    terria.configParameters.setValue(
+      ConfigStrata.override,
+      "serverConfigUrl",
+      `${baseUrl}serverconfig`
+    );
+    terria.configParameters.setValue(
+      ConfigStrata.override,
+      "corsProxyBaseUrl",
+      `${baseUrl}proxy/`
+    );
+
     await terria.start({ loadConfig: () => defaultLoadConfig(configUrl) });
 
     await terria.loadInitSources();

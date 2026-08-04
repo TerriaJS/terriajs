@@ -29,7 +29,7 @@ import * as z from "zod";
  */
 export type TerriaConfig<
   TSchema extends z.ZodObject = typeof ConfigParametersSchema
-> = StratifiedConfig<TSchema> & z.output<TSchema>;
+> = StratifiedConfig<TSchema> & Readonly<z.output<TSchema>>;
 
 /**
  * Re-export so callers that import ConfigParameters from this module continue
