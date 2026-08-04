@@ -6,6 +6,7 @@ import CommonStrata from "../../lib/Models/Definition/CommonStrata";
 import createStratumInstance from "../../lib/Models/Definition/createStratumInstance";
 import updateModelFromJson from "../../lib/Models/Definition/updateModelFromJson";
 import Terria from "../../lib/Models/Terria";
+import { ConfigStrata } from "../../lib/Models/Config/ConfigStrata";
 import LegendTraits, {
   LegendItemTraits
 } from "../../lib/Traits/TraitsClasses/LegendTraits";
@@ -34,8 +35,11 @@ describe("TableStyle", function () {
     terria = new Terria({
       baseUrl: "./"
     });
-    terria.configParameters.regionMappingDefinitionsUrl =
-      "build/TerriaJS/data/regionMapping.json";
+    terria.configParameters.setValue(
+      ConfigStrata.definition,
+      "regionMappingDefinitionsUrl",
+      "build/TerriaJS/data/regionMapping.json"
+    );
 
     worker.use(
       http.get("*/build/TerriaJS/data/regionMapping.json", () =>

@@ -1,4 +1,9 @@
-import { observable, runInAction } from "mobx";
+import {
+  get as getObservableValue,
+  observable,
+  runInAction,
+  set as setObservableValue
+} from "mobx";
 import * as z from "zod";
 import { ConfigStratumOrder } from "./ConfigStrata";
 
@@ -23,9 +28,9 @@ type ValidationState<T> =
  * `_strata` is an `ObservableMap<string, observable object>`.
  *  - The outer map tracks which strata exist — reacts when a new stratum
  *    is first created.
- *  - Each stratum's value is a MobX observable object — property reads inside
- *    `get()` are tracked at the key level, so updating `appName` only
- *    re-runs reactions that read `appName`, not every key in that stratum.
+ *  - Each stratum's value is a MobX observable object. Dynamic property reads
+ *    and writes use MobX's `get` and `set` APIs, so absent keys are observed
+ *    without predeclaring every schema property.
  *  - Writes directly mutate the observable object (no spread) — spread +
  *    `_strata.set()` would invalidate all per-key observers on every write.
  *
@@ -81,6 +86,15 @@ export class StratifiedConfig<TSchema extends z.ZodObject> {
         if (typeof prop !== "string" || prop in target)
           return Reflect.get(target, prop, receiver);
         return target.get(prop as keyof z.output<TSchema>);
+      },
+      set(target, prop, value, receiver) {
+        if (
+          typeof prop === "string" &&
+          Object.hasOwn(target.schema.shape, prop)
+        ) {
+          return false;
+        }
+        return Reflect.set(target, prop, value, receiver);
       }
     }) as StratifiedConfig<TSchema>;
   }
@@ -108,7 +122,7 @@ export class StratifiedConfig<TSchema extends z.ZodObject> {
         unknown
       >;
       for (const [key, value] of Object.entries(validated.data)) {
-        stratumObj[key] = value;
+        setObservableValue(stratumObj, key, value);
       }
     });
     return true;
@@ -134,7 +148,7 @@ export class StratifiedConfig<TSchema extends z.ZodObject> {
         string,
         unknown
       >;
-      stratumObj[key as string] = value;
+      setObservableValue(stratumObj, key as string, value);
     });
   }
 
@@ -163,7 +177,7 @@ export class StratifiedConfig<TSchema extends z.ZodObject> {
     for (const [, stratumObj] of this.stratumOrder.sortTopToBottom(
       this._strata as unknown as Map<string, Partial<z.output<TSchema>>>
     )) {
-      const value = stratumObj[key];
+      const value = getObservableValue(stratumObj, key as string);
       if (value !== undefined) return value;
     }
     return undefined as z.output<TSchema>[K];
@@ -204,8 +218,8 @@ export class StratifiedConfig<TSchema extends z.ZodObject> {
   // ── Private helpers ──────────────────────────────────────────────────────────
 
   /**
-   * Returns the observable object for `stratum`, creating an empty one if
-   * it does not yet exist.  Must be called inside a `runInAction`.
+   * Returns the observable object for `stratum`, creating an empty one if it
+   * does not yet exist. Must be called inside a `runInAction`.
    */
   private _getOrCreateStratum(stratum: string): Partial<z.output<TSchema>> {
     if (!this._strata.has(stratum)) {
@@ -224,9 +238,9 @@ export class StratifiedConfig<TSchema extends z.ZodObject> {
 export function createStratifiedConfig<TSchema extends z.ZodObject>(
   schema: TSchema,
   stratumOrder: ConfigStratumOrder = new ConfigStratumOrder()
-): StratifiedConfig<TSchema> & z.output<TSchema> {
+): StratifiedConfig<TSchema> & Readonly<z.output<TSchema>> {
   return new StratifiedConfig(
     schema,
     stratumOrder
-  ) as unknown as StratifiedConfig<TSchema> & z.output<TSchema>;
+  ) as unknown as StratifiedConfig<TSchema> & Readonly<z.output<TSchema>>;
 }

@@ -1860,7 +1860,11 @@ async function interpretHash(
   });
 
   if (isDefined(hashProperties.hideWelcomeMessage)) {
-    terria.configParameters.showWelcomeMessage = false;
+    terria.configParameters.setValue(
+      ConfigStrata.url,
+      "showWelcomeMessage",
+      false
+    );
   }
 
   // a share link that hasn't been shortened: JSON embedded in URL (only works for small quantities of JSON)
@@ -1983,7 +1987,11 @@ async function interpretStartData(
               initSource.stories.length
           )
         ) {
-          terria.configParameters.showWelcomeMessage = false;
+          terria.configParameters.setValue(
+            ConfigStrata.override,
+            "showWelcomeMessage",
+            false
+          );
         }
       }
     } catch (error) {

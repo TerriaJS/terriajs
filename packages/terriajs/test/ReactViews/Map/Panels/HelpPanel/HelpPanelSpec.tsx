@@ -1,6 +1,7 @@
 import { screen } from "@testing-library/react";
 import { runInAction } from "mobx";
 import Terria from "../../../../../lib/Models/Terria";
+import { ConfigStrata } from "../../../../../lib/Models/Config/ConfigStrata";
 import ViewState from "../../../../../lib/ReactViewModels/ViewState";
 import HelpPanel from "../../../../../lib/ReactViews/Map/Panels/HelpPanel/HelpPanel";
 import { renderWithContexts } from "../../../withContext";
@@ -37,12 +38,16 @@ describe("HelpPanel", function () {
   describe("with no text, videos and images in helpContent", function () {
     beforeEach(() => {
       runInAction(() => {
-        terria.configParameters.helpContent = [
-          {
-            itemName: "test",
-            title: "test"
-          }
-        ];
+        terria.configParameters.setValue(
+          ConfigStrata.definition,
+          "helpContent",
+          [
+            {
+              itemName: "test",
+              title: "test"
+            }
+          ]
+        );
       });
     });
 
@@ -80,7 +85,7 @@ describe("HelpPanel", function () {
     const placeholderImage =
       "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
     runInAction(() => {
-      terria.configParameters.helpContent = [
+      terria.configParameters.setValue(ConfigStrata.definition, "helpContent", [
         {
           itemName: "test",
           markdownText:
@@ -88,7 +93,7 @@ describe("HelpPanel", function () {
           videoUrl: "https://www.youtube-nocookie.com/embed/NTtSM70rIvI",
           placeholderImage: placeholderImage
         }
-      ];
+      ]);
       viewState.selectedHelpMenuItem = "test";
     });
 

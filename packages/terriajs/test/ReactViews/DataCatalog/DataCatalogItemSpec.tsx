@@ -7,6 +7,7 @@ import WebMapServiceCatalogItem from "../../../lib/Models/Catalog/Ows/WebMapServ
 import WebProcessingServiceCatalogFunction from "../../../lib/Models/Catalog/Ows/WebProcessingServiceCatalogFunction";
 import CommonStrata from "../../../lib/Models/Definition/CommonStrata";
 import Terria from "../../../lib/Models/Terria";
+import { ConfigStrata } from "../../../lib/Models/Config/ConfigStrata";
 import ViewState from "../../../lib/ReactViewModels/ViewState";
 import DataCatalogItem from "../../../lib/ReactViews/DataCatalog/DataCatalogItem";
 import { withThemeContext } from "../withContext";
@@ -158,7 +159,11 @@ describe("DataCatalogItem", () => {
 
       it("doesn't close the explorer panel if keepCatalogOpen is set", async () => {
         runInAction(() => {
-          terria.configParameters.keepCatalogOpen = true;
+          terria.configParameters.setValue(
+            ConfigStrata.definition,
+            "keepCatalogOpen",
+            true
+          );
         });
         render(
           withThemeContext(
