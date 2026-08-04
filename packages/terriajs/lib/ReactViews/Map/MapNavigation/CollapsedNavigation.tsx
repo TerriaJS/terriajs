@@ -48,7 +48,7 @@ const ButtonsBox = styled(Box).attrs({})`
   gap: 20px;
 `;
 
-const NavigationButton = styled(BoxSpan).attrs<{ disabled?: boolean }>({
+const NavigationButton = styled(BoxSpan).attrs({
   boxShadow: true,
   centered: true,
   rounded: true

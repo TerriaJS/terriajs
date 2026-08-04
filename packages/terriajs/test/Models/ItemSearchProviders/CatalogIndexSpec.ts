@@ -224,13 +224,13 @@ describe("CatalogIndex - with shareKeys", function () {
       }
     });
 
-    terria.catalog.index = new CatalogIndex(terria, "catalog-index.json");
-    await terria.catalog.index.load();
+    terria.catalogIndex = new CatalogIndex(terria, "catalog-index.json");
+    await terria.catalogIndex.load();
   });
 
   it("loads shareKeys", function () {
     expect(
-      Object.fromEntries(terria.catalog.index!.shareKeysMap.toJSON())
+      Object.fromEntries(terria.catalogIndex!.shareKeysMap.toJSON())
     ).toEqual({
       "test-nested-dynamic-group-sharekey": "test-nested-dynamic-group",
       "test-item-3-sharekey": "test-item-3",
@@ -243,22 +243,20 @@ describe("CatalogIndex - with shareKeys", function () {
 
   it('can use "deep" shareKeys', async function () {
     expect(
-      terria.catalog.index!.getModelByIdOrShareKey("test-item-3")?.uniqueId
+      terria.catalogIndex!.getModelByIdOrShareKey("test-item-3")?.uniqueId
     ).toBe("test-item-3");
     expect(
-      terria.catalog.index!.getModelByIdOrShareKey("test-item-3-sharekey")
+      terria.catalogIndex!.getModelByIdOrShareKey("test-item-3-sharekey")
         ?.uniqueId
     ).toBe("test-item-3");
 
     (
-      await terria.catalog
-        .index!.getModelByIdOrShareKey("test-item-3")
+      await terria
+        .catalogIndex!.getModelByIdOrShareKey("test-item-3")
         ?.loadReference()
     )?.logError();
 
-    expect(
-      Object.fromEntries(terria.catalog.index!.shareKeysMap.toJSON())
-    ).toEqual({
+    expect(Object.fromEntries(terria.shareKeysMap.toJSON())).toEqual({
       "test-nested-dynamic-group-sharekey": "test-nested-dynamic-group",
       "test-item-3-sharekey": "test-item-3",
       "Test item without ID-sharekey":
@@ -269,7 +267,7 @@ describe("CatalogIndex - with shareKeys", function () {
   });
 
   it("another one", async function () {
-    const model = terria.catalog.index!.getModelByIdOrShareKey(
+    const model = terria.catalogIndex!.getModelByIdOrShareKey(
       "test-nested-dynamic-group-sharekey/Test item without ID"
     );
     expect(model?.uniqueId).toBe(

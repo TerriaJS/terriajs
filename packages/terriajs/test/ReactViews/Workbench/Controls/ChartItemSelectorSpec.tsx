@@ -1,14 +1,15 @@
 import { render, screen } from "@testing-library/react";
+import { ThemeProvider } from "styled-components";
 import ChartableMixin, {
   ChartItem
 } from "../../../../lib/ModelMixins/ChartableMixin";
 import CreateModel from "../../../../lib/Models/Definition/CreateModel";
 import Terria from "../../../../lib/Models/Terria";
+import { terriaTheme } from "../../../../lib/ReactViews/StandardUserInterface";
 import ChartItemSelector from "../../../../lib/ReactViews/Workbench/Controls/ChartItemSelector";
 import mixTraits from "../../../../lib/Traits/mixTraits";
 import MappableTraits from "../../../../lib/Traits/TraitsClasses/MappableTraits";
 import UrlTraits from "../../../../lib/Traits/TraitsClasses/UrlTraits";
-import { TerriaThemeProvider } from "../../withContext";
 
 class SomeChartableItem extends ChartableMixin(
   CreateModel(mixTraits(UrlTraits, MappableTraits))
@@ -74,9 +75,9 @@ describe("ChartItemSelector", function () {
 
   it("sorts the chart items by name", function () {
     render(
-      <TerriaThemeProvider>
+      <ThemeProvider theme={terriaTheme}>
         <ChartItemSelector item={item} />
-      </TerriaThemeProvider>
+      </ThemeProvider>
     );
 
     expect(screen.getByRole("checkbox", { name: "aaa" })).toBeVisible();

@@ -84,7 +84,7 @@ class MappablePreview extends Component {
               showMap
             />
           )}
-        {!this.props.hideToggleItemOnMap && !catalogItem.disablePreview && (
+        {!this.props.hideToggleItemOnMap && (
           <button
             type="button"
             onClick={this.toggleOnMap.bind(this)}

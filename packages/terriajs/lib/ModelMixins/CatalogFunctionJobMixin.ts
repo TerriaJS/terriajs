@@ -154,6 +154,10 @@ function CatalogFunctionJobMixin<
       }
     }
 
+    get refreshInterval() {
+      return 2;
+    }
+
     private pollingForResults = false;
 
     /**

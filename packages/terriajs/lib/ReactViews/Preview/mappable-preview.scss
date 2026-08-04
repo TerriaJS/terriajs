@@ -53,17 +53,15 @@
 .share-link--wrapper {
   margin-top: variables.$padding;
   min-width: 118px;
-  flex-shrink: 0;
+  float: right;
 }
 
 .h3 {
   composes: h3 from "../../Sass/common/_base.scss";
   margin-top: 0;
   padding-right: variables.$padding-small;
-  flex: 1;
-  min-width: 0;
-  overflow-wrap: break-word;
-  word-break: break-word;
+  float: left;
+  width: 80%;
   font-size: variables.$font-size-mid-large;
 }
 .h4 {

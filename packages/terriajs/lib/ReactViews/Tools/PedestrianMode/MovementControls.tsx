@@ -71,7 +71,9 @@ const Container = styled.div`
   border-radius: 3px;
 `;
 
-const Title = styled(Box)`
+const Title = styled(Box).attrs({
+  medium: true
+})`
   justify-content: space-between;
   align-items: center;
   padding: 0 0.5em;

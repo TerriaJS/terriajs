@@ -945,7 +945,10 @@ export default class Cesium extends GlobeOrMap {
       } else if (MappableMixin.isMixedInto(target)) {
         // target is a Mappable
         if (isDefined(target.cesiumRectangle)) {
-          return this.doZoomTo(target.cesiumRectangle, flightDurationSeconds);
+          return flyToPromise(camera, {
+            duration: flightDurationSeconds,
+            destination: target.cesiumRectangle
+          });
         } else if (target.mapItems.length > 0) {
           // Zoom to the first item!
           return this.doZoomTo(target.mapItems[0], flightDurationSeconds);
@@ -1894,11 +1897,11 @@ function zoomToDataSource(
 type FlyToOptions = Parameters<InstanceType<typeof Camera>["flyTo"]>[0];
 
 function flyToPromise(camera: Camera, options: FlyToOptions): Promise<void> {
-  return new Promise((complete, reject) => {
+  return new Promise((complete, cancel) => {
     camera.flyTo({
       ...options,
       complete,
-      cancel: () => reject(new Error("Camera flight was cancelled"))
+      cancel
     });
   });
 }
@@ -1912,11 +1915,11 @@ function flyToBoundingSpherePromise(
   boundingSphere: BoundingSphere,
   options: FlyToBoundingSphereOptions
 ): Promise<void> {
-  return new Promise((complete, reject) => {
+  return new Promise((complete, cancel) => {
     camera.flyToBoundingSphere(boundingSphere, {
       ...options,
       complete,
-      cancel: () => reject(new Error("Camera flight was cancelled"))
+      cancel
     });
   });
 }

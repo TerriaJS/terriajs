@@ -1,12 +1,13 @@
 import { act, render, screen } from "@testing-library/react";
 import { runInAction } from "mobx";
+import { ThemeProvider } from "styled-components";
 import GeoJsonCatalogItem from "../../../lib/Models/Catalog/CatalogItems/GeoJsonCatalogItem";
 import WebMapServiceCatalogItem from "../../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
 import CommonStrata from "../../../lib/Models/Definition/CommonStrata";
 import updateModelFromJson from "../../../lib/Models/Definition/updateModelFromJson";
 import Terria from "../../../lib/Models/Terria";
 import Description from "../../../lib/ReactViews/Preview/Description";
-import { TerriaThemeProvider } from "../withContext";
+import { terriaTheme } from "../../../lib/ReactViews/StandardUserInterface";
 
 describe("DescriptionSpec", function () {
   let terria: Terria;
@@ -26,9 +27,9 @@ describe("DescriptionSpec", function () {
 
   it("renders metadataUrls", function () {
     render(
-      <TerriaThemeProvider>
+      <ThemeProvider theme={terriaTheme}>
         <Description item={wmsItem} />
-      </TerriaThemeProvider>
+      </ThemeProvider>
     );
 
     expect(
@@ -44,9 +45,9 @@ describe("DescriptionSpec", function () {
     });
 
     render(
-      <TerriaThemeProvider>
+      <ThemeProvider theme={terriaTheme}>
         <Description item={wmsItem} />
-      </TerriaThemeProvider>
+      </ThemeProvider>
     );
 
     expect(screen.queryByRole("link", { name: "Some Title" })).toBeVisible();
@@ -66,9 +67,9 @@ describe("DescriptionSpec", function () {
     });
 
     render(
-      <TerriaThemeProvider>
+      <ThemeProvider theme={terriaTheme}>
         <Description item={wmsItem} />
-      </TerriaThemeProvider>
+      </ThemeProvider>
     );
 
     expect(
@@ -91,9 +92,9 @@ describe("DescriptionSpec", function () {
     });
 
     render(
-      <TerriaThemeProvider>
+      <ThemeProvider theme={terriaTheme}>
         <Description item={wmsItem} />
-      </TerriaThemeProvider>
+      </ThemeProvider>
     );
 
     expect(screen.queryByRole("link", { name: "some link" })).toBeVisible();
@@ -106,9 +107,9 @@ describe("DescriptionSpec", function () {
     });
 
     const { container, rerender } = render(
-      <TerriaThemeProvider>
+      <ThemeProvider theme={terriaTheme}>
         <Description item={geoJsonItem} />
-      </TerriaThemeProvider>
+      </ThemeProvider>
     );
 
     expect(
@@ -123,9 +124,9 @@ describe("DescriptionSpec", function () {
     );
 
     rerender(
-      <TerriaThemeProvider>
+      <ThemeProvider theme={terriaTheme}>
         <Description item={geoJsonItem} />
-      </TerriaThemeProvider>
+      </ThemeProvider>
     );
 
     expect(screen.getByText("description.dataNotLocal")).toBeVisible();
@@ -141,9 +142,9 @@ describe("DescriptionSpec", function () {
     });
 
     rerender(
-      <TerriaThemeProvider>
+      <ThemeProvider theme={terriaTheme}>
         <Description item={geoJsonItem} />
-      </TerriaThemeProvider>
+      </ThemeProvider>
     );
 
     const showNoDescription = container.querySelectorAll("p");

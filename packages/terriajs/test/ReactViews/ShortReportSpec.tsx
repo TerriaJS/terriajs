@@ -1,9 +1,10 @@
 import { render, screen } from "@testing-library/react";
+import { ThemeProvider } from "styled-components";
 import WebMapServiceCatalogItem from "../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
 import Terria from "../../lib/Models/Terria";
+import { terriaTheme } from "../../lib/ReactViews/StandardUserInterface";
 import ShortReport from "../../lib/ReactViews/Workbench/Controls/ShortReport";
 import userEvent from "@testing-library/user-event";
-import { TerriaThemeProvider } from "./withContext";
 
 describe("ShortReport", function () {
   let terria: Terria;
@@ -36,9 +37,9 @@ describe("ShortReport", function () {
 
   it("renders section content", function () {
     render(
-      <TerriaThemeProvider>
+      <ThemeProvider theme={terriaTheme}>
         <ShortReport item={wmsItem} />
-      </TerriaThemeProvider>
+      </ThemeProvider>
     );
 
     // All three report names should be rendered
@@ -53,9 +54,9 @@ describe("ShortReport", function () {
 
   it("should expand and collapse sections when the section name is clicked", async function () {
     render(
-      <TerriaThemeProvider>
+      <ThemeProvider theme={terriaTheme}>
         <ShortReport item={wmsItem} />
-      </TerriaThemeProvider>
+      </ThemeProvider>
     );
 
     const section2Btn = screen.getByRole("button", { name: "Report Name 2" });
