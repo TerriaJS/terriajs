@@ -84,7 +84,7 @@ function getParseOptions(
   filterOutComments: boolean,
   resolve: (value: string[][]) => void,
   reject: (reason?: any) => void
-): papaparse.ParseConfig {
+): papaparse.ParseLocalConfig<string[], any> {
   return columnMajor
     ? getParseOptionsColumnMajor(filterOutComments, resolve, reject)
     : getParseOptionsRowMajor(filterOutComments, resolve, reject);
@@ -94,12 +94,12 @@ function getParseOptionsRowMajor(
   filterOutComments: boolean,
   resolve: (value: string[][]) => void,
   reject: (reason?: any) => void
-): papaparse.ParseConfig {
+): papaparse.ParseLocalConfig<string[], any> {
   const result: string[][] = [];
   let parser: any = null;
 
   return {
-    comments: filterOutComments,
+    comments: filterOutComments ? "#" : false,
     skipEmptyLines: true,
     worker: useWorker,
     chunk: function (results, p) {
@@ -125,12 +125,12 @@ function getParseOptionsColumnMajor(
   filterOutComments: boolean,
   resolve: (value: string[][]) => void,
   reject: (reason?: any) => void
-): papaparse.ParseConfig {
+): papaparse.ParseLocalConfig<string[], any> {
   const result: string[][] = [];
   let parser: any = null;
 
   return {
-    comments: filterOutComments,
+    comments: filterOutComments ? "#" : false,
     skipEmptyLines: true,
     worker: useWorker,
     chunk: function (results, p) {
