@@ -2,6 +2,12 @@
 
 The file `wwwroot/config.json` in TerriaMap contains client-side configuration parameters. See [this file for an example](https://github.com/TerriaJS/TerriaMap/blob/main/wwwroot/config.json).
 
+This file is downloaded by the browser and is public. Do not put passwords,
+private API keys, or other server-side secrets in it. Browser tokens such as a
+Cesium ion or Mapbox token must be restricted to the minimum permissions,
+origins, and assets required by the application. See
+[Security and production deployment](../deploying/security.md#cesium-ion-access-tokens).
+
 It has following structure:
 
 | Name                                          | Required | Type                          | Default | Description                                                                                                                                                                                                             |
