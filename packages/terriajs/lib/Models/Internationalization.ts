@@ -41,7 +41,7 @@ export const LanguageConfigurationSchema = z.strictObject({
   languages: z.record(z.string(), z.string()),
   fallbackLanguage: z.string(),
   react: z
-    .object({
+    .looseObject({
       useSuspense: z.boolean()
     })
     .optional(),
@@ -85,9 +85,13 @@ const loadLocale = async (locale: string) => {
   }
 };
 
+i18next.on("languageChanged", (lng) => {
+  loadLocale(lng);
+});
+
 class Internationalization {
   static async initLanguage(
-    languageConfiguration: LanguageConfiguration | undefined,
+    languageConfiguration: Partial<LanguageConfiguration> | undefined,
     /**
      * i18nOptions is explicitly a separate option from `languageConfiguration`,
      * as `languageConfiguration` can be serialised, but `i18nOptions` may have
@@ -96,15 +100,12 @@ class Internationalization {
     i18StartOptions: I18nStartOptions | undefined,
     terriajsResourcesBaseUrl: string
   ): Promise<TFunction> {
-    const languageConfig = Object.assign(
-      defaultLanguageConfiguration,
-      languageConfiguration
-    );
+    const languageConfig: LanguageConfiguration = {
+      ...defaultLanguageConfiguration,
+      ...languageConfiguration
+    };
 
     await loadLocale("en");
-    i18next.on("languageChanged", (lng) => {
-      loadLocale(lng);
-    });
 
     /**
      * initialization of the language with i18next

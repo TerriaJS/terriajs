@@ -23,11 +23,6 @@
     //     //devHostRegex: "\\b(staging|preview|test|dev)\\.",
     //     enableOnLocalhost: true // If false, don't show this when running on localhost
     // },
-    /*
-        developerAttribution: {
-            text: "Your organisation",
-            link: "http://www.example.com"
-        },*/
     // This is used in various text messages. You should also set <title> in index.html
     "appName": "Terria Map",
     // See comments in lib/Views/global.scss for further information about customising colors, logos, fonts etc.

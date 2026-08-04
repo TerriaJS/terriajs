@@ -61,7 +61,7 @@ export const defaultLoadConfig = async (
 
   return {
     config: {
-      parameters: raw.parameters,
+      parameters: raw.parameters ?? {},
       initializationUrls: raw.initializationUrls,
       v7initializationUrls: raw.v7initializationUrls
     },
