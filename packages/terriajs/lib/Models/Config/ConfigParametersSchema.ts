@@ -358,7 +358,7 @@ export const ConfigParametersSchema = z.strictObject({
    */
   helpContent: z.array(HelpContentItemSchema),
   helpContentTerms: z.array(TermSchema),
-  languageConfiguration: LanguageConfigurationSchema.optional(),
+  languageConfiguration: LanguageConfigurationSchema.partial().optional(),
   /**
    * Extra links to show in the credit line at the bottom of the map (currently
    * only the Cesium map).
