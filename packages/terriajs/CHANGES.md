@@ -2,15 +2,25 @@
 
 #### next release (8.x.x)
 
+- **Breaking:** `updateApplicationOnMessageFromParentWindow` now validates the `window.postMessage` sender's `event.origin` against an allowlist instead of trusting `window.parent`/`window.opener`. The application's own origin is always allowed; cross-origin pages that embed or open the app must be listed in the new `parentMessageAllowedOrigins` config parameter (empty by default) to send start data. The `event.data.allowOrigin` mechanism has been removed, and the `"ready"` message is now posted only to allowed origins rather than `"*"`. This prevents any page that frames or opens TerriaJS from injecting start data.
+
+- Harden the custom markdown/HTML sanitizer: replaced the blanket `ALLOW_UNKNOWN_PROTOCOLS` DOMPurify option (which preserved OS/app-handler schemes such as `vscode:`, `ms-its:` and `slack:` on links and images) with a scoped `uponSanitizeAttribute` hook. The hook keeps custom components' free-text attributes verbatim (so values may contain `:`, e.g. a chart's `column-titles`) while scheme-validating their URL attributes per URL, closing a gap where a dangerous scheme could hide in a comma-separated `sources`/`downloads` list.
+- Upgrade terriajs-server to 5.0.0-alpha.4
+- Document security best practices for production deployment of terriajs
+
+#### 8.12.5 - 2026-07-28
+
+- Automatically detect I3S layers by URL when adding web data, so ArcGIS `SceneServer` URLs resolve to an `I3SCatalogItem`.
 - Upgraded `terriajs-cesium` to `26.0.0` and `terriajs-cesium-widgets` to `16.0.0`. We are now using cesium 1.142.
 - Upgraded terriajs-server to v5.0.0-alpha.3
 - Upgraded to i18next v26 and migrated to i18next select pattern `(t($ => translation.key))` #7882
 - Add `edit` stratum for tracking temporary user changes that shouldn't be captured in share link - example form edits.
+- Upgraded `papaparse` to `5.5.4` (and `@types/papaparse` to `5.5.2`).
+- Guard CSV exports against spreadsheet formula injection (CWE-1236): the feature-info "Download" CSV, table data export, and `CsvCatalogItem`'s inline `csvString` export now prefix cells a spreadsheet would treat as a formula (`= + - @`, tab, CR) with a `'`, while leaving legitimate numbers (e.g. `-5`) untouched. `TableMixin` table exports now also structurally escape values via `papaparse` (previously they were joined with `,` unescaped). Downloads of a remote `url` are unchanged (the original file is served directly).
 
 #### 8.12.4 - 2026-06-19
 
 - Fix story editor rich-text toolbar dropdowns (paragraph style, alignment, table, text colour) and dialogs (image/media/link) being rendered invisibly behind the editor modal due to z-index stacking context. Add `underline` and `subscript` buttons to the toolbar.
-
 - Refactor feedback sending into a `FeedbackService` class instantiated on `Terria` when `feedbackUrl` is configured. The `sendFeedback` standalone function has been removed; consumers should use `terria.feedbackService?.sendFeedback(...)` instead.
 
 #### 8.12.3 - 2026-06-17

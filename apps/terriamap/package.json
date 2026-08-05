@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "terriajs-map",
-  "version": "0.4.6",
+  "version": "0.4.7",
   "description": "Geospatial catalog explorer based on TerriaJS.",
   "license": "Apache-2.0",
   "engines": {
@@ -12,7 +12,7 @@
     "url": "http://github.com/TerriaJS/TerriaMap"
   },
   "dependencies": {
-    "terriajs-server": "5.0.0-alpha.3"
+    "terriajs-server": "5.0.0-alpha.4"
   },
   "config": {
     "docker": {
@@ -29,12 +29,20 @@
     "@babel/core": "^7.29.0",
     "@babel/preset-env": "^7.29.2",
     "@babel/preset-react": "^7.28.5",
+    "@eslint/js": "^10.0.1",
+    "@typescript-eslint/eslint-plugin": "^8.58.1",
+    "@typescript-eslint/parser": "^8.58.1",
     "babel-loader": "^10.1.1",
     "css-loader": "^7.1.4",
+    "eslint": "^10.2.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^7.0.1",
     "fetch-mock": "^11.1.5",
     "fork-ts-checker-notifier-webpack-plugin": "^9.0.0",
     "fork-ts-checker-webpack-plugin": "^9.1.0",
     "fs-extra": "^7.0.1",
+    "globals": "^17.4.0",
     "gulp": "^5.0.1",
     "html-webpack-plugin": "^5.6.3",
     "husky": "^9.1.7",
@@ -55,11 +63,12 @@
     "sass-loader": "^16.0.7",
     "style-loader": "^4.0.0",
     "svg-sprite": "^2.0.4",
-    "terriajs": "*",
+    "terriajs": "8.12.5",
     "terriajs-cesium": "26.0.0",
     "terriajs-plugin-api": "0.0.1-alpha.17",
     "terriajs-plugin-sample": "0.0.1-alpha.7",
     "typescript": "^5.9.2",
+    "typescript-eslint": "^8.58.1",
     "urijs": "^1.18.12",
     "webpack": "^5.105.4",
     "webpack-cli": "^5.1.4",
