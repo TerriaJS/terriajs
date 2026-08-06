@@ -175,6 +175,35 @@ describe("MapboxVectorTileCatalogItem", function () {
       );
       expect(nothingToSelect.length).toBe(0);
     });
+
+    it("picks features whose props have a null prototype", async function () {
+      const view = (imageryProvider as any).view;
+
+      spyOn(view, "getDisplayTile").and.returnValue(Promise.resolve({}));
+      spyOn(view, "queryFeatures").and.returnValue([
+        {
+          layerName: "FID_LGA_2013_AUST",
+          feature: {
+            props: Object.assign(Object.create(null), {
+              LGA_CODE13: "11450",
+              name: "Blacktown"
+            })
+          }
+        }
+      ]);
+
+      const picked = await imageryProvider.pickFeatures(
+        1881,
+        1229,
+        11,
+        2.630470869072516,
+        -0.5932730847619763
+      );
+
+      expect(picked.length).toBe(1);
+      expect(picked[0]?.properties?.LGA_CODE13).toBe("11450");
+      expect(picked[0]?.name).toBe("Blacktown");
+    });
   });
 
   /** Mapbox style json tests are adapted from from https://github.com/protomaps/protomaps-leaflet/blob/a08304417ef36fef03679976cd3e5a971fec19a2/test/json_style.test.ts
