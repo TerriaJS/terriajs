@@ -87,14 +87,8 @@ export class StratifiedConfig<TSchema extends z.ZodObject> {
           return Reflect.get(target, prop, receiver);
         return target.get(prop as keyof z.output<TSchema>);
       },
-      set(target, prop, value, receiver) {
-        if (
-          typeof prop === "string" &&
-          Object.hasOwn(target.schema.shape, prop)
-        ) {
-          return false;
-        }
-        return Reflect.set(target, prop, value, receiver);
+      set() {
+        return false;
       }
     }) as StratifiedConfig<TSchema>;
   }

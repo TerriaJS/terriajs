@@ -27,4 +27,18 @@ describe("StratifiedConfig", function () {
     expect(config.value).toBeUndefined();
     expect(Object.hasOwn(config, "value")).toBeFalse();
   });
+
+  it("does not allow assignment to unknown properties", function () {
+    const config = createStratifiedConfig(schema);
+
+    expect(Reflect.set(config, "unknown", 1)).toBeFalse();
+    expect(Object.hasOwn(config, "unknown")).toBeFalse();
+  });
+
+  it("does not allow assignment to class properties", function () {
+    const config = createStratifiedConfig(schema);
+
+    expect(Reflect.set(config, "schema", z.strictObject({}))).toBeFalse();
+    expect(config.schema).toBe(schema);
+  });
 });
