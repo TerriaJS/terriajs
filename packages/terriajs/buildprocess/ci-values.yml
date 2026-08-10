@@ -42,6 +42,9 @@ terriamap:
     singlePageRouting:
       resolvePathRelativeToWwwroot: "/index.html"
       resolveUnmatchedPathsWithIndexHtml: true
+    trustedHosts: ["ci.terria.io/"]
+    securityHeaders:
+      - cspReportOnly: false
   clientConfig:
     initializationUrls:
       - simple

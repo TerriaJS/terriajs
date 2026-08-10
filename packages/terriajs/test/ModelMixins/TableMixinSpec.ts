@@ -5,8 +5,10 @@ import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSourc
 import LabelStyle from "terriajs-cesium/Source/Scene/LabelStyle";
 import { getMakiIcon } from "../../lib/Map/Icons/Maki/MakiIcons";
 import { ImageryParts } from "../../lib/ModelMixins/MappableMixin";
+import TableMixin from "../../lib/ModelMixins/TableMixin";
 import CsvCatalogItem from "../../lib/Models/Catalog/CatalogItems/CsvCatalogItem";
 import CommonStrata from "../../lib/Models/Definition/CommonStrata";
+import CreateModel from "../../lib/Models/Definition/CreateModel";
 import createStratumInstance from "../../lib/Models/Definition/createStratumInstance";
 import updateModelFromJson from "../../lib/Models/Definition/updateModelFromJson";
 import TerriaFeature from "../../lib/Models/Feature/Feature";
@@ -28,6 +30,7 @@ import TablePointStyleTraits, {
   PointSymbolTraits
 } from "../../lib/Traits/TraitsClasses/Table/PointStyleTraits";
 import TableStyleTraits from "../../lib/Traits/TraitsClasses/Table/StyleTraits";
+import TableTraits from "../../lib/Traits/TraitsClasses/Table/TableTraits";
 import TableTimeStyleTraits from "../../lib/Traits/TraitsClasses/Table/TimeStyleTraits";
 import TableTrailStyleTraits, {
   BinTrailSymbolTraits,
@@ -54,6 +57,20 @@ import regionIdsLgaCode from "../../wwwroot/data/regionids/region_map-FID_LGA_20
 import regionIdsLgaNameStates from "../../wwwroot/data/regionids/region_map-FID_LGA_2011_AUST_STE_NAME11.json";
 
 const NUMBER_OF_REGION_MAPPING_TYPES = 155;
+
+// Minimal concrete TableMixin item, used to exercise TableMixin._exportData
+// directly (CsvCatalogItem overrides _exportData, so it never reaches it).
+class SimpleTableCatalogItem extends TableMixin(CreateModel(TableTraits)) {
+  protected forceLoadMapItems(): Promise<void> {
+    return Promise.resolve();
+  }
+  protected forceLoadTableData(): Promise<string[][] | undefined> {
+    return Promise.resolve(undefined);
+  }
+  get mapItems() {
+    return [];
+  }
+}
 
 describe("TableMixin", function () {
   let item: CsvCatalogItem;
@@ -86,6 +103,52 @@ describe("TableMixin", function () {
         () => HttpResponse.json(regionIdsLgaNameStates)
       )
     );
+  });
+
+  describe("exportData", function () {
+    it("sanitises a CSV item's raw csvString against formula injection", async function () {
+      item.setTrait(
+        CommonStrata.user,
+        "csvString",
+        `lat,lon,value
+-33,151,=cmd|'/c calc'!A1
+-34,152,"a,b"
+-35,153,@SUM(A1)`
+      );
+      (await item.loadMapItems()).throwIfError();
+
+      const exported = await item.exportData();
+      const text = await (exported as { name: string; file: Blob }).file.text();
+
+      // Formula-trigger cells are prefixed with a quote so a spreadsheet treats
+      // them as text rather than executing them.
+      expect(text).toContain("'=cmd|'/c calc'!A1");
+      expect(text).toContain("'@SUM(A1)");
+      // No cell is left as a bare formula.
+      expect(text).not.toMatch(/(^|,)=cmd/);
+      // Negative numbers are preserved (not turned into text).
+      expect(text).toContain("-33");
+      // Cells containing a comma are structurally escaped (quoted).
+      expect(text).toContain('"a,b"');
+    });
+
+    it("sanitises re-serialised dataColumnMajor (TableMixin path, no CSV source)", async function () {
+      const tableItem = new SimpleTableCatalogItem("test-table", terria);
+      // Column-major: each column is [header, ...rowValues].
+      tableItem.dataColumnMajor = [
+        ["lat", "-33", "-34"],
+        ["lon", "151", "152"],
+        ["value", "=cmd|'/c calc'!A1", "@SUM(A1)"]
+      ];
+
+      const exported = await tableItem.exportData();
+      const text = await (exported as { name: string; file: Blob }).file.text();
+
+      expect(text).toContain("'=cmd|'/c calc'!A1");
+      expect(text).toContain("'@SUM(A1)");
+      expect(text).not.toMatch(/(^|,)=cmd/);
+      expect(text).toContain("-33");
+    });
   });
 
   describe("when the table has time, lat/lon and id columns", function () {
