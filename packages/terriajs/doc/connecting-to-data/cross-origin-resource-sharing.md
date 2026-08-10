@@ -1,4 +1,8 @@
-To ensure that TerriaJS is able to access your data, you must add all servers you intend to access to `devserverconfig.json`'s `allowProxyFor` list. This "whitelist" authorizes the proxy to work with those servers.
+To ensure that TerriaJS is able to access data through TerriaJS Server's proxy,
+add each required server to the `allowProxyFor` list in your TerriaJS Server
+configuration. This allowlist authorizes the proxy to contact those servers.
+Keep `proxyAllDomains` disabled in production and make the allowlist as narrow
+as practical.
 
 Failing to do this may result in an error like this:
 
@@ -14,7 +18,14 @@ Sometimes we deliberately exclude CORS-supporting servers from the `corsDomains`
 
 In both lists, a server name `foo.org` will be interpreted as `*.foo.org`. The port must match exactly. It's not very smart, so if you specify port 80 that won't match a server without a port specified, and vice-versa.
 
-The downside to a permissive whitelist is that you'll proxy for more servers, and people could use your proxy to make their (malicious?) traffic look like it's coming from your server instead of from theirs.
+The downside to a permissive allowlist is that you will proxy for more servers,
+and people could use your proxy to make their traffic look like it comes from
+your server. Keep TerriaJS Server's private, loopback, link-local, and special
+address blacklist enabled to prevent the proxy from reaching internal services.
+See
+[Security and production deployment](../deploying/security.md#other-service-tokens)
+and the
+[TerriaJS Server example configuration](https://github.com/TerriaJS/terriajs-server/blob/master/serverconfig.json.example).
 
 ## More Detailed Explanation
 
@@ -22,11 +33,21 @@ As a general rule, web browsers do not allow web sites running on one host (e.g.
 
 TerriaJS has a trick to allow it to access data from a server even if that server doesn't support CORS: it uses a proxy server built into [terriajs-server](https://github.com/TerriaJS/terriajs-server), which is included with TerriaMap. The idea is simple: we avoid the need for cross-origin support from servers by running a proxy on the same host that runs our app. That proxy can make requests to _other_ servers on our application's behalf. This works because cross-origin restrictions are a security feature of web browsers, not web servers. The proxy makes it look to the browser like the data comes from the same origin. There's nothing dodgy about this. The risks that browsers are defending against by imposing cross-origin restrictions are not present in this scenario.
 
-However, by running a proxy server, our TerriaMap server potentially opens itself up to risks. We don't want people to be able to bounce arbitrary requests through our proxy, because that could be used to make (malicious?) traffic look like it is coming from your server instead of from the real source. This is why `terriajs-server` uses a whitelist of servers that it is willing to proxy for. The `allowProxyFor` property in `devserverconfig.json` specifies the whitelist. If the server is asked to proxy for any server not in the whitelist, the request will be rejected.
+However, running a proxy introduces risks. Users must not be able to bounce
+arbitrary requests through it or use it to reach services that are only
+accessible from the server's network. TerriaJS Server therefore uses
+`allowProxyFor` to specify the hosts it is willing to contact and a network
+address blacklist to reject private and special-purpose destinations. A request
+for a host outside the allowlist is rejected.
 
 ## Specify an alternative proxy server URL
 
-The data service proxied by TerriaJS-Server is inherently public to any users. In the case that a data service must be restricted to certain authorised users, use an alternative proxy server that enforces required access control and ideally the hostname of server that provides non-public data service should be removed from `allowProxyFor` list.
+A data service exposed through the standard TerriaJS Server proxy is available
+to users who can access that proxy. Proxy authentication can keep an upstream
+credential out of the browser, but does not provide user-specific authorization
+by itself. If a data service must be restricted to authorized users, use an
+alternative proxy that enforces the required access control and remove the
+private service hostname from `allowProxyFor`.
 
 If using the proxy service of magda-datastore-api that enforces access control, a proxy URL with pattern `/api/v0/data/proxy/<record id>` should be prepended before the proxied URL.
 
