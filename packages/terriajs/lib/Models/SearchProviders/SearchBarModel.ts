@@ -53,30 +53,17 @@ export const SearchBarConfigSchema = z.strictObject({
     })
 });
 
-const defaultConfig = SearchBarConfigSchema.parse({});
+export const DEFAULT_SEARCH_BAR_CONFIG = SearchBarConfigSchema.parse({});
 
 export class SearchBarModel {
-  @observable
-  private _config: z.infer<typeof SearchBarConfigSchema> = defaultConfig;
   private locationSearchProviders = observable.map<string, BaseModel>();
 
   constructor(readonly terria: Terria) {
     makeObservable(this);
   }
 
-  get config() {
-    return this._config;
-  }
-
-  @action
-  updateModelConfig(config?: Partial<z.infer<typeof SearchBarConfigSchema>>) {
-    if (config) {
-      this._config = SearchBarConfigSchema.parse({
-        ...this._config,
-        ...config
-      });
-    }
-    return this;
+  get config(): Readonly<z.output<typeof SearchBarConfigSchema>> {
+    return this.terria.configParameters.searchBarConfig;
   }
 
   initializeSearchProviders(

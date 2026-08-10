@@ -14,6 +14,7 @@ import ViewState from "../../../lib/ReactViewModels/ViewState";
 import SearchBoxAndResults from "../../../lib/ReactViews/Search/SearchBoxAndResults";
 import { worker } from "../../mocks/browser";
 import { TerriaThemeProvider, renderWithContexts } from "../withContext";
+import { ConfigStrata } from "../../../lib/Models/Config/TerriaConfig";
 
 describe("SearchBoxAndResults", function () {
   let terria: Terria;
@@ -105,7 +106,13 @@ describe("SearchBoxAndResults", function () {
       viewState.searchState.showLocationSearchResults = true;
 
       runInAction(() => {
-        viewState.terria.searchBarModel.config.showSearchInCatalog = false;
+        terria.configParameters.mergeValue(
+          ConfigStrata.user,
+          "searchBarConfig",
+          {
+            showSearchInCatalog: false
+          }
+        );
       });
     });
     renderWithContexts(

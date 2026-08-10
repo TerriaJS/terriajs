@@ -3,6 +3,7 @@ import LocationSearchProviderMixin from "../../../lib/ModelMixins/SearchProvider
 import CommonStrata from "../../../lib/Models/Definition/CommonStrata";
 import BingMapsSearchProvider from "../../../lib/Models/SearchProviders/BingMapsSearchProvider";
 import Terria from "../../../lib/Models/Terria";
+import { ConfigStrata } from "../../../lib/Models/Config/TerriaConfig";
 
 describe("LocationSearchProvider", function () {
   let terria: Terria;
@@ -35,21 +36,39 @@ describe("LocationSearchProvider", function () {
   describe("searchBarModel fallback", function () {
     it(" - reads recommendedListLength from searchBarModel when not set on provider", function () {
       runInAction(() => {
-        terria.searchBarModel.config.recommendedListLength = 10;
+        terria.configParameters.mergeValue(
+          ConfigStrata.user,
+          "searchBarConfig",
+          {
+            recommendedListLength: 10
+          }
+        );
       });
       expect(bingMapsSearchProvider.recommendedListLength).toEqual(10);
     });
 
     it(" - reads flightDurationSeconds from searchBarModel when not set on provider", function () {
       runInAction(() => {
-        terria.searchBarModel.config.flightDurationSeconds = 3.0;
+        terria.configParameters.mergeValue(
+          ConfigStrata.user,
+          "searchBarConfig",
+          {
+            flightDurationSeconds: 3.0
+          }
+        );
       });
       expect(bingMapsSearchProvider.flightDurationSeconds).toEqual(3.0);
     });
 
     it(" - provider recommendedListLength takes precedence over searchBarModel", function () {
       runInAction(() => {
-        terria.searchBarModel.config.recommendedListLength = 10;
+        terria.configParameters.mergeValue(
+          ConfigStrata.user,
+          "searchBarConfig",
+          {
+            recommendedListLength: 10
+          }
+        );
       });
       bingMapsSearchProvider.setTrait(
         CommonStrata.definition,
@@ -61,7 +80,13 @@ describe("LocationSearchProvider", function () {
 
     it(" - provider flightDurationSeconds takes precedence over searchBarModel", function () {
       runInAction(() => {
-        terria.searchBarModel.config.flightDurationSeconds = 3.0;
+        terria.configParameters.mergeValue(
+          ConfigStrata.user,
+          "searchBarConfig",
+          {
+            flightDurationSeconds: 3.0
+          }
+        );
       });
       bingMapsSearchProvider.setTrait(
         CommonStrata.definition,

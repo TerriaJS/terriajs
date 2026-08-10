@@ -855,7 +855,6 @@ export default class Terria<
       );
 
     this.searchBarModel
-      .updateModelConfig(this.configParameters.searchBarConfig)
       // TODO: decide how we want to type this properly in the long run
       .initializeSearchProviders(this.configParameters.searchProviders as never)
       .catchError((error) =>
