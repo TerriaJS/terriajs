@@ -318,6 +318,14 @@ export default function registerCatalogMembers() {
     WebMapTileServiceCatalogGroup.type,
     true
   );
+  // I3S SceneServer endpoints, eg
+  // .../arcgis/rest/services/<name>/SceneServer. Registered before the generic
+  // ArcGIS matchers below so that a SceneServer URL is not swallowed by the
+  // /arcgis/rest/ ArcGisCatalogGroup matcher.
+  UrlToCatalogMemberMapping.register(
+    matchesUrl(/\/SceneServer\b/i),
+    I3SCatalogItem.type
+  );
   UrlToCatalogMemberMapping.register(
     matchesUrl(/\/arcgis\/rest\/.*\/MapServer\/\d+\b/i),
     ArcGisMapServerCatalogItem.type,

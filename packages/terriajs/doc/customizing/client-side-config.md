@@ -2,6 +2,12 @@
 
 The file `wwwroot/config.json` in TerriaMap contains client-side configuration parameters. See [this file for an example](https://github.com/TerriaJS/TerriaMap/blob/main/wwwroot/config.json).
 
+This file is downloaded by the browser and is public. Do not put passwords,
+private API keys, or other server-side secrets in it. Browser tokens such as a
+Cesium ion or Mapbox token must be restricted to the minimum permissions,
+origins, and assets required by the application. See
+[Security and production deployment](../deploying/security.md#cesium-ion-access-tokens).
+
 It has following structure:
 
 | Name                                          | Required | Type                          | Default | Description                                                                                                                                                                                                             |
@@ -72,6 +78,7 @@ Specifies various options for configuring TerriaJS:
 | `corsProxyBaseUrl`                | no       | **string**                                                                                               | `"proxy/"`                                                         | URL of CORS proxy service (part of TerriaJS-Server). This option only needs to be changed in unusual deployments. It has to be changed if deploying as static site, for instance.                                                                                                                      |
 | `proxyableDomainsUrl`             | no       | **string**                                                                                               | `"proxyabledomains/"`                                              | Deprecated, will be determined from serverconfig.                                                                                                                                                                                                                                                      |
 | `serverConfigUrl`                 | no       | **string**                                                                                               | `"serverconfig/"`                                                  |
+| `parentMessageAllowedOrigins`     | no       | **string[]**                                                                                             | `[]`                                                               | Origins permitted to exchange messages with the application through `window.postMessage`. The application's own non-opaque origin is allowed automatically. Cross-origin parent or opener pages must be listed explicitly. The opaque origin `"null"` is never allowed.                                |
 | `shareUrl`                        | no       | **string**                                                                                               | `"share"`                                                          |
 | `feedbackUrl`                     | no       | **string**                                                                                               |                                                                    | URL of the service used to send feedback. If not specified, the "Give Feedback" button will not appear.                                                                                                                                                                                                |
 | `initFragmentPaths`               | yes      | **string[]**                                                                                             | `["init/"]`                                                        | An array of base paths to use to try to use to resolve init fragments in the URL. For example, if this property is `[ "init/", "http://example.com/init/"]`, then a URL with `#test` will first try to load `init/test.json` and, if that fails, next try to load `http://example.com/init/test.json`. |
