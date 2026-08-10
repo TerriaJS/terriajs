@@ -39,6 +39,7 @@ nav:
   - Deploying:
       - Overview: deploying/README.md
       - Deploying TerriaMap: deploying/deploying-terriamap.md
+      - Security and production deployment: deploying/security.md
       - Deploying with Kubernetes: deploying/deploying-with-kubernetes.md
       - Setting Up a Region Mapping Server: deploying/setting-up-a-region-mapping-server.md
       - Setting Up Geoserver: deploying/setting-up-geoserver.md
