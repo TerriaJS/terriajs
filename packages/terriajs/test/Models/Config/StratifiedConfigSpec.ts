@@ -41,4 +41,32 @@ describe("StratifiedConfig", function () {
     expect(Reflect.set(config, "schema", z.strictObject({}))).toBeFalse();
     expect(config.schema).toBe(schema);
   });
+
+  it("deeply merges and validates a nested config value", function () {
+    const nestedSchema = z.strictObject({
+      nested: z.strictObject({
+        enabled: z.boolean(),
+        options: z.strictObject({ first: z.number(), second: z.number() }),
+        items: z.array(z.string())
+      })
+    });
+    const config = createStratifiedConfig(nestedSchema);
+    config.setValue(ConfigStrata.defaults, "nested", {
+      enabled: true,
+      options: { first: 1, second: 2 },
+      items: ["default"]
+    });
+
+    expect(
+      config.mergeValue(ConfigStrata.user, "nested", {
+        options: { second: 3 },
+        items: ["replacement"]
+      })
+    ).toBeTrue();
+    expect(config.nested).toEqual({
+      enabled: true,
+      options: { first: 1, second: 3 },
+      items: ["replacement"]
+    });
+  });
 });

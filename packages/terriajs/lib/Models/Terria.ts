@@ -798,7 +798,6 @@ export default class Terria<
       );
 
     this.searchBarModel
-      .updateModelConfig(this.configParameters.searchBarConfig)
       .initializeSearchProviders(this.configParameters.searchProviders as never)
       .catchError((error) =>
         this.raiseErrorToUser(

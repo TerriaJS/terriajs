@@ -17,6 +17,35 @@ type ValidationState<T> =
       error: string;
     };
 
+export type DeepPartial<T> = T extends (...args: infer A) => infer R
+  ? (...args: A) => R
+  : T extends readonly unknown[]
+    ? T
+    : T extends object
+      ? { [K in keyof T]?: DeepPartial<T[K]> }
+      : T;
+
+function isPlainObject(value: unknown): value is Record<string, unknown> {
+  if (typeof value !== "object" || value === null || Array.isArray(value)) {
+    return false;
+  }
+  const prototype = Object.getPrototypeOf(value);
+  return prototype === Object.prototype || prototype === null;
+}
+
+function mergeDeep(base: unknown, patch: unknown): unknown {
+  if (!isPlainObject(base) || !isPlainObject(patch)) return patch;
+
+  return Object.fromEntries(
+    Array.from(new Set([...Object.keys(base), ...Object.keys(patch)])).map(
+      (key) => [
+        key,
+        Object.hasOwn(patch, key) ? mergeDeep(base[key], patch[key]) : base[key]
+      ]
+    )
+  );
+}
+
 /**
  * A generic, priority-layered config store backed by a Zod schema.
  *
@@ -143,6 +172,24 @@ export class StratifiedConfig<TSchema extends z.ZodObject> {
         unknown
       >;
       setObservableValue(stratumObj, key as string, value);
+    });
+  }
+
+  /**
+   * Recursively merges a partial object into the currently resolved value and
+   * writes the validated result to `stratum`. Arrays are replaced rather than
+   * merged.
+   *
+   * The resolved value is materialized in the target stratum, so subsequent
+   * changes to lower strata will remain masked by the copied fields.
+   */
+  mergeValue<K extends keyof z.output<TSchema>>(
+    stratum: string,
+    key: K,
+    patch: DeepPartial<z.output<TSchema>[K]>
+  ): string | true {
+    return this.update(stratum, {
+      [key]: mergeDeep(this.get(key), patch)
     });
   }
 

@@ -3,7 +3,10 @@ import { HelpContentItemSchema } from "../../ReactViewModels/defaultHelpContent"
 import { defaultTerms, TermSchema } from "../../ReactViewModels/defaultTerms";
 import { LanguageConfigurationSchema } from "../Internationalization";
 import { RelatedMapSchema } from "../RelatedMaps";
-import { SearchBarConfigSchema } from "../SearchProviders/SearchBarModel";
+import {
+  DEFAULT_SEARCH_BAR_CONFIG,
+  SearchBarConfigSchema
+} from "../SearchProviders/SearchBarModel";
 
 /**
  * Zod schema for all TerriaJS configuration parameters — validation only.
@@ -485,7 +488,7 @@ export const CONFIG_DEFAULTS: ConfigParameters = {
   relatedMaps: [],
   searchProviders: [],
   alwaysShowTimeline: false,
-  searchBarConfig: SearchBarConfigSchema.parse({}), // Use Zod defaults for searchBarConfig
+  searchBarConfig: DEFAULT_SEARCH_BAR_CONFIG, // Use Zod defaults for searchBarConfig
   disableMobileInterface: false,
   disableSharePanel: false,
   disableShareEmbed: false,
