@@ -12,6 +12,12 @@ helm upgrade --install -f deploy/helm/example-prod.yml terria deploy/helm/terria
 
 You can customize TerriaMap through helm by either modifying example-prod or creating your own helm config file. Server config is available at `terriamap.serverConfig`, init config at `terriamap.initConfig` and client config at `terriamap.clientConfig`. Changes that you make will be merged with the default values in `deploy/terria/charts/terriamap/values.yaml`.
 
+For a public deployment, configure TLS at the ingress or load balancer and
+review `hostName`, `trustedHosts`, `trustProxy`, iframe permissions, and
+security headers. Do not store credentials directly in a committed Helm values
+file; use the cluster or deployment platform's secret-management mechanism.
+See [Security and production deployment](security.md).
+
 E.g.
 
 ```yaml

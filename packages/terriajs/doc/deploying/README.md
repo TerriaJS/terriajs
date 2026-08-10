@@ -6,6 +6,7 @@ Deploying TerriaMap itself:
 
 - [Deploying with Kubernetes](deploying-with-kubernetes.md): Deploy TerriaMap using [Docker](https://www.docker.com/) and [Kubernetes](https://kubernetes.io/).
 - [Deploying TerriaMap](deploying-terriamap.md): General instructions for deploying TerriaMap in almost any environment.
+- [Security and production deployment](security.md): Configure HTTPS, reverse proxies, iframe permissions, security headers, and service tokens.
 
 Deploying other services for use with TerriaJS:
 

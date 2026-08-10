@@ -64,6 +64,18 @@ export default abstract class CustomComponent {
   abstract get attributes(): string[];
 
   /**
+   * Gets the subset of {@link CustomComponent#attributes} whose values are URLs.
+   * These are deliberately excluded from the "keep verbatim" sanitization rule
+   * so that DOMPurify still validates their URI scheme (blocking eg. `vscode:`
+   * or `ms-its:`). All other custom attributes are treated as free text and are
+   * preserved verbatim, so their values may safely contain characters such as
+   * `:` (eg. a chart's `column-titles="name:title"`). Defaults to none.
+   */
+  get urlAttributes(): string[] {
+    return [];
+  }
+
+  /**
    * Determine if a given DOM node should be processed by this component. By
    * default, this method returns `true` if the node name matches the
    * {@link CustomComponent#name} property. If this method returns `true`,
@@ -138,5 +150,34 @@ export default abstract class CustomComponent {
    */
   static get attributes(): string[] {
     return this.values.reduce((p, c) => p.concat(c.attributes), [] as string[]);
+  }
+
+  /**
+   * Determines whether an attribute on a given tag is a registered custom
+   * attribute that should be preserved verbatim during sanitization.
+   *
+   * Returns true only when the tag is a registered custom component and the
+   * attribute is one of that component's own free-text attributes (ie. not one
+   * of its {@link CustomComponent#urlAttributes}). This scopes the exemption to
+   * the correct tag (a chart attribute is not honoured on a collapsible) and
+   * leaves URL attributes to DOMPurify's normal scheme validation.
+   */
+  static isFreeTextAttribute(tagName: string, attrName: string): boolean {
+    const component = this._types.get(tagName);
+    return (
+      component !== undefined &&
+      component.attributes.includes(attrName) &&
+      !component.urlAttributes.includes(attrName)
+    );
+  }
+
+  /**
+   * Determines whether an attribute on a given tag is one of that registered
+   * custom component's {@link CustomComponent#urlAttributes} — ie. an attribute
+   * whose value is a URL (or comma-separated list of URLs) and must therefore
+   * be scheme-validated during sanitization.
+   */
+  static isUrlAttribute(tagName: string, attrName: string): boolean {
+    return this._types.get(tagName)?.urlAttributes.includes(attrName) ?? false;
   }
 }
