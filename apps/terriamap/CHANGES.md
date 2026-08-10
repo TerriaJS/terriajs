@@ -2,6 +2,7 @@
 
 #### next release
 
+- **Breaking:** Convert the TerriaMap entry point from `index.js` to `index.ts` and define application-specific client configuration with a Zod schema in `lib/Core/config.ts`. Custom TerriaMap config parameters must be added to `TerriaMapConfigOptions`; unknown or invalid parameters now produce a configuration validation error instead of being silently ignored.
 - Upgrade terriajs-server to 5.0.0-alpha.4
 
 #### 0.4.7
