@@ -1327,6 +1327,7 @@ describe("TerriaSpec", function () {
         await terria.start({ configUrl: "test-config.json" });
         await terria.loadInitSources();
         await when(() => terria.currentViewer.type === "Cesium");
+        await when(() => terria.currentViewer.isMapZooming === false);
 
         const cameraPos = terria.cesium?.scene.camera.positionCartographic;
         expect(cameraPos).toBeDefined();
@@ -1350,6 +1351,7 @@ describe("TerriaSpec", function () {
         });
         // Wait for the switch to happen
         await when(() => terria.mainViewer.currentViewer.type === "Cesium");
+        await when(() => terria.currentViewer.isMapZooming === false);
         // Ensure that the camera position is correctly updated after the switch
         const cameraPos = terria.cesium?.scene.camera.positionCartographic;
         const { longitude, latitude, height } = cameraPos!;
