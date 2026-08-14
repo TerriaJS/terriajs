@@ -79,7 +79,6 @@ import Catalog from "./Catalog/Catalog";
 import CatalogMemberFactory from "./Catalog/CatalogMemberFactory";
 import CatalogProvider from "./Catalog/CatalogProvider";
 import SplitItemReference from "./Catalog/CatalogReferences/SplitItemReference";
-import { ConfigParametersSchema } from "./Config/ConfigParametersSchema";
 import {
   ConfigParameters,
   ConfigStrata,
@@ -124,7 +123,7 @@ export { defaultLoadConfig };
 
 export interface LoadConfigResponse {
   config: {
-    parameters: ConfigParameters;
+    parameters: Partial<ConfigParameters>;
     initializationUrls: string[] | undefined;
     v7initializationUrls: string[] | undefined;
   };
@@ -150,7 +149,7 @@ interface StartOptions {
    * @experimental - not ready for general consumption!
    */
   loadConfig?: () => Promise<LoadConfigResponse>;
-  applicationUrl?: Location;
+  applicationUrl?: Location | URL;
   shareDataService?: ShareDataService;
   errorService?: ErrorServiceProvider;
   /**
@@ -168,9 +167,7 @@ interface StartOptions {
   beforeRestoreAppState?: () => Promise<void> | void;
 }
 
-export interface TerriaOptions<
-  TSchema extends typeof ConfigParametersSchema = typeof ConfigParametersSchema
-> {
+export interface TerriaOptions {
   /**
    * Override detecting base href from document.baseURI.
    * Used in specs to support routes within Browser spec automation framework
@@ -195,7 +192,7 @@ export interface TerriaOptions<
    * Used to enable extending configuration schema definition from external source i.e. TerriaMap.
    * @experimental
    */
-  config?: TerriaConfig<TSchema>;
+  config?: TerriaConfig;
 }
 
 interface HomeCameraInit {
@@ -206,9 +203,7 @@ interface HomeCameraInit {
   west: number;
 }
 
-export default class Terria<
-  TSchema extends typeof ConfigParametersSchema = typeof ConfigParametersSchema
-> {
+export default class Terria {
   private readonly models = observable.map<string, BaseModel>();
 
   /** Map from share key -> id */
@@ -286,7 +281,7 @@ export default class Terria<
   readonly timelineStack = new TimelineStack(this, this.timelineClock);
 
   @observable
-  readonly configParameters: TerriaConfig<TSchema>;
+  readonly configParameters: TerriaConfig;
 
   @observable
   pickedFeatures: PickedFeatures | undefined;
@@ -435,7 +430,7 @@ export default class Terria<
    */
   catalogProvider?: CatalogProvider;
 
-  constructor(options: TerriaOptions<TSchema> = {}) {
+  constructor(options: TerriaOptions = {}) {
     makeObservable(this);
     if (options.appBaseHref) {
       this.appBaseHref = ensureSuffix(
@@ -468,8 +463,7 @@ export default class Terria<
 
     this.corsProxy = options.corsProxy ?? new CorsProxy();
 
-    this.configParameters =
-      options.config ?? (createTerriaConfig() as TerriaConfig<TSchema>);
+    this.configParameters = options.config ?? createTerriaConfig();
   }
 
   /** Raise error to user.

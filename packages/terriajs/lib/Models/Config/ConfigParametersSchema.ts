@@ -366,11 +366,11 @@ export const ConfigParametersSchema = z.strictObject({
    * specified, TerriaJS will send various events about how it's used to Google
    * Analytics.
    */
-  googleAnalyticsKey: z.string().nullable().optional(),
+  googleAnalyticsKey: z.string().nullish(),
   /**
    * Options for Google Analytics
    */
-  googleAnalyticsOptions: z.unknown().nullable().optional(),
+  googleAnalyticsOptions: z.unknown().nullish(),
 
   // ── Complex / opaque types ───────────────────────────────────────────────
   /** Theme overrides, this is applied in StandardUserInterface and merged in
@@ -443,11 +443,6 @@ export const ConfigParametersSchema = z.strictObject({
 });
 
 /**
- * The resolved configuration type — derived from the schema.
- */
-export type ConfigParameters = z.output<typeof ConfigParametersSchema>;
-
-/**
  * Built-in application defaults for every required config parameter.
  *
  * Loaded into the `defaults` stratum of `TerriaConfig` at startup — higher
@@ -455,7 +450,7 @@ export type ConfigParameters = z.output<typeof ConfigParametersSchema>;
  * without touching this object.  Optional fields that are absent here naturally
  * resolve to `undefined` when no other stratum provides them.
  */
-export const CONFIG_DEFAULTS: ConfigParameters = {
+export const CONFIG_DEFAULTS: z.output<typeof ConfigParametersSchema> = {
   appName: "TerriaJS App",
   supportEmail: "info@terria.io",
   defaultMaximumShownFeatureInfos: 100,

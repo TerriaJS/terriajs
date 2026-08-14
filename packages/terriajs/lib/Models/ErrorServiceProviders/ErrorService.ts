@@ -1,5 +1,5 @@
 import TerriaError from "../../Core/TerriaError";
-import { TerriaConfig } from "../Config/TerriaConfig";
+import { ConfigParameters } from "../Config/TerriaConfig";
 export interface ErrorServiceOptions {
   provider?: string;
   configuration: any;
@@ -8,9 +8,7 @@ export interface ErrorServiceOptions {
 /**
  * The interface that all valid error service providers must implement.
  */
-export interface ErrorServiceProvider<
-  TConfig extends TerriaConfig = TerriaConfig
-> {
-  init: (config: TConfig) => void;
+export interface ErrorServiceProvider {
+  init: (config: ConfigParameters) => void;
   error: (error: string | Error | TerriaError) => void;
 }

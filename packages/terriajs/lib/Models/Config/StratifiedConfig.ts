@@ -77,12 +77,12 @@ function mergeDeep(base: unknown, patch: unknown): unknown {
  * config.  Callers register additional strata on the same instance before
  * calling `update()` with that stratum name.
  */
-export class StratifiedConfig<TSchema extends z.ZodObject> {
+export class StratifiedConfig<T extends object> {
   /**
    * Outer map tracks which strata exist (coarse, ObservableMap).
    * Each value is a MobX observable object for fine-grained per-key reactivity.
    */
-  private readonly _strata: Map<string, Partial<z.output<TSchema>>>;
+  private readonly _strata: Map<string, Partial<T>>;
 
   /**
    * Cached partial schema — all fields made optional so `safeParse` succeeds
@@ -99,27 +99,24 @@ export class StratifiedConfig<TSchema extends z.ZodObject> {
   readonly stratumOrder: ConfigStratumOrder;
 
   constructor(
-    readonly schema: TSchema,
+    readonly schema: z.ZodObject,
     stratumOrder: ConfigStratumOrder = new ConfigStratumOrder()
   ) {
     this._partialSchema = schema.partial();
     this.stratumOrder = stratumOrder;
 
-    this._strata = observable.map<
-      string,
-      Partial<z.output<TSchema>>
-    >() as never;
+    this._strata = observable.map<string, Partial<T>>() as never;
 
     return new Proxy(this, {
       get(target, prop, receiver) {
         if (typeof prop !== "string" || prop in target)
           return Reflect.get(target, prop, receiver);
-        return target.get(prop as keyof z.output<TSchema>);
+        return target.get(prop as keyof T);
       },
       set() {
         return false;
       }
-    }) as StratifiedConfig<TSchema>;
+    }) as StratifiedConfig<T>;
   }
 
   // ── Write API ────────────────────────────────────────────────────────────────
@@ -134,7 +131,7 @@ export class StratifiedConfig<TSchema extends z.ZodObject> {
    * Writes directly mutate the per-key observable — only reactions that read
    * an updated key are invalidated, not the entire stratum.
    */
-  update(stratum: string, values: unknown): string | true {
+  update(stratum: string, values: Partial<T>): string | true {
     const validated = this.parseInput(values);
 
     if (validated.status === "INVALID") return validated.error;
@@ -161,11 +158,7 @@ export class StratifiedConfig<TSchema extends z.ZodObject> {
    * @example
    * cfg.setValue(ConfigStrata.user, "ignoreErrors", true);
    */
-  setValue<K extends keyof z.output<TSchema>>(
-    stratum: string,
-    key: K,
-    value: z.output<TSchema>[K]
-  ): void {
+  setValue<K extends keyof T>(stratum: string, key: K, value: T[K]): void {
     runInAction(() => {
       const stratumObj = this._getOrCreateStratum(stratum) as Record<
         string,
@@ -183,14 +176,14 @@ export class StratifiedConfig<TSchema extends z.ZodObject> {
    * The resolved value is materialized in the target stratum, so subsequent
    * changes to lower strata will remain masked by the copied fields.
    */
-  mergeValue<K extends keyof z.output<TSchema>>(
+  mergeValue<K extends keyof T>(
     stratum: string,
     key: K,
-    patch: DeepPartial<z.output<TSchema>[K]>
+    patch: DeepPartial<T[K]>
   ): string | true {
     return this.update(stratum, {
       [key]: mergeDeep(this.get(key), patch)
-    });
+    } as never);
   }
 
   // ── Read API ─────────────────────────────────────────────────────────────────
@@ -199,7 +192,7 @@ export class StratifiedConfig<TSchema extends z.ZodObject> {
    * Returns the observable partial stored at `stratum`, or `undefined` if
    * nothing has been set there yet.
    */
-  getStratum(stratum: string): Partial<z.output<TSchema>> | undefined {
+  getStratum(stratum: string): Partial<T> | undefined {
     return this._strata.get(stratum);
   }
 
@@ -214,14 +207,14 @@ export class StratifiedConfig<TSchema extends z.ZodObject> {
    * key — which should not happen for required fields if the defaults stratum
    * is fully populated.
    */
-  get<K extends keyof z.output<TSchema>>(key: K): z.output<TSchema>[K] {
+  get<K extends keyof T>(key: K): T[K] {
     for (const [, stratumObj] of this.stratumOrder.sortTopToBottom(
-      this._strata as unknown as Map<string, Partial<z.output<TSchema>>>
+      this._strata as unknown as Map<string, Partial<T>>
     )) {
       const value = getObservableValue(stratumObj, key as string);
       if (value !== undefined) return value;
     }
-    return undefined as z.output<TSchema>[K];
+    return undefined as T[K];
   }
 
   /**
@@ -233,7 +226,7 @@ export class StratifiedConfig<TSchema extends z.ZodObject> {
    * If any present value fails schema validation the whole input is rejected
    * and `{}` is returned.  Used internally by `update()`.
    */
-  parseInput(raw: unknown): ValidationState<Partial<z.output<TSchema>>> {
+  parseInput(raw: unknown): ValidationState<Partial<T>> {
     if (typeof raw !== "object" || raw === null || Array.isArray(raw)) {
       return {
         status: "INVALID",
@@ -251,7 +244,7 @@ export class StratifiedConfig<TSchema extends z.ZodObject> {
       status: "VALID",
       data: Object.fromEntries(
         Object.entries(result.data).filter(([, value]) => value !== undefined)
-      ) as Partial<z.output<TSchema>>
+      ) as Partial<T>
     };
   }
 
@@ -261,7 +254,7 @@ export class StratifiedConfig<TSchema extends z.ZodObject> {
    * Returns the observable object for `stratum`, creating an empty one if it
    * does not yet exist. Must be called inside a `runInAction`.
    */
-  private _getOrCreateStratum(stratum: string): Partial<z.output<TSchema>> {
+  private _getOrCreateStratum(stratum: string): Partial<T> {
     if (!this._strata.has(stratum)) {
       this._strata.set(stratum, observable({}));
     }
@@ -271,16 +264,18 @@ export class StratifiedConfig<TSchema extends z.ZodObject> {
 
 /**
  * Creates a `StratifiedConfig` instance typed as
- * `StratifiedConfig<TSchema> & z.output<TSchema>` so TypeScript sees both the
- * config methods and the transparently-proxied property accesses without any
- * assertion at call sites.
+ * `StratifiedConfig<z.output<TSchema>> & Readonly<z.output<TSchema>>` so
+ * TypeScript sees both the config methods and the transparently-proxied
+ * property accesses without any assertion at call sites. The resolved shape is
+ * inferred from the schema passed in.
  */
 export function createStratifiedConfig<TSchema extends z.ZodObject>(
   schema: TSchema,
   stratumOrder: ConfigStratumOrder = new ConfigStratumOrder()
-): StratifiedConfig<TSchema> & Readonly<z.output<TSchema>> {
-  return new StratifiedConfig(
+): StratifiedConfig<z.output<TSchema>> & Readonly<z.output<TSchema>> {
+  return new StratifiedConfig<z.output<TSchema>>(
     schema,
     stratumOrder
-  ) as unknown as StratifiedConfig<TSchema> & Readonly<z.output<TSchema>>;
+  ) as unknown as StratifiedConfig<z.output<TSchema>> &
+    Readonly<z.output<TSchema>>;
 }

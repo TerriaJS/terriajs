@@ -20,7 +20,7 @@ declare global {
   }
 }
 
-const terriaOptions: TerriaOptions<typeof TerriaMapConfigOptions> = {
+const terriaOptions: TerriaOptions = {
   baseUrl: "build/TerriaJS",
   config: createTerriaConfig(TerriaMapConfigOptions)
 };
