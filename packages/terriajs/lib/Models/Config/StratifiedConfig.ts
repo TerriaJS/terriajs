@@ -33,8 +33,8 @@ function isPlainObject(value: unknown): value is Record<string, unknown> {
   return prototype === Object.prototype || prototype === null;
 }
 
-function mergeDeep(base: unknown, patch: unknown): unknown {
-  if (!isPlainObject(base) || !isPlainObject(patch)) return patch;
+export function mergeDeep<T>(base: T, patch: DeepPartial<T>): T {
+  if (!isPlainObject(base) || !isPlainObject(patch)) return patch as T;
 
   return Object.fromEntries(
     Array.from(new Set([...Object.keys(base), ...Object.keys(patch)])).map(
@@ -43,7 +43,7 @@ function mergeDeep(base: unknown, patch: unknown): unknown {
         Object.hasOwn(patch, key) ? mergeDeep(base[key], patch[key]) : base[key]
       ]
     )
-  );
+  ) as T;
 }
 
 /**

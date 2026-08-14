@@ -3,7 +3,12 @@ import {
   ConfigParametersSchema
 } from "./ConfigParametersSchema";
 import { ConfigParameters } from "./ConfigParameters";
-import { StratifiedConfig, createStratifiedConfig } from "./StratifiedConfig";
+import {
+  DeepPartial,
+  StratifiedConfig,
+  createStratifiedConfig,
+  mergeDeep
+} from "./StratifiedConfig";
 import CommonStrata from "../Definition/CommonStrata";
 import { configStratumOrder } from "./ConfigStrata";
 import * as z from "zod";
@@ -41,15 +46,26 @@ export type { ConfigParameters };
  * `defaults` stratum.  Higher strata (underride, definition, override, user)
  * override individual keys without touching the defaults object.
  *
+ * `defaults` optionally overrides the built-in `CONFIG_DEFAULTS` before they
+ * are loaded. Overrides are deep-merged into the defaults (nested objects merge
+ * recursively, arrays replace), so a caller can tweak a single nested field or
+ * supply defaults for its own schema extensions (e.g. `hideLoginButton`)
+ * without restating the whole object. Everything is optional.
+ *
  * Side effects (localStorage persistence, Cesium RequestScheduler limits)
  * are intentionally NOT wired here — callers set them up via MobX `reaction()`
  * so the config object stays a pure reactive store.
  */
 export const createTerriaConfig = (
-  schema: z.ZodObject = ConfigParametersSchema
+  schema: z.ZodObject = ConfigParametersSchema,
+  defaults?: DeepPartial<ConfigParameters>
 ): TerriaConfig => {
   const config = createStratifiedConfig(schema, configStratumOrder);
-  const updateStatus = config.update(CommonStrata.defaults, CONFIG_DEFAULTS);
+  const mergedDefaults =
+    defaults === undefined
+      ? CONFIG_DEFAULTS
+      : mergeDeep(CONFIG_DEFAULTS, defaults);
+  const updateStatus = config.update(CommonStrata.defaults, mergedDefaults);
   if (typeof updateStatus !== "boolean") throw new Error(updateStatus);
 
   return config as unknown as TerriaConfig;
