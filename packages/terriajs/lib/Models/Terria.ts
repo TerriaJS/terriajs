@@ -120,6 +120,7 @@ import { FeedbackService, IFeedbackService } from "./FeedbackService";
 
 /** Keep export for experimentation */
 export { defaultLoadConfig };
+export type { ConfigParameters };
 
 export interface LoadConfigResponse {
   config: {
