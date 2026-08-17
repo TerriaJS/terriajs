@@ -9,6 +9,7 @@
 - Document security best practices for production deployment of terriajs
 - Fix an error when picking features on a Mapbox vector tile layer: `@mapbox/vector-tile` now builds feature props with a null prototype, which broke Cesium's `ImageryLayerFeatureInfo` methods that call `hasOwnProperty` directly. Props are now copied into a plain object before use.
 - Move catalog index from terria.ts class to catalog instance
+- Fix viewCatalogMember to correctly switch to the parent tab
 
 #### 8.12.5 - 2026-07-28
 
@@ -16,7 +17,6 @@
 - Upgraded `terriajs-cesium` to `26.0.0` and `terriajs-cesium-widgets` to `16.0.0`. We are now using cesium 1.142.
 - Upgraded terriajs-server to v5.0.0-alpha.3
 - Upgraded to i18next v26 and migrated to i18next select pattern `(t($ => translation.key))` #7882
-- Fix viewCatalogMember to correctly switch to the parent tab
 - Show spinner when loading tab group members
 - Changed `disablePreview` to also hide `Add to map` in preview modal.
 - Changed `About data` button to `About job` in workbench for CatalogFunctionJob instances.
