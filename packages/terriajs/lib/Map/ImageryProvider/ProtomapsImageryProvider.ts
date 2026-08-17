@@ -372,15 +372,20 @@ export default class ProtomapsImageryProvider implements ImageryProviderWithGrid
 
           const featureInfo = new ImageryLayerFeatureInfo();
 
+          // @mapbox/vector-tile builds feature props with a null prototype, so
+          // copy them into a plain object before handing them to Cesium, which
+          // calls props.hasOwnProperty() directly.
+          const props = { ...f.feature.props };
+
           // Add Layer name property
           featureInfo.properties = Object.assign(
             { [LAYER_NAME_PROP]: f.layerName },
-            f.feature.props ?? {}
+            props
           );
           featureInfo.position = new Cartographic(longitude, latitude);
 
-          featureInfo.configureDescriptionFromProperties(f.feature.props);
-          featureInfo.configureNameFromProperties(f.feature.props);
+          featureInfo.configureDescriptionFromProperties(props);
+          featureInfo.configureNameFromProperties(props);
 
           featureInfos.push(featureInfo);
         });

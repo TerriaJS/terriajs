@@ -1,6 +1,7 @@
 import i18next from "i18next";
 import { action, computed, makeObservable, override, runInAction } from "mobx";
 import isDefined from "../../../Core/isDefined";
+import { sanitizeCsvString } from "../../../Core/sanitizeCsv";
 import TerriaError from "../../../Core/TerriaError";
 import AutoRefreshingMixin from "../../../ModelMixins/AutoRefreshingMixin";
 import TableMixin from "../../../ModelMixins/TableMixin";
@@ -79,9 +80,13 @@ export default class CsvCatalogItem
 
   protected async _exportData() {
     if (isDefined(this.csvString)) {
+      // Sanitise against CSV/formula injection (CWE-1236) before exporting.
+      // Note: this re-serialises the CSV, so byte-for-byte source formatting is
+      // not preserved. The remote `url` case below is a direct download of the
+      // original file and is not sanitised.
       return {
         name: (this.name || this.uniqueId)!,
-        file: new Blob([this.csvString])
+        file: new Blob([sanitizeCsvString(this.csvString)])
       };
     }
 
