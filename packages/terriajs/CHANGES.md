@@ -9,6 +9,7 @@
 - Document security best practices for production deployment of terriajs
 - Fix an error when picking features on a Mapbox vector tile layer: `@mapbox/vector-tile` now builds feature props with a null prototype, which broke Cesium's `ImageryLayerFeatureInfo` methods that call `hasOwnProperty` directly. Props are now copied into a plain object before use.
 - Move catalog index from terria.ts class to catalog instance
+- Fix viewCatalogMember to correctly switch to the parent tab
 
 #### 8.12.5 - 2026-07-28
 
