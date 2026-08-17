@@ -14,6 +14,7 @@
 - Changed `disablePreview` to also hide `Add to map` in preview modal.
 - Changed `About data` button to `About job` in workbench for CatalogFunctionJob instances.
 - Add `edit` stratum for tracking temporary user changes that shouldn't be captured in share link - example form edits.
+- Fix viewCatalogMember to correctly switch to the parent tab
 
 #### 8.12.5 - 2026-07-28
 
