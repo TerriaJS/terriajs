@@ -49,5 +49,5 @@ export default class CatalogFunctionJobTraits extends mixTraits(
       "How often the job will poll for results, in seconds. (This overrides `AutoRefreshingTraits`)",
     type: "number"
   })
-  refreshInterval = 1;
+  refreshInterval = 2;
 }
