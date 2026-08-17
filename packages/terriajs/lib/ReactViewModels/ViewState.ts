@@ -683,7 +683,7 @@ export default class ViewState {
           runInAction(() => {
             this.openAddData();
             if (this.terria.configParameters.tabbedCatalog) {
-              this.loadParentTab(item);
+              this.selectParentTab(item);
             }
           });
         }
@@ -719,7 +719,7 @@ export default class ViewState {
   /**
    * Load the parent tab of the given item
    */
-  private loadParentTab(item: BaseModel) {
+  private selectParentTab(item: BaseModel) {
     const findParentTab = (item: BaseModel) =>
       getAncestors(item).find((m) =>
         this.terria.catalog.group.memberModels.includes(m)
@@ -727,11 +727,10 @@ export default class ViewState {
 
     let parentGroup = findParentTab(item);
     if (!parentGroup) {
-      // It is possible that the loadMembers() was not called on the
-      // top level tab groups and therefore the parent -> member
-      // links were not established. Manually call
-      // refreshKnownContainerUniqueIds on the top level tab groups
-      // and retry getting the ancestors.
+      // It is possible that the loadMembers() was not called on the top level
+      // tab groups on app load and therefore the parent -> member links were
+      // not established. Manually call refreshKnownContainerUniqueIds on the
+      // top level tab groups and retry getting the ancestors.
       this.terria.catalog.group.memberModels.forEach((m) => {
         if (GroupMixin.isMixedInto(m)) {
           m.refreshKnownContainerUniqueIds(m.uniqueId);
