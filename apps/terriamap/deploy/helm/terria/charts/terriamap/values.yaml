@@ -12,9 +12,6 @@ clientConfig:
     - helm
     - terria
   parameters:
-    disclaimer:
-      text: "Disclaimer: This map must not be used for navigation or precise spatial analysis"
-      url: "http://google.com"
     globalDisclaimer:
       confirmationRequired: true
       buttonTitle: "I agree"
@@ -22,9 +19,6 @@ clientConfig:
       prodHostRegex: "gov.\\.au$"
       devHostRegex: "\\b(staging|preview|test|dev)\\."
       enableOnLocalhost: true
-    developerAttribution:
-      text: "Your organisation"
-      link: "http://www.example.com"
     appName: "Terria Map"
     brandBarElements:
       [
@@ -33,7 +27,6 @@ clientConfig:
         ""
       ]
     supportEmail: "help@example.com"
-    mobileDefaultViewerMode: "2d"
     experimentalFeatures: true
 initConfig:
   homeCamera:

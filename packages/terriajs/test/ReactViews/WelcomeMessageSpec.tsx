@@ -1,5 +1,6 @@
 import { runInAction } from "mobx";
 import Terria from "../../lib/Models/Terria";
+import { ConfigStrata } from "../../lib/Models/Config/ConfigStrata";
 import ViewState from "../../lib/ReactViewModels/ViewState";
 import WelcomeMessage from "../../lib/ReactViews/WelcomeMessage/WelcomeMessage";
 import { renderWithContexts } from "./withContext";
@@ -20,12 +21,20 @@ describe("WelcomeMessage", function () {
 
   it("renders when showWelcomeMessage is set to true in config file", function () {
     runInAction(() => {
-      terria.configParameters.showWelcomeMessage = true;
-      terria.configParameters.welcomeMessageVideo = {
-        videoTitle: "Getting started with the map",
-        videoUrl: "",
-        placeholderImage: ""
-      };
+      terria.configParameters.setValue(
+        ConfigStrata.definition,
+        "showWelcomeMessage",
+        true
+      );
+      terria.configParameters.setValue(
+        ConfigStrata.definition,
+        "welcomeMessageVideo",
+        {
+          videoTitle: "Getting started with the map",
+          videoUrl: "",
+          placeholderImage: ""
+        }
+      );
     });
     const { container } = renderWithContexts(<WelcomeMessage />, viewState);
     const localScreen = within(container);
@@ -54,7 +63,13 @@ describe("WelcomeMessage", function () {
   });
 
   it("doesn't render when showWelcomeMessage is set to false in config file", function () {
-    runInAction(() => (terria.configParameters.showWelcomeMessage = false));
+    runInAction(() =>
+      terria.configParameters.setValue(
+        ConfigStrata.definition,
+        "showWelcomeMessage",
+        false
+      )
+    );
     renderWithContexts(<WelcomeMessage />, viewState);
 
     expect(viewState.showWelcomeMessage).toEqual(false);

@@ -57,7 +57,8 @@ const LocationSearchResults: React.FC<LocationSearchResultsProps> = observer(
     };
 
     const validResults = useMemo(() => {
-      const locationSearchBoundingBox = terria.searchBarModel.boundingBoxLimit;
+      const locationSearchBoundingBox =
+        terria.searchBarModel.config.boundingBoxLimit;
       let filterResults = false;
       let west: number | undefined,
         east: number | undefined,
