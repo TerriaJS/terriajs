@@ -1,0 +1,42 @@
+# Copybara Sync Gate (OSS)
+#
+# saas-settings creates copybara/from-monorepo before an outbound run starts. This
+# public-side gate blocks while that branch exists and needs no access to the private
+# repository.
+#
+# Required status check: the job name "copybara-sync-gate".
+
+name: Copybara Sync Gate
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  merge_group:
+
+permissions:
+  contents: read
+
+env:
+  SYNC_REF: copybara/from-monorepo
+
+jobs:
+  copybara-sync-gate:
+    runs-on: ubuntu-latest
+    steps:
+      # The pull_request run is intentionally a passthrough so the PR can enter the
+      # merge queue. The merge_group run performs the authoritative check.
+      - name: Require saas-settings oss/ to be synced
+        if: github.event_name == 'merge_group'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+
+          if gh api "repos/${GITHUB_REPOSITORY}/git/ref/heads/${SYNC_REF}" \
+            --silent 2>/dev/null; then
+            echo "::error::saas-settings oss/ has changes that are not yet synced to terriajs."
+            echo "::error::Check the Copybara outbound workflow and sync PR in TerriaJS/terriajs."
+            exit 1
+          fi
+
+          echo "No outbound sync branch exists"
