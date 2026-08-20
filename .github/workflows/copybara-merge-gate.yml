@@ -1,0 +1,120 @@
+# Copybara Sync Gate (OSS)
+#
+# Prevents merging terriajs (OSS) PRs while unsynced monorepo→oss/ changes exist.
+# Without this gate, the Copybara terriajs→oss/ (inbound) sync triggered by this merge
+# would overwrite those oss/ changes in the monorepo, silently reverting them.
+#
+# Required status check: the job name "copybara-sync-gate".
+#
+# Works with GitHub merge queue: the pull_request trigger is a passthrough (instant
+# success) so the PR can enter the merge queue. The real check runs on the merge_group
+# trigger at merge time, polling for up to 10 minutes if the sync is behind.
+#
+# Prerequisites: the shared GitHub App (installed on both terriajs and saas-settings)
+# to read the private monorepo history — variable APP_CLIENT_ID, secret APP_PRIVATE_KEY.
+
+name: Copybara Sync Gate
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  merge_group:
+
+permissions:
+  contents: read
+
+jobs:
+  copybara-sync-gate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Mint App token (read the private monorepo)
+        id: token
+        if: github.event_name == 'merge_group'
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
+        with:
+          client-id: ${{ vars.APP_CLIENT_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+          repositories: |
+            saas-settings
+            terriajs
+
+      - name: Wait for monorepo-to-oss/ sync to catch up
+        if: github.event_name == 'merge_group'
+        env:
+          GH_TOKEN: ${{ steps.token.outputs.token }}
+          OWNER: ${{ github.repository_owner }}
+        run: |
+          set -euo pipefail
+
+          check_sync() {
+            # Find the last monorepo commit that was synced to oss/. Copybara labels
+            # synced commits on terriajs with "MONOREPO_REV_ID: <monorepo-hash>".
+            LAST_SYNCED=$(gh api "repos/${{ github.repository }}/commits" \
+              --method GET -f sha=main -f per_page=100 \
+              --jq 'map(select(.commit.message | test("MONOREPO_REV_ID:"))) | .[0].commit.message' \
+            | grep -oP 'MONOREPO_REV_ID: \K[a-f0-9]+')
+
+            if [ -z "$LAST_SYNCED" ]; then
+              echo "Could not find any MONOREPO_REV_ID in the last 100 terriajs commits"
+              return 1
+            fi
+
+            # How many monorepo commits are ahead of the last synced one.
+            COMPARE=$(gh api "repos/${OWNER}/saas-settings/compare/${LAST_SYNCED}...main")
+            AHEAD=$(echo "$COMPARE" | jq '.ahead_by')
+
+            if [ "$AHEAD" -eq 0 ]; then
+              echo "monorepo-to-oss/ sync is caught up"
+              return 0
+            fi
+
+            # Filter out commits that originated from terriajs (noops for this direction).
+            # Then check if any remaining commits touch oss/.
+            UNSYNCED_SHAS=$(echo "$COMPARE" | jq -r \
+              '[.commits[] | select(.commit.message | test("TERRIAJS_REV_ID:") | not)] | .[].sha')
+
+            if [ -z "$UNSYNCED_SHAS" ]; then
+              echo "All $AHEAD ahead commits originated from terriajs — sync is effectively caught up"
+              return 0
+            fi
+
+            # Check if any unsynced commits touch oss/.
+            BLOCKING=0
+            for SHA in $UNSYNCED_SHAS; do
+              TOUCHES_OSS=$(gh api "repos/${OWNER}/saas-settings/commits/$SHA" \
+                --jq '[.files[].filename | select(startswith("oss/"))] | length')
+              if [ "$TOUCHES_OSS" -gt 0 ]; then
+                BLOCKING=$((BLOCKING + 1))
+              fi
+            done
+
+            if [ "$BLOCKING" -eq 0 ]; then
+              echo "No unsynced monorepo commits touch oss/ — safe to merge"
+              return 0
+            fi
+
+            echo "$BLOCKING unsynced monorepo commit(s) touch oss/"
+            return 1
+          }
+
+          MAX_ATTEMPTS=30  # 10 minutes at 20s intervals
+          for i in $(seq 1 $MAX_ATTEMPTS); do
+            if check_sync; then
+              echo "Sync gate passed"
+              exit 0
+            fi
+
+            if [ "$i" -eq 1 ]; then
+              echo "Waiting for Copybara monorepo-to-oss/ sync to complete..."
+            fi
+
+            if [ "$i" -eq "$MAX_ATTEMPTS" ]; then
+              echo "::error::monorepo-to-oss/ sync did not catch up within 10 minutes."
+              echo "::error::Merging this PR risks having oss/ changes silently reverted."
+              echo "::error::Check the 'Copybara outbound' workflow in TerriaJS/saas-settings."
+              exit 1
+            fi
+
+            sleep 20
+          done
