@@ -2,6 +2,7 @@ import { observer } from "mobx-react";
 import { FC, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import Box from "../../Styled/Box";
+import AnnotationPopups from "../Annotations/AnnotationPopups";
 import ActionBarPortal from "../ActionBar/ActionBarPortal";
 import BottomDock from "../BottomDock/BottomDock";
 import { useViewState } from "../Context";
@@ -82,6 +83,7 @@ export const MapColumn: FC<IMapColumnProps> = observer(
           >
             <TerriaViewerWrapper />
           </Box>
+          {!viewState.hideMapUi && <AnnotationPopups viewState={viewState} />}
           {!viewState.hideMapUi && (
             <>
               <ActionBarPortal show={viewState.isActionBarVisible} />

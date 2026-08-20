@@ -24,6 +24,7 @@ import Credit from "terriajs-cesium/Source/Core/Credit";
 import defined from "terriajs-cesium/Source/Core/defined";
 import destroyObject from "terriajs-cesium/Source/Core/destroyObject";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
+import EllipsoidalOccluder from "terriajs-cesium/Source/Core/EllipsoidalOccluder";
 import EllipsoidTerrainProvider from "terriajs-cesium/Source/Core/EllipsoidTerrainProvider";
 import Event from "terriajs-cesium/Source/Core/Event";
 import EventHelper from "terriajs-cesium/Source/Core/EventHelper";
@@ -91,7 +92,7 @@ import TerriaViewer from "../ViewModels/TerriaViewer";
 import CameraView from "./CameraView";
 import hasTraits from "./Definition/hasTraits";
 import TerriaFeature from "./Feature/Feature";
-import GlobeOrMap from "./GlobeOrMap";
+import GlobeOrMap, { ScreenAnchor } from "./GlobeOrMap";
 import Terria from "./Terria";
 import UserDrawing from "./UserDrawing";
 import { setViewerMode } from "./ViewerMode";
@@ -1742,6 +1743,47 @@ export default class Cesium extends GlobeOrMap {
       position,
       result
     );
+  }
+
+  override addScreenAnchor(position: Cartesian3): ScreenAnchor {
+    const element = document.createElement("div");
+    element.style.position = "absolute";
+    element.style.top = "0";
+    element.style.left = "0";
+    element.style.pointerEvents = "none";
+    this.cesiumWidget.container.appendChild(element);
+
+    const scratch = new Cartesian2();
+    const update = () => {
+      // Hide positions on the far side of the globe.
+      const occluder = new EllipsoidalOccluder(
+        Ellipsoid.WGS84,
+        this.scene.camera.positionWC
+      );
+      const screen = occluder.isPointVisible(position)
+        ? SceneTransforms.worldToWindowCoordinates(
+            this.scene,
+            position,
+            scratch
+          )
+        : undefined;
+      if (!isDefined(screen)) {
+        element.style.visibility = "hidden";
+        return;
+      }
+      element.style.visibility = "visible";
+      element.style.transform = `translate(${screen.x}px, ${screen.y}px)`;
+    };
+    update();
+    const removeListener = this.scene.postRender.addEventListener(update);
+
+    return {
+      element,
+      destroy: () => {
+        removeListener();
+        element.remove();
+      }
+    };
   }
 
   _selectFeature(): void {

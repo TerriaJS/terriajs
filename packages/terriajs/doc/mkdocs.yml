@@ -54,6 +54,7 @@ nav:
       - Using a Custom Version of Cesium: contributing/using-a-custom-version-of-cesium.md
       - Problems and Solutions: contributing/problems-and-solutions.md
       - New model layer documentation: contributing/model-layer.md
+      - Map Annotations: contributing/map-annotations.md
       - Traits in depth: contributing/traits-in-depth.md
       - Strata Examples: contributing/strata-examples.md
       - Init sources: contributing/init-sources.md

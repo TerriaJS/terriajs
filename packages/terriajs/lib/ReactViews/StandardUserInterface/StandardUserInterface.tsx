@@ -26,6 +26,7 @@ import Notification from "../Notification/Notification";
 import Branding from "../SidePanel/Branding";
 import FullScreenButton from "../SidePanel/FullScreenButton";
 import SidePanel from "../SidePanel/SidePanel";
+import AnnotationEditor from "../Annotations/AnnotationEditor";
 import StoryBuilder from "../Story/StoryBuilder";
 import StoryPanel from "../Story/StoryPanel/StoryPanel";
 import ClippingBoxToolLauncher from "../Tools/ClippingBox/ClippingBoxToolLauncher";
@@ -328,6 +329,7 @@ const StandardUserInterfaceBase: FC<StandardUserInterfaceProps> = observer(
           />
         )}
         <ClippingBoxToolLauncher viewState={props.viewState} />
+        <AnnotationEditor viewState={props.viewState} />
       </ContextProviders>
     );
   }

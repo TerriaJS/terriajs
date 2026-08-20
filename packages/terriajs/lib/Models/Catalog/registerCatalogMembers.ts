@@ -5,6 +5,7 @@ import CatalogGroup from "./CatalogGroup";
 import OpenDataSoftCatalogGroup from "./CatalogGroups/OpenDataSoftCatalogGroup";
 import SocrataCatalogGroup from "./CatalogGroups/SocrataCatalogGroup";
 import ThreddsCatalogGroup from "./CatalogGroups/ThreddsCatalogGroup";
+import AnnotationCatalogItem from "./CatalogItems/AnnotationCatalogItem";
 import { ApiTableCatalogItem } from "./CatalogItems/ApiTableCatalogItem";
 import BingMapsCatalogItem from "./CatalogItems/BingMapsCatalogItem";
 import CartoMapV1CatalogItem from "./CatalogItems/CartoMapV1CatalogItem";
@@ -104,6 +105,10 @@ export default function registerCatalogMembers() {
   CatalogMemberFactory.register(GeoRssCatalogItem.type, GeoRssCatalogItem);
   CatalogMemberFactory.register(CsvCatalogItem.type, CsvCatalogItem);
   CatalogMemberFactory.register(CzmlCatalogItem.type, CzmlCatalogItem);
+  CatalogMemberFactory.register(
+    AnnotationCatalogItem.type,
+    AnnotationCatalogItem
+  );
   CatalogMemberFactory.register(
     ShapefileCatalogItem.type,
     ShapefileCatalogItem

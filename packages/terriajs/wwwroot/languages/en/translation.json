@@ -57,6 +57,26 @@
     "measureToolTitle": "Line Measure",
     "measureDistance": "Measure distance between locations"
   },
+  "annotations": {
+    "name": "Annotations",
+    "toolTitle": "Annotate",
+    "toolDescription": "Add a text annotation to the map",
+    "messageHeader": "Annotation Tool",
+    "clickToAdd": "Click on the map to add an annotation, or click an existing annotation to edit it",
+    "doneBtn": "Done",
+    "editor": {
+      "addHeader": "Add annotation",
+      "editHeader": "Edit annotation",
+      "cancelBtn": "Cancel",
+      "deleteBtn": "Delete",
+      "saveBtn": "Save"
+    },
+    "popup": {
+      "edit": "Edit",
+      "delete": "Delete",
+      "close": "Close"
+    }
+  },
   "location": {
     "errorGettingLocation": "Error getting location",
     "browserCannotProvide": "Your browser cannot provide your location.",

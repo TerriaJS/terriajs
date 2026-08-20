@@ -248,6 +248,14 @@ declare module "terriajs-cesium/Source/Core/Ellipsoid" {
   import { Ellipsoid } from "terriajs-cesium";
   export default Ellipsoid;
 }
+declare module "terriajs-cesium/Source/Core/EllipsoidalOccluder" {
+  import { Cartesian3, Ellipsoid } from "terriajs-cesium";
+  export default class EllipsoidalOccluder {
+    constructor(ellipsoid: Ellipsoid, cameraPosition?: Cartesian3);
+    cameraPosition: Cartesian3;
+    isPointVisible(occludee: Cartesian3): boolean;
+  }
+}
 declare module "terriajs-cesium/Source/Core/EllipsoidGeodesic" {
   import { EllipsoidGeodesic } from "terriajs-cesium";
   export default EllipsoidGeodesic;

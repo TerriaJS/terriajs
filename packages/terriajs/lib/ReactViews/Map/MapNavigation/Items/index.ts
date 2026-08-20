@@ -1,3 +1,4 @@
+export { AnnotationTool, ANNOTATION_TOOL_ID } from "./AnnotationTool";
 export {
   AR_TOOL_ID,
   AugmentedVirtualityController,

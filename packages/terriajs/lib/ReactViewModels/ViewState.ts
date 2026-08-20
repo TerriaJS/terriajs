@@ -57,6 +57,20 @@ interface ViewStateOptions {
 }
 
 /**
+ * State driving the annotation rich-text editor modal.
+ */
+export interface AnnotationEditorState {
+  /** Initial HTML content shown in the editor. */
+  initialText: string;
+  /** Whether this is a brand new annotation (affects modal copy). */
+  isNew: boolean;
+  /** Called with the edited HTML when the user saves. */
+  onSave: (text: string) => void;
+  /** If provided, a delete button is shown that calls this. */
+  onDelete?: () => void;
+}
+
+/**
  * Root of a global view model. Presumably this should get nested as more stuff goes into it. Basically this belongs to
  * the root of the UI and then it can choose to pass either the whole thing or parts down as props to its children.
  */
@@ -90,6 +104,13 @@ export default class ViewState {
   // Map for storing react portal containers created by <Portal> component.
   @observable portals: Map<string, HTMLElement | null> = new Map();
   @observable storyBuilderShown: boolean = false;
+
+  /**
+   * State for the annotation rich-text editor modal. Set to an
+   * {@link AnnotationEditorState} to show the editor, `undefined` to hide it.
+   */
+  @observable annotationEditorState: AnnotationEditorState | undefined =
+    undefined;
 
   // Flesh out later
   @observable showHelpMenu: boolean = false;
@@ -187,6 +208,16 @@ export default class ViewState {
   @action
   setCurrentTrainerStepIndex(index: number): void {
     this.currentTrainerStepIndex = index;
+  }
+
+  @action
+  openAnnotationEditor(state: AnnotationEditorState): void {
+    this.annotationEditorState = state;
+  }
+
+  @action
+  closeAnnotationEditor(): void {
+    this.annotationEditorState = undefined;
   }
 
   @action

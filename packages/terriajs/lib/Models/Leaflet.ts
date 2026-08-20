@@ -55,7 +55,7 @@ import TerriaViewer from "../ViewModels/TerriaViewer";
 import CameraView from "./CameraView";
 import hasTraits from "./Definition/hasTraits";
 import TerriaFeature from "./Feature/Feature";
-import GlobeOrMap from "./GlobeOrMap";
+import GlobeOrMap, { ScreenAnchor } from "./GlobeOrMap";
 import { LeafletAttribution } from "./LeafletAttribution";
 import Terria from "./Terria";
 
@@ -953,6 +953,38 @@ export default class Leaflet extends GlobeOrMap {
       result = new Cartesian2(point.x, point.y);
     }
     return result;
+  }
+
+  override addScreenAnchor(position: Cartesian3): ScreenAnchor {
+    const cartographic = Ellipsoid.WGS84.cartesianToCartographic(position);
+    const latlng = L.latLng(
+      CesiumMath.toDegrees(cartographic.latitude),
+      CesiumMath.toDegrees(cartographic.longitude)
+    );
+
+    // A zero-size, non-interactive marker. Leaflet keeps it glued to the latLng
+    // through pan and zoom (including the zoom animation) with no lag.
+    const marker = L.marker(latlng, {
+      icon: L.divIcon({ className: "", html: "", iconSize: [0, 0] }),
+      interactive: false,
+      keyboard: false
+    });
+    marker.addTo(this.map);
+
+    const iconEl = marker.getElement();
+    const element = document.createElement("div");
+    element.style.pointerEvents = "none";
+    if (iconEl) {
+      iconEl.style.pointerEvents = "none";
+      iconEl.appendChild(element);
+    }
+
+    return {
+      element,
+      destroy: () => {
+        this.map.removeLayer(marker);
+      }
+    };
   }
 
   private _selectFeature(feature: TerriaFeature | undefined) {

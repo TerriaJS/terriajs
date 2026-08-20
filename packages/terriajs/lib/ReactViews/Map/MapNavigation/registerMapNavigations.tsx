@@ -13,6 +13,7 @@ import PedestrianMode, {
 } from "../../Tools/PedestrianMode/PedestrianMode";
 import { ToolButtonController } from "../../Tools/Tool";
 import {
+  AnnotationTool,
   AR_TOOL_ID,
   AugmentedVirtualityController,
   AugmentedVirtualityHoverController,
@@ -103,6 +104,17 @@ export const registerMapNavigations = (viewState: ViewState) => {
     controller: measureTool,
     screenSize: undefined,
     order: 6
+  });
+
+  const annotationTool = new AnnotationTool({ terria, viewState });
+  mapNavigationModel.addItem({
+    id: AnnotationTool.id,
+    name: "translate#annotations.toolTitle",
+    title: "translate#annotations.toolDescription",
+    location: "TOP",
+    controller: annotationTool,
+    screenSize: undefined,
+    order: 7
   });
 
   const pedestrianModeToolController = new ToolButtonController({

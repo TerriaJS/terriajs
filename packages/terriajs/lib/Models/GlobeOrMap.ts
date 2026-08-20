@@ -39,6 +39,16 @@ import MappableTraits, {
 import Model from "./Definition/Model";
 import "./Feature/ImageryLayerFeatureInfo"; // overrides Cesium's prototype.configureDescriptionFromProperties
 
+/**
+ * A DOM element anchored to a world position on the map (see
+ * {@link GlobeOrMap.addScreenAnchor}). Render content into `element`; call `destroy`
+ * to remove it and stop tracking.
+ */
+export interface ScreenAnchor {
+  readonly element: HTMLElement;
+  destroy(): void;
+}
+
 export default abstract class GlobeOrMap {
   abstract readonly type: string;
   abstract readonly terria: Terria;
@@ -138,6 +148,24 @@ export default abstract class GlobeOrMap {
   abstract resumeMapInteraction(): void;
 
   abstract notifyRepaintRequired(): void;
+
+  /**
+   * Creates a DOM element that stays anchored to the given world position as the
+   * camera/map moves, and is a fixed screen size regardless of zoom. Callers render
+   * their own content into `element` (e.g. via a React portal). Positioning is
+   * delegated to the concrete viewer so it tracks natively (a Leaflet marker in 2D,
+   * a per-frame `postRender` update in 3D). The base implementation returns a
+   * detached, untracked element.
+   */
+  addScreenAnchor(_position: Cartesian3): ScreenAnchor {
+    const element = document.createElement("div");
+    return {
+      element,
+      destroy() {
+        element.remove();
+      }
+    };
+  }
 
   /**
    * List of the attributions (credits) for data currently displayed on map.
