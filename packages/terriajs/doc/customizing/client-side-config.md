@@ -13,7 +13,7 @@ It has following structure:
 | Name                                          | Required | Type                          | Default | Description                                                                                                                                                                                                             |
 | --------------------------------------------- | -------- | ----------------------------- | ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | [initializationUrls](#intializationurls)      | yes      | **string[]**                  | []      | The list of initialization files which define the catalog content, for more details check [below](#intializationurls).                                                                                                  |
-| [v7initializationUrls](#v7initializationurls) | yes      | **string[]**                  | []      | The list of v7 initialization files &mdash; these will be converted to v8 on the fly using [`catalog-converter`](https://github.com/TerriaJS/catalog-converter). For more details check [below](#v7initializationurls). |
+| [v7initializationUrls](#v7initializationurls) | no       | **string[]**                  | []      | The list of v7 initialization files &mdash; these will be converted to v8 on the fly using [`catalog-converter`](https://github.com/TerriaJS/catalog-converter). For more details check [below](#v7initializationurls). |
 | parameters                                    | yes      | **[Parameters](#parameters)** |         | TerriaJS configuration options                                                                                                                                                                                          |
 
 **Example**
@@ -62,7 +62,8 @@ It is also possible to add version 7 init files using the `v7initializationUrls`
 
 ## Parameters
 
-**The best reference for now is [`interface ConfigParameters`](https://github.com/TerriaJS/terriajs/blob/main/packages/terriajs/lib/Models/Terria.ts#L101) (you may have to search for `interface ConfigParameters` on that page to find it if future code changes change line numbers).**
+The table below is not exhaustive. The authoritative references are [`ConfigParametersSchema`](https://github.com/TerriaJS/terriajs/blob/main/packages/terriajs/lib/Models/Config/ConfigParametersSchema.ts) for accepted parameters and
+[`CONFIG_DEFAULTS`](https://github.com/TerriaJS/terriajs/blob/main/packages/terriajs/lib/Models/Config/ConfigParametersSchema.ts) for their built-in defaults. In the future, this table should be generated from those definitions instead of maintained manually.
 
 Specifies various options for configuring TerriaJS:
 
@@ -81,8 +82,8 @@ Specifies various options for configuring TerriaJS:
 | `parentMessageAllowedOrigins`     | no       | **string[]**                                                                                             | `[]`                                                               | Origins permitted to exchange messages with the application through `window.postMessage`. The application's own non-opaque origin is allowed automatically. Cross-origin parent or opener pages must be listed explicitly. The opaque origin `"null"` is never allowed.                                |
 | `shareUrl`                        | no       | **string**                                                                                               | `"share"`                                                          |
 | `feedbackUrl`                     | no       | **string**                                                                                               |                                                                    | URL of the service used to send feedback. If not specified, the "Give Feedback" button will not appear.                                                                                                                                                                                                |
-| `initFragmentPaths`               | yes      | **string[]**                                                                                             | `["init/"]`                                                        | An array of base paths to use to try to use to resolve init fragments in the URL. For example, if this property is `[ "init/", "http://example.com/init/"]`, then a URL with `#test` will first try to load `init/test.json` and, if that fails, next try to load `http://example.com/init/test.json`. |
-| `storyEnabled`                    | yes      | **boolean**                                                                                              | `true`                                                             | Whether the story is enabled. If false story function button won't be available.                                                                                                                                                                                                                       |
+| `initFragmentPaths`               | no       | **string[]**                                                                                             | `["init/"]`                                                        | An array of base paths to use to try to use to resolve init fragments in the URL. For example, if this property is `[ "init/", "http://example.com/init/"]`, then a URL with `#test` will first try to load `init/test.json` and, if that fails, next try to load `http://example.com/init/test.json`. |
+| `storyEnabled`                    | no       | **boolean**                                                                                              | `true`                                                             | Whether the story is enabled. If false story function button won't be available.                                                                                                                                                                                                                       |
 | `storyAutoStart`                  | no       | **boolean**                                                                                              | `false`                                                            | True to start playing a story as soon as a map containing one is loaded, instead of asking the user whether they want to view it. A share that contains a story records this as `settings.storyAutoStart`; the `playStory` hash parameter overrides both.                                              |
 | `interceptBrowserPrint`           | no       | **boolean**                                                                                              | `true`                                                             | True (the default) to intercept the browser's print feature and use a custom one accessible through the Share panel.                                                                                                                                                                                   |
 | `tabbedCatalog`                   | no       | **boolean**                                                                                              | `false`                                                            | True to create a separate explorer panel tab for each top-level catalog group to list its items in.                                                                                                                                                                                                    |
@@ -102,8 +103,6 @@ Specifies various options for configuring TerriaJS:
 | `nextExperimentalFeatures`        | no       | **[NextExperimentalFeatures](#nextexperimentalfeatures)**                                                | undefined                                                          | Individually toggled experimental features.                                                                                                                                                                                                                                                            |
 | `magdaReferenceHeaders`           | no       | **[MagdaReferenceHeaders](#magdareferenceheaders)**                                                      | undefined                                                          |
 | `googleAnalyticsKey`              | no       | **string**                                                                                               | undefined                                                          | A Google API key for [Google Analytics](https://analytics.google.com). If specified, TerriaJS will send various events about how it's used to Google Analytics.                                                                                                                                        |
-| `errorService`                    | no       | **[ErrorServiceOptions](#errorserviceoptions)**                                                          | undefined                                                          | Optional configuration for the remote error logging service that Terria should log errors to.                                                                                                                                                                                                          |
-| `globalDisclaimer`                | no       | **any**                                                                                                  | undefined                                                          |                                                                                                                                                                                                                                                                                                        |
 | `showWelcomeMessage`              | no       | **boolean**                                                                                              | `false`                                                            | True to display welcome message on startup.                                                                                                                                                                                                                                                            |
 | `welcomeMessageVideo`             | no       | **any**                                                                                                  |                                                                    | Video to show in welcome message.                                                                                                                                                                                                                                                                      |
 | `showInAppGuides`                 | no       | **boolean**                                                                                              | `false`                                                            | True to display in-app guides.                                                                                                                                                                                                                                                                         |
@@ -195,13 +194,6 @@ Configuration of items to appear in the search bar
 
 ---
 
-### ErrorServiceOptions
-
-| Name          | Required | Type       | Default     | Description                                                            |
-| ------------- | -------- | ---------- | ----------- | ---------------------------------------------------------------------- |
-| provider      | no       | **string** | `undefined` | A string identifying the error service provider.                       |
-| configuration | no       | **any**    | `undefined` | The configuration object to be used when initializing an ErrorService. |
-
 **Example**
 
 ```json
@@ -282,3 +274,56 @@ search provider values.
 | minCharacters         | no       | **number**    | 3                              | Minimum number of characters required for search to start                                         |
 | boundingBoxLimit      | no       | **Rectangle** | `Cesium.Rectangle.MAX_VALUE`   | Bounding box limits for the search results {west, south, east, north}                             |
 | showSearchInCatalog   | no       | **boolean**   | true                           | True to show "Search in Catalog" link in location search results.                                 |
+
+## Extending the parameters schema
+
+Applications can add their own client-side configuration parameters without changing TerriaJS. Define the additional fields once in a Zod object, use its shape to extend the runtime schema, and declaration-merge the inferred fields into `ConfigParameters`:
+
+```ts
+import { ConfigParametersSchema } from "terriajs/lib/Models/Config/ConfigParametersSchema";
+import * as z from "zod";
+
+const AppConfigExtensionSchema = z.object({
+  myFeature: z
+    .object({
+      enabled: z.boolean(),
+      serviceUrl: z.string().url().optional()
+    })
+    .optional()
+});
+
+declare module "terriajs/lib/Models/Config/ConfigParameters" {
+  interface ConfigParametersExtensions extends z.infer<
+    typeof AppConfigExtensionSchema
+  > {}
+}
+
+export const AppConfigParametersSchema = ConfigParametersSchema.extend(
+  AppConfigExtensionSchema.shape
+);
+```
+
+Create the config with the extended schema and pass it to `Terria`:
+
+```ts
+import Terria from "terriajs/lib/Models/Terria";
+import { createTerriaConfig } from "terriajs/lib/Models/Config/TerriaConfig";
+import { AppConfigParametersSchema } from "./AppConfigParametersSchema";
+
+const terria = new Terria({
+  baseUrl: "build/TerriaJS/",
+  config: createTerriaConfig(AppConfigParametersSchema)
+});
+```
+
+The extension schema controls runtime validation, while declaration merging makes the new fields available wherever `ConfigParameters` is used. Keep both derived from the same Zod object so their accepted fields cannot diverge.
+Because the base schema is strict, unrecognised parameters produce a configuration validation error.
+
+If an application-specific field needs a default, pass it as the second
+argument to `createTerriaConfig`:
+
+```ts
+config: createTerriaConfig(AppConfigParametersSchema, {
+  myFeature: { enabled: false }
+});
+```
