@@ -1,6 +1,7 @@
 import {
   get as getObservableValue,
   observable,
+  remove as removeObservableValue,
   runInAction,
   set as setObservableValue
 } from "mobx";
@@ -173,6 +174,16 @@ export class StratifiedConfig<T extends object> {
     value: T[K]
   ): string | true {
     this._assertStratumRegistered(stratum);
+
+    if (value === undefined) {
+      runInAction(() => {
+        const stratumObj = this._strata.get(stratum) as
+          | Record<string, unknown>
+          | undefined;
+        if (stratumObj) removeObservableValue(stratumObj, key as string);
+      });
+      return true;
+    }
 
     const { data, errors } = this.parseInput({ [key]: value });
     if (errors.length > 0) return errors.join("\n");

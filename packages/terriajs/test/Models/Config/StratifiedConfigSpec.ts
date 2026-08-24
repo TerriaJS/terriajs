@@ -116,6 +116,16 @@ describe("StratifiedConfig", function () {
     expect(config.value).toBe(5);
   });
 
+  it("setValue removes a value from a stratum when passed undefined", function () {
+    const config = createStratifiedConfig(schema);
+    config.setValue(ConfigStrata.definition, "value", 1);
+    config.setValue(ConfigStrata.user, "value", 2);
+
+    expect(config.setValue(ConfigStrata.user, "value", undefined)).toBeTrue();
+    expect(config.value).toBe(1);
+    expect(config.getStratum(ConfigStrata.user)?.value).toBeUndefined();
+  });
+
   it("throws when writing to a stratum that is not registered in the order", function () {
     const schema = z.strictObject({ value: z.number().optional() });
     const config = createStratifiedConfig(schema);
