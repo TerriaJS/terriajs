@@ -43,7 +43,7 @@ import {
 } from "../Core/Json";
 import { isLatLonHeight } from "../Core/LatLonHeight";
 import Result from "../Core/Result";
-import ServerConfig from "../Core/ServerConfig";
+import ServerConfig, { IServerConfig } from "../Core/ServerConfig";
 import TerriaError, {
   TerriaErrorOverrides,
   TerriaErrorSeverity
@@ -110,7 +110,7 @@ import MapInteractionMode from "./MapInteractionMode";
 import NoViewer from "./NoViewer";
 import CatalogIndex from "./SearchProviders/CatalogIndex";
 import { SearchBarModel } from "./SearchProviders/SearchBarModel";
-import ShareDataService from "./ShareDataService";
+import { IShareDataService } from "./ShareDataService";
 import TimelineStack from "./TimelineStack";
 import { isViewerMode, setViewerMode } from "./ViewerMode";
 import Workbench from "./Workbench";
@@ -143,7 +143,7 @@ interface StartOptions {
    */
   loadConfig?: () => Promise<LoadConfigResponse>;
   applicationUrl?: Location | URL;
-  shareDataService?: ShareDataService;
+  shareDataService?: IShareDataService;
   errorService?: ErrorServiceProvider;
   /**
    * i18nOptions is explicitly a separate option from `languageConfiguration`,
@@ -329,9 +329,9 @@ export default class Terria {
     this.forceLoadInitSources.bind(this)
   );
 
-  @observable serverConfig: any; // TODO
+  @observable serverConfig: IServerConfig | undefined;
   @observable feedbackService: IFeedbackService | undefined;
-  @observable shareDataService: ShareDataService | undefined;
+  @observable shareDataService: IShareDataService | undefined;
 
   /* Splitter controls */
   @observable showSplitter = false;
@@ -825,15 +825,24 @@ export default class Terria {
       languageInitialized,
       this.serverConfig.init(this.configParameters.serverConfigUrl)
     ]);
-    await this.initCorsProxy(this.configParameters, serverConfig);
-    if (this.shareDataService && this.serverConfig.config) {
-      this.shareDataService.init(this.serverConfig.config);
+    this.initCorsProxy({
+      proxyAllDomains: serverConfig?.proxyAllDomains,
+      allowProxyFor: serverConfig?.allowProxyFor,
+      baseProxyUrl: this.configParameters.corsProxyBaseUrl,
+      proxyDomains: []
+    });
+    if (this.shareDataService && serverConfig) {
+      this.shareDataService.init({
+        sharePrefix: serverConfig.newShareUrlPrefix,
+        shareMaxRequestSize: serverConfig.shareMaxRequestSize,
+        shareMaxRequestSizeBytes: serverConfig.shareMaxRequestSizeBytes
+      });
     }
     if (this.configParameters.feedbackUrl) {
       this.feedbackService = new FeedbackService({
         terria: this,
         feedbackUrl: this.configParameters.feedbackUrl,
-        additionalFeedbackParameters: serverConfig.additionalFeedbackParameters
+        additionalFeedbackParameters: serverConfig?.additionalFeedbackParameters
       });
     }
 
@@ -2053,19 +2062,27 @@ export default class Terria {
     });
   }
 
-  async initCorsProxy(
-    config: ConfigParameters,
-    serverConfig: any
-  ): Promise<void> {
-    if (config.proxyableDomainsUrl) {
+  initCorsProxy({
+    proxyAllDomains,
+    allowProxyFor,
+    baseProxyUrl = CorsProxy.DEFAULT_BASE_PROXY_PATH,
+    proxyDomains = []
+  }: {
+    proxyAllDomains?: boolean;
+    allowProxyFor?: string[];
+    baseProxyUrl?: string;
+    proxyDomains?: string[];
+  }): void {
+    if (this.configParameters.proxyableDomainsUrl) {
       console.warn(
         i18next.t(($) => $.models.terria.proxyableDomainsDeprecation)
       );
     }
     this.corsProxy.init(
-      serverConfig,
-      this.configParameters.corsProxyBaseUrl,
-      []
+      proxyAllDomains,
+      allowProxyFor,
+      baseProxyUrl,
+      proxyDomains
     );
   }
 

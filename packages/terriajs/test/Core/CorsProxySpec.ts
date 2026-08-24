@@ -1,21 +1,12 @@
-"use strict";
-
 import CorsProxy from "../../lib/Core/CorsProxy";
 
 describe("CorsProxy", function () {
-  var corsProxy, loadDeferred, loadJson;
-  var originalPageIsHttps, originalAlwaysUseProxy;
+  let corsProxy: CorsProxy;
+  let originalPageIsHttps: boolean;
+  let originalAlwaysUseProxy: boolean;
 
   beforeEach(function () {
-    loadDeferred = {};
-    loadDeferred.promise = new Promise((resolve, reject) => {
-      loadDeferred.resolve = resolve;
-      loadDeferred.reject = reject;
-    });
-    loadJson = jasmine
-      .createSpy("loadJson")
-      .and.resolveTo(loadDeferred.promise);
-    corsProxy = new CorsProxy(loadJson);
+    corsProxy = new CorsProxy();
 
     originalPageIsHttps = corsProxy.pageIsHttps;
     originalAlwaysUseProxy = corsProxy.alwaysUseProxy;
@@ -26,28 +17,26 @@ describe("CorsProxy", function () {
   afterEach(function () {
     corsProxy.pageIsHttps = originalPageIsHttps;
     corsProxy.alwaysUseProxy = originalAlwaysUseProxy;
-    corsProxy.proxyDomains.length = 0;
+    corsProxy.proxyDomains = [];
     corsProxy.corsDomains.length = 0;
   });
 
   describe("init", function () {
     it("should use baseProxyUrl for subsequent proxy calls", function () {
-      corsProxy.init("", "proxy2/", {});
+      corsProxy.init(undefined, undefined, "proxy2/");
 
       expect(corsProxy.getURL("example")).toBe("proxy2/example");
     });
 
     it("should use the passed proxyDomains", function () {
-      corsProxy.init(undefined, undefined, ["example.com"]);
+      corsProxy.init(undefined, undefined, undefined, ["example.com"]);
 
       expect(corsProxy.shouldUseProxy("http://example.com")).toBe(true);
       expect(corsProxy.shouldUseProxy("http://example2.com")).toBe(false);
     });
 
     it("should ignore the passed proxyDomains if also provided a serverconfig list", function () {
-      corsProxy.init({ allowProxyFor: ["example2.com"] }, undefined, [
-        "example.com"
-      ]);
+      corsProxy.init(undefined, ["example2.com"], undefined, ["example.com"]);
 
       expect(corsProxy.shouldUseProxy("http://example.com")).toBe(false);
       expect(corsProxy.shouldUseProxy("http://example2.com")).toBe(true);
@@ -55,11 +44,7 @@ describe("CorsProxy", function () {
     });
 
     it("should honour proxyAllDomains being returned in proxyableDomains json by proxying all domains", function () {
-      corsProxy.init(
-        { allowProxyFor: ["example2.com"], proxyAllDomains: true },
-        undefined,
-        ["example.com"]
-      );
+      corsProxy.init(true, ["example2.com"], undefined, ["example.com"]);
 
       expect(corsProxy.shouldUseProxy("http://example.com")).toBe(true);
       expect(corsProxy.shouldUseProxy("http://example2.com")).toBe(true);
@@ -69,7 +54,7 @@ describe("CorsProxy", function () {
 
   describe("getURL", function () {
     beforeEach(function () {
-      corsProxy.init(undefined, undefined, ["example.com"]);
+      corsProxy.init(undefined, undefined, undefined, ["example.com"]);
     });
 
     it("converts URLs in the proxyableDomains list", function () {
@@ -93,7 +78,7 @@ describe("CorsProxy", function () {
 
   describe("getURLProxyIfNecessary", function () {
     beforeEach(function () {
-      corsProxy.init(undefined, undefined, ["example.com"]);
+      corsProxy.init(undefined, undefined, undefined, ["example.com"]);
     });
 
     it("converts URLs that should be proxied", function () {
@@ -127,7 +112,7 @@ describe("CorsProxy", function () {
     });
 
     it("proxies all domains if an open proxy", function () {
-      corsProxy.proxyDomains.push("example.com");
+      corsProxy.proxyDomains!.push("example.com");
       corsProxy.isOpenProxy = true;
       expect(corsProxy.shouldUseProxy("http://www.example.com/foo")).toBe(true);
       expect(corsProxy.shouldUseProxy("http://www.example2.com/foo")).toBe(
@@ -137,7 +122,7 @@ describe("CorsProxy", function () {
 
     describe("for a URL to a CORS-capable domain", function () {
       it("does not proxy under usual conditions", function () {
-        corsProxy.proxyDomains.push("example.com");
+        corsProxy.proxyDomains!.push("example.com");
         corsProxy.corsDomains.push("example.com");
         expect(corsProxy.shouldUseProxy("http://www.example.com/foo")).toBe(
           false
@@ -146,7 +131,7 @@ describe("CorsProxy", function () {
 
       it("are proxied for http requests on https sites", function () {
         corsProxy.pageIsHttps = true;
-        corsProxy.proxyDomains.push("example.com");
+        corsProxy.proxyDomains!.push("example.com");
         corsProxy.corsDomains.push("example.com");
         expect(corsProxy.shouldUseProxy("http://www.example.com/foo")).toBe(
           true
@@ -156,14 +141,14 @@ describe("CorsProxy", function () {
 
     describe("for a URL to a non-CORS capable domain", function () {
       it("proxies to domains in proxyableDomains", function () {
-        corsProxy.proxyDomains.push("example.com");
+        corsProxy.proxyDomains!.push("example.com");
         expect(corsProxy.shouldUseProxy("http://www.example.com/foo")).toBe(
           true
         );
       });
 
       it("does not proxy requests to domains not in proxyableDomains", function () {
-        corsProxy.proxyDomains.push("example.com");
+        corsProxy.proxyDomains!.push("example.com");
         expect(corsProxy.shouldUseProxy("http://www.example2.com/foo")).toBe(
           false
         );
@@ -173,7 +158,7 @@ describe("CorsProxy", function () {
     describe("if alwaysUseProxy is true", function () {
       beforeEach(function () {
         corsProxy.alwaysUseProxy = true;
-        corsProxy.proxyDomains.push("example.com");
+        corsProxy.proxyDomains!.push("example.com");
       });
 
       it("should still block domains outside proxyabledomains", function () {
