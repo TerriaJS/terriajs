@@ -21,7 +21,7 @@ const pollToPromise = function (f: () => boolean, options: Options) {
         resolve();
       } else {
         if (getTimestamp() > endTimestamp) {
-          reject();
+          reject(new Error("pollToPromise: timed out waiting for condition"));
         } else {
           setTimeout(poller, pollInterval);
         }
