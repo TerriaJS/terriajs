@@ -683,7 +683,11 @@ export default class ViewState {
           runInAction(() => {
             this.openAddData();
             if (this.terria.configParameters.tabbedCatalog) {
-              this.selectParentTab(item);
+              const parentGroups = getAncestors(item);
+              if (parentGroups.length > 0) {
+                // Go to specific tab
+                this.activeTabIdInCategory = parentGroups[0].uniqueId;
+              }
             }
           });
         }
@@ -693,13 +697,6 @@ export default class ViewState {
           this.switchMobileView(this.mobileViewOptions.preview);
         }
       }
-
-      // Open each ancestor group
-      getAncestors(item).forEach((ancestor) => {
-        if (GroupMixin.isMixedInto(ancestor)) {
-          ancestor.setTrait(stratum, "isOpen", isOpen);
-        }
-      });
 
       if (GroupMixin.isMixedInto(item)) {
         item.setTrait(stratum, "isOpen", isOpen);
@@ -714,37 +711,6 @@ export default class ViewState {
       return Result.error(e, `Could not view catalog member ${getName(item)}`);
     }
     return Result.none();
-  }
-
-  /**
-   * Load the parent tab of the given item
-   */
-  private selectParentTab(item: BaseModel) {
-    const findParentTab = (item: BaseModel) =>
-      getAncestors(item).find((m) =>
-        this.terria.catalog.group.memberModels.includes(m)
-      );
-
-    let parentGroup = findParentTab(item);
-    if (!parentGroup) {
-      // It is possible that the loadMembers() was not called on the top level
-      // tab groups on app load and therefore the parent -> member links were
-      // not established. Manually call refreshKnownContainerUniqueIds on the
-      // top level tab groups and retry getting the ancestors.
-      this.terria.catalog.group.memberModels.forEach((m) => {
-        if (GroupMixin.isMixedInto(m)) {
-          m.refreshKnownContainerUniqueIds(m.uniqueId);
-        }
-      });
-      parentGroup = findParentTab(item);
-    }
-    if (parentGroup) {
-      // Go to specific tab
-      this.activeTabIdInCategory = parentGroup.uniqueId;
-      if (GroupMixin.isMixedInto(parentGroup)) {
-        parentGroup.loadMembers().then((result) => result.throwIfError());
-      }
-    }
   }
 
   @action

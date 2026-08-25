@@ -11,7 +11,7 @@ type MouseTooltipProps = {
 
 const MouseTooltip: FC<MouseTooltipProps> = (props) => {
   const { scene, text } = props;
-  const tooltipText = useRef<HTMLDivElement>(null);
+  const tooltipText = useRef<typeof TooltipText>(null);
 
   useEffect(function tooltipFollowMouse() {
     const setTooltipPosition = (position: { x: number; y: number }) => {
