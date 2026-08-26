@@ -44,7 +44,7 @@ const Container = styled.div<{ isMapFullScreen: boolean }>`
   margin-left: ${(props) =>
     props.isMapFullScreen
       ? 15
-      : parseInt(props.theme.workbenchWidth, 10) + 42}px};
+      : parseInt(props.theme.workbenchWidth, 10) + 42}px;
   transition: margin-left 0.25s;
 `;
 
