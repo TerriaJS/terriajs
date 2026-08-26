@@ -65,7 +65,7 @@
     "@types/node": "^26.1.1",
     "eslint": "^10.7.0",
     "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-n": "^18.2.1",
+    "eslint-plugin-n": "^18.2.2",
     "globals": "^17.7.0",
     "http-proxy": "^1.18.1",
     "jasmine": "^6.3.0",
