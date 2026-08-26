@@ -17,7 +17,6 @@
 - Add `edit` stratum for tracking temporary user changes that shouldn't be captured in share link - example form edits.
 - Fix viewCatalogMember to correctly switch to the parent tab
 
-
 #### 8.12.5 - 2026-07-28
 
 - Automatically detect I3S layers by URL when adding web data, so ArcGIS `SceneServer` URLs resolve to an `I3SCatalogItem`.
