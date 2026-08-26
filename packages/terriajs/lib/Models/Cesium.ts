@@ -945,10 +945,7 @@ export default class Cesium extends GlobeOrMap {
       } else if (MappableMixin.isMixedInto(target)) {
         // target is a Mappable
         if (isDefined(target.cesiumRectangle)) {
-          return flyToPromise(camera, {
-            duration: flightDurationSeconds,
-            destination: target.cesiumRectangle
-          });
+          return this.doZoomTo(target.cesiumRectangle, flightDurationSeconds);
         } else if (target.mapItems.length > 0) {
           // Zoom to the first item!
           return this.doZoomTo(target.mapItems[0], flightDurationSeconds);
