@@ -1894,11 +1894,11 @@ function zoomToDataSource(
 type FlyToOptions = Parameters<InstanceType<typeof Camera>["flyTo"]>[0];
 
 function flyToPromise(camera: Camera, options: FlyToOptions): Promise<void> {
-  return new Promise((complete, cancel) => {
+  return new Promise((complete, reject) => {
     camera.flyTo({
       ...options,
       complete,
-      cancel
+      cancel: () => reject(new Error("Camera flight was cancelled"))
     });
   });
 }
@@ -1912,11 +1912,11 @@ function flyToBoundingSpherePromise(
   boundingSphere: BoundingSphere,
   options: FlyToBoundingSphereOptions
 ): Promise<void> {
-  return new Promise((complete, cancel) => {
+  return new Promise((complete, reject) => {
     camera.flyToBoundingSphere(boundingSphere, {
       ...options,
       complete,
-      cancel
+      cancel: () => reject(new Error("Camera flight was cancelled"))
     });
   });
 }
