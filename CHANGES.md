@@ -1,6 +1,6 @@
 ## Changelog
 
-### Next Release - Unreleased
+### 5.0.0 - 2026-08-27
 
 * Migrated to pure ES Modules (ESM). CommonJS `require()` no longer supported.
 * Minimum Node.js version increased to 22.0.0.
