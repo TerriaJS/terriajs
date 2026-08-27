@@ -1663,13 +1663,21 @@ describe("TerriaSpec", function () {
     });
 
     it("follows the config parameter", function () {
-      terria.updateParameters({ storyAutoStart: true });
+      terria.configParameters.setValue(
+        ConfigStrata.user,
+        "storyAutoStart",
+        true
+      );
 
       expect(terria.storyAutoStart).toBe(true);
     });
 
     it("is overridden by `settings.storyAutoStart` from an init source", async function () {
-      terria.updateParameters({ storyAutoStart: true });
+      terria.configParameters.setValue(
+        ConfigStrata.user,
+        "storyAutoStart",
+        true
+      );
 
       await terria.applyInitData({
         initData: { settings: { storyAutoStart: false } }
@@ -1679,7 +1687,11 @@ describe("TerriaSpec", function () {
     });
 
     it("is overridden by the `playStory` hash parameter", async function () {
-      terria.updateParameters({ storyAutoStart: false });
+      terria.configParameters.setValue(
+        ConfigStrata.user,
+        "storyAutoStart",
+        false
+      );
       await terria.applyInitData({
         initData: { settings: { storyAutoStart: false } }
       });
@@ -1690,7 +1702,11 @@ describe("TerriaSpec", function () {
     });
 
     it("is turned off by `playStory=0`", async function () {
-      terria.updateParameters({ storyAutoStart: true });
+      terria.configParameters.setValue(
+        ConfigStrata.user,
+        "storyAutoStart",
+        true
+      );
 
       await terria.updateApplicationUrl("http://test.com/#playStory=0");
 

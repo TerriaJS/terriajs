@@ -26,6 +26,7 @@ import {
 } from "../../../../../lib/ReactViews/Map/Panels/SharePanel/BuildShareLink";
 
 import bikeRacksGeoJson from "../../../../../wwwroot/test/GeoJSON/bike_racks.geojson" with { type: "json" };
+import { ConfigStrata } from "../../../../../lib/Models/Config/ConfigStrata";
 
 let terria: Terria;
 let viewState: ViewState;
@@ -334,7 +335,11 @@ describe("BuildShareLink", function () {
     it("omits the current camera when the story starts by itself", function () {
       runInAction(() => {
         terria.stories = [story];
-        terria.updateParameters({ storyAutoStart: true });
+        terria.configParameters.setValue(
+          ConfigStrata.user,
+          "storyAutoStart",
+          true
+        );
       });
 
       const initSources = shareInitSources();
@@ -347,9 +352,11 @@ describe("BuildShareLink", function () {
     });
 
     it("includes the current camera when there is no story to start", function () {
-      runInAction(() => {
-        terria.updateParameters({ storyAutoStart: true });
-      });
+      terria.configParameters.setValue(
+        ConfigStrata.user,
+        "storyAutoStart",
+        true
+      );
 
       const initSources = shareInitSources();
 
@@ -360,7 +367,11 @@ describe("BuildShareLink", function () {
     it("includes the current camera when the story is excluded from the share", function () {
       runInAction(() => {
         terria.stories = [story];
-        terria.updateParameters({ storyAutoStart: true });
+        terria.configParameters.setValue(
+          ConfigStrata.user,
+          "storyAutoStart",
+          true
+        );
       });
 
       const initSources = shareInitSources({ includeStories: false });

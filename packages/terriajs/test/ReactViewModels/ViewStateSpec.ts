@@ -49,9 +49,11 @@ describe("ViewState", function () {
 
     describe("in tabbed mode", function () {
       beforeEach(async function () {
-        runInAction(() => {
-          terria.configParameters.tabbedCatalog = true;
-        });
+        terria.configParameters.setValue(
+          ConfigStrata.user,
+          "tabbedCatalog",
+          true
+        );
         await terria.applyInitData({
           initData: {
             catalog: [
