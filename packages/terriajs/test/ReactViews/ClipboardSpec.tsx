@@ -78,4 +78,40 @@ describe("Clipboard", function () {
       screen.queryByText("clipboard.unsuccessful")
     ).not.toBeInTheDocument();
   });
+
+  it("shows the created message once a result arrives", () => {
+    const { rerender } = render(
+      <ThemeProvider theme={terriaTheme}>
+        <Clipboard createdMessage="Saved as new story" />
+      </ThemeProvider>
+    );
+    // text goes from empty to a real result
+    rerender(
+      <ThemeProvider theme={terriaTheme}>
+        <Clipboard createdMessage="Saved as new story" text="https://short" />
+      </ThemeProvider>
+    );
+
+    expect(screen.getByText("Saved as new story")).toBeVisible();
+  });
+
+  it("does not show the created message when the result failed", () => {
+    const { rerender } = render(
+      <ThemeProvider theme={terriaTheme}>
+        <Clipboard createdMessage="Saved as new story" />
+      </ThemeProvider>
+    );
+    // text becomes non-empty (an error message), but it's flagged as a failure
+    rerender(
+      <ThemeProvider theme={terriaTheme}>
+        <Clipboard
+          createdMessage="Saved as new story"
+          text="Something went wrong"
+          failed
+        />
+      </ThemeProvider>
+    );
+
+    expect(screen.queryByText("Saved as new story")).not.toBeInTheDocument();
+  });
 });
