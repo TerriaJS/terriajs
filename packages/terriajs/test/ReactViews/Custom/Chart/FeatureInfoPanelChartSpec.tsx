@@ -1,6 +1,5 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import { http, HttpResponse } from "msw";
-import { ThemeProvider } from "styled-components";
 import CsvCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/CsvCatalogItem";
 import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
 import TerriaFeature from "../../../../lib/Models/Feature/Feature";
@@ -12,12 +11,12 @@ import CustomComponent, {
   ProcessNodeContext
 } from "../../../../lib/ReactViews/Custom/CustomComponent";
 import parseCustomHtmlToReact from "../../../../lib/ReactViews/Custom/parseCustomHtmlToReact";
-import { terriaTheme } from "../../../../lib/ReactViews/StandardUserInterface";
 import { worker } from "../../../mocks/browser";
 
 import regionMapping from "../../../../wwwroot/data/regionMapping.json";
 
 import csv from "../../../../wwwroot/test/csv_nongeo/x_height.csv";
+import { TerriaThemeProvider } from "../../withContext";
 
 describe("FeatureInfoPanelChart", function () {
   let context: ProcessNodeContext;
@@ -102,5 +101,5 @@ function renderChart(chartMarkup: string, context: ProcessNodeContext): void {
     ADD_TAGS: ["chart"],
     ADD_ATTR: ChartAttributes
   });
-  render(<ThemeProvider theme={terriaTheme}>{chartElements}</ThemeProvider>);
+  render(<TerriaThemeProvider>{chartElements}</TerriaThemeProvider>);
 }

@@ -2,6 +2,7 @@
 
 #### next release (8.x.x)
 
+- Fixed React "unknown prop" console warnings introduced by the styled-components 6 upgrade.
 - Fixed the share panel showing a false "link created"/"saved" success message when generating a short share link actually failed.
 - The share panel now surfaces the real HTTP status of a failed share-link request (a data-too-large message for 413, otherwise a generic message that includes the status code) instead of string-matching `"413"` in the error text.
 - A failed share link now also raises an error notification, not just an inline message.

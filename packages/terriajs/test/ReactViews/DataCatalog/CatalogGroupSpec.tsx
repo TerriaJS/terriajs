@@ -1,21 +1,20 @@
 import { render, screen } from "@testing-library/react";
 import i18next from "i18next";
-import { ThemeProvider } from "styled-components";
 import CatalogGroup from "../../../lib/ReactViews/DataCatalog/CatalogGroup";
-import { terriaTheme } from "../../../lib/ReactViews/StandardUserInterface";
+import { TerriaThemeProvider } from "../withContext";
 
 describe("CatalogGroup React", () => {
   describe("Loading", () => {
     it("Shows loader", () => {
       render(
-        <ThemeProvider theme={terriaTheme}>
+        <TerriaThemeProvider>
           <CatalogGroup
             open
             t={i18next.t}
             loading
             emptyMessage="nothing here"
           />
-        </ThemeProvider>
+        </TerriaThemeProvider>
       );
       // Loader renders a spinning element
       expect(screen.getByText("loader.loadingMessage")).toBeVisible();
@@ -24,11 +23,11 @@ describe("CatalogGroup React", () => {
     });
     it("Doesn't show children when loading", () => {
       render(
-        <ThemeProvider theme={terriaTheme}>
+        <TerriaThemeProvider>
           <CatalogGroup open t={i18next.t} loading>
             <span>some child</span>
           </CatalogGroup>
-        </ThemeProvider>
+        </TerriaThemeProvider>
       );
       expect(screen.getByText("loader.loadingMessage")).toBeVisible();
       expect(screen.queryByText("some child")).not.toBeInTheDocument();
@@ -36,11 +35,11 @@ describe("CatalogGroup React", () => {
 
     it("Shows children when not loading", () => {
       render(
-        <ThemeProvider theme={terriaTheme}>
+        <TerriaThemeProvider>
           <CatalogGroup open t={i18next.t} loading={false}>
             <span>some child</span>
           </CatalogGroup>
-        </ThemeProvider>
+        </TerriaThemeProvider>
       );
       expect(
         screen.queryByText("loader.loadingMessage")
