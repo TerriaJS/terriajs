@@ -1,11 +1,12 @@
 import { render, screen } from "@testing-library/react";
 import { runInAction } from "mobx";
 import { ThemeProvider } from "styled-components";
+import { ConfigStrata } from "../../lib/Models/Config/TerriaConfig";
 import Terria from "../../lib/Models/Terria";
 import ViewState from "../../lib/ReactViewModels/ViewState";
-import { terriaTheme } from "../../lib/ReactViews/StandardUserInterface";
-import { StyledHtmlRaw } from "../../lib/ReactViews/Map/Panels/HelpPanel/StyledHtml";
 import registerCustomComponentTypes from "../../lib/ReactViews/Custom/registerCustomComponentTypes";
+import { StyledHtmlRaw } from "../../lib/ReactViews/Map/Panels/HelpPanel/StyledHtml";
+import { terriaTheme } from "../../lib/ReactViews/StandardUserInterface";
 
 describe("StyledHtml", function () {
   let terria: Terria;
@@ -42,7 +43,7 @@ describe("StyledHtml", function () {
         content: "data that is spatial, spluh"
       };
       runInAction(() => {
-        terria.updateParameters({
+        terria.configParameters.update(ConfigStrata.definition, {
           regionMappingDefinitionsUrl: "",
           initFragmentPaths: [],
           storyEnabled: false,

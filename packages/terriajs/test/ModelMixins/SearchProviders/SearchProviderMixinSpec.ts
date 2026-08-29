@@ -1,8 +1,10 @@
+import { runInAction } from "mobx";
 import SearchProviderMixin from "../../../lib/ModelMixins/SearchProviders/SearchProviderMixin";
 import CommonStrata from "../../../lib/Models/Definition/CommonStrata";
 import CreateModel from "../../../lib/Models/Definition/CreateModel";
 import Terria from "../../../lib/Models/Terria";
 import BingMapsSearchProviderTraits from "../../../lib/Traits/SearchProviders/BingMapsSearchProviderTraits";
+import { ConfigStrata } from "../../../lib/Models/Config/TerriaConfig";
 
 class TestSearchProvider extends SearchProviderMixin(
   CreateModel(BingMapsSearchProviderTraits)
@@ -79,30 +81,42 @@ describe("SearchProviderMixin", () => {
     });
 
     it(" - uses searchBarModel minCharacters when provider trait is not set", () => {
-      terria.searchBarModel.setTrait(
-        CommonStrata.definition,
-        "minCharacters",
-        7
-      );
+      runInAction(() => {
+        terria.configParameters.mergeValue(
+          ConfigStrata.user,
+          "searchBarConfig",
+          {
+            minCharacters: 7
+          }
+        );
+      });
       expect(freshProvider.minCharacters).toEqual(7);
     });
 
     it(" - provider minCharacters takes precedence over searchBarModel", () => {
-      terria.searchBarModel.setTrait(
-        CommonStrata.definition,
-        "minCharacters",
-        7
-      );
+      runInAction(() => {
+        terria.configParameters.mergeValue(
+          ConfigStrata.user,
+          "searchBarConfig",
+          {
+            minCharacters: 7
+          }
+        );
+      });
       freshProvider.setTrait(CommonStrata.definition, "minCharacters", 2);
       expect(freshProvider.minCharacters).toEqual(2);
     });
 
     it(" - does not search when text is shorter than searchBarModel minCharacters", () => {
-      terria.searchBarModel.setTrait(
-        CommonStrata.definition,
-        "minCharacters",
-        7
-      );
+      runInAction(() => {
+        terria.configParameters.mergeValue(
+          ConfigStrata.user,
+          "searchBarConfig",
+          {
+            minCharacters: 7
+          }
+        );
+      });
       freshProvider.search("abc", true);
       expect(freshProvider.searchResult.isSearching).toBeFalsy();
       expect(freshProvider.doSearch).not.toHaveBeenCalled();

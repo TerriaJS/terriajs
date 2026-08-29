@@ -1,5 +1,6 @@
 import { render } from "@testing-library/react";
 import Terria from "../../../lib/Models/Terria";
+import { ConfigStrata } from "../../../lib/Models/Config/ConfigStrata";
 import ViewState from "../../../lib/ReactViewModels/ViewState";
 import WorkflowPanel from "../../../lib/ReactViews/Workflow/WorkflowPanel";
 
@@ -11,8 +12,11 @@ describe("WorkflowPanel", function () {
     terria = new Terria({
       baseUrl: "./"
     });
-    terria.configParameters.regionMappingDefinitionsUrl =
-      "./data/regionMapping.json";
+    terria.configParameters.setValue(
+      ConfigStrata.definition,
+      "regionMappingDefinitionsUrl",
+      "./data/regionMapping.json"
+    );
     viewState = new ViewState({
       terria
     });

@@ -5,7 +5,6 @@ import { runInAction } from "mobx";
 import { http, HttpResponse } from "msw";
 import { I18nextProvider } from "react-i18next";
 import { ThemeProvider } from "styled-components";
-import CommonStrata from "../../../lib/Models/Definition/CommonStrata";
 import CatalogSearchProvider from "../../../lib/Models/SearchProviders/CatalogSearchProvider";
 import MapboxSearchProvider, {
   MapboxGeocodingResponse
@@ -17,6 +16,7 @@ import SearchBoxAndResults from "../../../lib/ReactViews/Search/SearchBoxAndResu
 import { terriaTheme } from "../../../lib/ReactViews/StandardUserInterface";
 import { worker } from "../../mocks/browser";
 import { renderWithContexts } from "../withContext";
+import { ConfigStrata } from "../../../lib/Models/Config/TerriaConfig";
 
 describe("SearchBoxAndResults", function () {
   let terria: Terria;
@@ -107,11 +107,15 @@ describe("SearchBoxAndResults", function () {
       viewState.searchState.locationSearchText = searchText;
       viewState.searchState.showLocationSearchResults = true;
 
-      viewState.terria.searchBarModel.setTrait(
-        CommonStrata.user,
-        "showSearchInCatalog",
-        false
-      );
+      runInAction(() => {
+        terria.configParameters.mergeValue(
+          ConfigStrata.user,
+          "searchBarConfig",
+          {
+            showSearchInCatalog: false
+          }
+        );
+      });
     });
     renderWithContexts(
       <ThemeProvider theme={terriaTheme}>

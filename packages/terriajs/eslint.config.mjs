@@ -8,6 +8,7 @@ import react from "eslint-plugin-react";
 import reactHooks from "eslint-plugin-react-hooks";
 import globals from "globals";
 import tseslint from "typescript-eslint";
+import eslintPluginZod from "eslint-plugin-zod";
 
 export default defineConfig([
   globalIgnores(["**/*.scss.d.ts", "lib/ThirdParty", "dist", "wwwroot"]),
@@ -17,6 +18,7 @@ export default defineConfig([
   react.configs.flat.recommended,
   react.configs.flat["jsx-runtime"],
   reactHooks.configs.flat.recommended,
+  eslintPluginZod.configs.recommended,
   {
     name: "terriajs/include-files",
     files: [
@@ -55,6 +57,7 @@ export default defineConfig([
   {
     name: "terriajs/base-rules",
     rules: {
+      "zod/prefer-string-schema-with-trim": "off",
       "react-hooks/exhaustive-deps": "error",
 
       "react/jsx-boolean-value": [

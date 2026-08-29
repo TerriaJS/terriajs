@@ -1,5 +1,6 @@
 import { screen, within } from "@testing-library/react";
 import Terria from "../../../lib/Models/Terria";
+import { ConfigStrata } from "../../../lib/Models/Config/ConfigStrata";
 import ViewState from "../../../lib/ReactViewModels/ViewState";
 import Branding from "../../../lib/ReactViews/SidePanel/Branding";
 import { renderWithContexts } from "../withContext";
@@ -16,16 +17,18 @@ describe("Branding", function () {
   });
 
   it("renders without issues", function () {
-    terria.configParameters.brandBarElements = ["<a href='blah'>a thing</a>"];
+    terria.configParameters.update(ConfigStrata.definition, {
+      brandBarElements: ["<a href='blah'>a thing</a>"]
+    });
     renderWithContexts(<Branding />, viewState);
     expect(screen.getByRole("link", { name: "a thing" })).toBeVisible();
   });
 
   it("renders when provided displayOne inside of index", function () {
-    terria.configParameters.brandBarElements = [
-      "<details><summary>a thing</summary></details>"
-    ];
-    terria.configParameters.displayOneBrand = 0;
+    terria.configParameters.update(ConfigStrata.definition, {
+      brandBarElements: ["<details><summary>a thing</summary></details>"],
+      displayOneBrand: 0
+    });
     const { container } = renderWithContexts(<Branding />, viewState);
 
     expect(container.querySelector("details")).toBeTruthy();
@@ -34,11 +37,13 @@ describe("Branding", function () {
   });
 
   it("renders when provided displayOne inside of index, but targetting empty string", function () {
-    terria.configParameters.brandBarElements = [
-      "",
-      "<progress>progress is a html element!</progress>"
-    ];
-    terria.configParameters.displayOneBrand = 0;
+    terria.configParameters.update(ConfigStrata.definition, {
+      brandBarElements: [
+        "",
+        "<progress>progress is a html element!</progress>"
+      ],
+      displayOneBrand: 0
+    });
     const { container } = renderWithContexts(<Branding />, viewState);
 
     expect(within(container).getByRole("progressbar")).toBeVisible();
@@ -48,41 +53,36 @@ describe("Branding", function () {
   });
 
   it("renders when provided displayOne outside of index", function () {
-    terria.configParameters.brandBarElements = [
-      "",
-      "<meter>meter is a html element!</meter>"
-    ];
-    terria.configParameters.displayOneBrand = 5;
+    terria.configParameters.update(ConfigStrata.definition, {
+      brandBarElements: ["", "<meter>meter is a html element!</meter>"],
+      displayOneBrand: 5
+    });
     renderWithContexts(<Branding />, viewState);
     expect(screen.getByRole("meter")).toBeVisible();
   });
 
   it("renders brandBarElements when provided brandBarSmallElements", function () {
-    terria.configParameters.brandBarElements = [
-      "",
-      "<meter>meter is a html element!</meter>"
-    ];
-
-    terria.configParameters.brandBarSmallElements = [
-      "<small>small is a html element!</small>",
-      "<a>a is a html element!</a>"
-    ];
-    terria.configParameters.displayOneBrand = 1;
+    terria.configParameters.update(ConfigStrata.definition, {
+      brandBarElements: ["", "<meter>meter is a html element!</meter>"],
+      brandBarSmallElements: [
+        "<small>small is a html element!</small>",
+        "<a>a is a html element!</a>"
+      ],
+      displayOneBrand: 1
+    });
     renderWithContexts(<Branding />, viewState);
     expect(screen.getByRole("meter")).toBeVisible();
   });
 
   it("renders when provided brandBarSmallElements and ignores displayOneBrand", function () {
-    terria.configParameters.brandBarElements = [
-      "",
-      "<meter>meter is a html element!</meter>"
-    ];
-
-    terria.configParameters.brandBarSmallElements = [
-      "<small>small is a html element!</small>",
-      "<a href='test'>a is a html element!</a>"
-    ];
-    terria.configParameters.displayOneBrand = 1;
+    terria.configParameters.update(ConfigStrata.definition, {
+      brandBarElements: ["", "<meter>meter is a html element!</meter>"],
+      brandBarSmallElements: [
+        "<small>small is a html element!</small>",
+        "<a href='test'>a is a html element!</a>"
+      ],
+      displayOneBrand: 1
+    });
     viewState.useSmallScreenInterface = true;
     renderWithContexts(<Branding />, viewState);
 

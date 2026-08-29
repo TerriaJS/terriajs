@@ -1,6 +1,7 @@
 import { http, HttpResponse } from "msw";
 import { runInAction } from "mobx";
 import Terria from "../../lib/Models/Terria";
+import { ConfigStrata } from "../../lib/Models/Config/ConfigStrata";
 import { FeedbackService } from "../../lib/Models/FeedbackService";
 import { worker } from "../mocks/browser";
 
@@ -154,9 +155,13 @@ describe("FeedbackService", function () {
     it("includes custom request headers from feedbackRequestHeaders", async function () {
       const terria = createTerria();
       runInAction(() => {
-        terria.configParameters.feedbackRequestHeaders = async () => ({
-          Authorization: "Bearer test-token"
-        });
+        terria.configParameters.setValue(
+          ConfigStrata.definition,
+          "feedbackRequestHeaders",
+          async () => ({
+            Authorization: "Bearer test-token"
+          })
+        );
       });
       const service = createService(terria);
 
@@ -176,9 +181,13 @@ describe("FeedbackService", function () {
     it("only forwards additional parameters whose names are in the constructor list", async function () {
       const terria = createTerria();
       runInAction(() => {
-        terria.configParameters.feedbackRequestHeaders = async () => ({
-          Authorization: "Bearer test-token"
-        });
+        terria.configParameters.setValue(
+          ConfigStrata.definition,
+          "feedbackRequestHeaders",
+          async () => ({
+            Authorization: "Bearer test-token"
+          })
+        );
       });
       const service = createService(terria, {
         additionalFeedbackParameters: [

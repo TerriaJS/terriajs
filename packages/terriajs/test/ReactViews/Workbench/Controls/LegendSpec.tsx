@@ -2,6 +2,7 @@ import { render, screen } from "@testing-library/react";
 import CsvCatalogItem from "../../../../lib/Models/Catalog/CatalogItems/CsvCatalogItem";
 import WebMapServiceCatalogItem from "../../../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
 import Terria from "../../../../lib/Models/Terria";
+import { ConfigStrata } from "../../../../lib/Models/Config/ConfigStrata";
 import Legend from "../../../../lib/ReactViews/Workbench/Controls/Legend";
 
 describe("Legend", function () {
@@ -11,8 +12,11 @@ describe("Legend", function () {
     terria = new Terria({
       baseUrl: "./"
     });
-    terria.configParameters.regionMappingDefinitionsUrl =
-      "./data/regionMapping.json";
+    terria.configParameters.setValue(
+      ConfigStrata.definition,
+      "regionMappingDefinitionsUrl",
+      "./data/regionMapping.json"
+    );
   });
 
   describe(" - with image", function () {
