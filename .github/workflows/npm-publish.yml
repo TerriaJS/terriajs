@@ -28,7 +28,7 @@ jobs:
         run: |
           CURRENT_VERSION=$(node -p "require('./package.json').version")
 
-          IS_ALREADY_PUBLISHED=$(npm view terriajs-server@$LOCAL_VERSION version 2>/dev/null || echo 'false')
+          IS_ALREADY_PUBLISHED=$(npm view terriajs-server@$CURRENT_VERSION version 2>/dev/null || echo 'false')
 
           if [ "$IS_ALREADY_PUBLISHED" != "false" ]; then
             echo "No version change detected"
