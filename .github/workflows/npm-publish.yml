@@ -27,18 +27,18 @@ jobs:
         id: detect
         run: |
           CURRENT_VERSION=$(node -p "require('./package.json').version")
-          PREVIOUS_VERSION=$(git show HEAD~1:package.json | node -p "JSON.parse(require('fs').readFileSync('/dev/stdin','utf8')).version")
 
-          if [ "$CURRENT_VERSION" = "$PREVIOUS_VERSION" ]; then
+          IS_ALREADY_PUBLISHED=$(npm view terriajs-server@$LOCAL_VERSION version 2>/dev/null || echo 'false')
+
+          if [ "$IS_ALREADY_PUBLISHED" != "false" ]; then
             echo "No version change detected"
             echo "version-changed=false" >> "$GITHUB_OUTPUT"
             exit 0
           fi
 
-          echo "Version change from $PREVIOUS_VERSION to $CURRENT_VERSION detected"
+          echo "Version change to $CURRENT_VERSION detected"
           echo "version-changed=true" >> "$GITHUB_OUTPUT"
           echo "current-version=$CURRENT_VERSION" >> "$GITHUB_OUTPUT"
-          echo "previous-version=$PREVIOUS_VERSION" >> "$GITHUB_OUTPUT"
 
           # Determine npm dist-tag from prerelease identifier
           NPM_TAG="latest"
@@ -58,13 +58,11 @@ jobs:
           git config user.name "Terria Bot via GitHub Actions"
           git config user.email "TerriaBot@users.noreply.github.com"
           git tag -a "${{ steps.detect.outputs.current-version }}" -m "${{ steps.detect.outputs.current-version }}"
-          git push origin "${{ steps.detect.outputs.current-version }}"
 
       - name: Set up Node.js for NPM
         if: steps.detect.outputs.version-changed == 'true'
         uses: actions/setup-node@v7
         with:
-          registry-url: "https://registry.npmjs.org"
           node-version-file: ".nvmrc"
           cache: "yarn"
 
@@ -83,3 +81,7 @@ jobs:
       - name: Publish package to NPM
         if: steps.detect.outputs.version-changed == 'true'
         run: npm publish --tag ${{ steps.detect.outputs.npm-tag }}
+
+      - name: Push the tag
+        if: steps.detect.outputs.version-changed == 'true'
+        run: git push origin "${{ steps.detect.outputs.current-version }}"
