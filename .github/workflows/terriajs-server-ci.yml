@@ -1,4 +1,4 @@
-name: CI
+name: terriajs-server CI
 
 on: [push, pull_request]
 
@@ -11,6 +11,9 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: packages/terriajs-server
     strategy:
       fail-fast: false
       matrix:

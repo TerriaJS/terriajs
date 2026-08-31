@@ -18,7 +18,7 @@
   "scripts": {
     "test": "jasmine",
     "lint": "eslint .",
-    "dev": "node --watch-path serverconfig.json --watch lib/app.js ",
+    "watch": "node --watch-path serverconfig.json --watch lib/app.js ",
     "start": "node lib/app.js",
     "format": "prettier --write ."
   },
@@ -70,7 +70,7 @@
     "http-proxy": "^1.18.1",
     "jasmine": "^6.3.0",
     "msw": "^2.15.0",
-    "prettier": "^3.9.4",
+    "prettier": "3.8.1",
     "supertest": "^7.2.2",
     "testcontainers": "^12.0.1"
   }
