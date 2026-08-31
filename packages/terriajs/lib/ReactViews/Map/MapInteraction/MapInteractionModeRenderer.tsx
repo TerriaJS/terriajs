@@ -9,14 +9,14 @@ import DefaultMapInteractionModePanel from "./DefaultMapInteractionModePanel";
 
 registerMapInteractionModePanel("default", DefaultMapInteractionModePanel);
 
-const MapInteractionModeRenderer: FC = observer(() => {
+const MapInteractionModeRenderer: FC<{}> = observer(() => {
   const viewState = useViewState();
-  const terria = viewState.terria;
+  const terria = useViewState().terria;
   const mapInteractionMode = terria.mapInteractionModeStack.at(-1);
 
   useEffect(() => {
     mapInteractionMode?.onEnable?.(viewState);
-  }, [mapInteractionMode, viewState]);
+  }, [mapInteractionMode]);
 
   if (!mapInteractionMode) {
     return null;
