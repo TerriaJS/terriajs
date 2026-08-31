@@ -1,8 +1,8 @@
-name: npm-publish
+name: terriajs-server-npm-publish
 on:
   push:
     branches:
-      - master
+      - main
 
 concurrency:
   group: npm-publish
@@ -16,6 +16,9 @@ jobs:
       id-token: write
     name: Publish to NPM
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: packages/terriajs-server
 
     steps:
       - name: Checkout repository
@@ -57,7 +60,7 @@ jobs:
         run: |
           git config user.name "Terria Bot via GitHub Actions"
           git config user.email "TerriaBot@users.noreply.github.com"
-          git tag -a "${{ steps.detect.outputs.current-version }}" -m "${{ steps.detect.outputs.current-version }}"
+          git tag -a "terriajs-server/${{ steps.detect.outputs.current-version }}" -m "terriajs-server/${{ steps.detect.outputs.current-version }}"
 
       - name: Set up Node.js for NPM
         if: steps.detect.outputs.version-changed == 'true'
@@ -84,4 +87,4 @@ jobs:
 
       - name: Push the tag
         if: steps.detect.outputs.version-changed == 'true'
-        run: git push origin "${{ steps.detect.outputs.current-version }}"
+        run: git push origin "terriajs-server/${{ steps.detect.outputs.current-version }}"
