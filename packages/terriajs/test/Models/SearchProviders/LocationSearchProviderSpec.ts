@@ -36,39 +36,33 @@ describe("LocationSearchProvider", function () {
   describe("searchBarModel fallback", function () {
     it(" - reads recommendedListLength from searchBarModel when not set on provider", function () {
       runInAction(() => {
-        terria.configParameters.mergeValue(
-          ConfigStrata.user,
-          "searchBarConfig",
-          {
+        terria.configParameters.update(ConfigStrata.user, {
+          searchBarConfig: {
             recommendedListLength: 10
           }
-        );
+        });
       });
       expect(bingMapsSearchProvider.recommendedListLength).toEqual(10);
     });
 
     it(" - reads flightDurationSeconds from searchBarModel when not set on provider", function () {
       runInAction(() => {
-        terria.configParameters.mergeValue(
-          ConfigStrata.user,
-          "searchBarConfig",
-          {
+        terria.configParameters.update(ConfigStrata.user, {
+          searchBarConfig: {
             flightDurationSeconds: 3.0
           }
-        );
+        });
       });
       expect(bingMapsSearchProvider.flightDurationSeconds).toEqual(3.0);
     });
 
     it(" - provider recommendedListLength takes precedence over searchBarModel", function () {
       runInAction(() => {
-        terria.configParameters.mergeValue(
-          ConfigStrata.user,
-          "searchBarConfig",
-          {
+        terria.configParameters.update(ConfigStrata.user, {
+          searchBarConfig: {
             recommendedListLength: 10
           }
-        );
+        });
       });
       bingMapsSearchProvider.setTrait(
         CommonStrata.definition,
@@ -80,13 +74,11 @@ describe("LocationSearchProvider", function () {
 
     it(" - provider flightDurationSeconds takes precedence over searchBarModel", function () {
       runInAction(() => {
-        terria.configParameters.mergeValue(
-          ConfigStrata.user,
-          "searchBarConfig",
-          {
+        terria.configParameters.update(ConfigStrata.user, {
+          searchBarConfig: {
             flightDurationSeconds: 3.0
           }
-        );
+        });
       });
       bingMapsSearchProvider.setTrait(
         CommonStrata.definition,

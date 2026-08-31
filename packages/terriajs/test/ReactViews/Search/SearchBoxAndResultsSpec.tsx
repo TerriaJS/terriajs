@@ -106,13 +106,11 @@ describe("SearchBoxAndResults", function () {
       viewState.searchState.showLocationSearchResults = true;
 
       runInAction(() => {
-        terria.configParameters.mergeValue(
-          ConfigStrata.user,
-          "searchBarConfig",
-          {
+        terria.configParameters.update(ConfigStrata.user, {
+          searchBarConfig: {
             showSearchInCatalog: false
           }
-        );
+        });
       });
     });
     renderWithContexts(

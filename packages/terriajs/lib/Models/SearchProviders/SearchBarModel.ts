@@ -20,23 +20,26 @@ import Terria from "../Terria";
 import SearchProviderFactory from "./SearchProviderFactory";
 import upsertSearchProviderFromJson from "./upsertSearchProviderFromJson";
 
+// Validation only — no `.default()` calls. Defaults live in
+// `DEFAULT_SEARCH_BAR_CONFIG` and are loaded into the `defaults` stratum via
+// `CONFIG_DEFAULTS`, so a partial write to a higher stratum stores only the
+// fields it sets and the rest resolve from the defaults stratum on read.
 export const SearchBarConfigSchema = z.strictObject({
-  placeholder: z.string().default("translate#search.placeholder").meta({
+  placeholder: z.string().meta({
     description:
       "Input text field placeholder shown when no input has been given yet. The string is translateable."
   }),
   recommendedListLength: z
     .number()
-    .default(5)
     .meta({ description: "Maximum amount of entries in the suggestion list." }),
-  flightDurationSeconds: z.number().default(1.5).meta({
+  flightDurationSeconds: z.number().meta({
     description:
       "The duration of the camera flight to an entered location, in seconds."
   }),
-  minCharacters: z.number().default(3).meta({
+  minCharacters: z.number().meta({
     description: "Minimum number of characters required for search to start"
   }),
-  showSearchInCatalog: z.boolean().default(true).meta({
+  showSearchInCatalog: z.boolean().meta({
     description: "Whether to show 'Search In Catalog' in search results"
   }),
   boundingBoxLimit: z
@@ -53,7 +56,14 @@ export const SearchBarConfigSchema = z.strictObject({
     })
 });
 
-export const DEFAULT_SEARCH_BAR_CONFIG = SearchBarConfigSchema.parse({});
+export const DEFAULT_SEARCH_BAR_CONFIG: z.output<typeof SearchBarConfigSchema> =
+  {
+    placeholder: "translate#search.placeholder",
+    recommendedListLength: 5,
+    flightDurationSeconds: 1.5,
+    minCharacters: 3,
+    showSearchInCatalog: true
+  };
 
 export class SearchBarModel {
   private locationSearchProviders = observable.map<string, BaseModel>();

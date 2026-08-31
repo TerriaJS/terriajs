@@ -82,26 +82,22 @@ describe("SearchProviderMixin", () => {
 
     it(" - uses searchBarModel minCharacters when provider trait is not set", () => {
       runInAction(() => {
-        terria.configParameters.mergeValue(
-          ConfigStrata.user,
-          "searchBarConfig",
-          {
+        terria.configParameters.update(ConfigStrata.user, {
+          searchBarConfig: {
             minCharacters: 7
           }
-        );
+        });
       });
       expect(freshProvider.minCharacters).toEqual(7);
     });
 
     it(" - provider minCharacters takes precedence over searchBarModel", () => {
       runInAction(() => {
-        terria.configParameters.mergeValue(
-          ConfigStrata.user,
-          "searchBarConfig",
-          {
+        terria.configParameters.update(ConfigStrata.user, {
+          searchBarConfig: {
             minCharacters: 7
           }
-        );
+        });
       });
       freshProvider.setTrait(CommonStrata.definition, "minCharacters", 2);
       expect(freshProvider.minCharacters).toEqual(2);
@@ -109,13 +105,11 @@ describe("SearchProviderMixin", () => {
 
     it(" - does not search when text is shorter than searchBarModel minCharacters", () => {
       runInAction(() => {
-        terria.configParameters.mergeValue(
-          ConfigStrata.user,
-          "searchBarConfig",
-          {
+        terria.configParameters.update(ConfigStrata.user, {
+          searchBarConfig: {
             minCharacters: 7
           }
-        );
+        });
       });
       freshProvider.search("abc", true);
       expect(freshProvider.searchResult.isSearching).toBeFalsy();

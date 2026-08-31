@@ -518,7 +518,7 @@ export const CONFIG_DEFAULTS: z.output<typeof ConfigParametersSchema> = {
   ],
   relatedMaps: [],
   searchProviders: [],
-  searchBarConfig: DEFAULT_SEARCH_BAR_CONFIG, // Use Zod defaults for searchBarConfig
+  searchBarConfig: DEFAULT_SEARCH_BAR_CONFIG,
   disableMobileInterface: false,
   disableSharePanel: false,
   disableShareEmbed: false,

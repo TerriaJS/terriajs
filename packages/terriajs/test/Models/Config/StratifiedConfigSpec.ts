@@ -42,7 +42,7 @@ describe("StratifiedConfig", function () {
     expect(config.schema).toBe(schema);
   });
 
-  it("deeply merges and validates a nested config value", function () {
+  it("deep-merges a partial nested write with lower strata, per leaf", function () {
     const nestedSchema = z.strictObject({
       nested: z.strictObject({
         enabled: z.boolean(),
@@ -57,17 +57,115 @@ describe("StratifiedConfig", function () {
       items: ["default"]
     });
 
-    expect(
-      config.mergeValue(ConfigStrata.user, "nested", {
-        options: { second: 3 },
-        items: ["replacement"]
-      })
-    ).toBeTrue();
-    expect(config.nested).toEqual({
-      enabled: true,
-      options: { first: 1, second: 3 },
-      items: ["replacement"]
+    const result = config.update(ConfigStrata.user, {
+      nested: { options: { second: 3 }, items: ["replacement"] }
     });
+
+    expect(result).toBeTrue();
+    expect(config.nested).toEqual({
+      enabled: true, // from defaults
+      options: { first: 1, second: 3 }, // first from defaults, second from user
+      items: ["replacement"] // array replaced wholesale
+    });
+  });
+
+  // ── Trait-model parity: object values resolve per-leaf across strata ─────────
+  //
+  // The model layer resolves an `objectTrait` per sub-property: each leaf comes
+  // from the highest stratum that defines *that leaf*, not from whichever
+  // stratum owns the whole object. `get()` mirrors that: object-valued keys are
+  // deep-merged across strata on read, so a partial higher stratum overrides
+  // individual leaves while lower strata still supply the rest.
+
+  it("deep-merges an object value across strata, keeping lower-stratum leaves a higher partial omits", function () {
+    const schema = z.strictObject({
+      options: z
+        .strictObject({ a: z.number(), b: z.number(), c: z.number() })
+        .partial()
+    });
+    const config = createStratifiedConfig(schema);
+
+    config.update(ConfigStrata.definition, { options: { a: 1, b: 2, c: 3 } });
+    config.update(ConfigStrata.user, { options: { b: 20 } });
+
+    expect(config.options).toEqual({ a: 1, b: 20, c: 3 });
+  });
+
+  it("resolves each leaf from the highest stratum that defines it across three strata", function () {
+    const schema = z.strictObject({
+      options: z
+        .strictObject({
+          a: z.number(),
+          b: z.number(),
+          c: z.number(),
+          d: z.number()
+        })
+        .partial()
+    });
+    const config = createStratifiedConfig(schema);
+
+    config.update(ConfigStrata.defaults, {
+      options: { a: 0, b: 0, c: 0, d: 0 }
+    });
+    config.update(ConfigStrata.definition, { options: { a: 1, b: 2 } });
+    config.update(ConfigStrata.user, { options: { b: 20 } });
+
+    expect(config.options).toEqual({
+      a: 1, // definition over defaults
+      b: 20, // user over definition over defaults
+      c: 0, // only defaults
+      d: 0 // only defaults
+    });
+  });
+
+  it("replaces array-valued leaves wholesale rather than merging them element-wise", function () {
+    const schema = z.strictObject({
+      nested: z.strictObject({ items: z.array(z.number()) }).partial()
+    });
+    const config = createStratifiedConfig(schema);
+
+    config.update(ConfigStrata.definition, { nested: { items: [1, 2, 3] } });
+    config.update(ConfigStrata.user, { nested: { items: [9] } });
+
+    expect(config.nested).toEqual({ items: [9] });
+  });
+
+  it("deep-merges nested objects more than one level deep", function () {
+    const schema = z.strictObject({
+      outer: z
+        .strictObject({
+          inner: z.strictObject({ x: z.number(), y: z.number() }).partial()
+        })
+        .partial()
+    });
+    const config = createStratifiedConfig(schema);
+
+    config.update(ConfigStrata.definition, {
+      outer: { inner: { x: 1, y: 2 } }
+    });
+    config.update(ConfigStrata.user, { outer: { inner: { y: 20 } } });
+
+    expect(config.outer).toEqual({ inner: { x: 1, y: 20 } });
+  });
+
+  it("reacts when a lower-stratum leaf that is not masked by a higher stratum changes", function () {
+    const schema = z.strictObject({
+      options: z.strictObject({ a: z.number(), b: z.number() }).partial()
+    });
+    const config = createStratifiedConfig(schema);
+    config.update(ConfigStrata.defaults, { options: { a: 1, b: 2 } });
+    config.update(ConfigStrata.user, { options: { b: 20 } });
+
+    const seen: Array<unknown> = [];
+    const dispose = autorun(() => seen.push(config.options));
+
+    config.update(ConfigStrata.defaults, { options: { a: 5, b: 2 } });
+
+    expect(seen).toEqual([
+      { a: 1, b: 20 },
+      { a: 5, b: 20 }
+    ]);
+    dispose();
   });
 
   it("applies valid keys and reports invalid ones in the same update", function () {
@@ -138,8 +236,9 @@ describe("StratifiedConfig", function () {
     );
   });
 
-  // A nested sub-schema whose fields are all required and have NO defaults —
-  // so a bare partial write to the object could not be validated on its own.
+  // A nested sub-schema whose fields are all required and have NO defaults.
+  // A bare partial write is still accepted (validation is deep-partial) and
+  // stored as a clean partial — completeness comes from the lower strata on read.
   const searchBarSchema = z.strictObject({
     searchBar: z.strictObject({
       placeholder: z.string(),
@@ -148,7 +247,7 @@ describe("StratifiedConfig", function () {
     })
   });
 
-  it("mergeValue overrides a single nested field, keeping the rest from the definition (not defaults)", function () {
+  it("a bare partial nested write overrides one field, keeping the rest from the definition (not defaults)", function () {
     const config = createStratifiedConfig(searchBarSchema);
 
     config.setValue(ConfigStrata.defaults, "searchBar", {
@@ -162,8 +261,8 @@ describe("StratifiedConfig", function () {
       showInCatalog: true
     });
 
-    const result = config.mergeValue(ConfigStrata.override, "searchBar", {
-      minCharacters: 4
+    const result = config.update(ConfigStrata.override, {
+      searchBar: { minCharacters: 4 }
     });
 
     expect(result).toBeTrue();
@@ -174,7 +273,7 @@ describe("StratifiedConfig", function () {
     });
   });
 
-  it("update rejects a bare partial nested object when the sub-schema requires the missing fields", function () {
+  it("stores a bare partial as a clean partial, so later lower-stratum changes are not masked", function () {
     const config = createStratifiedConfig(searchBarSchema);
 
     config.setValue(ConfigStrata.definition, "searchBar", {
@@ -185,13 +284,27 @@ describe("StratifiedConfig", function () {
 
     const result = config.update(ConfigStrata.override, {
       searchBar: { minCharacters: 4 }
-    } as never);
+    });
 
-    expect(typeof result).toBe("string");
-    // The definition value is left untouched — nothing partial was written.
+    expect(result).toBeTrue();
+    expect(config.getStratum(ConfigStrata.override)?.searchBar).toEqual({
+      minCharacters: 4
+    });
     expect(config.searchBar).toEqual({
       placeholder: "from-config",
+      minCharacters: 4,
+      showInCatalog: true
+    });
+
+    // A later change to a field the override does not set flows straight through.
+    config.setValue(ConfigStrata.definition, "searchBar", {
+      placeholder: "changed",
       minCharacters: 3,
+      showInCatalog: true
+    });
+    expect(config.searchBar).toEqual({
+      placeholder: "changed",
+      minCharacters: 4,
       showInCatalog: true
     });
   });

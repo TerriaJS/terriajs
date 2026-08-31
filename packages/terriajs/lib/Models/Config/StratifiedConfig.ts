@@ -81,12 +81,19 @@ export class StratifiedConfig<T extends object> {
   private readonly _strata: Map<string, Partial<T>>;
 
   /**
-   * Cached partial schema — every field made optional so `safeParse` accepts a
-   * partial object without injecting defaults for absent keys. Validation always
-   * goes through the whole schema (never per-field `schema.shape` access), so
-   * schema-level transforms and refinements still apply.
+   * Cached deep-partial schema (`z.deepPartial`) — every object field, at every
+   * depth, made optional so `safeParse` accepts a bare partial object without
+   * requiring absent sub-fields. Object mode (`strict`/`loose`) is preserved, so
+   * unknown-key handling is unchanged. Validation always goes through this whole
+   * schema (never per-field `schema.shape` access), so field-level transforms
+   * and refinements still apply.
+   *
+   * `z.deepPartial` also makes array *elements* optional and does not strip
+   * `.default()`s; both are non-issues here because config schemas hold no
+   * defaults (they live in the `defaults` stratum) and array values are replaced
+   * wholesale on read rather than merged element-by-element.
    */
-  private readonly _partialSchema: z.ZodObject;
+  private readonly _partialSchema: z.ZodType;
 
   /**
    * The stratum ordering registry that determines resolution priority.
@@ -101,7 +108,7 @@ export class StratifiedConfig<T extends object> {
     stratumOrder: ConfigStratumOrder = new ConfigStratumOrder()
   ) {
     this.stratumOrder = stratumOrder;
-    this._partialSchema = schema.partial();
+    this._partialSchema = z.deepPartial(schema);
 
     this._strata = observable.map<string, Partial<T>>() as never;
 
@@ -123,10 +130,13 @@ export class StratifiedConfig<T extends object> {
    * Validates `values` key-by-key and writes the valid keys into `stratum`,
    * creating the stratum if it does not yet exist.
    *
-   * Validation is partial: each provided key is checked against its own field
-   * schema, so a single invalid or unknown key does not discard the rest.
+   * Validation is deep-partial: each provided key is checked against its own
+   * field schema with every nested field optional, so a bare partial object is
+   * accepted and a single invalid or unknown key does not discard the rest.
    * Valid keys are applied; invalid keys are skipped and reported. Keys already
-   * in the stratum that are absent from `values` are preserved.
+   * in the stratum that are absent from `values` are preserved, and a nested
+   * object is stored exactly as given — the sub-fields it omits resolve from the
+   * strata below on read (see {@link get}).
    *
    * @returns `true` if every provided key was valid, otherwise a string
    * describing the keys that were rejected (the valid keys are still applied).
@@ -135,7 +145,7 @@ export class StratifiedConfig<T extends object> {
    * Writes directly mutate the per-key observable — only reactions that read
    * an updated key are invalidated, not the entire stratum.
    */
-  update(stratum: string, values: Partial<T>): string | true {
+  update(stratum: string, values: DeepPartial<T>): string | true {
     this._assertStratumRegistered(stratum);
 
     const { data, errors } = this.parseInput(values);
@@ -156,10 +166,10 @@ export class StratifiedConfig<T extends object> {
    * Sets a single key within `stratum` without disturbing any other key —
    * the per-property analogue of `setTrait()` in the model layer.
    *
-   * Validation runs through the same partial schema as {@link update} on a
+   * Validation runs through the same deep-partial schema as {@link update} on a
    * single-key object, so a valid single-key update is never blocked by
-   * unrelated required fields. An invalid value is rejected and nothing is
-   * written.
+   * unrelated required fields and a bare partial object value is accepted. An
+   * invalid value is rejected and nothing is written.
    *
    * @returns `true` if the value was valid and written, otherwise a string
    * describing why it was rejected.
@@ -171,7 +181,7 @@ export class StratifiedConfig<T extends object> {
   setValue<K extends keyof T>(
     stratum: string,
     key: K,
-    value: T[K]
+    value: DeepPartial<T[K]>
   ): string | true {
     this._assertStratumRegistered(stratum);
 
@@ -199,64 +209,75 @@ export class StratifiedConfig<T extends object> {
     return true;
   }
 
-  /**
-   * Recursively merges a partial object into the currently resolved value and
-   * writes the validated result to `stratum`. Arrays are replaced rather than
-   * merged.
-   *
-   * The resolved value is materialized in the target stratum, so subsequent
-   * changes to lower strata will remain masked by the copied fields.
-   */
-  mergeValue<K extends keyof T>(
-    stratum: string,
-    key: K,
-    patch: DeepPartial<T[K]>
-  ): string | true {
-    return this.update(stratum, {
-      [key]: mergeDeep(this.get(key), patch)
-    } as never);
-  }
-
   // ── Read API ─────────────────────────────────────────────────────────────────
 
   /**
-   * Returns the observable partial stored at `stratum`, or `undefined` if
-   * nothing has been set there yet.
+   * Returns the observable deep-partial stored at `stratum`, or `undefined` if
+   * nothing has been set there yet. A stratum holds only the (possibly nested)
+   * fields written to it — the rest resolve from lower strata via {@link get}.
    */
-  getStratum(stratum: string): Partial<T> | undefined {
-    return this._strata.get(stratum);
+  getStratum(stratum: string): DeepPartial<T> | undefined {
+    return this._strata.get(stratum) as DeepPartial<T> | undefined;
   }
 
   /**
-   * Resolves `key` from the highest-priority stratum that has it defined,
-   * walking from highest to lowest priority as determined by `stratumOrder`.
+   * Resolves `key` across strata, walking from highest to lowest priority as
+   * determined by `stratumOrder`.
    *
-   * Reads from the per-key observable inside each stratum — MobX tracks only
-   * this specific key, not the whole stratum.
+   * Resolution mirrors the model/catalog layer's `objectTrait`: a plain-object
+   * value is deep-merged across every stratum that defines it, so each leaf
+   * comes from the highest stratum that supplies *that leaf* and lower strata
+   * fill in the rest. A partial object in a higher stratum therefore overrides
+   * individual sub-properties without erasing the siblings a lower stratum
+   * defines. Non-object values (scalars, arrays, functions, `null`) are not
+   * merged — the highest-priority defined value wins wholesale, like a
+   * `primitiveTrait`. Arrays nested inside merged objects are likewise replaced,
+   * never concatenated (see {@link mergeDeep}).
+   *
+   * Reads the per-key observable inside each stratum — MobX tracks only this
+   * specific key. For object values every contributing stratum's key is read,
+   * so a change to an unmasked lower-stratum leaf still triggers reactions.
    *
    * Returns `undefined` only if no stratum (including `defaults`) provides the
    * key — which should not happen for required fields if the defaults stratum
    * is fully populated.
    */
   get<K extends keyof T>(key: K): T[K] {
+    const objectLayers: unknown[] = [];
     for (const [, stratumObj] of this.stratumOrder.sortTopToBottom(
       this._strata as unknown as Map<string, Partial<T>>
     )) {
       const value = getObservableValue(stratumObj, key as string);
-      if (value !== undefined) return value;
+      if (value === undefined) continue;
+      if (!isPlainObject(value)) {
+        // The highest-priority defined value is not a mergeable object, so it
+        // wins wholesale. A non-object appearing below already-collected object
+        // layers cannot contribute leaves, so stop the walk there.
+        if (objectLayers.length === 0) return value as T[K];
+        break;
+      }
+      objectLayers.push(value);
     }
-    return undefined as T[K];
+    if (objectLayers.length === 0) return undefined as T[K];
+    // objectLayers is ordered highest → lowest; fold from the lowest upward so
+    // each higher stratum patches the accumulated result and wins per leaf.
+    return objectLayers.reduceRight((base, patch) =>
+      mergeDeep(base, patch)
+    ) as T[K];
   }
 
   /**
-   * Validates `raw` through `schema.partial()` and returns the valid keys plus
-   * any validation errors, without ever indexing into `schema.shape`.
+   * Validates `raw` through the cached deep-partial schema (`z.deepPartial`) and
+   * returns the valid keys plus any validation errors, without ever indexing
+   * into `schema.shape`.
    *
-   * Validation is partial: a single invalid or unknown key does not discard the
-   * rest. On a fully valid parse the transformed keys are returned as-is
-   * (`undefined` values filtered out, no defaults injected). On failure the
-   * offending top-level keys are identified from `error.issues` and dropped,
-   * and the remainder is re-parsed so every recoverable key is still applied.
+   * Validation is partial at every depth: a bare partial object (even one whose
+   * sub-schema declares required fields) is accepted, and a single invalid or
+   * unknown key does not discard the rest. On a fully valid parse the
+   * transformed keys are returned as-is (`undefined` values filtered out, no
+   * defaults injected). On failure the offending top-level keys are identified
+   * from `error.issues` and dropped, and the remainder is re-parsed so every
+   * recoverable key is still applied.
    *
    * Because the whole schema is used, field-level transforms are preserved.
    * Object-level (cross-field) refinements can flag a key-less error; when the
