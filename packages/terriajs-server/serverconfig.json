@@ -1,0 +1,33 @@
+{
+  "port": 3001,
+
+  "allowProxyFor": ["nicta.com.au", "gov.au", "csiro.au", "xample.com"],
+
+  "singlePageRouting": {
+    "resolvePathRelativeToWwwroot": "/index.html",
+    "resolveUnmatchedPathsWithIndexHtml": false
+  },
+
+  "proxyAllDomains": false,
+
+  "proxyPostSizeLimit": 102400,
+
+  "initPaths": ["../randominits"],
+
+  "blacklistedAddresses": [],
+
+  //   "upstreamProxy": "proxy.example.com",
+
+  //   "bypassUpstreamProxyFor": ["server.example.com"],
+
+  "esriTokenAuth": {
+    "postSizeLimit": 1024,
+    "servers": {
+      "https://example.com/somelayer": {
+        "username": "myusername",
+        "password": "mypassword",
+        "tokenUrl": "https://example.com/tokens/generateToken"
+      }
+    }
+  }
+}

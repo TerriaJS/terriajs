@@ -1,0 +1,21 @@
+{
+    // This allows hosts which require basic HTTP auth to be proxied for.
+    // Warning: You are essentially bypassing security for this host and exposing it to the web,
+    // so you may want to combine this with another security mechanism such as an IP whitelist.
+
+    "www.some.remote.service.example.com": {
+        "authorization": "Basic dGVzdHVzZXI6dGVzdHBhc3MK"
+    },
+
+    // This allows you to pass other pre-specified headers (typically for authentication or authorization).
+
+    "some.other.service.example.com": {
+        "headers": [{
+             "name": "Secret-Key",
+             "value": "ABCDE12345"
+         }, {
+             "name": "Another-Header",
+             "value": "XYZ"
+         }]
+    }
+}
