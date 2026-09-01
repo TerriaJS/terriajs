@@ -59,6 +59,8 @@
 - Integrate terriajs-server into monorepo
 - Fix label background color for leaflet map. Previously label background color was being ignored.
 - Add `panel` support to `MapInteractionMode`, allowing the map interaction UI to be replaced with a custom component registered via `registerMapInteractionModePanel()`.
+- Add `panel` support to `MapInteractionMode`, allowing the map interaction UI to be replaced with a custom component registered via `registerMapInteractionModePanel()`.
+- Add `pickEvent` and `mouseMoveEvent` to `MapInteractionMode`, raised for both 2D and 3D maps while the mode is active. Add an opt-in `enableScenePicking` option which, in 3D mode, also resolves a position on the picked scene features (3D tiles, primitives, terrain) and exposes it as `scenePosition` on both events and on `PickedFeatures`. Cesium mouse move handling is now throttled to 30/sec and `mouseMoveEvent` is throttled to one event per animation frame.
 
 #### 8.12.5 - 2026-07-28
 

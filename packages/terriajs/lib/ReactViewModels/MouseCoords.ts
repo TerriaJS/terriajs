@@ -29,6 +29,9 @@ const scratchV2 = new Cartographic();
 const scratchIntersection = new Cartographic();
 const scratchBarycentric = new Cartesian3();
 const scratchCartographic = new Cartographic();
+const scratchScreenPosition = new Cartesian2();
+const scratchScenePosition = new Cartesian3();
+const scratchMouseEventPosition = new Cartesian3();
 const pickedTriangleScratch: PickTriangleResult = {
   tile: undefined,
   intersection: new Cartesian3(),
@@ -62,6 +65,12 @@ export default class MouseCoords {
 
   updateEvent = new CesiumEvent();
 
+  /**
+   * Id of the pending `requestAnimationFrame` used to fire mouse move events
+   * for the active {@link MapInteractionMode}.
+   */
+  private mouseEventRafId: number | undefined;
+
   constructor() {
     makeObservable(this);
     this.geoidModel = new EarthGravityModel1996(gridFileUrl);
@@ -86,14 +95,17 @@ export default class MouseCoords {
   }
 
   @action
-  updateCoordinatesFromCesium(terria: Terria, position: Cartesian2): void {
+  updateCoordinatesFromCesium(
+    terria: Terria,
+    screenPosition: Cartesian2
+  ): void {
     if (!terria.cesium) {
       return;
     }
 
     const scene = terria.cesium.scene;
     const camera = scene.camera;
-    const pickRay = camera.getPickRay(position, scratchRay);
+    const pickRay = camera.getPickRay(screenPosition, scratchRay);
     const globe = scene.globe;
     const pickedTriangle = isDefined(pickRay)
       ? pickTriangle(pickRay, scene, true, pickedTriangleScratch)
@@ -186,6 +198,14 @@ export default class MouseCoords {
       });
       this.updateEvent.raiseEvent();
     }
+
+    // Only fire the mouse move event when we have a position on the globe -
+    // `this.cartographic` is left untouched when the mouse is off the globe.
+    if (isDefined(pickedTriangle) && this.cartographic) {
+      this.fireMouseMoveEvent(terria, this.cartographic, screenPosition, () =>
+        scene.pickPosition(screenPosition, scratchScenePosition)
+      );
+    }
   }
 
   @action
@@ -205,6 +225,63 @@ export default class MouseCoords {
       scratchCartographic
     );
     this.cartographicToFields(coordinates);
+
+    const point = terria.leaflet.map.mouseEventToContainerPoint(mouseMoveEvent);
+    const screenPosition = Cartesian2.fromElements(
+      point.x,
+      point.y,
+      scratchScreenPosition
+    );
+    this.fireMouseMoveEvent(terria, coordinates, screenPosition);
+  }
+
+  /**
+   * Fire the mouse move event of the currently active {@link MapInteractionMode},
+   * if it has any listeners.
+   *
+   * The event is fired from a `requestAnimationFrame` callback, and any pending
+   * callback is cancelled first, so that at most one event is fired per frame
+   * no matter how frequently the mouse moves.
+   *
+   * @param scenePick Called to pick a position on the scene features under the
+   * mouse. Only called when the interaction mode has opted into scene picking.
+   */
+  private fireMouseMoveEvent(
+    terria: Terria,
+    cartographic: Cartographic,
+    screenPosition: Cartesian2,
+    scenePick?: () => Cartesian3 | undefined
+  ) {
+    const mapInteractionMode = terria.mapInteractionModeStack.at(-1);
+    const mouseMoveEvent = mapInteractionMode?.mouseMoveEvent;
+    if (!mouseMoveEvent || mouseMoveEvent.numberOfListeners === 0) {
+      return;
+    }
+
+    if (isDefined(this.mouseEventRafId)) {
+      cancelAnimationFrame(this.mouseEventRafId);
+    }
+
+    this.mouseEventRafId = requestAnimationFrame(() => {
+      this.mouseEventRafId = undefined;
+
+      const globePosition = Cartographic.toCartesian(
+        cartographic,
+        undefined,
+        scratchMouseEventPosition
+      );
+
+      const scenePosition =
+        mapInteractionMode.enableScenePicking && scenePick
+          ? scenePick()
+          : undefined;
+
+      mouseMoveEvent.raiseEvent({
+        globePosition,
+        screenPosition,
+        scenePosition
+      });
+    });
   }
 
   @action

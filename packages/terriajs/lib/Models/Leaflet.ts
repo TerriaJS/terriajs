@@ -720,11 +720,12 @@ export default class Leaflet extends GlobeOrMap {
           isDefined(mapInteractionModeStack) &&
           mapInteractionModeStack.length > 0
         ) {
-          const pickedFeatures =
-            mapInteractionModeStack[mapInteractionModeStack.length - 1]
-              .pickedFeatures;
-          if (isDefined(pickedFeatures)) {
-            pickedFeatures.pickPosition = newPickLocation;
+          const mapInteractionMode = mapInteractionModeStack.at(-1);
+          if (mapInteractionMode?.pickedFeatures) {
+            mapInteractionMode.pickedFeatures.pickPosition = newPickLocation;
+            mapInteractionMode.pickEvent.raiseEvent({
+              globePosition: newPickLocation
+            });
           }
         } else if (isDefined(this.terria.pickedFeatures)) {
           this.terria.pickedFeatures.pickPosition = newPickLocation;

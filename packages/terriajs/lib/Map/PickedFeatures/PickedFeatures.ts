@@ -42,6 +42,13 @@ export default class PickedFeatures {
   pickPosition: Cartesian3 | undefined;
 
   /**
+   * Gets or sets the position on the nearest scene feature (3D tiles,
+   * primitives, terrain) that was picked, if any. Only set in 3D mode when the
+   * active {@link MapInteractionMode} has `enableScenePicking` set to true.
+   */
+  scenePosition: Cartesian3 | undefined;
+
+  /**
    * Gets or sets the array of picked features.  The array is observable and may be updated up until the point that
    * {@see PickedFeatures#allFeaturesAvailablePromise} resolves.
    */
