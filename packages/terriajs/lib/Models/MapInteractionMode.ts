@@ -119,7 +119,7 @@ export default class MapInteractionMode {
   @observable
   customUi: (() => any) | undefined;
 
-  /*
+  /**
    * Raised when the user picks a position on the map while this interaction mode
    * is active. Raised for both 2D and 3D maps, at the same time as
    * {@link MapInteractionMode.pickedFeatures} is set.
