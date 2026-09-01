@@ -7,6 +7,7 @@ import {
   runInAction,
   when
 } from "mobx";
+import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import CesiumTerrainProvider from "terriajs-cesium/Source/Core/CesiumTerrainProvider";
 import Color from "terriajs-cesium/Source/Core/Color";
@@ -32,6 +33,9 @@ import CommonStrata from "../../lib/Models/Definition/CommonStrata";
 import CreateModel from "../../lib/Models/Definition/CreateModel";
 import createStratumInstance from "../../lib/Models/Definition/createStratumInstance";
 import updateModelFromJson from "../../lib/Models/Definition/updateModelFromJson";
+import MapInteractionMode, {
+  PickEventProps
+} from "../../lib/Models/MapInteractionMode";
 import upsertModelFromJson from "../../lib/Models/Definition/upsertModelFromJson";
 import Terria from "../../lib/Models/Terria";
 import CatalogMemberTraits from "../../lib/Traits/TraitsClasses/CatalogMemberTraits";
@@ -780,6 +784,105 @@ describeIfSupported("Cesium Model", function () {
         tilesetItem.setTrait(CommonStrata.definition, "shadows", "NONE");
       });
       expect(currentNotificationIgnored()).toBe(true);
+    });
+  });
+
+  describe("pickFromScreenPosition", function () {
+    const screenPosition = new Cartesian2(100, 100);
+    const globePosition = new Cartesian3(1, 2, 3);
+    let mapInteractionMode: MapInteractionMode;
+    let pickListener: jasmine.Spy<(props: PickEventProps) => void>;
+
+    beforeEach(function () {
+      mapInteractionMode = new MapInteractionMode({ message: "Click the map" });
+      pickListener = jasmine.createSpy("pickEventListener");
+      mapInteractionMode.pickEvent.addEventListener(pickListener);
+      // The globe has no tiles rendered in the spec runner, so stub out the
+      // globe pick to get a deterministic position.
+      spyOn(cesium.scene.globe, "pick").and.returnValue(globePosition);
+    });
+
+    it("sets terria.pickedFeatures when there is no active interaction mode", async function () {
+      await cesium.pickFromScreenPosition(screenPosition, false);
+      expect(terria.pickedFeatures?.pickPosition).toBe(globePosition);
+      expect(pickListener).not.toHaveBeenCalled();
+    });
+
+    describe("with an active interaction mode", function () {
+      beforeEach(function () {
+        runInAction(() => {
+          terria.mapInteractionModeStack.push(mapInteractionMode);
+        });
+      });
+
+      it("sets pickedFeatures on the interaction mode rather than on terria", async function () {
+        await cesium.pickFromScreenPosition(screenPosition, false);
+        expect(mapInteractionMode.pickedFeatures?.pickPosition).toBe(
+          globePosition
+        );
+        expect(terria.pickedFeatures).toBeUndefined();
+      });
+
+      it("raises pickEvent with the globe position", async function () {
+        await cesium.pickFromScreenPosition(screenPosition, false);
+        expect(pickListener).toHaveBeenCalledTimes(1);
+        expect(pickListener.calls.mostRecent().args[0].globePosition).toBe(
+          globePosition
+        );
+      });
+
+      it("does not pick the scene unless enableScenePicking is set", async function () {
+        const pickPosition = spyOn(cesium.scene, "pickPosition");
+
+        await cesium.pickFromScreenPosition(screenPosition, false);
+
+        expect(pickPosition).not.toHaveBeenCalled();
+        expect(
+          mapInteractionMode.pickedFeatures?.scenePosition
+        ).toBeUndefined();
+        expect(
+          pickListener.calls.mostRecent().args[0].scenePosition
+        ).toBeUndefined();
+      });
+
+      describe("when enableScenePicking is set", function () {
+        const scenePosition = new Cartesian3(4, 5, 6);
+
+        beforeEach(function () {
+          mapInteractionMode.enableScenePicking = true;
+        });
+
+        it("sets scenePosition on the picked features and the pick event", async function () {
+          spyOn(cesium.scene, "pickPosition").and.returnValue(scenePosition);
+
+          await cesium.pickFromScreenPosition(screenPosition, false);
+
+          expect(mapInteractionMode.pickedFeatures?.scenePosition).toBe(
+            scenePosition
+          );
+          expect(pickListener.calls.mostRecent().args[0].scenePosition).toBe(
+            scenePosition
+          );
+        });
+
+        it("picks the scene position before drill picking", async function () {
+          // Cesium returns a position on the ground instead of on the scene
+          // features if `drillPick` runs first in the same render frame.
+          const calls: string[] = [];
+          spyOn(cesium.scene, "pickPosition").and.callFake(() => {
+            calls.push("pickPosition");
+            return scenePosition;
+          });
+          spyOn(cesium.scene, "drillPick").and.callFake(() => {
+            calls.push("drillPick");
+            return [];
+          });
+
+          await cesium.pickFromScreenPosition(screenPosition, false);
+
+          expect(calls).toEqual(["pickPosition", "drillPick"]);
+        });
+      });
     });
   });
 
