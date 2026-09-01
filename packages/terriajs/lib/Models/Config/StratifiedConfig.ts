@@ -138,6 +138,10 @@ export class StratifiedConfig<T extends object> {
    * object is stored exactly as given — the sub-fields it omits resolve from the
    * strata below on read (see {@link get}).
    *
+   * Passing a key with an explicit `undefined` value removes that key from the
+   * stratum, so the value resolves from the next-lower stratum — the only way
+   * to "unset" an override and fall back to a default.
+   *
    * @returns `true` if every provided key was valid, otherwise a string
    * describing the keys that were rejected (the valid keys are still applied).
    * @throws {DeveloperError} if `stratum` is not registered in `stratumOrder`.
@@ -156,7 +160,11 @@ export class StratifiedConfig<T extends object> {
         unknown
       >;
       for (const [key, value] of Object.entries(data)) {
-        setObservableValue(stratumObj, key, value);
+        if (value === undefined) {
+          removeObservableValue(stratumObj, key);
+        } else {
+          setObservableValue(stratumObj, key, value);
+        }
       }
     });
     return errors.length > 0 ? errors.join("\n") : true;
@@ -171,6 +179,9 @@ export class StratifiedConfig<T extends object> {
    * unrelated required fields and a bare partial object value is accepted. An
    * invalid value is rejected and nothing is written.
    *
+   * Passing `undefined` removes the key from the stratum, so the value resolves
+   * from the next-lower stratum — the per-key way to unset an override.
+   *
    * @returns `true` if the value was valid and written, otherwise a string
    * describing why it was rejected.
    * @throws {DeveloperError} if `stratum` is not registered in `stratumOrder`.
@@ -181,7 +192,7 @@ export class StratifiedConfig<T extends object> {
   setValue<K extends keyof T>(
     stratum: string,
     key: K,
-    value: DeepPartial<T[K]>
+    value: DeepPartial<T[K]> | undefined
   ): string | true {
     this._assertStratumRegistered(stratum);
 
@@ -204,7 +215,11 @@ export class StratifiedConfig<T extends object> {
         string,
         unknown
       >;
-      setObservableValue(stratumObj, key as string, data[key]);
+      if (data[key] === undefined) {
+        removeObservableValue(stratumObj, key as string);
+      } else {
+        setObservableValue(stratumObj, key as string, data[key]);
+      }
     });
     return true;
   }
@@ -243,16 +258,61 @@ export class StratifiedConfig<T extends object> {
    * is fully populated.
    */
   get<K extends keyof T>(key: K): T[K] {
+    return this._resolve(key);
+  }
+
+  /**
+   * Resolves `key` exactly like {@link get} — deep-merging object values per
+   * leaf — but only from the strata *below* `targetStratum`; the target stratum
+   * and everything above it are ignored. Answers "what would this key resolve to
+   * without this stratum's override?", e.g. so a caller can store only the
+   * leaves that actually differ from the app-provided baseline. Works whether or
+   * not `targetStratum` itself has been written yet.
+   */
+  getBelowStratum<K extends keyof T>(key: K, targetStratum: string): T[K] {
+    const priority = this.stratumOrder.priorities.get(targetStratum);
+    if (priority === undefined) return undefined as T[K];
+    return this._resolve(key, (p) => p < priority);
+  }
+
+  /**
+   * Resolves `key` exactly like {@link get} — deep-merging object values per
+   * leaf — but only from the strata *above* `targetStratum`; the target stratum
+   * and everything below it are ignored. Answers "what has been set on top of
+   * this stratum?", e.g. to persist only the user-controlled value without
+   * freezing the app defaults that sit below it.
+   */
+  getAboveStratum<K extends keyof T>(key: K, targetStratum: string): T[K] {
+    const priority = this.stratumOrder.priorities.get(targetStratum);
+    if (priority === undefined) return undefined as T[K];
+    return this._resolve(key, (p) => p > priority);
+  }
+
+  /**
+   * Shared resolver for {@link get}, {@link getBelowStratum} and
+   * {@link getAboveStratum}. Walks strata highest → lowest; `includePriority`,
+   * when given, restricts the walk to strata whose priority it accepts. A
+   * plain-object value is deep-merged across the contributing strata (the
+   * highest stratum that defines a leaf wins it); any non-object value wins
+   * wholesale.
+   */
+  private _resolve<K extends keyof T>(
+    key: K,
+    includePriority?: (priority: number) => boolean
+  ): T[K] {
     const objectLayers: unknown[] = [];
-    for (const [, stratumObj] of this.stratumOrder.sortTopToBottom(
+    for (const [stratum, stratumObj] of this.stratumOrder.sortTopToBottom(
       this._strata as unknown as Map<string, Partial<T>>
     )) {
+      if (includePriority) {
+        const priority = this.stratumOrder.priorities.get(stratum);
+        if (priority === undefined || !includePriority(priority)) continue;
+      }
       const value = getObservableValue(stratumObj, key as string);
       if (value === undefined) continue;
       if (!isPlainObject(value)) {
-        // The highest-priority defined value is not a mergeable object, so it
-        // wins wholesale. A non-object appearing below already-collected object
-        // layers cannot contribute leaves, so stop the walk there.
+        // A non-object value wins wholesale. One appearing below already-
+        // collected object layers cannot contribute leaves, so stop the walk.
         if (objectLayers.length === 0) return value as T[K];
         break;
       }
@@ -271,13 +331,12 @@ export class StratifiedConfig<T extends object> {
    * returns the valid keys plus any validation errors, without ever indexing
    * into `schema.shape`.
    *
-   * Validation is partial at every depth: a bare partial object (even one whose
-   * sub-schema declares required fields) is accepted, and a single invalid or
-   * unknown key does not discard the rest. On a fully valid parse the
-   * transformed keys are returned as-is (`undefined` values filtered out, no
-   * defaults injected). On failure the offending top-level keys are identified
-   * from `error.issues` and dropped, and the remainder is re-parsed so every
-   * recoverable key is still applied.
+   * Validation is partial: a single invalid or unknown key does not discard the
+   * rest. On a fully valid parse the transformed keys are returned as-is — an
+   * explicit `undefined` is preserved (it signals the caller wants to clear the
+   * key), and absent keys are never injected. On failure the
+   * offending top-level keys are identified from `error.issues` and dropped,
+   * and the remainder is re-parsed so every recoverable key is still applied.
    *
    * Because the whole schema is used, field-level transforms are preserved.
    * Object-level (cross-field) refinements can flag a key-less error; when the
@@ -291,7 +350,7 @@ export class StratifiedConfig<T extends object> {
 
     const result = this._partialSchema.safeParse(raw);
     if (result.success) {
-      return { data: this._stripUndefined(result.data), errors: [] };
+      return { data: result.data as Partial<T>, errors: [] };
     }
 
     const errors = [z.prettifyError(result.error)];
@@ -309,19 +368,12 @@ export class StratifiedConfig<T extends object> {
     );
     const recovered = this._partialSchema.safeParse(remainder);
     return {
-      data: recovered.success ? this._stripUndefined(recovered.data) : {},
+      data: recovered.success ? (recovered.data as Partial<T>) : {},
       errors
     };
   }
 
   // ── Private helpers ──────────────────────────────────────────────────────────
-
-  private _stripUndefined(parsed: unknown): Partial<T> {
-    if (!isPlainObject(parsed)) return {};
-    return Object.fromEntries(
-      Object.entries(parsed).filter(([, value]) => value !== undefined)
-    ) as Partial<T>;
-  }
 
   /**
    * Throws if `stratum` has no registered priority in `stratumOrder`. Writing

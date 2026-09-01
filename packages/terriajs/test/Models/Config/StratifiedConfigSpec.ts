@@ -20,6 +20,53 @@ describe("StratifiedConfig", function () {
     dispose();
   });
 
+  it("setValue undefined clears the key so a lower stratum resolves", function () {
+    const config = createStratifiedConfig(schema);
+    config.setValue(ConfigStrata.defaults, "value", 1);
+    config.setValue(ConfigStrata.user, "value", 5);
+
+    expect(config.setValue(ConfigStrata.user, "value", undefined)).toBeTrue();
+
+    expect(config.value).toBe(1);
+    expect(
+      Object.hasOwn(config.getStratum(ConfigStrata.user) ?? {}, "value")
+    ).toBeFalse();
+  });
+
+  it("update with an undefined value clears the key so a lower stratum resolves", function () {
+    const config = createStratifiedConfig(schema);
+    config.setValue(ConfigStrata.defaults, "value", 1);
+    config.setValue(ConfigStrata.override, "value", 9);
+
+    expect(
+      config.update(ConfigStrata.override, { value: undefined })
+    ).toBeTrue();
+
+    expect(config.value).toBe(1);
+  });
+
+  it("resolves to undefined when the only stratum providing the key is cleared", function () {
+    const config = createStratifiedConfig(schema);
+    config.setValue(ConfigStrata.user, "value", 5);
+
+    config.setValue(ConfigStrata.user, "value", undefined);
+
+    expect(config.value).toBeUndefined();
+  });
+
+  it("observes a cleared override falling back to the lower stratum", function () {
+    const config = createStratifiedConfig(schema);
+    config.setValue(ConfigStrata.defaults, "value", 1);
+    const values: Array<number | undefined> = [];
+    const dispose = autorun(() => values.push(config.value));
+
+    config.setValue(ConfigStrata.user, "value", 5);
+    config.setValue(ConfigStrata.user, "value", undefined);
+
+    expect(values).toEqual([1, 5, 1]);
+    dispose();
+  });
+
   it("does not allow direct assignment to schema properties", function () {
     const config = createStratifiedConfig(schema);
 
@@ -116,6 +163,91 @@ describe("StratifiedConfig", function () {
       c: 0, // only defaults
       d: 0 // only defaults
     });
+  });
+
+  it("getBelowStratum deep-merges object values from the strata below the target", function () {
+    const schema = z.strictObject({
+      options: z
+        .strictObject({ a: z.number(), b: z.number(), c: z.number() })
+        .partial()
+    });
+    const config = createStratifiedConfig(schema);
+
+    config.update(ConfigStrata.defaults, { options: { a: 1, b: 1, c: 1 } });
+    config.update(ConfigStrata.definition, { options: { b: 2 } });
+    config.update(ConfigStrata.user, { options: { c: 3 } });
+
+    // Excludes the user stratum, deep-merges the rest — the baseline a caller
+    // diffs against to store only the leaves it actually overrides.
+    expect(config.getBelowStratum("options", ConfigStrata.user)).toEqual({
+      a: 1,
+      b: 2,
+      c: 1
+    });
+  });
+
+  it("getBelowStratum returns the highest scalar defined below the target", function () {
+    const schema = z.strictObject({ value: z.number().optional() });
+    const config = createStratifiedConfig(schema);
+
+    config.update(ConfigStrata.defaults, { value: 1 });
+    config.update(ConfigStrata.definition, { value: 2 });
+    config.update(ConfigStrata.user, { value: 3 });
+
+    expect(config.getBelowStratum("value", ConfigStrata.user)).toBe(2);
+    expect(
+      config.getBelowStratum("value", ConfigStrata.defaults)
+    ).toBeUndefined();
+  });
+
+  it("getBelowStratum resolves below the target even when the target stratum is unset", function () {
+    const schema = z.strictObject({
+      options: z.strictObject({ a: z.number(), b: z.number() }).partial()
+    });
+    const config = createStratifiedConfig(schema);
+
+    config.update(ConfigStrata.defaults, { options: { a: 1, b: 1 } });
+    config.update(ConfigStrata.definition, { options: { b: 2 } });
+    // user stratum is never written — getBelowStratum must still resolve.
+
+    expect(config.getBelowStratum("options", ConfigStrata.user)).toEqual({
+      a: 1,
+      b: 2
+    });
+  });
+
+  it("getAboveStratum deep-merges only the strata above the target, excluding it and below", function () {
+    const schema = z.strictObject({
+      options: z
+        .strictObject({ a: z.number(), b: z.number(), c: z.number() })
+        .partial()
+    });
+    const config = createStratifiedConfig(schema);
+
+    config.update(ConfigStrata.defaults, { options: { a: 1, b: 1, c: 1 } });
+    config.update(ConfigStrata.definition, { options: { b: 2 } });
+    config.update(ConfigStrata.persistedStorage, { options: { c: 30 } });
+    config.update(ConfigStrata.user, { options: { a: 100 } });
+
+    // Above definition: persistedStorage + user merged; definition/defaults excluded.
+    expect(config.getAboveStratum("options", ConfigStrata.definition)).toEqual({
+      a: 100,
+      c: 30
+    });
+  });
+
+  it("getAboveStratum returns undefined when nothing is set above the target", function () {
+    const schema = z.strictObject({ value: z.number().optional() });
+    const config = createStratifiedConfig(schema);
+
+    config.update(ConfigStrata.definition, { value: 5 });
+
+    expect(
+      config.getAboveStratum("value", ConfigStrata.definition)
+    ).toBeUndefined();
+
+    config.update(ConfigStrata.user, { value: 9 });
+    expect(config.getAboveStratum("value", ConfigStrata.definition)).toBe(9);
   });
 
   it("replaces array-valued leaves wholesale rather than merging them element-wise", function () {
