@@ -1,0 +1,77 @@
+{
+  "name": "terriajs-server",
+  "version": "5.0.0",
+  "description": "NodeJS server for TerriaJS, consisting of a CORS proxy, proj4 CRS lookup service, and express static server.",
+  "engineStrict": true,
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "type": "module",
+  "exports": {
+    "./terriajs-server.js": "./terriajs-server.js",
+    ".": {
+      "default": "./lib/index.js",
+      "types": "./lib/index.d.ts"
+    }
+  },
+  "types": "./lib/index.d.ts",
+  "scripts": {
+    "test": "jasmine",
+    "lint": "eslint .",
+    "dev": "node --watch-path serverconfig.json --watch lib/app.js ",
+    "start": "node lib/app.js",
+    "format": "prettier --write ."
+  },
+  "bin": {
+    "terriajs-server": "terriajs-server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/TerriaJS/TerriaJS-Server"
+  },
+  "keywords": [
+    "terriajs",
+    "National Map"
+  ],
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/TerriaJS/TerriaJS-Server/issues"
+  },
+  "homepage": "https://github.com/TerriaJS/TerriaJS-Server",
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.1082.0",
+    "base-x": "^5.0.1",
+    "basic-auth": "^2.0.1",
+    "body-parser": "^2.3.0",
+    "bytes": "^3.1.2",
+    "compression": "^1.8.1",
+    "cors": "^2.8.6",
+    "express": "^5.2.1",
+    "helmet": "^8.2.0",
+    "json5": "^2.2.3",
+    "morgan": "^1.11.0",
+    "proj4-cli-defs": "^2.1.0",
+    "range_check": "^4.1.0",
+    "rate-limiter-flexible": "^11.2.0",
+    "safe-regex2": "^5.1.1",
+    "undici": "^8.7.0",
+    "yargs": "^18.0.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@eslint/json": "^2.0.1",
+    "@testcontainers/localstack": "^12.0.4",
+    "@types/express": "^5.0.6",
+    "@types/node": "^26.1.1",
+    "eslint": "^10.7.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-n": "^18.2.2",
+    "globals": "^17.7.0",
+    "http-proxy": "^1.18.1",
+    "jasmine": "^6.3.0",
+    "msw": "^2.15.0",
+    "prettier": "^3.9.4",
+    "supertest": "^7.2.2",
+    "testcontainers": "^12.0.1"
+  }
+}

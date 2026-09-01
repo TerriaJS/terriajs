@@ -1,0 +1,297 @@
+{
+    // Port to listen on. Overriden by the --port command line setting.
+    "port": 3001,
+
+    // List of domains which the server is willing to proxy for. Subdomains are included automatically.
+    "allowProxyFor" : [
+        "nicta.com.au",
+        "gov.au",
+        "csiro.au"
+    ],
+
+    "singlePageRouting": {
+      "resolvePathRelativeToWwwroot": "/index.html",
+      // Whether to route unmatched routes to /index.html and let the frontend resolve the route
+      "resolveUnmatchedPathsWithIndexHtml": false
+    },
+
+    // If this setting is true, the allowProxyFor list is ignored, and all requests are accepted.
+    "proxyAllDomains": false,
+
+    // The largest size, in bytes, of data that the proxy will send in a POST request
+    "proxyPostSizeLimit": 102400,
+
+    // The largest size, in bytes, of a response body that the proxy will pass through.
+    // Responses exceeding this limit will be aborted with a 502 status. Default is 100MB (104857600).
+    "proxyResponseSizeLimit": 104857600,
+
+    // List of directories where init (catalog) files will be sought, before defaulting to wwwroot/init. This helps with managing catalog files
+    // separately from the main codebase.
+    "initPaths": [ "../randominits" ],
+
+    // Optional: IP addresses to refuse to proxy for, even if they"re resolved from a hostname that we would ordinarily allow.
+    // The default is as shown here. If your server has access to an IP range that is not accessible to clients of the proxy, and you
+    // want to ensure that the client can"t get access to it through the proxy, it is vital that you add that IP range to this list.
+    "blacklistedAddresses": [
+        // loopback
+        "127.0.0.0/8",
+        "::1/128",
+        // link-local
+        "169.254.0.0/16",
+        "fe80::/10",
+        // private networks (RFC 1918)
+        "10.0.0.0/8",
+        "172.16.0.0/12",
+        "192.168.0.0/16",
+        "fc00::/7",
+        // current network, "this" host (RFC 1122)
+        "0.0.0.0/8",
+        // carrier-grade NAT / shared address space (RFC 6598)
+        "100.64.0.0/10",
+        // IETF protocol assignments (RFC 6890)
+        "192.0.0.0/24",
+        // documentation / test ranges (RFC 5737)
+        "192.0.2.0/24",
+        "198.51.100.0/24",
+        "203.0.113.0/24",
+        // benchmarking (RFC 2544)
+        "198.18.0.0/15",
+        // 6to4 relay anycast (RFC 7526)
+        "192.88.99.0/24",
+        // AS112-v4 DNS blackhole (RFC 7535)
+        "192.31.196.0/24",
+        // AMT relay discovery (RFC 7450)
+        "192.52.193.0/24",
+        // AS112 direct delegation (RFC 7534)
+        "192.175.48.0/24",
+        // multicast (RFC 5771)
+        "224.0.0.0/4",
+        // reserved for future use (RFC 1112)
+        "240.0.0.0/4",
+        // broadcast
+        "255.255.255.255/32",
+        // unspecified address (RFC 4291)
+        "::/128",
+        // documentation (RFC 3849)
+        "2001:db8::/32",
+        // multicast (RFC 4291)
+        "ff00::/8",
+        // IPv4-mapped IPv6 (RFC 4291)
+        "::ffff:0:0/96",
+        // NAT64 well-known prefix (RFC 6052)
+        "64:ff9b::/96",
+        // NAT64 local-use prefix (RFC 8215)
+        "64:ff9b:1::/48",
+        // IETF protocol assignments (RFC 2928)
+        "2001::/23",
+        // 6to4 (RFC 3056)
+        "2002::/16",
+        // site-local (RFC 3879, deprecated)
+        "fec0::/10",
+        // discard prefix (RFC 6666)
+        "100::/64",
+        // DETS prefix (RFC 9780)
+        "100:0:0:1::/64",
+        // RPKI (RFC 9511)
+        "2620:4f:8000::/48",
+        // documentation (RFC 9637)
+        "3fff::/20",
+        // segment routing (RFC 9602)
+        "5f00::/16"
+    ],
+
+    // Pass requests through to another proxy upstream.
+    "upstreamProxy": "proxy.example.com",
+
+    // Hosts in this list will not be passed through to the upstream proxy.
+    "bypassUpstreamProxyFor": [
+      "server.example.com"
+    ],
+
+    // List of URLs and parameters to request tokens.
+    // Be careful using this configuration as this configuration effectively currently opens up access to these services and allows anyone to
+    // anonymously mint tokens for the specified server using these credentials.
+    "esriTokenAuth": {
+        "postSizeLimit": 1024,
+        "servers": {
+            "https://example.com/somelayer": {
+                "username": "myusername",
+                "password": "mypassword",
+                "tokenUrl": "https://example.com/tokens/generateToken"
+            }
+        }
+    },
+
+    // Enables and configures the feedback service.  This service accepts posted JSON like:
+    //   {
+    //       "name":"My Name",
+    //       "email":"myemail@example.com",
+    //       "comment":"This thing is so great! yeah!"
+    //   }
+    // And creates a GitHub issue based on the feedback.
+    "feedback": {
+        "userAgent": "TerriaBot (TerriaJS Feedback)",
+        "issuesUrl": "https://api.github.com/repos/TerriaJS/NationalMap-Feedback/issues",
+        "accessToken": "provide your GitHub access token here",
+        // Add additional suported feedback parameters if required on a custom feedback form.
+        // name gives the key that the parameter uses and descriptiveLabel is used as the title for the parameter in the GitHub issue description.
+        "additionalParameters": [
+            {
+                "name": "organisation",
+                "descriptiveLabel": "Organisation"
+            }
+        ]
+    },
+
+    // The value of the Express "trust proxy" application setting. Set this to true if you want to provide publicly usable URLs behind a reverse proxy
+    // See http://expressjs.com/en/api.html#trust.proxy.options.table
+    "trustProxy": false,
+
+    // Add very simple HTTP basic authentication with a single username/password for all users.
+    // All services are authenticated except /ping.
+    "basicAuthentication": {
+        "username": "myusername",
+        "password": "mypassword"
+    },
+
+    // Rate limits basic authentication requests. These settings are ignored if `basicAuthentication` is not
+    // configured. Note that this uses simple in-memory storage of requests,
+    // which means that the actual allowed rate will be higher when multiple terriajs-server processes
+    // are used. The first two wait times after `freeRetries` are `minWait`. Successive wait times are
+    // the sum of the two previous wait times, up to `maxWait`.
+    // The defaults are as shown here.
+    "rateLimit": {
+        // The number of retries the user gets before they need to start waiting.
+        "freeRetries": 2,
+
+        // The initial wait time (in milliseconds) after the free retries above.
+        "minWait": 200,
+
+        // The maximum time that the user will need to wait.
+        "maxWait": 60000
+    },
+
+    // Services for creating and/or resolving share URLs (or rather, the JSON that is stored in some service)
+    // A prefix of "foo" translates to a URL like "nationalmap.gov.au/#share=foo-12345" where 12345 is the actual
+    // unique key generated by the service.
+    "shareUrlPrefixes": {
+        // A blank prefix resolves without the separator: .../#share=12345
+        "s": {
+            "service": "s3",
+            // Required: the AWS region to access
+            "region": "us-west-2",
+
+            // Required: an existing S3 bucket in which to store objects
+            "bucket": "terria-sharedata",
+
+            // Optional: pass through custom S3 endpoint which will utilise the above region.
+            "endpoint": "https://{region}.your.custom.s3.endpoint.com",
+
+            // Optional: The access key ID and secret access key of a user with S3 getObject and putObject permission on the above bucket
+            // If not provided here, you must ensure they"re available as environment variables or in a shared credentials file.
+            // See http://docs.aws.amazon.com/AWSJavaScriptSDK/guide/node-configuring.html
+            "accessKeyId": "ABC123",
+            "secretAccessKey": "abc+123-XYZ",
+
+            // Optional: The length of the random share key to generate (not including prefix), up to 54 characters. Defaults to the full length.
+            "keyLength": 16
+        },
+        "g": {
+            "service": "gist",
+            // Optional: your Github access token with Gist creation privileges. If not supplied, all Gists will be created as "anonymous" and lower
+            // usage limits apply
+            // accessToken: "ABC123",
+
+            // Optional: user agent HTTP Header to set
+            "userAgent": "My service",
+            // Optional: The filename to give to the gist file (default: usercatalog.json)
+            "gistFilename":  "usercatalog.json",
+            // Optional: The description attached to each Gist
+            "gistDescription": "User catalog"
+        }
+    },
+    // Which service (of those defined above) should be used when new URLs are requested.
+    "newShareUrlPrefix": "g",
+
+    // The largest size, in bytes, of share JSON which can be received - can also be string, it defaults to "200kb"
+    "shareMaxRequestSize": "200kb",
+
+    // The domain at which you"re running the server. Mostly used for describing the available endpoints. Defaults to "localhost"
+    "hostName": "example.com",
+
+    // Optional: Run TerriaJS-Server in HTTPS mode. (In production, it"s probably better to use Nginx or something to do the HTTPS bit.)
+    "https": {
+        // Name and location of keys. You can make self-signed certs for testing like:
+        // openssl req -nodes -new -x509 -keyout key.pem -out cert.pem
+        "key": "key.pem",
+        "cert": "cert.pem"
+    },
+
+    // True to automatically redirect `http` requests to `https`.
+    // If `trustProxy` is defined, the protocol will be determined from the `X-Forwarded-Proto` header
+    // if it exists. The default is false.
+    "redirectToHttps": true,
+
+    // The `Strict-Transport-Security` header value to include in https responses when
+    // `redirectToHttps` is enabled. Ignored if `redirectToHttps` is false.
+    "strictTransportSecurity": "max-age=63072000; includeSubDomains; preload",
+
+    // The list of hosts for which `http` access is allowed, even if `redirectToHttps` is true.
+    // This is mostly useful to allow non-https access to localhost in development.
+    // The default is `["localhost"]`.
+    "httpAllowedHosts": [
+        "localhost"
+    ],
+
+    // Hostnames this server trusts as its own, in addition to `hostName`. Used to
+    // (a) constrain the http->https redirect target so an attacker-supplied `Host`
+    // header cannot turn it into an open redirect (other hosts get a 400), and
+    // (b) reject cross-origin (CSRF) requests to state-changing endpoints
+    // (/share, /feedback, /esri-token-auth) whose `Origin` is not trusted (403).
+    // List any additional hostnames this server is legitimately served under.
+    "trustedHosts": [
+        "maps.example.com"
+    ],
+
+    // Security response headers (via helmet). Enabled by default; set to false to disable entirely.
+    // A Content-Security-Policy tuned for TerriaJS/Cesium is sent in REPORT-ONLY mode by default, so
+    // it never blocks - it only reports violations to the /csp-report endpoint (logged server-side),
+    // letting you see what a deployment actually loads before enforcing. X-Frame-Options and the
+    // cross-origin isolation headers are intentionally left off, because iframe embedding is a
+    // supported feature and the /proxy endpoint serves resources cross-origin.
+    "securityHeaders": {
+        // Set to false to stop sending the Content-Security-Policy header at all.
+        "contentSecurityPolicy": true,
+        // Set to false to ENFORCE the CSP instead of report-only. Only do this after reviewing
+        // /csp-report output for your deployment - an over-tight CSP will silently break the map.
+        "cspReportOnly": true,
+        // Extra sources to add to `script-src` (e.g. an analytics host).
+        "cspScriptSrc": [],
+        // `frame-ancestors` directive. Defaults to ["'self'"]. Set to ["*"] (or specific origins)
+        // if this deployment is embedded in third-party sites via an iframe.
+        "cspFrameAncestors": ["'self'"],
+        // Raw helmet options, applied last, to override ANY policy for this deployment.
+        // See https://helmetjs.github.io/ . Examples:
+        //   Enable HSTS:            "hsts": { "maxAge": 31536000, "includeSubDomains": true }
+        //   Enforce frame denial:   "frameguard": { "action": "deny" }
+        //   Restrict cross-origin:  "crossOriginResourcePolicy": { "policy": "same-origin" }
+        // (HSTS is off by default here because it is a sticky, non-reversible commitment with no
+        //  report mode; it is also set by `redirectToHttps`/`strictTransportSecurity` on https.)
+        "helmet": {}
+    },
+
+    // An array of options which you to inform which additional parameters are appended to the url querystring.
+    // By default no additional parameters are appended.
+    // A regex pattern is used to test whether parameters should be attached. Set to "." to match everything
+    // Eg a request to somedomain.com/secured becomes somedomain.com/secured?apikey=123
+    "appendParamToQueryString": {
+        "somedomain.com": [
+            {
+                "regexPattern": "secured",
+                "params": {
+                    "apikey": "123"
+                }
+            }
+        ]
+    }
+}
