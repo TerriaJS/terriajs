@@ -4,9 +4,8 @@ import {
   waitForElementToBeRemoved
 } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { ThemeProvider } from "styled-components";
 import Clipboard from "../../lib/ReactViews/Clipboard";
-import { terriaTheme } from "../../lib/ReactViews/StandardUserInterface";
+import { TerriaThemeProvider } from "./withContext";
 
 // Ideally those test would use a jasmine clock mock but it interferes with promise execution
 // which needs the time to advance but it doesn't work with jasmine clock.
@@ -16,9 +15,9 @@ describe("Clipboard", function () {
     const user = userEvent.setup({ delay: null });
 
     render(
-      <ThemeProvider theme={terriaTheme}>
+      <TerriaThemeProvider>
         <Clipboard text="test" timeout={100} />
-      </ThemeProvider>
+      </TerriaThemeProvider>
     );
 
     const button = screen.getByRole("button", { name: "clipboard.copy" });
@@ -46,9 +45,9 @@ describe("Clipboard", function () {
     });
 
     render(
-      <ThemeProvider theme={terriaTheme}>
+      <TerriaThemeProvider>
         <Clipboard text="test" />
-      </ThemeProvider>
+      </TerriaThemeProvider>
     );
 
     const button = screen.queryByRole("button", { name: "clipboard.copy" });
@@ -59,9 +58,9 @@ describe("Clipboard", function () {
     const user = userEvent.setup({ delay: null });
 
     render(
-      <ThemeProvider theme={terriaTheme}>
+      <TerriaThemeProvider>
         <Clipboard timeout={100} />
-      </ThemeProvider>
+      </TerriaThemeProvider>
     );
 
     const button = screen.getByRole("button", { name: "clipboard.copy" });
@@ -81,15 +80,15 @@ describe("Clipboard", function () {
 
   it("shows the created message once a result arrives", () => {
     const { rerender } = render(
-      <ThemeProvider theme={terriaTheme}>
+      <TerriaThemeProvider>
         <Clipboard createdMessage="Saved as new story" />
-      </ThemeProvider>
+      </TerriaThemeProvider>
     );
     // text goes from empty to a real result
     rerender(
-      <ThemeProvider theme={terriaTheme}>
+      <TerriaThemeProvider>
         <Clipboard createdMessage="Saved as new story" text="https://short" />
-      </ThemeProvider>
+      </TerriaThemeProvider>
     );
 
     expect(screen.getByText("Saved as new story")).toBeVisible();
@@ -97,19 +96,19 @@ describe("Clipboard", function () {
 
   it("does not show the created message when the result failed", () => {
     const { rerender } = render(
-      <ThemeProvider theme={terriaTheme}>
+      <TerriaThemeProvider>
         <Clipboard createdMessage="Saved as new story" />
-      </ThemeProvider>
+      </TerriaThemeProvider>
     );
     // text becomes non-empty (an error message), but it's flagged as a failure
     rerender(
-      <ThemeProvider theme={terriaTheme}>
+      <TerriaThemeProvider>
         <Clipboard
           createdMessage="Saved as new story"
           text="Something went wrong"
           failed
         />
-      </ThemeProvider>
+      </TerriaThemeProvider>
     );
 
     expect(screen.queryByText("Saved as new story")).not.toBeInTheDocument();

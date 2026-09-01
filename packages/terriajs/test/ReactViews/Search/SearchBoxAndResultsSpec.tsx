@@ -4,7 +4,6 @@ import i18next from "i18next";
 import { runInAction } from "mobx";
 import { http, HttpResponse } from "msw";
 import { I18nextProvider } from "react-i18next";
-import { ThemeProvider } from "styled-components";
 import CommonStrata from "../../../lib/Models/Definition/CommonStrata";
 import CatalogSearchProvider from "../../../lib/Models/SearchProviders/CatalogSearchProvider";
 import MapboxSearchProvider, {
@@ -14,9 +13,8 @@ import NominatimSearchProvider from "../../../lib/Models/SearchProviders/Nominat
 import Terria from "../../../lib/Models/Terria";
 import ViewState from "../../../lib/ReactViewModels/ViewState";
 import SearchBoxAndResults from "../../../lib/ReactViews/Search/SearchBoxAndResults";
-import { terriaTheme } from "../../../lib/ReactViews/StandardUserInterface";
 import { worker } from "../../mocks/browser";
-import { renderWithContexts } from "../withContext";
+import { TerriaThemeProvider, renderWithContexts } from "../withContext";
 
 describe("SearchBoxAndResults", function () {
   let terria: Terria;
@@ -42,9 +40,9 @@ describe("SearchBoxAndResults", function () {
       viewState.searchState.showLocationSearchResults = false;
     });
     renderWithContexts(
-      <ThemeProvider theme={terriaTheme}>
+      <TerriaThemeProvider>
         <SearchBoxAndResults placeholder="Search" />
-      </ThemeProvider>,
+      </TerriaThemeProvider>,
       viewState
     );
 
@@ -65,9 +63,9 @@ describe("SearchBoxAndResults", function () {
     });
 
     renderWithContexts(
-      <ThemeProvider theme={terriaTheme}>
+      <TerriaThemeProvider>
         <SearchBoxAndResults placeholder="Search" />
-      </ThemeProvider>,
+      </TerriaThemeProvider>,
       viewState
     );
 
@@ -87,9 +85,9 @@ describe("SearchBoxAndResults", function () {
       viewState.terria.catalog.searchProvider = undefined;
     });
     renderWithContexts(
-      <ThemeProvider theme={terriaTheme}>
+      <TerriaThemeProvider>
         <SearchBoxAndResults placeholder="Search" />
-      </ThemeProvider>,
+      </TerriaThemeProvider>,
       viewState
     );
 
@@ -114,9 +112,9 @@ describe("SearchBoxAndResults", function () {
       );
     });
     renderWithContexts(
-      <ThemeProvider theme={terriaTheme}>
+      <TerriaThemeProvider>
         <SearchBoxAndResults placeholder="Search" />
-      </ThemeProvider>,
+      </TerriaThemeProvider>,
       viewState
     );
 
@@ -212,9 +210,9 @@ describe("SearchBoxAndResults", function () {
 
     renderWithContexts(
       <I18nextProvider i18n={i18n}>
-        <ThemeProvider theme={terriaTheme}>
+        <TerriaThemeProvider>
           <SearchBoxAndResults placeholder="Search for places" />
-        </ThemeProvider>
+        </TerriaThemeProvider>
       </I18nextProvider>,
       viewState
     );
@@ -243,9 +241,9 @@ describe("SearchBoxAndResults", function () {
 
     renderWithContexts(
       <I18nextProvider i18n={i18n}>
-        <ThemeProvider theme={terriaTheme}>
+        <TerriaThemeProvider>
           <SearchBoxAndResults placeholder="Search for places" />
-        </ThemeProvider>
+        </TerriaThemeProvider>
       </I18nextProvider>,
       viewState
     );
@@ -284,9 +282,9 @@ describe("SearchBoxAndResults", function () {
 
     renderWithContexts(
       <I18nextProvider i18n={i18n}>
-        <ThemeProvider theme={terriaTheme}>
+        <TerriaThemeProvider>
           <SearchBoxAndResults placeholder="Search for places" />
-        </ThemeProvider>
+        </TerriaThemeProvider>
       </I18nextProvider>,
       viewState
     );
@@ -316,9 +314,9 @@ describe("SearchBoxAndResults", function () {
 
     renderWithContexts(
       <I18nextProvider i18n={i18n}>
-        <ThemeProvider theme={terriaTheme}>
+        <TerriaThemeProvider>
           <SearchBoxAndResults placeholder="Search for places" />
-        </ThemeProvider>
+        </TerriaThemeProvider>
       </I18nextProvider>,
       viewState
     );
@@ -369,9 +367,9 @@ describe("SearchBoxAndResults", function () {
 
     renderWithContexts(
       <I18nextProvider i18n={i18n}>
-        <ThemeProvider theme={terriaTheme}>
+        <TerriaThemeProvider>
           <SearchBoxAndResults placeholder="Search for places" />
-        </ThemeProvider>
+        </TerriaThemeProvider>
       </I18nextProvider>,
       viewState
     );
@@ -400,9 +398,9 @@ describe("SearchBoxAndResults", function () {
 
     renderWithContexts(
       <I18nextProvider i18n={i18n}>
-        <ThemeProvider theme={terriaTheme}>
+        <TerriaThemeProvider>
           <SearchBoxAndResults placeholder="Search for places" />
-        </ThemeProvider>
+        </TerriaThemeProvider>
       </I18nextProvider>,
       viewState
     );

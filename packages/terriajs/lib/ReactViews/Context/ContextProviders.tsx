@@ -1,6 +1,11 @@
 import { ReactNode } from "react";
-import { DefaultTheme, ThemeProvider } from "styled-components";
+import {
+  DefaultTheme,
+  StyleSheetManager,
+  ThemeProvider
+} from "styled-components";
 import ViewState from "../../ReactViewModels/ViewState";
+import { shouldForwardProp } from "../../Styled/shouldForwardProp";
 import { ViewStateProvider } from "./ViewStateContext";
 
 export const ContextProviders = (props: {
@@ -9,6 +14,8 @@ export const ContextProviders = (props: {
   children: ReactNode[] | ReactNode;
 }) => (
   <ViewStateProvider viewState={props.viewState}>
-    <ThemeProvider theme={props.theme}>{props.children}</ThemeProvider>
+    <StyleSheetManager shouldForwardProp={shouldForwardProp}>
+      <ThemeProvider theme={props.theme}>{props.children}</ThemeProvider>
+    </StyleSheetManager>
   </ViewStateProvider>
 );

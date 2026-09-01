@@ -1,9 +1,9 @@
 import { render } from "@testing-library/react";
-import { ThemeProvider } from "styled-components";
 import Terria from "../../../../../lib/Models/Terria";
 import ViewState from "../../../../../lib/ReactViewModels/ViewState";
 import Compass from "../../../../../lib/ReactViews/Map/MapNavigation/Items/Compass/Compass";
 import { terriaTheme } from "../../../../../lib/ReactViews/StandardUserInterface";
+import { TerriaThemeProvider } from "../../../withContext";
 
 describe("Compass", function () {
   let terria: Terria;
@@ -21,9 +21,9 @@ describe("Compass", function () {
   describe("with basic props", function () {
     it("renders", function () {
       const { container } = render(
-        <ThemeProvider theme={terriaTheme}>
+        <TerriaThemeProvider>
           <Compass theme={terriaTheme} viewState={viewState} terria={terria} />
-        </ThemeProvider>
+        </TerriaThemeProvider>
       );
 
       const icons = container.querySelectorAll("svg");
