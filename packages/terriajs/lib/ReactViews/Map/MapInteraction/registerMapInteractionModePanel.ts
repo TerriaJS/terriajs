@@ -9,7 +9,7 @@ export interface MapInteractionPanelProps {
 const mapInteractionModePanels: Record<
   string,
   ComponentType<MapInteractionPanelProps>
-> = observable({});
+> = observable({}, undefined, { deep: false });
 
 /**
  * Register a map interaction mode panel component
