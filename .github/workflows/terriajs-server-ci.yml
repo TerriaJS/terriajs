@@ -1,6 +1,18 @@
 name: terriajs-server CI
 
-on: [push, pull_request]
+on:
+  push:
+    paths:
+      - "packages/terriajs-server/**"
+      - "package.json"
+      - "yarn.lock"
+      - ".github/workflows/terriajs-server-ci.yml"
+  pull_request:
+    paths:
+      - "packages/terriajs-server/**"
+      - "package.json"
+      - "yarn.lock"
+      - ".github/workflows/terriajs-server-ci.yml"
 
 # When a PR is updated, cancel the jobs from the previous version. Merges
 # do not define head_ref, so use run_id to never cancel those jobs.
