@@ -62,6 +62,7 @@
 - Add `panel` support to `MapInteractionMode`, allowing the map interaction UI to be replaced with a custom component registered via `registerMapInteractionModePanel()`.
 - Add `pickEvent` and `mouseMoveEvent` to `MapInteractionMode`, raised for both 2D and 3D maps while the mode is active. Add an opt-in `enableScenePicking` option which, in 3D mode, also resolves a position on the picked scene features (3D tiles, primitives, terrain) and exposes it as `scenePosition` on both events and on `PickedFeatures`. Cesium mouse move handling is now throttled to 30/sec and `mouseMoveEvent` is throttled to one event per animation frame.
 - Allow passing options object to `DragPoints` constructor. New options: `pointMovingCallback`, called continuously while a point is being dragged; `mapPickedObjectCallback`, which can substitute a different entity for the one under the cursor on mouse down; and `dragOnObjects`, which in 3D mode drags points onto scene features via `scene.pickPosition` instead of only the globe surface. `DragPoints.destroy()` now removes its viewer change and Leaflet mouse down listeners.
+- Fix label background color for leaflet map. Previously label background color was being ignored.
 
 #### 8.12.5 - 2026-07-28
 
