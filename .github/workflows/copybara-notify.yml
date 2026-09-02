@@ -1,0 +1,39 @@
+name: Notify monorepo (Copybara inbound)
+
+# terriajs is kept in sync (both ways) with a subtree of TerriaJS/saas-settings via
+# Copybara. When terriajs main changes, ping the monorepo so it pulls the change into
+# oss/ promptly (instead of waiting for the scheduled inbound run).
+#
+# Requires the shared GitHub App (installed on both terriajs and saas-settings):
+#   repo variable APP_CLIENT_ID, secret APP_PRIVATE_KEY.
+
+on:
+  push:
+    branches: [main]
+
+concurrency:
+  group: copybara-notify
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Mint App token (dispatch to saas-settings)
+        id: token
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
+        with:
+          client-id: ${{ vars.APP_CLIENT_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+          repositories: saas-settings
+
+      - name: Fire inbound sync
+        env:
+          GH_TOKEN: ${{ steps.token.outputs.token }}
+          OWNER: ${{ github.repository_owner }}
+        run: gh api "repos/${OWNER}/saas-settings/dispatches" -f event_type=terriajs-merged
