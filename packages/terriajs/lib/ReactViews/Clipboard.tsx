@@ -22,10 +22,15 @@ interface ClipboardProps {
   timeout?: number;
   onCopy?: (contents: string) => void;
   createdMessage?: string;
+  /** When true, `text` is a failure message rather than a real result, so the
+   * `createdMessage` success tick is not shown and the copy button is hidden
+   * (there is no real value to copy). */
+  failed?: boolean;
 }
 
 const Clipboard: FC<ClipboardProps> = (props) => {
-  const { text, inputTheme, inputPlaceholder, onCopy, createdMessage } = props;
+  const { text, inputTheme, inputPlaceholder, onCopy, createdMessage, failed } =
+    props;
   const { t } = useTranslation();
   const styledTheme = useTheme();
   const [status, setStatus] = useState<CopyStatus>(CopyStatus.Default);
@@ -33,12 +38,12 @@ const Clipboard: FC<ClipboardProps> = (props) => {
   const prevTextRef = useRef(text);
 
   useEffect(() => {
-    if (createdMessage && !prevTextRef.current && text) {
+    if (createdMessage && !prevTextRef.current && text && !failed) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setShowCreatedMessage(true);
     }
     prevTextRef.current = text;
-  }, [text, createdMessage]);
+  }, [text, createdMessage, failed]);
 
   const handleCopy = async () => {
     setShowCreatedMessage(false);
@@ -89,7 +94,7 @@ const Clipboard: FC<ClipboardProps> = (props) => {
           readOnly
           onClick={(e) => e.currentTarget.select()}
         />
-        {canCopy && (
+        {canCopy && !failed && (
           <Button
             onClick={handleCopy}
             primary
