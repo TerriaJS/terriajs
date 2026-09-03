@@ -1,0 +1,23 @@
+# https://marketplace.visualstudio.com/items?itemName=xyz.local-history
+.history/
+
+# added by GitSavvy
+/error.log
+
+# added by GitSavvy
+/node_modules/
+
+# added by GitSavvy
+/output.log
+
+# added by GitSavvy
+/wwwroot
+
+# added by GitSavvy
+/npm-debug.log
+
+# don't lock libs
+package-lock.json
+
+terriajs.pid
+.DS_Store
