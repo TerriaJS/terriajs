@@ -3,6 +3,7 @@ import UrlTemplateImageryProvider from "terriajs-cesium/Source/Scene/UrlTemplate
 import isDefined from "../../../Core/isDefined";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
 import MappableMixin, { MapItem } from "../../../ModelMixins/MappableMixin";
+import TileErrorHandlerMixin from "../../../ModelMixins/TileErrorHandlerMixin";
 import UrlTemplateImageryCatalogItemTraits from "../../../Traits/TraitsClasses/UrlTemplateImageryCatalogItemTraits";
 import CreateModel from "../../Definition/CreateModel";
 import { ModelConstructorParameters } from "../../Definition/Model";
@@ -14,8 +15,10 @@ import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
  * - {y}: The tile Y coordinate in the tiling scheme, where 0 is the Northernmost tile.
  * - {s}: One of the available subdomains, used to overcome browser limits on the number of simultaneous requests per host.
  */
-export default class UrlTemplateImageryCatalogItem extends MappableMixin(
-  CatalogMemberMixin(CreateModel(UrlTemplateImageryCatalogItemTraits))
+export default class UrlTemplateImageryCatalogItem extends TileErrorHandlerMixin(
+  MappableMixin(
+    CatalogMemberMixin(CreateModel(UrlTemplateImageryCatalogItemTraits))
+  )
 ) {
   static readonly type = "url-template-imagery";
 
