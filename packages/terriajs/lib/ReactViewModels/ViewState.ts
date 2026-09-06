@@ -694,12 +694,15 @@ export default class ViewState {
         }
       }
 
-      // Open each ancestor group
-      getAncestors(item).forEach((ancestor) => {
-        if (GroupMixin.isMixedInto(ancestor)) {
-          ancestor.setTrait(stratum, "isOpen", isOpen);
-        }
-      });
+      // Open each ancestor group so the item is revealed. We only ever open
+      // ancestors here - collapsing an item must never collapse its parents.
+      if (isOpen) {
+        getAncestors(item).forEach((ancestor) => {
+          if (GroupMixin.isMixedInto(ancestor)) {
+            ancestor.setTrait(stratum, "isOpen", true);
+          }
+        });
+      }
 
       if (GroupMixin.isMixedInto(item)) {
         item.setTrait(stratum, "isOpen", isOpen);
