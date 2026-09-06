@@ -104,14 +104,14 @@
     "confirmText": "Entendi",
     "manualAlignmentTitle": "Alinhamento Manual",
     "resetAlignmentTitle": "Reiniciar Alinhamento",
-    "resetAlignmentMessage": "Reiniciando o alinhamento da bússola. Se o alinhamento não corresponder ao do mundo real, tente agitar seu dispositivo em um movimento de figura 8 para recalibrar o dispositivo. Isso pode ser feito a qualquer momento. <br /> <br /> Evite locais com campos magnéticos ou objetos de metal, pois eles podem desorientar a bússola do dispositivo.",
+    "resetAlignmentMessage": "Reiniciando o alinhamento da bússola. Se o alinhamento não corresponder ao do mundo real, tente agitar seu dispositivo em um movimento de figura 8 para recalibrar o dispositivo. Isso pode ser feito a qualquer momento. <br> <br> Evite locais com campos magnéticos ou objetos de metal, pois eles podem desorientar a bússola do dispositivo.",
     "arTool": "ferramenta de realidade aumentada",
     "btnHover": "alternar altura de pairar",
     "btnRealign": "alternar alinhamento manual",
     "btnResetRealign": "redefinir o alinhamento da bússola",
     "title": "Recurso Experimental: Realidade Aumentada",
-    "experimentalFeatureMessage": "O modo de Realidade Aumentada está atualmente em beta. Este modo foi projetado para uso apenas nos dispositivos móveis de última geração. <br /> <br /> AVISO: Este modo pode consumir muitos dados, esteja ciente das tarifas de uso de dados de seu provedor de rede. <br /> <br /> A precisão deste modo depende da precisão da bússola interna de seus dispositivos móveis.",
-    "manualAlignmentMessage": "Alinhe seu dispositivo móvel de forma que corresponda ao alinhamento atual do mapa e, em seguida, clique na bússola piscando. Se nenhum ponto de referência para alinhar estiver visível no mapa, você pode mover o mapa usando ações de arrastar e pinçar até que um ponto de referência reconhecível esteja visível antes de alinhar o dispositivo com o mapa. <br /> <div> {{img}} </div> <br /> Dica: o sol ou a lua costumam ser bons marcos para se alinhar se você estiver em um local com o qual não está familiarizado (cuidado para não olhar para o sol - pode machucar seus olhos)."
+    "experimentalFeatureMessage": "O modo de Realidade Aumentada está atualmente em beta. Este modo foi projetado para uso apenas nos dispositivos móveis de última geração. <br> <br> AVISO: Este modo pode consumir muitos dados, esteja ciente das tarifas de uso de dados de seu provedor de rede. <br> <br> A precisão deste modo depende da precisão da bússola interna de seus dispositivos móveis.",
+    "manualAlignmentMessage": "Alinhe seu dispositivo móvel de forma que corresponda ao alinhamento atual do mapa e, em seguida, clique na bússola piscando. Se nenhum ponto de referência para alinhar estiver visível no mapa, você pode mover o mapa usando ações de arrastar e pinçar até que um ponto de referência reconhecível esteja visível antes de alinhar o dispositivo com o mapa. <br> <div> {{img}} </div> <br> Dica: o sol ou a lua costumam ser bons marcos para se alinhar se você estiver em um local com o qual não está familiarizado (cuidado para não olhar para o sol - pode machucar seus olhos)."
   },
   "tool": {
     "closeButtonTitle": "Fechar ferramenta {{toolName}}",
@@ -198,7 +198,7 @@
     "generatingUrl": "Gerando URL de compartilhamento ...",
     "browserPrint": "Para obter melhores resultados de impressão, use o botão Imprimir do {{appName}} em vez do recurso de impressão do navegador da web.",
     "btnAdvanced": "Opções avançadas",
-    "localDataNote": "<0> <0> Nota: </0> </0> <1> As seguintes fontes de dados NÃO serão compartilhadas porque incluem dados deste sistema local. Para compartilhar essas fontes de dados, publique seus dados em um servidor da web e <2> adicione-os usando um url </2>. </1>",
+    "localDataNote": "&lt;0&gt; &lt;0&gt; Nota:   &lt;1&gt; As seguintes fontes de dados NÃO serão compartilhadas porque incluem dados deste sistema local. Para compartilhar essas fontes de dados, publique seus dados em um servidor da web e &lt;2&gt; adicione-os usando um url . ",
     "btnCatalogShareText": "Compartilhar",
     "printTitle": "Imprimir Mapa",
     "creatingPrintView": "Criando visualização de impressão ...",
@@ -229,23 +229,23 @@
     "closeDataPanel": "Fechar painel de dados",
     "myData": "Meus Dados",
     "searchPlaceholderWhole": "Pesquisar catálogo inteiro",
-    "localFile": "<0> Etapa 2: </0> Selecione o arquivo",
-    "webFile": "<0> Etapa 2: </0> Insira a URL do arquivo de dados ou serviço da web",
+    "localFile": "&lt;0&gt; Etapa 2:  Selecione o arquivo",
+    "webFile": "&lt;0&gt; Etapa 2:  Insira a URL do arquivo de dados ou serviço da web",
     "webTitle": "Adicionar dados da web",
     "addDataBtnText": "Explorar dados",
     "dataCatalogue": "Catálogo de Dados",
     "searchPlaceholder": "Pesquise o catálogo",
     "localAdd": "Adicionar arquivo local",
-    "localFileType": "<0>Etapa 1:</0> Selecione o tipo de arquivo",
+    "localFileType": "&lt;0&gt;Etapa 1: Selecione o tipo de arquivo",
     "webAdd": "Adicionar dados da web",
-    "webFileType": "<0>Etapa 1:</0> Selecione arquivo ou tipo de serviço web",
+    "webFileType": "&lt;0&gt;Etapa 1: Selecione arquivo ou tipo de serviço web",
     "urlInputBtn": "Adic.",
     "localTitle": "Adicionar dados locais",
     "dragDrop": "Arrastar e Soltar",
     "browse": "Navegar...",
-    "infoText": "<0> Arraste e solte um arquivo aqui para visualizá-lo localmente no mapa </0> <1> (ele não será salvo ou enviado para a internet) </1>",
+    "infoText": "&lt;0&gt; Arraste e solte um arquivo aqui para visualizá-lo localmente no mapa  &lt;1&gt; (ele não será salvo ou enviado para a internet) ",
     "back": "Voltar",
-    "note": "<0> Nota: </0> Os dados adicionados desta forma não são salvos ou tornados visíveis para outras pessoas."
+    "note": "&lt;0&gt; Nota:  Os dados adicionados desta forma não são salvos ou tornados visíveis para outras pessoas."
   },
   "languagePanel": {
     "changeLanguage": "Alterar Idioma"
@@ -289,7 +289,7 @@
     "title": "Vamos começar",
     "helpBtnText": "Vou precisar de ajuda",
     "tourBtnText": "Faça o passeio",
-    "welcomeMessage": "Interessado em descoberta e exploração de dados? <br/> Mergulhe de cabeça e comece ou verifique as seguintes opções do guia de ajuda.",
+    "welcomeMessage": "Interessado em descoberta e exploração de dados? <br> Mergulhe de cabeça e comece ou verifique as seguintes opções do guia de ajuda.",
     "exploreDataBtnText": "Explorar dados",
     "welcomeMessageOnMobile": "Interessado em descoberta e exploração de dados?",
     "searchBtnText": "Procure um local",
@@ -309,7 +309,7 @@
     "previousBtn": "vá para a cena anterior",
     "navBtn": "ir para a história {{title}}",
     "navBtnMobile": "ir para a história {{title}}",
-    "promptHtml1": "<0> Você pode visualizar e criar histórias a qualquer momento clicando aqui. </0>",
+    "promptHtml1": "&lt;0&gt; Você pode visualizar e criar histórias a qualquer momento clicando aqui. ",
     "dismissText": "Ok, obrigado!",
     "mobileViewStory": "Ver Histórias {{storiesLength}}",
     "hideStoryPanel": "esconder editor",
@@ -318,7 +318,7 @@
     "removeAllStories": "Remover todos",
     "panelTitle": "Editor de histórias",
     "doesNotExist": "História não existe",
-    "removeStoryDialog": "Tem certeza de que deseja excluir '<1> {{storyName}} </1>'?",
+    "removeStoryDialog": "Tem certeza de que deseja excluir '&lt;1&gt; {{storyName}} '?",
     "panelBody": "Crie e compartilhe histórias interativas diretamente de seu mapa",
     "badgeBarLabel": "Cenas",
     "gettingStarted": "Instruções",
@@ -341,7 +341,7 @@
     "play": "Reproduzir",
     "untitled": "cena sem título",
     "nextBtn": "vá para a próxima cena",
-    "promptHtml2": "<0> <0> APRESENTANDO </0> <1> Histórias de dados </1> <2> Crie e compartilhe histórias interativas diretamente de seu mapa. </2> </0>",
+    "promptHtml2": "&lt;0&gt; &lt;0&gt; APRESENTANDO  &lt;1&gt; Histórias de dados  &lt;2&gt; Crie e compartilhe histórias interativas diretamente de seu mapa.  ",
     "story": "História",
     "storyEditor": "Editor de Histórias",
     "exitBtn": "Encerrar História",
@@ -398,7 +398,7 @@
   },
   "satelliteGuidance": {
     "titleI": "Imagens de satélite: Como faço para ...?",
-    "menuTitle": "Você pode acessar guias de mapa a qualquer momento no <2> menu de ajuda </2>.",
+    "menuTitle": "Você pode acessar guias de mapa a qualquer momento no &lt;2&gt; menu de ajuda .",
     "dismissText": "Entendi, obrigado!",
     "bodyI": "Um guia super rápido para obter o máximo das imagens históricas de satélite.",
     "nextI": "Ver guia",
@@ -423,7 +423,7 @@
     "captionText": "Isso nos ajuda a solucionar problemas, permitindo-nos ver o que você está vendo",
     "feedbackBtnText": "Dê retorno",
     "title": "Comentários",
-    "email": "Endereço de e-mail (opcional) <br/> <em> Não podemos fazer o acompanhamento sem ele! </em>",
+    "email": "Endereço de e-mail (opcional) <br> <em> Não podemos fazer o acompanhamento sem ele! </em>",
     "minLength": "O comprimento mínimo do comentário de feedback é {{minLength}}",
     "shareWithDevelopers": "Compartilhe minha visualização do mapa com os desenvolvedores do {{appName}}"
   },
@@ -508,9 +508,9 @@
     "name": "Descrição",
     "dataLocal": "Este arquivo existe apenas no seu navegador. Para compartilhá-lo, você deve carregá-lo em um servidor web público.",
     "dataNotLocal": "Entre em contato com o fornecedor desses dados para obter mais informações, incluindo informações sobre direitos e restrições de uso.",
-    "wfs": "Este é um <1> serviço WFS </1>, que transfere dados espaciais brutos mediante solicitação. Ele pode ser usado em software GIS com este URL:",
+    "wfs": "Este é um &lt;1&gt; serviço WFS , que transfere dados espaciais brutos mediante solicitação. Ele pode ser usado em software GIS com este URL:",
     "metadataUrls": "Links de metadados",
-    "wms": "Este é um <1> serviço WMS </1>, que gera imagens de mapas mediante solicitação. Ele pode ser usado em software GIS com este URL:",
+    "wms": "Este é um &lt;1&gt; serviço WMS , que gera imagens de mapas mediante solicitação. Ele pode ser usado em software GIS com este URL:",
     "typeName": "Nome do tipo",
     "layerName": "Nome da camada",
     "useTheLinkToDownload": "Use o link abaixo para baixar os dados diretamente.",
@@ -709,7 +709,7 @@
       "defaultCombineTitle": "Vários erros ocorreram",
       "defaultCombineMessage": "Detalhes dos erros estão abaixo",
       "networkRequestTitle": "Ocorreu um erro de solicitação de rede",
-      "networkRequestMessage": "Os dados podem não estar disponíveis ou ser exibidos corretamente devido à interrupção do serviço do custodiante de dados. Tente recarregar o mapa, acessando os dados em um estágio posterior ou selecionando um conjunto de dados diferente. <feedbacklink feedback-message='If the problem persists, please submit feedback here.' email-message='If the problem persists, please report to {{email}}'/>",
+      "networkRequestMessage": "Os dados podem não estar disponíveis ou ser exibidos corretamente devido à interrupção do serviço do custodiante de dados. Tente recarregar o mapa, acessando os dados em um estágio posterior ou selecionando um conjunto de dados diferente. <feedbacklink feedback-message=\"If the problem persists, please submit feedback here.\" email-message=\"If the problem persists, please report to {{email}}\"></feedbacklink>",
       "networkRequestMessageDetailed": "Isso pode indicar um dos seguintes:\n\n* O nome de host do servidor não pôde ser resolvido\n* O servidor não respondeu à solicitação - ou está temporariamente indisponível\n* O servidor negou o acesso [Cross-Origin Resource Sharing (CORS)] (https://docs.terria.io/guide/connecting-to-data/cross-origin-resource-sharing/) a este URL\n* Há um problema com sua conexão de internet\n\nSe você inseriu o link manualmente, verifique se o link está correto."
     },
     "readXml": {
@@ -757,7 +757,7 @@
     "newLocation": "Nova localização"
   },
   "dragDrop": {
-    "text": "<0> Arraste e solte </0> <1> Seus dados em qualquer lugar para visualizar no mapa <1>",
+    "text": "&lt;0&gt; Arraste e solte  &lt;1&gt; Seus dados em qualquer lugar para visualizar no mapa &lt;1&gt;",
     "not": "<0> bbbb </0>"
   },
   "loader": {
@@ -1087,8 +1087,8 @@
     },
     "imageryLayer": {
       "unableToDisplayMessage": "{{name}} não pode ser mostrado em 2D porque não suporta a projeção padrão Web Mercator (EPSG: 3857). Mude para 3D se for compatível com seu sistema, atualize o conjunto de dados para suportar a projeção ou use um conjunto de dados diferente.",
-      "accessingBaseMapErrorMessage": "Ocorreu um erro ao tentar baixar blocos para o mapa básico: <p> <center> {{name}} </center> </p> Selecione um mapa básico diferente usando o botão Mapa no canto superior direito.",
-      "accessingCatalogItemErrorMessage": "Ocorreu um erro ao tentar baixar tiles para o item do catálogo: <p> <center> {{name}} </center> </p> O item do catálogo foi ocultado do mapa. Você pode exibi-lo novamente no painel Exibindo Agora para tentar novamente.",
+      "accessingBaseMapErrorMessage": "Ocorreu um erro ao tentar baixar blocos para o mapa básico: <p> </p><center> {{name}} </center> <p></p> Selecione um mapa básico diferente usando o botão Mapa no canto superior direito.",
+      "accessingCatalogItemErrorMessage": "Ocorreu um erro ao tentar baixar tiles para o item do catálogo: <p> </p><center> {{name}} </center> <p></p> O item do catálogo foi ocultado do mapa. Você pode exibi-lo novamente no painel Exibindo Agora para tentar novamente.",
       "unknownTileErrorMessage": "Ao acessar o URL:\n{{url}}\nIsso provavelmente indica um dos seguintes:\n* O nome do host do servidor não pôde ser resolvido,\n* O servidor não respondeu ao pedido, ou\n* O servidor negou o acesso de Cross-Origin Resource Sharing (CORS) a este URL (consulte https://docs.terria.io/guide/connecting-to-data/cross-origin-resource-sharing/).",
       "intervalSupportErrorTitle": "Intervalos não suportados",
       "intervalSupportErrorMessage": "Desculpe, os itens do catálogo {{typeName}} ({{type}}) atualmente não podem ser variados no tempo especificando a propriedade \"intervalos\".",
@@ -1263,7 +1263,7 @@
       "attributes": "Atributos"
     },
     "terria": {
-      "loadingInitSourcesErrorMessage": "Ocorreu um erro ao carregar a configuração do mapa {{appName}} & mdash; ele pode não ser exibido corretamente. Tente recarregar o mapa e, se o problema persistir, informe-o enviando um e-mail para {{email}} ou pressione o botão abaixo.",
+      "loadingInitSourcesErrorMessage": "Ocorreu um erro ao carregar a configuração do mapa {{appName}} &amp; mdash; ele pode não ser exibido corretamente. Tente recarregar o mapa e, se o problema persistir, informe-o enviando um e-mail para {{email}} ou pressione o botão abaixo.",
       "initErrorMessage": "Ocorreu um problema com o servidor Terria. Isso pode fazer com que algumas camadas ou o serviço de conversão fiquem indisponíveis.",
       "loadingBaseMapsErrorTitle": "Erro ao carregar mapas básicos",
       "loadingWorkbenchItemErrorTitle": "Erro ao carregar o item no painel: `{{name}}`",
@@ -1605,7 +1605,7 @@
       "title": "Controles"
     },
     "toolButtonTitle": "Modo Pedestre",
-    "dropPedestrianTooltipMessage": "<b> Clique com o botão esquerdo </b> para selecionar o local de lançamento <br /> <b> Clique com o botão direito / Esc </b> para cancelar"
+    "dropPedestrianTooltipMessage": "<b> Clique com o botão esquerdo </b> para selecionar o local de lançamento <br> <b> Clique com o botão direito / Esc </b> para cancelar"
   },
   "term": {
     "missingContent": "conteúdo ausente"
