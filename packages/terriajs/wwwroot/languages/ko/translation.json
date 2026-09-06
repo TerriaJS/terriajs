@@ -40,7 +40,7 @@
       "content": "## 분할 비교\n\n창 분할을 통해 데이터를 비교할 수 있는 기능입니다. 항공사진과 같은 시계열 데이터의 경우, 일자/시간을 변경해가며 비교해 볼 수도 있습니다."
     },
     "sidePanelUploadButton": {
-      "content": "## 데이터 업로드\n\n사용자의 로컬 데이터를 업로드 하거나 웹상에 있는 데이터를 연결 시킬 수 있습니다. (지원 포맷 : CSV, GeoJSON, KML, GPX & CZML)"
+      "content": "## 데이터 업로드\n\n사용자의 로컬 데이터를 업로드 하거나 웹상에 있는 데이터를 연결 시킬 수 있습니다. (지원 포맷 : CSV, GeoJSON, KML, GPX &amp; CZML)"
     },
     "locationSearchInput": {
       "content": "## 장소 검색\n\n지도상의 장소를 검색하세요."
@@ -90,7 +90,7 @@
   },
   "compass": {
     "guidance": {
-      "dismissText": "닫기 & 다시 보지 않기",
+      "dismissText": "닫기 &amp; 다시 보지 않기",
       "innerCircleDescription1": "중심을 클릭하고, 상/하/좌/우로 천천히 드래그 하면 해당 방향으로 화면이 회전/기울이기 됩니다.",
       "innerCircleTitle": "안쪽 링",
       "outerRingTitle": "바깥쪽 링",
@@ -100,7 +100,7 @@
       "outerRingDescription": "바깥쪽 링을 원형 형태로 드래그 하면, 화면이 360˚ 회전됩니다."
     },
     "guidanceBtnTitle": "자이로스코프 사용법",
-    "title": "카메라 회전을 위해 클릭 & 드래그",
+    "title": "카메라 회전을 위해 클릭 &amp; 드래그",
     "guidanceBtnText": "자이로스코프 사용방법에 대한 상세 설명",
     "description": "바깥쪽 링 드래그 : 화면 회전\n안쪽 자이로스코프 드래그: 자유 회전/기울이기\n더블클릭 : 화면 초기화\nTIP : CTRL키+ 마우스 조작으로 화면 회전/기울이기 가능."
   },
@@ -181,7 +181,7 @@
       "defaultMessage": "알 수 없는 오류",
       "defaultCombineMessage": "오류에 대한 자세한 내용은 아래와 같습니다",
       "networkRequestMessageDetailed": "다음 중 하나를 나타낼 수 있습니다:\n\n* 서버 호스트 이름을 확인할 수 없습니다.\n* 서버가 요청에 응답하지 않았거나 일시적으로 사용할 수 없습니다.\n* 서버가 이 URL에 대한 [출처 간 리소스 공유(CORS)](https://docs.terria.io/guide/connecting-to-data/cross-origin-resource-sharing/) 액세스를 거부했습니다.\n* 인터넷 연결에 문제가 있습니다.\n\n링크를 수동으로 입력한 경우 링크가 올바른지 확인하세요.",
-      "networkRequestMessage": "데이터 관리자의 서비스 중단으로 인해 데이터를 사용할 수 없거나 올바르게 표시되지 않을 수 있습니다. 지도를 다시 로드하거나 나중에 데이터에 액세스하거나 다른 데이터 세트를 선택해 보세요. <feedbacklink feedback-message='If the problem persists, please submit feedback here.' email-message='If the problem persists, please report to {{email}}'/>"
+      "networkRequestMessage": "데이터 관리자의 서비스 중단으로 인해 데이터를 사용할 수 없거나 올바르게 표시되지 않을 수 있습니다. 지도를 다시 로드하거나 나중에 데이터에 액세스하거나 다른 데이터 세트를 선택해 보세요. <feedbacklink feedback-message=\"If the problem persists, please submit feedback here.\" email-message=\"If the problem persists, please report to {{email}}\"></feedbacklink>"
     },
     "readText": {
       "fileRequired": "파일이 필요합니다"
@@ -274,9 +274,9 @@
     "viewStory": "뷰",
     "locationBtn": "중심 장면",
     "dismissText": "알겠습니다, 감사합니다!",
-    "promptHtml1": "<0>여기를 클릭하면 언제든지 스토리를 보고 만들 수 있습니다.</0>",
+    "promptHtml1": "&lt;0&gt;여기를 클릭하면 언제든지 스토리를 보고 만들 수 있습니다.",
     "delete": "삭제",
-    "promptHtml2": "<0><0>소개</0><1>자료이야기</1><2>지도에서 직접 대화형 이야기를 만들어 공유합니다.</2><0>",
+    "promptHtml2": "&lt;0&gt;&lt;0&gt;소개&lt;1&gt;자료이야기&lt;2&gt;지도에서 직접 대화형 이야기를 만들어 공유합니다.&lt;0&gt;",
     "prev": "이전으로",
     "captureScene": "캡쳐 장면",
     "panelTitle": "스토리 에디터",
@@ -317,7 +317,7 @@
     "convertErrorMessage": "이 공유 링크는 이전 버전의 TerriaJS (이 웹 맵에 전원을 공급하는 소프트웨어)를 기반으로 합니다. 공유 데이터를 업그레이드하는 동안 오류가 발생했습니다.",
     "embedDescription": "이 코드를 복사하여 HTML 페이지에 이 지도를 삽입합니다:",
     "shortenUsingService": "웹 서비스를 사용하여 공유 URL 단축",
-    "localDataNote": "<0><0>참고:</0><1>다음 데이터 소스는 이 로컬 시스템의 데이터를 포함하므로 공유되지 않습니다. 이러한 데이터 소스를 공유하려면 해당 데이터를 웹 서버에 게시하고 URL을 사용하여 <2> 추가하십시오.</1>",
+    "localDataNote": "&lt;0&gt;&lt;0&gt;참고:&lt;1&gt;다음 데이터 소스는 이 로컬 시스템의 데이터를 포함하므로 공유되지 않습니다. 이러한 데이터 소스를 공유하려면 해당 데이터를 웹 서버에 게시하고 URL을 사용하여 &lt;2&gt; 추가하십시오.",
     "shortLinkError": "URL을 단축하는 동안 오류가 발생했습니다. 인터넷 연결을 확인하고 다시 시도하십시오.",
     "btnStoryShareTitle": "스토리를 공유",
     "btnAdvanced": "고급 옵션",
@@ -331,19 +331,19 @@
     "dragDrop": "끌어서 놓기",
     "searchPlaceholder": "카탈로그 검색",
     "myData": "내 데이터",
-    "webFileType": "<0>1단계:</0> 파일 또는 웹 서비스 종류 선택",
+    "webFileType": "&lt;0&gt;1단계: 파일 또는 웹 서비스 종류 선택",
     "webAdd": "웹데이터추가",
-    "webFile": "<0>2단계:</0> 데이터 파일 또는 웹 서비스의 URL 입력",
+    "webFile": "&lt;0&gt;2단계: 데이터 파일 또는 웹 서비스의 URL 입력",
     "localAdd": "로컬 파일 추가",
     "load": "로컬/웹 데이터 로드",
     "closeDataPanel": "데이터 패널 닫기",
     "urlInputBtn": "추가",
-    "localFile": "<0>2단계:</0> 파일선택",
-    "localFileType": "<0>1단계:</0> 파일 종류 선택",
+    "localFile": "&lt;0&gt;2단계: 파일선택",
+    "localFileType": "&lt;0&gt;1단계: 파일 종류 선택",
     "localTitle": "로컬 데이터 추가",
     "btnHide": "숨기기",
-    "note": "<0>참고: </0>이러한 방식으로 추가된 데이터는 저장되거나 다른 사람에게 표시되지 않습니다.",
-    "infoText": "<0>여기에 파일을 드래그 앤 드롭하여 지도에서 로컬로 볼 수 있습니다</0><1>(저장되거나 인터넷에 업로드되지 않습니다)</1>",
+    "note": "&lt;0&gt;참고: 이러한 방식으로 추가된 데이터는 저장되거나 다른 사람에게 표시되지 않습니다.",
+    "infoText": "&lt;0&gt;여기에 파일을 드래그 앤 드롭하여 지도에서 로컬로 볼 수 있습니다&lt;1&gt;(저장되거나 인터넷에 업로드되지 않습니다)",
     "dataCatalogue": "데이터 카탈로그",
     "webTitle": "웹 데이터 추가",
     "done": "끝내기",
@@ -351,7 +351,7 @@
     "back": "뒤로가기"
   },
   "welcomeMessage": {
-    "welcomeMessage": "데이터 검색 및 탐색에 관심있습니까?<br/> 바로 들어가서 시작하거나 도움말 옵션을 확인하세요.",
+    "welcomeMessage": "데이터 검색 및 탐색에 관심있습니까?<br> 바로 들어가서 시작하거나 도움말 옵션을 확인하세요.",
     "welcomeMessageOnMobile": "데이터 검색 및 탐색에 관심이 있습니까?",
     "tourBtnText": "투어 가이드",
     "exploreDataBtnText": "지도 데이터 탐색",
@@ -458,13 +458,13 @@
     "choosePreview": "미리보기 스타일 선택"
   },
   "AR": {
-    "manualAlignmentMessage": "모바일 장치를 지도의 현재 정렬과 일치하도록 정렬한 다음, 깜박이는 나침반을 클릭합니다. 현재 지도에 정렬할 랜드마크가 표시되지 않으면 인식할 수 있는 랜드마크가 표시될 때까지 드래그 및 핀치 동작을 통해 지도를 이동한 후 장치를 지도에 정렬할 수 있습니다. <br /><div>{img}/div><br />팁: 잘 모르는 위치에 있을 경우, 태양이나 달은 정렬하기 좋은 랜드마크가 되는 경우가 될 수 있습니다(태양을 보지 않도록 주의하십시오 - 눈을 다칠 수 있습니다).",
+    "manualAlignmentMessage": "모바일 장치를 지도의 현재 정렬과 일치하도록 정렬한 다음, 깜박이는 나침반을 클릭합니다. 현재 지도에 정렬할 랜드마크가 표시되지 않으면 인식할 수 있는 랜드마크가 표시될 때까지 드래그 및 핀치 동작을 통해 지도를 이동한 후 장치를 지도에 정렬할 수 있습니다. <br><div>{img}/div&gt;<br>팁: 잘 모르는 위치에 있을 경우, 태양이나 달은 정렬하기 좋은 랜드마크가 되는 경우가 될 수 있습니다(태양을 보지 않도록 주의하십시오 - 눈을 다칠 수 있습니다).</div>",
     "resetAlignmentTitle": "정렬 재설정",
     "title": "실험 기능 : 증강 현실",
     "btnHover": "호버 높이 전환",
     "arTool": "증강현실 도구",
-    "experimentalFeatureMessage": "증강현실 모드는 현재 베타 상태입니다. 이 모드는 최신 하이엔드 모바일 기기에서만 사용할 수 있도록 설계되었습니다. <br /><br />주의: 이 모드는 많은 데이터를 소비할 수 있습니다. 네트워크 제공업체의 데이터 사용료에 유의하시기 바랍니다. <br /><br />이 모드의 정확도는 모바일 기기 내부 나침반의 정확도에 달려 있습니다.",
-    "resetAlignmentMessage": "나침반 정렬로 재설정. 정렬 상태가 실제와 일치하지 않으면 그림 8 동작으로 장치를 흔들어 장치를 다시 보정합니다. 언제든지 수행할 수 있습니다. <br /> <br /> 자기장 또는 금속 물체가 있는 위치는 장치 나침반의 방향을 방해할 수 있으므로 피해야 합니다.",
+    "experimentalFeatureMessage": "증강현실 모드는 현재 베타 상태입니다. 이 모드는 최신 하이엔드 모바일 기기에서만 사용할 수 있도록 설계되었습니다. <br><br>주의: 이 모드는 많은 데이터를 소비할 수 있습니다. 네트워크 제공업체의 데이터 사용료에 유의하시기 바랍니다. <br><br>이 모드의 정확도는 모바일 기기 내부 나침반의 정확도에 달려 있습니다.",
+    "resetAlignmentMessage": "나침반 정렬로 재설정. 정렬 상태가 실제와 일치하지 않으면 그림 8 동작으로 장치를 흔들어 장치를 다시 보정합니다. 언제든지 수행할 수 있습니다. <br> <br> 자기장 또는 금속 물체가 있는 위치는 장치 나침반의 방향을 방해할 수 있으므로 피해야 합니다.",
     "manualAlignmentTitle": "수동 정렬",
     "btnRealign": "수동 정렬 전환",
     "btnResetRealign": "나침반 정렬 재설정",
@@ -477,7 +477,7 @@
     "sending": "보내는 중...",
     "yourName": "이름(선택사항)",
     "minLength": "피드백 코멘트의 최소 길이는 {{minLength}}입니다",
-    "email": "이메일 주소 (선택사항)<br/><em>이메일 주소가 없으면 후속조치가 불가능합니다!</em>",
+    "email": "이메일 주소 (선택사항)<br><em>이메일 주소가 없으면 후속조치가 불가능합니다!</em>",
     "commentQuestion": "코멘트 또는 질문",
     "cancel": "취소",
     "feedbackPreamble": "귀하의 의견을 듣고 싶습니다!",
@@ -492,7 +492,7 @@
     "btnText": "시작",
     "subTotals": "<div> {{name}}: {{items}개 / {{groups}}개 그룹</div>",
     "mapDataState_0": "{{count}}개의 데이터셋을 맵에서 사용 가능",
-    "totals": "<div> 카탈로그에는 {{groups}}개 그룹으로 구성된 {{item}개 품목이 들어있습니다./div>",
+    "totals": "<div> 카탈로그에는 {{groups}}개 그룹으로 구성된 {{item}개 품목이 들어있습니다./div&gt;</div>",
     "title": "데이터셋 수",
     "noMapDataEnabled": "활성화된 지도 데이터 없음"
   },
@@ -502,7 +502,7 @@
     "titleI": "위성 이미지: 어떻게...?",
     "titleII": "제 위성사진은 어디에 있나요?",
     "bodyIV": "위성 이미지를 원하는 시간과 위치에 항상 사용할 수 있는 것은 아닙니다. 특정 위치의 이미지만 보려면 데이터 작업대에서 '위치별 필터'를 클릭하십시오.",
-    "menuTitle": "<2> 도움말 메뉴 </2>에서 언제든지 지도 가이드에 접속할 수 있습니다.",
+    "menuTitle": "&lt;2&gt; 도움말 메뉴 에서 언제든지 지도 가이드에 접속할 수 있습니다.",
     "dismissText": "알겠습니다, 감사합니다!",
     "titleIV": "위치별 이미지 필터링",
     "bodyI": "역사적인 위성 이미지를 최대한 활용하기 위한 슈퍼-빠른 가이드입니다.",
@@ -631,14 +631,14 @@
     "dataServiceDetails": "데이터 서비스 세부 정보",
     "layerName": "레이어 이름",
     "name": "설명",
-    "wms": "요청 시 지도 이미지를 생성하는 <1>WMS 서비스</1>입니다. 이 URL을 통해 GIS 소프트웨어에서 사용할 수 있습니다:",
+    "wms": "요청 시 지도 이미지를 생성하는 &lt;1&gt;WMS 서비스입니다. 이 URL을 통해 GIS 소프트웨어에서 사용할 수 있습니다:",
     "dataUrl": "데이터 링크",
     "downloadInFormat": "현재 선택된 데이터를 {{format}} 형식으로 다운로드",
     "metadataUrls": "메타데이터 링크",
     "downloadNotSupported": "불행히도 브라우저는 파일을 다운로드하기 위해 필요한 기능을 지원하지 않습니다. 이 데이터를 다운로드하려면 $t(browsers.chrome), $t(browsers.firefox), $t(browsers.edge) 또는 $t(browsers.safari)를 사용하십시오.",
     "useTheLinkToDownload": "아래 링크를 사용하여 데이터를 직접 다운로드하십시오.",
     "dataLocal": "이 파일은 브라우저에만 존재합니다. 이 파일을 공유하려면 공용 웹 서버에 올려야 합니다.",
-    "wfs": "요청 시 미가공 공간 데이터를 전송하는 <1>WFS 서비스</1>입니다. 이 URL을 통해 GIS 소프트웨어에서 사용할 수 있습니다:"
+    "wfs": "요청 시 미가공 공간 데이터를 전송하는 &lt;1&gt;WFS 서비스입니다. 이 URL을 통해 GIS 소프트웨어에서 사용할 수 있습니다:"
   },
   "preview": {
     "selectToPreview": "<0>미리보기로 볼 데이터셋 선택 </0><1>- 또는 -</1><2>지도로 이동</2>",
@@ -732,7 +732,7 @@
     "shareExplanation": "이 URL을 가진 사람은 누구나 이 지도에 접근할 수 있습니다."
   },
   "dragDrop": {
-    "text": "<0>끌어서 놓기</0><1>데이터를 지도에 표시하기<1>",
+    "text": "&lt;0&gt;끌어서 놓기&lt;1&gt;데이터를 지도에 표시하기&lt;1&gt;",
     "not": "<0>bbbb</0>"
   },
   "mobile": {
@@ -1601,7 +1601,7 @@
       "loadingWorkbenchItemErrorTitle": "워크벤치에서 항목을 로드하는 중 오류 발생: `{{name}}`",
       "loadingInitJsonMessage": "JSON 파일 {{url}}을(를) 로드하는 동안 오류가 발생했습니다.",
       "loadingBaseMapsErrorTitle": "베이스맵을 로드하는 중에 오류가 발생했습니다",
-      "loadingInitSourcesErrorMessage": "{{appName}} 지도 구성을 로드하는 중 오류가 발생했습니다 &mdash; 올바르게 표시되지 않을 수 있습니다. 지도를 다시 로드해 보시고 문제가 지속되면 {{email}}로 이메일을 보내 신고해 주시거나 아래 버튼을 누르실 수 있습니다.",
+      "loadingInitSourcesErrorMessage": "{{appName}} 지도 구성을 로드하는 중 오류가 발생했습니다 — 올바르게 표시되지 않을 수 있습니다. 지도를 다시 로드해 보시고 문제가 지속되면 {{email}}로 이메일을 보내 신고해 주시거나 아래 버튼을 누르실 수 있습니다.",
       "loadingBaseMapErrorTitle": "베이스맵 로드 중 오류 발생: `{{name}}`",
       "urlLoadErrorTitle": "URL 로드 중 문제 발생",
       "parsingStartDataErrorMessage": "시작 데이터 JSON을 구문 분석하는 중에 오류가 발생했습니다.",
@@ -1895,10 +1895,10 @@
       "unknownTileErrorTitle": "알 수 없는 타일 오류",
       "unableToDisplayTitle": "데이터세트를 표시할 수 없습니다",
       "tileErrorMessageII": "URL에서 200(OK) 응답을 받았습니다:\n{{url}}\n하지만 이미지로 로드할 수 없습니다.",
-      "accessingBaseMapErrorMessage": "기본 지도용 타일을 다운로드하는 동안 오류가 발생했습니다:<p><center>{{name}} </center></p> 오른쪽 상단에 있는 지도 버튼을 사용하여 다른 기본 지도를 선택하세요.",
+      "accessingBaseMapErrorMessage": "기본 지도용 타일을 다운로드하는 동안 오류가 발생했습니다:<p></p><center>{{name}} </center><p></p> 오른쪽 상단에 있는 지도 버튼을 사용하여 다른 기본 지도를 선택하세요.",
       "intervalSupportErrorMessage": "죄송합니다. 현재는 \"간격\" 속성을 지정하여 {{typeName}}({{type}}) 카탈로그 항목을 시변으로 만들 수 없습니다.",
       "unableToDisplayMessage": "{{name}}은(는) 표준 Web Mercator(EPSG:3857) 투영을 지원하지 않으므로 2D로 표시할 수 없습니다. 시스템에서 지원되는 경우 3D로 전환하거나, 투영을 지원하도록 데이터세트를 업데이트하거나, 다른 데이터세트를 사용하세요.",
-      "accessingCatalogItemErrorMessage": "카탈로그 항목에 대한 타일을 다운로드하는 동안 오류가 발생했습니다:<p><center>{{name}}</center></p> 카탈로그 항목이 지도에서 숨겨졌습니다. 지금 보기 패널에 다시 표시하여 다시 시도할 수 있습니다."
+      "accessingCatalogItemErrorMessage": "카탈로그 항목에 대한 타일을 다운로드하는 동안 오류가 발생했습니다:<p></p><center>{{name}}</center><p></p> 카탈로그 항목이 지도에서 숨겨졌습니다. 지금 보기 패널에 다시 표시하여 다시 시도할 수 있습니다."
     },
     "feedback": {
       "unableToSendTitle": "의견을 보낼 수 없습니다",
@@ -2111,7 +2111,7 @@
     "controls": {
       "title": "컨트롤"
     },
-    "dropPedestrianTooltipMessage": "드롭 위치를 선택하려면 <b>왼쪽 클릭</b><br />취소하려면 <b>오른쪽 클릭/Esc</b>"
+    "dropPedestrianTooltipMessage": "드롭 위치를 선택하려면 <b>왼쪽 클릭</b><br>취소하려면 <b>오른쪽 클릭/Esc</b>"
   },
   "term": {
     "missingContent": "누락된 콘텐츠"
