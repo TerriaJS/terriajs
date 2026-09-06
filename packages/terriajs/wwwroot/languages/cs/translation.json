@@ -108,13 +108,13 @@
     "confirmText": "Chápu",
     "manualAlignmentTitle": "Ruční zarovnání",
     "resetAlignmentTitle": "Obnovení zarovnání",
-    "resetAlignmentMessage": "Resetování na zarovnání kompasu. Pokud zarovnání neodpovídá skutečnému světu, zkuste zařízením zamávat pohybem na obrázku 8, abyste zařízení překalibrovali. To lze provést kdykoli.<br /> <br />Vyhýbejte se místům s magnetickými poli nebo kovovými předměty, protože by mohly dezorientovat kompas zařízení.",
+    "resetAlignmentMessage": "Resetování na zarovnání kompasu. Pokud zarovnání neodpovídá skutečnému světu, zkuste zařízením zamávat pohybem na obrázku 8, abyste zařízení překalibrovali. To lze provést kdykoli.<br> <br>Vyhýbejte se místům s magnetickými poli nebo kovovými předměty, protože by mohly dezorientovat kompas zařízení.",
     "arTool": "nástroj rozšířené reality",
     "btnHover": "přepínač výšky při najetí",
     "btnRealign": "přepínač ručního zarovnání",
     "btnResetRealign": "obnovení seřízení kompasu",
-    "experimentalFeatureMessage": "Režim rozšířené reality je aktuálně ve verzi beta. Tento režim je určen pouze pro použití na nejnovějších mobilních zařízeních vyšší třídy. <br /><br />UPOZORNĚNÍ: Tento režim může spotřebovat velké množství dat, mějte prosím na paměti poplatky za využití dat od vašeho poskytovatele sítě. <br /><br />Přesnost tohoto režimu závisí na přesnosti interního kompasu vašeho mobilního zařízení.",
-    "manualAlignmentMessage": "Zarovnejte své mobilní zařízení tak, aby odpovídalo aktuálnímu zarovnání mapy, poté klikněte na blikající kompas. Pokud na mapě nejsou aktuálně viditelné žádné orientační body, které by bylo možné zarovnat, můžete mapu posouvat pomocí akcí přetažení a zmenšení, dokud nebude viditelný rozpoznatelný orientační bod, než zařízení zarovnáte s mapou. <br /><div>{{img}}</div> <br />Tip: Slunce nebo Měsíc jsou často dobré orientační body, pomocí kterých se můžete orientovat, pokud se nacházíte na místě, které neznáte (pozor, nedívejte se do slunce - mhli byste si poškodit ztrak)."
+    "experimentalFeatureMessage": "Režim rozšířené reality je aktuálně ve verzi beta. Tento režim je určen pouze pro použití na nejnovějších mobilních zařízeních vyšší třídy. <br><br>UPOZORNĚNÍ: Tento režim může spotřebovat velké množství dat, mějte prosím na paměti poplatky za využití dat od vašeho poskytovatele sítě. <br><br>Přesnost tohoto režimu závisí na přesnosti interního kompasu vašeho mobilního zařízení.",
+    "manualAlignmentMessage": "Zarovnejte své mobilní zařízení tak, aby odpovídalo aktuálnímu zarovnání mapy, poté klikněte na blikající kompas. Pokud na mapě nejsou aktuálně viditelné žádné orientační body, které by bylo možné zarovnat, můžete mapu posouvat pomocí akcí přetažení a zmenšení, dokud nebude viditelný rozpoznatelný orientační bod, než zařízení zarovnáte s mapou. <br><div>{{img}}</div> <br>Tip: Slunce nebo Měsíc jsou často dobré orientační body, pomocí kterých se můžete orientovat, pokud se nacházíte na místě, které neznáte (pozor, nedívejte se do slunce - mhli byste si poškodit ztrak)."
   },
   "tool": {
     "closeButtonTitle": "Zavřít nástroj {{toolName}}",
@@ -202,7 +202,7 @@
   },
   "share": {
     "browserPrint": "Chcete-li dosáhnout lepších výsledků při tisku, použijte místo funkce tisku webového prohlížeče tlačítko Tisk {{appName}}.",
-    "localDataNote": "<0><0>Poznámka:</0></0><1>Následující zdroje dat NEBUDOU sdíleny, protože obsahují data z tohoto místního systému nebo z ověřené online služby. Chcete-li tyto zdroje dat sdílet, zveřejněte jejich data na webovém serveru a <2>přidejte je pomocí url adresy</2>.</1>",
+    "localDataNote": "&lt;0&gt;&lt;0&gt;Poznámka:&lt;1&gt;Následující zdroje dat NEBUDOU sdíleny, protože obsahují data z tohoto místního systému nebo z ověřené online služby. Chcete-li tyto zdroje dat sdílet, zveřejněte jejich data na webovém serveru a &lt;2&gt;přidejte je pomocí url adresy.",
     "generatingUrl": "Generování sdílené adresy URL...",
     "printTitle": "Tisk mapy",
     "printExplanation": "Otevřít tisknutelnou verzi této mapy.",
@@ -307,7 +307,7 @@
     "feedbackPreamble": "Rádi vás uslyšíme!",
     "close": "zavřít zpětnou vazbu",
     "yourName": "Vaše jméno (volitelné)",
-    "email": "E-mailová adresa (volitelné)<br/><em>Bez ní nemůžeme navázat kontakt!</em>",
+    "email": "E-mailová adresa (volitelné)<br><em>Bez ní nemůžeme navázat kontakt!</em>",
     "commentQuestion": "Komentář nebo dotaz",
     "shareWithDevelopers": "Sdílení mého zobrazení mapy s vývojáři {{appName}}",
     "cancel": "Zrušit",
@@ -376,7 +376,7 @@
     "exploreDataBtnText": "Prozkoumat mapové podklady",
     "searchBtnText": "Vyhledání umístění",
     "dismissText": "Zavřít zprávu a už mi to nezobrazovat",
-    "welcomeMessage": "Zajímá vás zjišťování a zkoumání dat?<br/>Ponořte se do toho a začněte, nebo se podívejte na následující možnosti nápovědy.",
+    "welcomeMessage": "Zajímá vás zjišťování a zkoumání dat?<br>Ponořte se do toho a začněte, nebo se podívejte na následující možnosti nápovědy.",
     "title": "Začneme"
   },
   "story": {
@@ -395,7 +395,7 @@
     "untitledScene": "scéna bez názvu",
     "doesNotExist": "Příběh neexistuje",
     "removeAllStories": "Odstranit všechny scény",
-    "removeStoryDialog": "Opravdu si přejete odstranit '<1>{{storyName}}</1>'?",
+    "removeStoryDialog": "Opravdu si přejete odstranit '&lt;1&gt;{{storyName}}'?",
     "preview": "náhled příběhů",
     "play": "Přehrát",
     "captureSceneTitle": "zachytit aktuální scénu",
@@ -417,8 +417,8 @@
     "navBtn": "přejít na článek {{title}}",
     "nextBtn": "přejít na další scénu",
     "navBtnMobile": "přejít na příběh {{title}}",
-    "promptHtml1": "<0>Příběhy si můžete kdykoli prohlížet a vytvářet kliknutím sem.</0>",
-    "promptHtml2": "<0><0>ÚVOD</0><1>Datové příběhy</1><2>Vytvářejte a sdílejte interaktivní příběhy přímo z mapy </2></0>",
+    "promptHtml1": "&lt;0&gt;Příběhy si můžete kdykoli prohlížet a vytvářet kliknutím sem.",
+    "promptHtml2": "&lt;0&gt;&lt;0&gt;ÚVOD&lt;1&gt;Datové příběhy&lt;2&gt;Vytvářejte a sdílejte interaktivní příběhy přímo z mapy ",
     "story": "Příběh",
     "dismissText": "Chápu, díky!",
     "mobileViewStory": "Zobrazit příběhy {{storiesLength}}",
@@ -444,7 +444,7 @@
     "saveInstructions": "Klikněte na „Sdílet“ a vytvořte odkaz na nový příspěvek."
   },
   "satelliteGuidance": {
-    "menuTitle": "Do mapových průvodců se můžete kdykoli podívat v nabídce <2>nápověda</2>.",
+    "menuTitle": "Do mapových průvodců se můžete kdykoli podívat v nabídce &lt;2&gt;nápověda.",
     "dismissText": "Chápu, díky!",
     "titleI": "Satelitní snímky: Jak mohu...?",
     "bodyI": "Velmi rychlý průvodce, jak co nejlépe využít historické satelitní snímky.",
@@ -470,19 +470,19 @@
     "searchPlaceholderWhole": "Vyhledávání v celém katalogu",
     "searchPlaceholder": "Vyhledávání v katalogu",
     "localAdd": "Přidat místní soubor",
-    "localFileType": "<0>Krok 1:</0> Vybrat typ souboru",
-    "localFile": "<0>Krok 2:</0> Vybrat soubor",
+    "localFileType": "&lt;0&gt;Krok 1: Vybrat typ souboru",
+    "localFile": "&lt;0&gt;Krok 2: Vybrat soubor",
     "webAdd": "Přidat webová data",
-    "webFile": "<0>Krok 2:</0> Zadejte adresu URL datového souboru nebo webové služby",
+    "webFile": "&lt;0&gt;Krok 2: Zadejte adresu URL datového souboru nebo webové služby",
     "localTitle": "Přidat místní data",
     "webTitle": "Přidat webová data",
     "dragDrop": "Přetáhnout a pustit",
-    "infoText": "<0>Přetažením souboru sem jej zobrazíte lokálně na mapě</0><1>(nebude uložen ani odeslán na internet)</1>",
-    "note": "<0>Poznámka: </0>Takto přidaná data se neukládají ani nejsou viditelná pro ostatní.",
+    "infoText": "&lt;0&gt;Přetažením souboru sem jej zobrazíte lokálně na mapě&lt;1&gt;(nebude uložen ani odeslán na internet)",
+    "note": "&lt;0&gt;Poznámka: Takto přidaná data se neukládají ani nejsou viditelná pro ostatní.",
     "urlInputBtn": "Přidat",
     "back": "Zpět",
     "browse": "Procházet...",
-    "webFileType": "<0>Krok 1:</0> Výběr typu souboru nebo webové služby",
+    "webFileType": "&lt;0&gt;Krok 1: Výběr typu souboru nebo webové služby",
     "modalTitle": "Prozkoumat data",
     "data": "Data"
   },
@@ -532,13 +532,13 @@
     "dataDescription": "Popis dat",
     "resourceDescription": "Popis Zdroje",
     "mayBeExperiencingIssues": "U této datové sady může v současné době docházet k problémům",
-    "selectMultipleDatasets": "<0>Stiskněte <strong>Shift</strong> a klikněte</0><1 /><2>pro přidání více datových sad</2>"
+    "selectMultipleDatasets": "&lt;0&gt;Stiskněte <strong>Shift</strong> a klikněte&lt;1 /&gt;&lt;2&gt;pro přidání více datových sad"
   },
   "description": {
     "name": "Popis",
     "dataLocal": "Tento soubor existuje pouze v prohlížeči. Chcete-li jej sdílet, musíte jej nahrát na veřejný webový server.",
-    "wms": "Jedná se o službu <1>WMS</1>, která na vyžádání generuje obrázky map. Pomocí této adresy URL ji lze použít v softwaru GIS:",
-    "wfs": "Jedná se o službu <1>WFS</1>, která na vyžádání přenáší nezpracovaná prostorová data. Pomocí této adresy URL ji lze použít v softwaru GIS:",
+    "wms": "Jedná se o službu &lt;1&gt;WMS, která na vyžádání generuje obrázky map. Pomocí této adresy URL ji lze použít v softwaru GIS:",
+    "wfs": "Jedná se o službu &lt;1&gt;WFS, která na vyžádání přenáší nezpracovaná prostorová data. Pomocí této adresy URL ji lze použít v softwaru GIS:",
     "layerName": "Název vrstvy",
     "typeName": "Název typu",
     "metadataUrls": "Odkazy na metadata",
@@ -647,7 +647,7 @@
     "copy": "Kopírovat"
   },
   "dragDrop": {
-    "text": "<0>Přetáhnout a pustit</0><1>Vaše data kdekoli zobrazit na mapě<1>",
+    "text": "&lt;0&gt;Přetáhnout a pustit&lt;1&gt;Vaše data kdekoli zobrazit na mapě&lt;1&gt;",
     "not": "<0>bbbb</0>",
     "notification_0": "<0>\"{{fileNames}}\"</0> byl přidán do složky <4>Moje data</4>.",
     "notification_1": "<0>\"{{fileNames}}\"</0> byly přidány do složky <4>Moje data</4>.",
@@ -816,7 +816,7 @@
       "defaultCombineTitle": "Došlo k více chybám",
       "defaultCombineMessage": "Podrobnosti o chybách jsou uvedeny níže",
       "networkRequestTitle": "Došlo k chybě síťového požadavku",
-      "networkRequestMessage": "Data nemusí být dostupná nebo se nemusí zobrazovat správně z důvodu výpadku služby správce dat. Zkuste prosím znovu načíst mapu, přistupovat k datům později nebo vybrat jinou datovou sadu. <feedbacklink feedback-message=\"Pokud problém přetrvává, zašlete prosím zpětnou vazbu zde.\" email-message=\"Pokud problém přetrvává, zašlete prosím zprávu na {{email}}\"/>",
+      "networkRequestMessage": "Data nemusí být dostupná nebo se nemusí zobrazovat správně z důvodu výpadku služby správce dat. Zkuste prosím znovu načíst mapu, přistupovat k datům později nebo vybrat jinou datovou sadu. <feedbacklink feedback-message=\"Pokud problém přetrvává, zašlete prosím zpětnou vazbu zde.\" email-message=\"Pokud problém přetrvává, zašlete prosím zprávu na {{email}}\"></feedbacklink>",
       "networkRequestMessageDetailed": "To může znamenat jednu z následujících možností:\n\n* Název hostitele serveru se nepodařilo přeložit.\n* Server neodpověděl na požadavek - nebo je dočasně nedostupný.\n* Server odmítl [Cross-Origin Resource Sharing (CORS)](https://docs.terria.io/guide/connecting-to-data/cross-origin-resource-sharing/) přístup k této adrese URL.\n* Došlo k problému s internetovým připojením\n\nPokud jste odkaz zadali ručně, ověřte, zda je odkaz správný."
     },
     "errors": {
@@ -1185,9 +1185,9 @@
       "unknownTileErrorTitle": "Neznámá chyba dlaždic",
       "unableToDisplayTitle": "Nelze zobrazit datovou sadu",
       "intervalSupportErrorMessage": "Promiňte, {{typeName}} ({{type}}) katalogové položky nelze v současné době nastavit jako časově proměnné zadáním vlastnosti \"intervaly\".",
-      "accessingBaseMapErrorMessage": "Při pokusu o stažení dlaždic pro základní mapu došlo k chybě:<p><center>{{name}} </center></p> Vyberte prosím jinou základní mapu pomocí tlačítka Mapa v pravém horním rohu.",
+      "accessingBaseMapErrorMessage": "Při pokusu o stažení dlaždic pro základní mapu došlo k chybě:<p></p><center>{{name}} </center><p></p> Vyberte prosím jinou základní mapu pomocí tlačítka Mapa v pravém horním rohu.",
       "accessingCatalogItemErrorTitle": "Chyba při přístupu k položce katalogu",
-      "accessingCatalogItemErrorMessage": "Při pokusu o stažení dlaždic pro položku katalogu došlo k chybě:<p><center>{{name}}</center></p> Položka katalogu byla z mapy skryta.  Můžete ji znovu zobrazit na panelu Nyní zobrazeno a zkusit to znovu.",
+      "accessingCatalogItemErrorMessage": "Při pokusu o stažení dlaždic pro položku katalogu došlo k chybě:<p></p><center>{{name}}</center><p></p> Položka katalogu byla z mapy skryta.  Můžete ji znovu zobrazit na panelu Nyní zobrazeno a zkusit to znovu.",
       "tileErrorMessage": "Dlaždice s adresou URL:\n{{url}}\n uspěla při načtení pomocí XMLHttpRequest, ale při přímém načtení pomocí Cesium nebo Leaflet se několikrát nezdařilo.\n To může znamenat, že server je velmi citlivý na zadané hlavičky požadavku nebo je prostě nespolehlivý.",
       "unknownTileErrorMessage": "Při přístupu na adresu URL:\n{{url}}\nTo pravděpodobně znamená jednu z následujících možností:\n* Název hostitele serveru se nepodařilo přeložit,\n* server neodpověděl na požadavek, nebo\n* Server odepřel přístup k této adrese URL prostřednictvím služby CORS (Cross-Origin Resource Sharing) (viz https://docs.terria.io/guide/connecting-to-data/cross-origin-resource-sharing/).",
       "unableToDisplayMessage": "{{name}} nelze zobrazit ve 2D, protože nepodporuje standardní projekci Web Mercator (EPSG:3857). Přepněte prosím na 3D, pokud je ve vašem systému podporováno, aktualizujte datovou sadu tak, aby podporovala tuto projekci, nebo použijte jinou datovou sadu.",
@@ -1397,7 +1397,7 @@
       "disclaimer": "Odmítnutí odpovědnosti",
       "buttonTitleConfirm": "Souhlasím",
       "loadingMagdaInitSourceErrorMessage": "Při načítání inicializačních informací ze záznamu Magda `{{url}}` došlo k chybě.",
-      "loadingInitSourcesErrorMessage": "Při načítání konfigurace mapy {{appName}} došlo k chybě &mdash; nemusí se správně zobrazit. Zkuste prosím mapu načíst znovu, a pokud problém přetrvává, nahlaste jej prosím zasláním e-mailu na adresu {{email}} nebo můžete stisknout níže uvedené tlačítko.",
+      "loadingInitSourcesErrorMessage": "Při načítání konfigurace mapy {{appName}} došlo k chybě — nemusí se správně zobrazit. Zkuste prosím mapu načíst znovu, a pokud problém přetrvává, nahlaste jej prosím zasláním e-mailu na adresu {{email}} nebo můžete stisknout níže uvedené tlačítko.",
       "loadingShareDataErrorTitle": "Chyba při načítání dat sdílení",
       "parsingStartDataErrorMessage": "Při parsování startovacích dat JSON došlo k chybě."
     },
@@ -2213,7 +2213,7 @@
   },
   "pedestrianMode": {
     "toolButtonTitle": "Režim chodce",
-    "dropPedestrianTooltipMessage": "<b>Klikněte levým tlačítkem</b> pro výběr umístění přetažení<br /><b>Kliknutím pravým tlačítkem / Esc</b> zrušíte",
+    "dropPedestrianTooltipMessage": "<b>Klikněte levým tlačítkem</b> pro výběr umístění přetažení<br><b>Kliknutím pravým tlačítkem / Esc</b> zrušíte",
     "controls": {
       "title": "Ovládací prvky"
     }
