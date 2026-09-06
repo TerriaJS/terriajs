@@ -166,7 +166,7 @@
       "title": "控件"
     },
     "toolButtonTitle": "行人模式",
-    "dropPedestrianTooltipMessage": "<b>鼠标左键点击</b> 选择放置位置<br /><b>右键点击 或 键盘按 Esc</b>取消操作"
+    "dropPedestrianTooltipMessage": "<b>鼠标左键点击</b> 选择放置位置<br><b>右键点击 或 键盘按 Esc</b>取消操作"
   },
   "notification": {
     "title": "消息"
@@ -200,15 +200,15 @@
   "AR": {
     "btnResetRealign": "重置指南针对齐",
     "title": "实验功能：增强现实(AR)",
-    "experimentalFeatureMessage": "增强现实模式目前处于测试阶段。此模式仅适用于最新的高端移动设备。 <br /><br />警告：此模式会消耗大量数据，请注意网络提供商的数据使用费。 <br /><br />此模式的准确性取决于您的移动设备内部指南针的准确性。",
+    "experimentalFeatureMessage": "增强现实模式目前处于测试阶段。此模式仅适用于最新的高端移动设备。 <br><br>警告：此模式会消耗大量数据，请注意网络提供商的数据使用费。 <br><br>此模式的准确性取决于您的移动设备内部指南针的准确性。",
     "confirmText": "知道了",
     "manualAlignmentTitle": "手动对齐",
     "resetAlignmentTitle": "重置对齐",
-    "resetAlignmentMessage": "重置为指南针对齐。如果对齐与现实世界不匹配，请尝试以 8 字形动作挥动您的设备以重新校准设备。您可以随时进行校准设备。<br /> <br />避免放置在有磁场或金属物体的位置，因为这些可能会干扰设备的指南针正常工作。",
+    "resetAlignmentMessage": "重置为指南针对齐。如果对齐与现实世界不匹配，请尝试以 8 字形动作挥动您的设备以重新校准设备。您可以随时进行校准设备。<br> <br>避免放置在有磁场或金属物体的位置，因为这些可能会干扰设备的指南针正常工作。",
     "arTool": "增强现实(AR)工具",
     "btnHover": "切换悬停高度",
     "btnRealign": "切换手动对齐",
-    "manualAlignmentMessage": "对齐您的移动设备，使其与地图当前对齐方式相对应，然后单击闪烁的指南针。如果地图上当前没有要对齐的地标，您可以使用拖动和捏合操作移动地图，直到出现可识别的地标，然后再将设备与地图对齐。 <br /><div>{{img}}</div> <br />提示：如果您在不熟悉的位置，太阳或月亮通常是很好的标记（注意不要看太阳——它会伤害你的眼睛）。"
+    "manualAlignmentMessage": "对齐您的移动设备，使其与地图当前对齐方式相对应，然后单击闪烁的指南针。如果地图上当前没有要对齐的地标，您可以使用拖动和捏合操作移动地图，直到出现可识别的地标，然后再将设备与地图对齐。 <br><div>{{img}}</div> <br>提示：如果您在不熟悉的位置，太阳或月亮通常是很好的标记（注意不要看太阳——它会伤害你的眼睛）。"
   },
   "tool": {
     "closeButtonTitle": "关闭 {{toolName}} 工具",
@@ -286,7 +286,7 @@
     "browserPrint": "为了获得更好的打印效果，请使用 {{appName}} 的打印按钮而不是您的网络浏览器的打印功能。",
     "shortLinkShortening": "缩写...",
     "shortLinkError": "尝试缩短 URL 时出错。 请检查您的互联网连接，然后重试。",
-    "localDataNote": "<0><0>注意：</0></0><1>以下数据源将不会被共享，因为它们包含来自该本地系统的数据。 要共享这些数据源，请将其数据发布到网络服务器上并<2>使用 url 添加它们</2>。</1>",
+    "localDataNote": "&lt;0&gt;&lt;0&gt;注意：&lt;1&gt;以下数据源将不会被共享，因为它们包含来自该本地系统的数据。 要共享这些数据源，请将其数据发布到网络服务器上并&lt;2&gt;使用 url 添加它们。",
     "generatingUrl": "正在生成共享 URL链接...",
     "printTitle": "打印地图",
     "printExplanation": "打开此地图的可打印版本。",
@@ -323,7 +323,7 @@
     "minLength": "反馈评论的最小长度是 {{minLength}}个字",
     "feedbackPreamble": "我们很在意您的反馈！",
     "title": "反馈",
-    "email": "电子邮件地址（可选）<br/><em>没有它我们无法跟您联系！</em>",
+    "email": "电子邮件地址（可选）<br><em>没有它我们无法跟您联系！</em>",
     "commentQuestion": "评论或问题",
     "shareWithDevelopers": "与 {{appName}} 开发者分享我的地图视图"
   },
@@ -423,7 +423,7 @@
     },
     "dismissText": "知道了，谢谢！",
     "mobileViewStory": "查看地图故事 {{storiesLength}}",
-    "promptHtml2": "<0><0>介绍</0><1>数据故事</1><2>直接从您的地图创建和分享互动地图故事。</2></0>",
+    "promptHtml2": "&lt;0&gt;&lt;0&gt;介绍&lt;1&gt;数据故事&lt;2&gt;直接从您的地图创建和分享互动地图故事。",
     "playStory": "地图故事",
     "story": "地图故事",
     "storyEditor": "地图事故编辑器",
@@ -438,7 +438,7 @@
     "nextBtn": "转到下一个场景",
     "locationBtn": "中心场景",
     "previousBtn": "转到上一个场景",
-    "promptHtml1": "<0>点击此处，您可以随时查看和创建地图故事。</0>",
+    "promptHtml1": "&lt;0&gt;点击此处，您可以随时查看和创建地图故事。",
     "exitBtn": "退出地图故事",
     "untitled": "未命名场景",
     "navBtnMobile": "转到地图故事{{title}}",
@@ -456,7 +456,7 @@
     "doesNotExist": "地图故事不存在",
     "message": "<2>这是您的地图故事编辑器</2><1>直接从您的地图创建和分享互动地图故事<1><0><0></0>开始使用</0></1></1 >",
     "removeAllStories": "移除全部",
-    "removeStoryDialog": "您确定要删除“<1>{{storyName}}</1>”吗？",
+    "removeStoryDialog": "您确定要删除“&lt;1&gt;{{storyName}}”吗？",
     "preview": "预览地图故事",
     "play": "播放",
     "expand": "展开",
@@ -500,7 +500,7 @@
   "welcomeMessage": {
     "dismissText": "关闭消息，不再向我显示此消息",
     "welcomeMessageOnMobile": "对数据发现和探索感兴趣？",
-    "welcomeMessage": "对数据发现和探索感兴趣？<br/>立即开始学习或查看以下帮助指南选项。",
+    "welcomeMessage": "对数据发现和探索感兴趣？<br>立即开始学习或查看以下帮助指南选项。",
     "title": "让我们开始吧",
     "tourBtnText": "开始教程",
     "helpBtnText": "我需要一些帮助",
@@ -508,7 +508,7 @@
     "searchBtnText": "搜索位置"
   },
   "satelliteGuidance": {
-    "menuTitle": "您可以通过查看<2>帮助菜单</2>随时访问地图指南。",
+    "menuTitle": "您可以通过查看&lt;2&gt;帮助菜单随时访问地图指南。",
     "dismissText": "知道了，谢谢！",
     "titleI": "卫星图像：我该如何做……？",
     "bodyI": "充分利用历史卫星图像的超快指南。",
@@ -572,7 +572,7 @@
       "defaultTitle": "发生错误",
       "defaultMessage": "未知错误",
       "networkRequestTitle": "发生网络请求错误",
-      "networkRequestMessage": "由于数据管理者的服务中断，数据可能无法使用或无法正确显示。请尝试重新加载地图、稍后访问数据或选择不同的数据集。 <feedbacklink feedback-message='如果问题仍然存在，请在此提交反馈。' email-message='如果问题依旧，请报告给{{email}}'/>",
+      "networkRequestMessage": "由于数据管理者的服务中断，数据可能无法使用或无法正确显示。请尝试重新加载地图、稍后访问数据或选择不同的数据集。 <feedbacklink feedback-message=\"如果问题仍然存在，请在此提交反馈。\" email-message=\"如果问题依旧，请报告给{{email}}\"></feedbacklink>",
       "defaultCombineMessage": "错误的详细信息如下",
       "networkRequestMessageDetailed": "这可能出现了以下情况之一：\n\n* 无法解析服务器主机名\n* 服务器没有响应请求 - 或暂时不可用\n* 服务器拒绝 [Cross-Origin Resource Sharing (CORS)](https://docs.terria.io/guide/connecting-to-data/cross-origin-resource-sharing/) 访问此 URL\n* 您的网络连接有问题\n\n如果您手动输入链接，请验证链接是否正确。",
       "defaultCombineTitle": "遇到多个错误"
@@ -817,7 +817,7 @@
   },
   "addData": {
     "addDataBtnText": "探索地图数据",
-    "webFile": "<0>第2步：</0>输入数据文件或网络服务的URL",
+    "webFile": "&lt;0&gt;第2步：输入数据文件或网络服务的URL",
     "urlInputBtn": "添加",
     "back": "返回",
     "btnHide": "隐藏",
@@ -826,19 +826,19 @@
     "searchPlaceholderWhole": "搜索整个目录",
     "searchPlaceholder": "搜索目录",
     "localAdd": "添加本地文件",
-    "localFileType": "<0>步骤 1：</0> 选择文件类型",
-    "localFile": "<0>步骤 2：</0> 选择文件",
+    "localFileType": "&lt;0&gt;步骤 1： 选择文件类型",
+    "localFile": "&lt;0&gt;步骤 2： 选择文件",
     "webAdd": "添加网络数据",
     "browse": "浏览...",
     "localTitle": "添加本地数据",
     "dragDrop": "拖放",
-    "note": "<0>注意：</0>以这种方式添加的数据不会被保存或对其他人可见。",
+    "note": "&lt;0&gt;注意：以这种方式添加的数据不会被保存或对其他人可见。",
     "load": "加载本地/网络数据",
     "myData": "我的数据",
     "webTitle": "添加网络数据",
     "done": "完成",
-    "infoText": "<0>将文件拖放到此处以在地图上本地查看</0><1>（不会保存或上传到互联网）</1>",
-    "webFileType": "<0>步骤 1：</0> 选择文件类型或web服务类型"
+    "infoText": "&lt;0&gt;将文件拖放到此处以在地图上本地查看&lt;1&gt;（不会保存或上传到互联网）",
+    "webFileType": "&lt;0&gt;步骤 1： 选择文件类型或web服务类型"
   },
   "description": {
     "dataLocal": "该文件仅存在于您的浏览器中。 要共享它，您必须将其加载到公共 Web 服务器上。",
@@ -849,9 +849,9 @@
     "dataSourceDetails": "数据源详细信息",
     "dataNotLocal": "请联系此数据的提供者以获取更多信息，包括有关使用权利和限制的信息。",
     "typeName": "类型名称",
-    "wms": "这是一项<1>WMS 服务</1>，可根据请求生成地图图像。 它可以通过这个 URL 在 GIS 软件中使用：",
+    "wms": "这是一项&lt;1&gt;WMS 服务，可根据请求生成地图图像。 它可以通过这个 URL 在 GIS 软件中使用：",
     "dataCustodian": "数据保管人",
-    "wfs": "这是一项<1>WFS 服务</1>，可根据请求传输原始空间数据。 它可以通过这个 URL 在 GIS 软件中使用：",
+    "wfs": "这是一项&lt;1&gt;WFS 服务，可根据请求传输原始空间数据。 它可以通过这个 URL 在 GIS 软件中使用：",
     "metadataUrls": "元数据链接",
     "downloadNotSupported": "不幸的是，您的浏览器不支持将此数据下载为文件所需的功能。 请使用 Chrome、Firefox 或 Safari 下载此数据。",
     "layerName": "图层名称",
@@ -889,7 +889,7 @@
     "datasetDescription": "数据集描述",
     "modified": "修改",
     "author": "作者",
-    "selectMultipleDatasets": "按下<strong>Shift</strong>键并点击</0><1 /><2>以添加多个数据集</2>"
+    "selectMultipleDatasets": "按下<strong>Shift</strong>键并点击&lt;1 /&gt;&lt;2&gt;以添加多个数据集"
   },
   "workbench": {
     "splitItem": "比较",
@@ -953,7 +953,7 @@
   },
   "dragDrop": {
     "not": "<0>bbbb</0>",
-    "text": "<0>拖放</0><1>您的数据可在地图上任意位置查看<1>"
+    "text": "&lt;0&gt;拖放&lt;1&gt;您的数据可在地图上任意位置查看&lt;1&gt;"
   },
   "loader": {
     "loadingMessage": "加载中"
