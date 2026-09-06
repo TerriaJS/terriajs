@@ -13,7 +13,7 @@
     "nativeResolutionLabel": "Klicken Sie hier, um die Verwendung der Auflösung {{resolution1}} zu beenden und mit der Auflösung {{resolution2}} fortzufahren",
     "qualityLabels": {
       "lowerPerformance": "Maximale Qualität, geringere Leistung",
-      "balancedPerformance": "Ausgewogene Leistung & Qualität",
+      "balancedPerformance": "Ausgewogene Leistung &amp; Qualität",
       "maximumPerformance": "Maximale Leistung, geringere Qualität"
     },
     "viewerModeLabels": {
@@ -93,7 +93,7 @@
     "close": "Feedback schließen",
     "title": "Feedback",
     "feedbackPreamble": "Wir würden uns freuen, von Ihnen zu hören!",
-    "email": "E-Mail Adresse (optional)<br/><em>Ohne können wir Sie nicht kontaktieren!</em>",
+    "email": "E-Mail Adresse (optional)<br><em>Ohne können wir Sie nicht kontaktieren!</em>",
     "minLength": "Die Mindestlänge eines Feedbacks beträgt {{minLength}}"
   },
   "toolsPanel": {
@@ -138,7 +138,7 @@
     "convertErrorTitle": "Freigabelink konnte nicht auf Version 8 aktualisiert werden",
     "convertErrorMessage": "Dieser Freigabelink basiert auf einer älteren Version von TerriaJS - der Software, die diese Webkarte betreibt. Beim Versuch, die Freigabedaten zu aktualisieren, ist ein Fehler aufgetreten.",
     "convertNotificationHelp": "Wenn Sie den Freigabelink erstellt haben, finden Sie im Hilfemenü Tipps zum Aktualisieren des Freigabelinks.",
-    "localDataNote": "<0><0>Hinweis:</0></0><1>Die folgenden Datenquellen werden NICHT freigegeben, da sie Daten aus diesem lokalen System enthalten. Um diese Datenquellen gemeinsam zu nutzen, veröffentlichen Sie ihre Daten auf einem Webserver und <2>fügen Sie sie mit einer URL</2> ein.</1>",
+    "localDataNote": "&lt;0&gt;&lt;0&gt;Hinweis:&lt;1&gt;Die folgenden Datenquellen werden NICHT freigegeben, da sie Daten aus diesem lokalen System enthalten. Um diese Datenquellen gemeinsam zu nutzen, veröffentlichen Sie ihre Daten auf einem Webserver und &lt;2&gt;fügen Sie sie mit einer URL ein.",
     "convertNotificationTitle": "Hinweis: Freigabelink aktualisiert",
     "getShareSaveHelpMessage": "Lesezeichen für Freigabelink setzen",
     "convertNotificationMessage": "Dieser Freigabelink basiert auf einer älteren Version von TerriaJS - der Software, die dieses Geoportal betreibt. Obwohl wir uns bemühen, den Link zu erhalten, kann es zu Problemen bei der Visualisierung der Daten kommen.\n\nKlicken Sie auf OK, damit die Warnmeldung verschwindet und Sie mit dem Zugriff auf die Daten fortfahren können.",
@@ -191,12 +191,12 @@
     "title": "Experimentelles Merkmal: Erweiterte Realität (Augmented Reality)",
     "btnResetRealign": "Kompassausrichtung zurücksetzen",
     "arTool": "Augmented-Reality-Tool",
-    "manualAlignmentMessage": "Richten Sie Ihr mobiles Gerät so aus, dass es mit der aktuellen Ausrichtung der Karte übereinstimmt, und klicken Sie dann auf den blinkenden Kompass. Wenn derzeit keine Landmarken zum Ausrichten auf der Karte sichtbar sind, können Sie die Karte durch Ziehen und Aufziehen verschieben, bis eine erkennbare Landmarke sichtbar ist, bevor Sie das Gerät an der Karte ausrichten. <br /><div>{{img}}</div> <br />Tipp: Die Sonne oder der Mond sind oft gute Orientierungspunkte, an denen Sie sich ausrichten können, wenn Sie sich an einem Ort befinden, mit dem Sie nicht vertraut sind (achten Sie darauf, nicht in die Sonne zu schauen - sie kann Ihren Augen schaden).",
+    "manualAlignmentMessage": "Richten Sie Ihr mobiles Gerät so aus, dass es mit der aktuellen Ausrichtung der Karte übereinstimmt, und klicken Sie dann auf den blinkenden Kompass. Wenn derzeit keine Landmarken zum Ausrichten auf der Karte sichtbar sind, können Sie die Karte durch Ziehen und Aufziehen verschieben, bis eine erkennbare Landmarke sichtbar ist, bevor Sie das Gerät an der Karte ausrichten. <br><div>{{img}}</div> <br>Tipp: Die Sonne oder der Mond sind oft gute Orientierungspunkte, an denen Sie sich ausrichten können, wenn Sie sich an einem Ort befinden, mit dem Sie nicht vertraut sind (achten Sie darauf, nicht in die Sonne zu schauen - sie kann Ihren Augen schaden).",
     "confirmText": "Verstanden",
-    "experimentalFeatureMessage": "Der Augmented Reality-Modus befindet sich derzeit in der Betaphase. Dieser Modus ist nur für die Verwendung auf den neuesten High-End-Mobilgeräten vorgesehen. <br /><br />WARNUNG: Dieser Modus kann eine Menge Daten verbrauchen, bitte beachten Sie die Datennutzungsgebühren Ihres Netzbetreibers. <br /><br />Die Genauigkeit dieses Modus hängt von der Genauigkeit des internen Kompasses Ihres Mobilgeräts ab.",
+    "experimentalFeatureMessage": "Der Augmented Reality-Modus befindet sich derzeit in der Betaphase. Dieser Modus ist nur für die Verwendung auf den neuesten High-End-Mobilgeräten vorgesehen. <br><br>WARNUNG: Dieser Modus kann eine Menge Daten verbrauchen, bitte beachten Sie die Datennutzungsgebühren Ihres Netzbetreibers. <br><br>Die Genauigkeit dieses Modus hängt von der Genauigkeit des internen Kompasses Ihres Mobilgeräts ab.",
     "resetAlignmentTitle": "Ausrichtung zurücksetzen",
     "btnHover": "Höhe des Schwebebalken umschalten",
-    "resetAlignmentMessage": "Kalibrierung der Kompassausrichtung. Wenn die Ausrichtung nicht mit der realen Welt übereinstimmt, versuchen Sie, Ihr Gerät in einer Achterbewegung zu bewegen, um es neu zu kalibrieren. Dies ist jederzeit möglich.<br /> <br /> Vermeiden Sie Orte mit Magnetfeldern oder Metallobjekten, da diese den Kompass des Geräts aus dem Gleichgewicht bringen können.",
+    "resetAlignmentMessage": "Kalibrierung der Kompassausrichtung. Wenn die Ausrichtung nicht mit der realen Welt übereinstimmt, versuchen Sie, Ihr Gerät in einer Achterbewegung zu bewegen, um es neu zu kalibrieren. Dies ist jederzeit möglich.<br> <br> Vermeiden Sie Orte mit Magnetfeldern oder Metallobjekten, da diese den Kompass des Geräts aus dem Gleichgewicht bringen können.",
     "btnRealign": "manuelle Ausrichtung umschalten"
   },
   "legend": {
@@ -375,7 +375,7 @@
       "loadingInitSourceErrorMessage": "Es konnten keine Initialisierungsinformationen von \"{{fragment}}\" geladen werden, da keine initFragmentPaths definiert sind.",
       "initErrorTitle": "Dienste konnten nicht initialisiert werden",
       "buttonTitleConfirm": "Ich bin einverstanden",
-      "loadingInitSourcesErrorMessage": "Beim Laden der {{appName}} Kartenkonfiguration ist ein Fehler aufgetreten &mdash; sie wird möglicherweise nicht korrekt angezeigt. Versuchen Sie bitte, die Karte neu zu laden. Wenn das Problem weiterhin besteht, melden Sie es bitte per E-Mail an {{email}}, oder drücken Sie die Schaltfläche unten.",
+      "loadingInitSourcesErrorMessage": "Beim Laden der {{appName}} Kartenkonfiguration ist ein Fehler aufgetreten — sie wird möglicherweise nicht korrekt angezeigt. Versuchen Sie bitte, die Karte neu zu laden. Wenn das Problem weiterhin besteht, melden Sie es bitte per E-Mail an {{email}}, oder drücken Sie die Schaltfläche unten.",
       "loadingBaseMapErrorTitle": "Fehler beim Laden der Basiskarte: `{{name}}`",
       "loadConfigErrorTitle": "Terria Map Konfiguration konnte nicht geladen werden",
       "initErrorMessage": "Es ist ein Problem mit dem Terria-Server aufgetreten. Dies kann dazu führen, dass einige Ebenen oder der Konvertierungsdienst nicht mehr verfügbar sind.",
@@ -782,7 +782,7 @@
       "couldNotLoadMessage": "Beim Abrufen von JSON-Daten von dem angegebenen Link ist ein CORS-Fehler aufgetreten."
     },
     "imageryLayer": {
-      "accessingCatalogItemErrorMessage": "Beim Versuch, Kacheln für einen Katalogelement herunterzuladen, ist ein Fehler aufgetreten:<p><center>{{name}}</center></p> Das Katalogelement wurde aus der Karte ausgeblendet.  Sie können es im Fenster \"Jetzt anzeigen\" erneut einblenden, um es erneut zu versuchen.",
+      "accessingCatalogItemErrorMessage": "Beim Versuch, Kacheln für einen Katalogelement herunterzuladen, ist ein Fehler aufgetreten:<p></p><center>{{name}}</center><p></p> Das Katalogelement wurde aus der Karte ausgeblendet.  Sie können es im Fenster \"Jetzt anzeigen\" erneut einblenden, um es erneut zu versuchen.",
       "unableToShowLocMessage": "{{name}} kann an dieser Stelle nicht angezeigt werden, da die verfügbaren Aufnahmezeiten unbekannt sind. Die Eigenschaft {{featureTimesProperty}} wurde nicht gefunden.",
       "unableToShowLocTitle": "Kann an diesem Ort nicht angezeigt werden",
       "unknownTileErrorTitle": "Unbekannter Kachelfehler",
@@ -795,7 +795,7 @@
       "tileErrorMessage": "Die Kachel mit der URL:\n{{url}}\n war erfolgreich, wenn sie mit XMLHttpRequest geladen wurde, schlug aber mehrfach fehl, wenn sie direkt von Cesium oder Leaflet geladen wurde.\n Dies kann darauf hindeuten, dass der Server sehr empfindlich auf die angegebenen Request-Header reagiert oder einfach unzuverlässig ist.",
       "unableToDisplayMessage": "{{name}} kann nicht in 2D angezeigt werden, da es die Standard Web Mercator (EPSG:3857) Projektion nicht unterstützt. Bitte wechseln Sie zu 3D, wenn dies auf Ihrem System unterstützt wird, aktualisieren Sie den Datensatz, um die Projektion zu unterstützen, oder verwenden Sie einen anderen Datensatz.",
       "intervalSupportErrorMessage": "Entschuldigung, {{typeName}} ({{type}}) Katalogeinträge können derzeit nicht durch Angabe der Eigenschaft \"Intervalle\" zeitlich variabel gemacht werden.",
-      "accessingBaseMapErrorMessage": "Beim Versuch, Kacheln für die Basiskarte herunterzuladen, ist ein Fehler aufgetreten:<p><center>{{name}} </center></p> Bitte wählen Sie eine andere Basiskarte über die Schaltfläche Karte in der oberen rechten Ecke.",
+      "accessingBaseMapErrorMessage": "Beim Versuch, Kacheln für die Basiskarte herunterzuladen, ist ein Fehler aufgetreten:<p></p><center>{{name}} </center><p></p> Bitte wählen Sie eine andere Basiskarte über die Schaltfläche Karte in der oberen rechten Ecke.",
       "unknownTileErrorMessage": "Beim Zugriff auf die URL:\n{{url}}\nDies weist wahrscheinlich auf einen der folgenden Punkte hin:\n* Der Hostname des Servers konnte nicht aufgelöst werden,\n* Der Server hat nicht auf die Anfrage geantwortet oder\n* Der Server verweigert den Zugriff auf diese URL durch Cross-Origin Resource Sharing (CORS) (siehe https://docs.terria.io/guide/connecting-to-data/cross-origin-resource-sharing/).",
       "unableToDisplayTitle": "Datensatz kann nicht angezeigt werden"
     },
@@ -1232,7 +1232,7 @@
         "description": "Um die Datumsauswahl nach Ort zu filtern, wählen Sie bitte einen Punkt auf der Karte"
       },
       "locationSelected": {
-        "title": "Standort ausgewählt & Daten gefiltert",
+        "title": "Standort ausgewählt &amp; Daten gefiltert",
         "description": "Zum Ändern klicken Sie auf einen anderen Punkt auf der Karte"
       }
     },
@@ -1292,7 +1292,7 @@
     "preview": "Vorschau Stories",
     "locationBtn": "Szene zentrieren",
     "navBtnMobile": "zur Story {{title}} wechseln",
-    "promptHtml2": "<0><0>Einführung</0><1>Stories</1><2>Erstellen und teilen Sie interaktive Geschichten direkt aus Ihrer Karte.</2></0>",
+    "promptHtml2": "&lt;0&gt;&lt;0&gt;Einführung&lt;1&gt;Stories&lt;2&gt;Erstellen und teilen Sie interaktive Geschichten direkt aus Ihrer Karte.",
     "dismissText": "Verstanden, danke!",
     "mobileViewStory": "Stories anzeigen {{storiesLength}}",
     "hideStoryPanel": "Story Builder ausblenden",
@@ -1302,7 +1302,7 @@
     "recaptureStory": "Erneut aufnehmen",
     "previousBtn": "zur vorherigen Szene wechseln",
     "untitledScene": "unbenannte Szene",
-    "removeStoryDialog": "Sind Sie sicher, dass Sie '<1>{{storyName}}</1>' löschen möchten?",
+    "removeStoryDialog": "Sind Sie sicher, dass Sie '&lt;1&gt;{{storyName}}' löschen möchten?",
     "doesNotExist": "Story existiert nicht",
     "navBtn": "zur Story {{title}} wechseln",
     "nextBtn": "zur nächsten Szene wechseln",
@@ -1316,12 +1316,12 @@
     "panelBody": "Erstellen und teilen Sie interaktive Geschichten direkt von Ihrer Karte aus",
     "exitBtn": "Story verlassen",
     "untitled": "unbenannte Szene",
-    "promptHtml1": "<0>Sie können jederzeit Stories ansehen und erstellen, indem Sie hier klicken.</0>"
+    "promptHtml1": "&lt;0&gt;Sie können jederzeit Stories ansehen und erstellen, indem Sie hier klicken."
   },
   "addData": {
     "addDataBtnText": "Datenkatalog",
     "dragDrop": "Drag and Drop",
-    "infoText": "<0>Ziehen Sie eine Datei hierher, um sie lokal auf der Karte anzuzeigen</0><1>(sie wird nicht gespeichert oder ins Internet hochgeladen)</1>",
+    "infoText": "&lt;0&gt;Ziehen Sie eine Datei hierher, um sie lokal auf der Karte anzuzeigen&lt;1&gt;(sie wird nicht gespeichert oder ins Internet hochgeladen)",
     "back": "Zurück",
     "myData": "Meine Daten",
     "browse": "Durchsuchen...",
@@ -1329,19 +1329,19 @@
     "done": "Fertig",
     "urlInputBtn": "Hinzufügen",
     "closeDataPanel": "Datenfeld schließen",
-    "webFile": "<0>Schritt 2:</0> Geben Sie die URL der Datendatei oder des Webdienstes ein",
+    "webFile": "&lt;0&gt;Schritt 2: Geben Sie die URL der Datendatei oder des Webdienstes ein",
     "localTitle": "Lokale Daten hinzufügen",
     "webTitle": "Webbasierte Daten hinzufügen",
-    "note": "<0>Hinweis: </0>Die auf diese Weise hinzugefügten Daten werden nicht gespeichert oder für andere sichtbar gemacht.",
+    "note": "&lt;0&gt;Hinweis: Die auf diese Weise hinzugefügten Daten werden nicht gespeichert oder für andere sichtbar gemacht.",
     "load": "Laden lokaler/webbasierter Daten",
     "dataCatalogue": "Datenkatalog",
-    "localFileType": "<0>Schritt 1:</0> Dateityp auswählen",
+    "localFileType": "&lt;0&gt;Schritt 1: Dateityp auswählen",
     "webAdd": "Webbasierte Daten hinzufügen",
-    "localFile": "<0>Schritt 2:</0> Datei auswählen",
+    "localFile": "&lt;0&gt;Schritt 2: Datei auswählen",
     "searchPlaceholder": "Katalog durchsuchen",
     "localAdd": "Lokale Datei hinzufügen",
     "searchPlaceholderWhole": "Gesamten Katalog durchsuchen",
-    "webFileType": "<0>Schritt 1:</0> Wählen Sie den Typ der Datei oder des Webdienstes"
+    "webFileType": "&lt;0&gt;Schritt 1: Wählen Sie den Typ der Datei oder des Webdienstes"
   },
   "clipboard": {
     "shareURL": "URL teilen",
@@ -1476,7 +1476,7 @@
     "dataPreviewError": "FEHLER BEI DER DATENVORSCHAU",
     "addToMap": "Zur Karte hinzufügen",
     "mayBeExperiencingIssues": "Bei diesem Datensatz können derzeit Probleme auftreten",
-    "selectMultipleDatasets": "<0>Drücken Sie die <strong>Umschalttaste</strong> und klicken Sie</0><1 /><2>um mehrere Datensätze hinzuzufügen</2>"
+    "selectMultipleDatasets": "&lt;0&gt;Drücken Sie die <strong>Umschalttaste</strong> und klicken Sie&lt;1 /&gt;&lt;2&gt;um mehrere Datensätze hinzuzufügen"
   },
   "description": {
     "layerName": "Layername",
@@ -1484,7 +1484,7 @@
     "name": "Beschreibung",
     "dataCustodian": "Herausgeber",
     "downloadData": "Daten downloaden",
-    "wfs": "Dies ist ein <1>WFS-Dienst</1>, der auf Anfrage räumliche Rohdaten überträgt. Er kann in einer GIS-Software mit dieser URL verwendet werden:",
+    "wfs": "Dies ist ein &lt;1&gt;WFS-Dienst, der auf Anfrage räumliche Rohdaten überträgt. Er kann in einer GIS-Software mit dieser URL verwendet werden:",
     "dataSourceDetails": "Angaben zur Datenquelle",
     "dataServiceDetails": "Angaben zum Datendienst",
     "dataLocal": "Diese Datei existiert nur in Ihrem Browser. Um sie weiterzugeben, müssen Sie sie auf einen öffentlichen Webserver laden.",
@@ -1492,7 +1492,7 @@
     "useLinkBelow": "Verwenden Sie den unten stehenden Link, um die Daten herunterzuladen. Weitere Informationen zur Anpassung der URL-Abfrageparameter finden Sie unter {{link}}.",
     "downloadInFormat": "Herunterladen der aktuell ausgewählten Daten im Format {{format}}",
     "dataNotLocal": "Bitte wenden Sie sich an den Anbieter dieser Daten, um weitere Informationen zu erhalten, einschließlich Informationen über Nutzungsrechte und -beschränkungen.",
-    "wms": "Dies ist ein <1>WMS-Dienst</1>, der auf Anfrage Kartenbilder erzeugt. Er kann in einer GIS-Software mit dieser URL verwendet werden:",
+    "wms": "Dies ist ein &lt;1&gt;WMS-Dienst, der auf Anfrage Kartenbilder erzeugt. Er kann in einer GIS-Software mit dieser URL verwendet werden:",
     "downloadNotSupported": "Leider unterstützt Ihr Browser nicht die Funktionen, die zum Herunterladen dieser Daten als Datei erforderlich sind. Bitte verwenden Sie $t(browsers.chrome), $t(browsers.firefox), $t(browsers.edge), $t(browsers.safari) oder einen anderen geeigneten Browser, um diese Daten herunterzuladen.",
     "metadataUrls": "Links zu Metadaten",
     "dataUrl": "Links zu Daten"
@@ -1540,7 +1540,7 @@
     "welcomeMessageOnMobile": "Interessieren Sie sich für die Entdeckung und Erforschung von Daten?",
     "helpBtnText": "Ich benötige Hilfe",
     "dismissText": "Schließen die Nachricht und zeigen sie nicht mehr an",
-    "welcomeMessage": "Interessieren Sie sich für die Erkundung und Erforschung von Daten?<br/>Stürzen Sie sich hinein und fangen Sie an oder schauen Sie sich die folgenden Hilfsoptionen an.",
+    "welcomeMessage": "Interessieren Sie sich für die Erkundung und Erforschung von Daten?<br>Stürzen Sie sich hinein und fangen Sie an oder schauen Sie sich die folgenden Hilfsoptionen an.",
     "tourBtnText": "Starten der Tour"
   },
   "satelliteGuidance": {
@@ -1551,7 +1551,7 @@
     "titleI": "Satellitenbilder: Wie kann ich...?",
     "nextI": "Anleitung ansehen",
     "dismissText": "Verstanden, danke!",
-    "menuTitle": "Sie können jederzeit über das <2>Hilfemenü</2> auf Kartenanleitungen zugreifen.",
+    "menuTitle": "Sie können jederzeit über das &lt;2&gt;Hilfemenü auf Kartenanleitungen zugreifen.",
     "titleII": "Wo ist mein Satellitenbild?",
     "bodyII": "Möglicherweise müssen Sie Ihre Zoomstufe anpassen, damit die Satellitenbilder auf der Karte sichtbar werden.",
     "titleIV": "Filtern von Bildmaterial nach Ort",
@@ -1623,7 +1623,7 @@
       "defaultCombineTitle": "Mehrere Fehler sind aufgetreten",
       "defaultCombineMessage": "Einzelheiten zu den Fehlern sind nachstehend aufgeführt",
       "networkRequestTitle": "Ein Netzwerkanforderungsfehler ist aufgetreten",
-      "networkRequestMessage": "Die Daten sind möglicherweise nicht verfügbar oder werden nicht korrekt angezeigt, weil der Dienst des Herausgebers ausgefallen ist. Bitte versuchen Sie, die Karte neu zu laden, die Daten zu einem späteren Zeitpunkt abzurufen oder einen anderen Datensatz auszuwählen. <feedbacklink feedback-message='Wenn das Problem weiterhin besteht, geben Sie bitte hier Feedback.' email-message='Wenn das Problem weiterhin besteht, melden Sie sich bitte bei {{email}}'/>",
+      "networkRequestMessage": "Die Daten sind möglicherweise nicht verfügbar oder werden nicht korrekt angezeigt, weil der Dienst des Herausgebers ausgefallen ist. Bitte versuchen Sie, die Karte neu zu laden, die Daten zu einem späteren Zeitpunkt abzurufen oder einen anderen Datensatz auszuwählen. <feedbacklink feedback-message=\"Wenn das Problem weiterhin besteht, geben Sie bitte hier Feedback.\" email-message=\"Wenn das Problem weiterhin besteht, melden Sie sich bitte bei {{email}}\"></feedbacklink>",
       "networkRequestMessageDetailed": "Dies kann eine der folgenden Ursachen haben:\n\n* Der Hostname des Servers konnte nicht aufgelöst werden\n* Der Server hat nicht auf die Anfrage geantwortet - oder ist vorübergehend nicht verfügbar\n* Der Server verweigert den [Cross-Origin Resource Sharing (CORS)](https://docs.terria.io/guide/connecting-to-data/cross-origin-resource-sharing/) Zugriff auf diese URL\n* Es gibt ein Problem mit Ihrer Internetverbindung\n\nWenn Sie den Link manuell eingegeben haben, überprüfen Sie bitte, ob der Link korrekt ist."
     },
     "unverifiedExternalLink": {
@@ -1706,7 +1706,7 @@
     "controls": {
       "title": "Steuerungen"
     },
-    "dropPedestrianTooltipMessage": "<b>Linkklick</b> zur Auswahl des Ortes<br /><b>Rechtsklick / Esc</b> um abzubrechen",
+    "dropPedestrianTooltipMessage": "<b>Linkklick</b> zur Auswahl des Ortes<br><b>Rechtsklick / Esc</b> um abzubrechen",
     "toolButtonTitle": "Fußgängermodus"
   },
   "viewModels": {
@@ -1767,7 +1767,7 @@
   },
   "dragDrop": {
     "not": "<0>bbbb</0>",
-    "text": "<0>Drag & Drop</0><1>Ihre Daten überall auf der Karte anzeigen<1>"
+    "text": "&lt;0&gt;Drag &amp; Drop&lt;1&gt;Ihre Daten überall auf der Karte anzeigen&lt;1&gt;"
   },
   "term": {
     "missingContent": "fehlender Inhalt"
