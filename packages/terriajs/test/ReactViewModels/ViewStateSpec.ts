@@ -165,11 +165,12 @@ describe("ViewState", function () {
         expect(secondTab.isOpen).toBe(true);
         expect(subGroup.isOpen).toBe(true);
 
-        // and closes them again when `isOpen` is false
+        // and leaves them open when `isOpen` is false, so collapsing an item
+        // never collapses its parent groups
         (await viewState.viewCatalogMember(item, false)).throwIfError();
 
-        expect(secondTab.isOpen).toBe(false);
-        expect(subGroup.isOpen).toBe(false);
+        expect(secondTab.isOpen).toBe(true);
+        expect(subGroup.isOpen).toBe(true);
       });
     });
   });
