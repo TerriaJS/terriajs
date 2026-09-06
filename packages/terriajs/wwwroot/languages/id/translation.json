@@ -7,7 +7,7 @@
     "storyEditor": "Penyunting Cerita",
     "dismissText": "Mengerti, terima kasih!",
     "story": "Cerita",
-    "promptHtml1": "<0>Anda dapat melihat dan membuat cerita kapan saja dengan mengklik di sini.</0>",
+    "promptHtml1": "&lt;0&gt;Anda dapat melihat dan membuat cerita kapan saja dengan mengklik di sini.",
     "navBtnMobile": "pergi ke cerita {{title}}",
     "navBtn": "pergi ke cerita {{title}}",
     "editor": {
@@ -18,7 +18,7 @@
       "placeholder": "Masukkan sebuah judul di sini"
     },
     "play": "Putar",
-    "removeStoryDialog": "Apakah Anda yakin ingin menghapus '<1>{{storyName}}</1>'?",
+    "removeStoryDialog": "Apakah Anda yakin ingin menghapus '&lt;1&gt;{{storyName}}'?",
     "removeAllStories": "Hapus Semua",
     "message": "<2>Ini adalah penyunting cerita Anda</2><1>Buat dan bagikan cerita interaktif langsung dari peta Anda<1><0><0></0>Memulai </0></1></1>",
     "doesNotExist": "Cerita tidak ada",
@@ -30,7 +30,7 @@
     "shareTitle": "bagikan cerita",
     "share": "Bagikan",
     "recapture": "Menangkap kembali",
-    "promptHtml2": "<0><0>MEMPERKENALKAN</0><1>Cerita Data</1><2>Buat dan bagikan cerita interaktif langsung dari peta Anda.</2></0>",
+    "promptHtml2": "&lt;0&gt;&lt;0&gt;MEMPERKENALKAN&lt;1&gt;Cerita Data&lt;2&gt;Buat dan bagikan cerita interaktif langsung dari peta Anda.",
     "exitBtn": "keluar cerita",
     "view": "Tampilan",
     "untitledScene": "scene tanpa judul",
@@ -96,7 +96,7 @@
   "helpPanel": {
     "takeTour": "Ikuti turnya",
     "dismissText": "Mengerti, terima kasih!",
-    "promptMessage": "Temukan Tur, video petunjuk & konten bantuan lainnya di sini",
+    "promptMessage": "Temukan Tur, video petunjuk &amp; konten bantuan lainnya di sini",
     "menuPaneBody": "Cari tip berguna tentang bagaimana cara menggunakan TerriaJS dengan mengecek panduan berikut atau dengan menghubungi tim di [{{supportEmail}}]({{supportEmail}})",
     "menuPaneTitle": "Kami di sini untuk membantu",
     "btnText": "Bantuan",
@@ -111,7 +111,7 @@
     "captionText": "Ini membantu kami memecahkan masalah dengan mengizinkan kami melihat apa yang Anda lihat",
     "shareWithDevelopers": "Bagikan tampilan peta saya dengan pengembang-pengembang {{appName}}",
     "commentQuestion": "Komentar atau pertanyaan",
-    "email": "Alamat surel (opsional)<br/><em>Kami tidak dapat membalas tanpa ini!</em>",
+    "email": "Alamat surel (opsional)<br><em>Kami tidak dapat membalas tanpa ini!</em>",
     "yourName": "Nama Anda (opsional)",
     "close": "tutup masukan",
     "title": "Masukan",
@@ -136,7 +136,7 @@
     "screen": "layar",
     "qualityLabels": {
       "lowerPerformance": "Kualitas maksimal, performa menurun",
-      "balancedPerformance": "Performa & kualitas seimbang",
+      "balancedPerformance": "Performa &amp; kualitas seimbang",
       "maximumPerformance": "Performa maksimal, kualitas menurun"
     },
     "viewerModeLabels": {
@@ -702,14 +702,14 @@
     "dragDrop": "Tarik dan Jatuhkan",
     "back": "Kembali",
     "urlInputBtn": "Tambahkan",
-    "webFileType": "<0>Langkah 1:</0> Pilih jenis berkas (opsional)",
+    "webFileType": "&lt;0&gt;Langkah 1: Pilih jenis berkas (opsional)",
     "myData": "Data Saya",
     "done": "Selesai",
     "btnHide": "Sembunyikan",
     "webAdd": "tambah data web",
     "load": "Muat data lokal/web",
-    "localFileType": "<0>Langkah 1:</0> Pilih jenis berkas (opsional)",
-    "localFile": "<0>Langkah 2:</0> Pilih file",
+    "localFileType": "&lt;0&gt;Langkah 1: Pilih jenis berkas (opsional)",
+    "localFile": "&lt;0&gt;Langkah 2: Pilih file",
     "browse": "Telusuri...",
     "localTitle": "Tambah Data Lokal",
     "webTitle": "Tambah Data Web",
@@ -794,7 +794,7 @@
       "title": "Kontrol"
     },
     "toolButtonTitle": "Mode pejalan kaki",
-    "dropPedestrianTooltipMessage": "<b>Klik kiri</b> untuk memilih titik lokasi<br /><b>Klik kanan / Esc</b> untuk batal"
+    "dropPedestrianTooltipMessage": "<b>Klik kiri</b> untuk memilih titik lokasi<br><b>Klik kanan / Esc</b> untuk batal"
   },
   "indexedItemSearchProvider": {
     "errorParsingIndexRoot": "Kesalahan saat mengurai file indexRoot: {{indexRootUrl}}.",
