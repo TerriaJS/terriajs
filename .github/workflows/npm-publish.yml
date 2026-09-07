@@ -27,7 +27,7 @@ jobs:
           LOCAL_VERSION=$(node -p "require('./packages/terriajs/package.json').version")
           echo "Current version in package.json: $LOCAL_VERSION"
 
-          IS_ALREADY_PUBLISHED=$(npm view terriajs@$LOCAL_VERSION version 2>/dev/null || echo 'false')
+          IS_ALREADY_PUBLISHED=$(pnpm view terriajs@$LOCAL_VERSION version 2>/dev/null || echo 'false')
 
           if [ "$IS_ALREADY_PUBLISHED" != "false" ]; then
             echo "terriajs@$LOCAL_VERSION is already published"
@@ -54,13 +54,13 @@ jobs:
           registry-url: "https://registry.npmjs.org"
           node-version-file: ".nvmrc"
 
-      - name: Install yarn
+      - name: Install pnpm
         if: steps.detect.outputs.should_publish == 'true'
-        run: npm install -g yarn@^1.22.22
+        uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
 
       - name: Install dependencies
         if: steps.detect.outputs.should_publish == 'true'
-        run: yarn install --ignore-engines
+        run: pnpm install --frozen-lockfile
         env:
           NODE_OPTIONS: "--max_old_space_size=8192"
 
@@ -68,7 +68,7 @@ jobs:
       #   run: |
       #     git config --global user.email "TerriaBot@users.noreply.github.com"
       #     git config --global user.name "Terria Bot via GitHub Actions"
-      #     yarn gulp code-attribution
+      #     pnpm --filter terriajs exec gulp code-attribution
       #     git add doc/acknowledgements/attributions.md
       #     if ! git diff --cached --quiet; then
       #       git commit -m "Update attributions.md for v${{ steps.detect.outputs.version }}"
@@ -77,14 +77,14 @@ jobs:
 
       - name: Lint and build terriajs
         if: steps.detect.outputs.should_publish == 'true'
-        run: yarn workspace terriajs gulp lint release
+        run: pnpm --filter terriajs exec gulp lint release
         env:
           NODE_OPTIONS: "--max_old_space_size=8192"
 
       - name: Publish package to NPM
         if: steps.detect.outputs.should_publish == 'true'
         working-directory: packages/terriajs
-        run: npm publish --tag ${{ steps.detect.outputs.npm_tag }}
+        run: pnpm publish --no-git-checks --tag ${{ steps.detect.outputs.npm_tag }}
         env:
           NODE_OPTIONS: "--max_old_space_size=8192"
           NODE_AUTH_TOKEN: ""
@@ -144,7 +144,7 @@ jobs:
         run: |
           CURRENT_VERSION=$(node -p "require('./package.json').version")
 
-          IS_ALREADY_PUBLISHED=$(npm view terriajs-server@$CURRENT_VERSION version 2>/dev/null || echo 'false')
+          IS_ALREADY_PUBLISHED=$(pnpm view terriajs-server@$CURRENT_VERSION version 2>/dev/null || echo 'false')
 
           if [ "$IS_ALREADY_PUBLISHED" != "false" ]; then
             echo "No version change detected"
@@ -168,34 +168,34 @@ jobs:
           echo "npm-tag=$NPM_TAG" >> "$GITHUB_OUTPUT"
           echo "Publishing with npm tag: $NPM_TAG"
 
+      - name: Install pnpm
+        if: steps.detect.outputs.version-changed == 'true'
+        uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
+
       - name: Set up Node.js for NPM
         if: steps.detect.outputs.version-changed == 'true'
         uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
         with:
           node-version-file: "packages/terriajs-server/.nvmrc"
-          cache: "yarn"
+          cache: "pnpm"
           registry-url: "https://registry.npmjs.org"
-
-      - name: Install yarn
-        if: steps.detect.outputs.version-changed == 'true'
-        run: npm install -g yarn@^1.22.22
 
       - name: Install dependencies
         if: steps.detect.outputs.version-changed == 'true'
-        run: yarn install --frozen-lockfile
+        run: pnpm install --frozen-lockfile
         working-directory: .
 
       - name: Lint terriajs-server
         if: steps.detect.outputs.version-changed == 'true'
-        run: yarn lint
+        run: pnpm lint
 
       - name: Run tests for terriajs-server
         if: steps.detect.outputs.version-changed == 'true'
-        run: yarn test
+        run: pnpm test
 
       - name: Publish package to NPM
         if: steps.detect.outputs.version-changed == 'true'
-        run: npm publish --tag ${{ steps.detect.outputs.npm-tag }}
+        run: pnpm publish --no-git-checks --tag ${{ steps.detect.outputs.npm-tag }}
         env:
           NODE_AUTH_TOKEN: ""
 

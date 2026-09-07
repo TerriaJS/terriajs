@@ -159,7 +159,7 @@ function codeAttribution(done) {
   writeFileSync("doc/acknowledgements/attributions.md", attributionTemplate);
 
   var result = spawnSync(
-    "yarn",
+    "pnpm",
     ["licenses generate-disclaimer >> doc/acknowledgements/attributions.md"],
     {
       stdio: "inherit",
