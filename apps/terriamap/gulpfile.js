@@ -217,7 +217,7 @@ gulp.task("sync-terriajs-dependencies", function (done) {
     JSON.stringify(appPackageJson, undefined, "  ")
   );
   console.log(
-    "TerriaMap's package.json has been updated. Now run yarn install."
+    "TerriaMap's package.json has been updated. Now run pnpm install."
   );
   done();
 });
@@ -234,7 +234,7 @@ function syncDependencies(dependencies, targetJson, justWarn) {
           console.warn(
             "Warning: There is a version mismatch for " +
               dependency +
-              ". This build may fail or hang. You should run `gulp sync-terriajs-dependencies`, then re-run `npm install`, then run gulp again."
+              ". This build may fail or hang. You should run `gulp sync-terriajs-dependencies`, then re-run `pnpm install`, then run gulp again."
           );
         } else {
           console.log(
@@ -254,25 +254,18 @@ function syncDependencies(dependencies, targetJson, justWarn) {
 }
 
 function checkForDuplicateCesium() {
-  var fse = require("fs-extra");
+  const appCesiumPath = require.resolve("terriajs-cesium/package.json");
+  const terriaCesiumPath = require.resolve("terriajs-cesium/package.json", {
+    paths: [getPackageRoot("terriajs")]
+  });
+  const appVersion = require(appCesiumPath).version;
+  const terriaVersion = require(terriaCesiumPath).version;
 
-  if (
-    fse.existsSync("node_modules/terriajs-cesium") &&
-    fse.existsSync("node_modules/terriajs/node_modules/terriajs-cesium")
-  ) {
-    console.log(
-      "You have two copies of terriajs-cesium, one in this application's node_modules\n" +
-        "directory and the other in node_modules/terriajs/node_modules/terriajs-cesium.\n" +
-        "This leads to strange problems, such as knockout observables not working.\n" +
-        "Please verify that node_modules/terriajs-cesium is the correct version and\n" +
-        "  rm -rf node_modules/terriajs/node_modules/terriajs-cesium\n" +
-        "Also consider running:\n" +
-        "  yarn gulp sync-terriajs-dependencies\n" +
-        "to prevent this problem from recurring the next time you `npm install`."
-    );
+  if (appVersion !== terriaVersion) {
     throw new PluginError(
       "checkForDuplicateCesium",
-      "You have two copies of Cesium.",
+      `Different terriajs-cesium versions are installed: TerriaMap uses ${appVersion} (${appCesiumPath}), but TerriaJS uses ${terriaVersion} (${terriaCesiumPath}). ` +
+        "Run `pnpm gulp sync-terriajs-dependencies`, then `pnpm install` to align them.",
       { showStack: false }
     );
   }

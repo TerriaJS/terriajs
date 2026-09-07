@@ -41,9 +41,9 @@ jobs:
           SHARE_S3_SECRET_ACCESS_KEY: ${{ secrets.SHARE_S3_SECRET_ACCESS_KEY }}
           FEEDBACK_GITHUB_TOKEN: ${{ secrets.FEEDBACK_GITHUB_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      # Upload the resolved root yarn.lock for inspection.
+      # Upload the resolved root pnpm-lock.yaml for inspection.
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         if: always()
         with:
-          name: yarn.lock
-          path: yarn.lock
+          name: pnpm-lock.yaml
+          path: pnpm-lock.yaml

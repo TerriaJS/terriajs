@@ -32,7 +32,7 @@ Generally, you don't want to manually install TerriaJS-Server. It comes installe
 
 1. `git clone https://github.com/terriajs/terriajs-server`
 2. `cd terriajs-server`
-3. `npm install`
+3. `pnpm install`
 
 #### Configure
 
@@ -42,7 +42,7 @@ If you want to proxy authenticated layers, do the same for `proxyauth.json.examp
 
 #### Run
 
-1. `npm start -- [options] [path/to/wwwroot]`
+1. `pnpm start -- [options] [path/to/wwwroot]`
 
 ```
 terriajs-server.js [options] [path/to/wwwroot]
@@ -62,7 +62,7 @@ Options:
 
 For example, to run with port 3009:
 
-`npm start -- --port 3009`
+`pnpm start -- --port 3009`
 
 To run the server in the foreground, you can do this:
 
@@ -70,7 +70,7 @@ To run the server in the foreground, you can do this:
 
 #### Tests
 
-1. Run `npm test`
+1. Run `pnpm test`
 
 ### Installation with TerriaMap
 

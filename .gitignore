@@ -19,6 +19,7 @@ npm-debug.log
 .DS_Store
 *.swp
 
-# Lockfiles from other package managers (this repo uses yarn)
+# Lockfiles from other package managers (this repo uses pnpm)
 package-lock.json
+yarn.lock
 pnpm-lock.yaml

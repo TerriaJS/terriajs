@@ -2,7 +2,7 @@
 # terriajs package; `command` and `publish` are resolved relative to `base`.
 [build]
   base = "packages/terriajs"
-  command = "yarn gulp docs"
+  command = "pnpm gulp docs"
   publish = "wwwroot/doc"
 [build.environment]
   NODE_VERSION = "24"

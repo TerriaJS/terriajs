@@ -1,1 +1,1 @@
-npx pretty-quick --staged
+pnpm pretty-quick --staged

@@ -115,7 +115,7 @@ const Chart: React.FC<ChartProps> = observer(
         0,
         ...leftmostYAxis.scale
           .ticks(Y_AXIS_NUM_TICKS)
-          .map((n) => n.toString().length)
+          .map((n: number) => n.toString().length)
       );
       return maxLabelDigits * Y_AXIS_TICK_LABEL_FONT_SIZE;
     }, [yAxes]);

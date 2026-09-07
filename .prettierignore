@@ -65,9 +65,6 @@ apps/terriamap/deploy/work/
 apps/terriamap/packages/
 apps/terriamap/pancake/
 
-# Generated files
-apps/terriamap/.yarn/releases/
-
 # wwwroot
 apps/terriamap/wwwroot/public/
 apps/terriamap/wwwroot/*.html
