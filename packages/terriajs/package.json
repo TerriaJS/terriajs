@@ -177,6 +177,7 @@
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^7.0.1",
+    "express": "^5.2.1",
     "fast-glob": "^3.3.3",
     "fork-ts-checker-notifier-webpack-plugin": "^9.0.0",
     "fork-ts-checker-webpack-plugin": "^9.1.0",
