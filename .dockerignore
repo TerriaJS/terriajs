@@ -1,0 +1,12 @@
+.git
+**/node_modules
+**/wwwroot/build
+
+# Never bake local secrets into the build context
+.env
+.env.*
+**/.npmrc
+**/.aws
+*.pem
+*.key
+id_rsa*

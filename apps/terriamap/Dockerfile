@@ -1,3 +1,7 @@
+# This Dockerfile builds the terriajs-map workspace out of the whole monorepo,
+# so it must be built with the repo root as the build context, e.g.:
+#   docker build -f apps/terriamap/Dockerfile .
+
 # develop container
 FROM node:24 AS develop
 
@@ -5,12 +9,28 @@ FROM node:24 AS develop
 FROM node:24 AS build
 USER node
 
-COPY --chown=node:node . /app
-
 WORKDIR /app
 
-RUN yarn install --network-timeout 1000000
-RUN yarn gulp release
+COPY --chown=node:node . /app
+
+RUN yarn install --frozen-lockfile --network-timeout 1000000
+RUN yarn workspace terriajs-map gulp release
+
+# node_modules above still includes devDependencies (webpack, gulp, typescript, terriajs
+# itself, etc.) - yarn classic's --production flag is a known no-op in workspaces
+# projects, so it can't prune those out. Instead, reuse deploy/docker/create-docker-context.js
+# (the same tool the "real" CI build uses) to walk the production `dependencies` closure
+# only and write it out as a dereferenced tarball - "dereferenced" meaning the yarn
+# workspaces symlinks (e.g. node_modules/terriajs-server -> ../packages/terriajs-server)
+# are resolved to real copies, so the result is self-contained and safe to COPY into the
+# deploy stage below without dragging packages/ along too.
+RUN cd apps/terriamap && node deploy/docker/create-docker-context.js --output /tmp/terriamap-context.tar.gz
+# create-docker-context.js always writes its own (unused, --dockerfile-flavoured)
+# Dockerfile into the extracted context alongside the actual app files - drop it so a
+# single COPY below can take the whole directory as-is.
+RUN mkdir -p /tmp/terriamap-context \
+  && tar -xzf /tmp/terriamap-context.tar.gz -C /tmp/terriamap-context \
+  && rm /tmp/terriamap-context/component/Dockerfile
 
 # deploy container
 FROM node:24-slim AS deploy
@@ -19,13 +39,8 @@ USER node
 
 WORKDIR /app
 
-# Without the chown when copying directories, wwwroot is owned by root:root.
-COPY --from=build --chown=node:node /app/wwwroot wwwroot
-COPY --from=build --chown=node:node /app/node_modules node_modules
-COPY --from=build /app/serverconfig.json serverconfig.json
-COPY --from=build /app/index.js index.js
-COPY --from=build /app/package.json package.json
-COPY --from=build /app/version.js version.js
+# Without the chown when copying directories, files are owned by root:root.
+COPY --from=build --chown=node:node /tmp/terriamap-context/component/ .
 
 EXPOSE 3001
 ENV NODE_ENV=production
