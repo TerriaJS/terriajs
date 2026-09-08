@@ -2,6 +2,7 @@
 
 #### next release (8.x.x)
 
+- `UrlTemplateImageryCatalogItem` now uses `TileErrorHandlerMixin`, so tile load failures are handled gracefully (out-of-extent tiles are ignored, 403/404 handling follows `tileErrorHandlingOptions`, retries use backoff) instead of Cesium logging an uncaught "Failed to obtain image tile" error for every missing tile.
 - Fixed React "unknown prop" console warnings introduced by the styled-components 6 upgrade.
 - Fixed the share panel showing a false "link created"/"saved" success message when generating a short share link actually failed.
 - The share panel now surfaces the real HTTP status of a failed share-link request (a data-too-large message for 413, otherwise a generic message that includes the status code) instead of string-matching `"413"` in the error text.

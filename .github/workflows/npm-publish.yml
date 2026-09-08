@@ -9,7 +9,7 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  publish:
+  publish-terriajs:
     permissions:
       contents: write # to create and push a tag and updated attributions
       actions: read
@@ -123,3 +123,86 @@ jobs:
           if_mention: always
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
+
+  publish-terriajs-server:
+    permissions:
+      contents: write # to create and push a tag
+      actions: read
+      id-token: write
+    name: Publish terriajs-server to NPM
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: packages/terriajs-server
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      - name: Detect version change
+        id: detect
+        run: |
+          CURRENT_VERSION=$(node -p "require('./package.json').version")
+
+          IS_ALREADY_PUBLISHED=$(npm view terriajs-server@$CURRENT_VERSION version 2>/dev/null || echo 'false')
+
+          if [ "$IS_ALREADY_PUBLISHED" != "false" ]; then
+            echo "No version change detected"
+            echo "version-changed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          echo "Version change to $CURRENT_VERSION detected"
+          echo "version-changed=true" >> "$GITHUB_OUTPUT"
+          echo "current-version=$CURRENT_VERSION" >> "$GITHUB_OUTPUT"
+
+          # Determine npm dist-tag from prerelease identifier
+          NPM_TAG="latest"
+          if echo "$CURRENT_VERSION" | grep -q '-'; then
+            NPM_TAG=$(echo "$CURRENT_VERSION" | sed -E 's/.*-(alpha|beta|rc|next|canary).*/\1/')
+            if [ "$NPM_TAG" = "$CURRENT_VERSION" ]; then
+              echo "::error::Unrecognized prerelease identifier in version $CURRENT_VERSION. Allowed: alpha, beta, rc, next, canary"
+              exit 1
+            fi
+          fi
+          echo "npm-tag=$NPM_TAG" >> "$GITHUB_OUTPUT"
+          echo "Publishing with npm tag: $NPM_TAG"
+
+      - name: Set up Node.js for NPM
+        if: steps.detect.outputs.version-changed == 'true'
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version-file: "packages/terriajs-server/.nvmrc"
+          cache: "yarn"
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Install yarn
+        if: steps.detect.outputs.version-changed == 'true'
+        run: npm install -g yarn@^1.22.22
+
+      - name: Install dependencies
+        if: steps.detect.outputs.version-changed == 'true'
+        run: yarn install --frozen-lockfile
+        working-directory: .
+
+      - name: Lint terriajs-server
+        if: steps.detect.outputs.version-changed == 'true'
+        run: yarn lint
+
+      - name: Run tests for terriajs-server
+        if: steps.detect.outputs.version-changed == 'true'
+        run: yarn test
+
+      - name: Publish package to NPM
+        if: steps.detect.outputs.version-changed == 'true'
+        run: npm publish --tag ${{ steps.detect.outputs.npm-tag }}
+        env:
+          NODE_AUTH_TOKEN: ""
+
+      - name: Tag and push the new version to GitHub
+        if: steps.detect.outputs.version-changed == 'true'
+        run: |
+          git config user.name "Terria Bot via GitHub Actions"
+          git config user.email "TerriaBot@users.noreply.github.com"
+          git tag -a "terriajs-server/${{ steps.detect.outputs.current-version }}" -m "terriajs-server/${{ steps.detect.outputs.current-version }}"
+          git push origin "terriajs-server/${{ steps.detect.outputs.current-version }}"
