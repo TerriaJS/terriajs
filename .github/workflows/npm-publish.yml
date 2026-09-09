@@ -27,7 +27,7 @@ jobs:
           LOCAL_VERSION=$(node -p "require('./packages/terriajs/package.json').version")
           echo "Current version in package.json: $LOCAL_VERSION"
 
-          IS_ALREADY_PUBLISHED=$(pnpm view terriajs@$LOCAL_VERSION version 2>/dev/null || echo 'false')
+          IS_ALREADY_PUBLISHED=$(npm view terriajs@$LOCAL_VERSION version 2>/dev/null || echo 'false')
 
           if [ "$IS_ALREADY_PUBLISHED" != "false" ]; then
             echo "terriajs@$LOCAL_VERSION is already published"
