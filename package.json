@@ -24,9 +24,5 @@
     "prettier": "3.8.1",
     "pretty-quick": "^4.2.2",
     "turbo": "2.9.16"
-  },
-  "resolutions": {
-    "@types/react": "^18.3.3",
-    "@types/react-dom": "^18.3.1"
   }
 }
