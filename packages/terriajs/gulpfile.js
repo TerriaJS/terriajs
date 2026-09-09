@@ -153,25 +153,36 @@ search:
 `;
 
 function codeAttribution(done) {
-  var spawnSync = require("child_process").spawnSync;
-  const { writeFileSync } = require("node:fs");
+  const { execFileSync } = require("node:child_process");
+  const {
+    mkdtempSync,
+    readFileSync,
+    rmSync,
+    writeFileSync
+  } = require("node:fs");
+  const { tmpdir } = require("node:os");
+  const { join } = require("node:path");
+  const tempDir = mkdtempSync(join(tmpdir(), "terriajs-attributions-"));
 
-  writeFileSync("doc/acknowledgements/attributions.md", attributionTemplate);
-
-  var result = spawnSync(
-    "pnpm",
-    ["licenses generate-disclaimer >> doc/acknowledgements/attributions.md"],
-    {
-      stdio: "inherit",
-      shell: true
-    }
-  );
-  if (result.status !== 0) {
-    throw new Error(
-      "Generating code attribution exited with an error.\n" +
-        result.stderr.toString(),
-      { showStack: false }
+  try {
+    const outputFile = join(tempDir, "licenses.txt");
+    execFileSync(
+      "pnpm",
+      [
+        "exec",
+        "pnpm-licenses",
+        "generate-disclaimer",
+        "--output-file",
+        outputFile
+      ],
+      { cwd: __dirname, stdio: "inherit" }
     );
+    writeFileSync(
+      join(__dirname, "doc/acknowledgements/attributions.md"),
+      attributionTemplate + readFileSync(outputFile, "utf8")
+    );
+  } finally {
+    rmSync(tempDir, { recursive: true, force: true });
   }
   done();
 }

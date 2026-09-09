@@ -168,6 +168,7 @@
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "@mswjs/interceptors": "^0.41.9",
+    "@quantco/pnpm-licenses": "^2.4.2",
     "@types/node": "^24.3.1",
     "@types/svg-sprite": "^0.0.39",
     "@typescript-eslint/eslint-plugin": "^8.58.1",

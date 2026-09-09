@@ -751,6 +751,9 @@ importers:
       '@mswjs/interceptors':
         specifier: ^0.41.9
         version: 0.41.9
+      '@quantco/pnpm-licenses':
+        specifier: ^2.4.2
+        version: 2.4.2
       '@types/node':
         specifier: ^24.3.1
         version: 24.10.13
@@ -2258,6 +2261,10 @@ packages:
     resolution: {integrity: sha512-fL20rGWW/Nf4D9Yx1S/WJ50jL+vUN/lr/WyMtpwv1yPcY7W9g9LRssThtlTv+Q8O9nUEpBV9sqO9W0AE7k/0Aw==}
     hasBin: true
 
+  '@quantco/pnpm-licenses@2.4.2':
+    resolution: {integrity: sha512-kUdJ4V8/dr1YT9dG+jVhFDvqtPHUZbgw1WnWtc9Fx+JhOpz2fYAgpkx0tOnaszaWwpX9IdHnM1hCDJxdRUtV7w==}
+    hasBin: true
+
   '@reach/observe-rect@1.2.0':
     resolution: {integrity: sha512-Ba7HmkFgfQxZqqaeIWWkNK0rEhpxVQHIoVyW1YDSkGsGIXzcaW4deC8B0pZrNSSyLTdIk7y+5olKt5+g0GmFIQ==}
 
@@ -3160,6 +3167,10 @@ packages:
     resolution: {integrity: sha512-LHE+8BuR7RYGDKvnrmcuSq3tDcKv9OFEXQt/HpbZhY7V6h0zlUXutnAD82GiFx9rdieCMjkvtcsPqBwgUl1Iiw==}
     engines: {node: '>= 0.4'}
 
+  array-differ@4.0.0:
+    resolution: {integrity: sha512-Q6VPTLMsmXZ47ENG3V+wQyZS1ZxXMxFyYzA+Z/GMrJ6yIutAIEf9wTyroTzmGjNfox9/h3GdGBCVh43GVFx4Uw==}
+    engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
+
   array-each@1.0.1:
     resolution: {integrity: sha512-zHjL5SZa68hkKHBFBK6DJCTtr9sfTCPCaph/L7tMSLcTFgy+zX7E+6q5UArbtOtMBCtxdICpfTCspRse+ywyXA==}
     engines: {node: '>=0.10.0'}
@@ -3171,6 +3182,10 @@ packages:
   array-slice@1.1.0:
     resolution: {integrity: sha512-B1qMD3RBP7O8o0H2KbrXDyB0IccejMF15+87Lvlor12ONPRHP6gTjXMNkt/d3ZuOGbAe66hFmaCfECI24Ufp6w==}
     engines: {node: '>=0.10.0'}
+
+  array-union@3.0.1:
+    resolution: {integrity: sha512-1OvF9IbWwaeiM9VhzYXVQacMibxpXOMYVNIvMtKRyX9SImBXpKcFr8XvFDeEslCyuH/t6KRt7HEO94AlP8Iatw==}
+    engines: {node: '>=12'}
 
   array.prototype.findlast@1.2.5:
     resolution: {integrity: sha512-CVvd6FHg1Z3POpBLxO6E6zr+rSKEQ9L6rZHAaY7lLfhKsWYUBBOuMs0e9o24oopj6H+geRCX0YJ+TJLBK2eHyQ==}
@@ -5419,6 +5434,10 @@ packages:
       typescript:
         optional: true
 
+  multimatch@8.0.0:
+    resolution: {integrity: sha512-0D10M2/MnEyvoog7tmozlpSqL3HEU1evxUFa3v1dsKYmBDFSP1dLSX4CH2rNjpQ+4Fps8GKmUkCwiKryaKqd9A==}
+    engines: {node: '>=20'}
+
   mustache@2.3.2:
     resolution: {integrity: sha512-KpMNwdQsYz3O/SBS1qJ/o3sqUJ5wSb8gb0pul8CO0S56b9Y2ALm8zCfsjPXsqGFfoNBkDwZuZIAjhsZI03gYVQ==}
     engines: {npm: '>=1.4.0'}
@@ -6063,6 +6082,9 @@ packages:
     resolution: {integrity: sha512-G08Dxvm4iDN3MLM0EsP62EDV9IuhXPR6blNz6Utcp7zyV3tr4HVNINt6MpaRWbxoOHT3Q7YN2P+jaHX8vUbgog==}
     engines: {node: '>= 0.10'}
 
+  remove-markdown@0.5.5:
+    resolution: {integrity: sha512-lMR8tOtDqazFT6W2bZidoXwkptMdF3pCxpri0AEokHg0sZlC2GdoLqnoaxsEj1o7/BtXV1MKtT3YviA1t7rW7g==}
+
   remove-trailing-separator@1.1.0:
     resolution: {integrity: sha512-/hS+Y0u3aOfIETiaiirUFwDBDzmXPvO+jAfKTitUngIPzdKc6Z0LoFjM/CK5PL4C+eKwHohlHAb6H0VFfmmUsw==}
 
@@ -6363,6 +6385,10 @@ packages:
   sparkles@2.1.0:
     resolution: {integrity: sha512-r7iW1bDw8R/cFifrD3JnQJX0K1jqT0kprL48BiBpLZLJPmAm34zsVBsK5lc7HirZYZqMW65dOXZgbAGt/I6frg==}
     engines: {node: '>= 10.13.0'}
+
+  spdx-license-list@6.12.0:
+    resolution: {integrity: sha512-+nUYqm3aZMSHbjsthK+i/HHI2okTElCvqwUd4k8QcSk+FTGgjq+fsdFj2wZOaX6XmR2JdWhf/NeflNnvKOjcnQ==}
+    engines: {node: '>=8'}
 
   split-ca@1.0.1:
     resolution: {integrity: sha512-Q5thBSxp5t8WPTTJQS59LrGqOZqOsrhDGDVm8azCqIBjSBd7nd9o2PM+mDulQQkh8h//4U6hFZnc/mul8t5pWQ==}
@@ -9268,6 +9294,14 @@ snapshots:
     dependencies:
       tsx: 4.19.4
 
+  '@quantco/pnpm-licenses@2.4.2':
+    dependencies:
+      minimist: 1.2.8
+      multimatch: 8.0.0
+      remove-markdown: 0.5.5
+      spdx-license-list: 6.12.0
+      zod: 4.4.3
+
   '@reach/observe-rect@1.2.0': {}
 
   '@resvg/resvg-js-android-arm-eabi@2.6.2':
@@ -10368,6 +10402,8 @@ snapshots:
       call-bound: 1.0.4
       is-array-buffer: 3.0.5
 
+  array-differ@4.0.0: {}
+
   array-each@1.0.1: {}
 
   array-includes@3.1.8:
@@ -10380,6 +10416,8 @@ snapshots:
       is-string: 1.1.1
 
   array-slice@1.1.0: {}
+
+  array-union@3.0.1: {}
 
   array.prototype.findlast@1.2.5:
     dependencies:
@@ -12983,6 +13021,12 @@ snapshots:
     transitivePeerDependencies:
       - '@types/node'
 
+  multimatch@8.0.0:
+    dependencies:
+      array-differ: 4.0.0
+      array-union: 3.0.1
+      minimatch: 10.2.6
+
   mustache@2.3.2: {}
 
   mustache@4.2.0: {}
@@ -13691,6 +13735,8 @@ snapshots:
 
   relateurl@0.2.7: {}
 
+  remove-markdown@0.5.5: {}
+
   remove-trailing-separator@1.1.0: {}
 
   renderkid@3.0.0:
@@ -14004,6 +14050,8 @@ snapshots:
   source-map@0.6.1: {}
 
   sparkles@2.1.0: {}
+
+  spdx-license-list@6.12.0: {}
 
   split-ca@1.0.1: {}
 
