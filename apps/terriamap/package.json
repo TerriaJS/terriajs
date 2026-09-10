@@ -14,13 +14,6 @@
   "dependencies": {
     "terriajs-server": "workspace:*"
   },
-  "config": {
-    "docker": {
-      "name": "terriamap",
-      "include": "wwwroot node_modules serverconfig.json index.js package.json version.js",
-      "dockerfile": "deploy/docker/Dockerfile"
-    }
-  },
   "resolutions": {
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.1"
@@ -78,9 +71,6 @@
     "yargs": "^17.7.2"
   },
   "scripts": {
-    "docker-build-local": "node deploy/docker/create-docker-context.js --build --push --tag auto --local",
-    "docker-build-prod": "node deploy/docker/create-docker-context.js --build --push --tag auto --repository=ghcr.io/terriajs",
-    "docker-build-ci": "node deploy/docker/create-docker-context.js --build",
     "start": "terriajs-server --config-file serverconfig.json",
     "gulp": "gulp",
     "build": "gulp build",
