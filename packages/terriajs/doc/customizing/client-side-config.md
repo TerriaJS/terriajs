@@ -1,6 +1,6 @@
 # Client-side config
 
-The file `wwwroot/config.json` in TerriaMap contains client-side configuration parameters. See [this file for an example](https://github.com/TerriaJS/TerriaMap/blob/main/wwwroot/config.json).
+The file `wwwroot/config.json` in TerriaMap contains client-side configuration parameters. See [this file for an example](https://github.com/TerriaJS/terriajs/blob/main/apps/terriamap/wwwroot/config.json).
 
 This file is downloaded by the browser and is public. Do not put passwords,
 private API keys, or other server-side secrets in it. Browser tokens such as a

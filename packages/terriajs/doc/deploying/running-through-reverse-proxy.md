@@ -3,10 +3,10 @@ To configure TerriaMap to run correctly through a reverse proxy that prefixes a 
 E.g. if your map is accessible at http://example.com/my/terriamap/
 
 ```bash
-yarn gulp release --baseHref="/my/terriamap/"
+pnpm gulp release --baseHref="/my/terriamap/"
 ```
 
-This paramter can be passed to any `gulp` "build" task:
+This parameter can be passed to any `gulp` "build" task:
 
 - `default` (this runs when you call `gulp` without a task)
 - `build`

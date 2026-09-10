@@ -25,11 +25,11 @@ If your TerriaMap has many (>50) dynamic groups (groups which need to be loaded 
 
 The [flexsearch](https://github.com/nextapps-de/flexsearch) library is used to index and search the catalog index file.
 
-**Note** NodeJS v10 is not supported, please use v12 or v14.
+**Note** Requires Node.js 22 or later (see the repo's `.nvmrc`).
 
 To generate the catalog index:
 
-- `yarn build-tools`
+- `pnpm --filter terriajs run build-tools`
 - `node ./build/generateCatalogIndex.js -c config-url -b base-url` where
   - `config-url` is URL to client-side-config file
   - `base-url` is URL to terriajs-server (this is used to load `server-config` and to proxy requests)

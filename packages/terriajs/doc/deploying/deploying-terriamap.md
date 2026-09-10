@@ -3,10 +3,10 @@ TerriaMap can be deployed in almost any environment.
 First, you may want to build a minified version of TerriaMap by running:
 
 ```
-yarn gulp release
+pnpm --filter terriajs-map exec gulp release
 ```
 
-The normal build (`yarn gulp`) can be deployed as well, but the release version is smaller and faster.
+The normal build (`pnpm build`) can be deployed as well, but the release version is smaller and faster.
 
 Then, you can host your TerriaMap using either the included Node.js-based web server, or by using any web server of your choosing.
 
@@ -41,7 +41,7 @@ While we recommend using Docker or [Kubernetes](./deploying-with-kubernetes.md) 
 An example PM2 Ecosystem File can be found at `deploy/ecosystem-example.config.js`.
 
 ```bash
-npm install -g pm2@latest
+pnpm add -g pm2@latest
 
 pm2 start deploy/ecosystem-example.config.js --update-env --env production
 ```
