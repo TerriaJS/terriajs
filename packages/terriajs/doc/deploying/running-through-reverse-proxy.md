@@ -3,7 +3,7 @@ To configure TerriaMap to run correctly through a reverse proxy that prefixes a 
 E.g. if your map is accessible at http://example.com/my/terriamap/
 
 ```bash
-pnpm gulp release --baseHref="/my/terriamap/"
+pnpm --filter terriajs-map exec gulp release --baseHref="/my/terriamap/"
 ```
 
 This parameter can be passed to any `gulp` "build" task:

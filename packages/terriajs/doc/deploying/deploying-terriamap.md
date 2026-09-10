@@ -1,5 +1,7 @@
 TerriaMap can be deployed in almost any environment.
 
+Run the build commands below from the monorepo root. TerriaMap’s files live under `apps/terriamap`.
+
 First, you may want to build a minified version of TerriaMap by running:
 
 ```
@@ -14,10 +16,16 @@ Then, you can host your TerriaMap using either the included Node.js-based web se
 
 The easiest way to deploy your TerriaMap is to use the included Node.js-based web server, called [terriajs-server](https://github.com/TerriaJS/terriajs-server). Check the installed TerriaJS Server package for its supported Node.js versions; current releases require Node.js 22 or later.
 
-Then, copy the following files and directories from your local system where you built TerriaMap onto the server:
+Do not copy a workspace package’s `node_modules` by itself: its symlinks can point outside the application directory. Use the workspace-aware Dockerfile from the repository root:
 
-- `wwwroot`
-- production dependencies;
+```bash
+docker build -f apps/terriamap/Dockerfile -t terriamap .
+```
+
+For a deployment without Docker, create a portable production dependency tree with `pnpm --filter terriajs-map deploy --prod /tmp/terriamap-deploy`, then copy the following into the deployment directory:
+
+- `apps/terriamap/wwwroot`
+- the production `node_modules` from the deployment output;
 - a production TerriaJS Server configuration file.
 
 Do not commit private credentials to the repository or place them under
@@ -27,7 +35,7 @@ secret-management mechanism provided by the deployment platform.
 On the server, change to the directory where you copied the application and run:
 
 ```
-NODE_ENV=production terriajs-server --config-file serverconfig.json
+NODE_ENV=production node node_modules/terriajs-server/lib/app.js --config-file serverconfig.json
 ```
 
 The server will start on port 3001. You can specify a different port by adding ` --port 1234`.
@@ -38,7 +46,7 @@ TerriaJS Server supports HTTPS directly, but production deployments should norma
 
 While we recommend using Docker or [Kubernetes](./deploying-with-kubernetes.md) to run a production ready TerriaMap, other tools such as [PM2](https://pm2.keymetrics.io/docs/usage/quick-start/) can be used to run terriajs-server as a production ready web application.
 
-An example PM2 Ecosystem File can be found at `deploy/ecosystem-example.config.js`.
+An example PM2 Ecosystem File can be found at `apps/terriamap/deploy/ecosystem-example.config.js`. Run the following from `apps/terriamap`:
 
 ```bash
 pnpm add -g pm2@latest
