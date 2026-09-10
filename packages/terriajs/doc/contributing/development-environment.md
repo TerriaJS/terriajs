@@ -17,7 +17,7 @@ It builds TerriaMap, serves it on `http://localhost:3001`, and rebuilds whenever
 You need a standalone install of MkDocs and the `mkdocs-material` theme in order to build the user guide. Install these by running:
 
 ```bash
-pip install -r requirements.txt
+pip install -r packages/terriajs/requirements.txt
 ```
 
 Documentation is automatically generated from the source via JSDoc (reference) and MkDocs (user guide) by running:
@@ -26,15 +26,17 @@ Documentation is automatically generated from the source via JSDoc (reference) a
 pnpm --filter terriajs exec gulp docs
 ```
 
-It will be placed in the `wwwroot/doc` folder.
+It will be placed in `packages/terriajs/wwwroot/doc`. To serve it locally, run `pnpm --filter terriajs start`, then open `http://localhost:3002/doc/guide/`.
 
 ## Tests / Specs
 
-We use [Jasmine](https://jasmine.github.io/) for the TerriaJS tests, called specs in Jasmine parlance. Run the whole suite — build the specs (Turbo-caches the output) and run them in headless Chrome — from the repo root:
+We use [Jasmine](https://jasmine.github.io/) for the TerriaJS tests, called specs in Jasmine parlance. From the repo root, build the specs (Turbo-caches the output) and run them in headless Chrome, along with the server tests:
 
 ```bash
 pnpm test
 ```
+
+Install Chrome for the browser tests and start Docker for the server integration tests. Lint is a separate check (`pnpm lint`). To run only TerriaJS tests with their build prerequisite, use `pnpm exec turbo run test --filter=terriajs`.
 
 To build or run the specs on their own while iterating, use the TerriaJS gulp tasks below — for example `pnpm --filter terriajs exec gulp build` to (re)build them and `pnpm --filter terriajs exec gulp test` (or `test-firefox`) to run them. The spec source lives in the TerriaJS package's `test/` directory.
 
@@ -50,7 +52,7 @@ Individual build steps are exposed as `gulp` tasks per package. Run a TerriaJS t
 - `release` - The same as `build` except that it also minifies the build tests.
 - `lint` - Runs ESLint on the files in the `lib` folder and reports any problems. The ESLint rules are defined in the `eslint.config.mjs` file in the root directory of TerriaJS.
 - `docs` - Generates the user guide and reference documentation. The user guide is served at `http://localhost:3002/doc/guide/` and the reference documentation is at `http://localhost:3002/doc/reference/`.
-- `test` - Detects browsers available on the local system and launches the test suite in each. The results are reported on the command line.
+- `test` - Runs the test suite in headless Chrome, as configured in `test/jasmine-browser.mjs`. The results are reported on the command line.
 - `test-firefox` - Runs the tests in a headless Firefox browser.
 
 See `packages/terriajs/gulpfile.js` for more gulp tasks.

@@ -72,7 +72,7 @@ The everyday loop builds TerriaMap (and the TerriaJS it depends on), watches for
 pnpm dev
 ```
 
-For a one-shot production build of every package:
+To run the workspace build scripts once (TerriaMap is built without minification):
 
 ```bash
 pnpm build
@@ -94,10 +94,12 @@ The full set of `gulp` tasks can be found on the [Development Environment](../co
 
 ### Keeping up with updates
 
+Stop any running watch processes before removing dependencies.
+
 Pull the latest changes with `git pull`, then run `pnpm install` again to pick up any changed dependencies before rebuilding. If you have problems building or running, it is sometimes helpful to remove and reinstall the dependencies:
 
 ```bash
-rm -rf node_modules
+rm -rf node_modules packages/terriajs/node_modules packages/terriajs-server/node_modules apps/terriamap/node_modules
 pnpm install
 ```
 
