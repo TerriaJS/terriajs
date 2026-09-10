@@ -32,7 +32,7 @@ The best way to upgrade your initialization files to TerriaJS version 8 is to ru
 If you want the converter as a command line tool with extra options (such as more control over ids) you can run the catalog converter CLI by installing from npm:
 
 ```
-npm install -g catalog-converter
+pnpm add -g catalog-converter
 catalog-converter input-v7-init.json output-v8-init.json
 catalog-converter --help # To see all options
 ```

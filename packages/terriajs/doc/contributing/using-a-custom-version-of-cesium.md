@@ -1,41 +1,33 @@
 ## Working on TerriaJS and Cesium
 
-What if you need to make changes to [Cesium](https://github.com/AnalyticalGraphicsInc/cesium) while working on TerriaJS?
+What if you need to make changes to [Cesium](https://github.com/CesiumGS/cesium) while working on TerriaJS?
 
-The process of using a custom version of Cesium is much the same as using a custom version of TerriaJS. See the [Development Environment](development-environment.md#building-a-terriamap-against-a-modified-terriajs) for information on setting up and using `yarn`. To clone Cesium, do:
+TerriaJS depends on `terriajs-cesium`, a published fork of Cesium maintained at [TerriaJS/cesium](https://github.com/TerriaJS/cesium). It is not part of this monorepo, but you can develop against a local checkout much like you work on TerriaJS itself (see [Development Environment](development-environment.md#working-on-terriajs-and-terriamap-together)). Clone the fork into the `packages/` directory — it is covered by the workspace, so pnpm will link it:
 
 ```
 cd packages
-git clone -b terriajs https://github.com/TerriaJS/cesium.git
+git clone https://github.com/TerriaJS/cesium.git terriajs-cesium
 cd ..
+pnpm install
 ```
 
-It is important that you use the `terriajs` branch of [TerriaJS/cesium](https://github.com/TerriaJS/cesium) because it contains important changes to Cesium that are necessary for it to work with TerriaJS. If you need to use a different branch of Cesium, you will need to merge that branch with the changes in the `terriajs` branch.
+Use the [TerriaJS/cesium](https://github.com/TerriaJS/cesium) fork rather than upstream Cesium: its `main` branch carries the changes TerriaJS needs, and that is what `terriajs-cesium` is published from. If you work from a different branch, merge `main` into it first.
 
-And then run:
+## Using a custom Cesium branch without cloning
 
+To build against a Cesium branch without a local checkout, add a pnpm `overrides` entry to the root `pnpm-workspace.yaml`, pointing `terriajs-cesium` at the git ref:
+
+```yaml
+overrides:
+  terriajs-cesium: "github:TerriaJS/cesium#branchName"
 ```
-yarn install
-```
+
+Then run `pnpm install`. Replace `branchName` with the branch you want to use (a fork works too, e.g. `github:your-org/cesium#branchName`).
 
 ## Committing modifications
 
 If you make changes to Cesium and TerriaJS together, here's the process for getting them to production.
 
-First, commit your Cesium changes to a branch and open a pull request to merge that branch to master in the official [TerriaJS/cesium](https://github.com/TerriaJS/cesium) repo. Simultaneously, you may want to make a branch of TerriaJS that uses your modified version of Cesium. To do that, modify TerriaJS's `package.json`. Where it has a line like:
+First, commit your Cesium changes to a branch and open a pull request against the official [TerriaJS/cesium](https://github.com/TerriaJS/cesium) repo. While that is in review you can build TerriaJS against your branch using the `overrides` entry above.
 
-```
-"terriajs-cesium": "^1.25.1",
-```
-
-Change it to:
-
-```
-"terriajs-cesium": "git://github.com/TerriaJS/cesium.git#branchName",
-```
-
-Replace `branchName` with the name of the Cesium branch you want to use. You may even use a repository other than `TerriaJS/cesium` if your branch is in a fork of Cesium instead of in the official repository.
-
-Once your Cesium pull request has been merged and a new version of the `terriajs-cesium` npm module has been published, please remember to update `package.json` to point to an official `terriajs-cesium` version instead of a branch in a GitHub repo.
-
-The `package.json` in the `master` branch should always point to official releases of `terriajs-cesium` on npm, NOT GitHub branches.
+Once your Cesium pull request has been merged and a new version of the `terriajs-cesium` npm module has been published, update the `terriajs-cesium` dependency to that release and remove the `overrides` entry. The committed `pnpm-workspace.yaml` and `package.json` should always point to official releases of `terriajs-cesium` on npm, never a git branch.

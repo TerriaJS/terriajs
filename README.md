@@ -44,7 +44,7 @@ Sites we're aware of that are using TerriaJS. These are not endorsements or test
 
 ### Technical
 
-- NodeJS v20 and later are supported
+- NodeJS v22 and later are supported
 - Built in TypeScript & ES2020+ JavaScript, compiled with Babel to ES5.
 - Supports modern browsers (recent versions of Microsoft Edge, Mozilla Firefox & Google Chrome).
 - [TerriaJS Server component](https://github.com/TerriajS/TerriaJS-Server) runs in NodeJS and provides proxying for web services that don't support CORS or require authentication. Instead of using TerriaJS-Sever proxy service, an alternative proxying service URL can be specified. See [Specify an alternative proxy server URL](https://github.com/TerriaJS/terriajs/blob/main/packages/terriajs/doc/connecting-to-data/cross-origin-resource-sharing.md)
@@ -61,7 +61,7 @@ See [Getting Started](https://docs.terria.io/guide/getting-started/) in the [Doc
 - **[Terria™](http://terria.io)** is the overall name for the spatial data platform and the team that built TerriaJS.
 - **TerriaJS** is this TypeScript/JavaScript library consisting of the 2D/3D map, catalog management and many spatial data connectors.
 - **[Cesium](https://github.com/TerriaJS/Cesium)** is the 3D WebGL rendering library used by TerriaJS, which provides many low-level functions for loading and displaying imagery and spatial formats such as GeoJSON and KML.
-- **[TerriaMap](https://github.com/TerriaJS/TerriaMap)** is a complete website starting point, using TerriaJS.
+- **[TerriaMap](https://github.com/TerriaJS/terriajs/tree/main/apps/terriamap)** is a complete website starting point, using TerriaJS.
 - **[TerriaJS-Server](https://github.com/TerriaJS/TerriaJS-Server)** is a NodeJS-based server that provides proxying and support services for TerriaJS.
 - **[NationalMap](https://github.com/NICTA/NationalMap)** is the flagship Terria deployment, and the origin of the TerriaJS library.
 

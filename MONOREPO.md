@@ -9,18 +9,15 @@ Brings the core Terria projects together in one place.
 | `packages/terriajs` | `terriajs`  | The full TerriaJS library, moved here from its own repo. |
 | `apps/terriamap`    | `terriamap` | The OG TerriaMap, folded back in                         |
 
-> Yarn is kept here because it is the proven package manager across the current stack
-> projects. Migrating the monorepo to pnpm is a desirable, separate follow-up.
-
 ## Prerequisites
 
 - Node.js `>= 24` (see `.nvmrc`)
-- Yarn `1.x` (classic)
+- pnpm `12.x`
 
 ## Install
 
 ```bash
-yarn install
+pnpm install
 ```
 
 ## Common tasks
@@ -28,23 +25,23 @@ yarn install
 The everyday loop is "build TerriaMap, serve it from terriajs-server":
 
 ```bash
-yarn dev   # builds TerriaMap (+ terriajs), watches, serves on http://localhost:3001
+pnpm dev   # builds TerriaMap (+ terriajs), watches, serves on http://localhost:3001
 ```
 
 Other tasks run through Turborepo from the repo root:
 
 ```bash
-yarn build          # production build of every package
-yarn test           # lint + spec build (cached) + headless-Chrome tests
-yarn lint           # turbo run lint
-yarn format         # prettier --write .
-yarn prettier-check # prettier --check .
+pnpm build          # production build of every package
+pnpm test           # lint + spec build (cached) + headless-Chrome tests
+pnpm lint           # turbo run lint
+pnpm format         # prettier --write .
+pnpm prettier-check # prettier --check .
 ```
 
 Build and serve the built map:
 
 ```bash
-yarn start   # turbo run build, then terriajs-server on :3001
+pnpm start   # turbo run build, then terriajs-server on :3001
 ```
 
 ### What the Turbo tasks actually run
@@ -65,7 +62,7 @@ mapping is:
 `build-for-node`, and its browser assets are pulled in by terriamap's
 `gulp build`.
 
-`yarn test` runs the whole chain in one go: `test` depends on `build-specs`,
+`pnpm test` runs the whole chain in one go: `test` depends on `build-specs`,
 whose outputs (`wwwroot/build/**`) are Turbo-cached.
 
 ## Formatting

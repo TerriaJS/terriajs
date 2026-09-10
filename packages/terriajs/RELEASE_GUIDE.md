@@ -4,7 +4,7 @@
 
 ### From `main` using GitHub Actions (preferred method):
 
-- Checkout and pull `main` branch of `terriajs`, run `yarn install` if necessary.
+- Checkout and pull `main` branch of `terriajs`, run `pnpm install` if necessary.
 - Bump the version number in `package.json`.
   - Release will happen only if that version number is not already published to npm.
   - For a pre-release, add a pre-release tag to the version number, e.g. `8.12.3-alpha.0`. The pre-release tag can be any string, but it's common to use `alpha`, `beta`, `rc` (release candidate) etc. followed by a number that is incremented for each pre-release.
@@ -23,10 +23,10 @@
 
 This method should not be used to publish versions at the tip of `main` or another branch that is often used for releases. To publish a new version of TerriaJS to npm with this method, you'll need to be listed as a collaborator [here](https://www.npmjs.com/package/terriajs). Existing collaborators can add new ones. Then:
 
-- Checkout and pull the branch of `terriajs` to be deployed, run `yarn install` if necessary.
+- Checkout and pull the branch of `terriajs` to be deployed, run `pnpm install` if necessary.
 - Bump the version number in `package.json`. Follow [semver](http://semver.org/).
 - Appropriately update CHANGES.md, ensuring that changes are listed in their correct sections.
-- Update code attibutions using `yarn gulp code-attribution`
+- Update code attibutions using `pnpm gulp code-attribution`
 - Commit and push your changes and make a PR to the branch to be deployed.
 - Get someone to review and merge the PR.
 - Fetch and checkout the merge commit made by merging the PR.
