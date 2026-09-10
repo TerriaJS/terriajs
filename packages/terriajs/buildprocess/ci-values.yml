@@ -42,23 +42,9 @@ terriamap:
     singlePageRouting:
       resolvePathRelativeToWwwroot: "/index.html"
       resolveUnmatchedPathsWithIndexHtml: true
-<<<<<<< checkout/packages/terriajs/buildprocess/ci-values.yml
-    trustedHosts: ["ci.terria.io/"]
-    securityHeaders:
-      - cspReportOnly: false
-||||||| baseline/packages/terriajs/buildprocess/ci-values.yml
-=======
-<<<<<<< checkout/packages/terriajs/buildprocess/ci-values.yml
-||||||| baseline/packages/terriajs/buildprocess/ci-values.yml
-    trustedHosts: ["ci.terria.io/"]
-    securityHeaders:
-      - cspReportOnly: false
-=======
     trustedHosts: ["ci.terria.io"]
     securityHeaders:
       - cspReportOnly: false
->>>>>>> destination/packages/terriajs/buildprocess/ci-values.yml
->>>>>>> destination/packages/terriajs/buildprocess/ci-values.yml
   clientConfig:
     initializationUrls:
       - simple
