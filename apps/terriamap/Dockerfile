@@ -16,12 +16,15 @@ FROM node:24 AS develop
 FROM node:24 AS build
 RUN corepack enable
 WORKDIR /repo
+# The base href the built map is served under. A normal image build defaults to "/";
+# CI deploys pass the branch path (e.g. /my-branch/) so assets resolve under it.
+ARG BASE_HREF=/
 # terriajs's `prepare` (tsc) and `gulp release` are memory-hungry; cap node's heap so it
 # GCs instead of being OOM-killed (exit 137). Ensure the Docker builder has >4GB.
 ENV NODE_OPTIONS=--max_old_space_size=4096
 COPY . .
 RUN pnpm install --filter terriajs-map... --frozen-lockfile
-RUN pnpm --filter terriajs-map exec gulp release
+RUN pnpm --filter terriajs-map exec gulp release --baseHref="$BASE_HREF"
 # Materialise a portable, real (non-symlinked) node_modules for the runtime stage.
 RUN pnpm --filter terriajs-map deploy --prod /prod/app
 
