@@ -2,6 +2,8 @@
 
 #### next release (8.x.x)
 
+#### 8.13.0 - 2026-09-11
+
 - `UrlTemplateImageryCatalogItem` now uses `TileErrorHandlerMixin`, so tile load failures are handled gracefully (out-of-extent tiles are ignored, 403/404 handling follows `tileErrorHandlingOptions`, retries use backoff) instead of Cesium logging an uncaught "Failed to obtain image tile" error for every missing tile.
 - Fixed React "unknown prop" console warnings introduced by the styled-components 6 upgrade.
 - Fixed the share panel showing a false "link created"/"saved" success message when generating a short share link actually failed.
@@ -21,6 +23,7 @@
 - Changed `About data` button to `About job` in workbench for CatalogFunctionJob instances.
 - Add `edit` stratum for tracking temporary user changes that shouldn't be captured in share link - example form edits.
 - Fix viewCatalogMember to correctly switch to the parent tab
+- Integrate terriajs-server into monorepo
 
 #### 8.12.5 - 2026-07-28
 
