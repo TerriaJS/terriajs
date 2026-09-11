@@ -40,12 +40,12 @@
     "btnResetRealign": "reimposta allineamento bussola",
     "confirmText": "Fatto",
     "resetAlignmentTitle": "Ripristina Allineamento",
-    "manualAlignmentMessage": "Allinea il tuo dispositivo mobile in modo che corrisponda all'allineamento corrente della mappa, quindi clicca sulla bussola lampeggiante. Se nessun punto di riferimento con cui allinearsi è attualmente visibile sulla mappa, è possibile spostare la mappa utilizzando le azioni di trascinamento e pizzicamento fino a quando un punto di riferimento riconoscibile è visibile prima di allineare il dispositivo con la mappa. <br /><div>{{img}}</div> <br />Suggerimento: Il sole o la luna sono spesso dei buoni punti di riferimento con cui allinearsi se ci si trova in un luogo che non si conosce (fare attenzione a non guardare il sole - può far male agli occhi).",
+    "manualAlignmentMessage": "Allinea il tuo dispositivo mobile in modo che corrisponda all'allineamento corrente della mappa, quindi clicca sulla bussola lampeggiante. Se nessun punto di riferimento con cui allinearsi è attualmente visibile sulla mappa, è possibile spostare la mappa utilizzando le azioni di trascinamento e pizzicamento fino a quando un punto di riferimento riconoscibile è visibile prima di allineare il dispositivo con la mappa. <br><div>{{img}}</div> <br>Suggerimento: Il sole o la luna sono spesso dei buoni punti di riferimento con cui allinearsi se ci si trova in un luogo che non si conosce (fare attenzione a non guardare il sole - può far male agli occhi).",
     "title": "Caratteristica sperimentale: Realtà aumentata",
     "btnRealign": "attivare o disattivare l'allineamento manuale",
     "btnHover": "attiva o disattiva l'altezza del passaggio del mouse",
-    "resetAlignmentMessage": "Ripristino dell'allineamento della bussola. Se l'allineamento non corrisponde al mondo reale, prova a muovere il dispositivo con un movimento a 8 per ricalibrarlo. Questo può essere fatto in qualsiasi momento.<br /> <br />Evitare luoghi con campi magnetici o oggetti metallici, poiché questi possono disorientare la bussola del dispositivo.",
-    "experimentalFeatureMessage": "La modalità Realtà Aumentata è attualmente in beta. Questa modalità è progettata solo per l'uso sui più recenti dispositivi mobili di fascia alta. <br /><br />ATTENZIONE: Questa modalità può consumare molti dati, fai attenzione ai costi di utilizzo dei dati da parte del tuo provider di rete. <br /><br />La precisione di questa modalità dipende dalla precisione della bussola interna del tuo dispositivo mobile."
+    "resetAlignmentMessage": "Ripristino dell'allineamento della bussola. Se l'allineamento non corrisponde al mondo reale, prova a muovere il dispositivo con un movimento a 8 per ricalibrarlo. Questo può essere fatto in qualsiasi momento.<br> <br>Evitare luoghi con campi magnetici o oggetti metallici, poiché questi possono disorientare la bussola del dispositivo.",
+    "experimentalFeatureMessage": "La modalità Realtà Aumentata è attualmente in beta. Questa modalità è progettata solo per l'uso sui più recenti dispositivi mobili di fascia alta. <br><br>ATTENZIONE: Questa modalità può consumare molti dati, fai attenzione ai costi di utilizzo dei dati da parte del tuo provider di rete. <br><br>La precisione di questa modalità dipende dalla precisione della bussola interna del tuo dispositivo mobile."
   },
   "measure": {
     "measureDistance": "Misura la distanza fra punti",
@@ -95,7 +95,7 @@
     "sending": "Invio...",
     "minLength": "La lunghezza minima del commento di feedback è {{minLength}}",
     "captionText": "Questo ci aiuta a risolvere i problemi permettendoci di vedere quello che stai vedendo",
-    "email": "Indirizzo email (opzionale)<br/><em>Non possiamo proseguire senza!</em>",
+    "email": "Indirizzo email (opzionale)<br><em>Non possiamo proseguire senza!</em>",
     "feedbackPreamble": "Ci piacerebbe sentire la tua opinione!"
   },
   "settingPanel": {
@@ -163,7 +163,7 @@
     "convertNotificationWarningsTitle": "Dettagli tecnici",
     "shortLinkShortening": "Accorciamento...",
     "convertNotificationTitle": "Avviso: link di condivisione aggiornato",
-    "localDataNote": "<0><0>Nota:</0></0><1>Le seguenti fonti di dati NON saranno condivise perché includono dati da questo sistema locale. Per condividere queste fonti di dati, pubblica i loro dati su un server web e <2>aggiungili usando un url</2>.</1>",
+    "localDataNote": "&lt;0&gt;&lt;0&gt;Nota:&lt;1&gt;Le seguenti fonti di dati NON saranno condivise perché includono dati da questo sistema locale. Per condividere queste fonti di dati, pubblica i loro dati su un server web e &lt;2&gt;aggiungili usando un url.",
     "convertErrorMessage": "Questo link di condivisione è basato su una vecchia versione di TerriaJS - il software che alimenta questa mappa web. Si è verificato un errore nel tentativo di aggiornare i dati della condivisione.",
     "convertNotificationMessage": "Questo link di condivisione è basato su una vecchia versione di TerriaJS - il software che alimenta questa mappa web. Anche se sono stati fatti i migliori sforzi per preservare il link, potresti incontrare problemi con la visualizzazione dei dati.  \n\nSe sei l'utente che ha condiviso il link, clicca su OK per far scomparire il messaggio di avviso e continuare ad accedere ai dati.",
     "convertErrorTitle": "Impossibile aggiornare il link di condivisione alla versione 8",
@@ -268,7 +268,7 @@
       "initErrorTitle": "Impossibile inizializzare i servizi",
       "loadingBaseMapsErrorTitle": "Errore nel caricamento delle mappe di base",
       "urlLoadErrorTitle": "Problema di caricamento dell'URL",
-      "loadingInitSourcesErrorMessage": "Si è verificato un errore durante il caricamento della configurazione della mappa {{appName}} &mdash; potrebbe non essere visualizzata correttamente. Prova a ricaricare la mappa, e se il problema persiste, segnalalo inviando un'e-mail a {{email}}, oppure puoi premere il pulsante qui sotto.",
+      "loadingInitSourcesErrorMessage": "Si è verificato un errore durante il caricamento della configurazione della mappa {{appName}} — potrebbe non essere visualizzata correttamente. Prova a ricaricare la mappa, e se il problema persiste, segnalalo inviando un'e-mail a {{email}}, oppure puoi premere il pulsante qui sotto.",
       "loadingMagdaInitSourceErrorTitle": "Errore nel caricamento del sorgente di inizializzazione di Magda",
       "loadingWorkbenchItemErrorTitle": "Errore nel caricamento dell'elemento nel banco di lavoro: `{{name}}`",
       "loadConfigErrorTitle": "Impossibile caricare la configurazione di Terria Map",
@@ -776,8 +776,8 @@
       "unableToDisplayMessage": "{{name}} non può essere mostrato in 2D perché non supporta la proiezione standard Web Mercator (EPSG:3857). Per favore passa al 3D se è supportato dal tuo sistema, aggiorna il set di dati per supportare la proiezione, o usa un set di dati diverso.",
       "tileErrorMessage": "La tile con l'URL:\n{{url}}\n è riuscita quando è stata caricata con XMLHttpRequest ma è fallita più volte quando è stata caricata direttamente da Cesium o Leaflet.\n Questo può indicare che il server è molto sensibile alle intestazioni di richiesta fornite o è semplicemente inaffidabile.",
       "unknownTileErrorMessage": "Durante l'accesso all'URL:\n{{url}}\nQuesto probabilmente indica uno dei seguenti problemi:\n* L'hostname del server non può essere risolto,\n* Il server non ha risposto alla richiesta, o\n* Il server ha negato l'accesso Cross-Origin Resource Sharing (CORS) a questo URL (Vedi https://docs.terria.io/guide/connecting-to-data/cross-origin-resource-sharing/).",
-      "accessingBaseMapErrorMessage": "Si è verificato un errore durante il tentativo di scaricare le tile per la mappa base:<p><center>{{name}} </center></p> Seleziona un'altra mappa di base usando il pulsante Mappa nell'angolo in alto a destra.",
-      "accessingCatalogItemErrorMessage": "Si è verificato un errore durante il tentativo di scaricare le tile per l'articolo di catalogo:<p><center>{{name}}</center></p> L'elemento del catalogo è stato nascosto dalla mappa.  Puoi mostrarlo di nuovo nel pannello Visualizzazione attuale per riprovare.",
+      "accessingBaseMapErrorMessage": "Si è verificato un errore durante il tentativo di scaricare le tile per la mappa base:<p></p><center>{{name}} </center><p></p> Seleziona un'altra mappa di base usando il pulsante Mappa nell'angolo in alto a destra.",
+      "accessingCatalogItemErrorMessage": "Si è verificato un errore durante il tentativo di scaricare le tile per l'articolo di catalogo:<p></p><center>{{name}}</center><p></p> L'elemento del catalogo è stato nascosto dalla mappa.  Puoi mostrarlo di nuovo nel pannello Visualizzazione attuale per riprovare.",
       "resolvingAvailability": "Risoluzione della disponibilità in un luogo...",
       "unableToShowLocTitle": "Impossibile mostrare questa posizione",
       "intervalSupportErrorMessage": "Spiacente, gli elementi del catalogo {{typeName}} ({{type}}) non possono attualmente essere resi variabili nel tempo specificando la proprietà \"intervalli\".",
@@ -1052,7 +1052,7 @@
       "defaultCombineTitle": "Si sono verificati più errori",
       "defaultCombineMessage": "I dettagli degli errori sono qui sotto",
       "networkRequestTitle": "Si è verificato un errore nella richiesta di rete",
-      "networkRequestMessage": "I dati potrebbero non essere disponibili o visualizzati correttamente a causa di un'interruzione del servizio del custode dei dati. Prova a ricaricare la mappa, ad accedere ai dati in un secondo momento o a selezionare un altro set di dati. <feedbacklink feedback-message='If the problem persists, please submit feedback here.' email-message='If the problem persists, please report to {{email}}'/>",
+      "networkRequestMessage": "I dati potrebbero non essere disponibili o visualizzati correttamente a causa di un'interruzione del servizio del custode dei dati. Prova a ricaricare la mappa, ad accedere ai dati in un secondo momento o a selezionare un altro set di dati. <feedbacklink feedback-message=\"If the problem persists, please submit feedback here.\" email-message=\"If the problem persists, please report to {{email}}\"></feedbacklink>",
       "networkRequestMessageDetailed": "Questo può indicare una delle seguenti cose:\n\n* L'hostname del server non può essere risolto\n* Il server non ha risposto alla richiesta - o è temporaneamente non disponibile\n* Il server ha negato l'accesso [Cross-Origin Resource Sharing (CORS)](https://docs.terria.io/guide/connecting-to-data/cross-origin-resource-sharing/) a questo URL\n* C'è un problema con la tua connessione internet\n\nSe hai inserito il link manualmente, verifica che il link sia corretto."
     },
     "chartData": "Dati del grafico",
@@ -1120,8 +1120,8 @@
     "useTheLinkToDownload": "Usa il link qui sotto per scaricare direttamente i dati.",
     "downloadInFormat": "Scaricare i dati attualmente selezionati nel formato {{format}}",
     "useLinkBelow": "Usa il link qui sotto per scaricare i dati. Vedi il {{link}} per maggiori informazioni sulla personalizzazione dei parametri di query dell'URL.",
-    "wfs": "Questo è un <1>servizio WFS</1>, che trasferisce dati spaziali grezzi su richiesta. Può essere usato nei software GIS con questo URL:",
-    "wms": "Questo è un <1>servizio WMS</1>, che genera immagini di mappe su richiesta. Può essere usato nei software GIS con questo URL:",
+    "wfs": "Questo è un &lt;1&gt;servizio WFS, che trasferisce dati spaziali grezzi su richiesta. Può essere usato nei software GIS con questo URL:",
+    "wms": "Questo è un &lt;1&gt;servizio WMS, che genera immagini di mappe su richiesta. Può essere usato nei software GIS con questo URL:",
     "dataNotLocal": "Si prega di contattare il fornitore di questi dati per ulteriori informazioni, comprese quelle relative ai diritti e ai vincoli di utilizzo.",
     "dataLocal": "Questo file esiste solo nel tuo browser. Per condividerlo, devi caricarlo su un web server pubblico."
   },
@@ -1151,11 +1151,11 @@
     "mayBeExperiencingIssues": "Questo set di dati potrebbe attualmente avere dei problemi",
     "previewItemErrorMessage": "Si è verificato un errore durante il caricamento dell'elemento del catalogo.",
     "previewItemErrorTitle": "L'articolo del catalogo non può essere visualizzato in anteprima.",
-    "selectToPreviewDataset": "Seleziona un set di dati per vedere un'anteprima <br><i>(premi CTRL per selezionare più layers)</i>",
+    "selectToPreviewDataset": "Seleziona un set di dati per vedere un'anteprima (premi CTRL per selezionare più layers)",
     "selectToPreviewSeparator": "O",
     "goToTheMap": "Vai alla mappa",
     "doesNotContainGeospatialData": "Questo file non contiene dati geospaziali.",
-    "selectMultipleDatasets": "<0>Premi<strong>Shift</strong> e clicca</0><1 /><2>per aggiungere multipli datasets</2>"
+    "selectMultipleDatasets": "&lt;0&gt;Premi<strong>Shift</strong> e clicca&lt;1 /&gt;&lt;2&gt;per aggiungere multipli datasets"
   },
   "legend": {
     "n": "N",
@@ -1365,12 +1365,12 @@
     "load": "Carica dati locali/web",
     "browse": "Sfoglia...",
     "addDataBtnText": "Esplora i dati",
-    "localFile": "<0>Passo 2:</0> Selezionare il file",
-    "note": "<0>Nota: </0>I dati aggiunti in questo modo non vengono salvati o resi visibili agli altri.",
-    "infoText": "<0>Trascina un file qui per visualizzarlo localmente sulla mappa</0><1>(non sarà salvato o caricato su internet)</1>",
-    "webFile": "<0>Passo 2:</0> Inserisci l'URL del file di dati o del servizio web",
-    "webFileType": "<0>Passo 1:</0> Selezionare il tipo di file (opzionale)",
-    "localFileType": "<0>Passo 1:</0> Selezionare il tipo di file (opzionale)"
+    "localFile": "&lt;0&gt;Passo 2: Selezionare il file",
+    "note": "&lt;0&gt;Nota: I dati aggiunti in questo modo non vengono salvati o resi visibili agli altri.",
+    "infoText": "&lt;0&gt;Trascina un file qui per visualizzarlo localmente sulla mappa&lt;1&gt;(non sarà salvato o caricato su internet)",
+    "webFile": "&lt;0&gt;Passo 2: Inserisci l'URL del file di dati o del servizio web",
+    "webFileType": "&lt;0&gt;Passo 1: Selezionare il tipo di file (opzionale)",
+    "localFileType": "&lt;0&gt;Passo 1: Selezionare il tipo di file (opzionale)"
   },
   "satelliteGuidance": {
     "prevI": "No grazie",
@@ -1386,7 +1386,7 @@
     "titleII": "Dove sono le mie immagini satellitari?",
     "bodyI": "Una guida super-veloce per ottenere il massimo dalle immagini satellitari storiche.",
     "titleI": "Immagini satellitari: Come faccio a...?",
-    "menuTitle": "È possibile accedere alle guide delle mappe in qualsiasi momento cercando nel <2>menù aiuto</2>."
+    "menuTitle": "È possibile accedere alle guide delle mappe in qualsiasi momento cercando nel &lt;2&gt;menù aiuto."
   },
   "story": {
     "storyEditor": "Editor Storie",
@@ -1430,14 +1430,14 @@
     "loadSceneErrorTitle": "Errore nel caricamento della scena della storia",
     "previousBtn": "vai alla scena precedente",
     "doesNotExist": "La storia non esiste",
-    "promptHtml1": "<0>Puoi visualizzare e creare storie in qualsiasi momento cliccando qui.</0>",
-    "removeStoryDialog": "Sei sicuro di voler cancellare '<1>{{storyName}}</1>'?",
+    "promptHtml1": "&lt;0&gt;Puoi visualizzare e creare storie in qualsiasi momento cliccando qui.",
+    "removeStoryDialog": "Sei sicuro di voler cancellare '&lt;1&gt;{{storyName}}'?",
     "removeAllStoriesDialog": "Siete sicuri di voler cancellare {{ count }} scena?",
     "removeAllStoriesDialog_plural": "Siete sicuri di voler cancellare {{ count }} scene?",
     "message": "<2>Questo è il tuo editor di storie</2><1>Crea e condividi storie interattive direttamente dalla tua mappa<1><0><0></0>Iniziare </0></1></1>",
     "panelBody": "Crea e condividi storie interattive direttamente dalla tua mappa",
     "loadSceneErrorMessage": "Si è verificato un errore durante il caricamento dei dati per la scena della storia: `{{title}}`.",
-    "promptHtml2": "<0><0>INTRODUZIONE</0><1>Storie dei dati</1><2>Crea e condividi storie interattive direttamente dalla tua mappa.</2></0>",
+    "promptHtml2": "&lt;0&gt;&lt;0&gt;INTRODUZIONE&lt;1&gt;Storie dei dati&lt;2&gt;Crea e condividi storie interattive direttamente dalla tua mappa.",
     "restart": "Ricomincia",
     "prev": "Precedente",
     "next": "Successivo",
@@ -1447,7 +1447,7 @@
   },
   "dragDrop": {
     "not": "<0>bbbb</0>",
-    "text": "<0>Trascina e rilascia</0><1>I tuoi dati ovunque per visualizzarli sulla mappa<1>"
+    "text": "&lt;0&gt;Trascina e rilascia&lt;1&gt;I tuoi dati ovunque per visualizzarli sulla mappa&lt;1&gt;"
   },
   "terriaViewer": {
     "webGLNotSupportedTitle": "WebGL non supportato",
@@ -1473,7 +1473,7 @@
       "title": "Comandi"
     },
     "toolButtonTitle": "Modalità pedonale",
-    "dropPedestrianTooltipMessage": "<b>Clic sinistro</b> per selezionare la posizione della goccia<br /><b>Clic destro / Esc</b> per annullare"
+    "dropPedestrianTooltipMessage": "<b>Clic sinistro</b> per selezionare la posizione della goccia<br><b>Clic destro / Esc</b> per annullare"
   },
   "itemSearchTool": {
     "resetBtnText": "Cancella input",
@@ -1664,7 +1664,7 @@
     "dismissText": "Chiudi il messaggio e non mostrarlo più",
     "searchBtnText": "Cerca una posizione",
     "welcomeMessageOnMobile": "Sei interessato alla scoperta e all'esplorazione dei dati?",
-    "welcomeMessage": "Sei interessato alla scoperta e all'esplorazione dei dati?<br/>Immergiti subito e inizia o controlla le seguenti opzioni della guida."
+    "welcomeMessage": "Sei interessato alla scoperta e all'esplorazione dei dati?<br>Immergiti subito e inizia o controlla le seguenti opzioni della guida."
   },
   "helpPanel": {
     "dismissText": "Capito, grazie!",
