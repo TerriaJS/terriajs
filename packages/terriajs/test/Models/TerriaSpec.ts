@@ -969,6 +969,168 @@ describe("TerriaSpec", function () {
       });
     });
 
+    describe("is resilient to broken init data", function () {
+      // A share link should still load everything it can, even when part of it
+      // is broken - see https://github.com/TerriaJS/terriajs/issues/5168
+      const goodItem = {
+        type: "csv",
+        id: "good-item",
+        name: "A good item",
+        csvString: "lat,lon,value\n-37.8,144.9,10"
+      };
+
+      const anotherGoodItem = {
+        type: "csv",
+        id: "another-good-item",
+        name: "Another good item",
+        csvString: "lat,lon,value\n-33.9,151.2,20"
+      };
+
+      beforeEach(function () {
+        // Do not call through - we only care about which items make it to the
+        // workbench, not about actually loading them.
+        spyOn(CsvCatalogItem.prototype, "loadMapItems").and.callFake(() =>
+          Promise.resolve(Result.none())
+        );
+      });
+
+      /** Applies init data, returning any error instead of throwing it */
+      async function applyInitData(initData: any): Promise<unknown> {
+        try {
+          await terria.applyInitData({ initData });
+        } catch (e) {
+          return e;
+        }
+        return undefined;
+      }
+
+      it("loads the workbench when nothing is broken", async function () {
+        const error = await applyInitData({
+          catalog: [goodItem, anotherGoodItem],
+          workbench: ["good-item", "another-good-item"]
+        });
+
+        expect(terria.workbench.itemIds).toEqual([
+          "good-item",
+          "another-good-item"
+        ]);
+        expect(error).toBeUndefined();
+      });
+
+      it("loads the good models when a model has non-object traits", async function () {
+        const error = await applyInitData({
+          catalog: [goodItem, anotherGoodItem],
+          models: {
+            "broken-item": "this should be an object",
+            "good-item": { show: true }
+          },
+          workbench: ["good-item", "another-good-item"]
+        });
+
+        expect(terria.workbench.itemIds).toEqual([
+          "good-item",
+          "another-good-item"
+        ]);
+        expect(error)
+          .withContext("the broken model should still be reported")
+          .toBeDefined();
+      });
+
+      it("loads the good models when a model cannot be dereferenced", async function () {
+        // Share links of catalog items that used to be references contain a
+        // `dereferenced` block. If the catalog has since changed (or the item's
+        // type is no longer registered) the model is no longer a reference.
+        const error = await applyInitData({
+          catalog: [goodItem, anotherGoodItem],
+          models: {
+            "broken-item": {
+              type: "a-type-that-does-not-exist",
+              dereferenced: { type: "csv", name: "Dereferenced item" }
+            },
+            "good-item": { show: true }
+          },
+          workbench: ["good-item", "another-good-item"]
+        });
+
+        expect(terria.workbench.itemIds).toEqual([
+          "good-item",
+          "another-good-item"
+        ]);
+        expect(error)
+          .withContext("the broken model should still be reported")
+          .toBeDefined();
+      });
+
+      it("loads the workbench when a container of a model is broken", async function () {
+        const error = await applyInitData({
+          catalog: [goodItem, anotherGoodItem],
+          models: {
+            "broken-container": "this should be an object",
+            "another-good-item": {
+              show: true,
+              knownContainerUniqueIds: ["broken-container"]
+            }
+          },
+          workbench: ["good-item", "another-good-item"]
+        });
+
+        expect(terria.workbench.itemIds).toEqual([
+          "good-item",
+          "another-good-item"
+        ]);
+        expect(error)
+          .withContext("the broken container should still be reported")
+          .toBeDefined();
+      });
+
+      it("loads the workbench when `initialCamera` is invalid", async function () {
+        const error = await applyInitData({
+          catalog: [goodItem, anotherGoodItem],
+          initialCamera: { west: "not a number" },
+          workbench: ["good-item", "another-good-item"]
+        });
+
+        expect(terria.workbench.itemIds).toEqual([
+          "good-item",
+          "another-good-item"
+        ]);
+        expect(error)
+          .withContext("the invalid camera should still be reported")
+          .toBeDefined();
+      });
+
+      it("loads the workbench when `homeCamera` is invalid", async function () {
+        const error = await applyInitData({
+          catalog: [goodItem, anotherGoodItem],
+          homeCamera: { west: "not a number" },
+          workbench: ["good-item", "another-good-item"]
+        });
+
+        expect(terria.workbench.itemIds).toEqual([
+          "good-item",
+          "another-good-item"
+        ]);
+        expect(error)
+          .withContext("the invalid camera should still be reported")
+          .toBeDefined();
+      });
+
+      it("still applies init data that comes after a broken model", async function () {
+        await applyInitData({
+          catalog: [goodItem],
+          models: {
+            "broken-item": "this should be an object"
+          },
+          previewedItemId: "good-item",
+          workbench: ["good-item"],
+          timeline: ["good-item"]
+        });
+
+        expect(terria.workbench.itemIds).toEqual(["good-item"]);
+        expect(terria.previewedItemId).toBe("good-item");
+      });
+    });
+
     describe("Enable/disable shorten share URL via init data", function () {
       beforeEach(function () {
         window.localStorage.clear();
