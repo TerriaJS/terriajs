@@ -2,7 +2,7 @@
 
 #### next release (8.x.x)
 
-- Share links (and other init sources) are now resilient to a single broken part: applying init data no longer aborts when one model has invalid traits, a model has a `dereferenced` block but cannot be dereferenced, or `initialCamera`/`homeCamera` are invalid. Every part of the init data that can be applied is applied, and the failures are still reported to the user as a combined error. [#5168](https://github.com/TerriaJS/terriajs/issues/5168)
+- Share links (and other init sources) are now resilient to a single broken part: applying init data no longer aborts when one model has invalid traits, a model has a `dereferenced` block but cannot be dereferenced, or `initialCamera`/`homeCamera` are invalid. Every part of the init data that can be applied is applied - including individual workbench items, so the layers that load are added to the workbench even if others fail - and the failures are still reported to the user as a combined error. [#5168](https://github.com/TerriaJS/terriajs/issues/5168)
 
 #### 8.13.0 - 2026-09-11
 
