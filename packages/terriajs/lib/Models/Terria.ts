@@ -1532,9 +1532,12 @@ export default class Terria {
         const result = await this._applyInitData({
           initData: initSource!.data
         });
+        // Capture the base map promise before handling any error, otherwise it
+        // is dropped and races `loadPersistedOrInitBaseMap()` below.
         if (result.baseMapPromise) {
           baseMapPromise = result.baseMapPromise;
         }
+        if (result.error) throw result.error;
       } catch (e) {
         errors.push(
           TerriaError.from(e, {
@@ -1819,7 +1822,8 @@ export default class Terria {
     // This is for eg, set to true when switching through story slides.
     canUnsetFeaturePickingState?: boolean;
   }): Promise<void> {
-    await this._applyInitData(params);
+    const { error } = await this._applyInitData(params);
+    if (error) throw error;
   }
 
   /**
@@ -1834,7 +1838,10 @@ export default class Terria {
     initData: InitSourceData;
     replaceStratum?: boolean;
     canUnsetFeaturePickingState?: boolean;
-  }): Promise<{ baseMapPromise: Promise<void> | undefined }> {
+  }): Promise<{
+    baseMapPromise: Promise<void> | undefined;
+    error: TerriaError | undefined;
+  }> {
     const errors: TerriaError[] = [];
 
     initData = toJS(initData);
@@ -1845,24 +1852,30 @@ export default class Terria {
      * Applies one part of the init data, collecting any error instead of
      * throwing it.
      *
+     * Returns whatever `apply` returned, or `undefined` if it threw.
      */
-    const applyPart = (name: string, apply: () => void) => {
+    const applyPart = <T>(name: string, apply: () => T): T | undefined => {
       try {
-        apply();
+        return apply();
       } catch (e) {
         errors.push(
           TerriaError.from(e, `Failed to apply \`${name}\` from init data`)
         );
+        return undefined;
       }
     };
 
-    const applyPartAsync = async (name: string, apply: () => Promise<void>) => {
+    const applyPartAsync = async <T>(
+      name: string,
+      apply: () => Promise<T>
+    ): Promise<T | undefined> => {
       try {
-        await apply();
+        return await apply();
       } catch (e) {
         errors.push(
           TerriaError.from(e, `Failed to apply \`${name}\` from init data`)
         );
+        return undefined;
       }
     };
 
@@ -2045,6 +2058,10 @@ export default class Terria {
     });
 
     // Set the new contents of the workbench.
+    // Note `newItems` is collected outside of `applyPartAsync` so that items
+    // which loaded successfully are added to the workbench even if others fail.
+    const newItems: BaseModel[] = [];
+
     await applyPartAsync("workbench", async () => {
       const newItemsRaw = filterOutUndefined(
         workbench.map((modelId) => {
@@ -2056,35 +2073,39 @@ export default class Terria {
                 message: "A model ID in the workbench list is not a string."
               })
             );
-          } else {
-            return this.getModelByIdOrShareKey(BaseModel, modelId);
+            return undefined;
           }
+          return applyPart(`workbench item \`${modelId}\``, () =>
+            this.getModelByIdOrShareKey(BaseModel, modelId)
+          );
         })
       );
-
-      const newItems: BaseModel[] = [];
 
       // Maintain the model order in the workbench.
       for (;;) {
         const model = newItemsRaw.shift();
         if (model) {
-          await this.pushAndLoadMapItems(model, newItems, errors);
+          await applyPartAsync(`workbench item \`${model.uniqueId}\``, () =>
+            this.pushAndLoadMapItems(model, newItems, errors)
+          );
         } else {
           break;
         }
       }
 
       newItems.forEach((item) => {
-        // fire the google analytics event
-        this.analytics.logEvent(
-          Category.dataSource,
-          DataSourceAction.addFromShareOrInit,
-          getPath(item)
-        );
+        applyPart(`workbench analytics for \`${item.uniqueId}\``, () => {
+          // fire the google analytics event
+          this.analytics.logEvent(
+            Category.dataSource,
+            DataSourceAction.addFromShareOrInit,
+            getPath(item)
+          );
+        });
       });
-
-      runInAction(() => (this.workbench.items = newItems));
     });
+
+    runInAction(() => (this.workbench.items = newItems));
 
     // For ids that don't correspond to models resolve an id by share keys
     applyPart("timeline", () => {
@@ -2130,9 +2151,17 @@ export default class Terria {
       if (isJsonObject(initData.pickedFeatures)) {
         when(() => !(this.currentViewer instanceof NoViewer)).then(() => {
           if (isJsonObject(initData.pickedFeatures)) {
-            this.loadPickedFeatures(initData.pickedFeatures).catch((e) =>
-              this.raiseErrorToUser(e, "Failed to load picked features")
-            );
+            this.loadPickedFeatures(initData.pickedFeatures).catch((e) => {
+              // Note: not raised to the user - `pickedFeatures.error` is
+              // already surfaced in the feature info panel, and Leaflet
+              // rejects `allFeaturesAvailablePromise` by design.
+              const error = TerriaError.from(
+                e,
+                "Failed to load picked features"
+              );
+              this.errorService.error(error);
+              error.log();
+            });
           }
         });
       } else if (canUnsetFeaturePickingState) {
@@ -2152,16 +2181,21 @@ export default class Terria {
       }
     });
 
-    if (errors.length > 0)
-      throw TerriaError.combine(errors, {
-        message: {
-          key: keyFromSelector(
-            ($) => $.models.terria.loadingInitSourceErrorTitle
-          )
-        }
-      });
+    // Note the error is returned rather than thrown so that callers can still
+    // await `baseMapPromise` - dropping it races the base map loaded here
+    // against the persisted base map fallback.
+    const error =
+      errors.length > 0
+        ? TerriaError.combine(errors, {
+            message: {
+              key: keyFromSelector(
+                ($) => $.models.terria.loadingInitSourceErrorTitle
+              )
+            }
+          })
+        : undefined;
 
-    return { baseMapPromise };
+    return { baseMapPromise, error };
   }
 
   @action
