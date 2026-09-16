@@ -161,7 +161,7 @@
     "tinymce": "^7.6.0",
     "typescript": "^5.9.2",
     "urijs": "^1.18.12",
-    "webpack": "^5.105.4",
+    "webpack": "^5.111.0",
     "worker-loader": "^3.0.8",
     "zod": "^4.4.3"
   },
