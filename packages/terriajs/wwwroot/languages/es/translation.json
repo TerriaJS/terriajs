@@ -673,21 +673,21 @@
     "done": "Hecho",
     "btnHide": "Ocultar",
     "webAdd": "Añadir datos de la web",
-    "webFile": "<0>Paso 2:</0> Introduzca la URL del archivo de datos o del servicio web",
+    "webFile": "&lt;0&gt;Paso 2: Introduzca la URL del archivo de datos o del servicio web",
     "localTitle": "Añadir datos locales",
     "searchPlaceholderWhole": "Buscar en todo el catálogo",
     "searchPlaceholder": "Buscar en el catálogo",
     "localAdd": "Añadir archivo local",
-    "webFileType": "<0>Paso 1:</0> Seleccione el tipo de archivo o servicio web",
-    "infoText": "<0>Arrastra y suelta un archivo aquí para verlo localmente en el mapa</0><1>(no se guardará ni se subirá a Internet)</1>",
-    "note": "<0>Nota: </0>Los datos añadidos de esta manera no se guardan ni se hacen visibles para los demás.",
+    "webFileType": "&lt;0&gt;Paso 1: Seleccione el tipo de archivo o servicio web",
+    "infoText": "&lt;0&gt;Arrastra y suelta un archivo aquí para verlo localmente en el mapa&lt;1&gt;(no se guardará ni se subirá a Internet)",
+    "note": "&lt;0&gt;Nota: Los datos añadidos de esta manera no se guardan ni se hacen visibles para los demás.",
     "addDataBtnText": "Explorar datos",
     "load": "Cargar datos locales/web",
     "closeDataPanel": "Cerrar el panel de datos",
-    "localFile": "<0>Paso 2:</0> Seleccionar archivo",
+    "localFile": "&lt;0&gt;Paso 2: Seleccionar archivo",
     "webTitle": "Añadir datos web",
     "dataCatalogue": "Catálogo de datos",
-    "localFileType": "<0>Paso 1:</0> Seleccionar tipo de archivo",
+    "localFileType": "&lt;0&gt;Paso 1: Seleccionar tipo de archivo",
     "data": "Datos",
     "modalTitle": "Explorar Datos"
   },
@@ -699,7 +699,7 @@
     "titleII": "¿Dónde está mi imagen satelital?",
     "bodyIII": "En su banco de trabajo de datos, haga clic en el desplegable de la fecha de captura y seleccione entre las horas disponibles para cargar las imágenes históricas.",
     "titleIV": "Filtrar las imágenes por ubicación",
-    "menuTitle": "Puedes acceder a las guías de los mapas en cualquier momento buscando en el <2>menú de ayuda</2>",
+    "menuTitle": "Puedes acceder a las guías de los mapas en cualquier momento buscando en el &lt;2&gt;menú de ayuda",
     "dismissText": "Entendido, Gracias!",
     "titleV": "¿Cómo puedo ver las imágenes en falso color?",
     "titleIII": "Carga de imágenes históricas",
@@ -742,7 +742,7 @@
     "recapture": "Recaptura",
     "recaptureStory": "volver a capturar",
     "expand": "Expandir",
-    "removeStoryDialog": "¿Está seguro de que desea eliminar '<1>{{storyName}}</1>'?",
+    "removeStoryDialog": "¿Está seguro de que desea eliminar '&lt;1&gt;{{storyName}}'?",
     "locationBtn": "Centrar escena",
     "exitBtn": "Salir de la historia",
     "prev": "Previo",
@@ -755,8 +755,8 @@
     "next": "Siguiente",
     "untitled": "escena sin título",
     "hideStoryPanel": "Ocultar el constructor de historias",
-    "promptHtml1": "<0>Puedes ver y crear historias en cualquier momento haciendo clic aquí.</0>",
-    "promptHtml2": "<0><0>INTRODUCCIÓN</0><1>Historias de datos</1><2>Crea y comparte historias interactivas directamente desde tu mapa.</2></0>",
+    "promptHtml1": "&lt;0&gt;Puedes ver y crear historias en cualquier momento haciendo clic aquí.",
+    "promptHtml2": "&lt;0&gt;&lt;0&gt;INTRODUCCIÓN&lt;1&gt;Historias de datos&lt;2&gt;Crea y comparte historias interactivas directamente desde tu mapa.",
     "loadSceneErrorTitle": "Error al cargar la escena de la historia",
     "nextBtn": "Ir a la siguiente escena",
     "navBtn": "Ir a la historia {{title}}",
@@ -803,7 +803,7 @@
     "close": "cerrar sugerencia",
     "title": "Sugerencias",
     "minLength": "La longitud mínima del comentario es {{minLength}}",
-    "email": "Dirección de correo electrónico(opcional)<br/><em>No podemos seguir sin él!</em>"
+    "email": "Dirección de correo electrónico(opcional)<br><em>No podemos seguir sin él!</em>"
   },
   "location": {
     "centreMap": "Centrar mapa en su localización",
@@ -836,7 +836,7 @@
     "btnAdvanced": "Opciones avanzadas",
     "printButton": "Imprimir",
     "shortenUsingService": "Acortar la URL para compartir usando un servicio web",
-    "localDataNote": "<0><0>Nota:</0></0> <1> Las siguientes fuentes de datos NO se compartirán porque incluyen datos de este sistema local o de un servicio autenticado. Para compartir estas fuentes de datos, publique sus datos en un servidor web y <2> añádalos usando una URL </2>. </1>",
+    "localDataNote": "&lt;0&gt;&lt;0&gt;Nota: &lt;1&gt; Las siguientes fuentes de datos NO se compartirán porque incluyen datos de este sistema local o de un servicio autenticado. Para compartir estas fuentes de datos, publique sus datos en un servidor web y &lt;2&gt; añádalos usando una URL . ",
     "shortLinkShortening": "Acortamiento…",
     "embedTitle": "Incrustar mapa",
     "shortLinkError": "Se ha producido un error cuando se intentaba acortar la URL. Por favor revise sus opciones de conexión a internet y pruebe de nuevo.",
@@ -918,16 +918,16 @@
   },
   "AR": {
     "confirmText": "Lo tengo",
-    "manualAlignmentMessage": "Alinee su dispositivo móvil para que se corresponda con la alineación actual del mapa, luego haga clic en la brújula parpadeante. Si no hay puntos de referencia visibles con los que alinearse en el mapa, puede mover el mapa con las acciones de arrastrar y pellizcar hasta que se vea un punto de referencia reconocible antes de alinear el dispositivo con el mapa. <br /> <div> {{img}} </div> <br /> Consejo: El sol o la luna suelen ser buenos puntos de referencia para alinearse si se encuentra en un lugar con el que no está familiarizado (tenga cuidado de no mira al sol, puede lastimarte los ojos).",
+    "manualAlignmentMessage": "Alinee su dispositivo móvil para que se corresponda con la alineación actual del mapa, luego haga clic en la brújula parpadeante. Si no hay puntos de referencia visibles con los que alinearse en el mapa, puede mover el mapa con las acciones de arrastrar y pellizcar hasta que se vea un punto de referencia reconocible antes de alinear el dispositivo con el mapa. <br> <div> {{img}} </div> <br> Consejo: El sol o la luna suelen ser buenos puntos de referencia para alinearse si se encuentra en un lugar con el que no está familiarizado (tenga cuidado de no mira al sol, puede lastimarte los ojos).",
     "btnResetRealign": "restablecer la alineación de la brújula",
     "btnRealign": "alternar alineación manual",
     "btnHover": "alternar altura de desplazamiento",
-    "experimentalFeatureMessage": "El modo de realidad aumentada se encuentra actualmente en fase beta. Este modo solo está diseñado para su uso en los últimos dispositivos móviles de gama alta. <br /> <br /> ADVERTENCIA: Este modo puede consumir una gran cantidad de datos, tenga en cuenta los cargos por el uso de datos de su proveedor de red. <br /> <br /> La precisión de este modo depende de la precisión de la brújula interna de su dispositivo móvil.",
+    "experimentalFeatureMessage": "El modo de realidad aumentada se encuentra actualmente en fase beta. Este modo solo está diseñado para su uso en los últimos dispositivos móviles de gama alta. <br> <br> ADVERTENCIA: Este modo puede consumir una gran cantidad de datos, tenga en cuenta los cargos por el uso de datos de su proveedor de red. <br> <br> La precisión de este modo depende de la precisión de la brújula interna de su dispositivo móvil.",
     "arTool": "herramienta de realidad aumentada",
     "resetAlignmentTitle": "Restablecer Alineación",
     "manualAlignmentTitle": "Alineación Manual",
     "title": "Funcionalidad Experimental: Realidad Aumentada",
-    "resetAlignmentMessage": "Resetea la alineación del compas. Si la alineación no concuerda con el mundo real trata de resetear tu dispositivo como en la figura 8 para recalibrar el dispositivo. Esto puede hacerse en cualquier momento.<br /><br />Evite lugares con campos magnéticos u objetos metálicos, ya que pueden desorientar la brújula del dispositivo."
+    "resetAlignmentMessage": "Resetea la alineación del compas. Si la alineación no concuerda con el mundo real trata de resetear tu dispositivo como en la figura 8 para recalibrar el dispositivo. Esto puede hacerse en cualquier momento.<br><br>Evite lugares con campos magnéticos u objetos metálicos, ya que pueden desorientar la brújula del dispositivo."
   },
   "zoomControl": {
     "zoomOut": "Zoom -",
@@ -996,7 +996,7 @@
     "selectToPreviewSeparator": "O",
     "goToTheMap": "Vaya al mapa",
     "noPreviewAvailable": "NO HAY VISTA PREVIA DISPONIBLE",
-    "selectMultipleDatasets": "<0>Pulse <strong>Mayus</strong> y haga click</0><1 /><2>para añadir múltiples conjuntos de datos</2>"
+    "selectMultipleDatasets": "&lt;0&gt;Pulse <strong>Mayus</strong> y haga click&lt;1 /&gt;&lt;2&gt;para añadir múltiples conjuntos de datos"
   },
   "description": {
     "typeName": "Nombre del tipo",
@@ -1005,10 +1005,10 @@
     "dataLocal": "Este conjunto de datos puede estar experimentando problemas. Para compartirlo, debe cargarlo en un servidor web público.",
     "downloadData": "Descargar datos",
     "dataSourceDetails": "Detalles de la fuente de datos",
-    "wfs": "Se trata de un <1>servicio WFS</1>, que transfiere datos espaciales en bruto a petición. Se puede utilizar en el software GIS con esta URL:",
+    "wfs": "Se trata de un &lt;1&gt;servicio WFS, que transfiere datos espaciales en bruto a petición. Se puede utilizar en el software GIS con esta URL:",
     "dataCustodian": "Custodia de datos",
     "name": "Descripción",
-    "wms": "Se trata de un <1> servicio WMS</1>, que genera imágenes de mapas a petición. Se puede utilizar en el software GIS con esta URL:",
+    "wms": "Se trata de un &lt;1&gt; servicio WMS, que genera imágenes de mapas a petición. Se puede utilizar en el software GIS con esta URL:",
     "downloadInFormat": "Descargar los datos seleccionados actualmente en formato {{format}}",
     "useLinkBelow": "Utilice el siguiente enlace para descargar los datos. Consulte el {{enlace}} para obtener más información sobre la personalización de los parámetros de consulta de la URL.",
     "dataNotLocal": "Póngase en contacto con el proveedor de estos datos para obtener más información, incluida la relativa a los derechos y limitaciones de uso.",
@@ -1149,7 +1149,7 @@
     "promptMessage": "Encuentre el Tour, los vídeos explicativos y otros contenidos de ayuda aquí"
   },
   "welcomeMessage": {
-    "welcomeMessage": "¿Está interesado en el descubrimiento y la exploración de datos? <br/>Entre directamente y comience o consulte las siguientes opciones de la guía de ayuda.",
+    "welcomeMessage": "¿Está interesado en el descubrimiento y la exploración de datos? <br>Entre directamente y comience o consulte las siguientes opciones de la guía de ayuda.",
     "exploreDataBtnText": "Explorar los datos del mapa",
     "title": "Vamos a empezar",
     "helpBtnText": "Necesito ayuda",
@@ -1160,7 +1160,7 @@
   },
   "dragDrop": {
     "not": "<0>bbbb</0>",
-    "text": "<0>Arrastrar y soltar</0><1>Sus datos en cualquier lugar para verlos en el mapa<1>",
+    "text": "&lt;0&gt;Arrastrar y soltar&lt;1&gt;Sus datos en cualquier lugar para verlos en el mapa&lt;1&gt;",
     "notification_0": "<0>\"{{fileNames}}\"</0> ha sido añadido a <4>My Data</4>.",
     "notification_1": "<0>\"{{fileNames}}\"</0> han sido añadidos a <4>My Data</4>.",
     "notification_2": ""
@@ -1248,7 +1248,7 @@
       "defaultMessage": "Error desconocido",
       "defaultCombineMessage": "Los detalles de los errores se encuentran a continuación",
       "networkRequestTitle": "Se produjo un error de solicitud de red",
-      "networkRequestMessage": "Es posible que los datos no estén disponibles o no se muestren correctamente debido a la interrupción del servicio del custodio de datos. Intente volver a cargar el mapa, acceder a los datos en una etapa posterior o seleccionar un conjunto de datos diferente. <feedbacklink feedback-message='Si el problema persiste, envíe sus comentarios aquí.' email-message='Si el problema persiste, informe a {{email}}'/>",
+      "networkRequestMessage": "Es posible que los datos no estén disponibles o no se muestren correctamente debido a la interrupción del servicio del custodio de datos. Intente volver a cargar el mapa, acceder a los datos en una etapa posterior o seleccionar un conjunto de datos diferente. <feedbacklink feedback-message=\"Si el problema persiste, envíe sus comentarios aquí.\" email-message=\"Si el problema persiste, informe a {{email}}\"></feedbacklink>",
       "networkRequestMessageDetailed": "Esto puede indicar una de las siguientes situaciones:\n\n* El nombre del servidor no ha podido ser resuelto\n* El servidor no ha respondido a la solicitud - o no está disponible temporalmente\n* El servidor ha denegado el acceso a esta URL [Cross-Origin Resource Sharing (CORS)](https://docs.terria.io/guide/connecting-to-data/cross-origin-resource-sharing/)\n* Hay un problema con su conexión a Internet\n\nSi ha introducido el enlace manualmente, compruebe que el enlace es correcto"
     },
     "readText": {
@@ -1392,7 +1392,7 @@
   },
   "pedestrianMode": {
     "toolButtonTitle": "Modo Peatón",
-    "dropPedestrianTooltipMessage": "<b>Click izquierdo</b> para seleccionar<br /><b>Click derecho / Esc</b> para cancelar",
+    "dropPedestrianTooltipMessage": "<b>Click izquierdo</b> para seleccionar<br><b>Click derecho / Esc</b> para cancelar",
     "controls": {
       "title": "Controles"
     }
