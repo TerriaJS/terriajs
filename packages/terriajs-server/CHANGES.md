@@ -1,5 +1,9 @@
 ## Changelog
 
+### next release
+
+- Migrate to pnpm
+
 ### 5.0.0 - 2026-08-27
 
 - Migrated to pure ES Modules (ESM). CommonJS `require()` no longer supported.
