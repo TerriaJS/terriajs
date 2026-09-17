@@ -202,6 +202,10 @@ export interface ConfigParameters {
    */
   showStorySaveInstructions?: boolean;
   /**
+   * True to start playing a story as soon as a map containing one is loaded, instead of asking the user whether they want to view it. Defaults to false. A share link that contains a story records the value in effect when it was created, and the `playStory` hash parameter overrides both. When a story starts automatically its first scene sets the camera, so the current view is left out of share links that contain a story.
+   */
+  storyAutoStart?: boolean;
+  /**
    * True (the default) to intercept the browser's print feature and use a custom one accessible through the Share panel.
    */
   interceptBrowserPrint?: boolean;
@@ -606,6 +610,7 @@ export default class Terria {
     initFragmentPaths: ["init/"],
     storyEnabled: true,
     showStorySaveInstructions: false,
+    storyAutoStart: false,
     interceptBrowserPrint: true,
     tabbedCatalog: false,
     useCesiumIonTerrain: true,
@@ -750,6 +755,27 @@ export default class Terria {
   @observable depthTestAgainstTerrainEnabled = false;
 
   @observable stories: StoryData[] = [];
+
+  /** `settings.storyAutoStart` from the most recently applied init source (i.e. a share), if it set one. */
+  @observable private _storyAutoStartFromInitSource: boolean | undefined;
+
+  /**
+   * True to start playing a story as soon as one is loaded, rather than asking the user whether they want to view it.
+   *
+   * Resolved from the `playStory` hash parameter, then any `settings.storyAutoStart` carried by a share, then the `storyAutoStart` config parameter.
+   */
+  @computed
+  get storyAutoStart(): boolean {
+    const playStory = this.userProperties.get("playStory");
+    if (isDefined(playStory)) {
+      return playStory === "1" || playStory === "true" || playStory === true;
+    }
+    return (
+      this._storyAutoStartFromInitSource ??
+      this.configParameters.storyAutoStart ??
+      false
+    );
+  }
   @observable storyPromptShown: number = 0; // Story Prompt modal will be rendered when this property changes. See StandardUserInterface, section regarding sui.notifications. Ideally move this to ViewState.
 
   /**
@@ -1918,6 +1944,9 @@ export default class Terria {
       if (isJsonBoolean(initData.settings.depthTestAgainstTerrainEnabled)) {
         this.depthTestAgainstTerrainEnabled =
           initData.settings.depthTestAgainstTerrainEnabled;
+      }
+      if (isJsonBoolean(initData.settings.storyAutoStart)) {
+        this._storyAutoStartFromInitSource = initData.settings.storyAutoStart;
       }
     }
 

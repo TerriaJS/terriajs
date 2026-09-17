@@ -79,6 +79,12 @@ export interface InitSourceData {
      * To disable the shortening url service, set it to false.
      */
     shortenShareUrls?: boolean;
+    /** True to start playing this share's story as soon as it loads, instead of
+     * asking the user whether they want to view it. Overrides the
+     * `storyAutoStart` config parameter, and is overridden by the `playStory`
+     * hash parameter.
+     */
+    storyAutoStart?: boolean;
   };
 }
 
