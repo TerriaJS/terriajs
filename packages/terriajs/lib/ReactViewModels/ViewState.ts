@@ -447,10 +447,19 @@ export default class ViewState {
       }
     );
 
+    // Covers a story being asked to auto-start after load, e.g. `#playStory=1`
+    // arriving on a hash change. The load-time case is handled where the "view
+    // this story?" prompt would otherwise be raised.
     this._showStoriesSubscription = reaction(
-      () => Boolean(terria.userProperties.get("playStory")),
-      (playStory: boolean) => {
-        this.storyShown = terria.configParameters.storyEnabled && playStory;
+      () => terria.storyAutoStart,
+      (storyAutoStart: boolean) => {
+        if (storyAutoStart && terria.configParameters.storyEnabled) {
+          if (terria.stories.length > 0) {
+            this.runStories();
+          }
+        } else {
+          this.storyShown = false;
+        }
       }
     );
 

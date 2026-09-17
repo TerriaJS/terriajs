@@ -2,6 +2,11 @@
 
 #### next release (8.x.x)
 
+- Fixed the `<feedbacklink>` custom component rendering a literal `{{email}}` in error messages. An `email-message` override now has its `{{email}}` placeholder replaced with the support email address, instead of always having the address appended.
+- Added `storyAutoStart` config parameter (default `false`). Set it to `true` to start playing a story as soon as a map containing one loads, instead of asking the user whether they want to view it. A share link that contains a story records the value in effect when it was created (as `settings.storyAutoStart`), so it keeps opening the same way if the map's configuration changes later. Because an auto-starting story sets the camera from its first scene, the current view is left out of share links that contain a story.
+- The `playStory` hash parameter now overrides `storyAutoStart` and shares its code path. It previously relied on a MobX reaction that never fired if the parameter was already set before `ViewState` was constructed, so `#playStory=1` did nothing in applications that create their `ViewState` after `Terria#start`.
+- Fixed share links dropping the `=` from the hash parameters they carry over from the current URL (e.g. creating a share while `#playStory=1` was set produced `#playStory%3D1&share=…`). The map read the mangled parameter as the name of an init file and failed to load it.
+
 #### 8.13.0 - 2026-09-11
 
 - `UrlTemplateImageryCatalogItem` now uses `TileErrorHandlerMixin`, so tile load failures are handled gracefully (out-of-extent tiles are ignored, 403/404 handling follows `tileErrorHandlingOptions`, retries use backoff) instead of Cesium logging an uncaught "Failed to obtain image tile" error for every missing tile.
