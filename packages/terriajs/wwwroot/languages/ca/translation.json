@@ -626,7 +626,7 @@
     "shareURL": "Compartiu l'enllaç",
     "shareExplanation": "Qualsevol persona amb aquest enllaç podrà accedir a aquest mapa.",
     "copy": "Copia",
-    "storyExplanation": "Qualsevol persona que tingui aquest enllaç podrà accedir a aquest mapa."
+    "storyExplanation": "Qualsevol persona amb aquest enllaç podrà accedir a aquest mapa."
   },
   "dragDrop": {
     "text": "<0>Arrossegueu i deixeu anar</0><1>Les vostres dades a qualsevol lloc per veure-les al mapa<1>",
