@@ -1,10 +1,10 @@
 import { keyFromSelector } from "i18next";
 import queryToObject from "terriajs-cesium/Source/Core/queryToObject";
 import URI from "urijs";
-import { isJsonObject } from "../Core/Json";
+import * as z from "zod";
 import TerriaError from "../Core/TerriaError";
 import loadJson5 from "../Core/loadJson5";
-import type { LoadConfigResponse } from "./Terria";
+import { ConfigFileSchema, LoadConfigResponse } from "./loadConfig";
 
 const IS_DEVELOPMENT = process.env.NODE_ENV === "development";
 
@@ -31,39 +31,25 @@ export const defaultLoadConfig = async (
 
   const baseUri = new URI(configUrl).filename("");
 
-  const raw = await loadJson5<LoadConfigResponse["config"]>(
-    configUrl,
-    configUrlHeaders
-  );
+  const raw = await loadJson5(configUrl, configUrlHeaders);
 
-  if (!isJsonObject(raw, false)) {
+  const result = ConfigFileSchema.partial().safeParse(raw);
+  if (!result.success) {
     throw new TerriaError({
       title: {
         key: keyFromSelector(($) => $.models.terria.loadConfigErrorTitle)
       },
-      message: `Expected the config at ${configUrl} to be a JSON object`
+      message: z.prettifyError(result.error)
     });
   }
 
-  if (
-    raw.parameters &&
-    (typeof raw.parameters !== "object" ||
-      raw.parameters === null ||
-      Array.isArray(raw.parameters))
-  ) {
-    throw new TerriaError({
-      title: {
-        key: keyFromSelector(($) => $.models.terria.loadConfigErrorTitle)
-      },
-      message: `Config at "${configUrl}" has a "parameters" property that is not a JSON object.`
-    });
-  }
+  const config = result.data;
 
   return {
     config: {
-      parameters: raw.parameters ?? {},
-      initializationUrls: raw.initializationUrls,
-      v7initializationUrls: raw.v7initializationUrls
+      parameters: config.parameters ?? {},
+      initializationUrls: config.initializationUrls,
+      v7initializationUrls: config.v7initializationUrls
     },
     baseUri
   };

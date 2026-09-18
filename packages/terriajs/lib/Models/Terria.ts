@@ -117,19 +117,11 @@ import Workbench from "./Workbench";
 import SelectableDimensionWorkflow from "./Workflows/SelectableDimensionWorkflow";
 import { defaultLoadConfig } from "./defaultLoadConfig";
 import { FeedbackService, IFeedbackService } from "./FeedbackService";
+import { LoadConfigResponse } from "./loadConfig";
 
 /** Keep export for experimentation */
 export { defaultLoadConfig };
 export type { ConfigParameters };
-
-export interface LoadConfigResponse {
-  config: {
-    parameters: Partial<ConfigParameters>;
-    initializationUrls: string[] | undefined;
-    v7initializationUrls: string[] | undefined;
-  };
-  baseUri: URI;
-}
 
 interface StartOptions {
   /**
