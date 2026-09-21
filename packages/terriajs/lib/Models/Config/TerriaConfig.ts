@@ -9,8 +9,7 @@ import {
   createStratifiedConfig,
   mergeDeep
 } from "./StratifiedConfig";
-import CommonStrata from "../Definition/CommonStrata";
-import { configStratumOrder } from "./ConfigStrata";
+import { ConfigStrata, configStratumOrder } from "./ConfigStrata";
 import * as z from "zod";
 
 /**
@@ -65,7 +64,7 @@ export const createTerriaConfig = (
     defaults === undefined
       ? CONFIG_DEFAULTS
       : mergeDeep(CONFIG_DEFAULTS, defaults);
-  const updateStatus = config.update(CommonStrata.defaults, mergedDefaults);
+  const updateStatus = config.update(ConfigStrata.defaults, mergedDefaults);
   if (typeof updateStatus !== "boolean") throw new Error(updateStatus);
 
   return config as unknown as TerriaConfig;
