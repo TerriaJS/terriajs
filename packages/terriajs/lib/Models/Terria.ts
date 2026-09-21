@@ -980,6 +980,11 @@ export default class Terria {
     if (model.uniqueId) {
       this.models.delete(model.uniqueId);
     }
+    // Only reachable via this fully-unregistering path, not a plain
+    // workbench toggle-off, so the model is guaranteed to no longer be
+    // reachable via `terria.models`/the workbench - safe to tear down its
+    // AsyncLoaders (metadata/mapItems) here.
+    model.dispose();
   }
 
   @action

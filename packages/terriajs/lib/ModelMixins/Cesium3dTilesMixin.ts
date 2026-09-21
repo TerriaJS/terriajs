@@ -24,6 +24,10 @@ import Cesium3DTilePointFeature from "terriajs-cesium/Source/Scene/Cesium3DTileP
 import Cesium3DTileset from "terriajs-cesium/Source/Scene/Cesium3DTileset";
 import AbstractConstructor from "../Core/AbstractConstructor";
 import { JsonObject, isJsonObject } from "../Core/Json";
+import {
+  getQualityTierFraction,
+  isLowSpecQualityTier
+} from "../Core/QualityTier";
 import TerriaError from "../Core/TerriaError";
 import isDefined from "../Core/isDefined";
 import runLater from "../Core/runLater";
@@ -312,6 +316,55 @@ function Cesium3dTilesMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
           : 8;
       this.tileset.maximumScreenSpaceError =
         tilesetBaseSse * this.terria.baseMaximumScreenSpaceError;
+
+      // dynamicScreenSpaceError sub-params: each dataset's own (or Cesium's
+      // default) base value, scaled up to 2x at the low-spec end of the
+      // quality slider (value 3), unscaled at the high-quality end (value 1).
+      const qualityTierFraction = getQualityTierFraction(
+        this.terria.baseMaximumScreenSpaceError
+      );
+
+      const dynamicScreenSpaceErrorDensityBase =
+        this.options.dynamicScreenSpaceErrorDensity ?? 2.0e-4;
+      this.tileset.dynamicScreenSpaceErrorDensity =
+        dynamicScreenSpaceErrorDensityBase * (1 + qualityTierFraction);
+
+      const dynamicScreenSpaceErrorFactorBase =
+        this.options.dynamicScreenSpaceErrorFactor ?? 24.0;
+      this.tileset.dynamicScreenSpaceErrorFactor =
+        dynamicScreenSpaceErrorFactorBase * (1 + qualityTierFraction);
+
+      const dynamicScreenSpaceErrorHeightFalloffBase =
+        this.options.dynamicScreenSpaceErrorHeightFalloff ?? 0.25;
+      this.tileset.dynamicScreenSpaceErrorHeightFalloff =
+        dynamicScreenSpaceErrorHeightFalloffBase * (1 + qualityTierFraction);
+
+      // cacheBytes/maximumCacheOverflowBytes: a hard ceiling at the
+      // low-spec end of the quality slider only - unlike the settings
+      // above, this is a crash-prevention safety valve, not a fidelity
+      // dial, so a dataset's own authored value must not be able to slip
+      // through uncapped once the low-spec tier is reached (a smooth
+      // multiplier wouldn't protect against a dangerously high authored
+      // value at a mid-range slider position).
+      const isTilesetLowSpecQualityTier = isLowSpecQualityTier(
+        this.terria.baseMaximumScreenSpaceError
+      );
+      const cacheBytesLowSpecCeiling = 128 * 1024 * 1024;
+      const maximumCacheOverflowBytesLowSpecCeiling = 64 * 1024 * 1024;
+
+      const cacheBytesBase = this.options.cacheBytes ?? 512 * 1024 * 1024;
+      this.tileset.cacheBytes = isTilesetLowSpecQualityTier
+        ? Math.min(cacheBytesBase, cacheBytesLowSpecCeiling)
+        : cacheBytesBase;
+
+      const maximumCacheOverflowBytesBase =
+        this.options.maximumCacheOverflowBytes ?? 512 * 1024 * 1024;
+      this.tileset.maximumCacheOverflowBytes = isTilesetLowSpecQualityTier
+        ? Math.min(
+            maximumCacheOverflowBytesBase,
+            maximumCacheOverflowBytesLowSpecCeiling
+          )
+        : maximumCacheOverflowBytesBase;
 
       this.tileset.modelMatrix = this.modelMatrix;
 

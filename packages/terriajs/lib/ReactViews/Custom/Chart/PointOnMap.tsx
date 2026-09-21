@@ -50,7 +50,6 @@ export const PointOnMap: React.FC<PropsType> = observer((props: PropsType) => {
         if (pointItem) {
           terria.overlays.remove(pointItem);
           terria.removeModelReferences(pointItem);
-          pointItem.dispose();
         }
       });
     };

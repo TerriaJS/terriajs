@@ -118,6 +118,46 @@ export class OptionsTraits extends ModelTraits {
       "When true, Cesium does not wait for the draped imagery layers to load before the tileset mesh is rendered. This means while the imagery is being loaded the original tile texture will be shown."
   })
   asynchronouslyLoadImagery: boolean = true;
+
+  @primitiveTrait({
+    type: "number",
+    name: "Dynamic screen space error density",
+    description:
+      "Density used to adjust the dynamic screen space error, similar to fog density."
+  })
+  dynamicScreenSpaceErrorDensity?: number;
+
+  @primitiveTrait({
+    type: "number",
+    name: "Dynamic screen space error factor",
+    description:
+      "A factor used to increase the screen space error of tiles for the dynamic screen space error optimization."
+  })
+  dynamicScreenSpaceErrorFactor?: number;
+
+  @primitiveTrait({
+    type: "number",
+    name: "Dynamic screen space error height falloff",
+    description:
+      "A ratio of the tileset's height that determines the height at which the dynamic screen space error optimization has the maximum effect."
+  })
+  dynamicScreenSpaceErrorHeightFalloff?: number;
+
+  @primitiveTrait({
+    type: "number",
+    name: "Cache bytes",
+    description:
+      "The size (in bytes) to which the tile cache will be trimmed if not needed for the current view. This is the modern replacement for the now-removed `maximumNumberOfLoadedTiles` option."
+  })
+  cacheBytes?: number;
+
+  @primitiveTrait({
+    type: "number",
+    name: "Maximum cache overflow bytes",
+    description:
+      "The maximum additional memory (in bytes) to allow for cache headroom, if more than `cacheBytes` are needed for the current view."
+  })
+  maximumCacheOverflowBytes?: number;
 }
 
 export default class Cesium3DTilesTraits extends mixTraits(

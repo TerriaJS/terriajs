@@ -1,4 +1,5 @@
 import L from "leaflet";
+import debounce from "lodash-es/debounce";
 import { runInAction } from "mobx";
 import { observer } from "mobx-react";
 import { FC, useEffect, useState } from "react";
@@ -57,15 +58,28 @@ export const DistanceLegend: FC<IDistanceLegendProps> = observer(
       | undefined => {
       if (isDefined(terria.cesium)) {
         const scene = terria.cesium.scene;
-        let removeUpdateSubscription: CesiumEvent.RemoveCallback | undefined =
-          scene.postRender.addEventListener(() => {
+        let removeUpdateSubscription: CesiumEvent.RemoveCallback | undefined;
+        const debouncedUpdate = debounce(
+          () => {
             updateDistanceLegendCesium(scene);
             if (isPrintMode) {
               removeUpdateSubscription?.();
               removeUpdateSubscription = undefined;
             }
-          });
-        return removeUpdateSubscription;
+          },
+          200,
+          {
+            maxWait: 200,
+            leading: true,
+            trailing: true
+          }
+        );
+        removeUpdateSubscription =
+          scene.postRender.addEventListener(debouncedUpdate);
+        return () => {
+          removeUpdateSubscription?.();
+          debouncedUpdate.cancel();
+        };
       } else if (isDefined(terria.leaflet)) {
         const map = terria.leaflet.map;
         let removeUpdateSubscription: (() => void) | undefined = undefined;

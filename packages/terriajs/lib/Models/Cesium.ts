@@ -67,6 +67,10 @@ import flatten from "../Core/flatten";
 import isDefined from "../Core/isDefined";
 import LatLonHeight from "../Core/LatLonHeight";
 import pollToPromise from "../Core/pollToPromise";
+import {
+  getQualityTierFraction,
+  isLowSpecQualityTier as isLowSpecQualityTierOf
+} from "../Core/QualityTier";
 import TerriaError from "../Core/TerriaError";
 import waitForDataSourceToLoad from "../Core/waitForDataSourceToLoad";
 import CesiumRenderLoopPauser from "../Map/Cesium/CesiumRenderLoopPauser";
@@ -154,14 +158,20 @@ export default class Cesium extends GlobeOrMap {
   // over the LEFT_CLICK behavior.
   isFeaturePickingPaused = false;
 
+  // When defined, overrides the quality slider's low-spec shadow toggle -
+  // for features (e.g. a sunlight/shadow-analysis tool) with a hard
+  // dependency on scene.shadowMap that must force it on regardless of tier.
+  @observable
+  private shadowsOverrideEnabled: boolean | undefined = undefined;
+
   /* Disposers */
   private readonly _selectionIndicator: CesiumSelectionIndicator;
   private readonly _disposeSelectedFeatureSubscription: () => void;
   private readonly _disposeWorkbenchMapItemsSubscription: () => void;
   private readonly _disposeTerrainReaction: () => void;
   private readonly _disposeSplitterReaction: () => void;
-  private readonly _disposeResolutionReaction: () => void;
   private readonly _disposeBaseMapOpacityReaction: () => void;
+  private readonly _disposeQualityReaction: () => void;
 
   private _createImageryLayer: (
     ip: ImageryProvider,
@@ -441,11 +451,20 @@ export default class Cesium extends GlobeOrMap {
     });
     this._disposeSplitterReaction = this._reactToSplitterChanges();
 
-    this._disposeResolutionReaction = autorun(() => {
+    this._disposeQualityReaction = autorun(() => {
       (this.cesiumWidget as any).useBrowserRecommendedResolution =
         !this.terria.useNativeResolution;
       this.cesiumWidget.scene.globe.maximumScreenSpaceError =
         this.terria.baseMaximumScreenSpaceError;
+
+      const lowSpec = this.isLowSpecQualityTier;
+
+      this.cesiumWidget.resolutionScale = this.qualityResolutionScale;
+      this.scene.globe.tileCacheSize = this.qualityTileCacheSize;
+      this.scene.globe.preloadAncestors = !lowSpec;
+      this.scene.globe.preloadSiblings = false;
+      this.scene.fog.density = this.qualityFogDensity;
+      this.scene.shadowMap.enabled = this.shadowsOverrideEnabled ?? !lowSpec;
     });
 
     this._disposeBaseMapOpacityReaction = reaction(
@@ -455,6 +474,47 @@ export default class Cesium extends GlobeOrMap {
         fireImmediately: true
       }
     );
+  }
+
+  @computed
+  private get isLowSpecQualityTier(): boolean {
+    return isLowSpecQualityTierOf(this.terria.baseMaximumScreenSpaceError);
+  }
+
+  @computed
+  private get qualityTierFraction(): number {
+    return getQualityTierFraction(this.terria.baseMaximumScreenSpaceError);
+  }
+
+  @computed
+  private get qualityResolutionScale(): number {
+    return 1.0 - 0.25 * this.qualityTierFraction;
+  }
+
+  @computed
+  private get qualityTileCacheSize(): number {
+    return Math.round(100 - 50 * this.qualityTierFraction);
+  }
+
+  @computed
+  private get qualityFogDensity(): number {
+    return 0.0006 + 0.0006 * this.qualityTierFraction;
+  }
+
+  /**
+   * Forces shadows on regardless of the quality slider's low-spec tier.
+   * Intended for features (e.g. a sunlight/shadow-analysis tool) with a
+   * hard functional dependency on scene.shadowMap.
+   */
+  @action
+  enableShadowsOverride(): void {
+    this.shadowsOverrideEnabled = true;
+  }
+
+  /** Hands shadow control back to the quality slider. */
+  @action
+  clearShadowsOverride(): void {
+    this.shadowsOverrideEnabled = undefined;
   }
 
   get dataSources(): DataSourceCollection {
@@ -644,7 +704,7 @@ export default class Cesium extends GlobeOrMap {
     this._updateTilesLoadingIndeterminate(false); // reset progress bar loading state to false for any data sources with indeterminate progress e.g. 3DTilesets.
 
     this._disposeTerrainReaction();
-    this._disposeResolutionReaction();
+    this._disposeQualityReaction();
 
     this._disposeSelectedFeatureSubscription();
     this._disposeSplitterReaction();

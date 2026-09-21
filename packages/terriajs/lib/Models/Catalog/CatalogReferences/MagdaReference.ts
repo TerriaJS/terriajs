@@ -513,7 +513,6 @@ export default class MagdaReference extends AccessControlMixin(
             terria.addModel(model, shareKeys);
           } else if (prevModel.type !== model.type) {
             terria.removeModelReferences(prevModel);
-            prevModel.dispose();
             terria.addModel(model, shareKeys);
           }
           if (AccessControlMixin.isMixedInto(model)) {
