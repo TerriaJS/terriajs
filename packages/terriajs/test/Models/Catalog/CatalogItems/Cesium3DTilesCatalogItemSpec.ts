@@ -233,6 +233,39 @@ describe("Cesium3DTilesCatalogItemSpec", function () {
             expect(tileset.shadows).toBe(ShadowMode.CAST_ONLY);
           });
 
+          it("sets cacheBytes and maximumCacheOverflowBytes from the dataset's own trait value", function () {
+            runInAction(() =>
+              item.setTrait(
+                "definition",
+                "options",
+                createStratumInstance(OptionsTraits, {
+                  cacheBytes: 100 * 1024 * 1024,
+                  maximumCacheOverflowBytes: 50 * 1024 * 1024
+                })
+              )
+            );
+            const tileset = item.mapItems[0] as Cesium3DTileset;
+            expect(tileset.cacheBytes).toBe(100 * 1024 * 1024);
+            expect(tileset.maximumCacheOverflowBytes).toBe(50 * 1024 * 1024);
+          });
+
+          it("clamps cacheBytes and maximumCacheOverflowBytes to the low-spec ceiling once the quality slider is in its lowest tier", function () {
+            item.terria.setBaseMaximumScreenSpaceError(3);
+            runInAction(() =>
+              item.setTrait(
+                "definition",
+                "options",
+                createStratumInstance(OptionsTraits, {
+                  cacheBytes: 500 * 1024 * 1024,
+                  maximumCacheOverflowBytes: 500 * 1024 * 1024
+                })
+              )
+            );
+            const tileset = item.mapItems[0] as Cesium3DTileset;
+            expect(tileset.cacheBytes).toBe(128 * 1024 * 1024);
+            expect(tileset.maximumCacheOverflowBytes).toBe(64 * 1024 * 1024);
+          });
+
           it("sets the style", function () {
             runInAction(() =>
               item.setTrait("definition", "style", {
