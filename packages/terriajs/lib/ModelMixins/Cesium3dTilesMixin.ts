@@ -339,6 +339,25 @@ function Cesium3dTilesMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
       this.tileset.dynamicScreenSpaceErrorHeightFalloff =
         dynamicScreenSpaceErrorHeightFalloffBase * (1 + qualityTierFraction);
 
+      const isTilesetLowSpecQualityTier = isLowSpecQualityTier(
+        this.terria.baseMaximumScreenSpaceError
+      );
+
+      // pointCloudShading: attenuation is a boolean, so it flips only at
+      // the low-spec tier (like the settings in B.6); geometricErrorScale
+      // is continuous and scales smoothly, same pattern as
+      // dynamicScreenSpaceError above.
+      const pointCloudShadingAttenuationBase =
+        this.options.pointCloudShading?.attenuation ?? false;
+      this.tileset.pointCloudShading.attenuation = isTilesetLowSpecQualityTier
+        ? false
+        : pointCloudShadingAttenuationBase;
+
+      const pointCloudShadingGeometricErrorScaleBase =
+        this.options.pointCloudShading?.geometricErrorScale ?? 1.0;
+      this.tileset.pointCloudShading.geometricErrorScale =
+        pointCloudShadingGeometricErrorScaleBase * (1 + qualityTierFraction);
+
       // cacheBytes/maximumCacheOverflowBytes: a hard ceiling at the
       // low-spec end of the quality slider only - unlike the settings
       // above, this is a crash-prevention safety valve, not a fidelity
@@ -346,9 +365,6 @@ function Cesium3dTilesMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
       // through uncapped once the low-spec tier is reached (a smooth
       // multiplier wouldn't protect against a dangerously high authored
       // value at a mid-range slider position).
-      const isTilesetLowSpecQualityTier = isLowSpecQualityTier(
-        this.terria.baseMaximumScreenSpaceError
-      );
       const cacheBytesLowSpecCeiling = 128 * 1024 * 1024;
       const maximumCacheOverflowBytesLowSpecCeiling = 64 * 1024 * 1024;
 
