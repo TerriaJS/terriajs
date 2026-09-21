@@ -14,12 +14,6 @@ import plugins from "./plugins";
 import { createTerriaConfig } from "terriajs/lib/Models/Config/TerriaConfig";
 import { TerriaMapConfigOptions } from "./lib/Core/config";
 
-declare global {
-  interface Window {
-    viewState: ViewState;
-  }
-}
-
 const terriaOptions: TerriaOptions = {
   baseUrl: "build/TerriaJS",
   config: createTerriaConfig(TerriaMapConfigOptions)
@@ -54,7 +48,7 @@ registerSearchProviders();
 registerCustomComponentTypes(terria);
 
 if (process.env.NODE_ENV === "development") {
-  window.viewState = viewState;
+  (window as any).viewState = viewState;
 }
 
 export default terria
