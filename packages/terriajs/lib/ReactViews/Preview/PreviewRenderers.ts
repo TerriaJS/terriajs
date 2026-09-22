@@ -15,18 +15,30 @@ export type PreviewRendererType = FC<{
 const PreviewRenderers = observable(new Map<string, PreviewRendererType>());
 
 /**
- * Register a custom preview renderer for the given catalog item type.
+ * Add a custom preview renderer for the given catalog item type.
  *
  * Preview renderers, render the `About data` view.
  *
  * @param type Catalog item type
- * @param renderer Preview rendere component
+ * @param renderer Preview renderer component
  */
-export function registerCustomPreviewRenderer(
+export function addCustomPreviewRenderer(
   type: string,
   renderer: PreviewRendererType
 ) {
   runInAction(() => PreviewRenderers.set(type, renderer));
+}
+
+/**
+ * Remove custom preview renderer for the given catalog item type.
+ *
+ * The type falls back to its built-in preview renderer.
+ *
+ * @param type Catalog item type
+ * @returns `true` if a custom renderer was registered for the type, `false` otherwise.
+ */
+export function removeCustomPreviewRenderer(type: string): boolean {
+  return runInAction(() => PreviewRenderers.delete(type));
 }
 
 /**
