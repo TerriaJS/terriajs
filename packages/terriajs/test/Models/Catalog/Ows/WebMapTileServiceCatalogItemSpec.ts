@@ -3,9 +3,7 @@ import { autorun, runInAction } from "mobx";
 import { ImageryParts } from "../../../../lib/ModelMixins/MappableMixin";
 import WebMapTileServiceCatalogItem from "../../../../lib/Models/Catalog/Ows/WebMapTileServiceCatalogItem";
 import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
-import createStratumInstance from "../../../../lib/Models/Definition/createStratumInstance";
 import Terria from "../../../../lib/Models/Terria";
-import { WebMapTileServiceTimeTraits } from "../../../../lib/Traits/TraitsClasses/WebMapTileServiceCatalogItemTraits";
 
 describe("WebMapTileServiceCatalogItem", function () {
   let terria: Terria;
@@ -17,6 +15,25 @@ describe("WebMapTileServiceCatalogItem", function () {
 
   it("has a type", function () {
     expect(wmts.type).toBe("wmts");
+  });
+
+  it("handles malformed selected times without throwing during map-item evaluation", async function () {
+    runInAction(() => {
+      wmts.setTrait("definition", "url", "test/WMTS/tern-landscapes-time.xml");
+      wmts.setTrait("definition", "layer", "tern_soil_moisture_daily");
+      wmts.setTrait("definition", "currentTime", "not-a-date");
+    });
+    await wmts.loadMetadata();
+
+    expect(wmts.currentTimeAsJulianDate).toBeUndefined();
+    expect(wmts.currentDiscreteTimeTag).toBeUndefined();
+    expect(() => wmts.mapItems).not.toThrow();
+
+    runInAction(() => {
+      wmts.setTrait("definition", "currentTime", "2024-01-02");
+    });
+    expect(wmts.currentTimeAsJulianDate).toBeDefined();
+    expect(wmts.currentDiscreteTimeTag).toContain("2024-01-02");
   });
 
   it("derives getCapabilitiesUrl from url if getCapabilitiesUrl is not specifiied", function () {
@@ -257,8 +274,9 @@ describe("WebMapTileServiceCatalogItem", function () {
       expect(wmts.currentTime).toBe("2024-03-13");
     });
 
-    it("falls back to the most recent <Value> when no <Default> is supplied", async function () {
+    it("uses initialTimeSource when no <Default> is supplied", async function () {
       runInAction(() => {
+        wmts.setTrait("definition", "initialTimeSource", "start");
         wmts.setTrait(
           "definition",
           "url",
@@ -273,11 +291,8 @@ describe("WebMapTileServiceCatalogItem", function () {
 
       await wmts.loadMetadata();
 
-      // Per upstream issue #7742 acceptance criteria ("otherwise latest
-      // discrete time"), absence of <Default> must yield the chronologically
-      // last <Value>, not undefined. This is intentional WMTS divergence
-      // from WMS — see the comment block on `currentTime` in the stratum.
-      expect(wmts.currentTime).toBe("2024-03-15");
+      expect(wmts.currentTime).toBe(wmts.startTime);
+      expect(wmts.currentDiscreteTimeTag).toBe("2024-03-13");
     });
 
     it("expands a slash-separated range with no period (TERN/GeoServer style)", async function () {
@@ -311,125 +326,107 @@ describe("WebMapTileServiceCatalogItem", function () {
     });
   });
 
-  // ---------------------------------------------------------------------------
-  // Explicit `time` trait override (issue #14).
-  //
-  // GeoServer's GeoWebCache does NOT advertise <Dimension> in GetCapabilities
-  // even when the underlying layer has time metadata. Catalog JSON authors
-  // must be able to declare the time set explicitly. The override stratum
-  // (TimeOverrideStratum) translates the `time` trait into discreteTimes /
-  // currentTime at higher priority than GetCapabilitiesStratum. When unset,
-  // the stratum returns undefined for everything and existing GetCapabilities-
-  // driven behaviour is preserved (regression spec below).
-  // ---------------------------------------------------------------------------
-  describe("explicit time override (issue #14)", function () {
-    it("uses time.values verbatim as discreteTimes, sorted ascending", function () {
-      // Path 1: explicit `values` list. We deliberately supply them out of
-      // order to lock in the documented contract that the stratum sorts
-      // ascending — UI timeline scrubbing relies on monotonically-increasing
-      // discrete times.
+  describe("explicit timeValues", function () {
+    it("preserves explicit timestamp tags and orders the timeline chronologically", function () {
+      const values = ["2024-01-01T00:00:00-12:00", "2024-01-01T23:00:00+14:00"];
       runInAction(() => {
-        wmts.setTrait(
-          CommonStrata.user,
-          "time",
-          createStratumInstance(WebMapTileServiceTimeTraits, {
-            values: [
-              "2024-01-03T00:00:00Z",
-              "2024-01-01T00:00:00Z",
-              "2024-01-02T00:00:00Z"
-            ]
-          })
-        );
+        wmts.setTrait(CommonStrata.definition, "timeValues", values);
       });
 
-      // No GetCapabilities load is performed — the override stratum produces
-      // discreteTimes synchronously off the trait.
-      expect(wmts.discreteTimes).toBeDefined();
-      expect(wmts.discreteTimes!.length).toBe(3);
-      expect(wmts.discreteTimes![0].time).toBe("2024-01-01T00:00:00Z");
-      expect(wmts.discreteTimes![1].time).toBe("2024-01-02T00:00:00Z");
-      expect(wmts.discreteTimes![2].time).toBe("2024-01-03T00:00:00Z");
+      expect(wmts.discreteTimes?.map((time) => time.time)).toEqual(values);
+      expect(
+        wmts.discreteTimesAsSortedJulianDates?.map((time) => time.tag)
+      ).toEqual([values[1], values[0]]);
+      expect(wmts.timeValues).toEqual(values);
     });
 
-    it("expands time.start/stop/period via createDiscreteTimesFromIsoSegments", function () {
-      // Path 2: ISO range. Mirrors the GetCapabilities range path
-      // (createDiscreteTimesFromIsoSegments) but driven from catalog JSON.
-      // P1D over 4 days = 5 inclusive instants (Jan 1, 2, 3, 4, 5).
+    it("expands ISO intervals alongside explicit timestamps", function () {
       runInAction(() => {
-        wmts.setTrait(
-          CommonStrata.user,
-          "time",
-          createStratumInstance(WebMapTileServiceTimeTraits, {
-            start: "2024-01-01T00:00:00Z",
-            stop: "2024-01-05T00:00:00Z",
-            period: "P1D"
-          })
-        );
+        wmts.setTrait(CommonStrata.definition, "timeValues", [
+          "2024-01-01/2024-01-03/P1D",
+          "2024-01-05"
+        ]);
       });
 
-      expect(wmts.discreteTimes).toBeDefined();
-      expect(wmts.discreteTimes!.length).toBe(5);
-      expect(wmts.discreteTimes![0].time).toContain("2024-01-01");
-      expect(wmts.discreteTimes![4].time).toContain("2024-01-05");
+      expect(wmts.discreteTimes?.map((time) => time.time)).toEqual([
+        "2024-01-01",
+        "2024-01-02",
+        "2024-01-03",
+        "2024-01-05"
+      ]);
     });
 
-    it("selects time.defaultValue as currentTime when set", function () {
-      // currentTime priority: explicit defaultValue > most-recent discrete
-      // time > undefined. The most-recent value here is 2024-01-03 — asserting
-      // currentTime resolves to 2024-01-02 proves defaultValue takes precedence
-      // over the recency fallback.
+    it("limits interval expansion with maxRefreshIntervals", function () {
       runInAction(() => {
-        wmts.setTrait(
-          CommonStrata.user,
-          "time",
-          createStratumInstance(WebMapTileServiceTimeTraits, {
-            values: [
-              "2024-01-01T00:00:00Z",
-              "2024-01-02T00:00:00Z",
-              "2024-01-03T00:00:00Z"
-            ],
-            defaultValue: "2024-01-02T00:00:00Z"
-          })
-        );
+        wmts.setTrait(CommonStrata.definition, "maxRefreshIntervals", 2);
+        wmts.setTrait(CommonStrata.definition, "timeValues", [
+          "2024-01-01/2024-01-05/P1D"
+        ]);
       });
 
-      expect(wmts.currentTime).toBe("2024-01-02T00:00:00Z");
+      expect(wmts.discreteTimes?.map((time) => time.time)).toEqual([
+        "2024-01-01",
+        "2024-01-02"
+      ]);
     });
 
-    it("falls through to GetCapabilities when the time trait is absent (regression)", async function () {
-      // Regression: with no `time` trait set, the override stratum's getters
-      // return undefined and GetCapabilitiesStratum drives discreteTimes /
-      // currentTime — i.e., existing behaviour is preserved. This is the
-      // critical "do no harm" assertion: if this spec fails, every existing
-      // WMTS catalog item with a server-advertised <Dimension> is broken.
+    it("uses timeValues and currentTime over competing capabilities", async function () {
       runInAction(() => {
         wmts.setTrait(
-          "definition",
+          CommonStrata.definition,
           "url",
           "test/WMTS/tern-landscapes-time.xml"
         );
-        wmts.setTrait("definition", "layer", "tern_soil_moisture_daily");
+        wmts.setTrait(
+          CommonStrata.definition,
+          "layer",
+          "tern_soil_moisture_daily"
+        );
+        wmts.setTrait(CommonStrata.definition, "timeValues", [
+          "2023-01-01/2023-01-03/P1D"
+        ]);
+        wmts.setTrait(CommonStrata.definition, "currentTime", "2023-01-02");
       });
 
-      await wmts.loadMetadata();
+      await wmts.loadMapItems();
 
-      // The TERN fixture advertises a daily P1D range over 5 days
-      // (2024-01-01..2024-01-05) — same fixture used by the GetCapabilities
-      // range spec above. 5 discrete times must come through unchanged.
-      // Note: TerriaJS object traits always materialize a wrapper model for
-      // property access — `wmts.time` is not `undefined` even when no stratum
-      // has set values. The meaningful regression check is on the unset inner
-      // fields plus the discreteTimes pass-through from GetCapabilities.
-      expect(wmts.time?.values).toBeUndefined();
-      expect(wmts.time?.start).toBeUndefined();
-      expect(wmts.time?.stop).toBeUndefined();
-      expect(wmts.time?.period).toBeUndefined();
-      expect(wmts.time?.defaultValue).toBeUndefined();
-      expect(wmts.discreteTimes).toBeDefined();
-      expect(wmts.discreteTimes!.length).toBe(5);
-      expect(wmts.discreteTimes![0].time).toContain("2024-01-01");
-      expect(wmts.discreteTimes![4].time).toContain("2024-01-05");
+      expect(wmts.discreteTimes?.map((time) => time.time)).toEqual([
+        "2023-01-01",
+        "2023-01-02",
+        "2023-01-03"
+      ]);
+      expect(wmts.currentTime).toBe("2023-01-02");
+      expect(wmts.imageryProvider?.url).toContain("2023-01-02");
+
+      runInAction(() => {
+        wmts.setTrait(CommonStrata.user, "currentTime", "2023-01-03");
+      });
+      expect(wmts.imageryProvider?.url).toContain("2023-01-03");
     });
+
+    for (const timeValues of [undefined, []]) {
+      it(`uses capabilities when timeValues is ${timeValues === undefined ? "absent" : "empty"}`, async function () {
+        runInAction(() => {
+          wmts.setTrait(
+            CommonStrata.definition,
+            "url",
+            "test/WMTS/tern-landscapes-time.xml"
+          );
+          wmts.setTrait(
+            CommonStrata.definition,
+            "layer",
+            "tern_soil_moisture_daily"
+          );
+          wmts.setTrait(CommonStrata.definition, "timeValues", timeValues);
+        });
+
+        await wmts.loadMetadata();
+
+        expect(wmts.discreteTimes?.length).toBe(5);
+        expect(wmts.discreteTimes?.[0].time).toContain("2024-01-01");
+        expect(wmts.discreteTimes?.[4].time).toContain("2024-01-05");
+      });
+    }
   });
 
   // ---------------------------------------------------------------------------

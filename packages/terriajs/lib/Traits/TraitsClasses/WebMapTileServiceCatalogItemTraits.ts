@@ -54,66 +54,6 @@ export class WebMapTileServiceAvailableStyleTraits extends ModelTraits {
   isDefault: boolean = false;
 }
 
-/**
- * Explicit time-dimension override.
- *
- * Used when a WMTS server does not advertise a `<Dimension>` element in its
- * GetCapabilities response (e.g., GeoServer's GeoWebCache, which strips
- * Dimensions even when the underlying layer has time metadata configured).
- * Lets catalog JSON declare the discrete time set, an ISO range, and/or a
- * default selection without round-tripping through GetCapabilities.
- *
- * Resolution order in `TimeOverrideStratum`:
- *   1. `values` (explicit list) — sorted ascending and used as-is.
- *   2. `start` + `stop` + `period` — expanded via
- *      `createDiscreteTimesFromIsoSegments` (honours `maxRefreshIntervals`).
- *   3. Both absent — stratum returns `undefined` for `discreteTimes` and
- *      falls through to `GetCapabilitiesStratum`, preserving prior behaviour.
- *
- * `defaultValue` selects the initial `currentTime`; absent it, the most
- * recent discrete instant is selected (matches the GetCapabilities path).
- */
-export class WebMapTileServiceTimeTraits extends ModelTraits {
-  @primitiveArrayTrait({
-    type: "string",
-    name: "Values",
-    description:
-      "Explicit list of ISO 8601 timestamps. Used directly as the discrete time set when present."
-  })
-  values?: string[];
-
-  @primitiveTrait({
-    type: "string",
-    name: "Start",
-    description:
-      "ISO 8601 range start. Use together with `stop` and `period` to declare a regular interval that will be expanded via `createDiscreteTimesFromIsoSegments`."
-  })
-  start?: string;
-
-  @primitiveTrait({
-    type: "string",
-    name: "Stop",
-    description: "ISO 8601 range stop. Use together with `start` and `period`."
-  })
-  stop?: string;
-
-  @primitiveTrait({
-    type: "string",
-    name: "Period",
-    description:
-      "ISO 8601 period (e.g., `P1D`, `PT1H`). Use together with `start` and `stop`."
-  })
-  period?: string;
-
-  @primitiveTrait({
-    type: "string",
-    name: "Default Value",
-    description:
-      "ISO 8601 timestamp to select initially. Falls back to the most recent discrete time when omitted."
-  })
-  defaultValue?: string;
-}
-
 export class WebMapTileServiceAvailableLayerStylesTraits extends ModelTraits {
   @primitiveTrait({
     type: "string",
@@ -206,11 +146,14 @@ export default class WebMapTileServiceCatalogItemTraits extends mixTraits(
   })
   maxRefreshIntervals: number = 10000;
 
-  @objectTrait({
-    type: WebMapTileServiceTimeTraits,
-    name: "Time",
+  @primitiveArrayTrait({
+    type: "string",
+    name: "Time Values",
     description:
-      "Explicit time-dimension configuration. Used when the WMTS server does not advertise `<Dimension>` in GetCapabilities (e.g., GeoServer GeoWebCache). When set, this overrides any time dimension parsed from GetCapabilities. When unset, time handling falls through to GetCapabilities (existing behaviour)."
+      "Available times as ISO 8601 timestamps or intervals such as " +
+      "`2024-01-01/2024-12-31/P1D`. A nonempty list overrides the times " +
+      "advertised by GetCapabilities. Intervals are expanded up to " +
+      "`maxRefreshIntervals`. Use `currentTime` to select a time."
   })
-  time?: WebMapTileServiceTimeTraits;
+  timeValues?: string[];
 }

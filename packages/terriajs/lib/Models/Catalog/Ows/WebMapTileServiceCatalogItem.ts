@@ -480,38 +480,10 @@ class GetCapabilitiesStratum extends LoadableStratum(
     const dimension = this.timeDimension;
     if (!dimension || !isDefined(dimension.Value)) return undefined;
 
-    const result: DiscreteTimeAsJS[] = [];
-
-    const rawValues: ReadonlyArray<string> = isReadOnlyArray(dimension.Value)
+    const rawValues = isReadOnlyArray(dimension.Value)
       ? dimension.Value
       : [dimension.Value];
-
-    // Flatten any comma-separated entries inside individual <Value> children.
-    const values: string[] = [];
-    for (const raw of rawValues) {
-      if (typeof raw !== "string") continue;
-      for (const segment of raw.split(",")) {
-        const trimmed = segment.trim();
-        if (trimmed.length > 0) values.push(trimmed);
-      }
-    }
-
-    for (const value of values) {
-      const isoSegments = value.split("/");
-      if (isoSegments.length === 1) {
-        result.push({ time: value, tag: undefined });
-      } else {
-        createDiscreteTimesFromIsoSegments(
-          result,
-          isoSegments[0],
-          isoSegments[1],
-          isoSegments[2],
-          this.catalogItem.maxRefreshIntervals
-        );
-      }
-    }
-
-    return result.length > 0 ? result : undefined;
+    return parseTimeValues(rawValues, this.catalogItem.maxRefreshIntervals);
   }
 
   @computed
@@ -519,68 +491,17 @@ class GetCapabilitiesStratum extends LoadableStratum(
     return "now";
   }
 
-  /**
-   * Default time selection. Priority:
-   *
-   * 1. `<Default>` from the time `<Dimension>`, if present and not the
-   *    placeholder string `"current"`.
-   * 2. The most recent discrete instant.
-   * 3. `undefined` (UI falls back to `initialTimeSource`).
-   *
-   * INTENTIONAL DIVERGENCE FROM WMS: when no `<Default>` is supplied (or it
-   * equals the `"current"` sentinel), this stratum returns the latest
-   * discrete time — not `undefined`. The WMS stratum returns `undefined`
-   * here and lets `initialTimeSource="now"` drive the UI to the wall-clock.
-   *
-   * The WMTS choice is per upstream issue #7742 acceptance criteria
-   * ("otherwise latest discrete time"). Rationale: WMTS layers are typically
-   * pre-tiled archives where the wall-clock "now" is rarely a tiled instant,
-   * so anchoring to the newest available tile gives a usable initial render.
-   * If you change this, also change the U4/U5 specs in
-   * `WebMapTileServiceCatalogItemSpec.ts` and update issue #7742.
-   */
   @computed
   get currentTime(): string | undefined {
-    const dimension = this.timeDimension;
-    const explicitDefault = dimension?.Default;
-
-    // The literal "current" sentinel means "send the most recent data
-    // available" — we let the UI's "now" handling take over rather than
-    // pinning the layer to a stale ISO string.
-    if (isDefined(explicitDefault) && explicitDefault !== "current") {
-      return explicitDefault;
-    }
-
-    const times = this.discreteTimes;
-    if (times && times.length > 0) {
-      // discreteTimes from a range expansion are ordered ascending. For
-      // explicit <Value> lists we don't sort (preserve server order) but
-      // still pick the last entry, which matches WMS behaviour where the
-      // newest instant is conventionally last.
-      return times[times.length - 1].time;
-    }
-
-    return undefined;
+    const defaultTime = this.timeDimension?.Default;
+    // Defer keyword defaults to initialTimeSource so the timeline gets a date.
+    return defaultTime === "current" || defaultTime === "default"
+      ? undefined
+      : defaultTime;
   }
 }
 
-/**
- * Stratum that translates the user-supplied `time` trait (an explicit time
- * dimension declaration in catalog JSON) into `discreteTimes` and
- * `currentTime` values.
- *
- * Registered at HIGHER priority than `GetCapabilitiesStratum`, so when the
- * user declares `time` in catalog JSON, the override values take precedence
- * over whatever (if anything) the WMTS server advertises in `<Dimension>`.
- *
- * When `time` is unset, this stratum returns `undefined` for everything,
- * letting `GetCapabilitiesStratum` provide values via the regular
- * trait/stratum priority cascade — preserving existing behaviour.
- *
- * Required because GeoServer's GeoWebCache does not advertise `<Dimension>`
- * in GetCapabilities even when the underlying layer has a configured time
- * dimension. See issue #14.
- */
+/** Derives available times from catalog configuration when capabilities are incomplete. */
 class TimeOverrideStratum extends LoadableStratum(
   WebMapTileServiceCatalogItemTraits
 ) {
@@ -597,67 +518,15 @@ class TimeOverrideStratum extends LoadableStratum(
     ) as this;
   }
 
-  /**
-   * Discrete times derived from the `time` trait. Returns `undefined` (and
-   * thereby falls through to GetCapabilitiesStratum) when the trait is not
-   * configured to produce a time set:
-   *   - `time.values` (preferred): used directly, sorted ascending.
-   *   - `time.start` + `time.stop` + `time.period`: expanded via
-   *     `createDiscreteTimesFromIsoSegments` (honours `maxRefreshIntervals`).
-   *   - Anything else (no `time`, only `defaultValue`, partial range): the
-   *     stratum has no times to provide here; GetCapabilities still runs
-   *     for `discreteTimes`. `currentTime` may still resolve from
-   *     `defaultValue` below.
-   */
   @computed
   get discreteTimes(): DiscreteTimeAsJS[] | undefined {
-    const t = this.catalogItem.time;
-    if (!t) return undefined;
-
-    if (t.values && t.values.length > 0) {
-      return [...t.values].sort().map((time) => ({ time, tag: undefined }));
-    }
-
-    if (isDefined(t.start) && isDefined(t.stop) && isDefined(t.period)) {
-      const result: DiscreteTimeAsJS[] = [];
-      createDiscreteTimesFromIsoSegments(
-        result,
-        t.start,
-        t.stop,
-        t.period,
-        this.catalogItem.maxRefreshIntervals
-      );
-      return result.length > 0 ? result : undefined;
-    }
-
-    return undefined;
-  }
-
-  /**
-   * Initial `currentTime` selection. Priority:
-   *   1. `time.defaultValue` if set.
-   *   2. The most recent value in `discreteTimes` (matches the
-   *      GetCapabilitiesStratum fallback contract).
-   *   3. `undefined` — falls through to GetCapabilitiesStratum / UI default.
-   */
-  @computed
-  get currentTime(): string | undefined {
-    const t = this.catalogItem.time;
-    if (!t) return undefined;
-
-    if (isDefined(t.defaultValue)) return t.defaultValue;
-
-    const dt = this.discreteTimes;
-    if (dt && dt.length > 0) return dt[dt.length - 1].time;
-
-    return undefined;
+    return parseTimeValues(
+      this.catalogItem.timeValues ?? [],
+      this.catalogItem.maxRefreshIntervals
+    );
   }
 }
 
-// Register `TimeOverrideStratum` AFTER the GetCapabilities stratum so it
-// receives a higher priority — the `time` trait override wins over whatever
-// the WMTS server advertises (or fails to advertise) in <Dimension>.
-// `getCapabilities` is registered when `GetCapabilitiesMixin` loads above.
 StratumOrder.addLoadStratum(TimeOverrideStratum.stratumName);
 
 class WebMapTileServiceCatalogItem extends MappableMixin(
@@ -686,17 +555,9 @@ class WebMapTileServiceCatalogItem extends MappableMixin(
 
   static readonly type = "wmts";
 
-  static readonly TimeOverrideStratumName = TimeOverrideStratum.stratumName;
-
   constructor(...args: ModelConstructorParameters) {
     super(...args);
     makeObservable(this);
-    // Register the override stratum unconditionally. When the `time` trait
-    // is unset its computed properties return `undefined`, so the priority
-    // cascade falls through to `GetCapabilitiesStratum` and existing
-    // behaviour is preserved. When `time` is set, this stratum's higher
-    // priority means its `currentTime` wins, and the class-level
-    // `discreteTimes` getter consults this stratum first.
     this.strata.set(
       TimeOverrideStratum.stratumName,
       new TimeOverrideStratum(this)
@@ -707,21 +568,7 @@ class WebMapTileServiceCatalogItem extends MappableMixin(
     return WebMapTileServiceCatalogItem.type;
   }
 
-  /**
-   * Class-level delegate: forward `discreteTimes` from the strata so
-   * `DiscretelyTimeVaryingMixin` can read it off the model directly.
-   * There is intentionally no equivalent class-level delegate for
-   * `currentTime` — the trait system (via `DiscretelyTimeVaryingTraits`)
-   * already resolves `currentTime` from strata automatically, so an
-   * explicit getter would shadow stratum priority and break override
-   * semantics. `discreteTimes` is NOT a trait, hence the explicit forward.
-   *
-   * Priority: `TimeOverrideStratum` (catalog-JSON `time` trait) wins over
-   * `GetCapabilitiesStratum`. This mirrors the trait-stratum priority used
-   * for `currentTime`. When the override stratum has nothing to say (no
-   * `time` trait or only `defaultValue` set), it returns `undefined` and
-   * we fall through to GetCapabilities — preserving existing behaviour.
-   */
+  /** Explicit timeValues take precedence over capabilities-derived availability. */
   @computed
   get discreteTimes() {
     const overrideStratum: TimeOverrideStratum | undefined = this.strata.get(
@@ -1159,3 +1006,31 @@ export function getServiceContactInformation(contactInfo: ServiceProvider) {
 }
 
 export default WebMapTileServiceCatalogItem;
+
+/** Parse the same timestamp and interval encodings for metadata and catalog overrides. */
+function parseTimeValues(
+  rawValues: readonly string[],
+  maxRefreshIntervals: number
+): DiscreteTimeAsJS[] | undefined {
+  const result: DiscreteTimeAsJS[] = [];
+  for (const raw of rawValues) {
+    if (typeof raw !== "string") continue;
+    for (const segment of raw.split(",")) {
+      const value = segment.trim();
+      if (value.length === 0) continue;
+      const isoSegments = value.split("/");
+      if (isoSegments.length === 1) {
+        result.push({ time: value, tag: undefined });
+      } else {
+        createDiscreteTimesFromIsoSegments(
+          result,
+          isoSegments[0],
+          isoSegments[1],
+          isoSegments[2],
+          maxRefreshIntervals
+        );
+      }
+    }
+  }
+  return result.length > 0 ? result : undefined;
+}

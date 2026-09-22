@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   Variant of nasa-gibs-time.xml WITHOUT a <Default> element.
-  Used to verify that currentTime falls back to the most recent (last)
-  <Value> when no <Default> is supplied — see TerriaJS upstream issue
-  #7742 acceptance criteria ("otherwise latest discrete time").
+  Used to verify that currentTime falls back to initialTimeSource
+  when no <Default> is supplied.
 -->
 <Capabilities xmlns="http://www.opengis.net/wmts/1.0"
               xmlns:ows="http://www.opengis.net/ows/1.1"
@@ -33,7 +32,7 @@
       <Dimension>
         <ows:Identifier>time</ows:Identifier>
         <ows:UOM>ISO8601</ows:UOM>
-        <!-- No <Default> on purpose: forces fallback to the most recent <Value>. -->
+        <!-- No <Default> on purpose: uses initialTimeSource. -->
         <Value>2024-03-13</Value>
         <Value>2024-03-14</Value>
         <Value>2024-03-15</Value>
