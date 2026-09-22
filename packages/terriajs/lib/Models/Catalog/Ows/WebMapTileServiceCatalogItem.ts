@@ -32,7 +32,6 @@ import createStratumInstance from "../../Definition/createStratumInstance";
 import LoadableStratum from "../../Definition/LoadableStratum";
 import { BaseModel, ModelConstructorParameters } from "../../Definition/Model";
 import StratumFromTraits from "../../Definition/StratumFromTraits";
-import StratumOrder from "../../Definition/StratumOrder";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import { ServiceProvider } from "./OwsInterfaces";
 import WebMapTileServiceCapabilities, {
@@ -501,34 +500,6 @@ class GetCapabilitiesStratum extends LoadableStratum(
   }
 }
 
-/** Derives available times from catalog configuration when capabilities are incomplete. */
-class TimeOverrideStratum extends LoadableStratum(
-  WebMapTileServiceCatalogItemTraits
-) {
-  static stratumName = "wmts-time-override";
-
-  constructor(readonly catalogItem: WebMapTileServiceCatalogItem) {
-    super();
-    makeObservable(this);
-  }
-
-  duplicateLoadableStratum(model: BaseModel): this {
-    return new TimeOverrideStratum(
-      model as WebMapTileServiceCatalogItem
-    ) as this;
-  }
-
-  @computed
-  get discreteTimes(): DiscreteTimeAsJS[] | undefined {
-    return parseTimeValues(
-      this.catalogItem.timeValues ?? [],
-      this.catalogItem.maxRefreshIntervals
-    );
-  }
-}
-
-StratumOrder.addLoadStratum(TimeOverrideStratum.stratumName);
-
 class WebMapTileServiceCatalogItem extends MappableMixin(
   DiscretelyTimeVaryingMixin(
     GetCapabilitiesMixin(
@@ -558,29 +529,25 @@ class WebMapTileServiceCatalogItem extends MappableMixin(
   constructor(...args: ModelConstructorParameters) {
     super(...args);
     makeObservable(this);
-    this.strata.set(
-      TimeOverrideStratum.stratumName,
-      new TimeOverrideStratum(this)
-    );
   }
 
   get type() {
     return WebMapTileServiceCatalogItem.type;
   }
 
-  /** Explicit timeValues take precedence over capabilities-derived availability. */
+  /** Explicit `timeValues` take precedence over times advertised by capabilities. */
   @computed
   get discreteTimes() {
-    const overrideStratum: TimeOverrideStratum | undefined = this.strata.get(
-      TimeOverrideStratum.stratumName
-    ) as TimeOverrideStratum;
-    const overrideTimes = overrideStratum?.discreteTimes;
-    if (overrideTimes !== undefined) return overrideTimes;
-
-    const getCapabilitiesStratum: GetCapabilitiesStratum | undefined =
-      this.strata.get(
-        GetCapabilitiesMixin.getCapabilitiesStratumName
-      ) as GetCapabilitiesStratum;
+    const timeOverrides = parseTimeValues(
+      this.timeValues ?? [],
+      this.maxRefreshIntervals
+    );
+    if (timeOverrides) {
+      return timeOverrides;
+    }
+    const getCapabilitiesStratum = this.strata.get(
+      GetCapabilitiesMixin.getCapabilitiesStratumName
+    ) as GetCapabilitiesStratum | undefined;
     return getCapabilitiesStratum?.discreteTimes;
   }
 
