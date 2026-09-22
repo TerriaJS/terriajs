@@ -21,7 +21,7 @@ export interface WmtsLayer {
   readonly WGS84BoundingBox?: BoundingBox;
   readonly Style?: CapabilitiesStyle | CapabilitiesStyle[];
   readonly Format?: string | ReadonlyArray<string>;
-  readonly infoFormat?: string | ReadonlyArray<string>;
+  readonly InfoFormat?: string | ReadonlyArray<string>;
   readonly TileMatrixSetLink?: TileMatrixSetLink | TileMatrixSetLink[];
   readonly ResourceURL?: ResourceUrl | ResourceUrl[];
   readonly Dimension?: WmtsDimension | WmtsDimension[];
@@ -66,7 +66,7 @@ export interface WmtsCapabilitiesLegend extends CapabilitiesLegend {
 
 export interface ResourceUrl {
   format: string;
-  resourceType: "tile";
+  resourceType: "tile" | "FeatureInfo";
   template: string;
 }
 

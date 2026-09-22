@@ -2,8 +2,11 @@ import { autorun, runInAction } from "mobx";
 import GeographicTilingScheme from "terriajs-cesium/Source/Core/GeographicTilingScheme";
 import Resource from "terriajs-cesium/Source/Core/Resource";
 import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
+import WebMercatorProjection from "terriajs-cesium/Source/Core/WebMercatorProjection";
+import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import WebMapServiceImageryProvider from "terriajs-cesium/Source/Scene/WebMapServiceImageryProvider";
 import { ImageryParts } from "../../../../lib/ModelMixins/MappableMixin";
+import geoJsonToFeatureInfoWithProject from "../../../../lib/Models/Catalog/Ows/geoJsonToFeatureInfoWithProject";
 import WebMapServiceCatalogItem from "../../../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
 import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
 import Terria from "../../../../lib/Models/Terria";
@@ -1191,3 +1194,35 @@ function getFeatureInfoResourceForItem(
 ): Resource | undefined {
   return (getWebMapServiceImageryProvider(item) as any)?._pickFeaturesResource;
 }
+
+describe("geoJsonToFeatureInfoWithProject", function () {
+  const pointFeatureCollection = (coordinates: [number, number]) => ({
+    type: "FeatureCollection" as const,
+    features: [
+      {
+        type: "Feature" as const,
+        geometry: { type: "Point" as const, coordinates },
+        properties: {}
+      }
+    ]
+  });
+  const projection = new WebMercatorProjection();
+
+  it("unprojects metres returned in the request CRS (GeoServer)", function () {
+    const [info] = geoJsonToFeatureInfoWithProject(
+      pointFeatureCollection([16697923.6, -4009407.6]), // ~150E, 33.8S
+      projection
+    );
+    expect(CesiumMath.toDegrees(info.position!.longitude)).toBeCloseTo(150, 3);
+    expect(CesiumMath.toDegrees(info.position!.latitude)).toBeCloseTo(-33.8, 3);
+  });
+
+  it("keeps lon/lat degrees even under a projected tiling scheme (RFC 7946 servers)", function () {
+    const [info] = geoJsonToFeatureInfoWithProject(
+      pointFeatureCollection([150, -33.8]),
+      projection
+    );
+    expect(CesiumMath.toDegrees(info.position!.longitude)).toBeCloseTo(150, 6);
+    expect(CesiumMath.toDegrees(info.position!.latitude)).toBeCloseTo(-33.8, 6);
+  });
+});

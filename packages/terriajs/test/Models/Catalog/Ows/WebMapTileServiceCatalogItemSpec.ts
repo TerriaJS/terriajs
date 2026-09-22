@@ -1,5 +1,6 @@
 import i18next from "i18next";
 import { autorun, runInAction } from "mobx";
+import Resource from "terriajs-cesium/Source/Core/Resource";
 import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
 import WebMapTileServiceImageryProvider from "terriajs-cesium/Source/Scene/WebMapTileServiceImageryProvider";
 import { ImageryParts } from "../../../../lib/ModelMixins/MappableMixin";
@@ -618,6 +619,99 @@ describe("WebMapTileServiceCatalogItem", function () {
       const url = await requestedTileUrl(wmts);
       expect(url).toContain("/2024-01-02T00:00:00Z/");
       expect(url).not.toContain("2024-01-05T00:00:00Z");
+    });
+  });
+
+  describe("feature picking", function () {
+    const featureCollection = {
+      type: "FeatureCollection",
+      features: [
+        {
+          type: "Feature",
+          geometry: { type: "Point", coordinates: [0, 0] },
+          properties: { soil_moisture: 0.42 }
+        }
+      ]
+    };
+
+    /** Runs a pick through Cesium and returns the decoded GetFeatureInfo URL plus the features. */
+    async function pick(wmts: WebMapTileServiceCatalogItem) {
+      const fetchJson = spyOn(Resource.prototype, "fetchJson").and.returnValue(
+        Promise.resolve(featureCollection)
+      );
+      const features = await currentProvider(wmts)!.pickFeatures(0, 0, 0, 0, 0);
+      const resource = fetchJson.calls.mostRecent().object as Resource;
+      return { url: decodeURIComponent(String(resource)), features };
+    }
+
+    it("requests the advertised RESTful FeatureInfo template with pixel and time filled in", async function () {
+      runInAction(() => {
+        wmts.setTrait(
+          "definition",
+          "url",
+          "test/WMTS/tern-landscapes-time.xml"
+        );
+        wmts.setTrait("definition", "layer", "tern_soil_moisture_daily");
+        wmts.setTrait("definition", "currentTime", "2024-01-03T00:00:00Z");
+      });
+      await wmts.loadMapItems();
+
+      const { url, features } = await pick(wmts);
+      expect(url).toContain(
+        "/tern_soil_moisture_daily/default/2024-01-03T00:00:00Z/"
+      );
+      expect(url).toMatch(/\/\d+\/\d+\?format=application\/json$/);
+      expect(url).not.toContain("{");
+      expect(features?.length).toBe(1);
+      expect(features?.[0].properties).toEqual({ soil_moisture: 0.42 });
+    });
+
+    it("sends a KVP GetFeatureInfo request with the layer's InfoFormat and the selected time", async function () {
+      runInAction(() => {
+        wmts.setTrait(
+          "definition",
+          "url",
+          "test/WMTS/with_operation_metadata.xml"
+        );
+        wmts.setTrait(
+          "definition",
+          "layer",
+          "NWSHELF_ANALYSISFORECAST_PHY_004_013/cmems_mod_nws_phy_anfc_0.027deg-3D_PT1H-m_202309/vo"
+        );
+        wmts.setTrait("definition", "currentTime", "2023-08-01T00:00:00Z");
+      });
+      await wmts.loadMapItems();
+
+      const { url, features } = await pick(wmts);
+      const query = new URL(url).searchParams;
+      expect(query.get("request")).toBe("GetFeatureInfo");
+      expect(query.get("infoformat")).toBe("application/json");
+      expect(query.get("Time")).toBe("2023-08-01T00:00:00Z");
+      expect(query.get("i")).toMatch(/^\d+$/);
+      expect(query.get("j")).toMatch(/^\d+$/);
+      expect(features?.length).toBe(1);
+    });
+
+    it("uses the getFeatureInfoUrl trait over the advertised template", async function () {
+      runInAction(() => {
+        wmts.setTrait(
+          "definition",
+          "url",
+          "test/WMTS/tern-landscapes-time.xml"
+        );
+        wmts.setTrait("definition", "layer", "tern_soil_moisture_daily");
+        wmts.setTrait(
+          "definition",
+          "getFeatureInfoUrl",
+          "https://custom.example/info/{TileMatrix}/{TileRow}/{TileCol}/{i}/{j}"
+        );
+      });
+      await wmts.loadMapItems();
+
+      const { url } = await pick(wmts);
+      expect(url).toMatch(
+        /^https:\/\/custom\.example\/info\/\d+\/\d+\/\d+\/\d+\/\d+$/
+      );
     });
   });
 });

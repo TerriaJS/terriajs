@@ -137,6 +137,14 @@ export default class WebMapTileServiceCatalogItemTraits extends mixTraits(
   requestEncoding = "RESTful";
 
   @primitiveTrait({
+    type: "string",
+    name: "GetFeatureInfo URL",
+    description:
+      "URL or RESTful template (with `{i}`/`{j}` pixel placeholders) for `GetFeatureInfo` requests. Defaults to the `FeatureInfo` ResourceURL advertised by GetCapabilities, or to `url` for KVP services."
+  })
+  getFeatureInfoUrl?: string;
+
+  @primitiveTrait({
     type: "number",
     name: "Maximum Refresh Intervals",
     description:

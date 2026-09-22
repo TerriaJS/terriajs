@@ -3,11 +3,13 @@ import { computed, makeObservable, override, runInAction } from "mobx";
 import defined from "terriajs-cesium/Source/Core/defined";
 import GeographicTilingScheme from "terriajs-cesium/Source/Core/GeographicTilingScheme";
 import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
+import GetFeatureInfoFormat from "terriajs-cesium/Source/Scene/GetFeatureInfoFormat";
 import WebMapTileServiceImageryProvider from "terriajs-cesium/Source/Scene/WebMapTileServiceImageryProvider";
 import URI from "urijs";
 import containsAny from "../../../Core/containsAny";
 import createDiscreteTimesFromIsoSegments from "../../../Core/createDiscreteTimes";
 import createTransformerAllowUndefined from "../../../Core/createTransformerAllowUndefined";
+import filterOutUndefined from "../../../Core/filterOutUndefined";
 import isDefined from "../../../Core/isDefined";
 import isReadOnlyArray from "../../../Core/isReadOnlyArray";
 import TerriaError from "../../../Core/TerriaError";
@@ -42,6 +44,7 @@ import WebMapTileServiceCapabilities, {
   WmtsDimension,
   WmtsLayer
 } from "./WebMapTileServiceCapabilities";
+import geoJsonToFeatureInfoWithProject from "./geoJsonToFeatureInfoWithProject";
 
 export const SUPPORTED_CRS_3857 = [/EPSG.*3857/, /EPSG.*900913/];
 export const SUPPORTED_CRS_4326 = [/EPSG.*4326/, /CRS.*84/, /EPSG.*4283/];
@@ -631,9 +634,14 @@ class WebMapTileServiceCatalogItem extends MappableMixin(
         tilingScheme: tileMatrixSet.scheme,
         format,
         credit: this.attribution,
-        ...(isDefined(time) ? { dimensions: { [timeDimensionKey]: time } } : {})
-        // TODO: implement picking for WebMapTileServiceImageryProvider
-        //enablePickFeatures: this.allowFeaturePicking
+        ...(isDefined(time)
+          ? { dimensions: { [timeDimensionKey]: time } }
+          : {}),
+        // enablePickFeatures is set per map item (current on, next off).
+        getFeatureInfoUrl: isDefined(this.featureInfoUrl)
+          ? proxyCatalogItemUrl(this, this.featureInfoUrl)
+          : undefined,
+        getFeatureInfoFormats: this.getFeatureInfoFormats
       });
       return imageryProvider;
     }
@@ -686,6 +694,72 @@ class WebMapTileServiceCatalogItem extends MappableMixin(
     } else {
       return undefined;
     }
+  }
+
+  /**
+   * GetFeatureInfo endpoint: the trait, else the RESTful `FeatureInfo`
+   * ResourceURL advertised by capabilities (WMTS `{I}`/`{J}` renamed to the
+   * `{i}`/`{j}` Cesium expects). Undefined lets Cesium use `url` (KVP).
+   */
+  @computed
+  private get featureInfoUrl(): string | undefined {
+    if (isDefined(this.getFeatureInfoUrl)) return this.getFeatureInfoUrl;
+    if (this.requestEncoding !== "RESTful") return undefined;
+    const template = this.featureInfoResourceUrls[0]?.template;
+    return template?.replace(/\{I\}/g, "{i}").replace(/\{J\}/g, "{j}");
+  }
+
+  @computed
+  private get featureInfoResourceUrls(): ResourceUrl[] {
+    const stratum = this.strata.get(
+      GetCapabilitiesMixin.getCapabilitiesStratumName
+    ) as GetCapabilitiesStratum | undefined;
+    const resourceUrls = stratum?.capabilitiesLayer?.ResourceURL;
+    if (!resourceUrls) return [];
+    return (Array.isArray(resourceUrls) ? resourceUrls : [resourceUrls]).filter(
+      (resourceUrl) => resourceUrl.resourceType === "FeatureInfo"
+    );
+  }
+
+  /**
+   * Formats to try for GetFeatureInfo, from the layer's `<InfoFormat>` list
+   * (or the RESTful template's format). Falls back to Cesium's defaults.
+   */
+  @computed
+  private get getFeatureInfoFormats(): GetFeatureInfoFormat[] | undefined {
+    const stratum = this.strata.get(
+      GetCapabilitiesMixin.getCapabilitiesStratumName
+    ) as GetCapabilitiesStratum | undefined;
+    const infoFormats = stratum?.capabilitiesLayer?.InfoFormat;
+    const advertised = isDefined(this.getFeatureInfoUrl)
+      ? []
+      : this.featureInfoResourceUrls.map((resourceUrl) => resourceUrl.format);
+    const formats = advertised.length
+      ? advertised
+      : Array.isArray(infoFormats)
+        ? infoFormats
+        : isDefined(infoFormats)
+          ? [infoFormats]
+          : [];
+    const result = filterOutUndefined(
+      formats.map((format) => {
+        if (format === "application/json")
+          return new GetFeatureInfoFormat("json", format, (json) =>
+            geoJsonToFeatureInfoWithProject(
+              json,
+              this.tileMatrixSet?.scheme.projection
+            )
+          );
+        if (format === "text/xml" || format.includes("gml"))
+          return new GetFeatureInfoFormat("xml", format);
+        if (format === "text/html")
+          return new GetFeatureInfoFormat("html", format);
+        if (format === "text/plain")
+          return new GetFeatureInfoFormat("text", format);
+        return undefined;
+      })
+    );
+    return result.length > 0 ? result : undefined;
   }
 
   getTileUrl(
