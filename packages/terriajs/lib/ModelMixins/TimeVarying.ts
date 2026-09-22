@@ -21,6 +21,21 @@ namespace TimeVarying {
       "stopTimeAsJulianDate" in model
     );
   }
+
+  /**
+   * True when the model spans a non-empty time range. A single-instant layer
+   * (start === stop) has nothing to scrub and Cesium's Timeline rejects it.
+   */
+  export function hasTimeRange(model: TimeVarying): boolean {
+    return (
+      model.startTimeAsJulianDate !== undefined &&
+      model.stopTimeAsJulianDate !== undefined &&
+      JulianDate.lessThan(
+        model.startTimeAsJulianDate,
+        model.stopTimeAsJulianDate
+      )
+    );
+  }
 }
 
 export default TimeVarying;

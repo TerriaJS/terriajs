@@ -8,6 +8,8 @@
 - Fixed share links dropping the `=` from the hash parameters they carry over from the current URL (e.g. creating a share while `#playStory=1` was set produced `#playStory%3D1&share=…`). The map read the mangled parameter as the name of an init file and failed to load it.
 - Share links (and other init sources) are now resilient to a single broken part: applying init data no longer aborts when one model has invalid traits, a model has a `dereferenced` block but cannot be dereferenced, or `initialCamera`/`homeCamera` are invalid. Every part of the init data that can be applied is applied, and the failures are still reported to the user as a combined error. [#5168](https://github.com/TerriaJS/terriajs/issues/5168)
 - Share links (and other init sources) are now resilient to a single broken part: applying init data no longer aborts when one model has invalid traits, a model has a `dereferenced` block but cannot be dereferenced, or `initialCamera`/`homeCamera` are invalid. Every part of the init data that can be applied is applied - including individual workbench items, so the layers that load are added to the workbench even if others fail - and the failures are still reported to the user as a combined error. [#5168](https://github.com/TerriaJS/terriajs/issues/5168)
+- Fixed the timeline crashing (`Start time must come before end time`, followed by `this.disposeZoomAutorun is not a function` on removal) when a time-enabled layer has a single instant, e.g. a WMTS `<Value>2019-04-18/2019-04-18/P1429D</Value>`. Such a layer no longer drives the timeline or the clock, and the workbench hides its "use timeline" button.
+- [The next improvement]
 
 #### 8.13.0 - 2026-09-11
 

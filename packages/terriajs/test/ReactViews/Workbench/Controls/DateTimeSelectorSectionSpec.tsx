@@ -42,6 +42,22 @@ describe("DateTimeSelectorSection", function () {
     expect(screen.getByText("dateTime.selectorLabel")).toBeVisible();
   });
 
+  it("hides the timeline button for a single-instant layer", function () {
+    // e.g. a WMTS <Value>2019-04-18/2019-04-18/P1429D</Value>: one discrete
+    // time, so startTime === stopTime and there is no timeline to attach to.
+    wmsItem.setTrait("definition", "startTime", "2014-01-01T00:00:00Z");
+    wmsItem.setTrait("definition", "stopTime", "2014-01-01T00:00:00Z");
+
+    render(<DateTimeSelectorSection theme={terriaTheme} item={wmsItem} />);
+
+    expect(
+      screen.queryByRole("button", { name: "dateTime.useTimeline" })
+    ).toBeNull();
+    expect(
+      screen.getByRole("button", { name: "dateTime.availableTimeChart" })
+    ).toBeVisible();
+  });
+
   it("A datetime selector uses timeLabel", function () {
     wmsItem.setTrait("definition", "timeLabel", "Some Label");
 
