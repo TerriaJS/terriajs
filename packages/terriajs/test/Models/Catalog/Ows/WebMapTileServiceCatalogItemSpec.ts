@@ -6,6 +6,13 @@ import WebMapTileServiceCatalogItem from "../../../../lib/Models/Catalog/Ows/Web
 import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
 import Terria from "../../../../lib/Models/Terria";
 
+/** The imagery provider the map will use for the currently selected time. */
+function currentProvider(wmts: WebMapTileServiceCatalogItem) {
+  return wmts.mapItems.filter(ImageryParts.is)[0]?.imageryProvider as
+    | WebMapTileServiceImageryProvider
+    | undefined;
+}
+
 describe("WebMapTileServiceCatalogItem", function () {
   let terria: Terria;
   let wmts: WebMapTileServiceCatalogItem;
@@ -162,12 +169,12 @@ describe("WebMapTileServiceCatalogItem", function () {
     await wmts.loadMapItems();
 
     // Base URL comes from OperationsMetadata KVP endpoint, not ResourceURL or item URL
-    expect(wmts.imageryProvider?.url).toContain(
+    expect(currentProvider(wmts)?.url).toContain(
       "http://wmts.marine.copernicus.eu/teroWmts"
     );
-    expect(wmts.imageryProvider?.url).toContain("service=WMTS");
-    expect(wmts.imageryProvider?.url).toContain("request=GetTile");
-    expect(wmts.imageryProvider?.url).toContain(
+    expect(currentProvider(wmts)?.url).toContain("service=WMTS");
+    expect(currentProvider(wmts)?.url).toContain("request=GetTile");
+    expect(currentProvider(wmts)?.url).toContain(
       "layer=NWSHELF_ANALYSISFORECAST_PHY_004_013%2Fcmems_mod_nws_phy_anfc_0.027deg-3D_PT1H-m_202309"
     );
   });
@@ -397,12 +404,12 @@ describe("WebMapTileServiceCatalogItem", function () {
         "2023-01-03"
       ]);
       expect(wmts.currentTime).toBe("2023-01-02");
-      expect(wmts.imageryProvider?.url).toContain("2023-01-02");
+      expect(currentProvider(wmts)?.url).toContain("2023-01-02");
 
       runInAction(() => {
         wmts.setTrait(CommonStrata.user, "currentTime", "2023-01-03");
       });
-      expect(wmts.imageryProvider?.url).toContain("2023-01-03");
+      expect(currentProvider(wmts)?.url).toContain("2023-01-03");
     });
 
     [undefined, []].forEach((timeValues) => {
@@ -467,10 +474,9 @@ describe("WebMapTileServiceCatalogItem", function () {
       // placeholder substituted with the default-selected time.
       // Discriminating assertion: a literal `{time}` in the URL would prove
       // the substitution path didn't fire.
-      expect(wmts.imageryProvider).toBeDefined();
-      expect(wmts.imageryProvider!.url).toContain("2024-01-05T00:00:00Z");
-      expect(wmts.imageryProvider!.url).not.toContain("{time}");
-      expect(wmts.imageryProvider!.url).not.toContain("{Time}");
+      expect(currentProvider(wmts)?.url).toContain("2024-01-05T00:00:00Z");
+      expect(currentProvider(wmts)?.url).not.toContain("{time}");
+      expect(currentProvider(wmts)?.url).not.toContain("{Time}");
     });
 
     it("prefers the REST ResourceURL that carries a {Time} placeholder when the layer advertises several", async function () {
@@ -492,9 +498,7 @@ describe("WebMapTileServiceCatalogItem", function () {
 
       await wmts.loadMapItems();
 
-      const [current] = wmts.mapItems.filter(ImageryParts.is);
-      const url = (current.imageryProvider as WebMapTileServiceImageryProvider)
-        .url;
+      const url = currentProvider(wmts)?.url;
       expect(url).toContain(
         "/MODIS_Terra_CorrectedReflectance_TrueColor/default/2024-03-14/{TileMatrixSet}/"
       );
@@ -517,8 +521,7 @@ describe("WebMapTileServiceCatalogItem", function () {
       // constructor option (it appends &TIME=... to the GetTile request).
       // Assert it round-trips through the provider regardless of the REST
       // {Time} substitution above. <Default> is 2024-03-13.
-      expect(wmts.imageryProvider).toBeDefined();
-      expect(wmts.imageryProvider!.dimensions).toEqual({ Time: "2024-03-13" });
+      expect(currentProvider(wmts)?.dimensions).toEqual({ Time: "2024-03-13" });
     });
 
     it("substitutes uppercase {Time} in the REST ResourceURL (U6b)", async function () {
@@ -540,10 +543,9 @@ describe("WebMapTileServiceCatalogItem", function () {
       // where `{Time}` was. Negative assertion: no leftover placeholder
       // in either case. Together these prove the case-insensitive substitution
       // path actually fires (not just the lowercase one tested in U6).
-      expect(wmts.imageryProvider).toBeDefined();
-      expect(wmts.imageryProvider!.url).toContain("2024-01-05T00:00:00Z");
-      expect(wmts.imageryProvider!.url).not.toContain("{Time}");
-      expect(wmts.imageryProvider!.url).not.toContain("{time}");
+      expect(currentProvider(wmts)?.url).toContain("2024-01-05T00:00:00Z");
+      expect(currentProvider(wmts)?.url).not.toContain("{Time}");
+      expect(currentProvider(wmts)?.url).not.toContain("{time}");
     });
 
     it("propagates allowFeaturePicking onto _currentImageryParts and disables it on _nextImageryParts (U6c)", async function () {
@@ -602,7 +604,7 @@ describe("WebMapTileServiceCatalogItem", function () {
       await wmts.loadMapItems();
 
       // Snapshot the provider at the default time.
-      const providerAtDefault = wmts.imageryProvider;
+      const providerAtDefault = currentProvider(wmts);
       expect(providerAtDefault).toBeDefined();
       expect(providerAtDefault!.url).toContain("2024-01-05T00:00:00Z");
 
@@ -614,7 +616,7 @@ describe("WebMapTileServiceCatalogItem", function () {
         wmts.setTrait("definition", "currentTime", "2024-01-02T00:00:00Z");
       });
 
-      const providerAtNewTime = wmts.imageryProvider;
+      const providerAtNewTime = currentProvider(wmts);
       expect(providerAtNewTime).toBeDefined();
       // Discriminating assertion #1: the new URL reflects the new time.
       expect(providerAtNewTime!.url).toContain("2024-01-02T00:00:00Z");

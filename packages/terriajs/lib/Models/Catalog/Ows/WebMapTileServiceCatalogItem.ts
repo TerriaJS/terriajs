@@ -729,25 +729,6 @@ class WebMapTileServiceCatalogItem extends MappableMixin(
     }
   );
 
-  /**
-   * Backward-compatible accessor. Pre-I7 callers (and the existing
-   * `with_operation_metadata.xml` URL-shape spec) read `wmts.imageryProvider`
-   * directly. We resolve to the provider for the currently-selected discrete
-   * time tag so non-temporal layers (no `<Dimension>` -> tag is `undefined`)
-   * keep returning a single, stable provider instance.
-   *
-   * @deprecated Use `mapItems` instead. WMS does not expose this accessor;
-   * it is kept here only to avoid breaking the pre-I7
-   * `with_operation_metadata.xml` URL-shape spec and any third-party callers
-   * that read `wmts.imageryProvider` directly. New code should resolve
-   * the provider via `mapItems[0].imageryProvider` (after filtering
-   * `ImageryParts.is`).
-   */
-  @computed
-  get imageryProvider(): WebMapTileServiceImageryProvider | undefined {
-    return this._createImageryProvider(this.currentDiscreteTimeTag);
-  }
-
   @computed
   private get _currentImageryParts(): ImageryParts | undefined {
     const imageryProvider = this._createImageryProvider(
