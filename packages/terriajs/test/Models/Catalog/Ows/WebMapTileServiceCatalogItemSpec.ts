@@ -229,6 +229,44 @@ describe("WebMapTileServiceCatalogItem", function () {
     expect(wmts.tileMatrixSet!.tileHeight).toEqual(256);
   });
 
+  it("roots the tiling scheme where a geographic matrix set starts dividing the world evenly", async function () {
+    // GIBS runs 2, 3, 5, 10, 20, 40 columns. Cesium's default 2x1 root implies
+    // 64 columns at level 5, so it asked for columns past the server's 40 and
+    // everything east of them (Asia) came back TileOutOfRange.
+    runInAction(() => {
+      wmts.setTrait("definition", "url", "test/WMTS/nasa-gibs-epsg4326.xml");
+      wmts.setTrait("definition", "layer", "MERRA2_2m_Air_Temperature_Monthly");
+    });
+
+    await wmts.loadMapItems();
+
+    const tileMatrixSet = wmts.tileMatrixSet!;
+    expect(tileMatrixSet.id).toBe("2km");
+    // The coarser matrices have no uniform equivalent, so level 0 is "3".
+    expect(tileMatrixSet.labels).toEqual(["3", "4", "5"]);
+    expect(tileMatrixSet.minLevel).toBe(0);
+    expect(tileMatrixSet.maxLevel).toBe(2);
+    expect(tileMatrixSet.scheme.getNumberOfXTilesAtLevel(0)).toBe(10);
+    expect(tileMatrixSet.scheme.getNumberOfYTilesAtLevel(0)).toBe(5);
+    // The deepest level must match what the server advertises.
+    expect(tileMatrixSet.scheme.getNumberOfXTilesAtLevel(2)).toBe(40);
+    expect(tileMatrixSet.scheme.getNumberOfYTilesAtLevel(2)).toBe(20);
+  });
+
+  it("rejects a matrix set whose tiles never divide the globe evenly", async function () {
+    // 5 columns of 72 degrees span 360, but 3 rows of 72 span 216, so no
+    // uniform scheme can describe it. Better no imagery than misplaced tiles.
+    runInAction(() => {
+      wmts.setTrait("definition", "url", "test/WMTS/nasa-gibs-epsg4326.xml");
+      wmts.setTrait("definition", "layer", "Coarse_16km");
+    });
+
+    await wmts.loadMapItems();
+
+    expect(wmts.tileMatrixSet).toBeUndefined();
+    expect(wmts.mapItems).toEqual([]);
+  });
+
   describe("time dimension parsing", function () {
     it("expands explicit <Value> children into discrete times (NASA GIBS style)", async function () {
       runInAction(() => {

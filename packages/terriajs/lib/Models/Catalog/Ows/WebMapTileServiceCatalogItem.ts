@@ -1,6 +1,5 @@
 import i18next from "i18next";
 import { computed, makeObservable, override, runInAction } from "mobx";
-import defined from "terriajs-cesium/Source/Core/defined";
 import GeographicTilingScheme from "terriajs-cesium/Source/Core/GeographicTilingScheme";
 import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
 import GetFeatureInfoFormat from "terriajs-cesium/Source/Scene/GetFeatureInfoFormat";
@@ -39,6 +38,7 @@ import { ServiceProvider } from "./OwsInterfaces";
 import WebMapTileServiceCapabilities, {
   CapabilitiesStyle,
   ResourceUrl,
+  TileMatrix,
   TileMatrixSetLink,
   WmtsCapabilitiesLegend,
   WmtsDimension,
@@ -50,7 +50,10 @@ export const SUPPORTED_CRS_3857 = [/EPSG.*3857/, /EPSG.*900913/];
 export const SUPPORTED_CRS_4326 = [/EPSG.*4326/, /CRS.*84/, /EPSG.*4283/];
 
 interface UsableTileMatrixSets {
+  /** Matrix identifiers indexed by Cesium tile level (padded when minLevel > 0). */
   identifiers: string[];
+  minLevel: number;
+  maxLevel: number;
   tileWidth: number;
   tileHeight: number;
   scheme: WebMercatorTilingScheme | GeographicTilingScheme;
@@ -392,16 +395,14 @@ class GetCapabilitiesStratum extends LoadableStratum(
         }
       }
 
-      if (defined(matrixSet.TileMatrix) && matrixSet.TileMatrix.length > 0) {
-        const ids = matrixSet.TileMatrix.map(function (item) {
-          return item.Identifier;
-        });
-        const firstTile = matrixSet.TileMatrix[0];
+      const ids = matrices.map((matrix) => matrix.Identifier);
+      const levels = levelsForTileMatrixSet(matrices, ids, scheme);
+      if (levels) {
+        const firstTile = matrices[0];
         usableTileMatrixSets[matrixSet.Identifier] = {
-          identifiers: ids,
+          ...levels,
           tileWidth: firstTile.TileWidth,
-          tileHeight: firstTile.TileHeight,
-          scheme: scheme
+          tileHeight: firstTile.TileHeight
         };
       }
     }
@@ -887,35 +888,20 @@ class WebMapTileServiceCatalogItem extends MappableMixin(
     let scheme: WebMercatorTilingScheme | GeographicTilingScheme;
     for (let i = 0; i < tileMatrixSetLinks.length; i++) {
       const tileMatrixSet = tileMatrixSetLinks[i].TileMatrixSet;
-      if (usableTileMatrixSets && usableTileMatrixSets[tileMatrixSet]) {
+      const usable = usableTileMatrixSets?.[tileMatrixSet];
+      if (usable) {
         tileMatrixSetId = tileMatrixSet;
-        tileMatrixSetLabels = usableTileMatrixSets[tileMatrixSet].identifiers;
-        tileWidth = Number(usableTileMatrixSets[tileMatrixSet].tileWidth);
-        tileHeight = Number(usableTileMatrixSets[tileMatrixSet].tileHeight);
-        scheme = usableTileMatrixSets[tileMatrixSet].scheme;
+        tileMatrixSetLabels = usable.identifiers;
+        minLevel = usable.minLevel;
+        maxLevel = usable.maxLevel;
+        tileWidth = Number(usable.tileWidth);
+        tileHeight = Number(usable.tileHeight);
+        scheme = usable.scheme;
         break;
       }
     }
 
     if (!tileMatrixSetId) return undefined;
-
-    if (Array.isArray(tileMatrixSetLabels)) {
-      const levels = tileMatrixSetLabels.map((label) => {
-        const lastIndex = label.lastIndexOf(":");
-        return Math.abs(Number(label.substring(lastIndex + 1)));
-      });
-      maxLevel = levels.reduce((currentMaximum, level) => {
-        return level > currentMaximum ? level : currentMaximum;
-      }, 0);
-      minLevel = levels.reduce((currentMaximum, level) => {
-        return level < currentMaximum ? level : currentMaximum;
-      }, Infinity);
-    }
-    if (minLevel > 0) {
-      for (let i = 0; i < minLevel; i++) {
-        tileMatrixSetLabels.unshift("");
-      }
-    }
 
     return {
       id: tileMatrixSetId,
@@ -995,6 +981,119 @@ export function getServiceContactInformation(contactInfo: ServiceProvider) {
 }
 
 export default WebMapTileServiceCatalogItem;
+
+/**
+ * How many tiles a re-rooted scheme may need for the whole globe. Cesium's own
+ * schemes use one or two; NASA GIBS' geographic sets need 50. Much beyond that
+ * and the coarsest view of the layer costs thousands of requests, so the set is
+ * better left unused.
+ */
+const MAXIMUM_LEVEL_ZERO_TILES = 100;
+
+/** Does this matrix's grid of tiles cover the tiling scheme's rectangle exactly? */
+function coversTilingScheme(
+  matrix: TileMatrix,
+  columns: number,
+  rows: number,
+  scheme: WebMercatorTilingScheme | GeographicTilingScheme
+): boolean {
+  // WMTS 07-057r7 6.1: a scale denominator assumes a 0.28mm pixel, and is
+  // converted to CRS units with the standardized metres per unit.
+  const metersPerUnit =
+    scheme instanceof WebMercatorTilingScheme ? 1 : 111319.4907932736;
+  const unitsPerPixel =
+    (Number(matrix.ScaleDenominator) * 0.00028) / metersPerUnit;
+  const rectangle = scheme.rectangleToNativeRectangle(scheme.rectangle);
+  const tolerance = rectangle.width * 1e-6;
+  return (
+    Math.abs(
+      columns * Number(matrix.TileWidth) * unitsPerPixel - rectangle.width
+    ) < tolerance &&
+    Math.abs(
+      rows * Number(matrix.TileHeight) * unitsPerPixel - rectangle.height
+    ) < tolerance
+  );
+}
+
+/**
+ * Work out which tile levels Cesium can serve from a `<TileMatrixSet>`, and the
+ * tiling scheme that matches them.
+ *
+ * Cesium divides the world uniformly, so every matrix must hold
+ * `levelZeroTiles * 2^level` columns. A set that already follows that (the
+ * usual case) keeps its own level numbering, with unavailable low levels
+ * padded out. NASA GIBS' geographic sets instead run 2, 3, 5, 10, 20, 40
+ * columns: the top matrices cover more than the globe and have no uniform
+ * equivalent, so the scheme is rooted at the first matrix from which the
+ * doubling holds, dropping the coarser ones.
+ */
+function levelsForTileMatrixSet(
+  matrices: TileMatrix[],
+  ids: string[],
+  scheme: WebMercatorTilingScheme | GeographicTilingScheme
+):
+  | Pick<
+      UsableTileMatrixSets,
+      "identifiers" | "minLevel" | "maxLevel" | "scheme"
+    >
+  | undefined {
+  const levelOf = (id: string) =>
+    Math.abs(Number(id.substring(id.lastIndexOf(":") + 1)));
+  const columns = matrices.map((matrix) => Number(matrix.MatrixWidth));
+  const rows = matrices.map((matrix) => Number(matrix.MatrixHeight));
+  // Sizes are optional in the schema; without them assume the scheme's own.
+  const sized = columns.every(
+    (column, i) => isFinite(column) && isFinite(rows[i])
+  );
+  const matchesScheme = columns.every(
+    (column, i) =>
+      column === scheme.getNumberOfXTilesAtLevel(levelOf(ids[i])) &&
+      rows[i] === scheme.getNumberOfYTilesAtLevel(levelOf(ids[i]))
+  );
+
+  if (!sized || matchesScheme) {
+    const levels = ids.map(levelOf);
+    const minLevel = Math.min(...levels);
+    return {
+      identifiers: [...new Array(minLevel).fill(""), ...ids],
+      minLevel,
+      maxLevel: Math.max(...levels),
+      scheme
+    };
+  }
+
+  const root = matrices.findIndex(
+    (matrix, index) =>
+      coversTilingScheme(matrix, columns[index], rows[index], scheme) &&
+      columns
+        .slice(index)
+        .every(
+          (column, i) =>
+            column === columns[index] * 2 ** i &&
+            rows[index + i] === rows[index] * 2 ** i
+        )
+  );
+  // Nothing uniform to render, or the coarsest uniform matrix is so deep that
+  // showing the whole globe would mean thousands of requests.
+  if (root < 0 || columns[root] * rows[root] > MAXIMUM_LEVEL_ZERO_TILES) {
+    return undefined;
+  }
+  return {
+    identifiers: ids.slice(root),
+    minLevel: 0,
+    maxLevel: ids.length - 1 - root,
+    scheme:
+      scheme instanceof WebMercatorTilingScheme
+        ? new WebMercatorTilingScheme({
+            numberOfLevelZeroTilesX: columns[root],
+            numberOfLevelZeroTilesY: rows[root]
+          })
+        : new GeographicTilingScheme({
+            numberOfLevelZeroTilesX: columns[root],
+            numberOfLevelZeroTilesY: rows[root]
+          })
+  };
+}
 
 /** Parse the same timestamp and interval encodings for metadata and catalog overrides. */
 function parseTimeValues(

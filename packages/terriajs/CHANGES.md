@@ -15,6 +15,7 @@
 - **Breaking:** Removed `WebMapTileServiceCatalogItem.imageryProvider`. Read the provider from `mapItems` (filter with `ImageryParts.is`) as for other imagery catalog items.
 - Added `GetFeatureInfo` support to `WebMapTileServiceCatalogItem`. Feature picking uses the `FeatureInfo` ResourceURL template advertised by GetCapabilities (RESTful) or the service URL (KVP), with the response formats taken from the layer's `<InfoFormat>` list, and the selected time is included in the request. A new `getFeatureInfoUrl` trait overrides the endpoint. Picking is disabled on layers that advertise no feature info at all (e.g. NASA GIBS), which previously sent `GetFeatureInfo` requests to the tile endpoint.
 - Picked raster features whose position comes back with latitude and longitude transposed (e.g. Copernicus Marine) are now placed correctly, by choosing whichever reading is nearer the clicked location.
+- Fixed WMTS layers losing data (Asia was missing from NASA GIBS geographic layers) when a `<TileMatrixSet>` does not divide the world the way Cesium's tiling schemes do. GIBS' geographic sets run 2, 3, 5, 10, 20, 40 columns, so requests went past the columns the server has and failed with `TileOutOfRange`. The tiling scheme is now rooted at the first matrix from which the grid tiles the globe evenly, and a matrix set that never does, or whose coarsest usable matrix would need thousands of tiles to show the globe, is not used.
 - [The next improvement]
 
 #### 8.13.0 - 2026-09-11
