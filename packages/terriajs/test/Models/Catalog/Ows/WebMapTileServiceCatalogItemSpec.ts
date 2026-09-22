@@ -2,6 +2,8 @@ import i18next from "i18next";
 import { autorun, runInAction } from "mobx";
 import Resource from "terriajs-cesium/Source/Core/Resource";
 import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
+import GeographicTilingScheme from "terriajs-cesium/Source/Core/GeographicTilingScheme";
+import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
 import WebMapTileServiceImageryProvider from "terriajs-cesium/Source/Scene/WebMapTileServiceImageryProvider";
 import { ImageryParts } from "../../../../lib/ModelMixins/MappableMixin";
 import WebMapTileServiceCatalogItem from "../../../../lib/Models/Catalog/Ows/WebMapTileServiceCatalogItem";
@@ -59,6 +61,19 @@ describe("WebMapTileServiceCatalogItem", function () {
     });
     expect(wmts.currentTimeAsJulianDate).toBeDefined();
     expect(wmts.currentDiscreteTimeTag).toContain("2024-01-02");
+  });
+
+  it("has no tile matrix set or short report before its capabilities load", function () {
+    // The workbench reads shortReport as soon as an item is added, which is
+    // before loadMetadata has put the GetCapabilities stratum in place.
+    runInAction(() => {
+      wmts.setTrait("definition", "url", "test/WMTS/multiple-crs.xml");
+      wmts.setTrait("definition", "layer", "both_projections");
+    });
+
+    expect(() => wmts.tileMatrixSet).not.toThrow();
+    expect(wmts.tileMatrixSet).toBeUndefined();
+    expect(() => wmts.shortReport).not.toThrow();
   });
 
   it("derives getCapabilitiesUrl from url if getCapabilitiesUrl is not specifiied", function () {
@@ -251,6 +266,42 @@ describe("WebMapTileServiceCatalogItem", function () {
     // The deepest level must match what the server advertises.
     expect(tileMatrixSet.scheme.getNumberOfXTilesAtLevel(2)).toBe(40);
     expect(tileMatrixSet.scheme.getNumberOfYTilesAtLevel(2)).toBe(20);
+  });
+
+  describe("projection support", function () {
+    it("prefers a Web Mercator matrix set even when a geographic one is listed first", async function () {
+      runInAction(() => {
+        wmts.setTrait("definition", "url", "test/WMTS/multiple-crs.xml");
+        wmts.setTrait("definition", "layer", "both_projections");
+      });
+
+      await wmts.loadMapItems();
+
+      expect(wmts.tileMatrixSet!.id).toBe("EPSG:3857");
+      expect(
+        wmts.tileMatrixSet!.scheme instanceof WebMercatorTilingScheme
+      ).toBe(true);
+    });
+
+    it("reports why a geographic-only layer cannot be shown in 2D", async function () {
+      runInAction(() => {
+        wmts.setTrait("definition", "url", "test/WMTS/multiple-crs.xml");
+        wmts.setTrait("definition", "layer", "geographic_only");
+      });
+
+      await wmts.loadMapItems();
+      expect(wmts.tileMatrixSet!.scheme instanceof GeographicTilingScheme).toBe(
+        true
+      );
+
+      // A WMTS server cannot reproject on request the way WMS can, so there is
+      // nothing to fall back to.
+      expect(wmts.shortReport).toBeUndefined();
+      spyOnProperty(terria, "currentViewer", "get").and.returnValue({
+        type: "Leaflet"
+      } as any);
+      expect(wmts.shortReport).toBe("map.cesium.notWebMercatorTilingScheme");
+    });
   });
 
   it("rejects a matrix set whose tiles never divide the globe evenly", async function () {

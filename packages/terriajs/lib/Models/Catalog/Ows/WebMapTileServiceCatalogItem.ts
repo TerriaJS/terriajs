@@ -522,6 +522,19 @@ class WebMapTileServiceCatalogItem extends MappableMixin(
     return WebMapTileServiceCatalogItem.type;
   }
 
+  @override
+  get shortReport(): string | undefined {
+    // Unlike WMS, a WMTS server cannot reproject on request: if it publishes no
+    // Web Mercator tile matrix set there is nothing the 2D map can draw.
+    if (
+      this.tileMatrixSet?.scheme instanceof GeographicTilingScheme &&
+      this.terria.currentViewer.type === "Leaflet"
+    ) {
+      return i18next.t(($) => $.map.cesium.notWebMercatorTilingScheme);
+    }
+    return super.shortReport;
+  }
+
   /** Explicit `timeValues` take precedence over times advertised by capabilities. */
   @computed
   get discreteTimes() {
@@ -858,8 +871,9 @@ class WebMapTileServiceCatalogItem extends MappableMixin(
     | undefined {
     const stratum = this.strata.get(
       GetCapabilitiesMixin.getCapabilitiesStratumName
-    ) as GetCapabilitiesStratum;
-    if (!this.layer) {
+    ) as GetCapabilitiesStratum | undefined;
+    // Reachable before the capabilities have loaded, e.g. from `shortReport`.
+    if (!this.layer || !stratum) {
       return;
     }
     const layer = stratum.capabilitiesLayer;
@@ -886,8 +900,21 @@ class WebMapTileServiceCatalogItem extends MappableMixin(
     let tileHeight: number = 256;
     let tileMatrixSetLabels: string[] = [];
     let scheme: WebMercatorTilingScheme | GeographicTilingScheme;
-    for (let i = 0; i < tileMatrixSetLinks.length; i++) {
-      const tileMatrixSet = tileMatrixSetLinks[i].TileMatrixSet;
+    // Prefer Web Mercator: it is the only projection the 2D map can draw, and
+    // Cesium handles either.
+    const links = [...tileMatrixSetLinks].sort(
+      (a, b) =>
+        Number(
+          usableTileMatrixSets?.[b.TileMatrixSet]?.scheme instanceof
+            WebMercatorTilingScheme
+        ) -
+        Number(
+          usableTileMatrixSets?.[a.TileMatrixSet]?.scheme instanceof
+            WebMercatorTilingScheme
+        )
+    );
+    for (let i = 0; i < links.length; i++) {
+      const tileMatrixSet = links[i].TileMatrixSet;
       const usable = usableTileMatrixSets?.[tileMatrixSet];
       if (usable) {
         tileMatrixSetId = tileMatrixSet;
