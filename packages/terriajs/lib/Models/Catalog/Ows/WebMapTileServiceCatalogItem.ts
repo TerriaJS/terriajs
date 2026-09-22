@@ -719,9 +719,21 @@ class WebMapTileServiceCatalogItem extends MappableMixin(
   @computed
   private get featureInfoUrl(): string | undefined {
     if (isDefined(this.getFeatureInfoUrl)) return this.getFeatureInfoUrl;
-    if (this.requestEncoding !== "RESTful") return undefined;
+
     const template = this.featureInfoResourceUrls[0]?.template;
-    return template?.replace(/\{I\}/g, "{i}").replace(/\{J\}/g, "{j}");
+    if (this.requestEncoding === "RESTful" && template) {
+      // WMTS names the pixel {I}/{J}; Cesium substitutes {i}/{j}.
+      return template.replace(/\{I\}/g, "{i}").replace(/\{J\}/g, "{j}");
+    }
+
+    // Otherwise KVP, which a service may serve from its own endpoint rather
+    // than the one GetTile uses. Undefined leaves Cesium using the tile URL.
+    const stratum = this.strata.get(
+      GetCapabilitiesMixin.getCapabilitiesStratumName
+    ) as GetCapabilitiesStratum | undefined;
+    return stratum
+      ? kvpEndpoint(stratum.capabilities, "GetFeatureInfo")
+      : undefined;
   }
 
   /**
@@ -801,32 +813,7 @@ class WebMapTileServiceCatalogItem extends MappableMixin(
     format: string,
     time?: string
   ) {
-    let url: string | undefined = undefined;
-    if (
-      capabilities.OperationsMetadata &&
-      "GetTile" in capabilities.OperationsMetadata
-    ) {
-      const gets = capabilities.OperationsMetadata.GetTile["Get"];
-
-      for (let i = 0; i < gets.length; i++) {
-        let constraints = gets[i].Constraint;
-        if (constraints) {
-          constraints = Array.isArray(constraints)
-            ? constraints
-            : [constraints];
-          const getEncodingConstraint = constraints.find(
-            (element) => element.name === "GetEncoding"
-          );
-
-          const encodings = getEncodingConstraint?.AllowedValues?.Value;
-          if (encodings?.includes("KVP")) {
-            url = gets[i]["xlink:href"];
-          }
-        } else if (gets[i]["xlink:href"]) {
-          url = gets[i]["xlink:href"];
-        }
-      }
-    }
+    let url: string | undefined = kvpEndpoint(capabilities, "GetTile");
 
     const resourceUrls: ResourceUrl[] | undefined =
       !layer.ResourceURL || Array.isArray(layer.ResourceURL)
@@ -1120,6 +1107,37 @@ function levelsForTileMatrixSet(
             numberOfLevelZeroTilesY: rows[root]
           })
   };
+}
+
+/**
+ * The URL a service advertises for an operation's KVP requests, if any. A
+ * service may serve each operation from its own endpoint, so GetFeatureInfo
+ * cannot be assumed to live where GetTile does.
+ */
+function kvpEndpoint(
+  capabilities: WebMapTileServiceCapabilities,
+  operation: string
+): string | undefined {
+  const gets = capabilities.OperationsMetadata?.[operation]?.Get;
+  if (!gets) return undefined;
+
+  let url: string | undefined;
+  for (const get of gets) {
+    const constraints = !get.Constraint
+      ? undefined
+      : Array.isArray(get.Constraint)
+        ? get.Constraint
+        : [get.Constraint];
+    if (constraints) {
+      const encodings = constraints.find(
+        (constraint) => constraint.name === "GetEncoding"
+      )?.AllowedValues?.Value;
+      if (encodings?.includes("KVP")) url = get["xlink:href"];
+    } else if (get["xlink:href"]) {
+      url = get["xlink:href"];
+    }
+  }
+  return url;
 }
 
 /** Parse the same timestamp and interval encodings for metadata and catalog overrides. */

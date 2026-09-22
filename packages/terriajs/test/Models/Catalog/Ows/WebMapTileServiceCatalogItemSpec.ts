@@ -818,6 +818,29 @@ describe("WebMapTileServiceCatalogItem", function () {
       expect(currentProvider(wmts)?.enablePickFeatures).toBe(true);
     });
 
+    it("sends KVP GetFeatureInfo to the endpoint the service advertises for it", async function () {
+      // OperationsMetadata may give each operation its own endpoint. Cesium
+      // falls back to the tile URL, which answers GetTile, not GetFeatureInfo.
+      runInAction(() => {
+        wmts.setTrait(
+          "definition",
+          "url",
+          "test/WMTS/separate-featureinfo-endpoint.xml"
+        );
+        wmts.setTrait("definition", "layer", "split_endpoints");
+      });
+      await wmts.loadMapItems();
+
+      expect(await requestedTileUrl(wmts)).toContain(
+        "https://example.com/wmts/tile"
+      );
+
+      const { url } = await pick(wmts);
+      expect(url).toContain("https://example.com/wmts/info");
+      expect(url).not.toContain("/wmts/tile");
+      expect(new URL(url).searchParams.get("request")).toBe("GetFeatureInfo");
+    });
+
     it("uses the getFeatureInfoUrl trait over the advertised template", async function () {
       runInAction(() => {
         wmts.setTrait(
