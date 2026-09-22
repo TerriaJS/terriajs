@@ -1,5 +1,6 @@
 import i18next from "i18next";
 import { autorun, runInAction } from "mobx";
+import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
 import WebMapTileServiceImageryProvider from "terriajs-cesium/Source/Scene/WebMapTileServiceImageryProvider";
 import { ImageryParts } from "../../../../lib/ModelMixins/MappableMixin";
 import WebMapTileServiceCatalogItem from "../../../../lib/Models/Catalog/Ows/WebMapTileServiceCatalogItem";
@@ -589,6 +590,48 @@ describe("WebMapTileServiceCatalogItem", function () {
       const partsAfter = wmts.mapItems.filter(ImageryParts.is);
       const currentProviderAfter = partsAfter[0].imageryProvider as any;
       expect(currentProviderAfter.enablePickFeatures).toBe(false);
+    });
+
+    it("sends the selected time as a query parameter on KVP GetTile requests", async function () {
+      // Copernicus Marine only offers KVP GetTile. Cesium composes the tile
+      // URL at request time (base URL + DefaultParameters + `dimensions`), so
+      // observe the Resource it hands to ImageryProvider.loadImage rather
+      // than the provider's base url.
+      runInAction(() => {
+        wmts.setTrait(
+          "definition",
+          "url",
+          "test/WMTS/with_operation_metadata.xml"
+        );
+        wmts.setTrait(
+          "definition",
+          "layer",
+          "NWSHELF_ANALYSISFORECAST_PHY_004_013/cmems_mod_nws_phy_anfc_0.027deg-3D_PT1H-m_202309/vo"
+        );
+        wmts.setTrait("definition", "currentTime", "2023-08-01T00:00:00Z");
+      });
+
+      await wmts.loadMapItems();
+
+      const loadImage = spyOn(ImageryProvider, "loadImage").and.returnValue(
+        Promise.resolve(new Image())
+      );
+      const requestedUrl = () =>
+        new URL(String(loadImage.calls.mostRecent().args[1]));
+      await currentProvider(wmts)!.requestImage(0, 0, 0);
+
+      const query = requestedUrl().searchParams;
+      expect(query.get("request")).toBe("GetTile");
+      expect(query.get("Time")).toBe("2023-08-01T00:00:00Z");
+
+      // Selecting another time must reach the next request too.
+      runInAction(() => {
+        wmts.setTrait(CommonStrata.user, "currentTime", "2023-08-02T00:00:00Z");
+      });
+      await currentProvider(wmts)!.requestImage(0, 0, 0);
+      expect(requestedUrl().searchParams.get("Time")).toBe(
+        "2023-08-02T00:00:00Z"
+      );
     });
 
     it("rebuilds the imagery provider when currentTime changes (U8)", async function () {
