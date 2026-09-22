@@ -275,6 +275,7 @@
     "qualityLabel": "Quality",
     "performanceLabel": "Performance",
     "baseMapOpacity": "Base Map Opacity:",
+    "lowPerformanceQualityNote": "Also disables shadows and reduces resolution to improve performance.",
     "baseMapStatus": {
       "requiresViewerMode": "⚠️ The selected base map can only be viewed in {{viewerMode}}"
     },
@@ -1588,6 +1589,10 @@
         "receive": "Receive Only",
         "both": "Cast and Receive"
       }
+    },
+    "shadowsDisabledForPerformance": {
+      "title": "Shadows disabled",
+      "message": "Shadows have been turned off because Map Quality is set to a low-performance level, even though one or more of your datasets have shadows enabled. Increase Map Quality to restore them."
     },
     "clippingBox": {
       "groupName": "Clipping Box",

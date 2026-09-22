@@ -90,6 +90,7 @@ import MappableMixin, {
   isTerrainProvider,
   MapItem
 } from "../ModelMixins/MappableMixin";
+import ShadowMixin from "../ModelMixins/ShadowMixin";
 import TileErrorHandlerMixin from "../ModelMixins/TileErrorHandlerMixin";
 import OpacityTraits from "../Traits/TraitsClasses/OpacityTraits";
 import SplitterTraits from "../Traits/TraitsClasses/SplitterTraits";
@@ -464,7 +465,54 @@ export default class Cesium extends GlobeOrMap {
       this.scene.globe.preloadAncestors = !lowSpec;
       this.scene.globe.preloadSiblings = false;
       this.scene.fog.density = this.qualityFogDensity;
-      this.scene.shadowMap.enabled = this.shadowsOverrideEnabled ?? !lowSpec;
+      this.scene.shadowMap.enabled = this.effectiveShadowsEnabled;
+    });
+  }
+
+  /** True if some workbench item's own `shadows` trait asks for cast/receive
+   * shadows, even though the quality slider's low-spec tier may currently be
+   * forcing scene.shadowMap off for all datasets. */
+  @computed
+  private get hasShadowRequestingWorkbenchItem(): boolean {
+    return this.terria.workbench.items.some(
+      (item) => ShadowMixin.isMixedInto(item) && item.shadows !== "NONE"
+    );
+  }
+
+  /** Whether scene.shadowMap is actually enabled right now, once
+   * `shadowsOverrideEnabled` (see `enableShadowsOverride()`) is taken into
+   * account - the single source of truth `notifyIfShadowsSuppressed()`
+   * checks against, rather than re-deriving the low-spec tier itself. */
+  @computed
+  private get effectiveShadowsEnabled(): boolean {
+    return this.shadowsOverrideEnabled ?? !this.isLowSpecQualityTier;
+  }
+
+  /**
+   * Shows a toast telling the user shadows are currently suppressed, if some
+   * workbench item's own `shadows` trait wants them but scene.shadowMap is
+   * off right now. This is deliberately *not* wired up as a passive reaction
+   * to state changes (which would either spam the user on every unrelated
+   * recompute, or - if de-duplicated - silently miss a genuine new change
+   * that doesn't flip the overall boolean, e.g. turning on shadows for one
+   * item while another item already has them on). Instead, call this
+   * directly from every user-facing action that could create or reveal the
+   * mismatch: the quality slider (`SettingPanel.tsx`), the per-item shadow
+   * dropdown (`ShadowMixin.ts`), and - once built - the sunlight/viewshed
+   * tool's own activate/deactivate actions alongside
+   * `enableShadowsOverride()`/`clearShadowsOverride()`.
+   */
+  notifyIfShadowsSuppressed(): void {
+    if (
+      this.effectiveShadowsEnabled ||
+      !this.hasShadowRequestingWorkbenchItem
+    ) {
+      return;
+    }
+    this.terria.notificationState.addNotificationToQueue({
+      title: i18next.t(($) => $.models.shadowsDisabledForPerformance.title),
+      message: i18next.t(($) => $.models.shadowsDisabledForPerformance.message),
+      showAsToast: true
     });
 
     this._disposeBaseMapOpacityReaction = reaction(
@@ -511,7 +559,12 @@ export default class Cesium extends GlobeOrMap {
     this.shadowsOverrideEnabled = true;
   }
 
-  /** Hands shadow control back to the quality slider. */
+  /**
+   * Hands shadow control back to the quality slider. If the slider is still
+   * in its low-spec tier, this may immediately re-suppress shadows for a
+   * workbench item that wants them - callers should follow this with
+   * `notifyIfShadowsSuppressed()` to tell the user if that just happened.
+   */
   @action
   clearShadowsOverride(): void {
     this.shadowsOverrideEnabled = undefined;

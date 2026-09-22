@@ -76,4 +76,43 @@ describe("Notification", function () {
       expect(title).toBeNull("Message must be ignored when mobx value changes");
     });
   });
+
+  describe("toast notifications", function () {
+    beforeEach(function () {
+      jasmine.clock().install();
+    });
+
+    afterEach(function () {
+      jasmine.clock().uninstall();
+    });
+
+    it("stays visible indefinitely when toastVisibleDuration is not set", function () {
+      viewState.terria.notificationState.addNotificationToQueue({
+        title: "Shadows disabled",
+        message: "this toast has no duration set",
+        showAsToast: true
+      });
+      renderWithContexts(<Notification />, viewState);
+      act(() => {
+        jasmine.clock().tick(10 * 60 * 1000);
+      });
+      const message = screen.queryByText("this toast has no duration set");
+      expect(message).toBeVisible();
+    });
+
+    it("auto-dismisses once toastVisibleDuration elapses when it is set", function () {
+      viewState.terria.notificationState.addNotificationToQueue({
+        title: "Base map switched",
+        message: "this toast has a 10 second duration",
+        showAsToast: true,
+        toastVisibleDuration: 10
+      });
+      renderWithContexts(<Notification />, viewState);
+      act(() => {
+        jasmine.clock().tick(10 * 1000);
+      });
+      const message = screen.queryByText("this toast has a 10 second duration");
+      expect(message).toBeNull();
+    });
+  });
 });

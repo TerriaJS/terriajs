@@ -22,6 +22,12 @@ const NotificationToast: FC<{
       : notification.message;
 
   useEffect(() => {
+    // No toastVisibleDuration means the toast stays open until the user
+    // closes it - omitting the timeout here rather than passing `undefined`
+    // to setTimeout, which would fire almost immediately instead of never.
+    if (durationMsecs === undefined) {
+      return;
+    }
     const timeout = setTimeout(() => {
       if (notificationState.currentNotification === notification) {
         notificationState.dismissCurrentNotification();
