@@ -14,6 +14,21 @@ function currentProvider(wmts: WebMapTileServiceCatalogItem) {
     | undefined;
 }
 
+/**
+ * The tile URL Cesium requests for the currently selected time, decoded.
+ * Cesium fills in `{Time}` template values / KVP query parameters only when
+ * building a request, so the provider's `url` alone does not show the time.
+ */
+async function requestedTileUrl(wmts: WebMapTileServiceCatalogItem) {
+  const loadImage = jasmine.isSpy(ImageryProvider.loadImage)
+    ? (ImageryProvider.loadImage as jasmine.Spy)
+    : spyOn(ImageryProvider, "loadImage").and.returnValue(
+        Promise.resolve(new Image())
+      );
+  await currentProvider(wmts)!.requestImage(0, 0, 0);
+  return decodeURIComponent(String(loadImage.calls.mostRecent().args[1]));
+}
+
 describe("WebMapTileServiceCatalogItem", function () {
   let terria: Terria;
   let wmts: WebMapTileServiceCatalogItem;
@@ -405,12 +420,12 @@ describe("WebMapTileServiceCatalogItem", function () {
         "2023-01-03"
       ]);
       expect(wmts.currentTime).toBe("2023-01-02");
-      expect(currentProvider(wmts)?.url).toContain("2023-01-02");
+      expect(await requestedTileUrl(wmts)).toContain("/2023-01-02/");
 
       runInAction(() => {
         wmts.setTrait(CommonStrata.user, "currentTime", "2023-01-03");
       });
-      expect(currentProvider(wmts)?.url).toContain("2023-01-03");
+      expect(await requestedTileUrl(wmts)).toContain("/2023-01-03/");
     });
 
     [undefined, []].forEach((timeValues) => {
@@ -470,14 +485,11 @@ describe("WebMapTileServiceCatalogItem", function () {
       await wmts.loadMapItems();
 
       // The TERN fixture's <Default> is 2024-01-05T00:00:00Z and the
-      // ResourceURL template contains a `{time}` placeholder. After
-      // _createImageryProvider runs, the provider's url MUST have the
-      // placeholder substituted with the default-selected time.
-      // Discriminating assertion: a literal `{time}` in the URL would prove
-      // the substitution path didn't fire.
-      expect(currentProvider(wmts)?.url).toContain("2024-01-05T00:00:00Z");
-      expect(currentProvider(wmts)?.url).not.toContain("{time}");
-      expect(currentProvider(wmts)?.url).not.toContain("{Time}");
+      // ResourceURL template contains a lowercase `{time}` placeholder.
+      const url = await requestedTileUrl(wmts);
+      expect(url).toContain("/2024-01-05T00:00:00Z/");
+      expect(url).not.toContain("{time}");
+      expect(url).not.toContain("{Time}");
     });
 
     it("prefers the REST ResourceURL that carries a {Time} placeholder when the layer advertises several", async function () {
@@ -499,9 +511,9 @@ describe("WebMapTileServiceCatalogItem", function () {
 
       await wmts.loadMapItems();
 
-      const url = currentProvider(wmts)?.url;
+      const url = await requestedTileUrl(wmts);
       expect(url).toContain(
-        "/MODIS_Terra_CorrectedReflectance_TrueColor/default/2024-03-14/{TileMatrixSet}/"
+        "/MODIS_Terra_CorrectedReflectance_TrueColor/default/2024-03-14/"
       );
       expect(url).not.toContain("/default/default/");
     });
@@ -544,9 +556,10 @@ describe("WebMapTileServiceCatalogItem", function () {
       // where `{Time}` was. Negative assertion: no leftover placeholder
       // in either case. Together these prove the case-insensitive substitution
       // path actually fires (not just the lowercase one tested in U6).
-      expect(currentProvider(wmts)?.url).toContain("2024-01-05T00:00:00Z");
-      expect(currentProvider(wmts)?.url).not.toContain("{Time}");
-      expect(currentProvider(wmts)?.url).not.toContain("{time}");
+      const url = await requestedTileUrl(wmts);
+      expect(url).toContain("/2024-01-05T00:00:00Z/");
+      expect(url).not.toContain("{Time}");
+      expect(url).not.toContain("{time}");
     });
 
     it("propagates allowFeaturePicking onto _currentImageryParts and disables it on _nextImageryParts (U6c)", async function () {
@@ -613,14 +626,7 @@ describe("WebMapTileServiceCatalogItem", function () {
 
       await wmts.loadMapItems();
 
-      const loadImage = spyOn(ImageryProvider, "loadImage").and.returnValue(
-        Promise.resolve(new Image())
-      );
-      const requestedUrl = () =>
-        new URL(String(loadImage.calls.mostRecent().args[1]));
-      await currentProvider(wmts)!.requestImage(0, 0, 0);
-
-      const query = requestedUrl().searchParams;
+      const query = new URL(await requestedTileUrl(wmts)).searchParams;
       expect(query.get("request")).toBe("GetTile");
       expect(query.get("Time")).toBe("2023-08-01T00:00:00Z");
 
@@ -628,10 +634,9 @@ describe("WebMapTileServiceCatalogItem", function () {
       runInAction(() => {
         wmts.setTrait(CommonStrata.user, "currentTime", "2023-08-02T00:00:00Z");
       });
-      await currentProvider(wmts)!.requestImage(0, 0, 0);
-      expect(requestedUrl().searchParams.get("Time")).toBe(
-        "2023-08-02T00:00:00Z"
-      );
+      expect(
+        new URL(await requestedTileUrl(wmts)).searchParams.get("Time")
+      ).toBe("2023-08-02T00:00:00Z");
     });
 
     it("rebuilds the imagery provider when currentTime changes (U8)", async function () {
@@ -646,28 +651,20 @@ describe("WebMapTileServiceCatalogItem", function () {
 
       await wmts.loadMapItems();
 
-      // Snapshot the provider at the default time.
       const providerAtDefault = currentProvider(wmts);
-      expect(providerAtDefault).toBeDefined();
-      expect(providerAtDefault!.url).toContain("2024-01-05T00:00:00Z");
+      expect(await requestedTileUrl(wmts)).toContain("/2024-01-05T00:00:00Z/");
 
-      // Flip currentTime to an earlier discrete instant. The
-      // `createTransformerAllowUndefined` cache means the provider is keyed
-      // by the time string — a different time MUST produce a different
-      // provider instance with a different substituted URL.
       runInAction(() => {
         wmts.setTrait("definition", "currentTime", "2024-01-02T00:00:00Z");
       });
 
+      // Providers are cached per time, so a new time is a new instance with
+      // its own dimension value.
       const providerAtNewTime = currentProvider(wmts);
-      expect(providerAtNewTime).toBeDefined();
-      // Discriminating assertion #1: the new URL reflects the new time.
-      expect(providerAtNewTime!.url).toContain("2024-01-02T00:00:00Z");
-      expect(providerAtNewTime!.url).not.toContain("2024-01-05T00:00:00Z");
-      // Discriminating assertion #2: it is a *different* provider instance.
-      // If the transformer returned the cached default-time provider, this
-      // would fail and prove the per-time keying is broken.
       expect(providerAtNewTime).not.toBe(providerAtDefault);
+      const url = await requestedTileUrl(wmts);
+      expect(url).toContain("/2024-01-02T00:00:00Z/");
+      expect(url).not.toContain("2024-01-05T00:00:00Z");
     });
   });
 });

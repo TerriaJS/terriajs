@@ -614,27 +614,9 @@ class WebMapTileServiceCatalogItem extends MappableMixin(
   }
 
   /**
-   * Imagery-provider-per-time factory. Wrapped in `createTransformerAllowUndefined`
-   * so MobX caches one provider instance per `time` value — flipping the
-   * timeline tag ticks `currentDiscreteTimeTag`/`nextDiscreteTimeTag`, which
-   * recomputes `_currentImageryParts`/`_nextImageryParts`, which calls this
-   * with a new `time` and gets back a fresh provider. Mirrors the WMS
-   * pattern in `WebMapServiceCatalogItem._createImageryProvider`.
-   *
-   * `time` propagates two ways to Cesium:
-   * 1. **REST `{Time}` placeholder substitution** — if the resolved tile URL
-   *    (pre-Cesium) contains a `{Time}` / `{time}` literal, we substitute it
-   *    here so `imageryProvider.url` is directly inspectable in tests and
-   *    so any URL-level proxying/caching downstream sees the time-keyed URL.
-   * 2. **`dimensions: { Time: time }` constructor option** — Cesium routes
-   *    this to `&TIME=` query param appends in KVP mode, and to template
-   *    substitution (`resource.setTemplateValues(staticDimensions)`) in
-   *    REST mode. Passing it on both paths is harmless: REST templates
-   *    without a `{Time}` placeholder simply ignore the value.
-   *
-   * Layers without a time `<Dimension>` get `time === undefined`, the
-   * substitution is a no-op, and `dimensions` is omitted — so non-temporal
-   * WMTS layers behave exactly as before this refactor.
+   * One imagery provider per selected time, cached by MobX. Cesium applies
+   * `dimensions` itself: as a `{Time}` template value on REST URLs and as a
+   * query parameter on KVP requests.
    */
   private _createImageryProvider = createTransformerAllowUndefined(
     (
@@ -669,30 +651,24 @@ class WebMapTileServiceCatalogItem extends MappableMixin(
         format = "image/jpeg";
       }
 
-      let baseUrl: string = this.getTileUrl(
+      const tileUrl: string = this.getTileUrl(
         layer,
         stratum.capabilities,
         format,
         time
       );
 
-      // REST {Time} substitution. We do this BEFORE `proxyCatalogItemUrl` so
-      // the proxy sees the time-keyed URL (matters for cache key uniqueness
-      // and for any allow-list checks that assert against the literal URL).
-      // The regex is case-insensitive to cover both `{Time}` (NASA GIBS,
-      // Cesium's documented form) and `{time}` (TERN/GeoServer style — see
-      // the `tern-landscapes-time.xml` fixture).
-      if (isDefined(time)) {
-        baseUrl = baseUrl.replace(/\{time\}/gi, time);
-      }
-
       const tileMatrixSet = this.tileMatrixSet;
       if (!isDefined(tileMatrixSet)) {
         return;
       }
 
+      // Cesium's template substitution is case-sensitive, so match the
+      // placeholder's casing ({Time} for GIBS, {time} for GeoServer).
+      const timeDimensionKey = tileUrl.match(/\{(time)\}/i)?.[1] ?? "Time";
+
       const imageryProvider = new WebMapTileServiceImageryProvider({
-        url: proxyCatalogItemUrl(this, baseUrl),
+        url: proxyCatalogItemUrl(this, tileUrl),
         layer: layerIdentifier,
         style: this.style,
         tileMatrixSetID: tileMatrixSet.id,
@@ -705,23 +681,7 @@ class WebMapTileServiceCatalogItem extends MappableMixin(
         tilingScheme: tileMatrixSet.scheme,
         format,
         credit: this.attribution,
-        // KVP path: Cesium combines `dimensions` into the GetTile query
-        // string. REST path: Cesium calls `setTemplateValues(staticDimensions)`
-        // which substitutes any remaining `{Time}` placeholders. We've
-        // already pre-substituted in `baseUrl`, so this is belt-and-braces
-        // for KVP.
-        //
-        // SAFE-SINGLE-SUBSTITUTION INVARIANT: when the REST template contains
-        // `{Time}`/`{time}`, our `baseUrl.replace(/\{time\}/gi, time)` above
-        // consumes all placeholders before Cesium's `setTemplateValues` runs.
-        // Cesium's pass is therefore a no-op on REST URLs that already had
-        // their placeholder, and a real substitution only happens on URLs
-        // that did NOT have one (in which case our regex was the no-op).
-        // The two passes never both substitute the same placeholder; the
-        // ordering is invariant. If Cesium ever changes the order or
-        // escaping of `setTemplateValues`, only this comment's claim is
-        // affected — the URL we hand to Cesium is already fully resolved.
-        ...(isDefined(time) ? { dimensions: { Time: time } } : {})
+        ...(isDefined(time) ? { dimensions: { [timeDimensionKey]: time } } : {})
         // TODO: implement picking for WebMapTileServiceImageryProvider
         //enablePickFeatures: this.allowFeaturePicking
       });
