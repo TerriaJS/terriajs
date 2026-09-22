@@ -13,6 +13,8 @@
 - Added `timeValues` and `maxRefreshIntervals` traits to `wmts` catalog items. `timeValues` accepts ISO 8601 timestamps and intervals (e.g. `2024-01-01/2024-12-31/P1D`) and overrides the times advertised by GetCapabilities, for servers that serve a time dimension without advertising one - GeoServer's GeoWebCache strips `<Dimension>` from its capabilities document. `maxRefreshIntervals` (default `10000`) caps how many discrete times a single interval expands into.
 - A malformed `currentTime`, `startTime` or `stopTime` no longer throws while map items are evaluated - `DiscretelyTimeVaryingMixin` now treats it as no date, as it already did for invalid discrete times.
 - **Breaking:** Removed `WebMapTileServiceCatalogItem.imageryProvider`. Read the provider from `mapItems` (filter with `ImageryParts.is`) as for other imagery catalog items.
+- Added `GetFeatureInfo` support to `WebMapTileServiceCatalogItem`. Feature picking uses the `FeatureInfo` ResourceURL template advertised by GetCapabilities (RESTful) or the service URL (KVP), with the response formats taken from the layer's `<InfoFormat>` list, and the selected time is included in the request. A new `getFeatureInfoUrl` trait overrides the endpoint. Picking is disabled on layers that advertise no feature info at all (e.g. NASA GIBS), which previously sent `GetFeatureInfo` requests to the tile endpoint.
+- Picked raster features whose position comes back with latitude and longitude transposed (e.g. Copernicus Marine) are now placed correctly, by choosing whichever reading is nearer the clicked location.
 - [The next improvement]
 
 #### 8.13.0 - 2026-09-11

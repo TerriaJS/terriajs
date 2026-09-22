@@ -656,7 +656,8 @@ class WebMapTileServiceCatalogItem extends MappableMixin(
       return undefined;
     }
 
-    imageryProvider.enablePickFeatures = this.allowFeaturePicking;
+    imageryProvider.enablePickFeatures =
+      this.allowFeaturePicking && this.supportsFeatureInfo;
 
     return {
       imageryProvider,
@@ -707,6 +708,24 @@ class WebMapTileServiceCatalogItem extends MappableMixin(
     if (this.requestEncoding !== "RESTful") return undefined;
     const template = this.featureInfoResourceUrls[0]?.template;
     return template?.replace(/\{I\}/g, "{i}").replace(/\{J\}/g, "{j}");
+  }
+
+  /**
+   * Whether the layer offers GetFeatureInfo at all. Per WMTS 07-057r7 a layer
+   * declares support with `<InfoFormat>` or a `FeatureInfo` ResourceURL;
+   * without either (NASA GIBS, for example) picking would be sent to the tile
+   * endpoint, so it stays off unless a `getFeatureInfoUrl` is configured.
+   */
+  @computed
+  get supportsFeatureInfo(): boolean {
+    const stratum = this.strata.get(
+      GetCapabilitiesMixin.getCapabilitiesStratumName
+    ) as GetCapabilitiesStratum | undefined;
+    return (
+      isDefined(this.getFeatureInfoUrl) ||
+      this.featureInfoResourceUrls.length > 0 ||
+      isDefined(stratum?.capabilitiesLayer?.InfoFormat)
+    );
   }
 
   @computed

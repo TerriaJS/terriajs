@@ -692,6 +692,43 @@ describe("WebMapTileServiceCatalogItem", function () {
       expect(features?.length).toBe(1);
     });
 
+    it("does not pick on a layer that advertises no feature info (NASA GIBS)", async function () {
+      // GIBS has neither <InfoFormat> nor a FeatureInfo ResourceURL, so Cesium
+      // would otherwise send GetFeatureInfo to the tile template (a .png).
+      runInAction(() => {
+        wmts.setTrait("definition", "url", "test/WMTS/nasa-gibs-time.xml");
+        wmts.setTrait(
+          "definition",
+          "layer",
+          "MODIS_Terra_CorrectedReflectance_TrueColor"
+        );
+      });
+      await wmts.loadMapItems();
+
+      expect(wmts.allowFeaturePicking).toBe(true);
+      expect(wmts.supportsFeatureInfo).toBe(false);
+      expect(currentProvider(wmts)?.enablePickFeatures).toBe(false);
+    });
+
+    it("picks such a layer once getFeatureInfoUrl is configured", async function () {
+      runInAction(() => {
+        wmts.setTrait("definition", "url", "test/WMTS/nasa-gibs-time.xml");
+        wmts.setTrait(
+          "definition",
+          "layer",
+          "MODIS_Terra_CorrectedReflectance_TrueColor"
+        );
+        wmts.setTrait(
+          "definition",
+          "getFeatureInfoUrl",
+          "https://gibs.example/info/{TileMatrix}/{TileRow}/{TileCol}/{i}/{j}"
+        );
+      });
+      await wmts.loadMapItems();
+
+      expect(currentProvider(wmts)?.enablePickFeatures).toBe(true);
+    });
+
     it("uses the getFeatureInfoUrl trait over the advertised template", async function () {
       runInAction(() => {
         wmts.setTrait(

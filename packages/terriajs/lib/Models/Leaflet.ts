@@ -859,7 +859,10 @@ export default class Leaflet extends GlobeOrMap {
                   feature.position = pickedLocation;
                 }
 
-                return this._createFeatureFromImageryLayerFeature(feature);
+                return this._createFeatureFromImageryLayerFeature(
+                  feature,
+                  pickedLocation
+                );
               })
             );
           }, pickedFeatures.features);
