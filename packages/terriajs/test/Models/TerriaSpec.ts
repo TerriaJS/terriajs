@@ -1105,6 +1105,47 @@ describe("TerriaSpec", function () {
     });
   });
 
+  describe("storyAutoStart", function () {
+    it("is false by default", function () {
+      expect(terria.storyAutoStart).toBe(false);
+    });
+
+    it("follows the config parameter", function () {
+      terria.updateParameters({ storyAutoStart: true });
+
+      expect(terria.storyAutoStart).toBe(true);
+    });
+
+    it("is overridden by `settings.storyAutoStart` from an init source", async function () {
+      terria.updateParameters({ storyAutoStart: true });
+
+      await terria.applyInitData({
+        initData: { settings: { storyAutoStart: false } }
+      });
+
+      expect(terria.storyAutoStart).toBe(false);
+    });
+
+    it("is overridden by the `playStory` hash parameter", async function () {
+      terria.updateParameters({ storyAutoStart: false });
+      await terria.applyInitData({
+        initData: { settings: { storyAutoStart: false } }
+      });
+
+      await terria.updateApplicationUrl("http://test.com/#playStory=1");
+
+      expect(terria.storyAutoStart).toBe(true);
+    });
+
+    it("is turned off by `playStory=0`", async function () {
+      terria.updateParameters({ storyAutoStart: true });
+
+      await terria.updateApplicationUrl("http://test.com/#playStory=0");
+
+      expect(terria.storyAutoStart).toBe(false);
+    });
+  });
+
   describe("basemaps", function () {
     it("when no base maps are specified load defaultBaseMaps", async function () {
       await terria.start({ configUrl: "test-config.json" });
@@ -1327,6 +1368,7 @@ describe("TerriaSpec", function () {
         await terria.start({ configUrl: "test-config.json" });
         await terria.loadInitSources();
         await when(() => terria.currentViewer.type === "Cesium");
+        await when(() => terria.currentViewer.isMapZooming === false);
 
         const cameraPos = terria.cesium?.scene.camera.positionCartographic;
         expect(cameraPos).toBeDefined();
@@ -1350,6 +1392,7 @@ describe("TerriaSpec", function () {
         });
         // Wait for the switch to happen
         await when(() => terria.mainViewer.currentViewer.type === "Cesium");
+        await when(() => terria.currentViewer.isMapZooming === false);
         // Ensure that the camera position is correctly updated after the switch
         const cameraPos = terria.cesium?.scene.camera.positionCartographic;
         const { longitude, latitude, height } = cameraPos!;

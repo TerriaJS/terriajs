@@ -2,6 +2,7 @@ import { uniq } from "lodash-es";
 import { runInAction, toJS } from "mobx";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
+import queryToObject from "terriajs-cesium/Source/Core/queryToObject";
 import URI from "urijs";
 import hashEntity from "../../../../Core/hashEntity";
 import isDefined from "../../../../Core/isDefined";
@@ -46,24 +47,33 @@ function buildBaseShareUrl(
 
   const uri = new URI(baseUrl).fragment("").search("");
 
-  const fragmentsToShare = new URL(document.URL).hash
-    .split(/[#&]/)
-    .filter(
-      (elem) =>
-        elem !== "" && !elem.includes("share=") && !elem.includes("start=")
-    );
-  fragmentsToShare.forEach((sub) => {
-    uri.addSearch(sub);
+  // Each parameter has to be added as a key and a value - handing URI.js a
+  // whole "key=value" string makes it encode the `=`, and the map then reads
+  // the result as the name of an init file to load.
+  const params: { [key: string]: unknown } = {};
+
+  // Carry over the hash parameters of the current URL, apart from the ones
+  // describing the map state this link replaces.
+  const currentHashParams: { [key: string]: string } = queryToObject(
+    new URI(document.URL).fragment()
+  );
+  Object.keys(currentHashParams).forEach((key) => {
+    if (key === "share" || key === "start") return;
+    params[key] = currentHashParams[key];
   });
 
+  const addUserProperty = (key: string) => {
+    const value = terria.userProperties.get(key);
+    if (isDefined(value)) params[key] = value;
+  };
+
   if (terria.developmentEnv) {
-    uri.addSearch(toJS(terria.userProperties));
+    terria.userProperties.forEach((_value, key) => addUserProperty(key));
   } else {
-    userPropsToShare.forEach((key) =>
-      uri.addSearch({ [key]: terria.userProperties.get(key) })
-    );
+    userPropsToShare.forEach(addUserProperty);
   }
 
+  uri.addSearch(params);
   uri.addSearch(hashParams);
 
   return uri.fragment(uri.query()).query("").toString();
@@ -128,17 +138,24 @@ export function getShareData(
 ): StartData {
   return runInAction(() => {
     const { includeStories } = options;
+    const hasStories = includeStories && terria.stories.length > 0;
+    const autoStartStory = hasStories && terria.storyAutoStart;
     const initSource: InitSourceData = {};
     const initSources = [initSource];
 
     addStratum(terria, CommonStrata.user, initSource);
     addWorkbench(terria, initSource);
     addTimelineItems(terria, initSource);
-    addViewSettings(terria, viewState, initSource);
+    addViewSettings(terria, viewState, initSource, !autoStartStory);
     addFeaturePicking(terria, initSource);
     if (includeStories) {
       // info that are not needed in scene share data
       addStories(terria, initSource);
+    }
+    if (hasStories && initSource.settings) {
+      // Remember how the story should open, so the share keeps behaving the
+      // same if the map's configuration changes later.
+      initSource.settings.storyAutoStart = terria.storyAutoStart;
     }
 
     return {
@@ -310,7 +327,8 @@ export function canShorten(terria: Terria) {
 function addViewSettings(
   terria: Terria,
   viewState?: ViewState,
-  initSource: InitSourceData = {}
+  initSource: InitSourceData = {},
+  includeCurrentView: boolean = true
 ) {
   const viewer = terria.mainViewer;
 
@@ -325,9 +343,11 @@ function addViewSettings(
     viewerMode = "2d";
   }
 
-  initSource.initialCamera = terria.currentViewer
-    .getCurrentCameraView()
-    .toJson();
+  if (includeCurrentView) {
+    initSource.initialCamera = terria.currentViewer
+      .getCurrentCameraView()
+      .toJson();
+  }
   initSource.homeCamera = terria.mainViewer.homeCamera.toJson();
   initSource.viewerMode = viewerMode;
 

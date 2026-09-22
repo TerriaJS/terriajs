@@ -40,6 +40,7 @@ export default class StratumOrder {
     this.addDefinitionStratum(CommonStrata.definition);
     this.addDefinitionStratum(CommonStrata.override);
     this.addUserStratum(CommonStrata.user);
+    this.addUserStratum(CommonStrata.edit);
   }
 
   /**

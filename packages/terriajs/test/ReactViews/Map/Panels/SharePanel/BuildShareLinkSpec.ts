@@ -12,7 +12,10 @@ import WebMapServiceCatalogItem from "../../../../../lib/Models/Catalog/Ows/WebM
 import CommonStrata from "../../../../../lib/Models/Definition/CommonStrata";
 import { BaseModel } from "../../../../../lib/Models/Definition/Model";
 import TerriaFeature from "../../../../../lib/Models/Feature/Feature";
-import { InitSourceData } from "../../../../../lib/Models/InitSource";
+import {
+  InitSourceData,
+  StoryData
+} from "../../../../../lib/Models/InitSource";
 import Terria from "../../../../../lib/Models/Terria";
 import { setViewerMode } from "../../../../../lib/Models/ViewerMode";
 import ViewState from "../../../../../lib/ReactViewModels/ViewState";
@@ -301,6 +304,128 @@ describe("BuildShareLink", function () {
         expect(entities?.[1].hash).toBeDefined();
       })
     );
+  });
+
+  describe("sharing a story", function () {
+    const story: StoryData = {
+      id: "story-1",
+      title: "Test story",
+      text: "Some text",
+      shareData: { version: SHARE_VERSION, initSources: [] }
+    };
+
+    const shareInitSources = (options?: { includeStories: boolean }) =>
+      flattenInitSources(
+        decodeAndParseStartHash(buildShareLink(terria, viewState, options))
+          .initSources
+      );
+
+    it("includes the current camera when the story does not start by itself", function () {
+      runInAction(() => {
+        terria.stories = [story];
+      });
+
+      const initSources = shareInitSources();
+
+      expect(initSources.initialCamera).toBeDefined();
+      expect(initSources.settings?.storyAutoStart).toBe(false);
+    });
+
+    it("omits the current camera when the story starts by itself", function () {
+      runInAction(() => {
+        terria.stories = [story];
+        terria.updateParameters({ storyAutoStart: true });
+      });
+
+      const initSources = shareInitSources();
+
+      expect(initSources.initialCamera).toBeUndefined();
+      // the home camera is not the current view, so it is still shared
+      expect(initSources.homeCamera).toBeDefined();
+      expect(initSources.stories?.length).toBe(1);
+      expect(initSources.settings?.storyAutoStart).toBe(true);
+    });
+
+    it("includes the current camera when there is no story to start", function () {
+      runInAction(() => {
+        terria.updateParameters({ storyAutoStart: true });
+      });
+
+      const initSources = shareInitSources();
+
+      expect(initSources.initialCamera).toBeDefined();
+      expect(initSources.settings?.storyAutoStart).toBeUndefined();
+    });
+
+    it("includes the current camera when the story is excluded from the share", function () {
+      runInAction(() => {
+        terria.stories = [story];
+        terria.updateParameters({ storyAutoStart: true });
+      });
+
+      const initSources = shareInitSources({ includeStories: false });
+
+      expect(initSources.initialCamera).toBeDefined();
+      expect(initSources.stories).toBeUndefined();
+      expect(initSources.settings?.storyAutoStart).toBeUndefined();
+    });
+
+    it("records the `playStory` hash parameter over the config parameter", function () {
+      runInAction(() => {
+        terria.stories = [story];
+        terria.userProperties.set("playStory", "1");
+      });
+
+      const initSources = shareInitSources();
+
+      expect(initSources.initialCamera).toBeUndefined();
+      expect(initSources.settings?.storyAutoStart).toBe(true);
+    });
+  });
+
+  describe("hash parameters of the current url", function () {
+    const setDocumentUrl = (url: string) =>
+      Object.defineProperty(document, "URL", {
+        value: url,
+        configurable: true
+      });
+
+    const shareLinkHashParams = () =>
+      queryToObject(
+        URI.parse(buildShareLink(terria, viewState)).fragment ?? ""
+      );
+
+    afterEach(function () {
+      // remove the shadowing own property, exposing `Document.prototype.URL` again
+      delete (document as any).URL;
+    });
+
+    it("are carried over as key and value pairs", function () {
+      setDocumentUrl("http://example.com/#playStory=1&hideExplorerPanel=1");
+
+      const params = shareLinkHashParams();
+
+      expect(params["playStory"]).toBe("1");
+      expect(params["hideExplorerPanel"]).toBe("1");
+      // an encoded `=` would be read back as the name of an init file to load
+      expect(Object.keys(params)).not.toContain("playStory=1");
+    });
+
+    it("drop the state the new link replaces", function () {
+      setDocumentUrl("http://example.com/#share=some-token&playStory=1");
+
+      const params = shareLinkHashParams();
+
+      expect(params["share"]).toBeUndefined();
+      expect(params["start"]).toBeDefined();
+      expect(params["playStory"]).toBe("1");
+    });
+
+    it("do not lose their value to an unset user property", function () {
+      setDocumentUrl("http://example.com/#activeTabId=my-tab");
+
+      expect(shareLinkHashParams()["activeTabId"]).toBe("my-tab");
+    });
   });
 
   describe("map settings", function () {

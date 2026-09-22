@@ -4,6 +4,7 @@ import { USER_ADDED_CATEGORY_ID } from "../../../lib/Core/addedByUser";
 import isDefined from "../../../lib/Core/isDefined";
 import CsvCatalogItem from "../../../lib/Models/Catalog/CatalogItems/CsvCatalogItem";
 import GeoJsonCatalogItem from "../../../lib/Models/Catalog/CatalogItems/GeoJsonCatalogItem";
+import I3SCatalogItem from "../../../lib/Models/Catalog/CatalogItems/I3SCatalogItem";
 import createUrlReferenceFromUrl from "../../../lib/Models/Catalog/CatalogReferences/createUrlReferenceFromUrl";
 import UrlReference from "../../../lib/Models/Catalog/CatalogReferences/UrlReference";
 import createCatalogItemFromFileOrUrl from "../../../lib/Models/Catalog/createCatalogItemFromFileOrUrl";
@@ -71,6 +72,17 @@ describe("createUrlReferenceFromUrl", function () {
     expect(item).toBeDefined();
     if (item !== undefined) {
       expect(item instanceof CsvCatalogItem).toBe(true);
+    }
+  });
+
+  it("should create an I3SCatalogItem from an ArcGIS SceneServer URL", async function () {
+    const url =
+      "https://tiles.arcgis.com/tiles/z2tnIkrLQ2BRzr6P/arcgis/rest/services/SanFrancisco_3DObjects_1_7/SceneServer";
+
+    const item = await createUrlReferenceFromUrl(url, terria, true);
+    expect(item).toBeDefined();
+    if (item instanceof UrlReference) {
+      expect(item.target instanceof I3SCatalogItem).toBe(true);
     }
   });
 

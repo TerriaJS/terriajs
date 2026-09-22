@@ -1,6 +1,13 @@
 # Change Log
 
-#### next release (0.4.7)
+#### next release
+
+#### 0.4.8
+
+- Upgrade terriajs-server to 5.0.0
+- Upgrade terriajs to 8.13.0
+
+#### 0.4.7
 
 - Upgrade terriajs-server to version 5 alpha
   - Requires node version 22 or above

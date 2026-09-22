@@ -166,6 +166,15 @@ export interface ConfigParameters {
   /** URL to TerriaJS-server config. Defaults to `serverconfig/`. */
   serverConfigUrl?: string;
   /**
+   * Origins (eg. `"https://embedder.example"`) that are permitted to send start
+   * data to this application via `window.postMessage` (see
+   * `updateApplicationOnMessageFromParentWindow`). The application's own origin
+   * is always permitted; any other embedder must be listed here. Empty by
+   * default, so cross-origin pages that frame or open the app cannot inject
+   * start data.
+   */
+  parentMessageAllowedOrigins?: string[];
+  /**
    * URL of the service used to generate share links. This defaults to `share` if not specified, which maps to TerriaJS Server `share` endpoint.
    */
   shareUrl?: string;
@@ -192,6 +201,10 @@ export interface ConfigParameters {
    * Whether to show the saving instructions message in the story builder panel. Defaults to false.
    */
   showStorySaveInstructions?: boolean;
+  /**
+   * True to start playing a story as soon as a map containing one is loaded, instead of asking the user whether they want to view it. Defaults to false. A share link that contains a story records the value in effect when it was created, and the `playStory` hash parameter overrides both. When a story starts automatically its first scene sets the camera, so the current view is left out of share links that contain a story.
+   */
+  storyAutoStart?: boolean;
   /**
    * True (the default) to intercept the browser's print feature and use a custom one accessible through the Share panel.
    */
@@ -537,8 +550,6 @@ export default class Terria {
   readonly timelineClock = new Clock({ shouldAnimate: false });
   // readonly overrides: any = overrides; // TODO: add options.functionOverrides like in master
 
-  catalogIndex: CatalogIndex | undefined;
-
   readonly elements = observable.map<string, IElementConfig>();
 
   @observable
@@ -590,6 +601,7 @@ export default class Terria {
     corsProxyBaseUrl: "proxy/",
     proxyableDomainsUrl: "proxyabledomains/", // deprecated, will be determined from serverconfig
     serverConfigUrl: "serverconfig/",
+    parentMessageAllowedOrigins: [],
     shareUrl: "share",
     shareClientBaseUrl: undefined,
     shareRequestHeaders: undefined,
@@ -598,6 +610,7 @@ export default class Terria {
     initFragmentPaths: ["init/"],
     storyEnabled: true,
     showStorySaveInstructions: false,
+    storyAutoStart: false,
     interceptBrowserPrint: true,
     tabbedCatalog: false,
     useCesiumIonTerrain: true,
@@ -742,6 +755,27 @@ export default class Terria {
   @observable depthTestAgainstTerrainEnabled = false;
 
   @observable stories: StoryData[] = [];
+
+  /** `settings.storyAutoStart` from the most recently applied init source (i.e. a share), if it set one. */
+  @observable private _storyAutoStartFromInitSource: boolean | undefined;
+
+  /**
+   * True to start playing a story as soon as one is loaded, rather than asking the user whether they want to view it.
+   *
+   * Resolved from the `playStory` hash parameter, then any `settings.storyAutoStart` carried by a share, then the `storyAutoStart` config parameter.
+   */
+  @computed
+  get storyAutoStart(): boolean {
+    const playStory = this.userProperties.get("playStory");
+    if (isDefined(playStory)) {
+      return playStory === "1" || playStory === "true" || playStory === true;
+    }
+    return (
+      this._storyAutoStartFromInitSource ??
+      this.configParameters.storyAutoStart ??
+      false
+    );
+  }
   @observable storyPromptShown: number = 0; // Story Prompt modal will be rendered when this property changes. See StandardUserInterface, section regarding sui.notifications. Ideally move this to ViewState.
 
   /**
@@ -985,16 +1019,16 @@ export default class Terria {
       // If no model exists, try to find it through Terria model sharekeys or CatalogIndex sharekeys
       if (model?.uniqueId !== undefined) {
         return new Result(model);
-      } else if (this.catalogIndex) {
+      } else if (this.catalog.index) {
         try {
-          await this.catalogIndex.load();
+          await this.catalog.index.load();
         } catch (e) {
           throw TerriaError.from(
             e,
             `Failed to load CatalogIndex while trying to load model \`${id}\``
           );
         }
-        const indexModel = this.catalogIndex.getModelByIdOrShareKey(id);
+        const indexModel = this.catalog.index.getModelByIdOrShareKey(id);
         if (indexModel) {
           (await indexModel.loadReference()).throwIfError();
           return new Result(indexModel.target);
@@ -1158,8 +1192,8 @@ export default class Terria {
 
     // Create catalog index if catalogIndexUrl is set
     // Note: this isn't loaded now, it is loaded in first CatalogSearchProvider.doSearch()
-    if (this.configParameters.catalogIndexUrl && !this.catalogIndex) {
-      this.catalogIndex = new CatalogIndex(
+    if (this.configParameters.catalogIndexUrl && !this.catalog.index) {
+      this.catalog.index = new CatalogIndex(
         this,
         this.configParameters.catalogIndexUrl
       );
@@ -1910,6 +1944,9 @@ export default class Terria {
       if (isJsonBoolean(initData.settings.depthTestAgainstTerrainEnabled)) {
         this.depthTestAgainstTerrainEnabled =
           initData.settings.depthTestAgainstTerrainEnabled;
+      }
+      if (isJsonBoolean(initData.settings.storyAutoStart)) {
+        this._storyAutoStartFromInitSource = initData.settings.storyAutoStart;
       }
     }
 

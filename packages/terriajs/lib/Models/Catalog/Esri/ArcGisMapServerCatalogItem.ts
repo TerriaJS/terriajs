@@ -274,7 +274,7 @@ class MapServerStratum extends LoadableStratum(
         name: i18next.t(
           ($) => $.models.arcGisMapServerCatalogItem.serviceDescription
         ),
-        content: this.mapServer.description
+        content: this.mapServer.description || this.mapServer.serviceDescription
       }),
       createStratumInstance(InfoSectionTraits, {
         name: i18next.t(

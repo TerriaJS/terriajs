@@ -33,9 +33,7 @@ export default function loadJson<T = any>(
 
     jsonPromise =
       urlOrResource instanceof Resource
-        ? urlOrResource.post(body, {
-            responseType: responseType
-          })!
+        ? urlOrResource.post(params.data, params)!
         : Resource.post(params)!;
   } else {
     // Make a GET instead

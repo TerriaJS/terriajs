@@ -107,6 +107,7 @@ export const terriaErrorNotification = (error: TerriaError) =>
             }
           `}
           textLight
+          medium
         >
           {parseCustomMarkdownToReact(error.highestImportanceError.message, {
             viewState: viewState,
@@ -116,11 +117,11 @@ export const terriaErrorNotification = (error: TerriaError) =>
         {/* Show error details if there are more errors to show */}
         {detailedErrors ? (
           <>
-            <Spacing bottom={2} />
+            <Spacing bottom={3} />
             <Collapsible
               btnRight
               title={i18next.t(($) => $.models.raiseError.developerDetails)}
-              titleTextProps={{ large: true }}
+              titleTextProps={{ styledFontSize: "13px" }}
               bodyBoxProps={{ padded: true }}
               isOpen={error.showDetails}
               onToggle={(show) => {

@@ -545,6 +545,20 @@ export default class Leaflet extends GlobeOrMap {
     }
 
     if (isDefined(bounds)) {
+      // The map's container may have just been resized/repositioned (eg
+      // switching into a modal) and not yet be laid out with its final
+      // dimensions. Flying to bounds while the container reports a zero
+      // size produces NaN in Leaflet's flight animation math, which then
+      // throws on every animation frame. Recompute the map's size first so
+      // the flight is calculated against real dimensions.
+      this.map.invalidateSize();
+
+      const size = this.map.getSize();
+      if (size.x === 0 || size.y === 0) {
+        this.map.setView(bounds.getCenter(), this.map.getBoundsZoom(bounds));
+        return Promise.resolve();
+      }
+
       this.map.flyToBounds(bounds, {
         animate: flightDurationSeconds > 0.0,
         duration: flightDurationSeconds

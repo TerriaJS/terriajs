@@ -104,6 +104,10 @@ const StandardUserInterfaceBase: FC<StandardUserInterfaceProps> = observer(
         props.terria.stories.length &&
         !props.viewState.storyShown
       ) {
+        if (props.terria.storyAutoStart) {
+          props.viewState.runStories();
+          return;
+        }
         props.terria.notificationState.addNotificationToQueue({
           title: t(($) => $.sui.notifications.title),
           message: t(($) => $.sui.notifications.message),

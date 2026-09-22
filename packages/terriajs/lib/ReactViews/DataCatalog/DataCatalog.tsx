@@ -7,12 +7,14 @@ import SearchHeader from "../Search/SearchHeader";
 import Styles from "./data-catalog.scss";
 import DataCatalogMember from "./DataCatalogMember";
 import { observer } from "mobx-react";
+import Loader from "../Loader";
 
 interface DataCatalogProps {
   items?: readonly BaseModel[];
   hideActionButton?: boolean;
   onActionButtonClicked?: (item: CatalogMemberMixin.Instance) => void;
   removable?: boolean;
+  isLoading?: boolean;
 }
 
 export const DataCatalog = observer(
@@ -20,7 +22,8 @@ export const DataCatalog = observer(
     items,
     hideActionButton,
     onActionButtonClicked,
-    removable
+    removable,
+    isLoading
   }: DataCatalogProps) => {
     const viewState = useViewState();
     const { t } = useTranslation();
@@ -39,7 +42,6 @@ export const DataCatalog = observer(
         : items;
 
     const filteredItems = (unfilteredItems || []).filter(defined);
-
     return (
       <ul className={Styles.dataCatalog}>
         {isSearching && catalogSearchProvider && (
@@ -49,6 +51,11 @@ export const DataCatalog = observer(
             </label>
             <SearchHeader searchResult={catalogSearchProvider.searchResult} />
           </>
+        )}
+        {isLoading && (
+          <li key="loader">
+            <Loader />
+          </li>
         )}
         {filteredItems.map(
           (item) =>

@@ -447,10 +447,19 @@ export default class ViewState {
       }
     );
 
+    // Covers a story being asked to auto-start after load, e.g. `#playStory=1`
+    // arriving on a hash change. The load-time case is handled where the "view
+    // this story?" prompt would otherwise be raised.
     this._showStoriesSubscription = reaction(
-      () => Boolean(terria.userProperties.get("playStory")),
-      (playStory: boolean) => {
-        this.storyShown = terria.configParameters.storyEnabled && playStory;
+      () => terria.storyAutoStart,
+      (storyAutoStart: boolean) => {
+        if (storyAutoStart && terria.configParameters.storyEnabled) {
+          if (terria.stories.length > 0) {
+            this.runStories();
+          }
+        } else {
+          this.storyShown = false;
+        }
       }
     );
 
@@ -683,11 +692,7 @@ export default class ViewState {
           runInAction(() => {
             this.openAddData();
             if (this.terria.configParameters.tabbedCatalog) {
-              const parentGroups = getAncestors(item);
-              if (parentGroups.length > 0) {
-                // Go to specific tab
-                this.activeTabIdInCategory = parentGroups[0].uniqueId;
-              }
+              this.selectParentTab(item);
             }
           });
         }
@@ -696,6 +701,16 @@ export default class ViewState {
         if (!GroupMixin.isMixedInto(item)) {
           this.switchMobileView(this.mobileViewOptions.preview);
         }
+      }
+
+      // Open each ancestor group so the item is revealed. We only ever open
+      // ancestors here - collapsing an item must never collapse its parents.
+      if (isOpen) {
+        getAncestors(item).forEach((ancestor) => {
+          if (GroupMixin.isMixedInto(ancestor)) {
+            ancestor.setTrait(stratum, "isOpen", true);
+          }
+        });
       }
 
       if (GroupMixin.isMixedInto(item)) {
@@ -711,6 +726,37 @@ export default class ViewState {
       return Result.error(e, `Could not view catalog member ${getName(item)}`);
     }
     return Result.none();
+  }
+
+  /**
+   * Load the parent tab of the given item
+   */
+  private selectParentTab(item: BaseModel) {
+    const findParentTab = (item: BaseModel) =>
+      getAncestors(item).find((m) =>
+        this.terria.catalog.group.memberModels.includes(m)
+      );
+
+    let parentGroup = findParentTab(item);
+    if (!parentGroup) {
+      // It is possible that the loadMembers() was not called on the top level
+      // tab groups on app load and therefore the parent -> member links were
+      // not established. Manually call refreshKnownContainerUniqueIds on the
+      // top level tab groups and retry getting the ancestors.
+      this.terria.catalog.group.memberModels.forEach((m) => {
+        if (GroupMixin.isMixedInto(m)) {
+          m.refreshKnownContainerUniqueIds(m.uniqueId);
+        }
+      });
+      parentGroup = findParentTab(item);
+    }
+    if (parentGroup) {
+      // Go to specific tab
+      this.activeTabIdInCategory = parentGroup.uniqueId;
+      if (GroupMixin.isMixedInto(parentGroup)) {
+        parentGroup.loadMembers().then((result) => result.throwIfError());
+      }
+    }
   }
 
   @action

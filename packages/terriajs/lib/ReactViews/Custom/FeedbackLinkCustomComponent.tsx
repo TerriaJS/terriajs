@@ -17,11 +17,24 @@ function showFeedback(viewState: ViewState) {
   });
 }
 
+const emailPlaceholder = /\{\{email\}\}/g;
+
+/** Resolve an `email-message` override against the support email address. The
+ * message can position the address with a `{{email}}` placeholder - i18next
+ * leaves it untouched because the address isn't known at translation time. If
+ * there's no placeholder, the address is appended to the message.
+ */
+function resolveEmailMessage(emailMessage: string, supportEmail: string) {
+  return emailMessage.includes("{{email}}")
+    ? emailMessage.replace(emailPlaceholder, supportEmail)
+    : `${emailMessage} ${supportEmail}`;
+}
+
 export const FeedbackLink = (props: {
   viewState: ViewState;
   /** Override for feedback message */
   feedbackMessage?: string;
-  /** Override for email message - this will be shown if feedback isn't available. NOTE: email will be supportEmail to this string automatically */
+  /** Override for email message - this will be shown if feedback isn't available. NOTE: supportEmail will replace a `{{email}}` placeholder in this string, or be appended to it if there is no placeholder */
   emailMessage?: string;
 }) =>
   // If we have feedbackUrl = show button to open feedback dialog
@@ -46,7 +59,10 @@ export const FeedbackLink = (props: {
     <>
       {parseCustomMarkdownToReact(
         props.emailMessage
-          ? `${props.emailMessage} ${props.viewState.terria.supportEmail}`
+          ? resolveEmailMessage(
+              props.emailMessage,
+              props.viewState.terria.supportEmail
+            )
           : i18next.t(($) => $.models.raiseError.notificationFeedbackEmail, {
               email: props.viewState.terria.supportEmail
             })

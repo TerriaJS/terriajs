@@ -76,10 +76,30 @@ export default class ShareDataService {
       });
       const json = typeof result === "string" ? JSON.parse(result) : result;
       return json.id;
-    } catch (error) {
+    } catch (e: any) {
+      const error: Error & { statusCode?: number } = e || {};
+      // The share service reports failures by HTTP status, and the raw error
+      // still carries it here (once wrapped in a `TerriaError` the number is
+      // lost - only the stringified message survives). Choose a matching
+      // message; an unknown or absent status falls back to the generic one.
+      let message = i18next.t(($) => $.models.shareData.generateErrorMessage);
+      if (error.statusCode === 413) {
+        message = i18next.t(
+          ($) => $.models.shareData.generateErrorDataExceedsLimitMessage
+        );
+      } else if (error.statusCode === 401) {
+        message = i18next.t(
+          ($) => $.models.shareData.generateErrorMessageUnauthorized
+        );
+      } else if (error.statusCode) {
+        message = i18next.t(
+          ($) => $.models.shareData.generateErrorMessageWithStatus,
+          { statusCode: String(error.statusCode) }
+        );
+      }
       throw TerriaError.from(error, {
         title: i18next.t(($) => $.models.shareData.generateErrorTitle),
-        message: i18next.t(($) => $.models.shareData.generateErrorMessage),
+        message,
         importance: 1
       });
     }

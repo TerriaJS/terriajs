@@ -16,10 +16,7 @@ describe("markdownToHtml", function () {
       false,
       {
         ADD_TAGS: CustomComponent.names,
-        ADD_ATTR: CustomComponent.attributes,
-        // This is so that we can have attrs with `:` in their values.
-        // Without this setting such attrs are discarded as unknown protocols.
-        ALLOW_UNKNOWN_PROTOCOLS: true
+        ADD_ATTR: CustomComponent.attributes
       },
       {
         injectTermsAsTooltips: true,

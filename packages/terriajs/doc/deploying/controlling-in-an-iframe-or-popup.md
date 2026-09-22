@@ -1,10 +1,24 @@
 TerriaJS can be configured to accept messages posted to it by its parent window. This is useful when embedding a TerriaJS app in an iframe and when the parent wants to send more data to the embedded app than can be reasonably included in a URL.
 
+If the iframe is display-only and its parent does not send start data, do not configure `parentMessageAllowedOrigins`. You only need to permit the parent using TerriaJS Server's `securityHeaders.cspFrameAncestors` setting. See [Security and production deployment](security.md#embedding-terriajs-in-an-iframe) for the distinction between framing and message permissions.
+
 First, the TerriaJS app must include a line like this:
 
 ```js
 updateApplicationOnMessageFromParentWindow(terria, window);
 ```
+
+For a cross-origin parent or opener, add its exact origin to `parameters.parentMessageAllowedOrigins` in `config.json`:
+
+```json5
+{
+  parameters: {
+    parentMessageAllowedOrigins: ["https://portal.example.gov"]
+  }
+}
+```
+
+Same-origin parents and openers are allowed automatically. Cross-origin messages are ignored unless their origin is configured. The opaque origin `"null"` cannot be allowed.
 
 Then, the parent window can send messages like this:
 
@@ -29,7 +43,11 @@ Then, the parent window can send messages like this:
         var iframeWindow = document.getElementById(
           "embeddedNationalMap"
         ).contentWindow;
-        if (e.source === iframeWindow && e.data === "ready") {
+        if (
+          e.origin === "https://nationalmap.gov.au" &&
+          e.source === iframeWindow &&
+          e.data === "ready"
+        ) {
           // NationalMap is ready to receive messages!
           iframeWindow.postMessage(
             {
@@ -69,3 +87,5 @@ Then, the parent window can send messages like this:
 ```
 
 Notice that parent is creating a CSV catalog item with embedded data. The CSV is only two lines in this case, but in a real application it could be large, much larger than could fit in a URL.
+
+The parent must use the TerriaJS application's exact origin as the `postMessage` target and must validate both `event.origin` and `event.source` when receiving messages. Do not use `"*"` as the target origin.

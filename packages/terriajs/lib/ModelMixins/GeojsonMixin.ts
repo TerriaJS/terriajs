@@ -114,6 +114,37 @@ const SIMPLE_STYLE_KEYS = [
   "fill-opacity"
 ];
 
+/**
+ * Checks that a GeoJSON geometry's coordinates array has enough vertices to
+ * form a valid shape of the given type. A geometry with too few vertices
+ * (eg an unclosed/degenerate polygon ring) can never produce a valid Cesium
+ * bounding sphere, which causes zoomTo() to hang until it times out.
+ */
+function hasMinimumVerticesForGeometryType(
+  geometryType: string,
+  coordinates: unknown[]
+): boolean {
+  switch (geometryType) {
+    // Point coordinates are a flat [x, y(, z)] tuple, not an array of points
+    case "Point":
+      return coordinates.length >= 2;
+    case "MultiPoint":
+      return coordinates.length >= 1;
+    case "LineString":
+      return coordinates.length >= 2;
+    case "MultiLineString":
+      return (coordinates as unknown[][]).every((line) => line.length >= 2);
+    case "Polygon":
+      return (coordinates as unknown[][]).every((ring) => ring.length >= 4);
+    case "MultiPolygon":
+      return (coordinates as unknown[][][]).every((polygon) =>
+        polygon.every((ring) => ring.length >= 4)
+      );
+    default:
+      return true;
+  }
+}
+
 class GeoJsonStratum extends LoadableStratum(GeoJsonTraits) {
   static stratumName = "geojson";
   constructor(private readonly _item: GeoJsonMixin.Instance) {
@@ -471,6 +502,7 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
         geoJsonWgs84.features = [];
 
         let currentFeatureId = 0;
+        let degenerateFeatureCount = 0;
         for (let i = 0; i < features.length; i++) {
           const feature = features[i];
 
@@ -478,12 +510,21 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
           if (!isJsonObject(feature.geometry, false) || !feature.geometry.type)
             continue;
 
-          // Ignore features with invalid coordinates
+          // Ignore features with invalid or geometrically degenerate
+          // coordinates (eg a Polygon ring with too few points to form a
+          // shape) - Cesium can never compute a bounding sphere for these,
+          // which causes zoomTo() to hang until it times out.
           if (
             !isJsonArray(feature.geometry.coordinates, false) ||
-            feature.geometry.coordinates.length === 0
-          )
+            feature.geometry.coordinates.length === 0 ||
+            !hasMinimumVerticesForGeometryType(
+              feature.geometry.type,
+              feature.geometry.coordinates
+            )
+          ) {
+            degenerateFeatureCount++;
             continue;
+          }
 
           if (!feature.properties) {
             feature.properties = {};
@@ -539,6 +580,13 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
           featureCounts.total++;
           // Note it is important to increment currentFeatureId only if we are including the feature - as this needs to match the row ID in TableMixin (through dataColumnMajor)
           currentFeatureId++;
+        }
+
+        // Report dropped features
+        if (degenerateFeatureCount > 0) {
+          TerriaError.from(
+            `Skipped ${degenerateFeatureCount} GeoJSON feature(s) with too few coordinates to form a valid geometry`
+          ).log();
         }
 
         runInAction(() => {
