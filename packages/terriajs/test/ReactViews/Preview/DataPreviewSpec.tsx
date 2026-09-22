@@ -15,9 +15,11 @@ import {
 } from "../../../lib/ReactViews/Preview/PreviewRenderers";
 import { renderWithContexts } from "../withContext";
 
-const CustomRenderer: PreviewRendererType = ({ previewed }) => (
-  <div>Custom renderer for {previewed.name}</div>
-);
+const CustomRenderer: PreviewRendererType = ({
+  previewed
+}: {
+  previewed: CatalogMemberMixin.Instance;
+}) => <div>Custom renderer for {previewed.name}</div>;
 
 describe("DataPreview", function () {
   describe("preview rendering", function () {
