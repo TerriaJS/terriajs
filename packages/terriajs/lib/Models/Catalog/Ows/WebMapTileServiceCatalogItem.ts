@@ -909,14 +909,7 @@ class WebMapTileServiceCatalogItem extends MappableMixin(
       return undefined;
     }
 
-    // Reset feature picking for the current imagery layer.
-    // We disable feature picking for the next imagery layer (cross-fade).
-    // NOTE: Cesium's `WebMapTileServiceImageryProvider.pickFeatures` always
-    // returns undefined (WMTS has no GetFeatureInfo equivalent), so this
-    // assignment is currently a no-op at runtime — it mirrors WMS shape so
-    // the contract is in place if Cesium ever adds WMTS picking, and matches
-    // the established `WebMapServiceCatalogItem` pattern for upstream parity.
-    (imageryProvider as any).enablePickFeatures = this.allowFeaturePicking;
+    imageryProvider.enablePickFeatures = this.allowFeaturePicking;
 
     return {
       imageryProvider,
@@ -941,9 +934,7 @@ class WebMapTileServiceCatalogItem extends MappableMixin(
       }
 
       // Disable feature picking for the next imagery layer during cross-fade.
-      // See note in `_currentImageryParts`: this is a no-op on Cesium's WMTS
-      // provider today; kept for shape-parity with WMS.
-      (imageryProvider as any).enablePickFeatures = false;
+      imageryProvider.enablePickFeatures = false;
 
       return {
         imageryProvider,
