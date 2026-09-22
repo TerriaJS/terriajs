@@ -61,7 +61,7 @@ import PickedFeatures, {
   featureBelongsToCatalogItem,
   isProviderCoordsMap
 } from "../Map/PickedFeatures/PickedFeatures";
-import { getName } from "../ModelMixins/CatalogMemberMixin";
+import CatalogMemberMixin, { getName } from "../ModelMixins/CatalogMemberMixin";
 import GroupMixin from "../ModelMixins/GroupMixin";
 import MappableMixin, { isDataSource } from "../ModelMixins/MappableMixin";
 import ReferenceMixin from "../ModelMixins/ReferenceMixin";
@@ -983,8 +983,13 @@ export default class Terria {
     // Only reachable via this fully-unregistering path, not a plain
     // workbench toggle-off, so the model is guaranteed to no longer be
     // reachable via `terria.models`/the workbench - safe to tear down its
-    // AsyncLoaders (metadata/mapItems) here.
-    model.dispose();
+    // AsyncLoaders (metadata/mapItems) here. Skip disposal while the model
+    // is still mid-load (metadata/mapItems/reference/members) - disposing
+    // an in-flight AsyncLoader doesn't cancel the underlying request, it
+    // just corrupts the loader's own bookkeeping out from under it.
+    if (!CatalogMemberMixin.isMixedInto(model) || !model.isLoading) {
+      model.dispose();
+    }
   }
 
   @action

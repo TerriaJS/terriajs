@@ -65,6 +65,7 @@ export const DistanceLegend: FC<IDistanceLegendProps> = observer(
             if (isPrintMode) {
               removeUpdateSubscription?.();
               removeUpdateSubscription = undefined;
+              debouncedUpdate.cancel();
             }
           },
           200,
@@ -103,6 +104,13 @@ export const DistanceLegend: FC<IDistanceLegendProps> = observer(
     };
 
     const updateDistanceLegendCesium = (scene: Scene) => {
+      // The debounced postRender handler can still fire once in the narrow
+      // window between the Cesium viewer being destroyed (eg. switching
+      // viewer mode) and this component's effect cleanup running.
+      if (scene.isDestroyed()) {
+        return;
+      }
+
       // Find the distance between two pixels at the bottom center of the screen.
       const width = scene.canvas.clientWidth;
       const height = scene.canvas.clientHeight;
