@@ -1,11 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   Variant of tern-landscapes-time.xml whose ResourceURL template uses an
-  uppercase `{Time}` placeholder (Cesium / NASA GIBS convention) instead of
-  lowercase `{time}` (TERN / GeoServer convention). Verifies that the
-  case-insensitive `/\{time\}/gi` regex in
-  WebMapTileServiceCatalogItem._createImageryProvider substitutes both
-  cases. Single layer, single time matrix — minimal surface for the assertion.
+  uppercase `{Time}` placeholder (NASA GIBS convention) instead of the
+  lowercase `{time}` used by TERN / GeoServer.
 -->
 <Capabilities xmlns="http://www.opengis.net/wmts/1.0"
               xmlns:ows="http://www.opengis.net/ows/1.1"

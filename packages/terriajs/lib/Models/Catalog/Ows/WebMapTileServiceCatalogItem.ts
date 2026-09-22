@@ -438,11 +438,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
     );
   }
 
-  /**
-   * Locate the time `<Dimension>` (case-insensitive on Identifier) on the
-   * matched WMTS layer. Returns `undefined` if the layer or dimension is
-   * absent.
-   */
+  /** The layer's time `<Dimension>`, matched case-insensitively on Identifier. */
   @computed
   private get timeDimension(): WmtsDimension | undefined {
     const layer = this.capabilitiesLayer;
@@ -458,21 +454,8 @@ class GetCapabilitiesStratum extends LoadableStratum(
   }
 
   /**
-   * Discrete times parsed from the time `<Dimension>` of the matched layer.
-   *
-   * Three encodings are supported (per OGC 07-057r7 section 7.1.2 and common
-   * server practice):
-   *
-   * 1. Multiple `<Value>` children: each text node is treated as an explicit
-   *    ISO instant (NASA GIBS style).
-   * 2. A single `<Value>` containing a `start/stop/period` ISO 19128 range:
-   *    expanded via `createDiscreteTimesFromIsoSegments` (TERN, GeoServer
-   *    style).
-   * 3. A single `<Value>` containing a comma-separated list of instants or
-   *    ranges: each segment is parsed independently. (Not strictly per spec
-   *    but observed in the wild on GeoServer-backed endpoints.)
-   *
-   * Honours `maxRefreshIntervals` to cap range expansion.
+   * Discrete times from the time `<Dimension>`. Each `<Value>` may be an ISO
+   * instant, a `start/stop/period` range, or a comma-separated list of either.
    */
   @computed
   get discreteTimes(): DiscreteTimeAsJS[] | undefined {
@@ -865,12 +848,7 @@ class WebMapTileServiceCatalogItem extends MappableMixin(
       result.push(current);
     }
 
-    // _nextImageryParts only resolves to non-undefined when this layer is on
-    // the active timelineStack and has a `nextDiscreteTimeTag` — i.e. the
-    // user is animating through the time dimension. For non-temporal WMTS
-    // layers (no `<Dimension>`), `nextDiscreteTimeTag` is always undefined
-    // so this is always skipped and behaviour matches the pre-I7 single-
-    // imagery shape.
+    // Only present while animating on the timeline (there is a next time).
     const next = this._nextImageryParts;
     if (next) {
       result.push(next);

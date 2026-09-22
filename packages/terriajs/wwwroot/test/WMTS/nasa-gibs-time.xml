@@ -34,13 +34,7 @@
       <Dimension>
         <ows:Identifier>time</ows:Identifier>
         <ows:UOM>ISO8601</ows:UOM>
-        <!--
-          NOTE: <Default> is intentionally NOT the last <Value> so that the
-          Default-branch and last-value-fallback branch in the stratum's
-          currentTime getter produce *different* outputs. A test asserting
-          currentTime === "2024-03-13" therefore discriminates: it only
-          passes if the <Default> branch fires.
-        -->
+        <!-- <Default> is deliberately neither the first nor the last <Value>. -->
         <Default>2024-03-13</Default>
         <Value>2024-03-13</Value>
         <Value>2024-03-14</Value>
