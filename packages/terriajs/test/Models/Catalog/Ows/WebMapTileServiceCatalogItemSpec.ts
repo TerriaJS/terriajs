@@ -1,5 +1,6 @@
 import i18next from "i18next";
 import { autorun, runInAction } from "mobx";
+import WebMapTileServiceImageryProvider from "terriajs-cesium/Source/Scene/WebMapTileServiceImageryProvider";
 import { ImageryParts } from "../../../../lib/ModelMixins/MappableMixin";
 import WebMapTileServiceCatalogItem from "../../../../lib/Models/Catalog/Ows/WebMapTileServiceCatalogItem";
 import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
@@ -404,7 +405,7 @@ describe("WebMapTileServiceCatalogItem", function () {
       expect(wmts.imageryProvider?.url).toContain("2023-01-03");
     });
 
-    for (const timeValues of [undefined, []]) {
+    [undefined, []].forEach((timeValues) => {
       it(`uses capabilities when timeValues is ${timeValues === undefined ? "absent" : "empty"}`, async function () {
         runInAction(() => {
           wmts.setTrait(
@@ -426,7 +427,7 @@ describe("WebMapTileServiceCatalogItem", function () {
         expect(wmts.discreteTimes?.[0].time).toContain("2024-01-01");
         expect(wmts.discreteTimes?.[4].time).toContain("2024-01-05");
       });
-    }
+    });
   });
 
   // ---------------------------------------------------------------------------
@@ -472,6 +473,34 @@ describe("WebMapTileServiceCatalogItem", function () {
       expect(wmts.imageryProvider!.url).not.toContain("{Time}");
     });
 
+    it("prefers the REST ResourceURL that carries a {Time} placeholder when the layer advertises several", async function () {
+      // NASA GIBS advertises three tile templates per layer:
+      //   .../default/{Time}/{TileMatrixSet}/...
+      //   .../default/{TileMatrixSet}/...
+      //   .../default/default/{TileMatrixSet}/...
+      // Picking the last one silently serves the server's default time for
+      // every frame. The selected time must reach the URL.
+      runInAction(() => {
+        wmts.setTrait("definition", "url", "test/WMTS/nasa-gibs-time.xml");
+        wmts.setTrait(
+          "definition",
+          "layer",
+          "MODIS_Terra_CorrectedReflectance_TrueColor"
+        );
+        wmts.setTrait("definition", "currentTime", "2024-03-14");
+      });
+
+      await wmts.loadMapItems();
+
+      const [current] = wmts.mapItems.filter(ImageryParts.is);
+      const url = (current.imageryProvider as WebMapTileServiceImageryProvider)
+        .url;
+      expect(url).toContain(
+        "/MODIS_Terra_CorrectedReflectance_TrueColor/default/2024-03-14/{TileMatrixSet}/"
+      );
+      expect(url).not.toContain("/default/default/");
+    });
+
     it("passes the selected time as a Time dimension on the imagery provider (U7)", async function () {
       runInAction(() => {
         wmts.setTrait("definition", "url", "test/WMTS/nasa-gibs-time.xml");
@@ -484,12 +513,10 @@ describe("WebMapTileServiceCatalogItem", function () {
 
       await wmts.loadMapItems();
 
-      // The GIBS fixture's ResourceURL template does NOT contain a {Time}
-      // placeholder — Cesium's KVP-mode tile fetch is what consumes the
-      // `dimensions: { Time }` constructor option (it appends &TIME=...
-      // to the GetTile request). We assert the dimensions option round-
-      // trips through the provider so the KVP code path is exercised
-      // independently of REST {Time} substitution. <Default> is 2024-03-13.
+      // Cesium's KVP-mode tile fetch consumes the `dimensions: { Time }`
+      // constructor option (it appends &TIME=... to the GetTile request).
+      // Assert it round-trips through the provider regardless of the REST
+      // {Time} substitution above. <Default> is 2024-03-13.
       expect(wmts.imageryProvider).toBeDefined();
       expect(wmts.imageryProvider!.dimensions).toEqual({ Time: "2024-03-13" });
     });

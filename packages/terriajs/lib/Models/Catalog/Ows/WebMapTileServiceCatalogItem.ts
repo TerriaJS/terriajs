@@ -672,7 +672,8 @@ class WebMapTileServiceCatalogItem extends MappableMixin(
       let baseUrl: string = this.getTileUrl(
         layer,
         stratum.capabilities,
-        format
+        format,
+        time
       );
 
       // REST {Time} substitution. We do this BEFORE `proxyCatalogItemUrl` so
@@ -799,7 +800,8 @@ class WebMapTileServiceCatalogItem extends MappableMixin(
   getTileUrl(
     layer: WmtsLayer,
     capabilities: WebMapTileServiceCapabilities,
-    format: string
+    format: string,
+    time?: string
   ) {
     let url: string | undefined = undefined;
     if (
@@ -834,16 +836,24 @@ class WebMapTileServiceCatalogItem extends MappableMixin(
         : [layer.ResourceURL];
 
     if (resourceUrls && (this.requestEncoding === "RESTful" || !url)) {
-      for (let i = 0; i < resourceUrls.length; i++) {
-        const resourceUrl: ResourceUrl = resourceUrls[i];
-        if (
-          (resourceUrl.resourceType === "tile" &&
-            resourceUrl.format.indexOf(format) !== -1) ||
-          resourceUrl.format.indexOf("png") !== -1
-        ) {
-          url = resourceUrl.template;
-        }
-      }
+      const templates = resourceUrls
+        .filter(
+          (resourceUrl) =>
+            (resourceUrl.resourceType === "tile" &&
+              resourceUrl.format.indexOf(format) !== -1) ||
+            resourceUrl.format.indexOf("png") !== -1
+        )
+        .map((resourceUrl) => resourceUrl.template);
+      const hasTimePlaceholder = (template: string) =>
+        /\{time\}/i.test(template);
+      // Servers such as NASA GIBS advertise several tile templates; only the
+      // one with a {Time} placeholder can serve the selected time. Without a
+      // selected time prefer a template that needs no substitution.
+      url =
+        (isDefined(time) ? templates.find(hasTimePlaceholder) : undefined) ??
+        templates.find((template) => !hasTimePlaceholder(template)) ??
+        templates[templates.length - 1] ??
+        url;
     }
 
     return url ?? new URI(this.url).search("").toString();
