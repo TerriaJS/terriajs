@@ -61,6 +61,7 @@ import SceneTransforms from "terriajs-cesium/Source/Scene/SceneTransforms";
 import SingleTileImageryProvider from "terriajs-cesium/Source/Scene/SingleTileImageryProvider";
 import SplitDirection from "terriajs-cesium/Source/Scene/SplitDirection";
 import CesiumWidget from "terriajs-cesium/Source/Widget/CesiumWidget";
+import Color from "terriajs-cesium/Source/Core/Color";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import flatten from "../Core/flatten";
 import isDefined from "../Core/isDefined";
@@ -86,6 +87,7 @@ import MappableMixin, {
   MapItem
 } from "../ModelMixins/MappableMixin";
 import TileErrorHandlerMixin from "../ModelMixins/TileErrorHandlerMixin";
+import OpacityTraits from "../Traits/TraitsClasses/OpacityTraits";
 import SplitterTraits from "../Traits/TraitsClasses/SplitterTraits";
 import TerriaViewer from "../ViewModels/TerriaViewer";
 import CameraView from "./CameraView";
@@ -159,6 +161,7 @@ export default class Cesium extends GlobeOrMap {
   private readonly _disposeTerrainReaction: () => void;
   private readonly _disposeSplitterReaction: () => void;
   private readonly _disposeResolutionReaction: () => void;
+  private readonly _disposeBaseMapOpacityReaction: () => void;
 
   private _createImageryLayer: (
     ip: ImageryProvider,
@@ -444,6 +447,14 @@ export default class Cesium extends GlobeOrMap {
       this.cesiumWidget.scene.globe.maximumScreenSpaceError =
         this.terria.baseMaximumScreenSpaceError;
     });
+
+    this._disposeBaseMapOpacityReaction = reaction(
+      () => this.baseMapOpacity,
+      () => this.updateSceneOpacitySettings(this.baseMapOpacity),
+      {
+        fireImmediately: true
+      }
+    );
   }
 
   get dataSources(): DataSourceCollection {
@@ -637,6 +648,7 @@ export default class Cesium extends GlobeOrMap {
 
     this._disposeSelectedFeatureSubscription();
     this._disposeSplitterReaction();
+    this._disposeBaseMapOpacityReaction();
     this.cesiumWidget.destroy();
     destroyObject(this);
   }
@@ -1818,6 +1830,44 @@ export default class Cesium extends GlobeOrMap {
     return function () {
       scene.imageryLayers.remove(result);
     };
+  }
+
+  /**
+   * The opacity of the current base map, or `1.0` if the base map doesn't
+   * support opacity.
+   */
+  @computed
+  private get baseMapOpacity(): number {
+    const baseMap = this.terriaViewer.baseMap;
+    return hasTraits(baseMap, OpacityTraits, "opacity") ? baseMap.opacity : 1.0;
+  }
+
+  /**
+   * Adjust globe rendering settings so that the base map imagery remains
+   * visible (rather than being obscured by the opaque globe) when it is
+   * made translucent.
+   *
+   * See https://community.cesium.com/t/how-to-set-the-transparency-of-imagery-layer-when-turning-on-globe-transparency/26387/3
+   */
+  private updateSceneOpacitySettings(opacityValue: number) {
+    const opacity =
+      opacityValue < 0
+        ? 0
+        : opacityValue > 1 || isNaN(opacityValue)
+          ? 1
+          : opacityValue;
+    const globe = this.scene.globe;
+    if (opacity < 1) {
+      globe.showGroundAtmosphere = false;
+      globe.undergroundColor = Color.BLACK.withAlpha(0);
+      globe.translucency.enabled = true;
+      globe.baseColor = Color.TRANSPARENT;
+    } else {
+      globe.showGroundAtmosphere = true;
+      globe.undergroundColor = Color.BLACK;
+      globe.translucency.enabled = false;
+      globe.baseColor = Color.BLUE;
+    }
   }
 }
 

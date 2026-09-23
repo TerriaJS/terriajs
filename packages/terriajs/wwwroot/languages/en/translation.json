@@ -274,6 +274,7 @@
     "mapQuality": "Map Quality:",
     "qualityLabel": "Quality",
     "performanceLabel": "Performance",
+    "baseMapOpacity": "Base Map Opacity:",
     "baseMapStatus": {
       "requiresViewerMode": "⚠️ The selected base map can only be viewed in {{viewerMode}}"
     },

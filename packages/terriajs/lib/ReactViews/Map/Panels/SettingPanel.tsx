@@ -36,6 +36,7 @@ import { useRefForTerria } from "../../Hooks/useRefForTerria";
 import MenuPanel from "../../StandardUserInterface/customizable/MenuPanel";
 import Styles from "./setting-panel.scss";
 import withControlledVisibility from "../../HOCs/withControlledVisibility";
+import BaseMapOpacitySlider from "./BaseMapOpacitySlider";
 
 const sides = {
   left: keyFromSelector(($) => $.settingPanel.terrain.left),
@@ -433,6 +434,7 @@ const SettingPanel: FC = observer(() => {
             </Box>
           </>
         )}
+        <BaseMapOpacitySlider />
       </Box>
     </MenuPanel>
   );
