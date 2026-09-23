@@ -142,7 +142,9 @@
     "convertNotificationTitle": "Hinweis: Freigabelink aktualisiert",
     "getShareSaveHelpMessage": "Lesezeichen für Freigabelink setzen",
     "convertNotificationMessage": "Dieser Freigabelink basiert auf einer älteren Version von TerriaJS - der Software, die dieses Geoportal betreibt. Obwohl wir uns bemühen, den Link zu erhalten, kann es zu Problemen bei der Visualisierung der Daten kommen.\n\nKlicken Sie auf OK, damit die Warnmeldung verschwindet und Sie mit dem Zugriff auf die Daten fortfahren können.",
-    "downloadMap": "Karte downloaden (png)"
+    "downloadMap": "Karte downloaden (png)",
+    "shareStoryLink": "Teile Story-Link",
+    "storyLinkCreated": "Als neue Story gespeichert"
   },
   "location": {
     "location": "Standort",
@@ -150,7 +152,10 @@
     "errorGettingLocation": "Fehler beim Abrufen des Standorts",
     "myLocation": "Mein Standort",
     "originError": "Ihr Browser kann Ihren Standort nur übermitteln, wenn Sie HTTPS verwenden. Möglicherweise können Sie stattdessen {{secureUrl}} verwenden.",
-    "centreMap": "Karte an Ihrem aktuellen Standort zentrieren"
+    "centreMap": "Karte an Ihrem aktuellen Standort zentrieren",
+    "permissionDenied": "Der Zugriff auf Ihren Standort wurde verweigert. Bitte überprüfen Sie Ihre Browsereinstellungen.",
+    "positionUnavailable": "Ihre Standortdaten sind nicht verfügbar.",
+    "timeout": "Das Abrufen Ihrer Standortdaten hat zu lange gedauert. Bitte versuchen Sie es später erneut."
   },
   "measure": {
     "measureDistance": "Abstand zwischen Standorten messen",
@@ -191,12 +196,12 @@
     "title": "Experimentelles Merkmal: Erweiterte Realität (Augmented Reality)",
     "btnResetRealign": "Kompassausrichtung zurücksetzen",
     "arTool": "Augmented-Reality-Tool",
-    "manualAlignmentMessage": "Richten Sie Ihr mobiles Gerät so aus, dass es mit der aktuellen Ausrichtung der Karte übereinstimmt, und klicken Sie dann auf den blinkenden Kompass. Wenn derzeit keine Landmarken zum Ausrichten auf der Karte sichtbar sind, können Sie die Karte durch Ziehen und Aufziehen verschieben, bis eine erkennbare Landmarke sichtbar ist, bevor Sie das Gerät an der Karte ausrichten. <br><div>{{img}}</div> <br>Tipp: Die Sonne oder der Mond sind oft gute Orientierungspunkte, an denen Sie sich ausrichten können, wenn Sie sich an einem Ort befinden, mit dem Sie nicht vertraut sind (achten Sie darauf, nicht in die Sonne zu schauen - sie kann Ihren Augen schaden).",
+    "manualAlignmentMessage": "Richten Sie Ihr mobiles Gerät so aus, dass es mit der aktuellen Ausrichtung der Karte übereinstimmt, und klicken Sie dann auf den blinkenden Kompass. Wenn derzeit keine Landmarken zum Ausrichten auf der Karte sichtbar sind, können Sie die Karte durch Ziehen und Aufziehen verschieben, bis eine erkennbare Landmarke sichtbar ist, bevor Sie das Gerät an der Karte ausrichten. <br /><div>{{img}}</div> <br />Tipp: Die Sonne oder der Mond sind oft gute Orientierungspunkte, an denen Sie sich ausrichten können, wenn Sie sich an einem Ort befinden, mit dem Sie nicht vertraut sind (achten Sie darauf, nicht in die Sonne zu schauen - sie kann Ihren Augen schaden).",
     "confirmText": "Verstanden",
-    "experimentalFeatureMessage": "Der Augmented Reality-Modus befindet sich derzeit in der Betaphase. Dieser Modus ist nur für die Verwendung auf den neuesten High-End-Mobilgeräten vorgesehen. <br><br>WARNUNG: Dieser Modus kann eine Menge Daten verbrauchen, bitte beachten Sie die Datennutzungsgebühren Ihres Netzbetreibers. <br><br>Die Genauigkeit dieses Modus hängt von der Genauigkeit des internen Kompasses Ihres Mobilgeräts ab.",
+    "experimentalFeatureMessage": "Der Augmented Reality-Modus befindet sich derzeit in der Betaphase. Dieser Modus ist nur für die Verwendung auf den neuesten High-End-Mobilgeräten vorgesehen. <br /><br />WARNUNG: Dieser Modus kann eine Menge Daten verbrauchen, bitte beachten Sie die Datennutzungsgebühren Ihres Netzbetreibers. <br /><br />Die Genauigkeit dieses Modus hängt von der Genauigkeit des internen Kompasses Ihres Mobilgeräts ab.",
     "resetAlignmentTitle": "Ausrichtung zurücksetzen",
     "btnHover": "Höhe des Schwebebalken umschalten",
-    "resetAlignmentMessage": "Kalibrierung der Kompassausrichtung. Wenn die Ausrichtung nicht mit der realen Welt übereinstimmt, versuchen Sie, Ihr Gerät in einer Achterbewegung zu bewegen, um es neu zu kalibrieren. Dies ist jederzeit möglich.<br> <br> Vermeiden Sie Orte mit Magnetfeldern oder Metallobjekten, da diese den Kompass des Geräts aus dem Gleichgewicht bringen können.",
+    "resetAlignmentMessage": "Kalibrierung der Kompassausrichtung. Wenn die Ausrichtung nicht mit der realen Welt übereinstimmt, versuchen Sie, Ihr Gerät in einer Achterbewegung zu bewegen, um es neu zu kalibrieren. Dies ist jederzeit möglich.<br /> <br /> Vermeiden Sie Orte mit Magnetfeldern oder Metallobjekten, da diese den Kompass des Geräts aus dem Gleichgewicht bringen können.",
     "btnRealign": "manuelle Ausrichtung umschalten"
   },
   "legend": {
@@ -1261,7 +1266,8 @@
     },
     "choosePreview": "Wählen Sie den Stil des Vorschaumodus",
     "differenceResultsTitle": "Ergebnisse der Veränderungserkennung",
-    "chooseDifference": "Wählen Sie eine Differenz-Output"
+    "chooseDifference": "Wählen Sie eine Differenz-Output",
+    "close": "Schließen"
   },
   "story": {
     "removeAllStories": "Entfernen alle",
