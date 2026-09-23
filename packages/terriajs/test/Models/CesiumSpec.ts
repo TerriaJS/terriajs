@@ -654,6 +654,18 @@ describeIfSupported("Cesium Model", function () {
       expect(globe.baseColor).toEqual(Color.BLUE);
     });
 
+    it("leaves the globe opaque for a base map that supports opacity but never sets it", async function () {
+      // `OpacityTraits.opacity` defaults to 0.8 (a default meant for
+      // workbench overlay layers), so this guards against that default
+      // leaking into the base map's translucency handling.
+      await terriaViewer.setBaseMap(baseMap);
+
+      const globe = cesium.scene.globe;
+      expect(globe.translucency.enabled).toBe(false);
+      expect(globe.showGroundAtmosphere).toBe(true);
+      expect(globe.baseColor).toEqual(Color.BLUE);
+    });
+
     it("makes the globe translucent when the base map's opacity is less than 1", async function () {
       baseMap.setTrait(CommonStrata.user, "opacity", 0.5);
       await terriaViewer.setBaseMap(baseMap);

@@ -1833,13 +1833,27 @@ export default class Cesium extends GlobeOrMap {
   }
 
   /**
-   * The opacity of the current base map, or `1.0` if the base map doesn't
-   * support opacity.
+   * The opacity explicitly configured on the current base map, or `1.0` if
+   * the base map doesn't support opacity or no stratum has set a value.
+   *
+   * Note this deliberately doesn't use `baseMap.opacity` directly, as
+   * `OpacityTraits.opacity` defaults to `0.8` (a default intended for
+   * workbench overlay layers) rather than `1.0`, which would make the globe
+   * translucent for any base map that supports the trait but never sets it.
    */
   @computed
   private get baseMapOpacity(): number {
     const baseMap = this.terriaViewer.baseMap;
-    return hasTraits(baseMap, OpacityTraits, "opacity") ? baseMap.opacity : 1.0;
+    if (
+      baseMap === undefined ||
+      !hasTraits(baseMap, OpacityTraits, "opacity")
+    ) {
+      return 1.0;
+    }
+
+    const explicitOpacity: number | undefined =
+      OpacityTraits.traits.opacity.getValue(baseMap);
+    return explicitOpacity ?? 1.0;
   }
 
   /**
