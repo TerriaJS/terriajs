@@ -3,7 +3,6 @@ import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Color from "terriajs-cesium/Source/Core/Color";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
-import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import createGuid from "terriajs-cesium/Source/Core/createGuid";
@@ -31,7 +30,6 @@ import CameraView from "./CameraView";
 import CommonStrata from "./Definition/CommonStrata";
 import createStratumInstance from "./Definition/createStratumInstance";
 import hasTraits from "./Definition/hasTraits";
-import nearestAxisOrder from "../Map/PickedFeatures/nearestAxisOrder";
 import TerriaFeature from "./Feature/Feature";
 import Terria from "./Terria";
 
@@ -163,17 +161,11 @@ export default abstract class GlobeOrMap {
   /**
    * Creates a {@see Feature} (based on an {@see Entity}) from a {@see ImageryLayerFeatureInfo}.
    * @param imageryFeature The imagery layer feature for which to create an entity-based feature.
-   * @param pickedLocation Where the user clicked, used to resolve feature positions whose axis order is ambiguous.
    * @return The created feature.
    */
   protected _createFeatureFromImageryLayerFeature(
-    imageryFeature: ImageryLayerFeatureInfo,
-    pickedLocation?: Cartographic
+    imageryFeature: ImageryLayerFeatureInfo
   ): TerriaFeature {
-    if (pickedLocation) {
-      nearestAxisOrder(imageryFeature, pickedLocation);
-    }
-
     const feature = new TerriaFeature({
       id: imageryFeature.name
     });

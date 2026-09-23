@@ -1,3 +1,4 @@
+import { FeatureCollection } from "geojson";
 import i18next from "i18next";
 import { computed, makeObservable, override, runInAction } from "mobx";
 import GeographicTilingScheme from "terriajs-cesium/Source/Core/GeographicTilingScheme";
@@ -789,11 +790,41 @@ class WebMapTileServiceCatalogItem extends MappableMixin(
     const result = filterOutUndefined(
       formats.map((format) => {
         if (format === "application/json")
-          return new GetFeatureInfoFormat("json", format, (json) =>
-            geoJsonToFeatureInfoWithProject(
-              json,
-              this.tileMatrixSet?.scheme.projection
-            )
+          return new GetFeatureInfoFormat(
+            "json",
+            format,
+            (json: FeatureCollection) => {
+              const features = json.features.map((feature) => {
+                const { lat, lon } = feature.properties ?? {};
+                const geometry = feature.geometry;
+                // Copernicus returns latitude-first points, confirmed by its
+                // explicitly labelled properties. Leave other responses alone.
+                if (
+                  geometry?.type !== "Point" ||
+                  typeof lat !== "number" ||
+                  typeof lon !== "number" ||
+                  !Number.isFinite(lat) ||
+                  !Number.isFinite(lon) ||
+                  Math.abs(lat) > 90 ||
+                  Math.abs(lon) > 180 ||
+                  geometry.coordinates[0] !== lat ||
+                  geometry.coordinates[1] !== lon
+                )
+                  return feature;
+
+                return {
+                  ...feature,
+                  geometry: {
+                    ...geometry,
+                    coordinates: [lon, lat, ...geometry.coordinates.slice(2)]
+                  }
+                };
+              });
+              return geoJsonToFeatureInfoWithProject(
+                { ...json, features },
+                this.tileMatrixSet?.scheme.projection
+              );
+            }
           );
         if (format === "text/xml" || format.includes("gml"))
           return new GetFeatureInfoFormat("xml", format);
