@@ -6,12 +6,20 @@ import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTili
 import WebMapTileServiceImageryProvider from "terriajs-cesium/Source/Scene/WebMapTileServiceImageryProvider";
 import URI from "urijs";
 import containsAny from "../../../Core/containsAny";
+import createDiscreteTimesFromIsoSegments from "../../../Core/createDiscreteTimes";
+import createTransformerAllowUndefined from "../../../Core/createTransformerAllowUndefined";
 import isDefined from "../../../Core/isDefined";
 import isReadOnlyArray from "../../../Core/isReadOnlyArray";
 import TerriaError from "../../../Core/TerriaError";
 import CatalogMemberMixin from "../../../ModelMixins/CatalogMemberMixin";
+import DiscretelyTimeVaryingMixin, {
+  DiscreteTimeAsJS
+} from "../../../ModelMixins/DiscretelyTimeVaryingMixin";
 import GetCapabilitiesMixin from "../../../ModelMixins/GetCapabilitiesMixin";
-import MappableMixin, { MapItem } from "../../../ModelMixins/MappableMixin";
+import MappableMixin, {
+  ImageryParts,
+  MapItem
+} from "../../../ModelMixins/MappableMixin";
 import UrlMixin from "../../../ModelMixins/UrlMixin";
 import { InfoSectionTraits } from "../../../Traits/TraitsClasses/CatalogMemberTraits";
 import LegendTraits from "../../../Traits/TraitsClasses/LegendTraits";
@@ -31,6 +39,7 @@ import WebMapTileServiceCapabilities, {
   ResourceUrl,
   TileMatrixSetLink,
   WmtsCapabilitiesLegend,
+  WmtsDimension,
   WmtsLayer
 } from "./WebMapTileServiceCapabilities";
 
@@ -428,12 +437,58 @@ class GetCapabilitiesStratum extends LoadableStratum(
       layerAvailableStyles?.[0]?.identifier
     );
   }
+
+  /** The layer's time `<Dimension>`, matched case-insensitively on Identifier. */
+  @computed
+  private get timeDimension(): WmtsDimension | undefined {
+    const layer = this.capabilitiesLayer;
+    if (!layer || !layer.Dimension) return undefined;
+    const dimensions: ReadonlyArray<WmtsDimension> = Array.isArray(
+      layer.Dimension
+    )
+      ? layer.Dimension
+      : [layer.Dimension];
+    return dimensions.find(
+      (d) => isDefined(d.Identifier) && d.Identifier.toLowerCase() === "time"
+    );
+  }
+
+  /**
+   * Discrete times from the time `<Dimension>`. Each `<Value>` may be an ISO
+   * instant, a `start/stop/period` range, or a comma-separated list of either.
+   */
+  @computed
+  get discreteTimes(): DiscreteTimeAsJS[] | undefined {
+    const dimension = this.timeDimension;
+    if (!dimension || !isDefined(dimension.Value)) return undefined;
+
+    const rawValues = isReadOnlyArray(dimension.Value)
+      ? dimension.Value
+      : [dimension.Value];
+    return parseTimeValues(rawValues, this.catalogItem.maxRefreshIntervals);
+  }
+
+  @computed
+  get initialTimeSource() {
+    return "now";
+  }
+
+  @computed
+  get currentTime(): string | undefined {
+    const defaultTime = this.timeDimension?.Default;
+    // Defer keyword defaults to initialTimeSource so the timeline gets a date.
+    return defaultTime === "current" || defaultTime === "default"
+      ? undefined
+      : defaultTime;
+  }
 }
 
 class WebMapTileServiceCatalogItem extends MappableMixin(
-  GetCapabilitiesMixin(
-    UrlMixin(
-      CatalogMemberMixin(CreateModel(WebMapTileServiceCatalogItemTraits))
+  DiscretelyTimeVaryingMixin(
+    GetCapabilitiesMixin(
+      UrlMixin(
+        CatalogMemberMixin(CreateModel(WebMapTileServiceCatalogItemTraits))
+      )
     )
   )
 ) {
@@ -461,6 +516,22 @@ class WebMapTileServiceCatalogItem extends MappableMixin(
 
   get type() {
     return WebMapTileServiceCatalogItem.type;
+  }
+
+  /** Explicit `timeValues` take precedence over times advertised by capabilities. */
+  @computed
+  get discreteTimes() {
+    const timeOverrides = parseTimeValues(
+      this.timeValues ?? [],
+      this.maxRefreshIntervals
+    );
+    if (timeOverrides) {
+      return timeOverrides;
+    }
+    const getCapabilitiesStratum = this.strata.get(
+      GetCapabilitiesMixin.getCapabilitiesStratumName
+    ) as GetCapabilitiesStratum | undefined;
+    return getCapabilitiesStratum?.discreteTimes;
   }
 
   async createGetCapabilitiesStratumFromParent(
@@ -492,72 +563,136 @@ class WebMapTileServiceCatalogItem extends MappableMixin(
     return "1d";
   }
 
+  /**
+   * One imagery provider per selected time, cached by MobX. Cesium applies
+   * `dimensions` itself: as a `{Time}` template value on REST URLs and as a
+   * query parameter on KVP requests.
+   */
+  private _createImageryProvider = createTransformerAllowUndefined(
+    (
+      time: string | undefined
+    ): WebMapTileServiceImageryProvider | undefined => {
+      const stratum = this.strata.get(
+        GetCapabilitiesMixin.getCapabilitiesStratumName
+      ) as GetCapabilitiesStratum;
+
+      if (
+        !isDefined(this.layer) ||
+        !isDefined(this.url) ||
+        !isDefined(stratum) ||
+        !isDefined(this.style)
+      ) {
+        return;
+      }
+
+      const layer = stratum.capabilitiesLayer;
+      const layerIdentifier = layer?.Identifier;
+      if (!isDefined(layer) || !isDefined(layerIdentifier)) {
+        return;
+      }
+
+      let format: string = "image/png";
+      const formats = layer.Format;
+      if (
+        formats &&
+        formats?.indexOf("image/png") === -1 &&
+        formats?.indexOf("image/jpeg") !== -1
+      ) {
+        format = "image/jpeg";
+      }
+
+      const tileUrl: string = this.getTileUrl(
+        layer,
+        stratum.capabilities,
+        format,
+        time
+      );
+
+      const tileMatrixSet = this.tileMatrixSet;
+      if (!isDefined(tileMatrixSet)) {
+        return;
+      }
+
+      // Cesium's template substitution is case-sensitive, so match the
+      // placeholder's casing ({Time} for GIBS, {time} for GeoServer).
+      const timeDimensionKey = tileUrl.match(/\{(time)\}/i)?.[1] ?? "Time";
+
+      const imageryProvider = new WebMapTileServiceImageryProvider({
+        url: proxyCatalogItemUrl(this, tileUrl),
+        layer: layerIdentifier,
+        style: this.style,
+        tileMatrixSetID: tileMatrixSet.id,
+        tileMatrixLabels: tileMatrixSet.labels,
+        minimumLevel: tileMatrixSet.minLevel,
+        maximumLevel: tileMatrixSet.maxLevel,
+        tileWidth: this.tileWidth ?? tileMatrixSet.tileWidth,
+        tileHeight:
+          this.tileHeight ?? this.minimumLevel ?? tileMatrixSet.tileHeight,
+        tilingScheme: tileMatrixSet.scheme,
+        format,
+        credit: this.attribution,
+        ...(isDefined(time) ? { dimensions: { [timeDimensionKey]: time } } : {})
+        // TODO: implement picking for WebMapTileServiceImageryProvider
+        //enablePickFeatures: this.allowFeaturePicking
+      });
+      return imageryProvider;
+    }
+  );
+
   @computed
-  get imageryProvider() {
-    const stratum = this.strata.get(
-      GetCapabilitiesMixin.getCapabilitiesStratumName
-    ) as GetCapabilitiesStratum;
-
-    if (
-      !isDefined(this.layer) ||
-      !isDefined(this.url) ||
-      !isDefined(stratum) ||
-      !isDefined(this.style)
-    ) {
-      return;
-    }
-
-    const layer = stratum.capabilitiesLayer;
-    const layerIdentifier = layer?.Identifier;
-    if (!isDefined(layer) || !isDefined(layerIdentifier)) {
-      return;
-    }
-
-    let format: string = "image/png";
-    const formats = layer.Format;
-    if (
-      formats &&
-      formats?.indexOf("image/png") === -1 &&
-      formats?.indexOf("image/jpeg") !== -1
-    ) {
-      format = "image/jpeg";
-    }
-
-    const baseUrl: string = this.getTileUrl(
-      layer,
-      stratum.capabilities,
-      format
+  private get _currentImageryParts(): ImageryParts | undefined {
+    const imageryProvider = this._createImageryProvider(
+      this.currentDiscreteTimeTag
     );
-
-    const tileMatrixSet = this.tileMatrixSet;
-    if (!isDefined(tileMatrixSet)) {
-      return;
+    if (imageryProvider === undefined) {
+      return undefined;
     }
 
-    const imageryProvider = new WebMapTileServiceImageryProvider({
-      url: proxyCatalogItemUrl(this, baseUrl),
-      layer: layerIdentifier,
-      style: this.style,
-      tileMatrixSetID: tileMatrixSet.id,
-      tileMatrixLabels: tileMatrixSet.labels,
-      minimumLevel: tileMatrixSet.minLevel,
-      maximumLevel: tileMatrixSet.maxLevel,
-      tileWidth: this.tileWidth ?? tileMatrixSet.tileWidth,
-      tileHeight:
-        this.tileHeight ?? this.minimumLevel ?? tileMatrixSet.tileHeight,
-      tilingScheme: tileMatrixSet.scheme,
-      format,
-      credit: this.attribution
-      // TODO: implement picking for WebMapTileServiceImageryProvider
-      //enablePickFeatures: this.allowFeaturePicking
-    });
-    return imageryProvider;
+    imageryProvider.enablePickFeatures = this.allowFeaturePicking;
+
+    return {
+      imageryProvider,
+      alpha: this.opacity,
+      show: this.show,
+      clippingRectangle: this.clipToRectangle ? this.cesiumRectangle : undefined
+    };
+  }
+
+  @computed
+  private get _nextImageryParts(): ImageryParts | undefined {
+    if (
+      this.terria.timelineStack.contains(this) &&
+      !this.isPaused &&
+      this.nextDiscreteTimeTag
+    ) {
+      const imageryProvider = this._createImageryProvider(
+        this.nextDiscreteTimeTag
+      );
+      if (imageryProvider === undefined) {
+        return undefined;
+      }
+
+      // Disable feature picking for the next imagery layer during cross-fade.
+      imageryProvider.enablePickFeatures = false;
+
+      return {
+        imageryProvider,
+        alpha: 0.0,
+        show: true,
+        clippingRectangle: this.clipToRectangle
+          ? this.cesiumRectangle
+          : undefined
+      };
+    } else {
+      return undefined;
+    }
   }
 
   getTileUrl(
     layer: WmtsLayer,
     capabilities: WebMapTileServiceCapabilities,
-    format: string
+    format: string,
+    time?: string
   ) {
     let url: string | undefined = undefined;
     if (
@@ -592,16 +727,24 @@ class WebMapTileServiceCatalogItem extends MappableMixin(
         : [layer.ResourceURL];
 
     if (resourceUrls && (this.requestEncoding === "RESTful" || !url)) {
-      for (let i = 0; i < resourceUrls.length; i++) {
-        const resourceUrl: ResourceUrl = resourceUrls[i];
-        if (
-          (resourceUrl.resourceType === "tile" &&
-            resourceUrl.format.indexOf(format) !== -1) ||
-          resourceUrl.format.indexOf("png") !== -1
-        ) {
-          url = resourceUrl.template;
-        }
-      }
+      const templates = resourceUrls
+        .filter(
+          (resourceUrl) =>
+            (resourceUrl.resourceType === "tile" &&
+              resourceUrl.format.indexOf(format) !== -1) ||
+            resourceUrl.format.indexOf("png") !== -1
+        )
+        .map((resourceUrl) => resourceUrl.template);
+      const hasTimePlaceholder = (template: string) =>
+        /\{time\}/i.test(template);
+      // Servers such as NASA GIBS advertise several tile templates; only the
+      // one with a {Time} placeholder can serve the selected time. Without a
+      // selected time prefer a template that needs no substitution.
+      url =
+        (isDefined(time) ? templates.find(hasTimePlaceholder) : undefined) ??
+        templates.find((template) => !hasTimePlaceholder(template)) ??
+        templates[templates.length - 1] ??
+        url;
     }
 
     return url ?? new URI(this.url).search("").toString();
@@ -698,19 +841,20 @@ class WebMapTileServiceCatalogItem extends MappableMixin(
 
   @computed
   get mapItems(): MapItem[] {
-    if (isDefined(this.imageryProvider)) {
-      return [
-        {
-          alpha: this.opacity,
-          show: this.show,
-          imageryProvider: this.imageryProvider,
-          clippingRectangle: this.clipToRectangle
-            ? this.cesiumRectangle
-            : undefined
-        }
-      ];
+    const result: MapItem[] = [];
+
+    const current = this._currentImageryParts;
+    if (current) {
+      result.push(current);
     }
-    return [];
+
+    // Only present while animating on the timeline (there is a next time).
+    const next = this._nextImageryParts;
+    if (next) {
+      result.push(next);
+    }
+
+    return result;
   }
 
   protected get defaultGetCapabilitiesUrl(): string | undefined {
@@ -758,3 +902,31 @@ export function getServiceContactInformation(contactInfo: ServiceProvider) {
 }
 
 export default WebMapTileServiceCatalogItem;
+
+/** Parse the same timestamp and interval encodings for metadata and catalog overrides. */
+function parseTimeValues(
+  rawValues: readonly string[],
+  maxRefreshIntervals: number
+): DiscreteTimeAsJS[] | undefined {
+  const result: DiscreteTimeAsJS[] = [];
+  for (const raw of rawValues) {
+    if (typeof raw !== "string") continue;
+    for (const segment of raw.split(",")) {
+      const value = segment.trim();
+      if (value.length === 0) continue;
+      const isoSegments = value.split("/");
+      if (isoSegments.length === 1) {
+        result.push({ time: value, tag: undefined });
+      } else {
+        createDiscreteTimesFromIsoSegments(
+          result,
+          isoSegments[0],
+          isoSegments[1],
+          isoSegments[2],
+          maxRefreshIntervals
+        );
+      }
+    }
+  }
+  return result.length > 0 ? result : undefined;
+}
