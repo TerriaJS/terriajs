@@ -41,7 +41,9 @@ FROM node:24-slim AS deploy
 # until the grace period expires and it gets SIGKILLed. tini forwards the signal to
 # node and reaps zombies, so shutdown is immediate. Installed as root, before USER
 # node, since apt-get needs root.
-RUN apt-get update && apt-get install -y --no-install-recommends tini \
+RUN export DEBIAN_FRONTEND=noninteractive && apt-get update \
+  && apt-get upgrade -y \
+  && apt-get install -y --no-install-recommends tini \
   && rm -rf /var/lib/apt/lists/*
 
 USER node
