@@ -30,6 +30,7 @@
         <ows:Identifier>default</ows:Identifier>
       </Style>
       <Format>image/png</Format>
+      <InfoFormat>application/json</InfoFormat>
       <Dimension>
         <ows:Identifier>time</ows:Identifier>
         <ows:UOM>ISO8601</ows:UOM>
@@ -41,6 +42,9 @@
       </TileMatrixSetLink>
       <ResourceURL format="image/png" resourceType="tile"
                    template="https://tern.example/wmts/tern_soil_moisture_daily/default/{time}/{TileMatrixSet}/{TileMatrix}/{TileRow}/{TileCol}.png" />
+      <!-- GeoServer-style FeatureInfo template: pixel placeholders are {J}/{I}. -->
+      <ResourceURL format="application/json" resourceType="FeatureInfo"
+                   template="https://tern.example/wmts/tern_soil_moisture_daily/default/{time}/{TileMatrixSet}/{TileMatrix}/{TileRow}/{TileCol}/{J}/{I}?format=application/json" />
     </Layer>
     <!--
       Variant layer: the time <Value> contains exactly two slash segments

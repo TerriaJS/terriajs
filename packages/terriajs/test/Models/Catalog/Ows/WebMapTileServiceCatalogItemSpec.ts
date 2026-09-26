@@ -1,6 +1,9 @@
 import i18next from "i18next";
 import { autorun, runInAction } from "mobx";
+import Resource from "terriajs-cesium/Source/Core/Resource";
 import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
+import GeographicTilingScheme from "terriajs-cesium/Source/Core/GeographicTilingScheme";
+import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
 import WebMapTileServiceImageryProvider from "terriajs-cesium/Source/Scene/WebMapTileServiceImageryProvider";
 import { ImageryParts } from "../../../../lib/ModelMixins/MappableMixin";
 import WebMapTileServiceCatalogItem from "../../../../lib/Models/Catalog/Ows/WebMapTileServiceCatalogItem";
@@ -58,6 +61,19 @@ describe("WebMapTileServiceCatalogItem", function () {
     });
     expect(wmts.currentTimeAsJulianDate).toBeDefined();
     expect(wmts.currentDiscreteTimeTag).toContain("2024-01-02");
+  });
+
+  it("has no tile matrix set or short report before its capabilities load", function () {
+    // The workbench reads shortReport as soon as an item is added, which is
+    // before loadMetadata has put the GetCapabilities stratum in place.
+    runInAction(() => {
+      wmts.setTrait("definition", "url", "test/WMTS/multiple-crs.xml");
+      wmts.setTrait("definition", "layer", "both_projections");
+    });
+
+    expect(() => wmts.tileMatrixSet).not.toThrow();
+    expect(wmts.tileMatrixSet).toBeUndefined();
+    expect(() => wmts.shortReport).not.toThrow();
   });
 
   it("derives getCapabilitiesUrl from url if getCapabilitiesUrl is not specifiied", function () {
@@ -226,6 +242,80 @@ describe("WebMapTileServiceCatalogItem", function () {
     expect(wmts.tileMatrixSet!.minLevel).toBe(0);
     expect(wmts.tileMatrixSet!.tileWidth).toEqual(256);
     expect(wmts.tileMatrixSet!.tileHeight).toEqual(256);
+  });
+
+  it("roots the tiling scheme where a geographic matrix set starts dividing the world evenly", async function () {
+    // GIBS runs 2, 3, 5, 10, 20, 40 columns. Cesium's default 2x1 root implies
+    // 64 columns at level 5, so it asked for columns past the server's 40 and
+    // everything east of them (Asia) came back TileOutOfRange.
+    runInAction(() => {
+      wmts.setTrait("definition", "url", "test/WMTS/nasa-gibs-epsg4326.xml");
+      wmts.setTrait("definition", "layer", "MERRA2_2m_Air_Temperature_Monthly");
+    });
+
+    await wmts.loadMapItems();
+
+    const tileMatrixSet = wmts.tileMatrixSet!;
+    expect(tileMatrixSet.id).toBe("2km");
+    // The coarser matrices have no uniform equivalent, so level 0 is "3".
+    expect(tileMatrixSet.labels).toEqual(["3", "4", "5"]);
+    expect(tileMatrixSet.minLevel).toBe(0);
+    expect(tileMatrixSet.maxLevel).toBe(2);
+    expect(tileMatrixSet.scheme.getNumberOfXTilesAtLevel(0)).toBe(10);
+    expect(tileMatrixSet.scheme.getNumberOfYTilesAtLevel(0)).toBe(5);
+    // The deepest level must match what the server advertises.
+    expect(tileMatrixSet.scheme.getNumberOfXTilesAtLevel(2)).toBe(40);
+    expect(tileMatrixSet.scheme.getNumberOfYTilesAtLevel(2)).toBe(20);
+  });
+
+  describe("projection support", function () {
+    it("prefers a Web Mercator matrix set even when a geographic one is listed first", async function () {
+      runInAction(() => {
+        wmts.setTrait("definition", "url", "test/WMTS/multiple-crs.xml");
+        wmts.setTrait("definition", "layer", "both_projections");
+      });
+
+      await wmts.loadMapItems();
+
+      expect(wmts.tileMatrixSet!.id).toBe("EPSG:3857");
+      expect(
+        wmts.tileMatrixSet!.scheme instanceof WebMercatorTilingScheme
+      ).toBe(true);
+    });
+
+    it("reports why a geographic-only layer cannot be shown in 2D", async function () {
+      runInAction(() => {
+        wmts.setTrait("definition", "url", "test/WMTS/multiple-crs.xml");
+        wmts.setTrait("definition", "layer", "geographic_only");
+      });
+
+      await wmts.loadMapItems();
+      expect(wmts.tileMatrixSet!.scheme instanceof GeographicTilingScheme).toBe(
+        true
+      );
+
+      // A WMTS server cannot reproject on request the way WMS can, so there is
+      // nothing to fall back to.
+      expect(wmts.shortReport).toBeUndefined();
+      spyOnProperty(terria, "currentViewer", "get").and.returnValue({
+        type: "Leaflet"
+      } as any);
+      expect(wmts.shortReport).toBe("map.cesium.notWebMercatorTilingScheme");
+    });
+  });
+
+  it("rejects a matrix set whose tiles never divide the globe evenly", async function () {
+    // 5 columns of 72 degrees span 360, but 3 rows of 72 span 216, so no
+    // uniform scheme can describe it. Better no imagery than misplaced tiles.
+    runInAction(() => {
+      wmts.setTrait("definition", "url", "test/WMTS/nasa-gibs-epsg4326.xml");
+      wmts.setTrait("definition", "layer", "Coarse_16km");
+    });
+
+    await wmts.loadMapItems();
+
+    expect(wmts.tileMatrixSet).toBeUndefined();
+    expect(wmts.mapItems).toEqual([]);
   });
 
   describe("time dimension parsing", function () {
@@ -618,6 +708,159 @@ describe("WebMapTileServiceCatalogItem", function () {
       const url = await requestedTileUrl(wmts);
       expect(url).toContain("/2024-01-02T00:00:00Z/");
       expect(url).not.toContain("2024-01-05T00:00:00Z");
+    });
+  });
+
+  describe("feature picking", function () {
+    const featureCollection = {
+      type: "FeatureCollection",
+      features: [
+        {
+          type: "Feature",
+          geometry: { type: "Point", coordinates: [0, 0] },
+          properties: { soil_moisture: 0.42 }
+        }
+      ]
+    };
+
+    /** Runs a pick through Cesium and returns the decoded GetFeatureInfo URL plus the features. */
+    async function pick(wmts: WebMapTileServiceCatalogItem) {
+      const fetchJson = spyOn(Resource.prototype, "fetchJson").and.returnValue(
+        Promise.resolve(featureCollection)
+      );
+      const features = await currentProvider(wmts)!.pickFeatures(0, 0, 0, 0, 0);
+      const resource = fetchJson.calls.mostRecent().object as Resource;
+      return { url: decodeURIComponent(String(resource)), features };
+    }
+
+    it("requests the advertised RESTful FeatureInfo template with pixel and time filled in", async function () {
+      runInAction(() => {
+        wmts.setTrait(
+          "definition",
+          "url",
+          "test/WMTS/tern-landscapes-time.xml"
+        );
+        wmts.setTrait("definition", "layer", "tern_soil_moisture_daily");
+        wmts.setTrait("definition", "currentTime", "2024-01-03T00:00:00Z");
+      });
+      await wmts.loadMapItems();
+
+      const { url, features } = await pick(wmts);
+      expect(url).toContain(
+        "/tern_soil_moisture_daily/default/2024-01-03T00:00:00Z/"
+      );
+      expect(url).toMatch(/\/\d+\/\d+\?format=application\/json$/);
+      expect(url).not.toContain("{");
+      expect(features?.length).toBe(1);
+      expect(features?.[0].properties).toEqual({ soil_moisture: 0.42 });
+    });
+
+    it("sends a KVP GetFeatureInfo request with the layer's InfoFormat and the selected time", async function () {
+      runInAction(() => {
+        wmts.setTrait(
+          "definition",
+          "url",
+          "test/WMTS/with_operation_metadata.xml"
+        );
+        wmts.setTrait(
+          "definition",
+          "layer",
+          "NWSHELF_ANALYSISFORECAST_PHY_004_013/cmems_mod_nws_phy_anfc_0.027deg-3D_PT1H-m_202309/vo"
+        );
+        wmts.setTrait("definition", "currentTime", "2023-08-01T00:00:00Z");
+      });
+      await wmts.loadMapItems();
+
+      const { url, features } = await pick(wmts);
+      const query = new URL(url).searchParams;
+      expect(query.get("request")).toBe("GetFeatureInfo");
+      expect(query.get("infoformat")).toBe("application/json");
+      expect(query.get("Time")).toBe("2023-08-01T00:00:00Z");
+      expect(query.get("i")).toMatch(/^\d+$/);
+      expect(query.get("j")).toMatch(/^\d+$/);
+      expect(features?.length).toBe(1);
+    });
+
+    it("does not pick on a layer that advertises no feature info (NASA GIBS)", async function () {
+      // GIBS has neither <InfoFormat> nor a FeatureInfo ResourceURL, so Cesium
+      // would otherwise send GetFeatureInfo to the tile template (a .png).
+      runInAction(() => {
+        wmts.setTrait("definition", "url", "test/WMTS/nasa-gibs-time.xml");
+        wmts.setTrait(
+          "definition",
+          "layer",
+          "MODIS_Terra_CorrectedReflectance_TrueColor"
+        );
+      });
+      await wmts.loadMapItems();
+
+      expect(wmts.allowFeaturePicking).toBe(true);
+      expect(wmts.supportsFeatureInfo).toBe(false);
+      expect(currentProvider(wmts)?.enablePickFeatures).toBe(false);
+    });
+
+    it("picks such a layer once getFeatureInfoUrl is configured", async function () {
+      runInAction(() => {
+        wmts.setTrait("definition", "url", "test/WMTS/nasa-gibs-time.xml");
+        wmts.setTrait(
+          "definition",
+          "layer",
+          "MODIS_Terra_CorrectedReflectance_TrueColor"
+        );
+        wmts.setTrait(
+          "definition",
+          "getFeatureInfoUrl",
+          "https://gibs.example/info/{TileMatrix}/{TileRow}/{TileCol}/{i}/{j}"
+        );
+      });
+      await wmts.loadMapItems();
+
+      expect(currentProvider(wmts)?.enablePickFeatures).toBe(true);
+    });
+
+    it("sends KVP GetFeatureInfo to the endpoint the service advertises for it", async function () {
+      // OperationsMetadata may give each operation its own endpoint. Cesium
+      // falls back to the tile URL, which answers GetTile, not GetFeatureInfo.
+      runInAction(() => {
+        wmts.setTrait(
+          "definition",
+          "url",
+          "test/WMTS/separate-featureinfo-endpoint.xml"
+        );
+        wmts.setTrait("definition", "layer", "split_endpoints");
+      });
+      await wmts.loadMapItems();
+
+      expect(await requestedTileUrl(wmts)).toContain(
+        "https://example.com/wmts/tile"
+      );
+
+      const { url } = await pick(wmts);
+      expect(url).toContain("https://example.com/wmts/info");
+      expect(url).not.toContain("/wmts/tile");
+      expect(new URL(url).searchParams.get("request")).toBe("GetFeatureInfo");
+    });
+
+    it("uses the getFeatureInfoUrl trait over the advertised template", async function () {
+      runInAction(() => {
+        wmts.setTrait(
+          "definition",
+          "url",
+          "test/WMTS/tern-landscapes-time.xml"
+        );
+        wmts.setTrait("definition", "layer", "tern_soil_moisture_daily");
+        wmts.setTrait(
+          "definition",
+          "getFeatureInfoUrl",
+          "https://custom.example/info/{TileMatrix}/{TileRow}/{TileCol}/{i}/{j}"
+        );
+      });
+      await wmts.loadMapItems();
+
+      const { url } = await pick(wmts);
+      expect(url).toMatch(
+        /^https:\/\/custom\.example\/info\/\d+\/\d+\/\d+\/\d+\/\d+$/
+      );
     });
   });
 });

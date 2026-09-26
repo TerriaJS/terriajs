@@ -1,13 +1,15 @@
+import { FeatureCollection } from "geojson";
 import i18next from "i18next";
 import { computed, makeObservable, override, runInAction } from "mobx";
-import defined from "terriajs-cesium/Source/Core/defined";
 import GeographicTilingScheme from "terriajs-cesium/Source/Core/GeographicTilingScheme";
 import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
+import GetFeatureInfoFormat from "terriajs-cesium/Source/Scene/GetFeatureInfoFormat";
 import WebMapTileServiceImageryProvider from "terriajs-cesium/Source/Scene/WebMapTileServiceImageryProvider";
 import URI from "urijs";
 import containsAny from "../../../Core/containsAny";
 import createDiscreteTimesFromIsoSegments from "../../../Core/createDiscreteTimes";
 import createTransformerAllowUndefined from "../../../Core/createTransformerAllowUndefined";
+import filterOutUndefined from "../../../Core/filterOutUndefined";
 import isDefined from "../../../Core/isDefined";
 import isReadOnlyArray from "../../../Core/isReadOnlyArray";
 import TerriaError from "../../../Core/TerriaError";
@@ -37,17 +39,22 @@ import { ServiceProvider } from "./OwsInterfaces";
 import WebMapTileServiceCapabilities, {
   CapabilitiesStyle,
   ResourceUrl,
+  TileMatrix,
   TileMatrixSetLink,
   WmtsCapabilitiesLegend,
   WmtsDimension,
   WmtsLayer
 } from "./WebMapTileServiceCapabilities";
+import geoJsonToFeatureInfoWithProject from "./geoJsonToFeatureInfoWithProject";
 
 export const SUPPORTED_CRS_3857 = [/EPSG.*3857/, /EPSG.*900913/];
 export const SUPPORTED_CRS_4326 = [/EPSG.*4326/, /CRS.*84/, /EPSG.*4283/];
 
 interface UsableTileMatrixSets {
+  /** Matrix identifiers indexed by Cesium tile level (padded when minLevel > 0). */
   identifiers: string[];
+  minLevel: number;
+  maxLevel: number;
   tileWidth: number;
   tileHeight: number;
   scheme: WebMercatorTilingScheme | GeographicTilingScheme;
@@ -389,16 +396,14 @@ class GetCapabilitiesStratum extends LoadableStratum(
         }
       }
 
-      if (defined(matrixSet.TileMatrix) && matrixSet.TileMatrix.length > 0) {
-        const ids = matrixSet.TileMatrix.map(function (item) {
-          return item.Identifier;
-        });
-        const firstTile = matrixSet.TileMatrix[0];
+      const ids = matrices.map((matrix) => matrix.Identifier);
+      const levels = levelsForTileMatrixSet(matrices, ids, scheme);
+      if (levels) {
+        const firstTile = matrices[0];
         usableTileMatrixSets[matrixSet.Identifier] = {
-          identifiers: ids,
+          ...levels,
           tileWidth: firstTile.TileWidth,
-          tileHeight: firstTile.TileHeight,
-          scheme: scheme
+          tileHeight: firstTile.TileHeight
         };
       }
     }
@@ -518,6 +523,19 @@ class WebMapTileServiceCatalogItem extends MappableMixin(
     return WebMapTileServiceCatalogItem.type;
   }
 
+  @override
+  get shortReport(): string | undefined {
+    // Unlike WMS, a WMTS server cannot reproject on request: if it publishes no
+    // Web Mercator tile matrix set there is nothing the 2D map can draw.
+    if (
+      this.tileMatrixSet?.scheme instanceof GeographicTilingScheme &&
+      this.terria.currentViewer.type === "Leaflet"
+    ) {
+      return i18next.t(($) => $.map.cesium.notWebMercatorTilingScheme);
+    }
+    return super.shortReport;
+  }
+
   /** Explicit `timeValues` take precedence over times advertised by capabilities. */
   @computed
   get discreteTimes() {
@@ -631,9 +649,14 @@ class WebMapTileServiceCatalogItem extends MappableMixin(
         tilingScheme: tileMatrixSet.scheme,
         format,
         credit: this.attribution,
-        ...(isDefined(time) ? { dimensions: { [timeDimensionKey]: time } } : {})
-        // TODO: implement picking for WebMapTileServiceImageryProvider
-        //enablePickFeatures: this.allowFeaturePicking
+        ...(isDefined(time)
+          ? { dimensions: { [timeDimensionKey]: time } }
+          : {}),
+        // enablePickFeatures is set per map item (current on, next off).
+        getFeatureInfoUrl: isDefined(this.featureInfoUrl)
+          ? proxyCatalogItemUrl(this, this.featureInfoUrl)
+          : undefined,
+        getFeatureInfoFormats: this.getFeatureInfoFormats
       });
       return imageryProvider;
     }
@@ -648,7 +671,8 @@ class WebMapTileServiceCatalogItem extends MappableMixin(
       return undefined;
     }
 
-    imageryProvider.enablePickFeatures = this.allowFeaturePicking;
+    imageryProvider.enablePickFeatures =
+      this.allowFeaturePicking && this.supportsFeatureInfo;
 
     return {
       imageryProvider,
@@ -688,38 +712,139 @@ class WebMapTileServiceCatalogItem extends MappableMixin(
     }
   }
 
+  /**
+   * GetFeatureInfo endpoint: the trait, else the RESTful `FeatureInfo`
+   * ResourceURL advertised by capabilities (WMTS `{I}`/`{J}` renamed to the
+   * `{i}`/`{j}` Cesium expects). Undefined lets Cesium use `url` (KVP).
+   */
+  @computed
+  private get featureInfoUrl(): string | undefined {
+    if (isDefined(this.getFeatureInfoUrl)) return this.getFeatureInfoUrl;
+
+    const template = this.featureInfoResourceUrls[0]?.template;
+    if (this.requestEncoding === "RESTful" && template) {
+      // WMTS names the pixel {I}/{J}; Cesium substitutes {i}/{j}.
+      return template.replace(/\{I\}/g, "{i}").replace(/\{J\}/g, "{j}");
+    }
+
+    // Otherwise KVP, which a service may serve from its own endpoint rather
+    // than the one GetTile uses. Undefined leaves Cesium using the tile URL.
+    const stratum = this.strata.get(
+      GetCapabilitiesMixin.getCapabilitiesStratumName
+    ) as GetCapabilitiesStratum | undefined;
+    return stratum
+      ? kvpEndpoint(stratum.capabilities, "GetFeatureInfo")
+      : undefined;
+  }
+
+  /**
+   * Whether the layer offers GetFeatureInfo at all. Per WMTS 07-057r7 a layer
+   * declares support with `<InfoFormat>` or a `FeatureInfo` ResourceURL;
+   * without either (NASA GIBS, for example) picking would be sent to the tile
+   * endpoint, so it stays off unless a `getFeatureInfoUrl` is configured.
+   */
+  @computed
+  get supportsFeatureInfo(): boolean {
+    const stratum = this.strata.get(
+      GetCapabilitiesMixin.getCapabilitiesStratumName
+    ) as GetCapabilitiesStratum | undefined;
+    return (
+      isDefined(this.getFeatureInfoUrl) ||
+      this.featureInfoResourceUrls.length > 0 ||
+      isDefined(stratum?.capabilitiesLayer?.InfoFormat)
+    );
+  }
+
+  @computed
+  private get featureInfoResourceUrls(): ResourceUrl[] {
+    const stratum = this.strata.get(
+      GetCapabilitiesMixin.getCapabilitiesStratumName
+    ) as GetCapabilitiesStratum | undefined;
+    const resourceUrls = stratum?.capabilitiesLayer?.ResourceURL;
+    if (!resourceUrls) return [];
+    return (Array.isArray(resourceUrls) ? resourceUrls : [resourceUrls]).filter(
+      (resourceUrl) => resourceUrl.resourceType === "FeatureInfo"
+    );
+  }
+
+  /**
+   * Formats to try for GetFeatureInfo, from the layer's `<InfoFormat>` list
+   * (or the RESTful template's format). Falls back to Cesium's defaults.
+   */
+  @computed
+  private get getFeatureInfoFormats(): GetFeatureInfoFormat[] | undefined {
+    const stratum = this.strata.get(
+      GetCapabilitiesMixin.getCapabilitiesStratumName
+    ) as GetCapabilitiesStratum | undefined;
+    const infoFormats = stratum?.capabilitiesLayer?.InfoFormat;
+    const advertised = isDefined(this.getFeatureInfoUrl)
+      ? []
+      : this.featureInfoResourceUrls.map((resourceUrl) => resourceUrl.format);
+    const formats = advertised.length
+      ? advertised
+      : Array.isArray(infoFormats)
+        ? infoFormats
+        : isDefined(infoFormats)
+          ? [infoFormats]
+          : [];
+    const result = filterOutUndefined(
+      formats.map((format) => {
+        if (format === "application/json")
+          return new GetFeatureInfoFormat(
+            "json",
+            format,
+            (json: FeatureCollection) => {
+              const features = json.features.map((feature) => {
+                const { lat, lon } = feature.properties ?? {};
+                const geometry = feature.geometry;
+                // Copernicus returns latitude-first points, confirmed by its
+                // explicitly labelled properties. Leave other responses alone.
+                if (
+                  geometry?.type !== "Point" ||
+                  typeof lat !== "number" ||
+                  typeof lon !== "number" ||
+                  !Number.isFinite(lat) ||
+                  !Number.isFinite(lon) ||
+                  Math.abs(lat) > 90 ||
+                  Math.abs(lon) > 180 ||
+                  geometry.coordinates[0] !== lat ||
+                  geometry.coordinates[1] !== lon
+                )
+                  return feature;
+
+                return {
+                  ...feature,
+                  geometry: {
+                    ...geometry,
+                    coordinates: [lon, lat, ...geometry.coordinates.slice(2)]
+                  }
+                };
+              });
+              return geoJsonToFeatureInfoWithProject(
+                { ...json, features },
+                this.tileMatrixSet?.scheme.projection
+              );
+            }
+          );
+        if (format === "text/xml" || format.includes("gml"))
+          return new GetFeatureInfoFormat("xml", format);
+        if (format === "text/html")
+          return new GetFeatureInfoFormat("html", format);
+        if (format === "text/plain")
+          return new GetFeatureInfoFormat("text", format);
+        return undefined;
+      })
+    );
+    return result.length > 0 ? result : undefined;
+  }
+
   getTileUrl(
     layer: WmtsLayer,
     capabilities: WebMapTileServiceCapabilities,
     format: string,
     time?: string
   ) {
-    let url: string | undefined = undefined;
-    if (
-      capabilities.OperationsMetadata &&
-      "GetTile" in capabilities.OperationsMetadata
-    ) {
-      const gets = capabilities.OperationsMetadata.GetTile["Get"];
-
-      for (let i = 0; i < gets.length; i++) {
-        let constraints = gets[i].Constraint;
-        if (constraints) {
-          constraints = Array.isArray(constraints)
-            ? constraints
-            : [constraints];
-          const getEncodingConstraint = constraints.find(
-            (element) => element.name === "GetEncoding"
-          );
-
-          const encodings = getEncodingConstraint?.AllowedValues?.Value;
-          if (encodings?.includes("KVP")) {
-            url = gets[i]["xlink:href"];
-          }
-        } else if (gets[i]["xlink:href"]) {
-          url = gets[i]["xlink:href"];
-        }
-      }
-    }
+    let url: string | undefined = kvpEndpoint(capabilities, "GetTile");
 
     const resourceUrls: ResourceUrl[] | undefined =
       !layer.ResourceURL || Array.isArray(layer.ResourceURL)
@@ -764,8 +889,9 @@ class WebMapTileServiceCatalogItem extends MappableMixin(
     | undefined {
     const stratum = this.strata.get(
       GetCapabilitiesMixin.getCapabilitiesStratumName
-    ) as GetCapabilitiesStratum;
-    if (!this.layer) {
+    ) as GetCapabilitiesStratum | undefined;
+    // Reachable before the capabilities have loaded, e.g. from `shortReport`.
+    if (!this.layer || !stratum) {
       return;
     }
     const layer = stratum.capabilitiesLayer;
@@ -792,37 +918,35 @@ class WebMapTileServiceCatalogItem extends MappableMixin(
     let tileHeight: number = 256;
     let tileMatrixSetLabels: string[] = [];
     let scheme: WebMercatorTilingScheme | GeographicTilingScheme;
-    for (let i = 0; i < tileMatrixSetLinks.length; i++) {
-      const tileMatrixSet = tileMatrixSetLinks[i].TileMatrixSet;
-      if (usableTileMatrixSets && usableTileMatrixSets[tileMatrixSet]) {
+    // Prefer Web Mercator: it is the only projection the 2D map can draw, and
+    // Cesium handles either.
+    const links = [...tileMatrixSetLinks].sort(
+      (a, b) =>
+        Number(
+          usableTileMatrixSets?.[b.TileMatrixSet]?.scheme instanceof
+            WebMercatorTilingScheme
+        ) -
+        Number(
+          usableTileMatrixSets?.[a.TileMatrixSet]?.scheme instanceof
+            WebMercatorTilingScheme
+        )
+    );
+    for (let i = 0; i < links.length; i++) {
+      const tileMatrixSet = links[i].TileMatrixSet;
+      const usable = usableTileMatrixSets?.[tileMatrixSet];
+      if (usable) {
         tileMatrixSetId = tileMatrixSet;
-        tileMatrixSetLabels = usableTileMatrixSets[tileMatrixSet].identifiers;
-        tileWidth = Number(usableTileMatrixSets[tileMatrixSet].tileWidth);
-        tileHeight = Number(usableTileMatrixSets[tileMatrixSet].tileHeight);
-        scheme = usableTileMatrixSets[tileMatrixSet].scheme;
+        tileMatrixSetLabels = usable.identifiers;
+        minLevel = usable.minLevel;
+        maxLevel = usable.maxLevel;
+        tileWidth = Number(usable.tileWidth);
+        tileHeight = Number(usable.tileHeight);
+        scheme = usable.scheme;
         break;
       }
     }
 
     if (!tileMatrixSetId) return undefined;
-
-    if (Array.isArray(tileMatrixSetLabels)) {
-      const levels = tileMatrixSetLabels.map((label) => {
-        const lastIndex = label.lastIndexOf(":");
-        return Math.abs(Number(label.substring(lastIndex + 1)));
-      });
-      maxLevel = levels.reduce((currentMaximum, level) => {
-        return level > currentMaximum ? level : currentMaximum;
-      }, 0);
-      minLevel = levels.reduce((currentMaximum, level) => {
-        return level < currentMaximum ? level : currentMaximum;
-      }, Infinity);
-    }
-    if (minLevel > 0) {
-      for (let i = 0; i < minLevel; i++) {
-        tileMatrixSetLabels.unshift("");
-      }
-    }
 
     return {
       id: tileMatrixSetId,
@@ -902,6 +1026,150 @@ export function getServiceContactInformation(contactInfo: ServiceProvider) {
 }
 
 export default WebMapTileServiceCatalogItem;
+
+/**
+ * How many tiles a re-rooted scheme may need for the whole globe. Cesium's own
+ * schemes use one or two; NASA GIBS' geographic sets need 50. Much beyond that
+ * and the coarsest view of the layer costs thousands of requests, so the set is
+ * better left unused.
+ */
+const MAXIMUM_LEVEL_ZERO_TILES = 100;
+
+/** Does this matrix's grid of tiles cover the tiling scheme's rectangle exactly? */
+function coversTilingScheme(
+  matrix: TileMatrix,
+  columns: number,
+  rows: number,
+  scheme: WebMercatorTilingScheme | GeographicTilingScheme
+): boolean {
+  // WMTS 07-057r7 6.1: a scale denominator assumes a 0.28mm pixel, and is
+  // converted to CRS units with the standardized metres per unit.
+  const metersPerUnit =
+    scheme instanceof WebMercatorTilingScheme ? 1 : 111319.4907932736;
+  const unitsPerPixel =
+    (Number(matrix.ScaleDenominator) * 0.00028) / metersPerUnit;
+  const rectangle = scheme.rectangleToNativeRectangle(scheme.rectangle);
+  const tolerance = rectangle.width * 1e-6;
+  return (
+    Math.abs(
+      columns * Number(matrix.TileWidth) * unitsPerPixel - rectangle.width
+    ) < tolerance &&
+    Math.abs(
+      rows * Number(matrix.TileHeight) * unitsPerPixel - rectangle.height
+    ) < tolerance
+  );
+}
+
+/**
+ * Work out which tile levels Cesium can serve from a `<TileMatrixSet>`, and the
+ * tiling scheme that matches them.
+ *
+ * Cesium divides the world uniformly, so every matrix must hold
+ * `levelZeroTiles * 2^level` columns. A set that already follows that (the
+ * usual case) keeps its own level numbering, with unavailable low levels
+ * padded out. NASA GIBS' geographic sets instead run 2, 3, 5, 10, 20, 40
+ * columns: the top matrices cover more than the globe and have no uniform
+ * equivalent, so the scheme is rooted at the first matrix from which the
+ * doubling holds, dropping the coarser ones.
+ */
+function levelsForTileMatrixSet(
+  matrices: TileMatrix[],
+  ids: string[],
+  scheme: WebMercatorTilingScheme | GeographicTilingScheme
+):
+  | Pick<
+      UsableTileMatrixSets,
+      "identifiers" | "minLevel" | "maxLevel" | "scheme"
+    >
+  | undefined {
+  const levelOf = (id: string) =>
+    Math.abs(Number(id.substring(id.lastIndexOf(":") + 1)));
+  const columns = matrices.map((matrix) => Number(matrix.MatrixWidth));
+  const rows = matrices.map((matrix) => Number(matrix.MatrixHeight));
+  // Sizes are optional in the schema; without them assume the scheme's own.
+  const sized = columns.every(
+    (column, i) => isFinite(column) && isFinite(rows[i])
+  );
+  const matchesScheme = columns.every(
+    (column, i) =>
+      column === scheme.getNumberOfXTilesAtLevel(levelOf(ids[i])) &&
+      rows[i] === scheme.getNumberOfYTilesAtLevel(levelOf(ids[i]))
+  );
+
+  if (!sized || matchesScheme) {
+    const levels = ids.map(levelOf);
+    const minLevel = Math.min(...levels);
+    return {
+      identifiers: [...new Array(minLevel).fill(""), ...ids],
+      minLevel,
+      maxLevel: Math.max(...levels),
+      scheme
+    };
+  }
+
+  const root = matrices.findIndex(
+    (matrix, index) =>
+      coversTilingScheme(matrix, columns[index], rows[index], scheme) &&
+      columns
+        .slice(index)
+        .every(
+          (column, i) =>
+            column === columns[index] * 2 ** i &&
+            rows[index + i] === rows[index] * 2 ** i
+        )
+  );
+  // Nothing uniform to render, or the coarsest uniform matrix is so deep that
+  // showing the whole globe would mean thousands of requests.
+  if (root < 0 || columns[root] * rows[root] > MAXIMUM_LEVEL_ZERO_TILES) {
+    return undefined;
+  }
+  return {
+    identifiers: ids.slice(root),
+    minLevel: 0,
+    maxLevel: ids.length - 1 - root,
+    scheme:
+      scheme instanceof WebMercatorTilingScheme
+        ? new WebMercatorTilingScheme({
+            numberOfLevelZeroTilesX: columns[root],
+            numberOfLevelZeroTilesY: rows[root]
+          })
+        : new GeographicTilingScheme({
+            numberOfLevelZeroTilesX: columns[root],
+            numberOfLevelZeroTilesY: rows[root]
+          })
+  };
+}
+
+/**
+ * The URL a service advertises for an operation's KVP requests, if any. A
+ * service may serve each operation from its own endpoint, so GetFeatureInfo
+ * cannot be assumed to live where GetTile does.
+ */
+function kvpEndpoint(
+  capabilities: WebMapTileServiceCapabilities,
+  operation: string
+): string | undefined {
+  const gets = capabilities.OperationsMetadata?.[operation]?.Get;
+  if (!gets) return undefined;
+
+  let url: string | undefined;
+  for (const get of gets) {
+    const constraints = !get.Constraint
+      ? undefined
+      : Array.isArray(get.Constraint)
+        ? get.Constraint
+        : [get.Constraint];
+    if (constraints) {
+      const encodings = constraints.find(
+        (constraint) => constraint.name === "GetEncoding"
+      )?.AllowedValues?.Value;
+      if (encodings?.includes("KVP")) url = get["xlink:href"];
+    } else if (get["xlink:href"]) {
+      url = get["xlink:href"];
+    }
+  }
+  return url;
+}
 
 /** Parse the same timestamp and interval encodings for metadata and catalog overrides. */
 function parseTimeValues(

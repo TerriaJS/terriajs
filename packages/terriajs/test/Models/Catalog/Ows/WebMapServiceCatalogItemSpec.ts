@@ -2,8 +2,13 @@ import { autorun, runInAction } from "mobx";
 import GeographicTilingScheme from "terriajs-cesium/Source/Core/GeographicTilingScheme";
 import Resource from "terriajs-cesium/Source/Core/Resource";
 import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
+import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
+import GeographicProjection from "terriajs-cesium/Source/Core/GeographicProjection";
+import WebMercatorProjection from "terriajs-cesium/Source/Core/WebMercatorProjection";
+import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import WebMapServiceImageryProvider from "terriajs-cesium/Source/Scene/WebMapServiceImageryProvider";
 import { ImageryParts } from "../../../../lib/ModelMixins/MappableMixin";
+import geoJsonToFeatureInfoWithProject from "../../../../lib/Models/Catalog/Ows/geoJsonToFeatureInfoWithProject";
 import WebMapServiceCatalogItem from "../../../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
 import CommonStrata from "../../../../lib/Models/Definition/CommonStrata";
 import Terria from "../../../../lib/Models/Terria";
@@ -1191,3 +1196,79 @@ function getFeatureInfoResourceForItem(
 ): Resource | undefined {
   return (getWebMapServiceImageryProvider(item) as any)?._pickFeaturesResource;
 }
+
+describe("geoJsonToFeatureInfoWithProject", function () {
+  const pointFeatureCollection = (
+    coordinates: [number, number],
+    crs?: string
+  ) => ({
+    type: "FeatureCollection" as const,
+    ...(crs ? { crs: { type: "name", properties: { name: crs } } } : {}),
+    features: [
+      {
+        type: "Feature" as const,
+        geometry: { type: "Point" as const, coordinates },
+        properties: {}
+      }
+    ]
+  });
+  const projection = new WebMercatorProjection();
+  const degrees = (info: { position?: Cartographic }) => [
+    CesiumMath.toDegrees(info.position!.longitude),
+    CesiumMath.toDegrees(info.position!.latitude)
+  ];
+
+  it("unprojects a response that declares a projected CRS (GeoServer)", function () {
+    const [info] = geoJsonToFeatureInfoWithProject(
+      pointFeatureCollection(
+        [16697923.6, -4009407.6], // ~150E, 33.8S
+        "urn:ogc:def:crs:EPSG::3857"
+      ),
+      projection
+    );
+    const [longitude, latitude] = degrees(info);
+    expect(longitude).toBeCloseTo(150, 3);
+    expect(latitude).toBeCloseTo(-33.855, 3);
+  });
+
+  it("keeps degrees when the response declares a geographic CRS", function () {
+    const [info] = geoJsonToFeatureInfoWithProject(
+      pointFeatureCollection([150, -33.8], "urn:ogc:def:crs:EPSG::4326"),
+      projection
+    );
+    const [longitude, latitude] = degrees(info);
+    expect(longitude).toBeCloseTo(150, 6);
+    expect(latitude).toBeCloseTo(-33.8, 6);
+  });
+
+  it("keeps degrees when the response names no CRS, as GeoJSON requires", function () {
+    const [info] = geoJsonToFeatureInfoWithProject(
+      pointFeatureCollection([150, -33.8]),
+      projection
+    );
+    const [longitude, latitude] = degrees(info);
+    expect(longitude).toBeCloseTo(150, 6);
+    expect(latitude).toBeCloseTo(-33.8, 6);
+  });
+
+  it("does not mistake metres near the projection origin for degrees", function () {
+    // [100, 50] metres is in the Gulf of Guinea, not 100E 50N.
+    const [info] = geoJsonToFeatureInfoWithProject(
+      pointFeatureCollection([100, 50], "urn:ogc:def:crs:EPSG::900913"),
+      projection
+    );
+    const [longitude, latitude] = degrees(info);
+    expect(longitude).toBeCloseTo(0.0009, 4);
+    expect(latitude).toBeCloseTo(0.00045, 4);
+  });
+
+  it("keeps degrees under a geographic tiling scheme whatever the response says", function () {
+    const [info] = geoJsonToFeatureInfoWithProject(
+      pointFeatureCollection([150, -33.8], "urn:ogc:def:crs:EPSG::3857"),
+      new GeographicProjection()
+    );
+    const [longitude, latitude] = degrees(info);
+    expect(longitude).toBeCloseTo(150, 6);
+    expect(latitude).toBeCloseTo(-33.8, 6);
+  });
+});

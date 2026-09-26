@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  NASA GIBS geographic tile matrix set. The matrices run 2, 3, 5, 10, 20, 40
+  columns: the top three cover more than the globe, so only the run from "3"
+  (10x5) onwards divides the world uniformly.
+-->
+<Capabilities xmlns="http://www.opengis.net/wmts/1.0"
+              xmlns:ows="http://www.opengis.net/ows/1.1"
+              xmlns:xlink="http://www.w3.org/1999/xlink"
+              version="1.0.0">
+  <ows:ServiceIdentification>
+    <ows:Title>NASA GIBS</ows:Title>
+    <ows:ServiceType>OGC WMTS</ows:ServiceType>
+    <ows:ServiceTypeVersion>1.0.0</ows:ServiceTypeVersion>
+  </ows:ServiceIdentification>
+  <Contents>
+    <Layer>
+      <ows:Title xml:lang="en">2m Air Temperature (Monthly, MERRA-2)</ows:Title>
+      <ows:Identifier>MERRA2_2m_Air_Temperature_Monthly</ows:Identifier>
+      <Style isDefault="true">
+        <ows:Title>default</ows:Title>
+        <ows:Identifier>default</ows:Identifier>
+      </Style>
+      <Format>image/png</Format>
+      <Dimension>
+        <ows:Identifier>Time</ows:Identifier>
+        <ows:UOM>ISO8601</ows:UOM>
+        <Default>2026-06-01</Default>
+        <Value>2026-01-01/2026-06-01/P1M</Value>
+      </Dimension>
+      <TileMatrixSetLink>
+        <TileMatrixSet>2km</TileMatrixSet>
+      </TileMatrixSetLink>
+      <ResourceURL format="image/png" resourceType="tile"
+                   template="https://gibs.example/wmts/epsg4326/best/MERRA2_2m_Air_Temperature_Monthly/default/{Time}/{TileMatrixSet}/{TileMatrix}/{TileRow}/{TileCol}.png" />
+    </Layer>
+    <Layer>
+      <ows:Title xml:lang="en">Coarse layer (16km)</ows:Title>
+      <ows:Identifier>Coarse_16km</ows:Identifier>
+      <Style isDefault="true">
+        <ows:Title>default</ows:Title>
+        <ows:Identifier>default</ows:Identifier>
+      </Style>
+      <Format>image/png</Format>
+      <TileMatrixSetLink>
+        <TileMatrixSet>16km</TileMatrixSet>
+      </TileMatrixSetLink>
+      <ResourceURL format="image/png" resourceType="tile"
+                   template="https://gibs.example/wmts/epsg4326/best/Coarse_16km/default/{TileMatrixSet}/{TileMatrix}/{TileRow}/{TileCol}.png" />
+    </Layer>
+    <!-- Only three matrices, none of which tiles the globe evenly: 5 columns of
+         72 degrees span 360, but 3 rows of 72 span 216. -->
+    <TileMatrixSet>
+      <ows:Identifier>16km</ows:Identifier>
+      <ows:SupportedCRS>urn:ogc:def:crs:OGC:1.3:CRS84</ows:SupportedCRS>
+      <TileMatrix>
+        <ows:Identifier>0</ows:Identifier>
+        <ScaleDenominator>223632905.6114871</ScaleDenominator>
+        <TopLeftCorner>-180 90</TopLeftCorner>
+        <TileWidth>512</TileWidth>
+        <TileHeight>512</TileHeight>
+        <MatrixWidth>2</MatrixWidth>
+        <MatrixHeight>1</MatrixHeight>
+      </TileMatrix>
+      <TileMatrix>
+        <ows:Identifier>1</ows:Identifier>
+        <ScaleDenominator>111816452.8057436</ScaleDenominator>
+        <TopLeftCorner>-180 90</TopLeftCorner>
+        <TileWidth>512</TileWidth>
+        <TileHeight>512</TileHeight>
+        <MatrixWidth>3</MatrixWidth>
+        <MatrixHeight>2</MatrixHeight>
+      </TileMatrix>
+      <TileMatrix>
+        <ows:Identifier>2</ows:Identifier>
+        <ScaleDenominator>55908226.40287178</ScaleDenominator>
+        <TopLeftCorner>-180 90</TopLeftCorner>
+        <TileWidth>512</TileWidth>
+        <TileHeight>512</TileHeight>
+        <MatrixWidth>5</MatrixWidth>
+        <MatrixHeight>3</MatrixHeight>
+      </TileMatrix>
+    </TileMatrixSet>
+    <TileMatrixSet>
+      <ows:Identifier>2km</ows:Identifier>
+      <ows:SupportedCRS>urn:ogc:def:crs:OGC:1.3:CRS84</ows:SupportedCRS>
+      <TileMatrix>
+        <ows:Identifier>0</ows:Identifier>
+        <ScaleDenominator>223632905.6114871</ScaleDenominator>
+        <TopLeftCorner>-180 90</TopLeftCorner>
+        <TileWidth>512</TileWidth>
+        <TileHeight>512</TileHeight>
+        <MatrixWidth>2</MatrixWidth>
+        <MatrixHeight>1</MatrixHeight>
+      </TileMatrix>
+      <TileMatrix>
+        <ows:Identifier>1</ows:Identifier>
+        <ScaleDenominator>111816452.8057436</ScaleDenominator>
+        <TopLeftCorner>-180 90</TopLeftCorner>
+        <TileWidth>512</TileWidth>
+        <TileHeight>512</TileHeight>
+        <MatrixWidth>3</MatrixWidth>
+        <MatrixHeight>2</MatrixHeight>
+      </TileMatrix>
+      <TileMatrix>
+        <ows:Identifier>2</ows:Identifier>
+        <ScaleDenominator>55908226.40287178</ScaleDenominator>
+        <TopLeftCorner>-180 90</TopLeftCorner>
+        <TileWidth>512</TileWidth>
+        <TileHeight>512</TileHeight>
+        <MatrixWidth>5</MatrixWidth>
+        <MatrixHeight>3</MatrixHeight>
+      </TileMatrix>
+      <TileMatrix>
+        <ows:Identifier>3</ows:Identifier>
+        <ScaleDenominator>27954113.20143589</ScaleDenominator>
+        <TopLeftCorner>-180 90</TopLeftCorner>
+        <TileWidth>512</TileWidth>
+        <TileHeight>512</TileHeight>
+        <MatrixWidth>10</MatrixWidth>
+        <MatrixHeight>5</MatrixHeight>
+      </TileMatrix>
+      <TileMatrix>
+        <ows:Identifier>4</ows:Identifier>
+        <ScaleDenominator>13977056.60071795</ScaleDenominator>
+        <TopLeftCorner>-180 90</TopLeftCorner>
+        <TileWidth>512</TileWidth>
+        <TileHeight>512</TileHeight>
+        <MatrixWidth>20</MatrixWidth>
+        <MatrixHeight>10</MatrixHeight>
+      </TileMatrix>
+      <TileMatrix>
+        <ows:Identifier>5</ows:Identifier>
+        <ScaleDenominator>6988528.300358973</ScaleDenominator>
+        <TopLeftCorner>-180 90</TopLeftCorner>
+        <TileWidth>512</TileWidth>
+        <TileHeight>512</TileHeight>
+        <MatrixWidth>40</MatrixWidth>
+        <MatrixHeight>20</MatrixHeight>
+      </TileMatrix>
+    </TileMatrixSet>
+  </Contents>
+</Capabilities>

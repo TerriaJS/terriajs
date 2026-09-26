@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  A layer offering both a geographic and a Web Mercator tile matrix set, with
+  the geographic one listed first. Only Web Mercator can be drawn by the 2D map.
+-->
+<Capabilities xmlns="http://www.opengis.net/wmts/1.0"
+              xmlns:ows="http://www.opengis.net/ows/1.1"
+              xmlns:xlink="http://www.w3.org/1999/xlink"
+              version="1.0.0">
+  <ows:ServiceIdentification>
+    <ows:Title>Multi CRS</ows:Title>
+    <ows:ServiceType>OGC WMTS</ows:ServiceType>
+    <ows:ServiceTypeVersion>1.0.0</ows:ServiceTypeVersion>
+  </ows:ServiceIdentification>
+  <Contents>
+    <Layer>
+      <ows:Title>Both projections</ows:Title>
+      <ows:Identifier>both_projections</ows:Identifier>
+      <Style isDefault="true">
+        <ows:Title>default</ows:Title>
+        <ows:Identifier>default</ows:Identifier>
+      </Style>
+      <Format>image/png</Format>
+      <TileMatrixSetLink>
+        <TileMatrixSet>EPSG:4326</TileMatrixSet>
+      </TileMatrixSetLink>
+      <TileMatrixSetLink>
+        <TileMatrixSet>EPSG:3857</TileMatrixSet>
+      </TileMatrixSetLink>
+      <ResourceURL format="image/png" resourceType="tile"
+                   template="https://example.com/wmts/both_projections/default/{TileMatrixSet}/{TileMatrix}/{TileRow}/{TileCol}.png" />
+    </Layer>
+    <Layer>
+      <ows:Title>Geographic only</ows:Title>
+      <ows:Identifier>geographic_only</ows:Identifier>
+      <Style isDefault="true">
+        <ows:Title>default</ows:Title>
+        <ows:Identifier>default</ows:Identifier>
+      </Style>
+      <Format>image/png</Format>
+      <TileMatrixSetLink>
+        <TileMatrixSet>EPSG:4326</TileMatrixSet>
+      </TileMatrixSetLink>
+      <ResourceURL format="image/png" resourceType="tile"
+                   template="https://example.com/wmts/geographic_only/default/{TileMatrixSet}/{TileMatrix}/{TileRow}/{TileCol}.png" />
+    </Layer>
+    <TileMatrixSet>
+      <ows:Identifier>EPSG:4326</ows:Identifier>
+      <ows:SupportedCRS>urn:ogc:def:crs:EPSG::4326</ows:SupportedCRS>
+      <TileMatrix>
+        <ows:Identifier>0</ows:Identifier>
+        <ScaleDenominator>279541132.0143589</ScaleDenominator>
+        <TopLeftCorner>-180 90</TopLeftCorner>
+        <TileWidth>256</TileWidth>
+        <TileHeight>256</TileHeight>
+        <MatrixWidth>2</MatrixWidth>
+        <MatrixHeight>1</MatrixHeight>
+      </TileMatrix>
+      <TileMatrix>
+        <ows:Identifier>1</ows:Identifier>
+        <ScaleDenominator>139770566.0071794</ScaleDenominator>
+        <TopLeftCorner>-180 90</TopLeftCorner>
+        <TileWidth>256</TileWidth>
+        <TileHeight>256</TileHeight>
+        <MatrixWidth>4</MatrixWidth>
+        <MatrixHeight>2</MatrixHeight>
+      </TileMatrix>
+    </TileMatrixSet>
+    <TileMatrixSet>
+      <ows:Identifier>EPSG:3857</ows:Identifier>
+      <ows:SupportedCRS>urn:ogc:def:crs:EPSG:6.18:3:3857</ows:SupportedCRS>
+      <TileMatrix>
+        <ows:Identifier>0</ows:Identifier>
+        <ScaleDenominator>559082264.0287178</ScaleDenominator>
+        <TopLeftCorner>-20037508.34278925 20037508.34278925</TopLeftCorner>
+        <TileWidth>256</TileWidth>
+        <TileHeight>256</TileHeight>
+        <MatrixWidth>1</MatrixWidth>
+        <MatrixHeight>1</MatrixHeight>
+      </TileMatrix>
+      <TileMatrix>
+        <ows:Identifier>1</ows:Identifier>
+        <ScaleDenominator>279541132.0143589</ScaleDenominator>
+        <TopLeftCorner>-20037508.34278925 20037508.34278925</TopLeftCorner>
+        <TileWidth>256</TileWidth>
+        <TileHeight>256</TileHeight>
+        <MatrixWidth>2</MatrixWidth>
+        <MatrixHeight>2</MatrixHeight>
+      </TileMatrix>
+    </TileMatrixSet>
+  </Contents>
+</Capabilities>
