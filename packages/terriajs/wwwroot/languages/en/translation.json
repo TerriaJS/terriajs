@@ -1532,7 +1532,8 @@
       "missingUrlTitle": "Unable to load GetCapabilities",
       "missingUrlMessage": "Could not load the Web Map Tile Service (WMTS) GetCapabilities document because the catalog item does not have a `url`.",
       "noUsableTileMatrixTitle": "Warning",
-      "noUsableTileMatrixMessage": "This WMTS layer has no Web Mercator tile matrix set - it may not display correctly"
+      "noUsableTileMatrixMessage": "This WMTS layer has no Web Mercator tile matrix set - it may not display correctly",
+      "unavailableTileSizeMessage": "This layer is configured for {{requested}} pixel tiles, but its tile matrix set serves {{available}} pixel tiles. The map chooses which zoom level to request from the configured size, so it will show more or less detail than it should - remove `tileWidth`/`tileHeight`, or set them to {{available}}."
     },
     "webProcessingService": {
       "wps": "Web Processing Service (WPS)",
