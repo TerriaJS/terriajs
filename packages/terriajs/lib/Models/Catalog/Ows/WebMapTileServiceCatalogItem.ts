@@ -34,6 +34,7 @@ import createStratumInstance from "../../Definition/createStratumInstance";
 import LoadableStratum from "../../Definition/LoadableStratum";
 import { BaseModel, ModelConstructorParameters } from "../../Definition/Model";
 import StratumFromTraits from "../../Definition/StratumFromTraits";
+import CommonStrata from "../../Definition/CommonStrata";
 import proxyCatalogItemUrl from "../proxyCatalogItemUrl";
 import { ServiceProvider } from "./OwsInterfaces";
 import WebMapTileServiceCapabilities, {
@@ -478,6 +479,32 @@ class GetCapabilitiesStratum extends LoadableStratum(
     return "now";
   }
 
+  /**
+   * Tile dimensions and level range come from the tile matrix set the layer
+   * uses. They are traits so that catalog configuration can still override
+   * them - a stratum value beats the trait's default, and the definition and
+   * user strata beat this one.
+   */
+  @computed
+  get tileWidth(): number | undefined {
+    return this.catalogItem.tileMatrixSet?.tileWidth;
+  }
+
+  @computed
+  get tileHeight(): number | undefined {
+    return this.catalogItem.tileMatrixSet?.tileHeight;
+  }
+
+  @computed
+  get minimumLevel(): number | undefined {
+    return this.catalogItem.tileMatrixSet?.minLevel;
+  }
+
+  @computed
+  get maximumLevel(): number | undefined {
+    return this.catalogItem.tileMatrixSet?.maxLevel;
+  }
+
   @computed
   get currentTime(): string | undefined {
     const defaultTime = this.timeDimension?.Default;
@@ -533,6 +560,30 @@ class WebMapTileServiceCatalogItem extends MappableMixin(
     ) {
       return i18next.t(($) => $.map.cesium.notWebMercatorTilingScheme);
     }
+
+    // A configured tile size is honoured even when no matrix set serves it,
+    // rather than quietly substituting one. Say so: the tiles still land in
+    // the right place, so the only symptom is a layer drawn at the wrong
+    // level of detail, which is easy to miss.
+    const requested = this.requestedTileSize;
+    const served = this.tileMatrixSet;
+    if (
+      served &&
+      requested &&
+      ((isDefined(requested.width) && requested.width !== served.tileWidth) ||
+        (isDefined(requested.height) && requested.height !== served.tileHeight))
+    ) {
+      return i18next.t(
+        ($) => $.models.webMapTileServiceCatalogItem.unavailableTileSizeMessage,
+        {
+          requested: `${requested.width ?? served.tileWidth}x${
+            requested.height ?? served.tileHeight
+          }`,
+          available: `${served.tileWidth}x${served.tileHeight}`
+        }
+      );
+    }
+
     return super.shortReport;
   }
 
@@ -641,11 +692,10 @@ class WebMapTileServiceCatalogItem extends MappableMixin(
         style: this.style,
         tileMatrixSetID: tileMatrixSet.id,
         tileMatrixLabels: tileMatrixSet.labels,
-        minimumLevel: tileMatrixSet.minLevel,
-        maximumLevel: tileMatrixSet.maxLevel,
-        tileWidth: this.tileWidth ?? tileMatrixSet.tileWidth,
-        tileHeight:
-          this.tileHeight ?? this.minimumLevel ?? tileMatrixSet.tileHeight,
+        minimumLevel: this.minimumLevel,
+        maximumLevel: this.maximumLevel,
+        tileWidth: this.tileWidth,
+        tileHeight: this.tileHeight,
         tilingScheme: tileMatrixSet.scheme,
         format,
         credit: this.attribution,
@@ -875,6 +925,25 @@ class WebMapTileServiceCatalogItem extends MappableMixin(
     return url ?? new URI(this.url).search("").toString();
   }
 
+  /**
+   * The tile size asked for in catalog configuration, if any. The
+   * GetCapabilities stratum supplies one as well, so only the strata an author
+   * writes to count as a request.
+   */
+  @computed
+  private get requestedTileSize():
+    | { width: number | undefined; height: number | undefined }
+    | undefined {
+    const configured = (trait: "tileWidth" | "tileHeight") =>
+      this.getTrait(CommonStrata.user, trait) ??
+      this.getTrait(CommonStrata.definition, trait);
+    const width = configured("tileWidth");
+    const height = configured("tileHeight");
+    return isDefined(width) || isDefined(height)
+      ? { width, height }
+      : undefined;
+  }
+
   @computed
   get tileMatrixSet():
     | {
@@ -920,16 +989,28 @@ class WebMapTileServiceCatalogItem extends MappableMixin(
     let scheme: WebMercatorTilingScheme | GeographicTilingScheme;
     // Prefer Web Mercator: it is the only projection the 2D map can draw, and
     // Cesium handles either.
+    const isWebMercator = (link: TileMatrixSetLink) =>
+      usableTileMatrixSets?.[link.TileMatrixSet]?.scheme instanceof
+      WebMercatorTilingScheme;
+    // Servers commonly publish the same layer at several tile sizes - the
+    // `@2x`/`x2` high resolution convention - so an asked-for size picks
+    // between them. Projection still comes first: only Web Mercator can be
+    // drawn in 2D, whatever size its tiles are.
+    const servesRequestedTileSize = (link: TileMatrixSetLink) => {
+      const usable = usableTileMatrixSets?.[link.TileMatrixSet];
+      const requested = this.requestedTileSize;
+      if (!usable || !requested) return false;
+      return (
+        (requested.width === undefined ||
+          Number(usable.tileWidth) === requested.width) &&
+        (requested.height === undefined ||
+          Number(usable.tileHeight) === requested.height)
+      );
+    };
     const links = [...tileMatrixSetLinks].sort(
       (a, b) =>
-        Number(
-          usableTileMatrixSets?.[b.TileMatrixSet]?.scheme instanceof
-            WebMercatorTilingScheme
-        ) -
-        Number(
-          usableTileMatrixSets?.[a.TileMatrixSet]?.scheme instanceof
-            WebMercatorTilingScheme
-        )
+        Number(isWebMercator(b)) - Number(isWebMercator(a)) ||
+        Number(servesRequestedTileSize(b)) - Number(servesRequestedTileSize(a))
     );
     for (let i = 0; i < links.length; i++) {
       const tileMatrixSet = links[i].TileMatrixSet;
