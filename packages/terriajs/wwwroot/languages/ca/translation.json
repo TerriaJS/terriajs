@@ -222,7 +222,7 @@
     "convertErrorTitle": "No s'ha pogut actualitzar l'enllaç compartit a V8",
     "printExplanation": "Obriu una versió per impressió d'aquest mapa.",
     "creatingPrintView": "S'està creant la vista d'impressió...",
-    "localDataNote": "<0><0>Nota:</0></0><1>Les fonts de dades següents NO es compartiran perquè inclouen dades d'aquest sistema local. Per compartir aquestes fonts de dades, publiqueu-ne les dades en un servidor web i <2>afegiu-les mitjançant una URL</2>.</1>",
+    "localDataNote": "<0><0>Nota:</0></0><1>Les fonts de dades següents NO es compartiran perquè inclouen dades d'aquest sistema local. Per compartir aquestes fonts de dades, publiqueu-ne les dades en un servidor web i<2>afegiu-les mitjançant una URL</2>.</1>",
     "generatingUrl": "S'està generant l'URL per compartir...",
     "btnCatalogShareText": "Compartir",
     "convertNotificationMessage": "Aquest enllaç per compartir es basa en una versió anterior de TerriaJS, el programari que alimenta aquest mapa web. Tot i que es fan els millors esforços per preservar l'enllaç, és possible que tingueu problemes amb la visualització de les dades.\n\nSi sou usuari de l'enllaç per compartir, feu clic a D'acord per tal que el missatge d'advertència desaparegui i continueu accedint a les dades.",
@@ -246,7 +246,10 @@
     "mapDataState_0": "{{count}} conjunt de dades actiu al mapa",
     "mapDataState_1": "{{count}} conjunts de dades actius al mapa",
     "mapDataState_2": "{{count}} conjunts de dades actius al mapa",
-    "totals": "<div>El catàleg conté {{items}} articles en {{groups}} grups.</div>"
+    "totals": "<div>El catàleg conté {{items}} articles en {{groups}} grups.</div>",
+    "mapDataState_one": "{{count}} joc de dades actiu en el mapa",
+    "mapDataState_many": "{{count}} jocs de dades actiu en el mapa",
+    "mapDataState_other": "{{count}} jocs de dades actiu en el mapa"
   },
   "toolsPanel": {
     "btnText": "Eina",
@@ -308,7 +311,7 @@
     "title": "Comentaris",
     "close": "tancar comentaris",
     "yourName": "El vostre nom (opcional)",
-    "email": "Adreça de correu electrònic (opcional)<br/><em>Sense ella no podem fer un seguiment!</em>",
+    "email": "Adreça de correu electrònic (opcional)<br /><em>Sense ella no podem fer un seguiment!</em>",
     "commentQuestion": "Comentari o pregunta",
     "shareWithDevelopers": "Comparteix la meva vista de mapa amb els desenvolupadors de {{appName}}",
     "captionText": "Això ens ajuda a resoldre problemes deixant-nos veure el que esteu veient",
@@ -342,7 +345,7 @@
   },
   "welcomeMessage": {
     "title": "Som-hi",
-    "welcomeMessage": "T'interessa la descoberta i l'exploració de dades?<br/>Capbussa't directament per començar o consulta les opcions de la guia d'ajuda següent.",
+    "welcomeMessage": "T'interessa la descoberta i l'exploració de dades?<br />Capbussa't directament per començar o consulta les opcions de la guia d'ajuda següent.",
     "welcomeMessageOnMobile": "T'interessa el descobriment i l'exploració de dades?",
     "tourBtnText": "Visita guiada",
     "helpBtnText": "Necessitaré ajuda",
@@ -381,7 +384,7 @@
     "locationBtn": "centrar escena",
     "hideStoryPanel": "Amaga el creador d'històries",
     "loadSceneErrorMessage": "Error en carregar les dades de l'escena de la història: `{{title}}`.",
-    "removeStoryDialog": "Esteu segur que voleu suprimir \"<1>{{storyName}}</1>\"?",
+    "removeStoryDialog": "Esteu segur que voleu suprimir '<1>{{storyName}}</1>'?",
     "editor": {
       "cancelEditing": "Cancel·lar",
       "placeholder": "Introduïu un títol",
@@ -412,7 +415,10 @@
     "restart": "Reinicia",
     "panelBodyCapped": "Cada història té un límit de {{ shareMaxRequestSize }}: divideix dades grans o moltes escenes en diverses històries per mantenir-te per sota del límit.",
     "storiesTooLong": "Aquesta història supera la mida màxima permesa. Prova de reduir el nombre de conjunts de dades visibles o captura menys escenes.",
-    "saveInstructions": "Feu clic a compartir per crear un enllaç d'història nou."
+    "saveInstructions": "Feu clic a compartir per crear un enllaç d'història nou.",
+    "removeAllStoriesDialog_one": "Esteu segur que voleu suprimir {{ count }} escena?",
+    "removeAllStoriesDialog_many": "Esteu segur que voleu suprimir {{ count }} escenes?",
+    "removeAllStoriesDialog_other": "Esteu segur que voleu suprimir {{ count }} escena?"
   },
   "satelliteGuidance": {
     "menuTitle": "Podeu accedir a les guies de mapes en qualsevol moment consultant el <2>menú d'ajuda</2>.",
@@ -450,17 +456,19 @@
     "dragDrop": "Arrossegar i deixar anar",
     "infoText": "<0>Arrossegueu i deixeu anar un arxiu aquí per veure'l localment al mapa</0><1>(no es desarà ni es penjarà a Internet)</1>",
     "back": "Enrere",
-    "note": "<0>Nota: </0>Les dades afegides d'aquesta manera no es desen ni es fan visibles per als altres.",
+    "note": "<0>Nota: </0> Les dades afegides d'aquesta manera no es desen ni es fan visibles per als altres.",
     "addDataBtnText": "Explora les dades",
     "webTitle": "Afegir dades web",
     "webFile": "<0>Pas 2:</0> Introduïu l'URL de l'arxiu de dades o del servei web",
     "data": "Dades",
-    "modalTitle": "Explora Dades"
+    "modalTitle": "Explora Dades",
+    "cesiumIonToken": "Token per a Cesium ion:",
+    "cesiumIonStep2": "Pas 2:"
   },
   "search": {
     "resultsLabel": "Resultats de la cerca",
     "done": "Fet",
-    "searchInDataCatalog": "Cerqueu <1>'{{locationSearchText}}'</1> al Catàleg de Dades",
+    "searchInDataCatalog": "Cerqueu '{{locationSearchText}}' al Catàleg de Dades",
     "search": "Cerqueu \"{{searchText}}\" al Catàleg de Dades",
     "viewLess": "Veure menys {{name}} resultats",
     "placeholder": "Cerca ubicacions",
@@ -520,7 +528,7 @@
     "dataCustodian": "Dipositari de les dades",
     "name": "Descripció",
     "wms": "Aquest és un <1>servei WMS</1>, que genera imatges de mapes sota demanda. Es pot utilitzar al programari GIS amb aquesta URL:",
-    "wfs": "Aquest és un <1>servei WFS</1>, que transfereix dades espacials en brut sota demanda. Es pot utilitzar al programari GIS amb aquesta URL:",
+    "wfs": "Aquest és un<1>servei WFS</1>, que transfereix dades espacials en brut sota demanda. Es pot utilitzar al programari GIS amb aquesta URL:",
     "useTheLinkToDownload": "Utilitzeu l'enllaç següent per descarregar les dades directament.",
     "downloadInFormat": "Baixeu les dades seleccionades actualment en format {{format}}"
   },
@@ -564,7 +572,9 @@
     "rangeMax": "Màxim:",
     "splitScreenMode": "MODE PANTALLA PARTIDA",
     "enableAll": "Activa-ho tot",
-    "disableAll": "Desactiva-ho tot"
+    "disableAll": "Desactiva-ho tot",
+    "previewJob": "Sobre la tasca",
+    "previewJobTitle": "Sobre aquesta tasca"
   },
   "dateTime": {
     "selectorLabel": "Temps:",
@@ -615,14 +625,18 @@
     "unsuccessful": "Còpia fallida...",
     "shareURL": "Compartiu l'enllaç",
     "shareExplanation": "Qualsevol persona amb aquest enllaç podrà accedir a aquest mapa.",
-    "copy": "Copia"
+    "copy": "Copia",
+    "storyExplanation": "Qualsevol persona amb aquest enllaç podrà accedir a aquest mapa."
   },
   "dragDrop": {
-    "text": "<0>Drag & Drop</0><1>Les vostres dades a qualsevol lloc per veure-les al mapa<1>",
+    "text": "<0>Arrossegueu i deixeu anar</0><1>Les vostres dades a qualsevol lloc per veure-les al mapa<1>",
     "not": "<0>bbbb</0>",
     "notification_0": "<0>\"{{fileNames}}\"</0> s'ha afegit a <4>Les meves dades</4>.",
     "notification_1": "<0>\"{{fileNames}}\"</0> s'han afegit a <4>Les meves dades</4>.",
-    "notification_2": "<0>\"{{fileNames}}\"</0> s'han afegit a <4>Les meves dades</4>."
+    "notification_2": "<0>\"{{fileNames}}\"</0> s'han afegit a <4>Les meves dades</4>.",
+    "notification_one": "S'ha afegit <0>\"{{fileNames}}\"</0> a <4>Les meves dades</4>.",
+    "notification_many": "S'han afegit <0>\"{{fileNames}}\"</0> a <4>Les meves dades</4>.",
+    "notification_other": "S'han afegit <0>\"{{fileNames}}\"</0> a <4>Les meves dades</4>."
   },
   "loader": {
     "loadingMessage": "Carregant"
@@ -689,7 +703,11 @@
     "searchErrorOccurred": "S'ha produït un error durant la cerca. Comprova la teva connexió a Internet o torna-ho a provar més tard.",
     "searchMinCharacters_0": "Heu d'introduir un mínim de {{count}} caracter",
     "searchMinCharacters_1": "Heu d'introduir un mínim de {{count}} caràcters",
-    "searchMinCharacters_2": "Heu d'introduir un mínim de {{count}} caràcters"
+    "searchMinCharacters_2": "Heu d'introduir un mínim de {{count}} caràcters",
+    "searchMinCharacters_one": "Heu d'introduir un mínim de {{count}} caràcter",
+    "searchMinCharacters_many": "Heu d'introduir un mínim de {{count}} caràcters",
+    "searchMinCharacters_other": "Heu d'introduir un mínim de {{count}} caràcters",
+    "enterToStartSearch": "Premeu Enter per començar la cerca"
   },
   "terriaViewer": {
     "slowWebGLAvailableMessageII": "{{appName}} funciona millor amb un navegador web que admeti {{webGL}}, incloses les darreres versions de $t(browsers.chrome), $t(browsers.firefox), $t(browsers.edge), i $t(browsers.safari). Sembla que el vostre navegador web no admet WebGL, de manera que veureu una experiència limitada només en 2D.",
@@ -796,7 +814,7 @@
       "networkRequestTitle": "Error de sol·licitud de xarxa",
       "networkRequestMessageDetailed": "Això pot indicar un dels següents:\n\n* No s'ha pogut resoldre el nom del servidor\n* El servidor no ha respost a la sol·licitud o no està disponible temporalment\n* El servidor ha denegat l'accés [Compartició de recursos entre orígens (CORS)](https://docs.terria.io/guide/connecting-to-data/cross-origin-resource-sharing/) a aquesta URL\n* Hi ha un problema amb la connexió a Internet\n\nSi heu introduït l'enllaç manualment, comproveu que l'enllaç sigui correcte.",
       "defaultCombineMessage": "Els detalls dels errors es troben a continuació",
-      "networkRequestMessage": "És possible que les dades no estiguin disponibles o no es mostrin correctament a causa de l'interrupció del servei del custodi de dades. Si us plau proveu de tornar a carregar el mapa, accediu a les dades en una fase posterior o seleccioneu un conjunt de dades diferent. <feedbacklink feedback-message='Si el problema persisteix, envieu comentaris aquí.' email-message='Si el problema persisteix, si us plau, informeu-ne a {{email}}'/>"
+      "networkRequestMessage": "És possible que les dades no estiguin disponibles o no es mostrin correctament a causa de l'interrupció del servei del custodi de dades. Si us plau proveu de tornar a carregar el mapa, accediu a les dades en una fase posterior o seleccioneu un conjunt de dades diferent. <feedbacklink feedback-message='Si el problema persisteix, envieu comentaris aquí.' email-message='Si el problema persisteix, si us plau, informeu-ne a {{email}}'>"
     },
     "serverConfig": {
       "failedToGet": "No s'ha pogut obtenir la configuració del servidor de {{serverConfigUrl}}. Això vol dir que és possible que serveis com ara el proxy, la conversió i l'escurçament d'URL no funcionin."
@@ -1429,7 +1447,11 @@
       "generateErrorMessage": "Alguna cosa ha fallat en intentar utilitzar el servei de compartició de dades per generar una URL curta.",
       "expandErrorTitle": "No s'ha pogut expandir l'URL",
       "expandErrorMessage": "No s'ha localitzat el servei de dades compartides utilitzat per llançar {{appName}}. Això pot indicar un error a l'enllaç o que el servei no està disponible en aquest moment.",
-      "generateErrorDataExceedsLimitMessage": "Error: Les dades compartides superen el límit"
+      "generateErrorDataExceedsLimitMessage": "Error: Les dades compartides superen el límit",
+      "generateErrorMessageWithStatus": "Alguna cosa ha anat malament ({{statusCode}})",
+      "generateErrorMessageUnauthorized": "Alguna cosa ha anat malament (401)",
+      "shareNotFoundTitle": "No s'ha trobat l'enllaç",
+      "shareNotFoundMessage": "La història o l'enllaç per compartir no existeix. O bé s'ha eliminat o bé l'URL és incorrecta."
     },
     "socrataServer": {
       "name": "Servidor Socrata",
@@ -2150,6 +2172,12 @@
     },
     "cogCatalogItem": {
       "experimentalReprojectionWarning": "Aquest COG no es està en una projecció nativa (EPG:4326 o EPSG:3857). La reprojecció és experimental i pot ser que no funcioni com s'esperava. Si teniu el control de les dades d'origen, us recomanem que torneu a projectar a EPSG:4326 o EPSG:3857 mitjançant GDAL o similar."
+    },
+    "carto-v3": {
+      "name": "Carto V3"
+    },
+    "composite": {
+      "name": "Element de catàleg compost"
     }
   },
   "deltaTool": {
@@ -2202,7 +2230,10 @@
     "resultsCount_2": "S'ha trobat {{count}} coincidències",
     "searchError": "La cerca ha fallat. Comproveu la consola per trobar errors detallats.",
     "resetBtnText": "Esborra l'entrada",
-    "searchBtnText": "Cerca"
+    "searchBtnText": "Cerca",
+    "resultsCount_one": "S'ha trobat {{count}} coincidència",
+    "resultsCount_many": "S'han trobat {{count}} coincidències",
+    "resultsCount_other": "S'han trobat {{count}} coincidències"
   },
   "indexedItemSearchProvider": {
     "missingOptionIndexRootUrl": "Falta l'opció `indexRootUrl` a la configuració de cerca de l'element.",
