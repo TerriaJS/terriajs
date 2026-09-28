@@ -888,6 +888,59 @@ describe("TerriaSpec", function () {
         expect(loadMapItemsArcGisMap).toHaveBeenCalledTimes(1);
       });
 
+      it("when a workbench item is a group containing a nested group", async function () {
+        await terria.applyInitData({
+          initData: {
+            catalog: [
+              {
+                id: "outer-group",
+                type: "group",
+                name: "Outer group",
+                members: [
+                  {
+                    id: "direct-member",
+                    type: "geojson",
+                    name: "Direct member",
+                    geoJsonData: {
+                      type: "Feature",
+                      properties: {},
+                      geometry: { type: "Point", coordinates: [133, -25] }
+                    }
+                  },
+                  {
+                    id: "nested-group",
+                    type: "group",
+                    name: "Nested group",
+                    members: [
+                      {
+                        id: "nested-member",
+                        type: "geojson",
+                        name: "Nested member",
+                        geoJsonData: {
+                          type: "Feature",
+                          properties: {},
+                          geometry: { type: "Point", coordinates: [145, -37] }
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            workbench: ["outer-group"]
+          }
+        });
+
+        // The nested group's member used to be dropped: that branch begins with
+        // `await loadMembers()`, so its push landed after the workbench had
+        // already been assigned. The direct member survived only because it is
+        // pushed before the branch reaches its first `await`.
+        expect(terria.workbench.itemIds).toEqual([
+          "direct-member",
+          "nested-member"
+        ]);
+      });
+
       it("when the workbench has more than one items", async function () {
         await terria.applyInitData({
           initData: {
