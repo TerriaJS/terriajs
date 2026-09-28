@@ -37,6 +37,8 @@
 - The distance legend (scale bar) no longer recalculates on every rendered frame in the 3D view. It skips frames where the camera and canvas size are unchanged and otherwise updates at most every 200ms, so panning and zooming no longer run two globe picks, a MobX action and a React re-render per frame.
 - Fix label background color for leaflet map. Previously label background color was being ignored.
 - Upgrade Cesium to 1.145
+- Workbench items from an init source or share link now load concurrently instead of one at a time, so applying init data takes about as long as the slowest item rather than the sum of every item.
+- **Breaking:** A group on the workbench now contributes its nested-group members and its reference members, not just its direct mappable members. `Terria.pushAndLoadMapItems` previously started member loads without awaiting them, so anything pushed after an `await` — members of nested groups, and the targets of `ReferenceMixin` members — was pushed only after the workbench had already been assigned and was silently dropped; direct members were pushed in time but their `loadMapItems()` was never waited on. Applying init data now blocks until a workbench group's members have loaded.
 - [The next improvement]
 
 #### 8.13.0 - 2026-09-11
