@@ -814,7 +814,7 @@
       "networkRequestTitle": "Error de sol·licitud de xarxa",
       "networkRequestMessageDetailed": "Això pot indicar un dels següents:\n\n* No s'ha pogut resoldre el nom del servidor\n* El servidor no ha respost a la sol·licitud o no està disponible temporalment\n* El servidor ha denegat l'accés [Compartició de recursos entre orígens (CORS)](https://docs.terria.io/guide/connecting-to-data/cross-origin-resource-sharing/) a aquesta URL\n* Hi ha un problema amb la connexió a Internet\n\nSi heu introduït l'enllaç manualment, comproveu que l'enllaç sigui correcte.",
       "defaultCombineMessage": "Els detalls dels errors es troben a continuació",
-      "networkRequestMessage": "És possible que les dades no estiguin disponibles o no es mostrin correctament a causa de l'interrupció del servei del custodi de dades. Si us plau proveu de tornar a carregar el mapa, accediu a les dades en una fase posterior o seleccioneu un conjunt de dades diferent. <feedbacklink feedback-message='Si el problema persisteix, envieu comentaris aquí.' email-message='Si el problema persisteix, si us plau, informeu-ne a {{email}}'>"
+      "networkRequestMessage": "És possible que les dades no estiguin disponibles o no es mostrin correctament a causa de l'interrupció del servei del custodi de dades. Si us plau proveu de tornar a carregar el mapa, accediu a les dades en una fase posterior o seleccioneu un conjunt de dades diferent.<feedbacklink feedback-message='Si el problema continua enviue comentairs aquí.' email-message='If the problem persists, please report to {{email}}'/>"
     },
     "serverConfig": {
       "failedToGet": "No s'ha pogut obtenir la configuració del servidor de {{serverConfigUrl}}. Això vol dir que és possible que serveis com ara el proxy, la conversió i l'escurçament d'URL no funcionin."
@@ -1443,11 +1443,11 @@
       "invalidInitialTimeSource": "InicialTimeSource no vàlid especificat a l'arxiu de configuració: {{initialTimeSource}}"
     },
     "shareData": {
-      "generateErrorTitle": "No s'ha pogut generar una URL curta.",
-      "generateErrorMessage": "Alguna cosa ha fallat en intentar utilitzar el servei de compartició de dades per generar una URL curta.",
+      "generateErrorTitle": "No s'ha pogut crear l'enllaç per compartir",
+      "generateErrorMessage": "Alguna cosa ha anat malament",
       "expandErrorTitle": "No s'ha pogut expandir l'URL",
       "expandErrorMessage": "No s'ha localitzat el servei de dades compartides utilitzat per llançar {{appName}}. Això pot indicar un error a l'enllaç o que el servei no està disponible en aquest moment.",
-      "generateErrorDataExceedsLimitMessage": "Error: Les dades compartides superen el límit",
+      "generateErrorDataExceedsLimitMessage": "La història o l'enllaç per compartir és massa gran. Proveu d'eliminar contingut o escenes i torneu-ho a provar.",
       "generateErrorMessageWithStatus": "Alguna cosa ha anat malament ({{statusCode}})",
       "generateErrorMessageUnauthorized": "Alguna cosa ha anat malament (401)",
       "shareNotFoundTitle": "No s'ha trobat l'enllaç",
