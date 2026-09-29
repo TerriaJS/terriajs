@@ -7,6 +7,7 @@ import ViewState from "../../ReactViewModels/ViewState";
 import { IconGlyph } from "../../Styled/Icon";
 import MapNavigationItemController from "./MapNavigationItemController";
 import { NavigationItemLocation } from "./MapNavigationModel";
+import { JsonObject } from "../../Core/Json";
 
 export interface ToolConfig {
   /**
@@ -33,6 +34,11 @@ export interface ToolConfig {
    * ```
    */
   toolComponentLoader: () => Promise<{ default: ComponentType<any> }>;
+
+  /**
+   * Default props to pass to the tool component in addition to any props passed to openTool().
+   */
+  defaultProps?: JsonObject;
 
   /**
    * The tool button configuration
@@ -223,6 +229,7 @@ export class ToolController extends MapNavigationItemController {
         getToolComponent: () =>
           toolConfig.toolComponentLoader().then((m) => m.default),
         params: {
+          ...toolConfig.defaultProps,
           ...props,
           // Pass toolId as an extra prop to the component.
           // TODO: Maybe we should use react contexts to do this instead of a magic prop?
