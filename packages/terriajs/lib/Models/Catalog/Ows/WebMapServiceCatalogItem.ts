@@ -5,19 +5,14 @@
 // 3. Observable spaghetti
 //  Solution: think in terms of pipelines with computed observables, document patterns.
 // 4. All code for all catalog item types needs to be loaded before we can do anything.
-import { FeatureCollection } from "geojson";
 import i18next from "i18next";
 import { computed, makeObservable, override, runInAction } from "mobx";
-import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
-import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
-import GeographicProjection from "terriajs-cesium/Source/Core/GeographicProjection";
 import GeographicTilingScheme from "terriajs-cesium/Source/Core/GeographicTilingScheme";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
-import MapProjection from "terriajs-cesium/Source/Core/MapProjection";
 import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
 import combine from "terriajs-cesium/Source/Core/combine";
 import GetFeatureInfoFormat from "terriajs-cesium/Source/Scene/GetFeatureInfoFormat";
-import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
+import geoJsonToFeatureInfoWithProject from "./geoJsonToFeatureInfoWithProject";
 import WebMapServiceImageryProvider from "terriajs-cesium/Source/Scene/WebMapServiceImageryProvider";
 import URI from "urijs";
 import { JsonObject } from "../../../Core/Json";
@@ -844,44 +839,6 @@ export function formatDimensionsForOws(
       },
     {}
   );
-}
-
-// Take the GetFeatureInfo response and reproject the feature coordinates to geographic if necessary, so the position is correct when displayed on the map.
-// Cesium [GetFeatureInfoFormat](https://github.com/CesiumGS/cesium/blob/5754031f65646bee5f9d0e9a56dec7d3677a8b08/packages/engine/Source/Scene/GetFeatureInfoFormat.js#L74) assumes picked features is returned in geographic projection, so we need to convert them when tile scheme is not geographic.
-function geoJsonToFeatureInfoWithProject(
-  json: FeatureCollection,
-  projection: MapProjection
-) {
-  const result = [];
-
-  const features = json.features;
-  for (let i = 0; i < features.length; ++i) {
-    const feature = features[i];
-
-    const featureInfo = new ImageryLayerFeatureInfo();
-    featureInfo.data = feature;
-    featureInfo.properties = feature.properties;
-    featureInfo.configureNameFromProperties(feature.properties);
-    featureInfo.configureDescriptionFromProperties(feature.properties);
-
-    // If this is a point feature, use the coordinates of the point.
-    if (!!feature.geometry && feature.geometry.type === "Point") {
-      const x = feature.geometry.coordinates[0];
-      const y = feature.geometry.coordinates[1];
-
-      if (!projection || projection instanceof GeographicProjection) {
-        featureInfo.position = Cartographic.fromDegrees(x, y);
-      } else {
-        const positionInMeters = new Cartesian3(x, y, 0);
-        const cartographic = projection.unproject(positionInMeters);
-        featureInfo.position = cartographic;
-      }
-    }
-
-    result.push(featureInfo);
-  }
-
-  return result;
 }
 
 export default WebMapServiceCatalogItem;

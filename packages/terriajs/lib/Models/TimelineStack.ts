@@ -109,7 +109,7 @@ export default class TimelineStack {
    */
   @computed
   get top(): TimeVarying | undefined {
-    // Find the first item with a current, start, and stop time.
+    // Find the first item with a current time and a non-empty time range.
     // Use the default if there isn't one.
     return (
       this.items.find((item) => {
@@ -119,8 +119,7 @@ export default class TimelineStack {
             : item;
         return (
           dereferenced.currentTimeAsJulianDate !== undefined &&
-          dereferenced.startTimeAsJulianDate !== undefined &&
-          dereferenced.stopTimeAsJulianDate !== undefined
+          TimeVarying.hasTimeRange(dereferenced)
         );
       }) || this.defaultTimeVarying
     );

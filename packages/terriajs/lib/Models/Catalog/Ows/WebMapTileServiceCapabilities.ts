@@ -21,9 +21,31 @@ export interface WmtsLayer {
   readonly WGS84BoundingBox?: BoundingBox;
   readonly Style?: CapabilitiesStyle | CapabilitiesStyle[];
   readonly Format?: string | ReadonlyArray<string>;
-  readonly infoFormat?: string | ReadonlyArray<string>;
+  readonly InfoFormat?: string | ReadonlyArray<string>;
   readonly TileMatrixSetLink?: TileMatrixSetLink | TileMatrixSetLink[];
   readonly ResourceURL?: ResourceUrl | ResourceUrl[];
+  readonly Dimension?: WmtsDimension | WmtsDimension[];
+}
+
+/**
+ * WMTS 1.0.0 `<Dimension>` element (per OGC 07-057r7 section 7.1.2).
+ *
+ * Unlike WMS, where the dimension's value list is the element's text content,
+ * WMTS nests the value list under one or more child `<Value>` elements, with
+ * the dimension name in `<Identifier>` and an optional `<Default>`.
+ *
+ * NOTE: only the time dimension is consumed by the catalog stratum today.
+ * Other dimensions (elevation, band, etc.) parse fine but are ignored.
+ */
+export interface WmtsDimension {
+  readonly Identifier: string;
+  readonly Title?: string;
+  readonly Abstract?: string;
+  readonly UOM?: string;
+  readonly UnitSymbol?: string;
+  readonly Default?: string;
+  readonly Current?: boolean;
+  readonly Value?: string | ReadonlyArray<string>;
 }
 
 /* For some reason LegendUrls are formatted differently from WMS - this makes me very upset >:(
@@ -44,7 +66,7 @@ export interface WmtsCapabilitiesLegend extends CapabilitiesLegend {
 
 export interface ResourceUrl {
   format: string;
-  resourceType: "tile";
+  resourceType: "tile" | "FeatureInfo";
   template: string;
 }
 

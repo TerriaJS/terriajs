@@ -9,7 +9,7 @@ import CatalogMemberReferenceTraits from "./CatalogMemberReferenceTraits";
 
 If your TerriaMap has many dynamic groups which need to be loaded, it may be worth generating a static catalog index JSON file.
 
-- \`yarn build-tools\`
+- \`pnpm build-tools\`
 - \`node ./build/generateCatalogIndex.js -c config-url -b base-url\``
 })
 export default class CatalogIndexReferenceTraits extends mixTraits(

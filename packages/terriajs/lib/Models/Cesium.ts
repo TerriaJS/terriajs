@@ -1626,11 +1626,13 @@ export default class Cesium extends GlobeOrMap {
                 return resultFeaturesSoFar;
               }
 
+              const pickedLocation =
+                pickPosition &&
+                Ellipsoid.WGS84.cartesianToCartographic(pickPosition);
+
               let features = imageryLayerFeatures.map((feature) => {
                 if (!isDefined(feature.position)) {
-                  feature.position =
-                    pickPosition &&
-                    Ellipsoid.WGS84.cartesianToCartographic(pickPosition);
+                  feature.position = pickedLocation;
                 }
 
                 // If the picked feature does not have a height, use the height of the picked location.

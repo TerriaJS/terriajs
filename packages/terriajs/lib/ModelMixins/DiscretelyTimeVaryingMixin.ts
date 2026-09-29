@@ -419,13 +419,18 @@ function toJulianDate(time: string | undefined): JulianDate | undefined {
   if (time.includes("NaN")) {
     return undefined;
   }
-  const julianDate = JulianDate.fromIso8601(time);
+  try {
+    const julianDate = JulianDate.fromIso8601(time);
 
-  // Don't return an invalid JulianDate
-  if (isNaN(julianDate.secondsOfDay) || isNaN(julianDate.dayNumber))
+    // Don't return an invalid JulianDate
+    if (isNaN(julianDate.secondsOfDay) || isNaN(julianDate.dayNumber))
+      return undefined;
+
+    return julianDate;
+  } catch {
+    // Treat malformed selected times and bounds like invalid discrete times.
     return undefined;
-
-  return julianDate;
+  }
 }
 
 type DatesObject<T> = {

@@ -8,6 +8,7 @@ import styled, { DefaultTheme, withTheme } from "styled-components";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import isDefined from "../../../Core/isDefined";
 import DiscretelyTimeVaryingMixin from "../../../ModelMixins/DiscretelyTimeVaryingMixin";
+import TimeVarying from "../../../ModelMixins/TimeVarying";
 import CommonStrata from "../../../Models/Definition/CommonStrata";
 import Box from "../../../Styled/Box";
 import { RawButton } from "../../../Styled/Button";
@@ -233,14 +234,16 @@ class DateTimeSelectorSection extends Component<IProps, IState> {
               />
             </div>
           </Box>
-          <TimelineButton
-            active={attachedToTimeline}
-            type="button"
-            onClick={this.onTimelineButtonClicked}
-            title={t(($) => $.dateTime.useTimeline)}
-          >
-            <StyledIcon light styledWidth={"20px"} glyph={GLYPHS.timeline} />
-          </TimelineButton>
+          {TimeVarying.hasTimeRange(item) && (
+            <TimelineButton
+              active={attachedToTimeline}
+              type="button"
+              onClick={this.onTimelineButtonClicked}
+              title={t(($) => $.dateTime.useTimeline)}
+            >
+              <StyledIcon light styledWidth={"20px"} glyph={GLYPHS.timeline} />
+            </TimelineButton>
+          )}
           <TimelineButton
             active={item.showInChartPanel}
             type="button"

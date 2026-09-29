@@ -1,0 +1,17 @@
+packages:
+  - "packages/*"
+  - "apps/*"
+allowBuilds:
+  "@parcel/watcher": false
+  "@swc/core": false
+  core-js: true
+  cpu-features: false
+  esbuild: true
+  msw: true
+  protobufjs: false
+  ssh2: false
+  terriajs: true
+
+overrides:
+  "@types/react": ^18.3.3
+  "@types/react-dom": ^18.3.1
