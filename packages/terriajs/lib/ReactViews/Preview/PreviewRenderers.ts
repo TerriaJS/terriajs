@@ -5,8 +5,10 @@ import CatalogMemberMixin from "../../ModelMixins/CatalogMemberMixin";
 /**
  * Custom previewe renderer type
  */
-export type PreviewRendererType = FC<{
-  previewed: CatalogMemberMixin.Instance;
+export type PreviewRendererType<
+  T extends CatalogMemberMixin.Instance = CatalogMemberMixin.Instance
+> = FC<{
+  previewed: T;
 }>;
 
 /**
@@ -22,11 +24,13 @@ const PreviewRenderers = observable(new Map<string, PreviewRendererType>());
  * @param type Catalog item type
  * @param renderer Preview renderer component
  */
-export function addCustomPreviewRenderer(
+export function addCustomPreviewRenderer<T extends CatalogMemberMixin.Instance>(
   type: string,
-  renderer: PreviewRendererType
+  renderer: PreviewRendererType<T>
 ) {
-  runInAction(() => PreviewRenderers.set(type, renderer));
+  runInAction(() =>
+    PreviewRenderers.set(type, renderer as PreviewRendererType)
+  );
 }
 
 /**
