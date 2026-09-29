@@ -288,6 +288,11 @@ export interface ConfigParameters {
   disablePedestrianMode?: boolean;
 
   /**
+   * True to disable the base map opacity slider in the map settings panel.
+   */
+  disableBaseMapOpacityControl?: boolean;
+
+  /**
    * True to disable the share panel.
    */
   disableSharePanel?: boolean;
@@ -631,6 +636,7 @@ export default class Terria {
     disableMyLocation: undefined,
     disableSplitter: undefined,
     disablePedestrianMode: false,
+    disableBaseMapOpacityControl: false,
     disableSharePanel: false,
     disableShareEmbed: false,
     disableUserAddedData: false,

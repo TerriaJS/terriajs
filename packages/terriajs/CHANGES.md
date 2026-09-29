@@ -43,6 +43,7 @@
 - Add `edit` stratum for tracking temporary user changes that shouldn't be captured in share link - example form edits.
 - Fix viewCatalogMember to correctly switch to the parent tab
 - Integrate terriajs-server into monorepo
+- Fix label background color for leaflet map. Previously label background color was being ignored.
 
 #### 8.12.5 - 2026-07-28
 

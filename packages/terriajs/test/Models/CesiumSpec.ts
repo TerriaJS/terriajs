@@ -9,6 +9,7 @@ import {
 } from "mobx";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import CesiumTerrainProvider from "terriajs-cesium/Source/Core/CesiumTerrainProvider";
+import Color from "terriajs-cesium/Source/Core/Color";
 import EllipsoidTerrainProvider from "terriajs-cesium/Source/Core/EllipsoidTerrainProvider";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
@@ -18,7 +19,8 @@ import Scene from "terriajs-cesium/Source/Scene/Scene";
 import filterOutUndefined from "../../lib/Core/filterOutUndefined";
 import runLater from "../../lib/Core/runLater";
 import supportsWebGL from "../../lib/Core/supportsWebGL";
-import MappableMixin from "../../lib/ModelMixins/MappableMixin";
+import CatalogMemberMixin from "../../lib/ModelMixins/CatalogMemberMixin";
+import MappableMixin, { MapItem } from "../../lib/ModelMixins/MappableMixin";
 import CameraView from "../../lib/Models/CameraView";
 import Cesium3DTilesCatalogItem from "../../lib/Models/Catalog/CatalogItems/Cesium3DTilesCatalogItem";
 import CesiumTerrainCatalogItem from "../../lib/Models/Catalog/CatalogItems/CesiumTerrainCatalogItem";
@@ -27,11 +29,16 @@ import CatalogMemberFactory from "../../lib/Models/Catalog/CatalogMemberFactory"
 import WebMapServiceCatalogItem from "../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
 import Cesium from "../../lib/Models/Cesium";
 import CommonStrata from "../../lib/Models/Definition/CommonStrata";
+import CreateModel from "../../lib/Models/Definition/CreateModel";
 import createStratumInstance from "../../lib/Models/Definition/createStratumInstance";
 import updateModelFromJson from "../../lib/Models/Definition/updateModelFromJson";
 import upsertModelFromJson from "../../lib/Models/Definition/upsertModelFromJson";
 import Terria from "../../lib/Models/Terria";
+import CatalogMemberTraits from "../../lib/Traits/TraitsClasses/CatalogMemberTraits";
 import { RectangleTraits } from "../../lib/Traits/TraitsClasses/MappableTraits";
+import MappableTraits from "../../lib/Traits/TraitsClasses/MappableTraits";
+import OpacityTraits from "../../lib/Traits/TraitsClasses/OpacityTraits";
+import mixTraits from "../../lib/Traits/mixTraits";
 import TerriaViewer from "../../lib/ViewModels/TerriaViewer";
 import { worker } from "../mocks/browser";
 import { http, HttpResponse } from "msw";
@@ -632,7 +639,81 @@ describeIfSupported("Cesium Model", function () {
       });
     });
   });
+
+  describe("base map opacity", function () {
+    let baseMap: TestOpacityBaseMapItem;
+
+    beforeEach(function () {
+      baseMap = new TestOpacityBaseMapItem("test-opacity-basemap", terria);
+    });
+
+    it("leaves the globe opaque when there is no base map", function () {
+      const globe = cesium.scene.globe;
+      expect(globe.translucency.enabled).toBe(false);
+      expect(globe.showGroundAtmosphere).toBe(true);
+      expect(globe.baseColor).toEqual(Color.BLUE);
+    });
+
+    it("leaves the globe opaque for a base map that supports opacity but never sets it", async function () {
+      // `OpacityTraits.opacity` defaults to 0.8 (a default meant for
+      // workbench overlay layers), so this guards against that default
+      // leaking into the base map's translucency handling.
+      await terriaViewer.setBaseMap(baseMap);
+
+      const globe = cesium.scene.globe;
+      expect(globe.translucency.enabled).toBe(false);
+      expect(globe.showGroundAtmosphere).toBe(true);
+      expect(globe.baseColor).toEqual(Color.BLUE);
+    });
+
+    it("makes the globe translucent when the base map's opacity is less than 1", async function () {
+      baseMap.setTrait(CommonStrata.user, "opacity", 0.5);
+      await terriaViewer.setBaseMap(baseMap);
+
+      const globe = cesium.scene.globe;
+      expect(globe.translucency.enabled).toBe(true);
+      expect(globe.showGroundAtmosphere).toBe(false);
+      expect(globe.baseColor).toEqual(Color.TRANSPARENT);
+      expect(globe.undergroundColor).toEqual(Color.BLACK.withAlpha(0));
+    });
+
+    it("restores the opaque globe settings when opacity is set back to 1", async function () {
+      baseMap.setTrait(CommonStrata.user, "opacity", 0.5);
+      await terriaViewer.setBaseMap(baseMap);
+
+      baseMap.setTrait(CommonStrata.user, "opacity", 1);
+
+      const globe = cesium.scene.globe;
+      expect(globe.translucency.enabled).toBe(false);
+      expect(globe.showGroundAtmosphere).toBe(true);
+      expect(globe.baseColor).toEqual(Color.BLUE);
+    });
+
+    it("clamps out-of-range opacity values", async function () {
+      baseMap.setTrait(CommonStrata.user, "opacity", 5);
+      await terriaViewer.setBaseMap(baseMap);
+      expect(cesium.scene.globe.translucency.enabled).toBe(false);
+
+      baseMap.setTrait(CommonStrata.user, "opacity", -1);
+      expect(cesium.scene.globe.translucency.enabled).toBe(true);
+    });
+  });
 });
+
+/**
+ * Catalog item with an opacity trait, for base map opacity tests.
+ */
+class TestOpacityBaseMapItem extends MappableMixin(
+  CatalogMemberMixin(
+    CreateModel(mixTraits(CatalogMemberTraits, MappableTraits, OpacityTraits))
+  )
+) {
+  protected async forceLoadMapItems(): Promise<void> {}
+
+  get mapItems(): MapItem[] {
+    return [];
+  }
+}
 
 /**
  * Returns a promise that fulfills when terrain provider has finished loading.
