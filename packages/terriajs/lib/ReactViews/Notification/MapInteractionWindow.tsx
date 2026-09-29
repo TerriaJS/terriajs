@@ -131,22 +131,30 @@ class MapInteractionWindow extends Component<{
     const isDiffTool =
       this.currentInteractionMode?.uiMode === UIMode.Difference;
 
+    const message = isDefined(this.currentInteractionMode)
+      ? parseCustomHtmlToReact(this.currentInteractionMode.message())
+      : undefined;
+    const messageAsNode = isDefined(this.currentInteractionMode)
+      ? this.currentInteractionMode.messageAsNode()
+      : undefined;
+
     return (
       <MapInteractionWindowWrapper
         className={windowClass}
         aria-hidden={!isActive}
         isDiffTool={isDiffTool}
       >
-        <div
-          className={classNames({
-            [Styles.content]: !isDiffTool
-          })}
-        >
-          {isDefined(this.currentInteractionMode) &&
-            parseCustomHtmlToReact(this.currentInteractionMode.message())}
-          {isDefined(this.currentInteractionMode) &&
-            this.currentInteractionMode.messageAsNode()}
-        </div>
+        {message ||
+          (messageAsNode && (
+            <div
+              className={classNames({
+                [Styles.content]: !isDiffTool
+              })}
+            >
+              {message}
+              {messageAsNode}
+            </div>
+          ))}
         {typeof this.currentInteractionMode?.customUi === "function" &&
           this.currentInteractionMode.customUi()}
         {this.currentInteractionMode?.onCancel && (
