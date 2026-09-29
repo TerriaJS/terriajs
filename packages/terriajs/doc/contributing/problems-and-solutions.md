@@ -12,7 +12,7 @@ The default TerriaJS configuration uses Cesium Ion for serving some of its basem
 
 ### Problem
 
-Building TerriaMap (without yarn workspaces) throws an error like:
+The build throws an error like:
 
 ```
 You have two copies of terriajs-cesium
@@ -20,52 +20,19 @@ You have two copies of terriajs-cesium
 
 ### Solution
 
-Check:
+Both `packages/terriajs` and `apps/terriamap` depend on `terriajs-cesium`. If their declared versions have drifted apart — usually because it was bumped in TerriaJS but not in TerriaMap — pnpm installs two copies. Check with:
 
 ```
-yarn list terriajs-cesium
+pnpm why terriajs-cesium
 ```
 
-If there are 2 different versions listed, run:
-
-```
-yarn gulp sync-terriajs-dependencies
-```
-
-If there's only 1 version listed in 2 places your yarn lockfile is playing up. To fix it, you could use [yarn-deduplicate](https://www.npmjs.com/package/yarn-deduplicate) or try reverting to a known good commit of your lockfile, and then run `yarn install` again.
+If more than one version is listed, update the `terriajs-cesium` version in `apps/terriamap/package.json` to match the one in `packages/terriajs/package.json`, then run `pnpm install`.
 
 ---
 
 ### Problem
 
-When using yarn workspaces to develop a TerriaMap against a custom version of terriajs `yarn install` throws error
-
-```
-An unexpected error occurred: "expected workspace package to exist for \"pkg-dir\""
-```
-
-or a similar error with a different package.
-Sometimes yarn versions after yarn@1.19.0 will cause an error when running yarn install using workspaces. The Github issue describing it https://github.com/yarnpkg/yarn/issues/7807 has comments saying it’s caused by a workspace trying to install a different version of the same dependency.
-
-### Workaround
-
-Easiest fix is to install dependencies using an older version of yarn:
-
-```
-npx yarn@1.19.0 install
-```
-
-It’s possible the problem could also be fixed in certain cases by syncing dependency versions for the same package, and ensuring that a workspace doesn’t install the same dependency but with a different version. Syncing dependencies could help:
-
-```
-yarn gulp sync-terriajs-dependencies
-```
-
----
-
-### Problem
-
-I have already have NodeJS installed, but I need an early version for TerriaJS
+I already have NodeJS installed, but I need the version TerriaJS expects.
 
 ### Solution
 
@@ -73,21 +40,19 @@ You can use [nvm](https://github.com/nvm-sh/nvm#installing-and-updating) to mana
 
 Follow installation instructions [here](https://github.com/nvm-sh/nvm#installing-and-updating).
 
-Then run the following to install NodeJS v16 and use it:
+The repo pins its Node version in `.nvmrc`, so from the repo root you can run:
 
 ```bash
-nvm install 16
-nvm use 16
+nvm install   # installs the version in .nvmrc
+nvm use       # switches to it
 ```
+
+---
 
 ### Problem
 
-When building TerriaMap/TerriaJS I see the following error
-
-```
-Error: error:0308010C:digital envelope routines::unsupported
-```
+A build fails with `Module not found` (or a TypeScript `Cannot find module`) for a package you can see is used.
 
 ### Solution
 
-Update to TerriaJS 8.4.1.
+It is most likely an undeclared dependency. pnpm's isolated `node_modules` only exposes the packages a project actually declares, so an import that used to resolve through hoisting now fails. Add the missing package to that project's `package.json` (`dependencies` or `devDependencies`) and run `pnpm install` — don't rely on a transitive dependency being reachable.

@@ -12,14 +12,7 @@
     "url": "http://github.com/TerriaJS/TerriaMap"
   },
   "dependencies": {
-    "terriajs-server": "*"
-  },
-  "config": {
-    "docker": {
-      "name": "terriamap",
-      "include": "wwwroot node_modules serverconfig.json index.js package.json version.js",
-      "dockerfile": "deploy/docker/Dockerfile"
-    }
+    "terriajs-server": "workspace:*"
   },
   "resolutions": {
     "@types/react": "^18.3.3",
@@ -50,7 +43,9 @@
     "json5": "^2.1.0",
     "lodash": "^4.17.21",
     "minimist": "^1.2.8",
-    "msw": "^2.12.14",
+    "mobx": "^6.13.7",
+    "mobx-react": "^9.2.0",
+    "msw": "~2.12.14",
     "node-notifier": "^10.0.1",
     "plugin-error": "^2.0.1",
     "prettier": "3.8.1",
@@ -63,26 +58,24 @@
     "sass-loader": "^16.0.7",
     "style-loader": "^4.0.0",
     "svg-sprite": "^2.0.4",
-    "terriajs": "*",
+    "terriajs": "workspace:*",
     "terriajs-cesium": "26.0.0",
     "terriajs-plugin-api": "0.0.1-alpha.17",
     "terriajs-plugin-sample": "0.0.1-alpha.7",
+    "terriajs-typings-for-css-modules-loader": "^2.5.2",
     "typescript": "^5.9.2",
     "typescript-eslint": "^8.58.1",
     "urijs": "^1.18.12",
-    "webpack": "^5.105.4",
+    "webpack": "^5.111.0",
     "webpack-cli": "^5.1.4",
     "yargs": "^17.7.2"
   },
   "scripts": {
-    "docker-build-local": "node deploy/docker/create-docker-context.js --build --push --tag auto --local",
-    "docker-build-prod": "node deploy/docker/create-docker-context.js --build --push --tag auto --repository=ghcr.io/terriajs",
-    "docker-build-ci": "node deploy/docker/create-docker-context.js --build",
     "start": "terriajs-server --config-file serverconfig.json",
     "gulp": "gulp",
     "build": "gulp build",
     "dev": "gulp dev",
-    "postinstall": "echo 'Installation successful. What to do next:\\n  yarn gulp dev   # Starts the server on port 3001, builds TerriaMap and dependencies, and rebuilds if files change.'",
+    "postinstall": "echo 'Installation successful. What to do next:\\n  pnpm gulp dev   # Starts the server on port 3001, builds TerriaMap and dependencies, and rebuilds if files change.'",
     "prettier": "prettier --write .",
     "prettier-check": "prettier --check .",
     "lint": "gulp lint"
