@@ -25,14 +25,35 @@ function isPlainObject(value: unknown): value is Record<string, unknown> {
   return prototype === Object.prototype || prototype === null;
 }
 
+/**
+ * Copies plain objects and arrays at every depth so a resolved value never
+ * aliases a stratum's stored value (see {@link StratifiedConfig.get}). Anything
+ * else — scalars, functions, `null`, class instances — is returned as-is,
+ * because it cannot be copied meaningfully and is replaced wholesale anyway.
+ */
+function cloneValue<T>(value: T): T {
+  if (Array.isArray(value)) return value.map((item) => cloneValue(item)) as T;
+  if (!isPlainObject(value)) return value;
+  return Object.fromEntries(
+    Object.entries(value).map(([key, item]) => [key, cloneValue(item)])
+  ) as T;
+}
+
 export function mergeDeep<T>(base: T, patch: DeepPartial<T>): T {
-  if (!isPlainObject(base) || !isPlainObject(patch)) return patch as T;
+  if (!isPlainObject(patch)) return cloneValue(patch as T);
+
+  // An absent/non-object base still folds through the object branch, so the
+  // result is always a fresh object at every depth — never a reference to a
+  // stratum's stored value (see {@link StratifiedConfig.get}).
+  const source: Record<string, unknown> = isPlainObject(base) ? base : {};
 
   return Object.fromEntries(
-    Array.from(new Set([...Object.keys(base), ...Object.keys(patch)])).map(
+    Array.from(new Set([...Object.keys(source), ...Object.keys(patch)])).map(
       (key) => [
         key,
-        Object.hasOwn(patch, key) ? mergeDeep(base[key], patch[key]) : base[key]
+        Object.hasOwn(patch, key)
+          ? mergeDeep(source[key], patch[key])
+          : source[key]
       ]
     )
   ) as T;
@@ -249,6 +270,11 @@ export class StratifiedConfig<T extends object> {
    * `primitiveTrait`. Arrays nested inside merged objects are likewise replaced,
    * never concatenated (see {@link mergeDeep}).
    *
+   * An object value is always a fresh snapshot, never a reference to a
+   * stratum's stored value, so a caller cannot write past `update()`'s
+   * validation by mutating what it reads. Writes go through
+   * {@link update}/{@link setValue}; a snapshot held across a write goes stale.
+   *
    * Reads the per-key observable inside each stratum — MobX tracks only this
    * specific key. For object values every contributing stratum's key is read,
    * so a change to an unmasked lower-stratum leaf still triggers reactions.
@@ -313,7 +339,7 @@ export class StratifiedConfig<T extends object> {
       if (!isPlainObject(value)) {
         // A non-object value wins wholesale. One appearing below already-
         // collected object layers cannot contribute leaves, so stop the walk.
-        if (objectLayers.length === 0) return value as T[K];
+        if (objectLayers.length === 0) return cloneValue(value) as T[K];
         break;
       }
       objectLayers.push(value);
@@ -321,8 +347,12 @@ export class StratifiedConfig<T extends object> {
     if (objectLayers.length === 0) return undefined as T[K];
     // objectLayers is ordered highest → lowest; fold from the lowest upward so
     // each higher stratum patches the accumulated result and wins per leaf.
-    return objectLayers.reduceRight((base, patch) =>
-      mergeDeep(base, patch)
+    // The empty seed is required, not cosmetic: without it a single layer is
+    // returned by reference (reduceRight skips the callback), handing callers
+    // the stratum's own stored object to mutate.
+    return objectLayers.reduceRight<unknown>(
+      (base, patch) => mergeDeep(base, patch),
+      {}
     ) as T[K];
   }
 

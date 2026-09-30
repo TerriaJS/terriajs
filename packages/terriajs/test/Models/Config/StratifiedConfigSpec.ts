@@ -280,6 +280,73 @@ describe("StratifiedConfig", function () {
     expect(config.outer).toEqual({ inner: { x: 1, y: 20 } });
   });
 
+  it("returns a snapshot, so mutating a resolved object does not change the next read", function () {
+    const schema = z.strictObject({
+      theme: z.strictObject({ primary: z.string(), secondary: z.string() })
+    });
+    const config = createStratifiedConfig(schema);
+    config.update(ConfigStrata.defaults, {
+      theme: { primary: "blue", secondary: "red" }
+    });
+
+    const resolved = config.theme;
+    (resolved as { primary: string }).primary = "mutated";
+
+    expect(config.theme).toEqual({ primary: "blue", secondary: "red" });
+  });
+
+  it("returns a snapshot at every depth, so mutating a nested resolved object does not change the next read", function () {
+    const schema = z.strictObject({
+      outer: z.strictObject({
+        inner: z.strictObject({ x: z.number() })
+      })
+    });
+    const config = createStratifiedConfig(schema);
+    config.update(ConfigStrata.defaults, { outer: { inner: { x: 1 } } });
+
+    const resolved = config.outer;
+    (resolved.inner as { x: number }).x = 99;
+
+    expect(config.outer).toEqual({ inner: { x: 1 } });
+  });
+
+  it("returns a snapshot of an array-valued key, so mutating it does not change the next read", function () {
+    const schema = z.strictObject({ paths: z.array(z.string()) });
+    const config = createStratifiedConfig(schema);
+    config.update(ConfigStrata.defaults, { paths: ["a", "b"] });
+
+    const resolved = config.paths;
+    (resolved as string[]).push("injected");
+
+    expect(config.paths).toEqual(["a", "b"]);
+  });
+
+  it("returns a snapshot of an array nested inside a merged object", function () {
+    const schema = z.strictObject({
+      nested: z.strictObject({ items: z.array(z.number()) })
+    });
+    const config = createStratifiedConfig(schema);
+    config.update(ConfigStrata.defaults, { nested: { items: [1, 2] } });
+
+    const resolved = config.nested;
+    (resolved.items as number[])[0] = 99;
+
+    expect(config.nested).toEqual({ items: [1, 2] });
+  });
+
+  it("returns a snapshot of the objects inside an array-valued key", function () {
+    const schema = z.strictObject({
+      entries: z.array(z.strictObject({ title: z.string() }))
+    });
+    const config = createStratifiedConfig(schema);
+    config.update(ConfigStrata.defaults, { entries: [{ title: "Intro" }] });
+
+    const resolved = config.entries;
+    (resolved[0] as { title: string }).title = "mutated";
+
+    expect(config.entries).toEqual([{ title: "Intro" }]);
+  });
+
   it("reacts when a lower-stratum leaf that is not masked by a higher stratum changes", function () {
     const schema = z.strictObject({
       options: z.strictObject({ a: z.number(), b: z.number() }).partial()
