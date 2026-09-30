@@ -1,11 +1,5 @@
 import { keyFromSelector } from "i18next";
-import {
-  action,
-  computed,
-  isObservableArray,
-  makeObservable,
-  observable
-} from "mobx";
+import { action, computed, makeObservable, observable } from "mobx";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import RuntimeError from "terriajs-cesium/Source/Core/RuntimeError";
 import * as z from "zod";
@@ -81,7 +75,7 @@ export class SearchBarModel {
   ) {
     const errors: TerriaError[] = [];
 
-    if (!isObservableArray(searchProviders)) {
+    if (!Array.isArray(searchProviders)) {
       errors.push(
         new TerriaError({
           sender: SearchProviderFactory,

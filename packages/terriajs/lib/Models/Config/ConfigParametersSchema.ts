@@ -38,9 +38,9 @@ const NextExperimentalFeaturesSchema = z.object({
  *
  * No `.default()` calls here. Defaults live in `CONFIG_DEFAULTS` and are loaded
  * into the `defaults` stratum at startup. Keeping them separate means:
- *  - Schema transforms that rename keys work correctly with `parseInput` (which
- *    uses `schema.partial()` so transformed output keys aren't filtered out by
- *    an input-key comparison)
+ *  - Schema transforms that rename keys work correctly with `parseValidConfig`
+ *    (which parses the whole deep-partial schema, so transformed output keys
+ *    aren't filtered out by an input-key comparison)
  *  - Defaults are visible as a plain object, easy to inspect and override
  *  - The schema stays a plain `ZodObject` — `schema.shape` and
  *    `schema.partial()` remain accessible without `ZodEffects` unwrapping

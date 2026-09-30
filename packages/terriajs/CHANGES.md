@@ -64,7 +64,7 @@
 
 - **Breaking:** Replace the mutable `Terria.configParameters` object with a Zod-validated, stratified configuration store.
   - Configuration is resolved by priority from the `defaults`, `underride`, `definition`, `persistedStorage`, `override`, `url`, and `user` strata. Use `configParameters.update(stratum, values)` or `configParameters.setValue(stratum, key, value)` instead of assigning properties directly. Both accept partial values at every depth — a nested object stores only the fields it sets, and the rest resolve from the strata below on read (matching the trait/catalog layer's `objectTrait`).
-  - `config.json` parameters are validated before being applied. Unknown properties and invalid values reject the definition stratum and display a validation error to the user instead of being silently ignored.
+  - `config.json` parameters are validated before being applied. Every value that validates is applied; each unknown or invalid value is rejected individually - a bad leaf inside a nested object does not discard its siblings or the rest of the file - and the validation error is shown to the user.
   - Applications can extend `ConfigParametersSchema` with application-specific options and pass a config created with `createTerriaConfig(extendedSchema)` through `TerriaOptions.config`.
   - Built-in defaults now live in `CONFIG_DEFAULTS`, separately from the validation schema, so partial higher-priority strata do not inject defaults.
   - Replace the trait-based `SearchBarTraits` configuration with `SearchBarConfigSchema`, and validate language configuration with `LanguageConfigurationSchema`.

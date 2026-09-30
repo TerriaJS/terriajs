@@ -8,6 +8,7 @@ import {
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import * as z from "zod";
 import { ConfigStratumOrder } from "./ConfigStrata";
+import { parseValidConfig } from "./parseValidConfig";
 
 export type DeepPartial<T> = T extends (...args: infer A) => infer R
   ? (...args: A) => R
@@ -77,13 +78,13 @@ export function mergeDeep<T>(base: T, patch: DeepPartial<T>): T {
  *    `_strata.set()` would invalidate all per-key observers on every write.
  *
  * **Validation approach:**
- * Uses `schema.partial()` (cached at construction) so partial raw objects
- * don't fail validation on missing required fields.  Validation is *partial*:
- * a single invalid or unknown key never discards the rest — the valid keys are
- * applied and the offending keys are reported. This is done by parsing the
- * whole schema, dropping the keys named in the resulting `error.issues`, and
- * re-parsing the remainder — never by indexing into `schema.shape`, so
- * schema-level transforms are preserved.
+ * Uses `z.deepPartial(schema)` (cached at construction) so partial raw objects
+ * don't fail validation on missing required fields.  Writes go through
+ * {@link parseValidConfig}, which applies every value that validates and
+ * reports the ones that do not, per *value* rather than per top-level key: an
+ * invalid or unknown leaf is pruned and re-parsed, so the valid leaves beside
+ * it are still applied. It parses the whole schema — never per-field
+ * `schema.shape` access — so schema-level transforms are preserved.
  *
  * **Strata priority (lowest → highest):**
  *   defaults  <  underride  <  definition  < persistedStorage < override < url <  user
@@ -163,8 +164,9 @@ export class StratifiedConfig<T extends object> {
    * stratum, so the value resolves from the next-lower stratum — the only way
    * to "unset" an override and fall back to a default.
    *
-   * @returns `true` if every provided key was valid, otherwise a string
-   * describing the keys that were rejected (the valid keys are still applied).
+   * @returns `true` if every provided value was valid, otherwise the
+   * validation error as formatted by `z.prettifyError` (the valid values are
+   * still applied). {@link parseValidConfig} exposes the same issues as data.
    * @throws {DeveloperError} if `stratum` is not registered in `stratumOrder`.
    *
    * Writes directly mutate the per-key observable — only reactions that read
@@ -173,7 +175,10 @@ export class StratifiedConfig<T extends object> {
   update(stratum: string, values: DeepPartial<T>): string | true {
     this._assertStratumRegistered(stratum);
 
-    const { data, errors } = this.parseInput(values);
+    const { data, issues, message } = parseValidConfig<T>(
+      this._partialSchema,
+      values
+    );
 
     runInAction(() => {
       const stratumObj = this._getOrCreateStratum(stratum) as Record<
@@ -188,7 +193,7 @@ export class StratifiedConfig<T extends object> {
         }
       }
     });
-    return errors.length > 0 ? errors.join("\n") : true;
+    return issues.length > 0 ? message : true;
   }
 
   /**
@@ -227,8 +232,10 @@ export class StratifiedConfig<T extends object> {
       return true;
     }
 
-    const { data, errors } = this.parseInput({ [key]: value });
-    if (errors.length > 0) return errors.join("\n");
+    const { data, issues, message } = parseValidConfig<T>(this._partialSchema, {
+      [key]: value
+    });
+    if (issues.length > 0) return message;
     if (!Object.hasOwn(data, key as string)) return true;
 
     runInAction(() => {
@@ -270,10 +277,12 @@ export class StratifiedConfig<T extends object> {
    * `primitiveTrait`. Arrays nested inside merged objects are likewise replaced,
    * never concatenated (see {@link mergeDeep}).
    *
-   * An object value is always a fresh snapshot, never a reference to a
-   * stratum's stored value, so a caller cannot write past `update()`'s
-   * validation by mutating what it reads. Writes go through
-   * {@link update}/{@link setValue}; a snapshot held across a write goes stale.
+   * An object or array value is a fresh plain snapshot, never a reference to
+   * a stratum's stored value, so a caller cannot write past `update()`'s
+   * validation by mutating what it reads, and a snapshot held across a write
+   * goes stale. Observe config with `reaction`/`autorun`/`observer`, which
+   * track the reads made here — not with `observe()` or `isObservable*()` on
+   * the returned value, which is not itself observable.
    *
    * Reads the per-key observable inside each stratum — MobX tracks only this
    * specific key. For object values every contributing stratum's key is read,
@@ -354,53 +363,6 @@ export class StratifiedConfig<T extends object> {
       (base, patch) => mergeDeep(base, patch),
       {}
     ) as T[K];
-  }
-
-  /**
-   * Validates `raw` through the cached deep-partial schema (`z.deepPartial`) and
-   * returns the valid keys plus any validation errors, without ever indexing
-   * into `schema.shape`.
-   *
-   * Validation is partial: a single invalid or unknown key does not discard the
-   * rest. On a fully valid parse the transformed keys are returned as-is — an
-   * explicit `undefined` is preserved (it signals the caller wants to clear the
-   * key), and absent keys are never injected. On failure the
-   * offending top-level keys are identified from `error.issues` and dropped,
-   * and the remainder is re-parsed so every recoverable key is still applied.
-   *
-   * Because the whole schema is used, field-level transforms are preserved.
-   * Object-level (cross-field) refinements can flag a key-less error; when the
-   * remainder still fails to re-parse, no keys are applied and the error is
-   * reported. Used internally by {@link update} and {@link setValue}.
-   */
-  parseInput(raw: unknown): { data: Partial<T>; errors: string[] } {
-    if (typeof raw !== "object" || raw === null || Array.isArray(raw)) {
-      return { data: {}, errors: ["Configuration needs to be an object"] };
-    }
-
-    const result = this._partialSchema.safeParse(raw);
-    if (result.success) {
-      return { data: result.data as Partial<T>, errors: [] };
-    }
-
-    const errors = [z.prettifyError(result.error)];
-    const invalidKeys = new Set<string>();
-    for (const issue of result.error.issues) {
-      if (issue.code === "unrecognized_keys") {
-        for (const key of issue.keys) invalidKeys.add(key);
-      } else if (typeof issue.path[0] === "string") {
-        invalidKeys.add(issue.path[0]);
-      }
-    }
-
-    const remainder = Object.fromEntries(
-      Object.entries(raw).filter(([key]) => !invalidKeys.has(key))
-    );
-    const recovered = this._partialSchema.safeParse(remainder);
-    return {
-      data: recovered.success ? (recovered.data as Partial<T>) : {},
-      errors
-    };
   }
 
   // ── Private helpers ──────────────────────────────────────────────────────────

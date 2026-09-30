@@ -347,6 +347,85 @@ describe("StratifiedConfig", function () {
     expect(config.entries).toEqual([{ title: "Intro" }]);
   });
 
+  describe("observability", function () {
+    const observedSchema = z.strictObject({
+      appName: z.string().optional(),
+      paths: z.array(z.string()).optional(),
+      theme: z
+        .strictObject({ a: z.string(), b: z.string() })
+        .partial()
+        .optional(),
+      nested: z
+        .strictObject({ items: z.array(z.number()), label: z.string() })
+        .partial()
+        .optional()
+    });
+
+    it("reacts to a simple key written by update and setValue", function () {
+      const config = createStratifiedConfig(observedSchema);
+      const seen: Array<string | undefined> = [];
+      const dispose = autorun(() => seen.push(config.appName));
+
+      config.update(ConfigStrata.definition, { appName: "A" });
+      config.setValue(ConfigStrata.user, "appName", "B");
+
+      expect(seen).toEqual([undefined, "A", "B"]);
+      dispose();
+    });
+
+    it("reacts to a nested leaf overridden by a higher stratum", function () {
+      const config = createStratifiedConfig(observedSchema);
+      config.update(ConfigStrata.defaults, { theme: { a: "blue", b: "red" } });
+      const seen: Array<string | undefined> = [];
+      const dispose = autorun(() => seen.push(config.theme?.b));
+
+      config.update(ConfigStrata.user, { theme: { b: "green" } });
+
+      expect(seen).toEqual(["red", "green"]);
+      dispose();
+    });
+
+    it("reacts to a nested leaf changed in the same stratum", function () {
+      const config = createStratifiedConfig(observedSchema);
+      config.update(ConfigStrata.defaults, { theme: { a: "blue", b: "red" } });
+      const seen: Array<string | undefined> = [];
+      const dispose = autorun(() => seen.push(config.theme?.b));
+
+      config.update(ConfigStrata.defaults, { theme: { a: "blue", b: "pink" } });
+
+      expect(seen).toEqual(["red", "pink"]);
+      dispose();
+    });
+
+    it("reacts to an array replaced by a higher stratum", function () {
+      const config = createStratifiedConfig(observedSchema);
+      config.update(ConfigStrata.defaults, { paths: ["a"] });
+      const seen: string[][] = [];
+      const dispose = autorun(() => seen.push([...(config.paths ?? [])]));
+
+      config.update(ConfigStrata.definition, { paths: ["a", "b"] });
+
+      expect(seen).toEqual([["a"], ["a", "b"]]);
+      dispose();
+    });
+
+    it("reacts to an array inside an object replaced by a higher stratum", function () {
+      const config = createStratifiedConfig(observedSchema);
+      config.update(ConfigStrata.defaults, {
+        nested: { items: [1], label: "x" }
+      });
+      const seen: number[][] = [];
+      const dispose = autorun(() =>
+        seen.push([...(config.nested?.items ?? [])])
+      );
+
+      config.update(ConfigStrata.user, { nested: { items: [1, 2] } });
+
+      expect(seen).toEqual([[1], [1, 2]]);
+      dispose();
+    });
+  });
+
   it("reacts when a lower-stratum leaf that is not masked by a higher stratum changes", function () {
     const schema = z.strictObject({
       options: z.strictObject({ a: z.number(), b: z.number() }).partial()
@@ -393,6 +472,47 @@ describe("StratifiedConfig", function () {
     expect(typeof result).toBe("string");
     expect(result).toContain("mystery");
     expect(config.a).toBe(1);
+  });
+
+  it("applies every other value when a nested key is unknown, reporting only that key", function () {
+    const schema = z.strictObject({
+      appName: z.string().optional(),
+      searchBarConfig: z
+        .strictObject({ placeholder: z.string().optional() })
+        .optional()
+    });
+    const config = createStratifiedConfig(schema);
+
+    const result = config.update(ConfigStrata.definition, {
+      appName: "My Map",
+      searchBarConfig: { placeholder: "Search", bogus: 1 }
+    } as never);
+
+    expect(config.appName).toBe("My Map");
+    expect(config.searchBarConfig).toEqual({ placeholder: "Search" });
+    expect(result).toContain('Unrecognized key: "bogus"');
+  });
+
+  it("keeps the valid leaf beside an invalid nested leaf", function () {
+    const schema = z.strictObject({
+      appName: z.string().optional(),
+      searchBarConfig: z
+        .strictObject({
+          placeholder: z.string().optional(),
+          minCharacters: z.number().optional()
+        })
+        .optional()
+    });
+    const config = createStratifiedConfig(schema);
+
+    const result = config.update(ConfigStrata.definition, {
+      appName: "My Map",
+      searchBarConfig: { placeholder: "Search", minCharacters: "three" }
+    } as never);
+
+    expect(config.appName).toBe("My Map");
+    expect(config.searchBarConfig).toEqual({ placeholder: "Search" });
+    expect(result).toContain("searchBarConfig.minCharacters");
   });
 
   it("setValue rejects a value that fails schema validation without writing it", function () {
