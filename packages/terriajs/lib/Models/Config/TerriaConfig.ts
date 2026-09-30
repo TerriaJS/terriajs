@@ -3,12 +3,7 @@ import {
   ConfigParametersSchema
 } from "./ConfigParametersSchema";
 import { ConfigParameters } from "./ConfigParameters";
-import {
-  DeepPartial,
-  StratifiedConfig,
-  createStratifiedConfig,
-  mergeDeep
-} from "./StratifiedConfig";
+import { DeepPartial, StratifiedConfig, mergeDeep } from "./StratifiedConfig";
 import { ConfigStrata, configStratumOrder } from "./ConfigStrata";
 import * as z from "zod";
 
@@ -40,9 +35,45 @@ export type TerriaConfig = StratifiedConfig<ConfigParameters> &
  */
 export type { ConfigParameters };
 
+type MissingFromSchema<TSchema extends z.ZodObject> = Exclude<
+  keyof ConfigParameters,
+  keyof z.output<TSchema>
+>;
+type MissingFromConfigParameters<TSchema extends z.ZodObject> = Exclude<
+  keyof z.output<TSchema>,
+  keyof ConfigParameters
+>;
+
+/**
+ * `unknown` when `TSchema` produces exactly `ConfigParameters` — the same keys,
+ * and values assignable both ways — otherwise an object type whose property
+ * names the mismatch, so the call fails to compile and says why.
+ */
+type MatchesConfigParameters<TSchema extends z.ZodObject> = [
+  MissingFromSchema<TSchema>
+] extends [never]
+  ? [MissingFromConfigParameters<TSchema>] extends [never]
+    ? [z.output<TSchema>] extends [ConfigParameters]
+      ? [ConfigParameters] extends [z.output<TSchema>]
+        ? unknown
+        : { "schema output does not match ConfigParameters": ConfigParameters }
+      : { "schema output does not match ConfigParameters": ConfigParameters }
+    : {
+        "keys the schema adds but ConfigParametersExtensions does not declare": MissingFromConfigParameters<TSchema>;
+      }
+  : {
+      "keys ConfigParametersExtensions declares but the schema does not validate": MissingFromSchema<TSchema>;
+    };
+
 /**
  * Creates a fresh `TerriaConfig` pre-loaded with `CONFIG_DEFAULTS` in the
- * `defaults` stratum.  Higher strata (underride, definition, override, user)
+ * `defaults` stratum.
+ *
+ * `schema` must produce exactly `ConfigParameters`. An app that augments
+ * `ConfigParametersExtensions` must pass the schema extended with the same
+ * fields, and the call fails to compile when the two drift apart — otherwise a
+ * field declared on the type but missing from the schema would be rejected by
+ * the strict schema at runtime and silently resolve to `undefined`.  Higher strata (underride, definition, override, user)
  * override individual keys without touching the defaults object.
  *
  * `defaults` optionally overrides the built-in `CONFIG_DEFAULTS` before they
@@ -55,11 +86,19 @@ export type { ConfigParameters };
  * are intentionally NOT wired here — callers set them up via MobX `reaction()`
  * so the config object stays a pure reactive store.
  */
-export const createTerriaConfig = (
-  schema: z.ZodObject = ConfigParametersSchema,
+export const createTerriaConfig = <
+  TSchema extends z.ZodObject = typeof ConfigParametersSchema
+>(
+  schema?: TSchema & MatchesConfigParameters<TSchema>,
   defaults?: DeepPartial<ConfigParameters>
 ): TerriaConfig => {
-  const config = createStratifiedConfig(schema, configStratumOrder);
+  // `schema`'s type proves it produces `ConfigParameters`, and the Proxy in
+  // `StratifiedConfig` serves each of its keys as a property — the one fact
+  // the compiler cannot see, as in `createStratifiedConfig`.
+  const config = new StratifiedConfig<ConfigParameters>(
+    schema ?? ConfigParametersSchema,
+    configStratumOrder
+  ) as TerriaConfig;
   const mergedDefaults =
     defaults === undefined
       ? CONFIG_DEFAULTS
@@ -67,7 +106,7 @@ export const createTerriaConfig = (
   const updateStatus = config.update(ConfigStrata.defaults, mergedDefaults);
   if (typeof updateStatus !== "boolean") throw new Error(updateStatus);
 
-  return config as unknown as TerriaConfig;
+  return config;
 };
 
 /**

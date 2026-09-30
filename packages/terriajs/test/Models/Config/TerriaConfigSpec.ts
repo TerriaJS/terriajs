@@ -1,3 +1,5 @@
+import * as z from "zod";
+import { ConfigParametersSchema } from "../../../lib/Models/Config/ConfigParametersSchema";
 import { createTerriaConfig } from "../../../lib/Models/Config/TerriaConfig";
 
 describe("createTerriaConfig", function () {
@@ -38,5 +40,28 @@ describe("createTerriaConfig", function () {
     });
 
     expect(config.initFragmentPaths).toEqual(["custom/"]);
+  });
+
+  it("accepts a schema whose output is exactly ConfigParameters", function () {
+    const config = createTerriaConfig(ConfigParametersSchema);
+
+    expect(config.appName).toBe("TerriaJS App");
+  });
+
+  it("rejects, at compile time, a schema that drifts from ConfigParameters", function () {
+    const addsUndeclaredKey = ConfigParametersSchema.extend({
+      notInConfigParameters: z.boolean().optional()
+    });
+    const untyped: z.ZodObject = ConfigParametersSchema;
+
+    // The check is type-level only; at runtime both still build a config.
+    expect(() =>
+      // @ts-expect-error the schema adds a key ConfigParameters does not declare
+      createTerriaConfig(addsUndeclaredKey)
+    ).not.toThrow();
+    expect(() =>
+      // @ts-expect-error an untyped schema proves nothing about its output
+      createTerriaConfig(untyped)
+    ).not.toThrow();
   });
 });
