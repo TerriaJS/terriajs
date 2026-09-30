@@ -244,6 +244,143 @@ describe("WebMapTileServiceCatalogItem", function () {
     expect(wmts.tileMatrixSet!.tileHeight).toEqual(256);
   });
 
+  describe("choosing between tile matrix sets of different tile sizes", function () {
+    // The layer links EPSG:3857 (256px), @2x (512px) and @3x (768px), the
+    // high resolution convention GeoServer and Copernicus both publish.
+    beforeEach(function () {
+      runInAction(() => {
+        wmts.setTrait(
+          "definition",
+          "url",
+          "test/WMTS/with_operation_metadata.xml"
+        );
+        wmts.setTrait(
+          "definition",
+          "layer",
+          "NWSHELF_ANALYSISFORECAST_PHY_004_013/cmems_mod_nws_phy_anfc_0.027deg-3D_PT1H-m_202309/vo"
+        );
+      });
+    });
+
+    it("takes the server's order when no tile size is asked for", async function () {
+      await wmts.loadMapItems();
+
+      expect(wmts.tileMatrixSet!.id).toBe("EPSG:3857");
+      expect(currentProvider(wmts)!.tileWidth).toBe(256);
+    });
+
+    it("picks the matrix set serving the requested tile size", async function () {
+      runInAction(() => {
+        wmts.setTrait("definition", "tileWidth", 512);
+        wmts.setTrait("definition", "tileHeight", 512);
+      });
+
+      await wmts.loadMapItems();
+
+      expect(wmts.tileMatrixSet!.id).toBe("EPSG:3857@2x");
+      expect(currentProvider(wmts)!.tileWidth).toBe(512);
+    });
+
+    it("keeps the requested size even when no matrix set serves it", async function () {
+      runInAction(() => {
+        wmts.setTrait("definition", "tileWidth", 300);
+        wmts.setTrait("definition", "tileHeight", 300);
+      });
+
+      await wmts.loadMapItems();
+
+      // Better a layer that visibly misdraws than one quietly served at a
+      // size the catalog did not ask for.
+      expect(wmts.tileMatrixSet!.id).toBe("EPSG:3857");
+      expect(currentProvider(wmts)!.tileWidth).toBe(300);
+    });
+
+    it("says so in the workbench when no matrix set serves the requested size", async function () {
+      runInAction(() => {
+        wmts.setTrait("definition", "tileWidth", 1024);
+      });
+
+      await wmts.loadMapItems();
+
+      // Otherwise the only symptom is a stretched layer and no explanation.
+      expect(wmts.shortReport).toBe(
+        "models.webMapTileServiceCatalogItem.unavailableTileSizeMessage"
+      );
+    });
+
+    it("says nothing when the requested size is served", async function () {
+      runInAction(() => {
+        wmts.setTrait("definition", "tileWidth", 512);
+        wmts.setTrait("definition", "tileHeight", 512);
+      });
+
+      await wmts.loadMapItems();
+
+      expect(wmts.shortReport).toBeUndefined();
+    });
+
+    it("does not let tile size outweigh the projection", async function () {
+      // EPSG:4326 is listed first and also has a 512px variant, but only Web
+      // Mercator can be drawn in 2D.
+      runInAction(() => {
+        wmts.setTrait("definition", "tileWidth", 512);
+      });
+
+      await wmts.loadMapItems();
+
+      expect(wmts.tileMatrixSet!.id).toBe("EPSG:3857@2x");
+    });
+  });
+
+  describe("tile size and level range", function () {
+    beforeEach(function () {
+      runInAction(() => {
+        // The 2km matrix set advertises 512px tiles, and re-roots to levels
+        // 3-5, which Cesium sees as 0-2.
+        wmts.setTrait("definition", "url", "test/WMTS/nasa-gibs-epsg4326.xml");
+        wmts.setTrait(
+          "definition",
+          "layer",
+          "MERRA2_2m_Air_Temperature_Monthly"
+        );
+      });
+    });
+
+    it("asks Cesium for the tiles the server actually serves", async function () {
+      await wmts.loadMapItems();
+
+      // The server serves 512px tiles. Telling Cesium 256 - the trait default,
+      // which the old fallback chain could never get past - leaves every
+      // level-of-detail calculation out by a factor of two.
+      const provider = currentProvider(wmts)!;
+      expect(provider.tileWidth).toBe(512);
+      expect(provider.tileHeight).toBe(512);
+      expect(provider.tilingScheme.getNumberOfXTilesAtLevel(0)).toBe(10);
+
+      // Cesium level 0 is the matrix the re-rooting started from, so the tile
+      // it requests is matrix "3" of the 2km set, not "0".
+      expect(await requestedTileUrl(wmts)).toContain("/2km/3/0/0.png");
+    });
+
+    it("lets catalog configuration cap the zoom the server offers", async function () {
+      runInAction(() => {
+        wmts.setTrait("definition", "tileWidth", 256);
+        wmts.setTrait("definition", "tileHeight", 256);
+        wmts.setTrait("definition", "maximumLevel", 1);
+      });
+
+      await wmts.loadMapItems();
+
+      // Previously the matrix set won outright, so these traits did nothing.
+      const provider = currentProvider(wmts)!;
+      expect(provider.tileWidth).toBe(256);
+      expect(provider.tileHeight).toBe(256);
+      expect(provider.maximumLevel).toBe(1);
+      // Not overridden, so still the matrix set's.
+      expect(provider.minimumLevel).toBe(0);
+    });
+  });
+
   it("roots the tiling scheme where a geographic matrix set starts dividing the world evenly", async function () {
     // GIBS runs 2, 3, 5, 10, 20, 40 columns. Cesium's default 2x1 root implies
     // 64 columns at level 5, so it asked for columns past the server's 40 and
