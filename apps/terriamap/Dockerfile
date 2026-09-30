@@ -50,7 +50,7 @@ COPY --from=build --chown=node:node /prod/app/node_modules node_modules
 # Without the chown when copying directories, wwwroot is owned by root:root.
 COPY --from=build --chown=node:node /repo/apps/terriamap/wwwroot wwwroot
 COPY --from=build /repo/apps/terriamap/serverconfig.json serverconfig.json
-COPY --from=build /repo/apps/terriamap/index.js index.js
+COPY --from=build /repo/apps/terriamap/index.ts index.ts
 COPY --from=build /repo/apps/terriamap/package.json package.json
 COPY --from=build /repo/apps/terriamap/version.js version.js
 
