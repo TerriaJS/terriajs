@@ -134,6 +134,15 @@ export class StratifiedConfig<T extends object> {
 
     this._strata = observable.map<string, Partial<T>>() as never;
 
+    // Enumeration reports the config keys that resolve to a value, as a plain
+    // object would, so Object.keys, spread and JSON.stringify see the resolved
+    // config rather than this class's internal fields.
+    const configKeys = Object.keys(schema.shape);
+    const resolves = (target: this, prop: string | symbol) =>
+      typeof prop === "string" &&
+      configKeys.includes(prop) &&
+      target.get(prop as keyof T) !== undefined;
+
     return new Proxy(this, {
       get(target, prop, receiver) {
         if (typeof prop !== "string" || prop in target)
@@ -142,6 +151,23 @@ export class StratifiedConfig<T extends object> {
       },
       set() {
         return false;
+      },
+      has(target, prop) {
+        return prop in target || resolves(target, prop);
+      },
+      ownKeys(target) {
+        return configKeys.filter((key) => resolves(target, key));
+      },
+      getOwnPropertyDescriptor(target, prop) {
+        if (!resolves(target, prop)) {
+          return Reflect.getOwnPropertyDescriptor(target, prop);
+        }
+        return {
+          value: target.get(prop as keyof T),
+          enumerable: true,
+          configurable: true,
+          writable: false
+        };
       }
     }) as StratifiedConfig<T>;
   }

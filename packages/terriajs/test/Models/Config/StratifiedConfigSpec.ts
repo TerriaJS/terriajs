@@ -89,6 +89,52 @@ describe("StratifiedConfig", function () {
     expect(config.schema).toBe(schema);
   });
 
+  describe("as a plain object", function () {
+    const resolvedSchema = z.strictObject({
+      appName: z.string().optional(),
+      theme: z.strictObject({ a: z.string(), b: z.string() }).optional(),
+      unused: z.number().optional()
+    });
+
+    function createResolvedConfig() {
+      const config = createStratifiedConfig(resolvedSchema);
+      config.update(ConfigStrata.defaults, { theme: { a: "blue", b: "red" } });
+      config.update(ConfigStrata.definition, { appName: "My Map" });
+      config.update(ConfigStrata.user, { theme: { b: "green" } });
+      return config;
+    }
+
+    it("lists the config keys that resolve to a value, not its internal fields", function () {
+      expect(Object.keys(createResolvedConfig())).toEqual(["appName", "theme"]);
+    });
+
+    it("serialises the resolved config with JSON.stringify", function () {
+      expect(JSON.parse(JSON.stringify(createResolvedConfig()))).toEqual({
+        appName: "My Map",
+        theme: { a: "blue", b: "green" }
+      });
+    });
+
+    it("spreads into a snapshot of the resolved config", function () {
+      const snapshot: z.output<typeof resolvedSchema> = {
+        ...createResolvedConfig()
+      };
+
+      expect(snapshot).toEqual({
+        appName: "My Map",
+        theme: { a: "blue", b: "green" }
+      });
+    });
+
+    it("reports a config key as present only when it resolves to a value", function () {
+      const config = createResolvedConfig();
+
+      expect("appName" in config).toBeTrue();
+      expect("unused" in config).toBeFalse();
+      expect("update" in config).toBeTrue();
+    });
+  });
+
   it("deep-merges a partial nested write with lower strata, per leaf", function () {
     const nestedSchema = z.strictObject({
       nested: z.strictObject({
