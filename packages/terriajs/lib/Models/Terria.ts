@@ -49,7 +49,6 @@ import TerriaError, {
 import { Complete } from "../Core/TypeModifiers";
 import ensureSuffix from "../Core/ensureSuffix";
 import filterOutUndefined from "../Core/filterOutUndefined";
-import flatten from "../Core/flatten";
 import getDereferencedIfExists from "../Core/getDereferencedIfExists";
 import getPath from "../Core/getPath";
 import hashEntity from "../Core/hashEntity";
@@ -1869,10 +1868,13 @@ export default class Terria {
       const memberBuckets: BaseModel[][] = memberModels.map(() => []);
       await Promise.all(
         memberModels.map((m, i) =>
-          this.pushAndLoadMapItems(m, { ...context, newItems: memberBuckets[i] })
+          this.pushAndLoadMapItems(m, {
+            ...context,
+            newItems: memberBuckets[i]
+          })
         )
       );
-      newItems.push(...flatten(memberBuckets));
+      newItems.push(...memberBuckets.flat());
     } else if (MappableMixin.isMixedInto(model)) {
       addItem(model, modelErrorList);
       (await model.loadMapItems()).pushErrorTo(modelErrorList);
@@ -2177,7 +2179,7 @@ export default class Terria {
           )
         )
       );
-      newItems.push(...flatten(newItemBuckets));
+      newItems.push(...newItemBuckets.flat());
 
       newItems.forEach((item) => {
         applyPart(`workbench analytics for \`${item.uniqueId}\``, () => {
