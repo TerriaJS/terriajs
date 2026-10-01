@@ -17,7 +17,7 @@ import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSourc
  * @param {Terria} terria The Terria instance.
  * @param {PointMovedCallback} pointMovedCallback A function that is called when a point is moved.
  * @param {PointMovingCallback} pointMovingCallback A function that is called when a point is moving.
- * @param {MapPickedObjectCallback} mapPickedObjectCallback An optional function that resolves the picked object to another object.
+ * @param {MapPickedObjectCallback} mapPickedObjectCallback An optional function that maps the picked object to another object, eg a snap point.
  */
 const LeafletDragPoints = function (
   terria,
@@ -94,24 +94,33 @@ LeafletDragPoints.prototype.setUp = function () {
 /**
  * Function that is called when the user clicks and holds on a point that was previously drawn.
  *
- * @param {Entity} entity The entity that user mouse downs on.
+ * @param {Entity} pickedEntity The entity that user mouse downs on.
  */
-LeafletDragPoints.prototype._onMouseDownOnPoint = function (entity) {
+LeafletDragPoints.prototype._onMouseDownOnPoint = function (pickedEntity) {
   if (!defined(this._draggableObjects.entities)) {
     return;
   }
 
-  var dragEntity = this._draggableObjects.entities.values.find(
-    function (dragObjEntity) {
+  // Map the picked entity to another if a map function is specified, for
+  // example to return a snap point if no point was picked but the position
+  // is close enough to a snap point
+  const mappedEntity = this._mapPickedObjectCallback
+    ? this._mapPickedObjectCallback(pickedEntity)
+    : pickedEntity;
+
+  if (!mappedEntity) {
+    return;
+  }
+
+  // Ensure the mapped entity is part of draggable objects
+  const draggedEntity = this._draggableObjects.entities.values.find(
+    function (e) {
       // Not necessarily same entity, but will have same id.
-      return dragObjEntity.id === entity.id;
+      return e.id === mappedEntity.id;
     }
   );
-  dragEntity = this._mapPickedObjectCallback
-    ? this._mapPickedObjectCallback(dragEntity)
-    : dragEntity;
 
-  if (defined(dragEntity)) {
+  if (defined(draggedEntity)) {
     // The touch events below don't actually work because Leaflet doesn't
     // expose these events.  See here for a possible workaround:
     // https://github.com/Leaflet/Leaflet/issues/1542
@@ -121,10 +130,10 @@ LeafletDragPoints.prototype._onMouseDownOnPoint = function (entity) {
     this._terria.leaflet.map.on("touchend", this._onMouseUp, this);
 
     this._dragInProgress = true;
-    this._entityDragged = dragEntity;
+    this._entityDragged = draggedEntity;
 
     this._terria.currentViewer.pauseMapInteraction();
-    this._originalPosition = dragEntity.position;
+    this._originalPosition = draggedEntity.position;
   }
 };
 

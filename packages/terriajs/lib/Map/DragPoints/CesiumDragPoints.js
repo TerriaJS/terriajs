@@ -20,7 +20,7 @@ import Ray from "terriajs-cesium/Source/Core/Ray";
  * @param {Terria} terria The Terria instance.
  * @param {PointMovedCallback} pointMovedCallback A function that is called when a point is moved.
  * @param {PointMovingCallback} pointMovingCallback A function that is called when a point is moving.
- * @param {MapPickedObjectCallback} mapPickedObjectCallback An optional function that resolves the picked object to another object.
+ * @param {MapPickedObjectCallback} mapPickedObjectCallback An optional function that maps the picked object or no pick to another object, eg a snap point.
  * @param {Boolean} dragOnObjects Allow dragging on to other objects instead of just the globe.
  */
 const CesiumDragPoints = function (
@@ -130,25 +130,32 @@ CesiumDragPoints.prototype.setUp = function () {
     if (!defined(that._draggableObjects.entities)) {
       return;
     }
-    var pickedObject = that._scene.pick(click.position);
-    var pickedEntity =
-      pickedObject?.id instanceof Entity ? pickedObject.id : undefined;
-    pickedEntity = that._mapPickedObjectCallback
+    const pick = that._scene.pick(click.position);
+    const pickedEntity = pick?.id instanceof Entity ? pick.id : undefined;
+
+    // Map the picked entity to another if a map function is specified, for
+    // example to return a snap point if no point was picked but the position
+    // is close enough to a snap point
+    const mappedEntity = that._mapPickedObjectCallback
       ? that._mapPickedObjectCallback(pickedEntity)
       : pickedEntity;
 
-    that._originalPosition = click.position;
-    if (defined(pickedEntity)) {
-      var draggedEntity = that._draggableObjects.entities.values.find(
-        function (dragObjEntity) {
-          return dragObjEntity.id === pickedEntity.id;
-        }
-      );
-      if (draggedEntity) {
-        that._dragInProgress = true;
-        that._entityDragged = draggedEntity;
-        that._setCameraMotion(false);
+    if (!mappedEntity) {
+      return;
+    }
+
+    // Ensure the mapped entity is part of draggable objects
+    const draggedEntity = that._draggableObjects.entities.values.find(
+      function (e) {
+        return e.id === mappedEntity.id;
       }
+    );
+
+    if (defined(draggedEntity)) {
+      that._dragInProgress = true;
+      that._entityDragged = draggedEntity;
+      that._setCameraMotion(false);
+      that._originalPosition = click.position;
     }
   }, ScreenSpaceEventType.LEFT_DOWN);
 
