@@ -636,16 +636,13 @@ describe("DragPoints", function () {
     });
 
     it("drags the entity substituted by mapPickedObjectCallback", function () {
-      const substitute = new Entity({ name: "substitute entity" });
-      setUpDragPoints({ mapPickedObjectCallback: () => substitute });
+      setUpDragPoints({ mapPickedObjectCallback: () => entity });
 
       featureMousedown.raiseEvent(new Entity({ name: "some other entity" }));
       moveMouseTo(135, -28.5);
 
-      expect(pointMovingCallback).toHaveBeenCalledWith(substitute);
-      expect(positionOf(substitute)).toEqual(
-        Cartesian3.fromDegrees(135, -28.5)
-      );
+      expect(pointMovingCallback).toHaveBeenCalledWith(entity);
+      expect(positionOf(entity)).toEqual(Cartesian3.fromDegrees(135, -28.5));
     });
 
     it("does not drag when mapPickedObjectCallback returns nothing", function () {
