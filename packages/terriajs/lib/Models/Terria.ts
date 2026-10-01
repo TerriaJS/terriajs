@@ -49,7 +49,6 @@ import TerriaError, {
 import { Complete } from "../Core/TypeModifiers";
 import ensureSuffix from "../Core/ensureSuffix";
 import filterOutUndefined from "../Core/filterOutUndefined";
-import flatten from "../Core/flatten";
 import getDereferencedIfExists from "../Core/getDereferencedIfExists";
 import getPath from "../Core/getPath";
 import hashEntity from "../Core/hashEntity";
@@ -1808,7 +1807,7 @@ export default class Terria {
           this.pushAndLoadMapItems(m, memberBuckets[i], errors)
         )
       );
-      newItems.push(...flatten(memberBuckets));
+      newItems.push(...memberBuckets.flat());
     } else if (MappableMixin.isMixedInto(model)) {
       newItems.push(model);
       (await model.loadMapItems()).pushErrorTo(errors);
@@ -2097,7 +2096,7 @@ export default class Terria {
           )
         )
       );
-      newItems.push(...flatten(newItemBuckets));
+      newItems.push(...newItemBuckets.flat());
 
       newItems.forEach((item) => {
         applyPart(`workbench analytics for \`${item.uniqueId}\``, () => {
