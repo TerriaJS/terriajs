@@ -10,11 +10,13 @@ import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import Ray from "terriajs-cesium/Source/Core/Ray";
 import TerrainProvider from "terriajs-cesium/Source/Core/TerrainProvider";
 import sampleTerrainMostDetailed from "terriajs-cesium/Source/Core/sampleTerrainMostDetailed";
+import Scene from "terriajs-cesium/Source/Scene/Scene";
 import isDefined from "../Core/isDefined";
 import pickTriangle, { PickTriangleResult } from "../Map/Cesium/pickTriangle";
 import EarthGravityModel1996 from "../Map/Vector/EarthGravityModel1996";
 import prettifyCoordinates from "../Map/Vector/prettifyCoordinates";
 import prettifyProjection from "../Map/Vector/prettifyProjection";
+import MapInteractionMode from "../Models/MapInteractionMode";
 import Terria from "../Models/Terria";
 import gridFileUrl from "../../wwwroot/data/WW15MGH.DAC";
 
@@ -32,6 +34,8 @@ const scratchCartographic = new Cartographic();
 const scratchScreenPosition = new Cartesian2();
 const scratchScenePosition = new Cartesian3();
 const scratchMouseEventPosition = new Cartesian3();
+const scratchPendingCartographic = new Cartographic();
+const scratchPendingScreenPosition = new Cartesian2();
 const pickedTriangleScratch: PickTriangleResult = {
   tile: undefined,
   intersection: new Cartesian3(),
@@ -70,6 +74,9 @@ export default class MouseCoords {
    * for the active {@link MapInteractionMode}.
    */
   private mouseEventRafId: number | undefined;
+  private pendingMouseEventTerria: Terria | undefined;
+  private pendingMouseEventMode: MapInteractionMode | undefined;
+  private pendingMouseEventPickScene = false;
 
   constructor() {
     makeObservable(this);
@@ -108,7 +115,7 @@ export default class MouseCoords {
     const pickRay = camera.getPickRay(screenPosition, scratchRay);
     const globe = scene.globe;
     const pickedTriangle = isDefined(pickRay)
-      ? pickTriangle(pickRay, scene, true, pickedTriangleScratch)
+      ? this.pickGlobeTriangle(scene, pickRay)
       : undefined;
     if (isDefined(pickedTriangle)) {
       // Get a fast, accurate-ish height every time the mouse moves.
@@ -202,10 +209,15 @@ export default class MouseCoords {
     // Only fire the mouse move event when we have a position on the globe -
     // `this.cartographic` is left untouched when the mouse is off the globe.
     if (isDefined(pickedTriangle) && this.cartographic) {
-      this.fireMouseMoveEvent(terria, this.cartographic, screenPosition, () =>
-        scene.pickPosition(screenPosition, scratchScenePosition)
-      );
+      this.fireMouseMoveEvent(terria, this.cartographic, screenPosition, true);
     }
+  }
+
+  protected pickGlobeTriangle(
+    scene: Scene,
+    ray: Ray
+  ): PickTriangleResult | undefined {
+    return pickTriangle(ray, scene, true, pickedTriangleScratch);
   }
 
   @action
@@ -232,25 +244,27 @@ export default class MouseCoords {
       point.y,
       scratchScreenPosition
     );
-    this.fireMouseMoveEvent(terria, coordinates, screenPosition);
+    this.fireMouseMoveEvent(terria, coordinates, screenPosition, false);
   }
 
   /**
    * Fire the mouse move event of the currently active {@link MapInteractionMode},
    * if it has any listeners.
    *
-   * The event is fired from a `requestAnimationFrame` callback, and any pending
-   * callback is cancelled first, so that at most one event is fired per frame
-   * no matter how frequently the mouse moves.
+   * The event is fired from a `requestAnimationFrame` callback so that at most
+   * one event is fired per frame no matter how frequently the mouse moves. The
+   * positions are copied into scratch objects so that the event reflects a
+   * single point in time, even if the caller mutates its arguments before the
+   * frame fires.
    *
-   * @param scenePick Called to pick a position on the scene features under the
-   * mouse. Only called when the interaction mode has opted into scene picking.
+   * @param pickScene Whether to pick a position on the scene features under the
+   * mouse. Only honoured when the interaction mode has opted into scene picking.
    */
   private fireMouseMoveEvent(
     terria: Terria,
     cartographic: Cartographic,
     screenPosition: Cartesian2,
-    scenePick?: () => Cartesian3 | undefined
+    pickScene: boolean
   ) {
     const mapInteractionMode = terria.mapInteractionModeStack.at(-1);
     const mouseMoveEvent = mapInteractionMode?.mouseMoveEvent;
@@ -258,31 +272,49 @@ export default class MouseCoords {
       return;
     }
 
-    if (isDefined(this.mouseEventRafId)) {
-      cancelAnimationFrame(this.mouseEventRafId);
+    this.pendingMouseEventTerria = terria;
+    this.pendingMouseEventMode = mapInteractionMode;
+    this.pendingMouseEventPickScene = pickScene;
+    Cartographic.clone(cartographic, scratchPendingCartographic);
+    Cartesian2.clone(screenPosition, scratchPendingScreenPosition);
+
+    if (!isDefined(this.mouseEventRafId)) {
+      this.mouseEventRafId = requestAnimationFrame(this.raisePendingMouseEvent);
+    }
+  }
+
+  private raisePendingMouseEvent = () => {
+    const terria = this.pendingMouseEventTerria;
+    const mapInteractionMode = this.pendingMouseEventMode;
+    this.mouseEventRafId = undefined;
+    this.pendingMouseEventTerria = undefined;
+    this.pendingMouseEventMode = undefined;
+    if (!terria || !mapInteractionMode) {
+      return;
     }
 
-    this.mouseEventRafId = requestAnimationFrame(() => {
-      this.mouseEventRafId = undefined;
+    const globePosition = Cartographic.toCartesian(
+      scratchPendingCartographic,
+      undefined,
+      scratchMouseEventPosition
+    );
 
-      const globePosition = Cartographic.toCartesian(
-        cartographic,
-        undefined,
-        scratchMouseEventPosition
-      );
+    const scenePosition =
+      this.pendingMouseEventPickScene &&
+      mapInteractionMode.enableScenePicking &&
+      terria.cesium
+        ? terria.cesium.scene.pickPosition(
+            scratchPendingScreenPosition,
+            scratchScenePosition
+          )
+        : undefined;
 
-      const scenePosition =
-        mapInteractionMode.enableScenePicking && scenePick
-          ? scenePick()
-          : undefined;
-
-      mouseMoveEvent.raiseEvent({
-        globePosition,
-        screenPosition,
-        scenePosition
-      });
+    mapInteractionMode.mouseMoveEvent.raiseEvent({
+      globePosition,
+      screenPosition: scratchPendingScreenPosition,
+      scenePosition
     });
-  }
+  };
 
   @action
   cartographicToFields(coordinates: Cartographic, errorBar?: number): void {
