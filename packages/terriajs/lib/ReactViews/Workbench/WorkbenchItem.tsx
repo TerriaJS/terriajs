@@ -1,5 +1,5 @@
 import { action } from "mobx";
-import { useState } from "react";
+import { MouseEvent, useState } from "react";
 import { observer } from "mobx-react";
 import { sortable } from "react-anything-sortable";
 import { useTranslation } from "react-i18next";
@@ -24,9 +24,11 @@ import { terriaErrorNotification } from "../Notification/terriaErrorNotification
 import PrivateIndicator from "../PrivateIndicator/PrivateIndicator";
 import WorkbenchItemControls from "./Controls/WorkbenchItemControls";
 
+const DRAG_THRESHOLD_PX = 5;
+
 interface IProps {
   item: BaseModel;
-  onMouseDown(): void;
+  onMouseDown(e: MouseEvent): void;
   onTouchStart(): void;
   viewState: ViewState;
   className: any;
@@ -42,6 +44,28 @@ const WorkbenchItemRaw: React.FC<IProps> = observer((props) => {
   const theme = useTheme();
   const [showErrors, setShowErrors] = useState(false);
   const errors = viewState.terria.workbench.getItemErrors(item);
+
+  const onDraggableMouseDown = (e: MouseEvent) => {
+    const startX = e.clientX;
+    const startY = e.clientY;
+    const onMove = (moveEvent: globalThis.MouseEvent) => {
+      if (
+        Math.abs(moveEvent.clientX - startX) +
+          Math.abs(moveEvent.clientY - startY) <
+        DRAG_THRESHOLD_PX
+      ) {
+        return;
+      }
+      removeListeners();
+      onMouseDown(e);
+    };
+    const removeListeners = () => {
+      document.removeEventListener("mousemove", onMove);
+      document.removeEventListener("mouseup", removeListeners);
+    };
+    document.addEventListener("mousemove", onMove);
+    document.addEventListener("mouseup", removeListeners);
+  };
 
   const toggleDisplay = action(() => {
     if (!CatalogMemberMixin.isMixedInto(item)) return;
@@ -74,7 +98,7 @@ const WorkbenchItemRaw: React.FC<IProps> = observer((props) => {
         <Box fullWidth>
           <Box left fullWidth centered>
             <DraggableBox
-              onMouseDown={onMouseDown}
+              onMouseDown={onDraggableMouseDown}
               onTouchStart={onTouchStart}
               title={getPath(item, " → ")}
               fullWidth

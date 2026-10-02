@@ -257,6 +257,15 @@ describe("Workbench", function () {
       expect(workbench.getItemErrors(item2)).toEqual([]);
     });
 
+    it("are kept when the item is moved", function () {
+      workbench.items = [item1, item2];
+      workbench.setItemErrors(item1, [error]);
+
+      workbench.moveItemToIndex(item1, 1);
+      expect(workbench.items).toEqual([item2, item1]);
+      expect(workbench.getItemErrors(item1)).toEqual([error]);
+    });
+
     it("are cleared when the item is no longer in the workbench items", function () {
       workbench.items = [item1, item2];
       workbench.setItemErrors(item1, [error]);

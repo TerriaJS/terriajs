@@ -326,8 +326,10 @@ export default class Workbench {
     if (!this.contains(item)) {
       return;
     }
+    const errors = this.getItemErrors(item);
     this.remove(item);
     this.insertItem(item, newIndex);
+    this.setItemErrors(item, errors);
   }
 }
 
