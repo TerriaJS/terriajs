@@ -28,6 +28,10 @@ const supportsReordering = (model: BaseModel) =>
 
 export default class Workbench {
   private readonly _items = observable.array<BaseModel>();
+  private readonly _itemErrors = observable.map<
+    BaseModel,
+    readonly TerriaError[]
+  >(undefined, { deep: false });
 
   constructor() {
     makeObservable(this);
@@ -43,11 +47,31 @@ export default class Workbench {
   set items(items: readonly BaseModel[]) {
     // Run items through a set to remove duplicates.
     const setItems = new Set(items);
+    const dereferencedItems = new Set(items.map(dereferenceModel));
+    Array.from(this._itemErrors.keys()).forEach((item) => {
+      if (!dereferencedItems.has(item)) this._itemErrors.delete(item);
+    });
     this._items.spliceWithArray(
       0,
       this._items.length,
       Array.from(setItems).slice()
     );
+  }
+
+  /**
+   * Gets the non-blocking errors that occurred while loading a workbench item.
+   */
+  getItemErrors(item: BaseModel): readonly TerriaError[] {
+    return this._itemErrors.get(dereferenceModel(item)) ?? [];
+  }
+
+  @action
+  setItemErrors(item: BaseModel, errors: readonly TerriaError[]): void {
+    if (errors.length > 0) {
+      this._itemErrors.set(dereferenceModel(item), errors);
+    } else {
+      this._itemErrors.delete(dereferenceModel(item));
+    }
   }
 
   /**
@@ -87,6 +111,7 @@ export default class Workbench {
   remove(item: BaseModel): void {
     const index = this.indexOf(item);
     if (index >= 0) {
+      this._itemErrors.delete(dereferenceModel(this._items[index]));
       this._items.splice(index, 1);
     }
   }
@@ -97,6 +122,7 @@ export default class Workbench {
   @action
   removeAll(): void {
     this._items.clear();
+    this._itemErrors.clear();
   }
 
   /**

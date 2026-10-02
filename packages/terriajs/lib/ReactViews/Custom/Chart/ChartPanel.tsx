@@ -63,15 +63,22 @@ const ChartPanel: FC<ChartPanelProps> = observer(({ onHeightChange }) => {
     if (items.length === 0) return;
 
     // Load all items
-    Promise.all(
-      items
-        .filter((item) => MappableMixin.isMixedInto(item))
-        .map((item) => item.loadMapItems())
-    ).then((results) =>
-      Result.combine(results, {
-        message: "Failed to load chart items",
-        importance: -1
-      }).raiseError(viewState.terria)
+    const mappableItems = items.filter((item) =>
+      MappableMixin.isMixedInto(item)
+    );
+    Promise.all(mappableItems.map((item) => item.loadMapItems())).then(
+      (results) =>
+        Result.combine(
+          results.filter(
+            (_result, index) =>
+              viewState.terria.workbench.getItemErrors(mappableItems[index])
+                .length === 0
+          ),
+          {
+            message: "Failed to load chart items",
+            importance: -1
+          }
+        ).raiseError(viewState.terria)
     );
 
     return (

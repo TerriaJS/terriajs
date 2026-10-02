@@ -1,4 +1,5 @@
 import { action } from "mobx";
+import { useState } from "react";
 import { observer } from "mobx-react";
 import { sortable } from "react-anything-sortable";
 import { useTranslation } from "react-i18next";
@@ -17,8 +18,9 @@ import { RawButton } from "../../Styled/Button";
 import Checkbox from "../../Styled/Checkbox/Checkbox";
 import Icon, { StyledIcon } from "../../Styled/Icon";
 import { Li } from "../../Styled/List";
-import { TextSpan } from "../../Styled/Text";
+import { Text, TextSpan } from "../../Styled/Text";
 import Loader from "../Loader";
+import { terriaErrorNotification } from "../Notification/terriaErrorNotification";
 import PrivateIndicator from "../PrivateIndicator/PrivateIndicator";
 import WorkbenchItemControls from "./Controls/WorkbenchItemControls";
 
@@ -38,6 +40,8 @@ const WorkbenchItemRaw: React.FC<IProps> = observer((props) => {
 
   const { t } = useTranslation();
   const theme = useTheme();
+  const [showErrors, setShowErrors] = useState(false);
+  const errors = viewState.terria.workbench.getItemErrors(item);
 
   const toggleDisplay = action(() => {
     if (!CatalogMemberMixin.isMixedInto(item)) return;
@@ -125,33 +129,75 @@ const WorkbenchItemRaw: React.FC<IProps> = observer((props) => {
             </DraggableBox>
           </Box>
         </Box>
-        {CatalogMemberMixin.isMixedInto(item) ? (
+        {CatalogMemberMixin.isMixedInto(item) || errors.length > 0 ? (
           <Box centered paddedHorizontally>
-            {item.isPrivate && (
+            {CatalogMemberMixin.isMixedInto(item) && item.isPrivate && (
               <BoxSpan paddedHorizontally>
                 <PrivateIndicator inWorkbench />
               </BoxSpan>
             )}
-            <RawButton onClick={toggleDisplay}>
-              <BoxSpan padded>
-                {isOpen ? (
+            {errors.length > 0 && (
+              <RawButton
+                onClick={() => setShowErrors(!showErrors)}
+                title={t(($) => $.workbench.showErrors)}
+                aria-expanded={showErrors}
+              >
+                <BoxSpan padded centered>
                   <StyledIcon
-                    styledHeight={"8px"}
-                    light
-                    glyph={Icon.GLYPHS.opened}
+                    styledHeight={"18px"}
+                    fillColor={theme.textWarning}
+                    glyph={Icon.GLYPHS.warning}
                   />
-                ) : (
-                  <StyledIcon
-                    styledHeight={"8px"}
-                    light
-                    glyph={Icon.GLYPHS.closed}
-                  />
-                )}
-              </BoxSpan>
-            </RawButton>
+                  {errors.length > 1 && (
+                    <TextSpan
+                      small
+                      css={{ color: theme.textWarning, marginLeft: "2px" }}
+                    >
+                      {errors.length}
+                    </TextSpan>
+                  )}
+                </BoxSpan>
+              </RawButton>
+            )}
+            {CatalogMemberMixin.isMixedInto(item) && (
+              <RawButton onClick={toggleDisplay}>
+                <BoxSpan padded>
+                  {isOpen ? (
+                    <StyledIcon
+                      styledHeight={"8px"}
+                      light
+                      glyph={Icon.GLYPHS.opened}
+                    />
+                  ) : (
+                    <StyledIcon
+                      styledHeight={"8px"}
+                      light
+                      glyph={Icon.GLYPHS.closed}
+                    />
+                  )}
+                </BoxSpan>
+              </RawButton>
+            )}
           </Box>
         ) : null}
       </Box>
+      {showErrors && errors.length > 0 && (
+        <Box
+          column
+          gap={3}
+          paddedRatio={3}
+          css={{ borderTop: `1px solid ${theme.grey}` }}
+        >
+          {errors.map((error, index) => (
+            <Box column key={index}>
+              <Text medium bold css={{ color: theme.textWarning }}>
+                {error.highestImportanceError.title}
+              </Text>
+              {terriaErrorNotification(error)(viewState)}
+            </Box>
+          ))}
+        </Box>
+      )}
       {isOpen && (
         <Box
           column

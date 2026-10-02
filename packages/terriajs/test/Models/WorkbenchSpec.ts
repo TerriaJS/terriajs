@@ -230,6 +230,42 @@ describe("Workbench", function () {
     expect(workbench.itemIds).toEqual(["A", "C"]);
   });
 
+  describe("item errors", function () {
+    const error = TerriaError.from("Failed to load");
+
+    it("can be set and cleared", function () {
+      workbench.items = [item1, item2];
+      workbench.setItemErrors(item1, [error]);
+
+      expect(workbench.getItemErrors(item1)).toEqual([error]);
+      expect(workbench.getItemErrors(item2)).toEqual([]);
+
+      workbench.setItemErrors(item1, []);
+      expect(workbench.getItemErrors(item1)).toEqual([]);
+    });
+
+    it("are cleared when the item is removed", function () {
+      workbench.items = [item1, item2];
+      workbench.setItemErrors(item1, [error]);
+      workbench.setItemErrors(item2, [error]);
+
+      workbench.remove(item1);
+      expect(workbench.getItemErrors(item1)).toEqual([]);
+      expect(workbench.getItemErrors(item2)).toEqual([error]);
+
+      workbench.removeAll();
+      expect(workbench.getItemErrors(item2)).toEqual([]);
+    });
+
+    it("are cleared when the item is no longer in the workbench items", function () {
+      workbench.items = [item1, item2];
+      workbench.setItemErrors(item1, [error]);
+
+      workbench.items = [item2];
+      expect(workbench.getItemErrors(item1)).toEqual([]);
+    });
+  });
+
   it("add reference item", async function () {
     const model = new MagdaReference("magda-reference", terria);
     model.setTrait(CommonStrata.definition, "recordId", "test-group");
