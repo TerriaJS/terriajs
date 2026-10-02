@@ -71,8 +71,7 @@ const ChartPanel: FC<ChartPanelProps> = observer(({ onHeightChange }) => {
         Result.combine(
           results.filter(
             (_result, index) =>
-              viewState.terria.workbench.getItemErrors(mappableItems[index])
-                .length === 0
+              !viewState.terria.workbench.showsItemErrors(mappableItems[index])
           ),
           {
             message: "Failed to load chart items",

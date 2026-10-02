@@ -225,6 +225,23 @@ describe("Workbench", function () {
     expect(workbench.getItemErrors(item3)).toEqual([error]);
   });
 
+  it("shows item errors for an item while it is being added with `showErrorsOnItem`", async function () {
+    let finishLoading: (result: Result<void>) => void = () => {};
+    (item3 as any).loadMapItems = () =>
+      new Promise((resolve) => (finishLoading = resolve));
+
+    const adding = workbench.add(item3, { showErrorsOnItem: true });
+    await new Promise((resolve) => setTimeout(resolve, 0));
+
+    expect(workbench.contains(item3)).toBe(true);
+    expect(workbench.showsItemErrors(item3)).toBe(true);
+
+    finishLoading(Result.none());
+    await adding;
+
+    expect(workbench.showsItemErrors(item3)).toBe(false);
+  });
+
   it("doesn't add duplicate model", async function () {
     workbench.items = [item1, item2, item3];
 

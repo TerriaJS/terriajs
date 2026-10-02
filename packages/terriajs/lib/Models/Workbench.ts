@@ -28,6 +28,7 @@ const supportsReordering = (model: BaseModel) =>
 
 export default class Workbench {
   private readonly _items = observable.array<BaseModel>();
+  private readonly _itemsAddingWithErrorsOnItem = new Set<BaseModel>();
   private readonly _itemErrors = observable.map<
     BaseModel,
     readonly TerriaError[]
@@ -63,6 +64,18 @@ export default class Workbench {
    */
   getItemErrors(item: BaseModel): readonly TerriaError[] {
     return this._itemErrors.get(dereferenceModel(item)) ?? [];
+  }
+
+  /**
+   * Whether load errors for `item` are shown on the workbench item, including
+   * while it is being added with `showErrorsOnItem`.
+   */
+  showsItemErrors(item: BaseModel): boolean {
+    const dereferenced = dereferenceModel(item);
+    return (
+      this._itemErrors.has(dereferenced) ||
+      this._itemsAddingWithErrorsOnItem.has(dereferenced)
+    );
   }
 
   @action
@@ -249,6 +262,21 @@ export default class Workbench {
       });
     }
 
+    if (!options.showErrorsOnItem) return this.addItem(item, options);
+
+    const dereferenced = dereferenceModel(item);
+    this._itemsAddingWithErrorsOnItem.add(dereferenced);
+    try {
+      return await this.addItem(item, options);
+    } finally {
+      this._itemsAddingWithErrorsOnItem.delete(dereferenced);
+    }
+  }
+
+  private async addItem(
+    item: BaseModel,
+    options: { showErrorsOnItem?: boolean }
+  ): Promise<Result<unknown>> {
     if (MappableMixin.isMixedInto(item) && item.shouldShowInitialMessage) {
       await item.showInitialMessage();
     }
