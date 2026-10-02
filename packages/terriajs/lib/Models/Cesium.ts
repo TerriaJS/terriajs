@@ -467,6 +467,14 @@ export default class Cesium extends GlobeOrMap {
       this.scene.fog.density = this.qualityFogDensity;
       this.scene.shadowMap.enabled = this.effectiveShadowsEnabled;
     });
+
+    this._disposeBaseMapOpacityReaction = reaction(
+      () => this.baseMapOpacity,
+      () => this.updateSceneOpacitySettings(this.baseMapOpacity),
+      {
+        fireImmediately: true
+      }
+    );
   }
 
   /** True if some workbench item's own `shadows` trait asks for cast/receive
@@ -514,14 +522,6 @@ export default class Cesium extends GlobeOrMap {
       message: i18next.t(($) => $.models.shadowsDisabledForPerformance.message),
       showAsToast: true
     });
-
-    this._disposeBaseMapOpacityReaction = reaction(
-      () => this.baseMapOpacity,
-      () => this.updateSceneOpacitySettings(this.baseMapOpacity),
-      {
-        fireImmediately: true
-      }
-    );
   }
 
   @computed
