@@ -1,5 +1,4 @@
 import L from "leaflet";
-import debounce from "lodash-es/debounce";
 import { runInAction } from "mobx";
 import { observer } from "mobx-react";
 import { FC, useEffect, useState } from "react";
@@ -58,29 +57,15 @@ export const DistanceLegend: FC<IDistanceLegendProps> = observer(
       | undefined => {
       if (isDefined(terria.cesium)) {
         const scene = terria.cesium.scene;
-        let removeUpdateSubscription: CesiumEvent.RemoveCallback | undefined;
-        const debouncedUpdate = debounce(
-          () => {
+        let removeUpdateSubscription: CesiumEvent.RemoveCallback | undefined =
+          scene.postRender.addEventListener(() => {
             updateDistanceLegendCesium(scene);
             if (isPrintMode) {
               removeUpdateSubscription?.();
               removeUpdateSubscription = undefined;
-              debouncedUpdate.cancel();
             }
-          },
-          200,
-          {
-            maxWait: 200,
-            leading: true,
-            trailing: true
-          }
-        );
-        removeUpdateSubscription =
-          scene.postRender.addEventListener(debouncedUpdate);
-        return () => {
-          removeUpdateSubscription?.();
-          debouncedUpdate.cancel();
-        };
+          });
+        return removeUpdateSubscription;
       } else if (isDefined(terria.leaflet)) {
         const map = terria.leaflet.map;
         let removeUpdateSubscription: (() => void) | undefined = undefined;
@@ -104,13 +89,6 @@ export const DistanceLegend: FC<IDistanceLegendProps> = observer(
     };
 
     const updateDistanceLegendCesium = (scene: Scene) => {
-      // The debounced postRender handler can still fire once in the narrow
-      // window between the Cesium viewer being destroyed (eg. switching
-      // viewer mode) and this component's effect cleanup running.
-      if (scene.isDestroyed()) {
-        return;
-      }
-
       // Find the distance between two pixels at the bottom center of the screen.
       const width = scene.canvas.clientWidth;
       const height = scene.canvas.clientHeight;

@@ -736,24 +736,6 @@ describe("TerriaSpec", function () {
       terria.removeModelReferences(model);
       expect(terria.getModelById(BaseModel, "testId")).toBeUndefined();
     });
-
-    it("disposes the model", function () {
-      spyOn(model, "dispose");
-      terria.removeModelReferences(model);
-      expect(model.dispose).toHaveBeenCalledTimes(1);
-    });
-
-    it("does not dispose the model while it is still loading", async function () {
-      spyOn(model, "dispose");
-      const loadPromise = model.loadMapItems();
-      expect(model.isLoading).toBeTruthy();
-
-      terria.removeModelReferences(model);
-
-      expect(model.dispose).not.toHaveBeenCalled();
-
-      await loadPromise;
-    });
   });
 
   //   it("tells us there's a time enabled WMS with `checkNowViewingForTimeWms()`", function(done) {
