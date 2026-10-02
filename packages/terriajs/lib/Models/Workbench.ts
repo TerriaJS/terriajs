@@ -229,13 +229,19 @@ export default class Workbench {
    * be {@link AsyncMappableMixin} or {@link ChartableMixin} but it is a {@link GroupMixin}, it will
    * be removed from the workbench. If it is mappable, `loadMapItems` will be called.
    *
-   * If an error occurs, it will only be added to the workbench if the severity is TerriaError.Warning - otherwise it will not be added
+   * If an error occurs, it will only be added to the workbench if the severity is TerriaError.Warning - otherwise it will not be added.
+   * If `options.showErrorsOnItem` is true, the item is always added and any error is attached to it (see {@link getItemErrors}).
    *
    * @param item The item to add to or remove from the workbench.
    */
-  public async add(item: BaseModel | BaseModel[]): Promise<Result<unknown>> {
+  public async add(
+    item: BaseModel | BaseModel[],
+    options: { showErrorsOnItem?: boolean } = {}
+  ): Promise<Result<unknown>> {
     if (Array.isArray(item)) {
-      const results = await Promise.all(item.reverse().map((i) => this.add(i)));
+      const results = await Promise.all(
+        item.reverse().map((i) => this.add(i, options))
+      );
       return Result.combine(results, {
         title: i18next.t(($) => $.workbench.addItemErrorTitle),
         message: i18next.t(($) => $.workbench.addItemErrorMessage),
@@ -255,7 +261,7 @@ export default class Workbench {
       error = (await item.loadReference()).error;
       if (item.target) {
         this.remove(item);
-        return this.add(item.target);
+        return this.add(item.target, options);
       }
     }
 
@@ -283,8 +289,10 @@ export default class Workbench {
       });
     }
 
-    // Remove item if TerriaError severity is Error
-    if (error?.severity === TerriaErrorSeverity.Error) {
+    if (options.showErrorsOnItem) {
+      this.setItemErrors(item, error ? [error] : []);
+    } else if (error?.severity === TerriaErrorSeverity.Error) {
+      // Remove item if TerriaError severity is Error
       this.remove(item);
     }
 

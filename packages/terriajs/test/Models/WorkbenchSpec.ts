@@ -210,6 +210,21 @@ describe("Workbench", function () {
     expect(workbench.itemIds).toEqual(["D", "A", "B"]);
   });
 
+  it("keeps an item that fails to load and attaches its error when `showErrorsOnItem` is set", async function () {
+    workbench.items = [item1, item2];
+    const error = new TerriaError({
+      message: "Failed to Load",
+      severity: TerriaErrorSeverity.Error
+    });
+    (item3 as any).loadMapItems = () => Result.error(error);
+
+    const addResult = await workbench.add(item3, { showErrorsOnItem: true });
+
+    expect(addResult.error).toBeDefined();
+    expect(workbench.itemIds).toEqual(["C", "A", "B"]);
+    expect(workbench.getItemErrors(item3)).toEqual([error]);
+  });
+
   it("doesn't add duplicate model", async function () {
     workbench.items = [item1, item2, item3];
 

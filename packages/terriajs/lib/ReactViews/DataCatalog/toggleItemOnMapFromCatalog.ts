@@ -53,11 +53,16 @@ export default async function toggleItemOnMapFromCatalog(
   const op = viewState.terria.workbench.contains(item) ? Op.Remove : Op.Add;
 
   if (op === Op.Add) {
-    (await viewState.terria.workbench.add(item)).raiseError(
-      viewState.terria,
-      undefined,
-      true // We want to force show error to user here - because this function is called when a user clicks the "Add to workbench"  buttons
-    );
+    const result = await viewState.terria.workbench.add(item, {
+      showErrorsOnItem: true
+    });
+    if (!viewState.terria.workbench.contains(item)) {
+      result.raiseError(
+        viewState.terria,
+        undefined,
+        true // We want to force show error to user here - because this function is called when a user clicks the "Add to workbench"  buttons
+      );
+    }
   } else {
     viewState.terria.workbench.remove(item);
   }
