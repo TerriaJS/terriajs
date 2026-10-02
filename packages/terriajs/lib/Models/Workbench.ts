@@ -94,10 +94,10 @@ export default class Workbench {
     );
   }
 
-  @action
   /**
    * @param options.clearWhenShown Clear the errors when the item is next shown.
    */
+  @action
   setItemErrors(
     item: BaseModel,
     errors: readonly TerriaError[],
