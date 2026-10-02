@@ -13,6 +13,7 @@ import getAncestors from "../../Models/getAncestors";
 import getDereferencedIfExists from "../../Core/getDereferencedIfExists";
 import { runInAction } from "mobx";
 import CommonStrata from "../../Models/Definition/CommonStrata";
+import raiseErrorNotShownInPreview from "../Preview/raiseErrorNotShownInPreview";
 
 const RawButtonAndUnderline = RawButton;
 
@@ -32,8 +33,10 @@ class Breadcrumbs extends Component {
         item.setTrait(CommonStrata.user, "isOpen", true);
       });
     });
-    (await this.props.viewState.viewCatalogMember(items[0])).raiseError(
-      this.props.viewState.terria
+    raiseErrorNotShownInPreview(
+      this.props.viewState,
+      items[0],
+      await this.props.viewState.viewCatalogMember(items[0])
     );
     this.props.viewState.changeSearchState("");
   }

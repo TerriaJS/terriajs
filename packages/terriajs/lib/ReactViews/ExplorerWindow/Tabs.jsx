@@ -11,6 +11,7 @@ import GroupMixin from "../../ModelMixins/GroupMixin";
 import DataCatalogTab from "./Tabs/DataCatalogTab";
 import MyDataTab from "./Tabs/MyDataTab/MyDataTab";
 import Styles from "./tabs.scss";
+import raiseErrorNotShownInPreview from "../Preview/raiseErrorNotShownInPreview";
 
 @observer
 class Tabs extends Component {
@@ -117,7 +118,13 @@ class Tabs extends Component {
           if (defined(member)) {
             this.props.viewState
               .viewCatalogMember(member)
-              .then((result) => result.raiseError(this.props.viewState.terria));
+              .then((result) =>
+                raiseErrorNotShownInPreview(
+                  this.props.viewState,
+                  member,
+                  result
+                )
+              );
           }
         }
       }
