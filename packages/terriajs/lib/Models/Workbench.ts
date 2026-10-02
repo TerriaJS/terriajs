@@ -4,6 +4,7 @@ import {
   computed,
   observable,
   makeObservable,
+  reaction,
   runInAction
 } from "mobx";
 import filterOutUndefined from "../Core/filterOutUndefined";
@@ -33,9 +34,23 @@ export default class Workbench {
     BaseModel,
     readonly TerriaError[]
   >(undefined, { deep: false });
+  private readonly _clearErrorsWhenShown = observable.set<BaseModel>(
+    undefined,
+    { deep: false }
+  );
 
   constructor() {
     makeObservable(this);
+    reaction(
+      () =>
+        Array.from(this._clearErrorsWhenShown).filter(
+          (item) =>
+            this._itemErrors.has(item) &&
+            MappableMixin.isMixedInto(item) &&
+            item.show
+        ),
+      (items) => items.forEach((item) => this.setItemErrors(item, []))
+    );
   }
 
   /**
@@ -79,11 +94,24 @@ export default class Workbench {
   }
 
   @action
-  setItemErrors(item: BaseModel, errors: readonly TerriaError[]): void {
+  /**
+   * @param options.clearWhenShown Clear the errors when the item is next shown.
+   */
+  setItemErrors(
+    item: BaseModel,
+    errors: readonly TerriaError[],
+    options: { clearWhenShown?: boolean } = {}
+  ): void {
+    const dereferenced = dereferenceModel(item);
     if (errors.length > 0) {
-      this._itemErrors.set(dereferenceModel(item), errors);
+      this._itemErrors.set(dereferenced, errors);
     } else {
-      this._itemErrors.delete(dereferenceModel(item));
+      this._itemErrors.delete(dereferenced);
+    }
+    if (errors.length > 0 && options.clearWhenShown) {
+      this._clearErrorsWhenShown.add(dereferenced);
+    } else {
+      this._clearErrorsWhenShown.delete(dereferenced);
     }
   }
 
@@ -363,9 +391,12 @@ export default class Workbench {
       return;
     }
     const errors = this.getItemErrors(item);
+    const clearWhenShown = this._clearErrorsWhenShown.has(
+      dereferenceModel(item)
+    );
     this.remove(item);
     this.insertItem(item, newIndex);
-    this.setItemErrors(item, errors);
+    this.setItemErrors(item, errors, { clearWhenShown });
   }
 }
 

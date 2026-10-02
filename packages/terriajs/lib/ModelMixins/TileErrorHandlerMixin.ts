@@ -149,25 +149,31 @@ function TileErrorHandlerMixin<T extends AbstractConstructor<ModelType>>(
               })
             );
           } else {
-            this.terria.raiseErrorToUser(
-              new TerriaError({
-                sender: this,
-                title: i18next.t(
-                  ($) => $.models.imageryLayer.accessingCatalogItemErrorTitle
-                ),
-                message:
-                  i18next.t(
-                    ($) =>
-                      $.models.imageryLayer.accessingCatalogItemErrorMessage,
-                    {
-                      name: this.name as string
-                    }
-                  ) +
-                  "<pre>" +
-                  formatError(e) +
-                  "</pre>"
-              })
-            );
+            const error = new TerriaError({
+              sender: this,
+              title: i18next.t(
+                ($) => $.models.imageryLayer.accessingCatalogItemErrorTitle
+              ),
+              message:
+                i18next.t(
+                  ($) => $.models.imageryLayer.accessingCatalogItemErrorMessage,
+                  {
+                    name: this.name as string
+                  }
+                ) +
+                "<pre>" +
+                formatError(e) +
+                "</pre>"
+            });
+            if (this.terria.workbench.contains(this)) {
+              this.terria.workbench.setItemErrors(this, [error], {
+                clearWhenShown: true
+              });
+              this.terria.errorService.error(error);
+              error.log();
+            } else {
+              this.terria.raiseErrorToUser(error);
+            }
           }
           this.setTrait(CommonStrata.user, "show", false);
         }
