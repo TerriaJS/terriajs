@@ -289,6 +289,32 @@ describe("Workbench", function () {
       expect(workbench.getItemErrors(item2)).toEqual([]);
     });
 
+    it("stop being cleared when shown once the item is removed", function () {
+      workbench.items = [item1, item2];
+      item1.setTrait(CommonStrata.user, "show", false);
+      item2.setTrait(CommonStrata.user, "show", false);
+      workbench.setItemErrors(item1, [error], { clearWhenShown: true });
+      workbench.setItemErrors(item2, [error], { clearWhenShown: true });
+      expect((workbench as any)._clearErrorsWhenShown.size).toBe(2);
+
+      workbench.remove(item1);
+      expect((workbench as any)._clearErrorsWhenShown.size).toBe(1);
+      workbench.items = [];
+
+      expect((workbench as any)._clearErrorsWhenShown.size).toBe(0);
+    });
+
+    it("keep clearing when shown after the item is moved", function () {
+      workbench.items = [item1, item2];
+      item1.setTrait(CommonStrata.user, "show", false);
+      workbench.setItemErrors(item1, [error], { clearWhenShown: true });
+
+      workbench.moveItemToIndex(item1, 1);
+      item1.setTrait(CommonStrata.user, "show", true);
+
+      expect(workbench.getItemErrors(item1)).toEqual([]);
+    });
+
     it("are kept when the item is moved", function () {
       workbench.items = [item1, item2];
       workbench.setItemErrors(item1, [error]);

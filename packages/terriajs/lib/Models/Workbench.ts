@@ -68,6 +68,9 @@ export default class Workbench {
     Array.from(this._itemErrors.keys()).forEach((item) => {
       if (!dereferencedItems.has(item)) this._itemErrors.delete(item);
     });
+    Array.from(this._clearErrorsWhenShown).forEach((item) => {
+      if (!dereferencedItems.has(item)) this._clearErrorsWhenShown.delete(item);
+    });
     this._items.spliceWithArray(
       0,
       this._items.length,
@@ -153,7 +156,9 @@ export default class Workbench {
   remove(item: BaseModel): void {
     const index = this.indexOf(item);
     if (index >= 0) {
-      this._itemErrors.delete(dereferenceModel(this._items[index]));
+      const dereferenced = dereferenceModel(this._items[index]);
+      this._itemErrors.delete(dereferenced);
+      this._clearErrorsWhenShown.delete(dereferenced);
       this._items.splice(index, 1);
     }
   }
@@ -165,6 +170,7 @@ export default class Workbench {
   removeAll(): void {
     this._items.clear();
     this._itemErrors.clear();
+    this._clearErrorsWhenShown.clear();
   }
 
   /**

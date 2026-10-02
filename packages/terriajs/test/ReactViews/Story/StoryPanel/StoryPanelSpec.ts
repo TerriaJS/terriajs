@@ -37,4 +37,26 @@ describe("activateStory", function () {
     expect(terria.useNativeResolution).toBe(false);
     expect(terria.timelineStack.alwaysShowingTimeline).toBe(true);
   });
+
+  it("shows scene errors that aren't on a workbench item as a toast", async function () {
+    const raiseSpy = spyOn(terria, "raiseErrorToUser");
+
+    await activateStory(
+      {
+        id: "scene",
+        title: "Scene",
+        text: "",
+        shareData: {
+          version: "8.0.0",
+          initSources: [{ initialCamera: { west: "not a number" } }]
+        }
+      } as any,
+      terria
+    );
+
+    expect(raiseSpy).not.toHaveBeenCalled();
+    expect(terria.notificationState.currentNotification?.showAsToast).toBe(
+      true
+    );
+  });
 });
