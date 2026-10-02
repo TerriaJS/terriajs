@@ -3,8 +3,9 @@ import { runInAction } from "mobx";
 import TerriaError from "../../Core/TerriaError";
 import ViewState from "../../ReactViewModels/ViewState";
 import Box from "../../Styled/Box";
+import { RawButton } from "../../Styled/Button";
 import Spacing from "../../Styled/Spacing";
-import { Text } from "../../Styled/Text";
+import { Text, TextSpan } from "../../Styled/Text";
 import Collapsible from "../Custom/Collapsible/Collapsible";
 import FeedbackLinkCustomComponent, {
   FeedbackLink
@@ -135,5 +136,32 @@ export const terriaErrorNotification = (error: TerriaError) =>
         ) : null}
         {!includesFeedbackLink ? <FeedbackLink viewState={viewState} /> : null}
       </>
+    );
+  };
+
+export const terriaErrorToast = (error: TerriaError) =>
+  function TerriaErrorToast(viewState: ViewState) {
+    const showDetails = () => {
+      const notificationState = viewState.terria.notificationState;
+      notificationState.dismissCurrentNotification();
+      runInAction(() => {
+        error.showDetails = true;
+        error.overrideRaiseToUser = true;
+      });
+      notificationState.addNotificationToQueue(error.toNotification());
+    };
+
+    return (
+      <Text textLight medium>
+        {parseCustomMarkdownToReact(`**${error.title}** ${error.message}`, {
+          viewState,
+          terria: viewState.terria
+        })}
+        <RawButton onClick={showDetails}>
+          <TextSpan textLight isLink>
+            {i18next.t(($) => $.models.raiseError.seeDetails)}
+          </TextSpan>
+        </RawButton>
+      </Text>
     );
   };

@@ -1257,7 +1257,8 @@
       "errorTitle": "An error occurred",
       "notificationFeedback": "For questions or feedback, click here.",
       "notificationFeedbackEmail": "For questions or feedback, please contact {{email}}",
-      "developerDetails": "Developer details"
+      "developerDetails": "Developer details",
+      "seeDetails": "See details"
     },
     "regionMapping": {
       "noDataForDate": "No data for the selected date.",

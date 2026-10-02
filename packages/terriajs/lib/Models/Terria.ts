@@ -915,6 +915,20 @@ export default class Terria {
     terriaError.log();
   }
 
+  /** Like `raiseErrorToUser`, but shows the error as a non-blocking toast. */
+  raiseErrorToUserAsToast(
+    error: unknown,
+    overrides?: TerriaErrorOverrides
+  ): void {
+    const terriaError = TerriaError.from(error, overrides);
+    this.errorService.error(terriaError);
+    if (this.userProperties.get("ignoreErrors") !== "1")
+      this.notificationState.addNotificationToQueue(
+        terriaError.toToastNotification()
+      );
+    terriaError.log();
+  }
+
   @computed
   get currentViewer(): GlobeOrMap {
     return this.mainViewer.currentViewer;

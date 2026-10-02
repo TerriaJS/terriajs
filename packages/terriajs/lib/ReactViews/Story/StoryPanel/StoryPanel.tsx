@@ -65,7 +65,7 @@ export async function activateStory(scene: Story, terria: Terria) {
       })
     );
     if (errors.length > 0) {
-      terria.raiseErrorToUser(
+      terria.raiseErrorToUserAsToast(
         TerriaError.combine(errors, {
           title: { key: keyFromSelector(($) => $.story.loadSceneErrorTitle) },
           message: {

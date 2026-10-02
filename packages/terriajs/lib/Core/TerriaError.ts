@@ -3,7 +3,10 @@ import { observable, makeObservable } from "mobx";
 import RequestErrorEvent from "terriajs-cesium/Source/Core/RequestErrorEvent";
 import Terria from "../Models/Terria";
 import { Notification } from "../ReactViewModels/NotificationState";
-import { terriaErrorNotification } from "../ReactViews/Notification/terriaErrorNotification";
+import {
+  terriaErrorNotification,
+  terriaErrorToast
+} from "../ReactViews/Notification/terriaErrorNotification";
 import filterOutUndefined from "./filterOutUndefined";
 import flatten from "./flatten";
 import isDefined from "./isDefined";
@@ -355,6 +358,15 @@ export default class TerriaError {
       ignore: () => !this.shouldRaiseToUser,
       // Set raisedToUser to true on dismiss
       onDismiss: () => (this.raisedToUser = true)
+    };
+  }
+
+  /** Convert `TerriaError` to a non-blocking toast `Notification`, with a link to the full error */
+  toToastNotification(): Notification {
+    return {
+      ...this.toNotification(),
+      message: terriaErrorToast(this),
+      showAsToast: true
     };
   }
 
