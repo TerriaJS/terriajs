@@ -520,7 +520,9 @@ export default class Cesium extends GlobeOrMap {
     this.terria.notificationState.addNotificationToQueue({
       title: i18next.t(($) => $.models.shadowsDisabledForPerformance.title),
       message: i18next.t(($) => $.models.shadowsDisabledForPerformance.message),
-      showAsToast: true
+      showAsToast: true,
+      ignore: () =>
+        this.effectiveShadowsEnabled || !this.hasShadowRequestingWorkbenchItem
     });
   }
 

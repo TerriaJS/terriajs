@@ -698,6 +698,50 @@ describeIfSupported("Cesium Model", function () {
       cesium.notifyIfShadowsSuppressed();
       expect(currentNotificationTitle()).toBeUndefined();
     });
+
+    function currentNotificationIgnored(): boolean {
+      const ignore = terria.notificationState.currentNotification?.ignore;
+      return typeof ignore === "function" ? ignore() : (ignore ?? false);
+    }
+
+    it("marks the toast to auto-dismiss once quality is raised back out of the low-spec tier", function () {
+      runInAction(() => {
+        terria.setBaseMaximumScreenSpaceError(3);
+      });
+      cesium.notifyIfShadowsSuppressed();
+      expect(currentNotificationIgnored()).toBe(false);
+
+      runInAction(() => {
+        terria.setBaseMaximumScreenSpaceError(1);
+      });
+      expect(currentNotificationIgnored()).toBe(true);
+    });
+
+    it("marks the toast to auto-dismiss once shadows are force-enabled via the override hook", function () {
+      runInAction(() => {
+        terria.setBaseMaximumScreenSpaceError(3);
+      });
+      cesium.notifyIfShadowsSuppressed();
+      expect(currentNotificationIgnored()).toBe(false);
+
+      runInAction(() => {
+        cesium.enableShadowsOverride();
+      });
+      expect(currentNotificationIgnored()).toBe(true);
+    });
+
+    it("marks the toast to auto-dismiss if the requesting workbench item is removed", function () {
+      runInAction(() => {
+        terria.setBaseMaximumScreenSpaceError(3);
+      });
+      cesium.notifyIfShadowsSuppressed();
+      expect(currentNotificationIgnored()).toBe(false);
+
+      runInAction(() => {
+        tilesetItem.setTrait(CommonStrata.definition, "shadows", "NONE");
+      });
+      expect(currentNotificationIgnored()).toBe(true);
+    });
   });
 
   describe("getCurrentCameraView", function () {
