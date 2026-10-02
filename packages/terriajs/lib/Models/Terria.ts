@@ -2118,7 +2118,7 @@ export default class Terria {
     const itemErrors = new Map<BaseModel, TerriaError[]>();
 
     await applyPartAsync("workbench", async () => {
-      const newItemsRaw = filterOutUndefined(
+      const workbenchModels = filterOutUndefined(
         workbench.map((modelId) => {
           if (typeof modelId !== "string") {
             errors.push(
@@ -2135,6 +2135,7 @@ export default class Terria {
           );
         })
       );
+      const newItemsRaw = Array.from(new Set(workbenchModels));
 
       // Maintain the model order in the workbench.
       for (;;) {

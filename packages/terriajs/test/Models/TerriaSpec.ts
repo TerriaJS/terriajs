@@ -1176,6 +1176,22 @@ describe("TerriaSpec", function () {
         ).toBeGreaterThan(0);
       });
 
+      it("keeps a workbench item's errors when its ID is in the workbench twice", async function () {
+        await applyInitData({
+          models: {
+            "broken-item": {
+              type: "a-type-that-does-not-exist",
+              dereferenced: { type: "csv", name: "Dereferenced item" }
+            }
+          },
+          workbench: ["broken-item", "broken-item"]
+        });
+
+        expect(terria.workbench.itemIds).toEqual(["broken-item"]);
+        const brokenItem = terria.workbench.items[0];
+        expect(terria.workbench.getItemErrors(brokenItem).length).toBe(2);
+      });
+
       it("clears workbench item errors when init data is applied again", async function () {
         const loadMapItemsSpy = CsvCatalogItem.prototype
           .loadMapItems as jasmine.Spy;
