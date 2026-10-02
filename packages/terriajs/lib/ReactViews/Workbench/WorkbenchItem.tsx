@@ -169,13 +169,13 @@ const WorkbenchItemRaw: React.FC<IProps> = observer((props) => {
                 <BoxSpan padded centered>
                   <StyledIcon
                     styledHeight={"18px"}
-                    fillColor={theme.textWarning}
+                    fillColor={theme.colorSecondary}
                     glyph={Icon.GLYPHS.warning}
                   />
                   {errors.length > 1 && (
                     <TextSpan
                       small
-                      css={{ color: theme.textWarning, marginLeft: "2px" }}
+                      css={{ color: theme.colorSecondary, marginLeft: "2px" }}
                     >
                       {errors.length}
                     </TextSpan>
@@ -214,10 +214,20 @@ const WorkbenchItemRaw: React.FC<IProps> = observer((props) => {
         >
           {errors.map((error, index) => (
             <Box column key={index}>
-              <Text medium bold css={{ color: theme.textWarning }}>
+              <Text medium bold css={{ color: theme.colorSecondary }}>
                 {error.highestImportanceError.title}
               </Text>
-              {terriaErrorNotification(error)(viewState)}
+              <Box
+                column
+                css={{
+                  fontSize: "14px",
+                  color: theme.greyLighter,
+                  "& div, & p, & span": { color: theme.greyLighter },
+                  "& a": { color: theme.colorPrimary }
+                }}
+              >
+                {terriaErrorNotification(error)(viewState)}
+              </Box>
             </Box>
           ))}
         </Box>
