@@ -24,8 +24,9 @@ import MappableTraits from "../Traits/TraitsClasses/MappableTraits";
 const keepOnTop = (model: BaseModel) =>
   hasTraits(model, LayerOrderingTraits, "keepOnTop") && model.keepOnTop;
 const supportsReordering = (model: BaseModel) =>
-  hasTraits(model, LayerOrderingTraits, "supportsReordering") &&
-  model.supportsReordering;
+  (!MappableMixin.isMixedInto(model) && !ChartableMixin.isMixedInto(model)) ||
+  (hasTraits(model, LayerOrderingTraits, "supportsReordering") &&
+    model.supportsReordering);
 
 export default class Workbench {
   private readonly _items = observable.array<BaseModel>();

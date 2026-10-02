@@ -1192,6 +1192,28 @@ describe("TerriaSpec", function () {
         expect(terria.workbench.getItemErrors(brokenItem).length).toBe(2);
       });
 
+      it("lets a workbench item that cannot be loaded be reordered", async function () {
+        await applyInitData({
+          catalog: [goodItem, anotherGoodItem],
+          models: {
+            "broken-item": {
+              type: "a-type-that-does-not-exist",
+              dereferenced: { type: "csv", name: "Dereferenced item" }
+            }
+          },
+          workbench: ["good-item", "another-good-item", "broken-item"]
+        });
+        const brokenItem = terria.workbench.items[2];
+
+        terria.workbench.moveItemToIndex(brokenItem, 1);
+
+        expect(terria.workbench.itemIds).toEqual([
+          "good-item",
+          "broken-item",
+          "another-good-item"
+        ]);
+      });
+
       it("clears workbench item errors when init data is applied again", async function () {
         const loadMapItemsSpy = CsvCatalogItem.prototype
           .loadMapItems as jasmine.Spy;
