@@ -12,6 +12,7 @@ import SharePanel from "../Map/Panels/SharePanel/SharePanel";
 import DataPreviewSections from "./DataPreviewSections";
 import DataPreviewUrl from "./DataPreviewUrl";
 import Styles from "./mappable-preview.scss";
+import Box from "../../Styled/Box";
 import WarningBox from "./WarningBox";
 
 /**
@@ -76,17 +77,22 @@ class GroupPreview extends Component {
             )}
           </div>
         </div>
-        {this.props.previewed.loadMetadataResult?.error && (
-          <WarningBox
-            error={this.props.previewed.loadMetadataResult?.error}
-            viewState={this.props.viewState}
-          />
-        )}
-        {this.props.previewed.loadMembersResult?.error && (
-          <WarningBox
-            error={this.props.previewed.loadMembersResult?.error}
-            viewState={this.props.viewState}
-          />
+        {(this.props.previewed.loadMetadataResult?.error ||
+          this.props.previewed.loadMembersResult?.error) && (
+          <Box column gap={2} css={{ marginBottom: "10px" }}>
+            {this.props.previewed.loadMetadataResult?.error && (
+              <WarningBox
+                error={this.props.previewed.loadMetadataResult?.error}
+                viewState={this.props.viewState}
+              />
+            )}
+            {this.props.previewed.loadMembersResult?.error && (
+              <WarningBox
+                error={this.props.previewed.loadMembersResult?.error}
+                viewState={this.props.viewState}
+              />
+            )}
+          </Box>
         )}
         <div className={Styles.previewedInfo}>
           <div className={Styles.url}>
