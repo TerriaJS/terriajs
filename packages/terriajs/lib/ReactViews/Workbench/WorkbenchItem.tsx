@@ -1,5 +1,5 @@
 import { action } from "mobx";
-import { MouseEvent, useState } from "react";
+import { MouseEvent, useEffect, useRef, useState } from "react";
 import { observer } from "mobx-react";
 import { sortable } from "react-anything-sortable";
 import { useTranslation } from "react-i18next";
@@ -45,10 +45,18 @@ const WorkbenchItemRaw: React.FC<IProps> = observer((props) => {
   const [showErrors, setShowErrors] = useState(false);
   const errors = viewState.terria.workbench.getItemErrors(item);
 
+  const removeDragListeners = useRef<() => void>();
+  useEffect(() => () => removeDragListeners.current?.(), []);
+
   const onDraggableMouseDown = (e: MouseEvent) => {
+    removeDragListeners.current?.();
     const startX = e.clientX;
     const startY = e.clientY;
     const onMove = (moveEvent: globalThis.MouseEvent) => {
+      if ((moveEvent.buttons & 1) === 0) {
+        removeListeners();
+        return;
+      }
       if (
         Math.abs(moveEvent.clientX - startX) +
           Math.abs(moveEvent.clientY - startY) <
@@ -61,10 +69,12 @@ const WorkbenchItemRaw: React.FC<IProps> = observer((props) => {
     };
     const removeListeners = () => {
       document.removeEventListener("mousemove", onMove);
-      document.removeEventListener("mouseup", removeListeners);
+      document.removeEventListener("mouseup", removeListeners, true);
+      removeDragListeners.current = undefined;
     };
+    removeDragListeners.current = removeListeners;
     document.addEventListener("mousemove", onMove);
-    document.addEventListener("mouseup", removeListeners);
+    document.addEventListener("mouseup", removeListeners, true);
   };
 
   const toggleDisplay = action(() => {
