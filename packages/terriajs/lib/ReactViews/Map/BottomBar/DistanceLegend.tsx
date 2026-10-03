@@ -1,4 +1,5 @@
 import L from "leaflet";
+import debounce from "lodash-es/debounce";
 import { runInAction } from "mobx";
 import { observer } from "mobx-react";
 import { FC, useEffect, useState } from "react";
@@ -6,6 +7,7 @@ import { useTheme } from "styled-components";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import EllipsoidGeodesic from "terriajs-cesium/Source/Core/EllipsoidGeodesic";
 import CesiumEvent from "terriajs-cesium/Source/Core/Event";
+import Matrix4 from "terriajs-cesium/Source/Core/Matrix4";
 import Scene from "terriajs-cesium/Source/Scene/Scene";
 import isDefined from "../../../Core/isDefined";
 import Box from "../../../Styled/Box";
@@ -57,15 +59,56 @@ export const DistanceLegend: FC<IDistanceLegendProps> = observer(
       | undefined => {
       if (isDefined(terria.cesium)) {
         const scene = terria.cesium.scene;
-        let removeUpdateSubscription: CesiumEvent.RemoveCallback | undefined =
-          scene.postRender.addEventListener(() => {
-            updateDistanceLegendCesium(scene);
-            if (isPrintMode) {
-              removeUpdateSubscription?.();
-              removeUpdateSubscription = undefined;
+
+        if (isPrintMode) {
+          let removePostRender: CesiumEvent.RemoveCallback | undefined =
+            scene.postRender.addEventListener(() => {
+              updateDistanceLegendCesium(scene);
+              removePostRender?.();
+              removePostRender = undefined;
+            });
+          return () => removePostRender?.();
+        }
+
+        // postRender fires every frame while the camera moves, so skip frames
+        // where the view hasn't changed since the last successful update and
+        // recompute at most every 200ms otherwise.
+        const lastViewMatrix = new Matrix4();
+        let lastWidth: number | undefined;
+        let lastHeight: number | undefined;
+
+        const update = debounce(
+          () => {
+            const width = scene.canvas.clientWidth;
+            const height = scene.canvas.clientHeight;
+            const viewMatrix = Matrix4.clone(scene.camera.viewMatrix);
+            if (updateDistanceLegendCesium(scene)) {
+              Matrix4.clone(viewMatrix, lastViewMatrix);
+              lastWidth = width;
+              lastHeight = height;
+            } else {
+              lastWidth = lastHeight = undefined;
             }
-          });
-        return removeUpdateSubscription;
+          },
+          200,
+          { leading: true, trailing: true, maxWait: 200 }
+        );
+
+        const removePostRender = scene.postRender.addEventListener(() => {
+          if (
+            scene.canvas.clientWidth === lastWidth &&
+            scene.canvas.clientHeight === lastHeight &&
+            Matrix4.equals(scene.camera.viewMatrix, lastViewMatrix)
+          ) {
+            return;
+          }
+          update();
+        });
+
+        return () => {
+          removePostRender();
+          update.cancel();
+        };
       } else if (isDefined(terria.leaflet)) {
         const map = terria.leaflet.map;
         let removeUpdateSubscription: (() => void) | undefined = undefined;
@@ -88,7 +131,8 @@ export const DistanceLegend: FC<IDistanceLegendProps> = observer(
       }
     };
 
-    const updateDistanceLegendCesium = (scene: Scene) => {
+    /** Returns false if the globe could not be picked, so the caller retries. */
+    const updateDistanceLegendCesium = (scene: Scene): boolean => {
       // Find the distance between two pixels at the bottom center of the screen.
       const width = scene.canvas.clientWidth;
       const height = scene.canvas.clientHeight;
@@ -103,7 +147,7 @@ export const DistanceLegend: FC<IDistanceLegendProps> = observer(
       const globe = scene.globe;
 
       if (!isDefined(left) || !isDefined(right)) {
-        return;
+        return false;
       }
 
       const leftPosition = globe.pick(left, scene);
@@ -112,7 +156,7 @@ export const DistanceLegend: FC<IDistanceLegendProps> = observer(
       if (!isDefined(leftPosition) || !isDefined(rightPosition)) {
         setBarWidth(0);
         setDistanceLabel(undefined);
-        return;
+        return false;
       }
 
       const leftCartographic =
@@ -146,6 +190,7 @@ export const DistanceLegend: FC<IDistanceLegendProps> = observer(
         setBarWidth(0);
         setDistanceLabel(undefined);
       }
+      return true;
     };
 
     const updateDistanceLegendLeaflet = (map: L.Map) => {
