@@ -73,22 +73,18 @@ export const DistanceLegend: FC<IDistanceLegendProps> = observer(
         // postRender fires every frame while the camera moves, so skip frames
         // where the view hasn't changed since the last successful update and
         // recompute at most every 200ms otherwise.
-        const lastViewMatrix = new Matrix4();
-        let lastWidth: number | undefined;
-        let lastHeight: number | undefined;
+        let lastView:
+          | { viewMatrix: Matrix4; width: number; height: number }
+          | undefined;
 
         const update = debounce(
           () => {
-            const width = scene.canvas.clientWidth;
-            const height = scene.canvas.clientHeight;
-            const viewMatrix = Matrix4.clone(scene.camera.viewMatrix);
-            if (updateDistanceLegendCesium(scene)) {
-              Matrix4.clone(viewMatrix, lastViewMatrix);
-              lastWidth = width;
-              lastHeight = height;
-            } else {
-              lastWidth = lastHeight = undefined;
-            }
+            const view = {
+              viewMatrix: Matrix4.clone(scene.camera.viewMatrix),
+              width: scene.canvas.clientWidth,
+              height: scene.canvas.clientHeight
+            };
+            lastView = updateDistanceLegendCesium(scene) ? view : undefined;
           },
           200,
           { leading: true, trailing: true, maxWait: 200 }
@@ -96,9 +92,10 @@ export const DistanceLegend: FC<IDistanceLegendProps> = observer(
 
         const removePostRender = scene.postRender.addEventListener(() => {
           if (
-            scene.canvas.clientWidth === lastWidth &&
-            scene.canvas.clientHeight === lastHeight &&
-            Matrix4.equals(scene.camera.viewMatrix, lastViewMatrix)
+            lastView &&
+            scene.canvas.clientWidth === lastView.width &&
+            scene.canvas.clientHeight === lastView.height &&
+            Matrix4.equals(scene.camera.viewMatrix, lastView.viewMatrix)
           ) {
             return;
           }
