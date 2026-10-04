@@ -8,9 +8,8 @@ import markerIcon from "../../../../wwwroot/images/difference-pin.png";
 import LatLonHeight from "../../../Core/LatLonHeight";
 import PickedFeatures from "../../../Map/PickedFeatures/PickedFeatures";
 import { addMarker, removeMarker } from "../../../Models/LocationMarkerUtils";
-import MapInteractionMode, { UIMode } from "../../../Models/MapInteractionMode";
+import MapInteractionMode from "../../../Models/MapInteractionMode";
 import Terria from "../../../Models/Terria";
-import Loader from "../../Loader";
 
 interface PropsType {
   terria: Terria;
@@ -38,22 +37,18 @@ export default class LocationPicker extends Component<PropsType> {
     const { terria, location, onPicking, onPicked } = this.props;
     this.pickMode = new MapInteractionMode({
       message: "",
-      messageAsNode: <div />,
-      uiMode: UIMode.Difference
+      // The diff tool renders its own UI, so hide the interaction panel
+      invisible: true
     });
     addInteractionModeToMap(terria, this.pickMode);
     if (location) showMarker(terria, location);
 
     this.pickDisposer = reaction(
-      () => this.pickMode!.pickedFeatures,
+      () => this.pickMode?.pickedFeatures,
       action((newPick: PickedFeatures | undefined) => {
         if (newPick === undefined || newPick.pickPosition === undefined) {
           return;
         }
-
-        this.pickMode!.customUi = () => (
-          <Loader message={`Querying ${location ? "new" : ""} position...`} />
-        );
 
         const position = cartesianToDegrees(newPick.pickPosition);
         showMarker(this.props.terria, position);
