@@ -1852,7 +1852,8 @@ export default class Cesium extends GlobeOrMap {
       generation
     );
     if (
-      this.terria.configParameters.experimentalFeatures &&
+      this.terria.configParameters.nextExperimentalFeatures
+        ?.imageryLayerGuard &&
       layer.isDestroyed()
     ) {
       generation++;

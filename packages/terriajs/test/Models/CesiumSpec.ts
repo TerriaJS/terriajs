@@ -341,9 +341,11 @@ describeIfSupported("Cesium Model", function () {
         );
       });
 
-      describe("with experimentalFeatures enabled", function () {
+      describe("with the imageryLayerGuard experimental feature enabled", function () {
         beforeEach(function () {
-          terria.configParameters.experimentalFeatures = true;
+          terria.configParameters.nextExperimentalFeatures = {
+            imageryLayerGuard: true
+          };
         });
 
         it("must not destroy draped imagery layers when the tileset is removed from the viewer", async function () {

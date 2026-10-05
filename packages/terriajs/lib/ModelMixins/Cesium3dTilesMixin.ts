@@ -198,7 +198,10 @@ function Cesium3dTilesMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
           anyTileset.destroy = function () {
             // Draped imagery layers are shared with the globe, so detach them
             // rather than letting the tileset destroy them
-            if (terria.configParameters.experimentalFeatures) {
+            if (
+              terria.configParameters.nextExperimentalFeatures
+                ?.imageryLayerGuard
+            ) {
               this.imageryLayers?.removeAll(false);
             }
             superDestroy.call(this);
