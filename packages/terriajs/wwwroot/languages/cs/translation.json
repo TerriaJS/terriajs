@@ -108,13 +108,13 @@
     "confirmText": "Chápu",
     "manualAlignmentTitle": "Ruční zarovnání",
     "resetAlignmentTitle": "Obnovení zarovnání",
-    "resetAlignmentMessage": "Resetování na zarovnání kompasu. Pokud zarovnání neodpovídá skutečnému světu, zkuste zařízením zamávat pohybem na obrázku 8, abyste zařízení překalibrovali. To lze provést kdykoli.<br> <br>Vyhýbejte se místům s magnetickými poli nebo kovovými předměty, protože by mohly dezorientovat kompas zařízení.",
+    "resetAlignmentMessage": "Obnovení nastavení kompasu. Pokud se orientace neshoduje se skutečností, zkuste zařízením mávat pohybem ve tvaru osmičky, abyste jej znovu kalibrovali. To lze provést kdykoli.<br /> <br />Vyhýbejte se místům s magnetickými poli nebo kovovými předměty, protože ty mohou narušit orientaci kompasu zařízení.",
     "arTool": "nástroj rozšířené reality",
     "btnHover": "přepínač výšky při najetí",
     "btnRealign": "přepínač ručního zarovnání",
     "btnResetRealign": "obnovení seřízení kompasu",
-    "experimentalFeatureMessage": "Režim rozšířené reality je aktuálně ve verzi beta. Tento režim je určen pouze pro použití na nejnovějších mobilních zařízeních vyšší třídy. <br><br>UPOZORNĚNÍ: Tento režim může spotřebovat velké množství dat, mějte prosím na paměti poplatky za využití dat od vašeho poskytovatele sítě. <br><br>Přesnost tohoto režimu závisí na přesnosti interního kompasu vašeho mobilního zařízení.",
-    "manualAlignmentMessage": "Zarovnejte své mobilní zařízení tak, aby odpovídalo aktuálnímu zarovnání mapy, poté klikněte na blikající kompas. Pokud na mapě nejsou aktuálně viditelné žádné orientační body, které by bylo možné zarovnat, můžete mapu posouvat pomocí akcí přetažení a zmenšení, dokud nebude viditelný rozpoznatelný orientační bod, než zařízení zarovnáte s mapou. <br><div>{{img}}</div> <br>Tip: Slunce nebo Měsíc jsou často dobré orientační body, pomocí kterých se můžete orientovat, pokud se nacházíte na místě, které neznáte (pozor, nedívejte se do slunce - mhli byste si poškodit ztrak)."
+    "experimentalFeatureMessage": "Režim rozšířené reality je v současné době ve fázi beta. Tento režim je určen výhradně pro použití na nejnovějších špičkových mobilních zařízeních. <br /><br />UPOZORNĚNÍ: Tento režim může spotřebovávat velké množství dat, proto prosím dbejte na poplatky za přenos dat účtované vaším operátorem. <br /><br />Přesnost tohoto režimu závisí na přesnosti vestavěného kompasu vašeho mobilního zařízení.",
+    "manualAlignmentMessage": "Nastavte své mobilní zařízení tak, aby odpovídalo aktuálnímu orientaci mapy, a poté klikněte na blikající kompas. Pokud na mapě momentálně nejsou viditelné žádné orientační body, můžete mapu posouvat tažením a přibližováním prstů, dokud se neobjeví rozpoznatelný orientační bod, a teprve poté zařízení s mapou sladit. <br /><div>{{img}}</div> <br />Tip: Slunce nebo měsíc jsou často dobrými orientačními body, podle kterých se můžete orientovat, pokud se nacházíte na místě, které neznáte (dávejte pozor, abyste se nedívali přímo na slunce – mohlo by to poškodit vaše oči)."
   },
   "tool": {
     "closeButtonTitle": "Zavřít nástroj {{toolName}}",
@@ -202,7 +202,7 @@
   },
   "share": {
     "browserPrint": "Chcete-li dosáhnout lepších výsledků při tisku, použijte místo funkce tisku webového prohlížeče tlačítko Tisk {{appName}}.",
-    "localDataNote": "&lt;0&gt;&lt;0&gt;Poznámka:&lt;1&gt;Následující zdroje dat NEBUDOU sdíleny, protože obsahují data z tohoto místního systému nebo z ověřené online služby. Chcete-li tyto zdroje dat sdílet, zveřejněte jejich data na webovém serveru a &lt;2&gt;přidejte je pomocí url adresy.",
+    "localDataNote": "<0><0>Poznámka:</0></0><1>Následující zdroje dat NEBUDOU sdíleny, protože obsahují data z tohoto lokálního systému nebo z ověřené online služby. Chcete-li tyto zdroje dat sdílet, zveřejněte jejich data na webovém serveru a <2>přidejte je pomocí URL adresy</2>.</1>",
     "generatingUrl": "Generování sdílené adresy URL...",
     "printTitle": "Tisk mapy",
     "printExplanation": "Otevřít tisknutelnou verzi této mapy.",
@@ -301,13 +301,14 @@
     "baseMapSwitched": {
       "title": "Základní mapa přepnuta",
       "message": "Základní mapa '{{currentBaseMap}}' nelze zobrazit v režimu {{mapMode}}. Základní mapa byla změněna na '{{newBaseMap}}'"
-    }
+    },
+    "baseMapOpacity": "Průhlednost základní mapy:"
   },
   "feedback": {
     "feedbackPreamble": "Rádi vás uslyšíme!",
     "close": "zavřít zpětnou vazbu",
     "yourName": "Vaše jméno (volitelné)",
-    "email": "E-mailová adresa (volitelné)<br><em>Bez ní nemůžeme navázat kontakt!</em>",
+    "email": "E-mailová adresa (volitelné)<br/><em>Bez ní vám nemůžeme odpovědět!</em>",
     "commentQuestion": "Komentář nebo dotaz",
     "shareWithDevelopers": "Sdílení mého zobrazení mapy s vývojáři {{appName}}",
     "cancel": "Zrušit",
@@ -376,7 +377,7 @@
     "exploreDataBtnText": "Prozkoumat mapové podklady",
     "searchBtnText": "Vyhledání umístění",
     "dismissText": "Zavřít zprávu a už mi to nezobrazovat",
-    "welcomeMessage": "Zajímá vás zjišťování a zkoumání dat?<br>Ponořte se do toho a začněte, nebo se podívejte na následující možnosti nápovědy.",
+    "welcomeMessage": "Zajímá vás objevování a prozkoumávání dat?<br/>Pusťte se do toho hned, nebo si prohlédněte následující možnosti nápovědy.",
     "title": "Začneme"
   },
   "story": {
