@@ -304,7 +304,8 @@
     "baseMapSwitched": {
       "title": "Mapa base canviat",
       "message": "El mapa base '{{currentBaseMap}}' no es pot visualitzar a {{mapMode}}. El mapa base s'ha canviat a '{{newBaseMap}}'"
-    }
+    },
+    "baseMapOpacity": "Opacitat del mapa base:"
   },
   "feedback": {
     "feedbackPreamble": "Ens encantaria saber de tu!",
