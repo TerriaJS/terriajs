@@ -132,6 +132,11 @@ export interface NextExperimentalFeatures {
    * memoised imagery layers that have been destroyed.
    */
   imageryLayerGuard?: boolean;
+  /**
+   * Keep workbench items shown when tiles fail with a 4xx, warning on the item
+   * instead. Defaults to true; set to false to disable the item as before.
+   */
+  keepLayersOnMissingTiles?: boolean;
 }
 
 export interface ConfigParameters {
