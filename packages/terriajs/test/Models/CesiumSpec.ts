@@ -341,35 +341,41 @@ describeIfSupported("Cesium Model", function () {
         );
       });
 
-      it("must not destroy draped imagery layers when the tileset is removed from the viewer", async function () {
-        const tileset2 = items[4].mapItems[0] as Cesium3DTileset;
-        const drapedLayers = [
-          tileset2.imageryLayers.get(0),
-          tileset2.imageryLayers.get(1)
-        ];
-
-        items.splice(4, 1);
-        runInAction(() => viewerItems.set(items));
-        await runLater(() => {});
-
-        expect(tileset2.isDestroyed()).toBe(true);
-        drapedLayers.forEach((layer) => {
-          expect(layer.isDestroyed()).toBe(false);
-          expect(cesium.scene.imageryLayers.contains(layer)).toBe(true);
+      describe("with experimentalFeatures enabled", function () {
+        beforeEach(function () {
+          terria.configParameters.experimentalFeatures = true;
         });
-      });
 
-      it("must replace a memoised imagery layer that has been destroyed", function () {
-        const layer = cesium.scene.imageryLayers.get(0);
-        const provider = layer.imageryProvider;
-        cesium.scene.imageryLayers.remove(layer, true);
+        it("must not destroy draped imagery layers when the tileset is removed from the viewer", async function () {
+          const tileset2 = items[4].mapItems[0] as Cesium3DTileset;
+          const drapedLayers = [
+            tileset2.imageryLayers.get(0),
+            tileset2.imageryLayers.get(1)
+          ];
 
-        runInAction(() => viewerItems.set(items.slice()));
+          items.splice(4, 1);
+          runInAction(() => viewerItems.set(items));
+          await runLater(() => {});
 
-        const newLayer = cesium.scene.imageryLayers.get(0);
-        expect(newLayer.isDestroyed()).toBe(false);
-        expect(newLayer).not.toBe(layer);
-        expect(newLayer.imageryProvider).toBe(provider);
+          expect(tileset2.isDestroyed()).toBe(true);
+          drapedLayers.forEach((layer) => {
+            expect(layer.isDestroyed()).toBe(false);
+            expect(cesium.scene.imageryLayers.contains(layer)).toBe(true);
+          });
+        });
+
+        it("must replace a memoised imagery layer that has been destroyed", function () {
+          const layer = cesium.scene.imageryLayers.get(0);
+          const provider = layer.imageryProvider;
+          cesium.scene.imageryLayers.remove(layer, true);
+
+          runInAction(() => viewerItems.set(items.slice()));
+
+          const newLayer = cesium.scene.imageryLayers.get(0);
+          expect(newLayer.isDestroyed()).toBe(false);
+          expect(newLayer).not.toBe(layer);
+          expect(newLayer.imageryProvider).toBe(provider);
+        });
       });
     });
   });

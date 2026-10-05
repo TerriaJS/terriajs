@@ -1851,7 +1851,10 @@ export default class Cesium extends GlobeOrMap {
       parts.clippingRectangle,
       generation
     );
-    if (layer.isDestroyed()) {
+    if (
+      this.terria.configParameters.experimentalFeatures &&
+      layer.isDestroyed()
+    ) {
       generation++;
       this._imageryLayerGenerations.set(ip, generation);
       layer = this._createImageryLayer(ip, parts.clippingRectangle, generation);
