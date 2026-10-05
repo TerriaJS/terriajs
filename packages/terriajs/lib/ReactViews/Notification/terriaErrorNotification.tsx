@@ -5,12 +5,14 @@ import ViewState from "../../ReactViewModels/ViewState";
 import Box from "../../Styled/Box";
 import { RawButton } from "../../Styled/Button";
 import Spacing from "../../Styled/Spacing";
-import { Text, TextSpan } from "../../Styled/Text";
+import { Text } from "../../Styled/Text";
 import Collapsible from "../Custom/Collapsible/Collapsible";
 import FeedbackLinkCustomComponent, {
   FeedbackLink
 } from "../Custom/FeedbackLinkCustomComponent";
-import parseCustomMarkdownToReact from "../Custom/parseCustomMarkdownToReact";
+import parseCustomMarkdownToReact, {
+  parseCustomMarkdownToReactWithOptions
+} from "../Custom/parseCustomMarkdownToReact";
 
 const ErrorsBox = (props: {
   errors: (Error | TerriaError)[];
@@ -152,16 +154,15 @@ export const terriaErrorToast = (error: TerriaError) =>
     };
 
     return (
-      <Text textLight medium>
-        {parseCustomMarkdownToReact(`**${error.title}** ${error.message}`, {
-          viewState,
-          terria: viewState.terria
-        })}
+      <>
+        {parseCustomMarkdownToReactWithOptions(
+          `**${error.title}** ${error.message}`,
+          { inline: true },
+          { viewState, terria: viewState.terria }
+        )}{" "}
         <RawButton onClick={showDetails}>
-          <TextSpan textLight isLink>
-            {i18next.t(($) => $.models.raiseError.seeDetails)}
-          </TextSpan>
+          {i18next.t(($) => $.models.raiseError.seeDetails)}
         </RawButton>
-      </Text>
+      </>
     );
   };
