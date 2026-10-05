@@ -176,12 +176,19 @@ export default class Cesium extends GlobeOrMap {
 
   private _createImageryLayer: (
     ip: ImageryProvider,
-    clippingRectangle: Rectangle | undefined
-  ) => ImageryLayer = computedFn((ip, clippingRectangle) => {
+    clippingRectangle: Rectangle | undefined,
+    generation: number
+  ) => ImageryLayer = computedFn((ip, clippingRectangle, _generation) => {
     return new ImageryLayer(ip, {
       rectangle: clippingRectangle
     });
   });
+
+  /**
+   * Bumped for a provider when its memoised ImageryLayer has been destroyed,
+   * so that the next call to `_createImageryLayer` misses the cache.
+   */
+  private _imageryLayerGenerations = new WeakMap<ImageryProvider, number>();
 
   private _terrainMessageViewed: boolean = false;
 
@@ -1837,10 +1844,18 @@ export default class Cesium extends GlobeOrMap {
   ): ImageryLayer | undefined {
     if (parts.imageryProvider === undefined) return undefined;
 
-    const layer = this._createImageryLayer(
-      parts.imageryProvider,
-      parts.clippingRectangle
+    const ip = parts.imageryProvider;
+    let generation = this._imageryLayerGenerations.get(ip) ?? 0;
+    let layer = this._createImageryLayer(
+      ip,
+      parts.clippingRectangle,
+      generation
     );
+    if (layer.isDestroyed()) {
+      generation++;
+      this._imageryLayerGenerations.set(ip, generation);
+      layer = this._createImageryLayer(ip, parts.clippingRectangle, generation);
+    }
     if (TileErrorHandlerMixin.isMixedInto(item)) {
       // because this code path can run multiple times, make sure we remove the
       // handler if it is already registered

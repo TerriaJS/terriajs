@@ -195,6 +195,9 @@ function Cesium3dTilesMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
           anyTileset.destroyed = tileset.isDestroyed();
           const superDestroy = anyTileset.destroy;
           anyTileset.destroy = function () {
+            // Draped imagery layers are shared with the globe, so detach them
+            // rather than letting the tileset destroy them
+            this.imageryLayers?.removeAll(false);
             superDestroy.call(this);
             // TODO: we are running later to prevent this
             // modification from happening in some computed up the call chain.
