@@ -21,7 +21,7 @@ import HelpPanel from "../Map/Panels/HelpPanel/HelpPanel";
 import PrintView from "../Map/Panels/SharePanel/Print/PrintView";
 import TrainerBar from "./TrainerBar/TrainerBar";
 import MobileHeader from "../Mobile/MobileHeader";
-import MapInteractionWindow from "../Notification/MapInteractionWindow";
+import MapInteractionModeRenderer from "../Map/MapInteraction/MapInteractionModeRenderer";
 import Notification from "../Notification/Notification";
 import Branding from "../SidePanel/Branding";
 import FullScreenButton from "../SidePanel/FullScreenButton";
@@ -270,7 +270,7 @@ const StandardUserInterfaceBase: FC<StandardUserInterfaceProps> = observer(
             {props.viewState.panel}
 
             <Notification />
-            <MapInteractionWindow />
+            <MapInteractionModeRenderer />
             {!customElements.feedback.length &&
               props.terria.feedbackService &&
               !props.viewState.hideMapUi &&

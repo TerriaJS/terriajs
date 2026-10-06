@@ -3,17 +3,24 @@ import { observable, makeObservable } from "mobx";
 import ViewState from "../ReactViewModels/ViewState";
 import { ReactNode } from "react";
 
-export enum UIMode {
-  Difference
-}
-
 interface Options {
   onCancel?: () => void;
   message: string;
   messageAsNode?: ReactNode;
+
+  /**
+   * The component used for rendering the UI when this MapInteractionMode is
+   * active. Defaults to "default".
+   */
+  panel?: string;
+
+  /**
+   * Only used by the "default" UI panel to insert custom UI elements in the
+   * default panel.
+   */
   customUi?: () => unknown;
+
   buttonText?: string;
-  uiMode?: UIMode; // diff tool hack for now
   onEnable?: (viewState: ViewState) => void;
   invisible?: boolean;
 }
@@ -25,12 +32,9 @@ export default class MapInteractionMode {
   readonly onCancel?: () => void;
 
   readonly buttonText: string;
-  readonly uiMode?: UIMode;
-
-  readonly invisible: boolean;
 
   @observable
-  customUi: (() => any) | undefined;
+  invisible: boolean;
 
   @observable
   message: () => string;
@@ -42,6 +46,24 @@ export default class MapInteractionMode {
   pickedFeatures?: PickedFeatures;
 
   onEnable?: (viewState: ViewState) => void;
+
+  /**
+   * The component used for rendering the UI when this MapInteractionMode is active.
+   *
+   * The "default" panel {@link DefaultMapInteractionModePanel} renders a small
+   * floating UI at the top-center of the map. To use a different UI, register a
+   * new panel type by calling {@link registerMapInteractionModePanel} and pass
+   * its id as the `panel` option.
+   */
+  @observable
+  panel: string;
+
+  /**
+   * Only used by the "default" UI panel to insert custom UI elements in the
+   * default panel.
+   */
+  @observable
+  customUi: (() => any) | undefined;
 
   constructor(options: Options) {
     makeObservable(this);
@@ -84,16 +106,17 @@ export default class MapInteractionMode {
     this.pickedFeatures = undefined;
 
     /**
-     * Gets or sets whether to use the diff tool UI+styles
-     */
-    this.uiMode = options.uiMode ?? undefined;
-
-    /**
      * Determines whether a rectangle will be requested from the user rather than a set of pickedFeatures.
      */
     // this.drawRectangle = options.drawRectangle ?? false;
     this.onEnable = options.onEnable;
 
     this.invisible = options.invisible ?? false;
+
+    /**
+     * Component to use for rendering the map interaction panel.
+     * Custom panels can be registered using {@link registerMapInteractionModePanel}
+     */
+    this.panel = options.panel ?? "default";
   }
 }
