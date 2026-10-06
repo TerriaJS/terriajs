@@ -126,6 +126,14 @@ import SelectableDimensionWorkflow from "./Workflows/SelectableDimensionWorkflow
 import { defaultLoadConfig } from "./defaultLoadConfig";
 import { FeedbackService, IFeedbackService } from "./FeedbackService";
 
+export interface NextExperimentalFeatures {
+  /**
+   * Stop 3D tilesets destroying imagery layers draped on them, and recreate
+   * memoised imagery layers that have been destroyed.
+   */
+  imageryLayerGuard?: boolean;
+}
+
 export interface ConfigParameters {
   /**
    * TerriaJS uses this name whenever it needs to display the name of the application.
@@ -307,6 +315,12 @@ export interface ConfigParameters {
   disableUserAddedData?: boolean;
 
   experimentalFeatures?: boolean;
+
+  /**
+   * Individually toggled experimental features.
+   */
+  nextExperimentalFeatures?: NextExperimentalFeatures;
+
   magdaReferenceHeaders?: MagdaReferenceHeaders;
   locationSearchBoundingBox?: number[];
   /**
@@ -642,6 +656,7 @@ export default class Terria {
     disableUserAddedData: false,
     keepCatalogOpen: false,
     experimentalFeatures: undefined,
+    nextExperimentalFeatures: undefined,
     magdaReferenceHeaders: undefined,
     locationSearchBoundingBox: undefined,
     googleAnalyticsKey: undefined,
