@@ -62,7 +62,12 @@ function ShadowMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
             shadow === "RECEIVE" ||
             shadow === "BOTH" ||
             shadow === "NONE"
-              ? runInAction(() => this.setTrait(strata, "shadows", shadow))
+              ? runInAction(() => {
+                  this.setTrait(strata, "shadows", shadow);
+                  if (shadow !== "NONE") {
+                    this.terria.cesium?.notifyIfShadowsSuppressed();
+                  }
+                })
               : null
         }
       ];

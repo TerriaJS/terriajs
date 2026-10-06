@@ -67,6 +67,10 @@ import flatten from "../Core/flatten";
 import isDefined from "../Core/isDefined";
 import LatLonHeight from "../Core/LatLonHeight";
 import pollToPromise from "../Core/pollToPromise";
+import {
+  getQualityTierFraction,
+  isLowSpecQualityTier as isLowSpecQualityTierOf
+} from "../Core/QualityTier";
 import TerriaError from "../Core/TerriaError";
 import waitForDataSourceToLoad from "../Core/waitForDataSourceToLoad";
 import CesiumRenderLoopPauser from "../Map/Cesium/CesiumRenderLoopPauser";
@@ -86,6 +90,7 @@ import MappableMixin, {
   isTerrainProvider,
   MapItem
 } from "../ModelMixins/MappableMixin";
+import ShadowMixin from "../ModelMixins/ShadowMixin";
 import TileErrorHandlerMixin from "../ModelMixins/TileErrorHandlerMixin";
 import OpacityTraits from "../Traits/TraitsClasses/OpacityTraits";
 import SplitterTraits from "../Traits/TraitsClasses/SplitterTraits";
@@ -154,14 +159,20 @@ export default class Cesium extends GlobeOrMap {
   // over the LEFT_CLICK behavior.
   isFeaturePickingPaused = false;
 
+  // When defined, overrides the quality slider's low-spec shadow toggle -
+  // for features (e.g. a sunlight/shadow-analysis tool) with a hard
+  // dependency on scene.shadowMap that must force it on regardless of tier.
+  @observable
+  private shadowsOverrideEnabled: boolean | undefined = undefined;
+
   /* Disposers */
   private readonly _selectionIndicator: CesiumSelectionIndicator;
   private readonly _disposeSelectedFeatureSubscription: () => void;
   private readonly _disposeWorkbenchMapItemsSubscription: () => void;
   private readonly _disposeTerrainReaction: () => void;
   private readonly _disposeSplitterReaction: () => void;
-  private readonly _disposeResolutionReaction: () => void;
   private readonly _disposeBaseMapOpacityReaction: () => void;
+  private readonly _disposeQualityReaction: () => void;
 
   private _createImageryLayer: (
     ip: ImageryProvider,
@@ -441,11 +452,20 @@ export default class Cesium extends GlobeOrMap {
     });
     this._disposeSplitterReaction = this._reactToSplitterChanges();
 
-    this._disposeResolutionReaction = autorun(() => {
+    this._disposeQualityReaction = autorun(() => {
       (this.cesiumWidget as any).useBrowserRecommendedResolution =
         !this.terria.useNativeResolution;
       this.cesiumWidget.scene.globe.maximumScreenSpaceError =
         this.terria.baseMaximumScreenSpaceError;
+
+      const lowSpec = this.isLowSpecQualityTier;
+
+      this.cesiumWidget.resolutionScale = this.qualityResolutionScale;
+      this.scene.globe.tileCacheSize = this.qualityTileCacheSize;
+      this.scene.globe.preloadAncestors = !lowSpec;
+      this.scene.globe.preloadSiblings = false;
+      this.scene.fog.density = this.qualityFogDensity;
+      this.scene.shadowMap.enabled = this.effectiveShadowsEnabled;
     });
 
     this._disposeBaseMapOpacityReaction = reaction(
@@ -455,6 +475,101 @@ export default class Cesium extends GlobeOrMap {
         fireImmediately: true
       }
     );
+  }
+
+  /** True if some workbench item's own `shadows` trait asks for cast/receive
+   * shadows, even though the quality slider's low-spec tier may currently be
+   * forcing scene.shadowMap off for all datasets. */
+  @computed
+  private get hasShadowRequestingWorkbenchItem(): boolean {
+    return this.terria.workbench.items.some(
+      (item) => ShadowMixin.isMixedInto(item) && item.shadows !== "NONE"
+    );
+  }
+
+  /** Whether scene.shadowMap is actually enabled right now, once
+   * `shadowsOverrideEnabled` (see `enableShadowsOverride()`) is taken into
+   * account - the single source of truth `notifyIfShadowsSuppressed()`
+   * checks against, rather than re-deriving the low-spec tier itself. */
+  @computed
+  private get effectiveShadowsEnabled(): boolean {
+    return this.shadowsOverrideEnabled ?? !this.isLowSpecQualityTier;
+  }
+
+  /**
+   * Shows a toast telling the user shadows are currently suppressed, if some
+   * workbench item's own `shadows` trait wants them but scene.shadowMap is
+   * off right now. This is deliberately *not* wired up as a passive reaction
+   * to state changes (which would either spam the user on every unrelated
+   * recompute, or - if de-duplicated - silently miss a genuine new change
+   * that doesn't flip the overall boolean, e.g. turning on shadows for one
+   * item while another item already has them on). Instead, call this
+   * directly from every user-facing action that could create or reveal the
+   * mismatch: the quality slider (`SettingPanel.tsx`), the per-item shadow
+   * dropdown (`ShadowMixin.ts`), and - once built - the sunlight/viewshed
+   * tool's own activate/deactivate actions alongside
+   * `enableShadowsOverride()`/`clearShadowsOverride()`.
+   */
+  notifyIfShadowsSuppressed(): void {
+    if (
+      this.effectiveShadowsEnabled ||
+      !this.hasShadowRequestingWorkbenchItem
+    ) {
+      return;
+    }
+    this.terria.notificationState.addNotificationToQueue({
+      title: i18next.t(($) => $.models.shadowsDisabledForPerformance.title),
+      message: i18next.t(($) => $.models.shadowsDisabledForPerformance.message),
+      showAsToast: true,
+      ignore: () =>
+        this.effectiveShadowsEnabled || !this.hasShadowRequestingWorkbenchItem
+    });
+  }
+
+  @computed
+  private get isLowSpecQualityTier(): boolean {
+    return isLowSpecQualityTierOf(this.terria.baseMaximumScreenSpaceError);
+  }
+
+  @computed
+  private get qualityTierFraction(): number {
+    return getQualityTierFraction(this.terria.baseMaximumScreenSpaceError);
+  }
+
+  @computed
+  private get qualityResolutionScale(): number {
+    return 1.0 - 0.25 * this.qualityTierFraction;
+  }
+
+  @computed
+  private get qualityTileCacheSize(): number {
+    return Math.round(100 - 50 * this.qualityTierFraction);
+  }
+
+  @computed
+  private get qualityFogDensity(): number {
+    return 0.0006 + 0.0006 * this.qualityTierFraction;
+  }
+
+  /**
+   * Forces shadows on regardless of the quality slider's low-spec tier.
+   * Intended for features (e.g. a sunlight/shadow-analysis tool) with a
+   * hard functional dependency on scene.shadowMap.
+   */
+  @action
+  enableShadowsOverride(): void {
+    this.shadowsOverrideEnabled = true;
+  }
+
+  /**
+   * Hands shadow control back to the quality slider. If the slider is still
+   * in its low-spec tier, this may immediately re-suppress shadows for a
+   * workbench item that wants them - callers should follow this with
+   * `notifyIfShadowsSuppressed()` to tell the user if that just happened.
+   */
+  @action
+  clearShadowsOverride(): void {
+    this.shadowsOverrideEnabled = undefined;
   }
 
   get dataSources(): DataSourceCollection {
@@ -644,7 +759,7 @@ export default class Cesium extends GlobeOrMap {
     this._updateTilesLoadingIndeterminate(false); // reset progress bar loading state to false for any data sources with indeterminate progress e.g. 3DTilesets.
 
     this._disposeTerrainReaction();
-    this._disposeResolutionReaction();
+    this._disposeQualityReaction();
 
     this._disposeSelectedFeatureSubscription();
     this._disposeSplitterReaction();

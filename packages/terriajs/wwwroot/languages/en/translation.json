@@ -275,6 +275,7 @@
     "qualityLabel": "Quality",
     "performanceLabel": "Performance",
     "baseMapOpacity": "Base Map Opacity:",
+    "lowPerformanceQualityNote": "Also disables shadows and reduces resolution to improve performance.",
     "baseMapStatus": {
       "requiresViewerMode": "⚠️ The selected base map can only be viewed in {{viewerMode}}"
     },
@@ -1588,6 +1589,10 @@
         "receive": "Receive Only",
         "both": "Cast and Receive"
       }
+    },
+    "shadowsDisabledForPerformance": {
+      "title": "Shadows disabled",
+      "message": "Maximum performance is on. The map is lower quality and shadows are off. <settingspanel title='Open map quality settings'>Display settings</settingspanel>"
     },
     "clippingBox": {
       "groupName": "Clipping Box",

@@ -22,6 +22,21 @@ import DragWrapper from "../../Drag/DragWrapper";
 import { keyFromSelector } from "i18next";
 
 /**
+ * Map quality and native resolution are viewer device preferences. Scenes
+ * capture the author's values, so replaying them would reset the viewer's
+ * quality slider on every scene change.
+ */
+function withoutDevicePreferences(initSource: any) {
+  if (!initSource?.settings) return initSource;
+  const {
+    baseMaximumScreenSpaceError: _bmsse,
+    useNativeResolution: _useNativeResolution,
+    ...settings
+  } = initSource.settings;
+  return { ...initSource, settings };
+}
+
+/**
  *
  * @param scene The story scene to activate
  * @param terria The Terria instance
@@ -40,7 +55,7 @@ export async function activateStory(scene: Story, terria: Terria) {
       scene.shareData.initSources.map(async (initSource: any) => {
         try {
           await terria.applyInitData({
-            initData: initSource,
+            initData: withoutDevicePreferences(initSource),
             replaceStratum: true,
             canUnsetFeaturePickingState: true
           });

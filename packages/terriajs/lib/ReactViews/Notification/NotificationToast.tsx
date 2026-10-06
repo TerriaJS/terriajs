@@ -1,14 +1,16 @@
 import { FC, useEffect, useRef } from "react";
-import styled from "styled-components";
+import styled, { useTheme } from "styled-components";
 import { Notification } from "../../ReactViewModels/NotificationState";
 import { Button } from "../../Styled/Button";
 import Icon, { StyledIcon } from "../../Styled/Icon";
+import parseCustomMarkdownToReact from "../Custom/parseCustomMarkdownToReact";
 import { useViewState } from "../Context";
 
 const NotificationToast: FC<{
   notification: Notification;
 }> = ({ notification }) => {
   const viewState = useViewState();
+  const theme = useTheme();
   const nodeRef = useRef(null);
 
   const notificationState = viewState.terria.notificationState;
@@ -16,12 +18,22 @@ const NotificationToast: FC<{
     ? notification.toastVisibleDuration * 1000
     : undefined;
 
-  const message =
+  const rawMessage =
     typeof notification.message === "function"
       ? notification.message(viewState)
       : notification.message;
+  const message =
+    typeof rawMessage === "string"
+      ? parseCustomMarkdownToReact(rawMessage)
+      : rawMessage;
 
   useEffect(() => {
+    // No toastVisibleDuration means the toast stays open until the user
+    // closes it - omitting the timeout here rather than passing `undefined`
+    // to setTimeout, which would fire almost immediately instead of never.
+    if (durationMsecs === undefined) {
+      return;
+    }
     const timeout = setTimeout(() => {
       if (notificationState.currentNotification === notification) {
         notificationState.dismissCurrentNotification();
@@ -36,9 +48,9 @@ const NotificationToast: FC<{
         styledWidth="24px"
         styledHeight="24px"
         glyph={Icon.GLYPHS.warning}
-        fillColor="#EA580C"
+        fillColor={theme.colorSecondary}
       />
-      <div>{message}</div>
+      <Message>{message}</Message>
       <CloseButton
         onClick={(e: MouseEvent) => {
           e.stopPropagation();
@@ -58,14 +70,23 @@ const Wrapper = styled.div`
   bottom: 70px;
   left: 50%;
   transform: translate(-35%);
-  border: 1px solid #ea580c;
+  border: 1px solid ${(p) => p.theme.darkLighter};
   border-radius: 6px;
   z-index: ${(p) => p.theme.notificationWindowZIndex};
 
   max-width: 50%;
   padding: 16px;
   gap: 16px;
-  background-color: #f2f2f2;
+  background-color: ${(p) => p.theme.dark};
+`;
+
+const Message = styled.div`
+  color: ${(p) => p.theme.textLight};
+
+  button {
+    color: ${(p) => p.theme.colorPrimary};
+    text-decoration: none;
+  }
 `;
 
 const CloseButton = styled(Button).attrs({
@@ -76,7 +97,7 @@ const CloseButton = styled(Button).attrs({
       glyph={Icon.GLYPHS.closeLight}
       styledWidth="16px"
       styledHeight="16px"
-      dark
+      light
     />
   )
 })`
