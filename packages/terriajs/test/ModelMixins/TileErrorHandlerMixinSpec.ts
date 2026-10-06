@@ -1,3 +1,4 @@
+import TerriaError from "../../lib/Core/TerriaError";
 import i18next from "i18next";
 import L from "leaflet";
 import RequestErrorEvent from "terriajs-cesium/Source/Core/RequestErrorEvent";
@@ -307,6 +308,16 @@ describe("TileErrorHandlerMixin", function () {
       expect(item.terria.raiseErrorToUser).toHaveBeenCalled();
     });
 
+    it("still disables a 4xx-failing item that isn't in the workbench", async function () {
+      try {
+        await onTileLoadError(item, newError(403));
+      } catch {}
+      try {
+        await onTileLoadError(item, newError(403, 1));
+      } catch {}
+      expect(item.show).toBe(false);
+    });
+
     it("disables the catalog item", async function () {
       expect(item.show).toBe(true);
       try {
@@ -316,6 +327,92 @@ describe("TileErrorHandlerMixin", function () {
         await onTileLoadError(item, newError(undefined, 1));
       } catch {}
       expect(item.show).toBe(false);
+    });
+
+    describe("when the item is in the workbench", function () {
+      beforeEach(function () {
+        item.terria.workbench.items = [item];
+      });
+
+      it("shows the error on the workbench item instead of raising it", async function () {
+        spyOn(item.terria, "raiseErrorToUser");
+        try {
+          await onTileLoadError(item, newError(undefined));
+        } catch {}
+        try {
+          await onTileLoadError(item, newError(undefined, 1));
+        } catch {}
+        expect(item.show).toBe(false);
+        expect(item.terria.raiseErrorToUser).not.toHaveBeenCalled();
+        expect(item.terria.workbench.getItemErrors(item).length).toBe(1);
+      });
+
+      it("replaces earlier errors on the workbench item", async function () {
+        item.terria.workbench.setItemErrors(item, [
+          TerriaError.from("one"),
+          TerriaError.from("two")
+        ]);
+        try {
+          await onTileLoadError(item, newError(undefined));
+        } catch {}
+        try {
+          await onTileLoadError(item, newError(undefined, 1));
+        } catch {}
+        expect(item.terria.workbench.getItemErrors(item).length).toBe(1);
+      });
+
+      it("clears the error when the item is shown again", async function () {
+        try {
+          await onTileLoadError(item, newError(undefined));
+        } catch {}
+        try {
+          await onTileLoadError(item, newError(undefined, 1));
+        } catch {}
+        expect(item.terria.workbench.getItemErrors(item).length).toBe(1);
+
+        item.setTrait(CommonStrata.user, "show", true);
+        expect(item.terria.workbench.getItemErrors(item)).toEqual([]);
+      });
+
+      it("keeps the item shown for 4xx (missing tile) failures and warns on the item", async function () {
+        spyOn(item.terria, "raiseErrorToUser");
+        try {
+          await onTileLoadError(item, newError(403));
+        } catch {}
+        try {
+          await onTileLoadError(item, newError(403, 1));
+        } catch {}
+        expect(item.tileFailures).toBe(2);
+        expect(item.show).toBe(true);
+        expect(item.terria.raiseErrorToUser).not.toHaveBeenCalled();
+        expect(item.terria.workbench.getItemErrors(item).length).toBe(1);
+      });
+
+      it("doesn't replace existing item errors on further 4xx failures", async function () {
+        const existing = TerriaError.from("existing");
+        item.terria.workbench.setItemErrors(item, [existing]);
+        try {
+          await onTileLoadError(item, newError(403));
+        } catch {}
+        try {
+          await onTileLoadError(item, newError(403, 1));
+        } catch {}
+        expect(item.show).toBe(true);
+        expect(item.terria.workbench.getItemErrors(item)).toEqual([existing]);
+      });
+
+      it("disables the item for 4xx failures when keepLayersOnMissingTiles is false", async function () {
+        item.terria.configParameters.nextExperimentalFeatures = {
+          keepLayersOnMissingTiles: false
+        };
+        try {
+          await onTileLoadError(item, newError(403));
+        } catch {}
+        try {
+          await onTileLoadError(item, newError(403, 1));
+        } catch {}
+        expect(item.show).toBe(false);
+      });
     });
   });
 

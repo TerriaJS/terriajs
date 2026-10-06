@@ -14,6 +14,7 @@ import SharePanel from "../Map/Panels/SharePanel/SharePanel";
 import DataPreviewMap from "./DataPreviewMap";
 import Description from "./Description";
 import Styles from "./mappable-preview.scss";
+import Box from "../../Styled/Box";
 import WarningBox from "./WarningBox";
 
 /**
@@ -114,17 +115,22 @@ class MappablePreview extends Component {
                 </div>
               )}
           </div>
-          {catalogItem.loadMetadataResult?.error && (
-            <WarningBox
-              error={catalogItem.loadMetadataResult?.error}
-              viewState={this.props.viewState}
-            />
-          )}
-          {catalogItem.loadMapItemsResult?.error && (
-            <WarningBox
-              error={catalogItem.loadMapItemsResult?.error}
-              viewState={this.props.viewState}
-            />
+          {(catalogItem.loadMetadataResult?.error ||
+            catalogItem.loadMapItemsResult?.error) && (
+            <Box column gap={2} css={{ marginBottom: "10px" }}>
+              {catalogItem.loadMetadataResult?.error && (
+                <WarningBox
+                  error={catalogItem.loadMetadataResult?.error}
+                  viewState={this.props.viewState}
+                />
+              )}
+              {catalogItem.loadMapItemsResult?.error && (
+                <WarningBox
+                  error={catalogItem.loadMapItemsResult?.error}
+                  viewState={this.props.viewState}
+                />
+              )}
+            </Box>
           )}
           <Description item={catalogItem} />
         </div>

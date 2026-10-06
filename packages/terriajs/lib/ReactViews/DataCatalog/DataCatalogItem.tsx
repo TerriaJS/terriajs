@@ -15,6 +15,7 @@ import CatalogItem, { ButtonState } from "./CatalogItem";
 import toggleItemOnMapFromCatalog, {
   Op as ToggleOnMapOp
 } from "./toggleItemOnMapFromCatalog";
+import raiseErrorNotShownInPreview from "../Preview/raiseErrorNotShownInPreview";
 
 interface Props {
   item: CatalogMemberMixin.Instance;
@@ -50,7 +51,7 @@ export default observer(function DataCatalogItem({
   const setPreviewedItem = () =>
     viewState
       .viewCatalogMember(item)
-      .then((result) => result.raiseError(viewState.terria));
+      .then((result) => raiseErrorNotShownInPreview(viewState, item, result));
 
   const toggleEnable = async (event: MouseEvent<HTMLButtonElement>) => {
     const keepCatalogOpen =

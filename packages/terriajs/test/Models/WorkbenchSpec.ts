@@ -210,6 +210,38 @@ describe("Workbench", function () {
     expect(workbench.itemIds).toEqual(["D", "A", "B"]);
   });
 
+  it("keeps an item that fails to load and attaches its error when `showErrorsOnItem` is set", async function () {
+    workbench.items = [item1, item2];
+    const error = new TerriaError({
+      message: "Failed to Load",
+      severity: TerriaErrorSeverity.Error
+    });
+    (item3 as any).loadMapItems = () => Result.error(error);
+
+    const addResult = await workbench.add(item3, { showErrorsOnItem: true });
+
+    expect(addResult.error).toBeDefined();
+    expect(workbench.itemIds).toEqual(["C", "A", "B"]);
+    expect(workbench.getItemErrors(item3)).toEqual([error]);
+  });
+
+  it("shows item errors for an item while it is being added with `showErrorsOnItem`", async function () {
+    let finishLoading: (result: Result<void>) => void = () => {};
+    (item3 as any).loadMapItems = () =>
+      new Promise((resolve) => (finishLoading = resolve));
+
+    const adding = workbench.add(item3, { showErrorsOnItem: true });
+    await new Promise((resolve) => setTimeout(resolve, 0));
+
+    expect(workbench.contains(item3)).toBe(true);
+    expect(workbench.showsItemErrors(item3)).toBe(true);
+
+    finishLoading(Result.none());
+    await adding;
+
+    expect(workbench.showsItemErrors(item3)).toBe(false);
+  });
+
   it("doesn't add duplicate model", async function () {
     workbench.items = [item1, item2, item3];
 
@@ -228,6 +260,77 @@ describe("Workbench", function () {
     workbench.remove(item2);
     expect(workbench.items).toEqual([item1, item3]);
     expect(workbench.itemIds).toEqual(["A", "C"]);
+  });
+
+  describe("item errors", function () {
+    const error = TerriaError.from("Failed to load");
+
+    it("can be set and cleared", function () {
+      workbench.items = [item1, item2];
+      workbench.setItemErrors(item1, [error]);
+
+      expect(workbench.getItemErrors(item1)).toEqual([error]);
+      expect(workbench.getItemErrors(item2)).toEqual([]);
+
+      workbench.setItemErrors(item1, []);
+      expect(workbench.getItemErrors(item1)).toEqual([]);
+    });
+
+    it("are cleared when the item is removed", function () {
+      workbench.items = [item1, item2];
+      workbench.setItemErrors(item1, [error]);
+      workbench.setItemErrors(item2, [error]);
+
+      workbench.remove(item1);
+      expect(workbench.getItemErrors(item1)).toEqual([]);
+      expect(workbench.getItemErrors(item2)).toEqual([error]);
+
+      workbench.removeAll();
+      expect(workbench.getItemErrors(item2)).toEqual([]);
+    });
+
+    it("stop being cleared when shown once the item is removed", function () {
+      workbench.items = [item1, item2];
+      item1.setTrait(CommonStrata.user, "show", false);
+      item2.setTrait(CommonStrata.user, "show", false);
+      workbench.setItemErrors(item1, [error], { clearWhenShown: true });
+      workbench.setItemErrors(item2, [error], { clearWhenShown: true });
+      expect((workbench as any)._clearErrorsWhenShown.size).toBe(2);
+
+      workbench.remove(item1);
+      expect((workbench as any)._clearErrorsWhenShown.size).toBe(1);
+      workbench.items = [];
+
+      expect((workbench as any)._clearErrorsWhenShown.size).toBe(0);
+    });
+
+    it("keep clearing when shown after the item is moved", function () {
+      workbench.items = [item1, item2];
+      item1.setTrait(CommonStrata.user, "show", false);
+      workbench.setItemErrors(item1, [error], { clearWhenShown: true });
+
+      workbench.moveItemToIndex(item1, 1);
+      item1.setTrait(CommonStrata.user, "show", true);
+
+      expect(workbench.getItemErrors(item1)).toEqual([]);
+    });
+
+    it("are kept when the item is moved", function () {
+      workbench.items = [item1, item2];
+      workbench.setItemErrors(item1, [error]);
+
+      workbench.moveItemToIndex(item1, 1);
+      expect(workbench.items).toEqual([item2, item1]);
+      expect(workbench.getItemErrors(item1)).toEqual([error]);
+    });
+
+    it("are cleared when the item is no longer in the workbench items", function () {
+      workbench.items = [item1, item2];
+      workbench.setItemErrors(item1, [error]);
+
+      workbench.items = [item2];
+      expect(workbench.getItemErrors(item1)).toEqual([]);
+    });
   });
 
   it("add reference item", async function () {

@@ -14,6 +14,7 @@ import {
   allMappableMembersInWorkbench
 } from "./DisplayGroupHelper";
 import Terria from "../../Models/Terria";
+import raiseErrorNotShownInPreview from "../Preview/raiseErrorNotShownInPreview";
 
 interface GroupModel extends BaseModel {
   isOpen?: boolean;
@@ -70,8 +71,10 @@ const DataCatalogGroup: React.FC<PropsType> = observer((props) => {
       setIsOpenLocal(!isOpenLocal);
     }
 
-    (await viewState.viewCatalogMember(group, !group.isOpen)).raiseError(
-      viewState.terria
+    raiseErrorNotShownInPreview(
+      viewState,
+      group,
+      await viewState.viewCatalogMember(group, !group.isOpen)
     );
   }, [manageIsOpenLocally, isOpenLocal, group, viewState]);
 

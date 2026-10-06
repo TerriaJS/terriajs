@@ -1129,6 +1129,109 @@ describe("TerriaSpec", function () {
         expect(terria.workbench.itemIds).toEqual(["good-item"]);
         expect(terria.previewedItemId).toBe("good-item");
       });
+
+      it("shows workbench item load errors on the item instead of raising them", async function () {
+        (CsvCatalogItem.prototype.loadMapItems as jasmine.Spy).and.callFake(
+          function (this: CsvCatalogItem) {
+            return Promise.resolve(
+              this.uniqueId === "good-item"
+                ? Result.error("Failed to load map items")
+                : Result.none()
+            );
+          }
+        );
+
+        const error = await applyInitData({
+          catalog: [goodItem, anotherGoodItem],
+          workbench: ["good-item", "another-good-item"]
+        });
+
+        expect(error).toBeUndefined();
+        expect(terria.workbench.itemIds).toEqual([
+          "good-item",
+          "another-good-item"
+        ]);
+        const [failedItem, loadedItem] = terria.workbench.items;
+        expect(terria.workbench.getItemErrors(failedItem).length).toBe(1);
+        expect(terria.workbench.getItemErrors(loadedItem)).toEqual([]);
+      });
+
+      it("adds a workbench model that cannot be dereferenced to the workbench with its errors", async function () {
+        const error = await applyInitData({
+          catalog: [goodItem],
+          models: {
+            "broken-item": {
+              type: "a-type-that-does-not-exist",
+              dereferenced: { type: "csv", name: "Dereferenced item" }
+            }
+          },
+          workbench: ["broken-item", "good-item"]
+        });
+
+        expect(error).toBeUndefined();
+        expect(terria.workbench.itemIds).toEqual(["broken-item", "good-item"]);
+        const brokenItem = terria.workbench.items[0];
+        expect(
+          terria.workbench.getItemErrors(brokenItem).length
+        ).toBeGreaterThan(0);
+      });
+
+      it("keeps a workbench item's errors when its ID is in the workbench twice", async function () {
+        await applyInitData({
+          models: {
+            "broken-item": {
+              type: "a-type-that-does-not-exist",
+              dereferenced: { type: "csv", name: "Dereferenced item" }
+            }
+          },
+          workbench: ["broken-item", "broken-item"]
+        });
+
+        expect(terria.workbench.itemIds).toEqual(["broken-item"]);
+        const brokenItem = terria.workbench.items[0];
+        expect(terria.workbench.getItemErrors(brokenItem).length).toBe(2);
+      });
+
+      it("lets a workbench item that cannot be loaded be reordered", async function () {
+        await applyInitData({
+          catalog: [goodItem, anotherGoodItem],
+          models: {
+            "broken-item": {
+              type: "a-type-that-does-not-exist",
+              dereferenced: { type: "csv", name: "Dereferenced item" }
+            }
+          },
+          workbench: ["good-item", "another-good-item", "broken-item"]
+        });
+        const brokenItem = terria.workbench.items[2];
+
+        terria.workbench.moveItemToIndex(brokenItem, 1);
+
+        expect(terria.workbench.itemIds).toEqual([
+          "good-item",
+          "broken-item",
+          "another-good-item"
+        ]);
+      });
+
+      it("clears workbench item errors when init data is applied again", async function () {
+        const loadMapItemsSpy = CsvCatalogItem.prototype
+          .loadMapItems as jasmine.Spy;
+        loadMapItemsSpy.and.returnValue(
+          Promise.resolve(Result.error("Failed to load map items"))
+        );
+        await applyInitData({
+          catalog: [goodItem],
+          workbench: ["good-item"]
+        });
+        const item = terria.workbench.items[0];
+        expect(terria.workbench.getItemErrors(item).length).toBe(1);
+
+        loadMapItemsSpy.and.returnValue(Promise.resolve(Result.none()));
+        await applyInitData({ workbench: ["good-item"] });
+
+        expect(terria.workbench.getItemErrors(item)).toEqual([]);
+      });
     });
 
     describe("Enable/disable shorten share URL via init data", function () {

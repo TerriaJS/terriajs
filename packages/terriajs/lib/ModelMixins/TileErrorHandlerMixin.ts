@@ -120,7 +120,7 @@ function TileErrorHandlerMixin<T extends AbstractConstructor<ModelType>>(
 
       // Give up loading this (definitively, unexpectedly bad) tile and
       // possibly give up on this layer entirely.
-      const failTile = action((e: Error) => {
+      const failTile = action((e: Error, disableItem = true) => {
         this.tileFailures += 1;
         const opts = this.tileErrorHandlingOptions;
         const thresholdBeforeDisablingItem =
@@ -149,31 +149,55 @@ function TileErrorHandlerMixin<T extends AbstractConstructor<ModelType>>(
               })
             );
           } else {
-            this.terria.raiseErrorToUser(
-              new TerriaError({
-                sender: this,
-                title: i18next.t(
-                  ($) => $.models.imageryLayer.accessingCatalogItemErrorTitle
-                ),
-                message:
-                  i18next.t(
-                    ($) =>
-                      $.models.imageryLayer.accessingCatalogItemErrorMessage,
-                    {
-                      name: this.name as string
-                    }
-                  ) +
-                  "<pre>" +
-                  formatError(e) +
-                  "</pre>"
-              })
-            );
+            const error = new TerriaError({
+              sender: this,
+              title: i18next.t(
+                ($) => $.models.imageryLayer.accessingCatalogItemErrorTitle
+              ),
+              message:
+                i18next.t(
+                  ($) => $.models.imageryLayer.accessingCatalogItemErrorMessage,
+                  {
+                    name: this.name as string
+                  }
+                ) +
+                "<pre>" +
+                formatError(e) +
+                "</pre>"
+            });
+            if (this.terria.workbench.contains(this) && !disableItem) {
+              if (this.terria.workbench.getItemErrors(this).length === 0) {
+                this.terria.workbench.setItemErrors(this, [error]);
+                this.terria.errorService.error(error);
+                error.log();
+              }
+              operation.stop();
+              result.reject();
+              return;
+            } else if (this.terria.workbench.contains(this)) {
+              this.terria.workbench.setItemErrors(this, [error], {
+                clearWhenShown: true
+              });
+              this.terria.errorService.error(error);
+              error.log();
+            } else {
+              this.terria.raiseErrorToUser(error);
+            }
           }
           this.setTrait(CommonStrata.user, "show", false);
         }
         operation.stop();
         result.reject();
       });
+
+      // Prior to this new behaviour, we used to fail but keep the workbench
+      // item enabled.
+      const failMissingTile = (e: Error) =>
+        failTile(
+          e,
+          this.terria.configParameters.nextExperimentalFeatures
+            ?.keepLayersOnMissingTiles === false
+        );
 
       const tellMapToSilentlyGiveUp = () => {
         operation.stop();
@@ -338,7 +362,7 @@ function TileErrorHandlerMixin<T extends AbstractConstructor<ModelType>>(
               } else if (e.statusCode === 404 && treat404AsError === false) {
                 tellMapToSilentlyGiveUp();
               } else {
-                failTile(e);
+                failMissingTile(e);
               }
             } else if (e.statusCode >= 500 && e.statusCode < 600) {
               retryWithBackoff(e);

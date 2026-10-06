@@ -3,13 +3,16 @@ import { runInAction } from "mobx";
 import TerriaError from "../../Core/TerriaError";
 import ViewState from "../../ReactViewModels/ViewState";
 import Box from "../../Styled/Box";
+import { RawButton } from "../../Styled/Button";
 import Spacing from "../../Styled/Spacing";
 import { Text } from "../../Styled/Text";
 import Collapsible from "../Custom/Collapsible/Collapsible";
 import FeedbackLinkCustomComponent, {
   FeedbackLink
 } from "../Custom/FeedbackLinkCustomComponent";
-import parseCustomMarkdownToReact from "../Custom/parseCustomMarkdownToReact";
+import parseCustomMarkdownToReact, {
+  parseCustomMarkdownToReactWithOptions
+} from "../Custom/parseCustomMarkdownToReact";
 
 const ErrorsBox = (props: {
   errors: (Error | TerriaError)[];
@@ -134,6 +137,32 @@ export const terriaErrorNotification = (error: TerriaError) =>
           </>
         ) : null}
         {!includesFeedbackLink ? <FeedbackLink viewState={viewState} /> : null}
+      </>
+    );
+  };
+
+export const terriaErrorToast = (error: TerriaError) =>
+  function TerriaErrorToast(viewState: ViewState) {
+    const showDetails = () => {
+      const notificationState = viewState.terria.notificationState;
+      notificationState.dismissCurrentNotification();
+      runInAction(() => {
+        error.showDetails = true;
+        error.overrideRaiseToUser = true;
+      });
+      notificationState.addNotificationToQueue(error.toNotification());
+    };
+
+    return (
+      <>
+        {parseCustomMarkdownToReactWithOptions(
+          `**${error.title}** ${error.message}`,
+          { inline: true },
+          { viewState, terria: viewState.terria }
+        )}{" "}
+        <RawButton onClick={showDetails}>
+          {i18next.t(($) => $.models.raiseError.seeDetails)}
+        </RawButton>
       </>
     );
   };

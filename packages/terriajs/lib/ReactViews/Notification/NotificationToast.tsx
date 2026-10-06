@@ -1,3 +1,4 @@
+import { observer } from "mobx-react";
 import { FC, useEffect, useRef } from "react";
 import styled, { useTheme } from "styled-components";
 import { Notification } from "../../ReactViewModels/NotificationState";
@@ -8,7 +9,7 @@ import { useViewState } from "../Context";
 
 const NotificationToast: FC<{
   notification: Notification;
-}> = ({ notification }) => {
+}> = observer(({ notification }) => {
   const viewState = useViewState();
   const theme = useTheme();
   const nodeRef = useRef(null);
@@ -43,7 +44,7 @@ const NotificationToast: FC<{
   }, [notification, notificationState, durationMsecs]);
 
   return (
-    <Wrapper ref={nodeRef}>
+    <Wrapper ref={nodeRef} trainerBarVisible={viewState.trainerBarVisible}>
       <StyledIcon
         styledWidth="24px"
         styledHeight="24px"
@@ -59,15 +60,16 @@ const NotificationToast: FC<{
       />
     </Wrapper>
   );
-};
+});
 
-const Wrapper = styled.div`
+const Wrapper = styled.div<{ trainerBarVisible: boolean }>`
   display: flex;
   flex-direction: row;
   align-items: center;
 
   position: fixed;
-  bottom: 70px;
+  top: ${(p) =>
+    (p.trainerBarVisible ? Number(p.theme.trainerHeight) : 0) + 70}px;
   left: 50%;
   transform: translate(-35%);
   border: 1px solid ${(p) => p.theme.darkLighter};
@@ -82,6 +84,13 @@ const Wrapper = styled.div`
 
 const Message = styled.div`
   color: ${(p) => p.theme.textLight};
+
+  p {
+    margin: 0;
+  }
+  p + p {
+    margin-top: 8px;
+  }
 
   button {
     color: ${(p) => p.theme.colorPrimary};

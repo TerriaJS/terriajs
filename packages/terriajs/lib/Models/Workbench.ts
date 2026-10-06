@@ -4,6 +4,7 @@ import {
   computed,
   observable,
   makeObservable,
+  reaction,
   runInAction
 } from "mobx";
 import filterOutUndefined from "../Core/filterOutUndefined";
@@ -23,14 +24,34 @@ import MappableTraits from "../Traits/TraitsClasses/MappableTraits";
 const keepOnTop = (model: BaseModel) =>
   hasTraits(model, LayerOrderingTraits, "keepOnTop") && model.keepOnTop;
 const supportsReordering = (model: BaseModel) =>
-  hasTraits(model, LayerOrderingTraits, "supportsReordering") &&
-  model.supportsReordering;
+  (!MappableMixin.isMixedInto(model) && !ChartableMixin.isMixedInto(model)) ||
+  (hasTraits(model, LayerOrderingTraits, "supportsReordering") &&
+    model.supportsReordering);
 
 export default class Workbench {
   private readonly _items = observable.array<BaseModel>();
+  private readonly _itemsAddingWithErrorsOnItem = new Set<BaseModel>();
+  private readonly _itemErrors = observable.map<
+    BaseModel,
+    readonly TerriaError[]
+  >(undefined, { deep: false });
+  private readonly _clearErrorsWhenShown = observable.set<BaseModel>(
+    undefined,
+    { deep: false }
+  );
 
   constructor() {
     makeObservable(this);
+    reaction(
+      () =>
+        Array.from(this._clearErrorsWhenShown).filter(
+          (item) =>
+            this._itemErrors.has(item) &&
+            MappableMixin.isMixedInto(item) &&
+            item.show
+        ),
+      (items) => items.forEach((item) => this.setItemErrors(item, []))
+    );
   }
 
   /**
@@ -43,11 +64,59 @@ export default class Workbench {
   set items(items: readonly BaseModel[]) {
     // Run items through a set to remove duplicates.
     const setItems = new Set(items);
+    const dereferencedItems = new Set(items.map(dereferenceModel));
+    Array.from(this._itemErrors.keys()).forEach((item) => {
+      if (!dereferencedItems.has(item)) this._itemErrors.delete(item);
+    });
+    Array.from(this._clearErrorsWhenShown).forEach((item) => {
+      if (!dereferencedItems.has(item)) this._clearErrorsWhenShown.delete(item);
+    });
     this._items.spliceWithArray(
       0,
       this._items.length,
       Array.from(setItems).slice()
     );
+  }
+
+  /**
+   * Gets the non-blocking errors that occurred while loading a workbench item.
+   */
+  getItemErrors(item: BaseModel): readonly TerriaError[] {
+    return this._itemErrors.get(dereferenceModel(item)) ?? [];
+  }
+
+  /**
+   * Whether load errors for `item` are shown on the workbench item, including
+   * while it is being added with `showErrorsOnItem`.
+   */
+  showsItemErrors(item: BaseModel): boolean {
+    const dereferenced = dereferenceModel(item);
+    return (
+      this._itemErrors.has(dereferenced) ||
+      this._itemsAddingWithErrorsOnItem.has(dereferenced)
+    );
+  }
+
+  /**
+   * @param options.clearWhenShown Clear the errors when the item is next shown.
+   */
+  @action
+  setItemErrors(
+    item: BaseModel,
+    errors: readonly TerriaError[],
+    options: { clearWhenShown?: boolean } = {}
+  ): void {
+    const dereferenced = dereferenceModel(item);
+    if (errors.length > 0) {
+      this._itemErrors.set(dereferenced, errors);
+    } else {
+      this._itemErrors.delete(dereferenced);
+    }
+    if (errors.length > 0 && options.clearWhenShown) {
+      this._clearErrorsWhenShown.add(dereferenced);
+    } else {
+      this._clearErrorsWhenShown.delete(dereferenced);
+    }
   }
 
   /**
@@ -87,6 +156,9 @@ export default class Workbench {
   remove(item: BaseModel): void {
     const index = this.indexOf(item);
     if (index >= 0) {
+      const dereferenced = dereferenceModel(this._items[index]);
+      this._itemErrors.delete(dereferenced);
+      this._clearErrorsWhenShown.delete(dereferenced);
       this._items.splice(index, 1);
     }
   }
@@ -97,6 +169,8 @@ export default class Workbench {
   @action
   removeAll(): void {
     this._items.clear();
+    this._itemErrors.clear();
+    this._clearErrorsWhenShown.clear();
   }
 
   /**
@@ -203,13 +277,19 @@ export default class Workbench {
    * be {@link AsyncMappableMixin} or {@link ChartableMixin} but it is a {@link GroupMixin}, it will
    * be removed from the workbench. If it is mappable, `loadMapItems` will be called.
    *
-   * If an error occurs, it will only be added to the workbench if the severity is TerriaError.Warning - otherwise it will not be added
+   * If an error occurs, it will only be added to the workbench if the severity is TerriaError.Warning - otherwise it will not be added.
+   * If `options.showErrorsOnItem` is true, the item is always added and any error is attached to it (see {@link getItemErrors}).
    *
    * @param item The item to add to or remove from the workbench.
    */
-  public async add(item: BaseModel | BaseModel[]): Promise<Result<unknown>> {
+  public async add(
+    item: BaseModel | BaseModel[],
+    options: { showErrorsOnItem?: boolean } = {}
+  ): Promise<Result<unknown>> {
     if (Array.isArray(item)) {
-      const results = await Promise.all(item.reverse().map((i) => this.add(i)));
+      const results = await Promise.all(
+        item.reverse().map((i) => this.add(i, options))
+      );
       return Result.combine(results, {
         title: i18next.t(($) => $.workbench.addItemErrorTitle),
         message: i18next.t(($) => $.workbench.addItemErrorMessage),
@@ -217,6 +297,21 @@ export default class Workbench {
       });
     }
 
+    if (!options.showErrorsOnItem) return this.addItem(item, options);
+
+    const dereferenced = dereferenceModel(item);
+    this._itemsAddingWithErrorsOnItem.add(dereferenced);
+    try {
+      return await this.addItem(item, options);
+    } finally {
+      this._itemsAddingWithErrorsOnItem.delete(dereferenced);
+    }
+  }
+
+  private async addItem(
+    item: BaseModel,
+    options: { showErrorsOnItem?: boolean }
+  ): Promise<Result<unknown>> {
     if (MappableMixin.isMixedInto(item) && item.shouldShowInitialMessage) {
       await item.showInitialMessage();
     }
@@ -229,7 +324,7 @@ export default class Workbench {
       error = (await item.loadReference()).error;
       if (item.target) {
         this.remove(item);
-        return this.add(item.target);
+        return this.add(item.target, options);
       }
     }
 
@@ -257,8 +352,10 @@ export default class Workbench {
       });
     }
 
-    // Remove item if TerriaError severity is Error
-    if (error?.severity === TerriaErrorSeverity.Error) {
+    if (options.showErrorsOnItem) {
+      this.setItemErrors(item, error ? [error] : []);
+    } else if (error?.severity === TerriaErrorSeverity.Error) {
+      // Remove item if TerriaError severity is Error
       this.remove(item);
     }
 
@@ -300,8 +397,13 @@ export default class Workbench {
     if (!this.contains(item)) {
       return;
     }
+    const errors = this.getItemErrors(item);
+    const clearWhenShown = this._clearErrorsWhenShown.has(
+      dereferenceModel(item)
+    );
     this.remove(item);
     this.insertItem(item, newIndex);
+    this.setItemErrors(item, errors, { clearWhenShown });
   }
 }
 

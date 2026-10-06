@@ -132,6 +132,11 @@ export interface NextExperimentalFeatures {
    * memoised imagery layers that have been destroyed.
    */
   imageryLayerGuard?: boolean;
+  /**
+   * Keep workbench items shown when tiles fail with a 4xx, warning on the item
+   * instead. Defaults to true; set to false to disable the item as before.
+   */
+  keepLayersOnMissingTiles?: boolean;
 }
 
 export interface ConfigParameters {
@@ -912,6 +917,20 @@ export default class Terria {
         terriaError.toNotification()
       );
 
+    terriaError.log();
+  }
+
+  /** Like `raiseErrorToUser`, but shows the error as a non-blocking toast. */
+  raiseErrorToUserAsToast(
+    error: unknown,
+    overrides?: TerriaErrorOverrides
+  ): void {
+    const terriaError = TerriaError.from(error, overrides);
+    this.errorService.error(terriaError);
+    if (this.userProperties.get("ignoreErrors") !== "1")
+      this.notificationState.addNotificationToQueue(
+        terriaError.toToastNotification()
+      );
     terriaError.log();
   }
 
@@ -1800,39 +1819,64 @@ export default class Terria {
     );
   }
 
+  /**
+   * Adds `model` (or what it dereferences to) to `newItems` and loads its map
+   * items. Errors for a model that is added to the workbench are collected in
+   * `itemErrors`, other errors are pushed to `errors`.
+   */
   private async pushAndLoadMapItems(
     model: BaseModel,
-    newItems: BaseModel[],
-    errors: TerriaError[]
+    context: {
+      newItems: BaseModel[];
+      itemErrors: Map<BaseModel, TerriaError[]>;
+      modelErrors: Map<BaseModel, TerriaError[]>;
+      errors: TerriaError[];
+    },
+    inheritedErrors: TerriaError[] = []
   ) {
+    const { newItems, itemErrors, modelErrors, errors } = context;
+    const modelErrorList = [
+      ...inheritedErrors,
+      ...(modelErrors.get(model) ?? [])
+    ];
+    modelErrors.delete(model);
+
+    const addItem = (item: BaseModel, itemErrorList: TerriaError[]) => {
+      newItems.push(item);
+      itemErrors.set(item, itemErrorList);
+    };
+
     if (ReferenceMixin.isMixedInto(model)) {
-      (await model.loadReference()).pushErrorTo(errors);
+      (await model.loadReference()).pushErrorTo(modelErrorList);
 
       if (model.target !== undefined) {
-        await this.pushAndLoadMapItems(model.target, newItems, errors);
+        await this.pushAndLoadMapItems(model.target, context, modelErrorList);
       } else {
-        errors.push(
+        addItem(model, [
+          ...modelErrorList,
           TerriaError.from(
             "Reference model has no target. Model Id: " + model.uniqueId
           )
-        );
+        ]);
       }
     } else if (GroupMixin.isMixedInto(model)) {
+      errors.push(...modelErrorList);
       (await model.loadMembers()).pushErrorTo(errors);
 
       model.memberModels.map(async (m) => {
-        await this.pushAndLoadMapItems(m, newItems, errors);
+        await this.pushAndLoadMapItems(m, context);
       });
     } else if (MappableMixin.isMixedInto(model)) {
-      newItems.push(model);
-      (await model.loadMapItems()).pushErrorTo(errors);
+      addItem(model, modelErrorList);
+      (await model.loadMapItems()).pushErrorTo(modelErrorList);
     } else {
-      errors.push(
+      addItem(model, [
+        ...modelErrorList,
         TerriaError.from(
           "Can not load an un-mappable item to the map. Item Id: " +
             model.uniqueId
         )
-      );
+      ]);
     }
   }
 
@@ -2053,18 +2097,26 @@ export default class Terria {
 
     // NOTE: after this Promise, this function is no longer an `@action`
     const models = initData.models;
+    // Errors for models that end up in the workbench are shown on the
+    // workbench item instead of being raised to the user.
+    const modelErrors = new Map<BaseModel, TerriaError[]>();
     if (isJsonObject(models, false)) {
       await Promise.all(
         Object.keys(models).map((modelId) =>
           applyPartAsync(`model ${modelId}`, async () => {
-            (
-              await this.loadModelStratum(
-                modelId,
-                stratumId,
-                models,
-                replaceStratum
-              )
-            ).pushErrorTo(errors);
+            const { error } = await this.loadModelStratum(
+              modelId,
+              stratumId,
+              models,
+              replaceStratum
+            );
+            if (!error) return;
+            const model = this.getModelByIdOrShareKey(BaseModel, modelId);
+            if (model) {
+              modelErrors.set(model, [error]);
+            } else {
+              errors.push(error);
+            }
           })
         )
       );
@@ -2082,9 +2134,10 @@ export default class Terria {
     // Note `newItems` is collected outside of `applyPartAsync` so that items
     // which loaded successfully are added to the workbench even if others fail.
     const newItems: BaseModel[] = [];
+    const itemErrors = new Map<BaseModel, TerriaError[]>();
 
     await applyPartAsync("workbench", async () => {
-      const newItemsRaw = filterOutUndefined(
+      const workbenchModels = filterOutUndefined(
         workbench.map((modelId) => {
           if (typeof modelId !== "string") {
             errors.push(
@@ -2101,13 +2154,19 @@ export default class Terria {
           );
         })
       );
+      const newItemsRaw = Array.from(new Set(workbenchModels));
 
       // Maintain the model order in the workbench.
       for (;;) {
         const model = newItemsRaw.shift();
         if (model) {
           await applyPartAsync(`workbench item \`${model.uniqueId}\``, () =>
-            this.pushAndLoadMapItems(model, newItems, errors)
+            this.pushAndLoadMapItems(model, {
+              newItems,
+              itemErrors,
+              modelErrors,
+              errors
+            })
           );
         } else {
           break;
@@ -2126,7 +2185,19 @@ export default class Terria {
       });
     });
 
-    runInAction(() => (this.workbench.items = newItems));
+    runInAction(() => {
+      this.workbench.items = newItems;
+      newItems.forEach((item) =>
+        this.workbench.setItemErrors(item, itemErrors.get(item) ?? [])
+      );
+    });
+    itemErrors.forEach((itemErrorList) =>
+      itemErrorList.forEach((error) => {
+        this.errorService.error(error);
+        error.log();
+      })
+    );
+    modelErrors.forEach((modelErrorList) => errors.push(...modelErrorList));
 
     // For ids that don't correspond to models resolve an id by share keys
     applyPart("timeline", () => {
