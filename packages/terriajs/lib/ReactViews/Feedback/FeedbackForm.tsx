@@ -303,11 +303,9 @@ class FeedbackForm extends Component<IProps, IState> {
             onChange={this.changeSendShareUrl}
           >
             <Text>
-              {
-                t(($) => $.feedback.shareWithDevelopers, {
-                  appName: this.props.viewState.terria.appName
-                })!
-              }
+              {t(($) => $.feedback.shareWithDevelopers, {
+                appName: this.props.viewState.terria.appName
+              })!}
             </Text>
           </Checkbox>
           <Spacing bottom={2} />

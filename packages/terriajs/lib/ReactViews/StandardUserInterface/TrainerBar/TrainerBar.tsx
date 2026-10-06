@@ -425,8 +425,9 @@ export const TrainerBar = observer((props: TrainerBarProps) => {
               background: transparent;
               color: ${theme.textLight};
               border-color: ${theme.textLight};
-              ${viewState.currentTrainerStepIndex === 0 &&
-              `visibility: hidden;`}
+              ${
+                viewState.currentTrainerStepIndex === 0 && `visibility: hidden;`
+              }
             `}
             onClick={() => {
               viewState.setCurrentTrainerStepIndex(
@@ -441,8 +442,10 @@ export const TrainerBar = observer((props: TrainerBarProps) => {
             primary
             shortMinHeight
             css={`
-              ${viewState.currentTrainerStepIndex ===
-                selectedTrainerSteps.length - 1 && `visibility: hidden;`}
+              ${
+                viewState.currentTrainerStepIndex ===
+                  selectedTrainerSteps.length - 1 && `visibility: hidden;`
+              }
             `}
             onClick={() => {
               viewState.setCurrentTrainerStepIndex(

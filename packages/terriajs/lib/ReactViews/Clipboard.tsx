@@ -124,15 +124,19 @@ const Clipboard: FC<ClipboardProps> = (props) => {
                 margin: 5px;
                 margin-left: 0;
                 display: inline-block;
-                ${status !== CopyStatus.Error &&
-                `fill: ${styledTheme.textSuccess};`}
+                ${
+                  status !== CopyStatus.Error &&
+                  `fill: ${styledTheme.textSuccess};`
+                }
               `}
             />
             <TextSpan
               medium
               css={`
-                ${status !== CopyStatus.Error &&
-                `color: ${styledTheme.textSuccess};`}
+                ${
+                  status !== CopyStatus.Error &&
+                  `color: ${styledTheme.textSuccess};`
+                }
               `}
             >
               {statusMessage}

@@ -110,8 +110,10 @@ const CollapsedNavigationPanel: FC<PropTypes> = observer((props: PropTypes) => {
               }
             }}
             css={`
-              ${item.controller.active &&
-              `border: 2px solid ${theme.colorPrimary};`}
+              ${
+                item.controller.active &&
+                `border: 2px solid ${theme.colorPrimary};`
+              }
             `}
             disabled={item.controller.disabled}
           >

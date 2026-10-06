@@ -24,9 +24,7 @@
 }
 
 .link {
-  @include mixins.link(
-    variables.$overlay
-  ); // Arbitrarily use the workbench's background as the default.
+  @include mixins.link(variables.$overlay); // Arbitrarily use the workbench's background as the default.
 }
 
 .sm-show {

@@ -151,7 +151,6 @@ export const Box = styled.div<IBoxProps>`
   ${(props) =>
     props.backgroundColor && `background-color: ${props.backgroundColor};`}
 
-
   /* Unsure of padding API as yet */
 
   ${(props) => props.padded && `padding: 5px;`}
@@ -211,7 +210,7 @@ export const Box = styled.div<IBoxProps>`
     `
       overflow-y: ${props.overflowY};
     `}
-    ${(props) =>
+  ${(props) =>
     props.overflowX &&
     `
         overflow-x: ${props.overflowX};

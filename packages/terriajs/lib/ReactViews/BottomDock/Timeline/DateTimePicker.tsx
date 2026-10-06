@@ -317,12 +317,14 @@ const DateTimePicker: React.FC<PropsType> = ({
             left: 0;
             z-index: 100;
 
-            ${openDirection === "down"
-              ? `
+            ${
+              openDirection === "down"
+                ? `
           top: 40px;
           left: -190px;
         `
-              : ""}
+                : ""
+            }
           `}
           className={"scrollbars"}
         >

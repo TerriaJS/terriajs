@@ -74,10 +74,12 @@ class FullScreenButton extends Component {
           id="toggle-workbench"
           css={`
             border-radius: 0 4px 4px 0;
-            ${this.props.viewState.isMapFullScreen === false
-              ? `width: 16px;
+            ${
+              this.props.viewState.isMapFullScreen === false
+                ? `width: 16px;
             padding: 0px;`
-              : `width: 100%; border-radius: 0;`}
+                : `width: 100%; border-radius: 0;`
+            }
           `}
           primary
           textProps={{
