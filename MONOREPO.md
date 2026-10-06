@@ -35,8 +35,8 @@ Other tasks run through Turborepo from the repo root:
 pnpm build          # run each package’s build script (TerriaMap is not minified)
 pnpm test           # cached spec build + browser tests + server tests
 pnpm lint           # turbo run lint
-pnpm format         # prettier --write .
-pnpm prettier-check # prettier --check .
+pnpm format         # oxfmt
+pnpm format:check   # oxfmt --check
 ```
 
 Build and serve the built map:
@@ -72,6 +72,7 @@ For a minified map release, run `pnpm --filter terriajs-map exec gulp release`.
 
 ## Formatting
 
-Prettier config is shared from the repo root (`.prettierrc`, `.prettierignore`)
-and runs across every package. A Husky `pre-commit` hook formats staged files
-with `pretty-quick`.
+Formatting uses [oxfmt](https://oxc.rs/docs/guide/usage/formatter). The root
+`.oxfmtrc.json` covers every package without its own config; a package with its
+own `.oxfmtrc.json` (and `ignorePatterns`) owns its subtree. A Husky `pre-commit`
+hook formats staged files.

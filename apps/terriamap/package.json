@@ -47,9 +47,8 @@
     "mobx-react": "^9.2.0",
     "msw": "~2.12.14",
     "node-notifier": "^10.0.1",
+    "oxfmt": "0.72.0",
     "plugin-error": "^2.0.1",
-    "prettier": "3.8.1",
-    "pretty-quick": "^4.2.2",
     "prop-types": "^15.6.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
@@ -76,8 +75,8 @@
     "build": "gulp build",
     "dev": "gulp dev",
     "postinstall": "echo 'Installation successful. What to do next:\\n  pnpm gulp dev   # Starts the server on port 3001, builds TerriaMap and dependencies, and rebuilds if files change.'",
-    "prettier": "prettier --write .",
-    "prettier-check": "prettier --check .",
+    "format": "oxfmt",
+    "format:check": "oxfmt --check",
     "lint": "gulp lint"
   }
 }

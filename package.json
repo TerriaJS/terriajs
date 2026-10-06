@@ -14,15 +14,14 @@
     "start": "turbo run build && pnpm --filter terriajs-map start",
     "test": "turbo run test",
     "lint": "turbo run lint",
-    "format": "prettier --write .",
-    "prettier-check": "prettier --check .",
+    "format": "oxfmt",
+    "format:check": "oxfmt --check",
     "sync-readme": "node -e \"require('node:fs').copyFileSync('packages/terriajs/README.md','README.md')\"",
     "prepare": "husky"
   },
   "devDependencies": {
     "husky": "^9.1.7",
-    "prettier": "3.8.1",
-    "pretty-quick": "^4.2.2",
+    "oxfmt": "0.72.0",
     "turbo": "2.9.16"
   }
 }

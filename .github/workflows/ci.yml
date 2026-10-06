@@ -34,8 +34,8 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
 
-      - name: Check formatting with prettier
-        run: pnpm prettier-check
+      - name: Check formatting with oxfmt
+        run: pnpm format:check
 
       # Root README.md mirrors packages/terriajs/README.md (interim parity: same
       # content on the GitHub repo page and the npm terriajs page). Fail if the mirror

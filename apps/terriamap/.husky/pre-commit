@@ -1,1 +1,2 @@
-pnpm pretty-quick --staged
+git diff --cached --name-only --diff-filter=ACMR -z | xargs -0 -r pnpm exec oxfmt --no-error-on-unmatched-pattern
+git diff --cached --name-only --diff-filter=ACMR -z | xargs -0 -r git add

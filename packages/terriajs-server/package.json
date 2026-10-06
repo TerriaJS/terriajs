@@ -20,7 +20,7 @@
     "lint": "eslint .",
     "watch": "node --watch-path serverconfig.json --watch lib/app.js ",
     "start": "node lib/app.js",
-    "format": "prettier --write ."
+    "format": "oxfmt"
   },
   "bin": {
     "terriajs-server": "terriajs-server.js"
@@ -70,7 +70,7 @@
     "http-proxy": "^1.18.1",
     "jasmine": "^6.3.0",
     "msw": "^2.15.0",
-    "prettier": "3.8.1",
+    "oxfmt": "0.72.0",
     "supertest": "^7.2.2",
     "testcontainers": "^12.0.1"
   }
