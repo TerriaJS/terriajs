@@ -305,7 +305,8 @@
       "title": "Mapa base canviat",
       "message": "El mapa base '{{currentBaseMap}}' no es pot visualitzar a {{mapMode}}. El mapa base s'ha canviat a '{{newBaseMap}}'"
     },
-    "baseMapOpacity": "Opacitat del mapa base:"
+    "baseMapOpacity": "Opacitat del mapa base:",
+    "lowPerformanceQualityNote": "També desactiva les ombres i redueix la resolució per millorar el rendiment."
   },
   "feedback": {
     "feedbackPreamble": "Ens encantaria saber de tu!",
@@ -575,7 +576,8 @@
     "enableAll": "Activa-ho tot",
     "disableAll": "Desactiva-ho tot",
     "previewJob": "Sobre la tasca",
-    "previewJobTitle": "Sobre aquesta tasca"
+    "previewJobTitle": "Sobre aquesta tasca",
+    "showErrors": "Mostra problemes en carregar aquestes dades"
   },
   "dateTime": {
     "selectorLabel": "Temps:",
@@ -1416,7 +1418,8 @@
       "errorTitle": "S'ha produït un error",
       "notificationFeedback": "Per a preguntes o comentaris, feu clic aquí.",
       "notificationFeedbackEmail": "Per a preguntes o suggeriments, poseu-vos en contacte amb {{email}}",
-      "developerDetails": "Detalls del desenvolupador"
+      "developerDetails": "Detalls del desenvolupador",
+      "seeDetails": "Veure detalls"
     },
     "resultPending": {
       "name": "Resultat pendent"
@@ -2179,6 +2182,10 @@
     },
     "composite": {
       "name": "Element de catàleg compost"
+    },
+    "shadowsDisabledForPerformance": {
+      "title": "Ombres desactivades",
+      "message": "El rendiment màxim està activat. El mapa és de menor qualitat i les ombres estan desactivades. <settingspanel title='Obre la configuració de qualitat del mapa'>Configuració de visualització</settingspanel>"
     }
   },
   "deltaTool": {
