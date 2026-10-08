@@ -14,13 +14,13 @@ const declrationFileSource = fs.readFileSync(cesiumDeclarationFile).toString();
 // The next step is to find the list of Cesium modules exported by the Cesium API
 // So that we can map these modules with a link back to their original source file.
 
-const regex = /^export (function|class|namespace|enum|const enum) (.+)/gm;
+const regex =
+  /^export (?:function|class|interface|namespace|enum|const enum) ([\w$]+)/gm;
 let matches;
 const publicModules = new Set();
 //eslint-disable-next-line no-cond-assign
 while ((matches = regex.exec(declrationFileSource))) {
-  const moduleName = matches[2].match(/([^\s(]+)/);
-  publicModules.add(moduleName[1]);
+  publicModules.add(matches[1]);
 }
 
 const sourceFiles = [

@@ -59,7 +59,7 @@
     "style-loader": "^4.0.0",
     "svg-sprite": "^2.0.4",
     "terriajs": "workspace:*",
-    "terriajs-cesium": "26.0.0",
+    "terriajs-cesium": "26.3.0",
     "terriajs-plugin-api": "0.0.1-alpha.17",
     "terriajs-plugin-sample": "0.0.1-alpha.7",
     "terriajs-typings-for-css-modules-loader": "^2.5.2",

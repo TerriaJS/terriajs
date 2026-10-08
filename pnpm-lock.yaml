@@ -253,8 +253,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/terriajs
       terriajs-cesium:
-        specifier: 26.0.0
-        version: 26.0.0
+        specifier: 26.3.0
+        version: 26.3.0
       terriajs-plugin-api:
         specifier: 0.0.1-alpha.17
         version: 0.0.1-alpha.17
@@ -709,17 +709,17 @@ importers:
         specifier: ^6.4.4
         version: 6.5.3(css-to-react-native@3.2.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       terriajs-cesium:
-        specifier: 26.0.0
-        version: 26.0.0
+        specifier: 26.3.0
+        version: 26.3.0
       terriajs-cesium-widgets:
-        specifier: 16.0.0
-        version: 16.0.0
+        specifier: 16.2.0
+        version: 16.2.0
       terriajs-html2canvas:
         specifier: 1.0.0-alpha.12-terriajs-1
         version: 1.0.0-alpha.12-terriajs-1
       terriajs-tiff-imagery-provider:
         specifier: 2.13.3-webpack5-3
-        version: 2.13.3-webpack5-3(terriajs-cesium@26.0.0)
+        version: 2.13.3-webpack5-3(terriajs-cesium@26.3.0)
       terriajs-typings-for-css-modules-loader:
         specifier: ^2.5.2
         version: 2.5.2
@@ -3051,6 +3051,10 @@ packages:
   '@xtuc/long@4.2.2':
     resolution: {integrity: sha512-NuHqBY1PB/D8xU6s/thBgOAiAP7HOYDQ32+BFZILJ8ivkUkAHQnWfn6WhL79Owj1qmUnoN/YPhktdIoucipkAQ==}
 
+  '@zip.js/zip.js@2.23.0':
+    resolution: {integrity: sha512-K5obAqfrO7zhycnCupM9aaoZ9kx0SA0kv7+Z2oOUsdpWquv4s/Z4zyD7AdTqxrK3pgPM+ozaUi8kdRQbCWaIrQ==}
+    engines: {bun: '>=0.7.0', deno: '>=1.0.0', node: '>=18.0.0'}
+
   '@zip.js/zip.js@2.8.21':
     resolution: {integrity: sha512-fkyzXISE3IMrstDO1AgPkJCx14MYHP/suIGiAovEYEuBjq3mffsuL6aMV7ohOSjW4rXtuACuUfpA3GtITgdtYg==}
     engines: {bun: '>=0.7.0', deno: '>=1.0.0', node: '>=18.0.0'}
@@ -4009,6 +4013,9 @@ packages:
 
   dompurify@3.3.3:
     resolution: {integrity: sha512-Oj6pzI2+RqBfFG+qOaOLbFXLQ90ARpcGG6UePL82bJLtdsa6CYJD7nmiU8MW9nQNOtCHV3lZ/Bzq1X0QYbBZCA==}
+
+  dompurify@3.4.16:
+    resolution: {integrity: sha512-sqo+pNp3qRhCIpbgRi1y8Tgk27Bo2Ry7w0dC1NBeNTdZChWjz9Xb/KOoZbRP/R6pQZ80Qw8YhXw13hWWBbMRnQ==}
 
   domutils@2.8.0:
     resolution: {integrity: sha512-w96Cjofp72M5IIhpjgobBimYEfoPjx1Vx0BSX9P30WBdZW2WIKU0T1Bd0kz2eNZ9ikjKgHbEyKx8BB6H1L3h3A==}
@@ -5111,8 +5118,8 @@ packages:
   jszip@3.10.1:
     resolution: {integrity: sha512-xXDvecyTpGLrqFrvkrUSoxxfJI5AH7U8zxxtVclpsUtMCq4JQ290LY8AW5c7Ggnr/Y/oK+bQMbqK2qmtk3pN4g==}
 
-  kdbush@4.0.2:
-    resolution: {integrity: sha512-WbCVYJ27Sz8zi9Q7Q0xHC+05iwkm3Znipc2XTlrnJbsHMYktW4hPhXUE8Ys1engBrvffoSCqbil1JQAa7clRpA==}
+  kdbush@4.1.0:
+    resolution: {integrity: sha512-e9vurzrXJQrFX6ckpHP3bvj5l+9CnYzkxDNnNQ1h2QTqdWsUAJgXiKdGNcOa1EY85dU8KbQ+z/FdQdB7P+9yfQ==}
 
   keyv@4.5.4:
     resolution: {integrity: sha512-oxVHkHR/EJf2CNXnWxRLW6mg7JyCCUcG0DtEGmL2ctUo1PNTin1PUil+r/+4r5MpVgC/fn1kjsx7mjSujKqIpw==}
@@ -5283,8 +5290,8 @@ packages:
   mersenne-twister@1.1.0:
     resolution: {integrity: sha512-mUYWsMKNrm4lfygPkL3OfGzOPTR2DBlTkBNHM//F6hGp8cLThY897crAlk3/Jo17LEOOjQUrNAx6DvgO77QJkA==}
 
-  meshoptimizer@1.0.1:
-    resolution: {integrity: sha512-Vix+QlA1YYT3FwmBBZ+49cE5y/b+pRrcXKqGpS5ouh33d3lSp2PoTpCw19E0cKDFWalembrHnIaZetf27a+W2g==}
+  meshoptimizer@1.3.0:
+    resolution: {integrity: sha512-2oZqMAcEEiCtXWUjIGtZ71oPx1B0ZxYGTqIKsXB1wzWFhleNsCFxQuUJzgCV706bRcwPWtMGf1odmQvAcqKkIw==}
 
   methods@1.1.2:
     resolution: {integrity: sha512-iclAHeNqNm68zFtnZ0e+1L2yUIdvzNoauKU4WBA3VvH/vPFieF7qfRlwUZU+DA9P9bPXIS90ulxoUoCH23sV2w==}
@@ -5645,6 +5652,9 @@ packages:
   pako@2.1.0:
     resolution: {integrity: sha512-w+eufiZ1WuJYgPXbV/PO3NCMEc3xqylkKHzp8bxp1uW4qaSNQUkwmLLEc3kKsfz8lpV1F8Ht3U1Cm+9Srog2ug==}
 
+  pako@3.0.2:
+    resolution: {integrity: sha512-uBv6IT2aT1A78iU6dpNEbf6+CyhlV/6g9JlJs9kpgjFGFhruIICVRysF/W0SLzXg5+hCl+KroH7e4YUyfEmgLg==}
+
   papaparse@5.5.4:
     resolution: {integrity: sha512-SwzWD9gl/ElwYLCI0nUja1mFJzjq2D8ziShfNBa7zCHzkOozeOGDwHWQ+tvCzEZcewecWZ5U7kUopDnG+DFYEQ==}
 
@@ -5865,8 +5875,8 @@ packages:
     resolution: {integrity: sha512-dYDWdjSl5RNb7SgPxGQcRU+GtvP7s2fpkrY0r432PcOIaZ0/rBcxEZnQN67iJhFuQiVw754JDoPruPCNdGsbjg==}
     engines: {node: '>=12.0.0'}
 
-  protobufjs@8.6.4:
-    resolution: {integrity: sha512-/+XMv9JalknuncEJSwsyEVlwcxVLKx2iaoSUXFZA86MJkdqyOdfrlB1sB7S6aKyUk9tl20YY+SgQe5J2sJHTcg==}
+  protobufjs@8.8.0:
+    resolution: {integrity: sha512-N3xhQ5yyBx3vQq4gubBfASzYhJGNzeDbjqBpu61g7UVylsN/qyffU96TKWD3GbbLOKF82VGNRNvv1+BFgE31Eg==}
     engines: {node: '>=12.0.0'}
 
   protocol-buffers-schema@3.6.0:
@@ -6622,12 +6632,12 @@ packages:
   teex@1.0.1:
     resolution: {integrity: sha512-eYE6iEI62Ni1H8oIa7KlDU6uQBtqr4Eajni3wX7rpfXD8ysFx8z0+dri+KWEPWpBsxXfxu58x/0jvTVT1ekOSg==}
 
-  terriajs-cesium-widgets@16.0.0:
-    resolution: {integrity: sha512-A0mzaSJHs4h3hTh67d6H8ISpldM+pMWOcxF1Dtq5QgYIIgLl3oBfilk1EKIfcd005uEoeF7yJ3xX6L4C6JpgRQ==}
+  terriajs-cesium-widgets@16.2.0:
+    resolution: {integrity: sha512-IIrTyTgmIF4C3v7kHbi4kBrqzdyBLBWYln0MFytAtWVqe+joScYzzug53WwDg+ytnyPEUsfMPdo3L50juJzf5w==}
     engines: {node: '>=22.0.0'}
 
-  terriajs-cesium@26.0.0:
-    resolution: {integrity: sha512-ePW2FiheNZkvR/qdePAkoMuKTrMq/y0D+Vg9MmG49pXMMkkfq9IYmfgUX4AKJ/Tr4FugH65UIyA3WW5AZ9Rusw==}
+  terriajs-cesium@26.3.0:
+    resolution: {integrity: sha512-ojIOZ7JJ7/D4qvL8zTux0Poe2kcpHZtgSt78MYgxsR2zk46fHgDlTrYBXysGuNlJTyvt63G++MXh3kKbZJMRVA==}
     engines: {node: '>=22.0.0'}
 
   terriajs-html2canvas@1.0.0-alpha.12-terriajs-1:
@@ -10322,6 +10332,8 @@ snapshots:
 
   '@xtuc/long@4.2.2': {}
 
+  '@zip.js/zip.js@2.23.0': {}
+
   '@zip.js/zip.js@2.8.21': {}
 
   abort-controller@3.0.0:
@@ -11376,6 +11388,10 @@ snapshots:
       domelementtype: 2.3.0
 
   dompurify@3.3.3:
+    optionalDependencies:
+      '@types/trusted-types': 2.0.7
+
+  dompurify@3.4.16:
     optionalDependencies:
       '@types/trusted-types': 2.0.7
 
@@ -12739,7 +12755,7 @@ snapshots:
       readable-stream: 2.3.8
       setimmediate: 1.0.5
 
-  kdbush@4.0.2: {}
+  kdbush@4.1.0: {}
 
   keyv@4.5.4:
     dependencies:
@@ -12894,7 +12910,7 @@ snapshots:
 
   mersenne-twister@1.1.0: {}
 
-  meshoptimizer@1.0.1: {}
+  meshoptimizer@1.3.0: {}
 
   methods@1.1.2: {}
 
@@ -13240,6 +13256,8 @@ snapshots:
 
   pako@2.1.0: {}
 
+  pako@3.0.2: {}
+
   papaparse@5.5.4: {}
 
   param-case@3.0.4:
@@ -13467,7 +13485,7 @@ snapshots:
       '@types/node': 26.4.0
       long: 5.3.2
 
-  protobufjs@8.6.4:
+  protobufjs@8.8.0:
     dependencies:
       long: 5.3.2
 
@@ -14388,31 +14406,31 @@ snapshots:
       - bare-abort-controller
       - react-native-b4a
 
-  terriajs-cesium-widgets@16.0.0:
+  terriajs-cesium-widgets@16.2.0:
     dependencies:
-      '@cesium/engine': terriajs-cesium@26.0.0
+      '@cesium/engine': terriajs-cesium@26.3.0
       nosleep.js: 0.12.0
 
-  terriajs-cesium@26.0.0:
+  terriajs-cesium@26.3.0:
     dependencies:
       '@cesium/wasm-splats': 0.1.0-alpha.2
       '@spz-loader/core': 0.3.1
       '@tweenjs/tween.js': 25.0.0
-      '@zip.js/zip.js': 2.8.21
+      '@zip.js/zip.js': 2.23.0
       autolinker: 4.0.1
       bitmap-sdf: 1.0.4
-      dompurify: 3.3.3
+      dompurify: 3.4.16
       draco3d: 1.5.7
       earcut: 3.0.2
       grapheme-splitter: 1.0.4
       jsep: 1.4.0
-      kdbush: 4.0.2
+      kdbush: 4.1.0
       ktx-parse: 1.1.0
       lerc: 2.0.0
       mersenne-twister: 1.1.0
-      meshoptimizer: 1.0.1
-      pako: 2.1.0
-      protobufjs: 8.6.4
+      meshoptimizer: 1.3.0
+      pako: 3.0.2
+      protobufjs: 8.8.0
       rbush: 4.0.1
       topojson-client: 3.1.0
       urijs: 1.19.11
@@ -14429,10 +14447,10 @@ snapshots:
     dependencies:
       terriajs-plugin-api: 0.0.1-alpha.6
 
-  terriajs-tiff-imagery-provider@2.13.3-webpack5-3(terriajs-cesium@26.0.0):
+  terriajs-tiff-imagery-provider@2.13.3-webpack5-3(terriajs-cesium@26.3.0):
     dependencies:
       geotiff: 2.1.3
-      terriajs-cesium: 26.0.0
+      terriajs-cesium: 26.3.0
 
   terriajs-typings-for-css-modules-loader@2.5.2:
     dependencies:

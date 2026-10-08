@@ -1654,11 +1654,19 @@ export default class Cesium extends GlobeOrMap {
           vectorFeatures.length < catalogItem.maxRequests
         );
         if (result) {
-          if (Array.isArray(result)) {
-            vectorFeatures.push(...result);
-          } else {
-            vectorFeatures.push(result);
+          const results = Array.isArray(result) ? result : [result];
+          // `buildFeatureFromPickResult` implementations build the feature from
+          // the pick result's entity and discard its primitive, but the
+          // primitive is what carries the terrain-clamped position. Without it
+          // the selection indicator falls back to the feature's own position,
+          // which for 2D source coordinates sits on the ellipsoid, below the
+          // pixel that was clicked.
+          if (picked.primitive) {
+            results.forEach((feature) => {
+              feature.cesiumPrimitive ??= picked.primitive;
+            });
           }
+          vectorFeatures.push(...results);
         }
       } else if (id instanceof Entity && vectorFeatures.indexOf(id) === -1) {
         const feature = TerriaFeature.fromEntityCollectionOrEntity(id);
