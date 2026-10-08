@@ -1,5 +1,5 @@
 import i18next, { keyFromSelector } from "i18next";
-import { isEqual } from "lodash-es";
+import { isEqual, throttle } from "lodash-es";
 import {
   action,
   autorun,
@@ -304,18 +304,27 @@ export default class Cesium extends GlobeOrMap {
     //     },
     //     ScreenSpaceEventType.LEFT_DOUBLE_CLICK, KeyboardEventModifier.SHIFT);
 
-    // Handle mouse move
-    inputHandler.setInputAction((e: ScreenSpaceEventHandler.MotionEvent) => {
-      this.mouseCoords.updateCoordinatesFromCesium(this.terria, e.endPosition);
-    }, ScreenSpaceEventType.MOUSE_MOVE);
-
-    inputHandler.setInputAction(
+    // Throttle mouse move updates to 30/sec. Cesium can emit MOUSE_MOVE much
+    // more frequently than that on high refresh rate devices and each update
+    // performs terrain and (optionally) scene picking.
+    const throttledCoordinatesUpdate = throttle(
       (e: ScreenSpaceEventHandler.MotionEvent) => {
         this.mouseCoords.updateCoordinatesFromCesium(
           this.terria,
           e.endPosition
         );
       },
+      1000 / 30
+    );
+
+    // Handle mouse move
+    inputHandler.setInputAction(
+      throttledCoordinatesUpdate,
+      ScreenSpaceEventType.MOUSE_MOVE
+    );
+
+    inputHandler.setInputAction(
+      throttledCoordinatesUpdate,
       ScreenSpaceEventType.MOUSE_MOVE,
       KeyboardEventModifier.SHIFT
     );
@@ -1474,6 +1483,17 @@ export default class Cesium extends GlobeOrMap {
     ignoreSplitter: boolean
   ): Promise<void> {
     const pickRay = this.scene.camera.getPickRay(screenPosition);
+
+    // There is a subtle bug in Cesium - `pickPosition` must be called before
+    // `drillPick` if both happen in the same render frame, otherwise
+    // `pickPosition` returns a point on the ground instead of the position on
+    // the scene features.
+    // https://community.cesium.com/t/result-of-pickposition-changes-after-call-to-drillpick/12226/2
+    const mapInteractionMode = this.terria.mapInteractionModeStack.at(-1);
+    const scenePosition = mapInteractionMode?.enableScenePicking
+      ? this.scene.pickPosition(screenPosition)
+      : undefined;
+
     const pickPosition = isDefined(pickRay)
       ? this.scene.globe.pick(pickRay, this.scene)
       : undefined;
@@ -1497,15 +1517,14 @@ export default class Cesium extends GlobeOrMap {
       ignoreSplitter
     );
 
-    const mapInteractionModeStack = this.terria.mapInteractionModeStack;
     runInAction(() => {
-      if (
-        isDefined(mapInteractionModeStack) &&
-        mapInteractionModeStack.length > 0
-      ) {
-        mapInteractionModeStack[
-          mapInteractionModeStack.length - 1
-        ].pickedFeatures = result;
+      if (mapInteractionMode) {
+        result.scenePosition = scenePosition;
+        mapInteractionMode.pickedFeatures = result;
+        mapInteractionMode.pickEvent.raiseEvent({
+          globePosition: result.pickPosition,
+          scenePosition
+        });
       } else {
         this.terria.pickedFeatures = result;
       }

@@ -17,18 +17,19 @@ import ViewerMode from "../../Models/ViewerMode";
  *
  * ViewerModes.
  * @param {Terria} terria The Terria instance.
- * @param {PointMovedCallback} pointMovedCallback A function that is called when a point is moved.
+ * @param {PointMovedCallback | Options} pointMovedCallbackOrOptions A function that is called when a point is moved.
  */
-var DragPoints = function (terria, pointMovedCallback) {
+var DragPoints = function (terria, pointMovedCallbackOrOptions) {
   this._terria = terria;
-  this._createDragPointsHelper(pointMovedCallback);
+  this._createDragPointsHelper(pointMovedCallbackOrOptions);
 
   var that = this;
   // It's possible to change viewerMode while mid-drawing, but in that case we need to change the dragPoints helper.
-  this._terria.mainViewer.afterViewerChanged.addEventListener(function () {
-    that._createDragPointsHelper(pointMovedCallback);
-    that.setUp();
-  });
+  this._destroyViewerChangeListener =
+    this._terria.mainViewer.afterViewerChanged.addEventListener(function () {
+      that._createDragPointsHelper(pointMovedCallbackOrOptions);
+      that.setUp();
+    });
 };
 
 /**
@@ -46,6 +47,7 @@ DragPoints.prototype.setUp = function () {
  */
 DragPoints.prototype.destroy = function () {
   this._dragPointsHelper.destroy();
+  this._destroyViewerChangeListener?.();
 };
 
 /**
@@ -80,19 +82,35 @@ DragPoints.prototype.updateDraggableObjects = function (entities) {
  * @param {PointMovedCallback} pointMovedCallback A function that is called when a point is moved.
  * @private
  */
-DragPoints.prototype._createDragPointsHelper = function (pointMovedCallback) {
+DragPoints.prototype._createDragPointsHelper = function (
+  pointMovedCallbackOrOptions
+) {
+  const {
+    pointMovedCallback = () => {},
+    pointMovingCallback = () => {},
+    mapPickedObjectCallback = (entity) => entity,
+    dragOnObjects = false
+  } = typeof pointMovedCallbackOrOptions === "function"
+    ? { pointMovedCallback: pointMovedCallbackOrOptions }
+    : (pointMovedCallbackOrOptions ?? {});
+
   if (defined(this._dragPointsHelper)) {
     this._dragPointsHelper.destroy();
   }
   if (this._terria.mainViewer.viewerMode === ViewerMode.Leaflet) {
     this._dragPointsHelper = new LeafletDragPoints(
       this._terria,
-      pointMovedCallback
+      pointMovedCallback,
+      pointMovingCallback,
+      mapPickedObjectCallback
     );
   } else {
     this._dragPointsHelper = new CesiumDragPoints(
       this._terria,
-      pointMovedCallback
+      pointMovedCallback,
+      pointMovingCallback,
+      mapPickedObjectCallback,
+      dragOnObjects
     );
   }
 };

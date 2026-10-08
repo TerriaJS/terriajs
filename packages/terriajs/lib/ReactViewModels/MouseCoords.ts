@@ -10,11 +10,13 @@ import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import Ray from "terriajs-cesium/Source/Core/Ray";
 import TerrainProvider from "terriajs-cesium/Source/Core/TerrainProvider";
 import sampleTerrainMostDetailed from "terriajs-cesium/Source/Core/sampleTerrainMostDetailed";
+import Scene from "terriajs-cesium/Source/Scene/Scene";
 import isDefined from "../Core/isDefined";
 import pickTriangle, { PickTriangleResult } from "../Map/Cesium/pickTriangle";
 import EarthGravityModel1996 from "../Map/Vector/EarthGravityModel1996";
 import prettifyCoordinates from "../Map/Vector/prettifyCoordinates";
 import prettifyProjection from "../Map/Vector/prettifyProjection";
+import MapInteractionMode from "../Models/MapInteractionMode";
 import Terria from "../Models/Terria";
 import gridFileUrl from "../../wwwroot/data/WW15MGH.DAC";
 
@@ -29,6 +31,11 @@ const scratchV2 = new Cartographic();
 const scratchIntersection = new Cartographic();
 const scratchBarycentric = new Cartesian3();
 const scratchCartographic = new Cartographic();
+const scratchScreenPosition = new Cartesian2();
+const scratchScenePosition = new Cartesian3();
+const scratchMouseEventPosition = new Cartesian3();
+const scratchPendingCartographic = new Cartographic();
+const scratchPendingScreenPosition = new Cartesian2();
 const pickedTriangleScratch: PickTriangleResult = {
   tile: undefined,
   intersection: new Cartesian3(),
@@ -62,6 +69,15 @@ export default class MouseCoords {
 
   updateEvent = new CesiumEvent();
 
+  /**
+   * Id of the pending `requestAnimationFrame` used to fire mouse move events
+   * for the active {@link MapInteractionMode}.
+   */
+  private mouseEventRafId: number | undefined;
+  private pendingMouseEventTerria: Terria | undefined;
+  private pendingMouseEventMode: MapInteractionMode | undefined;
+  private pendingMouseEventPickScene = false;
+
   constructor() {
     makeObservable(this);
     this.geoidModel = new EarthGravityModel1996(gridFileUrl);
@@ -86,17 +102,20 @@ export default class MouseCoords {
   }
 
   @action
-  updateCoordinatesFromCesium(terria: Terria, position: Cartesian2): void {
+  updateCoordinatesFromCesium(
+    terria: Terria,
+    screenPosition: Cartesian2
+  ): void {
     if (!terria.cesium) {
       return;
     }
 
     const scene = terria.cesium.scene;
     const camera = scene.camera;
-    const pickRay = camera.getPickRay(position, scratchRay);
+    const pickRay = camera.getPickRay(screenPosition, scratchRay);
     const globe = scene.globe;
     const pickedTriangle = isDefined(pickRay)
-      ? pickTriangle(pickRay, scene, true, pickedTriangleScratch)
+      ? this.pickGlobeTriangle(scene, pickRay)
       : undefined;
     if (isDefined(pickedTriangle)) {
       // Get a fast, accurate-ish height every time the mouse moves.
@@ -186,6 +205,19 @@ export default class MouseCoords {
       });
       this.updateEvent.raiseEvent();
     }
+
+    // Only fire the mouse move event when we have a position on the globe -
+    // `this.cartographic` is left untouched when the mouse is off the globe.
+    if (isDefined(pickedTriangle) && this.cartographic) {
+      this.fireMouseMoveEvent(terria, this.cartographic, screenPosition, true);
+    }
+  }
+
+  protected pickGlobeTriangle(
+    scene: Scene,
+    ray: Ray
+  ): PickTriangleResult | undefined {
+    return pickTriangle(ray, scene, true, pickedTriangleScratch);
   }
 
   @action
@@ -205,7 +237,84 @@ export default class MouseCoords {
       scratchCartographic
     );
     this.cartographicToFields(coordinates);
+
+    const point = terria.leaflet.map.mouseEventToContainerPoint(mouseMoveEvent);
+    const screenPosition = Cartesian2.fromElements(
+      point.x,
+      point.y,
+      scratchScreenPosition
+    );
+    this.fireMouseMoveEvent(terria, coordinates, screenPosition, false);
   }
+
+  /**
+   * Fire the mouse move event of the currently active {@link MapInteractionMode},
+   * if it has any listeners.
+   *
+   * The event is fired from a `requestAnimationFrame` callback so that at most
+   * one event is fired per frame no matter how frequently the mouse moves. The
+   * positions are copied into scratch objects so that the event reflects a
+   * single point in time, even if the caller mutates its arguments before the
+   * frame fires.
+   *
+   * @param pickScene Whether to pick a position on the scene features under the
+   * mouse. Only honoured when the interaction mode has opted into scene picking.
+   */
+  private fireMouseMoveEvent(
+    terria: Terria,
+    cartographic: Cartographic,
+    screenPosition: Cartesian2,
+    pickScene: boolean
+  ) {
+    const mapInteractionMode = terria.mapInteractionModeStack.at(-1);
+    const mouseMoveEvent = mapInteractionMode?.mouseMoveEvent;
+    if (!mouseMoveEvent || mouseMoveEvent.numberOfListeners === 0) {
+      return;
+    }
+
+    this.pendingMouseEventTerria = terria;
+    this.pendingMouseEventMode = mapInteractionMode;
+    this.pendingMouseEventPickScene = pickScene;
+    Cartographic.clone(cartographic, scratchPendingCartographic);
+    Cartesian2.clone(screenPosition, scratchPendingScreenPosition);
+
+    if (!isDefined(this.mouseEventRafId)) {
+      this.mouseEventRafId = requestAnimationFrame(this.raisePendingMouseEvent);
+    }
+  }
+
+  private raisePendingMouseEvent = () => {
+    const terria = this.pendingMouseEventTerria;
+    const mapInteractionMode = this.pendingMouseEventMode;
+    this.mouseEventRafId = undefined;
+    this.pendingMouseEventTerria = undefined;
+    this.pendingMouseEventMode = undefined;
+    if (!terria || !mapInteractionMode) {
+      return;
+    }
+
+    const globePosition = Cartographic.toCartesian(
+      scratchPendingCartographic,
+      undefined,
+      scratchMouseEventPosition
+    );
+
+    const scenePosition =
+      this.pendingMouseEventPickScene &&
+      mapInteractionMode.enableScenePicking &&
+      terria.cesium
+        ? terria.cesium.scene.pickPosition(
+            scratchPendingScreenPosition,
+            scratchScenePosition
+          )
+        : undefined;
+
+    mapInteractionMode.mouseMoveEvent.raiseEvent({
+      globePosition,
+      screenPosition: scratchPendingScreenPosition,
+      scenePosition
+    });
+  };
 
   @action
   cartographicToFields(coordinates: Cartographic, errorBar?: number): void {

@@ -2,6 +2,9 @@ import PickedFeatures from "../Map/PickedFeatures/PickedFeatures";
 import { observable, makeObservable } from "mobx";
 import ViewState from "../ReactViewModels/ViewState";
 import { ReactNode } from "react";
+import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
+import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
+import CesiumEvent from "terriajs-cesium/Source/Core/Event";
 
 interface Options {
   onCancel?: () => void;
@@ -23,6 +26,57 @@ interface Options {
   buttonText?: string;
   onEnable?: (viewState: ViewState) => void;
   invisible?: boolean;
+
+  /**
+   * When true, in 3D mode, `pickedFeatures.scenePosition`, `PickEvent.scenePosition`
+   * and `MouseMoveEvent.scenePosition` will be set. This is opt-in because scene
+   * picking is costlier than globe picking.
+   */
+  enableScenePicking?: boolean;
+}
+
+/**
+ * Details of a mouse move over the map, passed to {@link MapInteractionMode.mouseMoveEvent}
+ * listeners.
+ *
+ * The positions are scratch objects that are re-used for the next event - clone
+ * them if you need to keep them beyond the listener call.
+ */
+export interface MouseMoveEventProps {
+  /**
+   * The position on the globe surface (including terrain) under the mouse.
+   */
+  globePosition: Cartesian3;
+
+  /**
+   * The position of the mouse in container/screen coordinates.
+   */
+  screenPosition: Cartesian2;
+
+  /**
+   * The position on the nearest scene feature (3D tiles, primitives, terrain)
+   * under the mouse. Only set in 3D mode when `enableScenePicking` is true and
+   * the mouse is over something pickable.
+   */
+  scenePosition?: Cartesian3;
+}
+
+/**
+ * Details of a pick on the map, passed to {@link MapInteractionMode.pickEvent}
+ * listeners.
+ */
+export interface PickEventProps {
+  /**
+   * The position on the globe surface (including terrain) that was picked.
+   */
+  globePosition?: Cartesian3;
+
+  /**
+   * The position on the nearest scene feature (3D tiles, primitives, terrain)
+   * that was picked. Only set in 3D mode when `enableScenePicking` is true and
+   * something pickable was under the cursor.
+   */
+  scenePosition?: Cartesian3;
 }
 
 /**
@@ -64,6 +118,31 @@ export default class MapInteractionMode {
    */
   @observable
   customUi: (() => any) | undefined;
+
+  /**
+   * Raised when the user picks a position on the map while this interaction mode
+   * is active. Raised for both 2D and 3D maps, at the same time as
+   * {@link MapInteractionMode.pickedFeatures} is set.
+   */
+  readonly pickEvent: CesiumEvent<(props: PickEventProps) => void> =
+    new CesiumEvent();
+
+  /**
+   * Raised when the user moves the mouse over the map while this interaction
+   * mode is active. Raised for both 2D and 3D maps.
+   *
+   * The event is throttled to at most one per animation frame, and is not
+   * raised at all when there are no listeners.
+   */
+  readonly mouseMoveEvent: CesiumEvent<(props: MouseMoveEventProps) => void> =
+    new CesiumEvent();
+
+  /**
+   * When true, in 3D mode, `pickedFeatures.scenePosition`,
+   * `PickEvent.scenePosition` and `MouseMoveEvent.scenePosition` will be set.
+   * This is opt-in because scene picking is costlier than globe picking.
+   */
+  enableScenePicking: boolean;
 
   constructor(options: Options) {
     makeObservable(this);
@@ -118,5 +197,7 @@ export default class MapInteractionMode {
      * Custom panels can be registered using {@link registerMapInteractionModePanel}
      */
     this.panel = options.panel ?? "default";
+
+    this.enableScenePicking = options.enableScenePicking ?? false;
   }
 }

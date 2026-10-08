@@ -1,7 +1,9 @@
 import defined from "terriajs-cesium/Source/Core/defined";
+import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import ScreenSpaceEventHandler from "terriajs-cesium/Source/Core/ScreenSpaceEventHandler";
 import ScreenSpaceEventType from "terriajs-cesium/Source/Core/ScreenSpaceEventType";
 import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
+import Ray from "terriajs-cesium/Source/Core/Ray";
 
 /**
  * Callback for when a point is moved.
@@ -17,8 +19,17 @@ import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSourc
  *
  * @param {Terria} terria The Terria instance.
  * @param {PointMovedCallback} pointMovedCallback A function that is called when a point is moved.
+ * @param {PointMovingCallback} pointMovingCallback A function that is called when a point is moving.
+ * @param {MapPickedObjectCallback} mapPickedObjectCallback An optional function that maps the picked object or no pick to another object, eg a snap point.
+ * @param {Boolean} dragOnObjects Allow dragging on to other objects instead of just the globe.
  */
-const CesiumDragPoints = function (terria, pointMovedCallback) {
+const CesiumDragPoints = function (
+  terria,
+  pointMovedCallback,
+  pointMovingCallback,
+  mapPickedObjectCallback,
+  dragOnObjects
+) {
   this._terria = terria;
   this._setUp = false;
   this.type = "Cesium";
@@ -29,6 +40,23 @@ const CesiumDragPoints = function (terria, pointMovedCallback) {
    * @default undefined
    */
   this._pointMovedCallback = pointMovedCallback;
+
+  /**
+   * Callback that occurs when point is moving. Function takes a CustomDataSource which is a list of PointEntities.
+   * @type {PointMovingCallback}
+   * @default undefined
+   */
+  this._pointMovingCallback = pointMovingCallback;
+
+  /**
+   * Callback that occurs when user presses the mouse button. Function takes a
+   * picked object or undefined if there is no object at the cursor
+   * position. The function may return another object that must be dragged
+   * instead of the picked one.
+   * @type {PointMovingCallback}
+   * @default undefined
+   */
+  this._mapPickedObjectCallback = mapPickedObjectCallback;
 
   /**
    * List of entities that can be dragged, which is populated with user-created points only.
@@ -47,6 +75,12 @@ const CesiumDragPoints = function (terria, pointMovedCallback) {
    * @type {Number}
    */
   this.dragCount = 0;
+
+  /**
+   * Allow dragging on other objects. Uses scene.pick instead of globe.pick when true.
+   * @type {Boolean}
+   */
+  this.dragOnObjects = dragOnObjects ?? false;
 };
 
 /**
@@ -68,31 +102,60 @@ CesiumDragPoints.prototype.setUp = function () {
   this._viewer = this._terria.cesium.cesiumWidget;
   this._mouseHandler = new ScreenSpaceEventHandler(this._scene.canvas);
 
+  const scratchRay = new Ray();
+  const pickPosition = (screenPosition) => {
+    let position;
+    if (this.dragOnObjects) {
+      // use scene pick
+      position = this._scene.pickPosition(screenPosition);
+    }
+
+    if (!position) {
+      // fallback to globe pick
+      const pickRay = this._viewer.camera.getPickRay(
+        screenPosition,
+        scratchRay
+      );
+      position = this._scene.globe.pick(pickRay, that._scene);
+    }
+
+    return position;
+  };
+
   var that = this;
 
   // Mousedown event. This is called for all mousedown events, not just mousedown on entity events like the Leaflet
   // equivalent.
   this._mouseHandler.setInputAction(function (click) {
-    if (
-      !defined(that._draggableObjects.entities) ||
-      that._draggableObjects.entities.length === 0
-    ) {
+    if (!defined(that._draggableObjects.entities)) {
       return;
     }
-    var pickedObject = that._scene.pick(click.position);
-    that._originalPosition = click.position;
-    if (defined(pickedObject)) {
-      var pickedEntity = pickedObject.id;
-      var draggedEntity = that._draggableObjects.entities.values.filter(
-        function (dragObjEntity) {
-          return dragObjEntity.id === pickedEntity.id;
-        }
-      )[0];
-      if (draggedEntity) {
-        that._dragInProgress = true;
-        that._entityDragged = draggedEntity;
-        that._setCameraMotion(false);
+    const pick = that._scene.pick(click.position);
+    const pickedEntity = pick?.id instanceof Entity ? pick.id : undefined;
+
+    // Map the picked entity to another if a map function is specified, for
+    // example to return a snap point if no point was picked but the position
+    // is close enough to a snap point
+    const mappedEntity = that._mapPickedObjectCallback
+      ? that._mapPickedObjectCallback(pickedEntity)
+      : pickedEntity;
+
+    if (!mappedEntity) {
+      return;
+    }
+
+    // Ensure the mapped entity is part of draggable objects
+    const draggedEntity = that._draggableObjects.entities.values.find(
+      function (e) {
+        return e.id === mappedEntity.id;
       }
+    );
+
+    if (defined(draggedEntity)) {
+      that._dragInProgress = true;
+      that._entityDragged = draggedEntity;
+      that._setCameraMotion(false);
+      that._originalPosition = click.position;
     }
   }, ScreenSpaceEventType.LEFT_DOWN);
 
@@ -102,14 +165,14 @@ CesiumDragPoints.prototype.setUp = function () {
       return;
     }
     that.dragCount = that.dragCount + 1;
-    const pickRay = that._viewer.camera.getPickRay(move.endPosition);
-    const cartesian = that._scene.globe.pick(pickRay, that._scene);
+    const cartesian = pickPosition(move.endPosition);
     that._entityDragged.position = cartesian;
     for (var i = 0; i < that._draggableObjects.entities.values.length; i++) {
       if (
         that._draggableObjects.entities.values[i].id === that._entityDragged.id
       ) {
         that._draggableObjects.entities.values[i].position = cartesian;
+        that._pointMovingCallback(that._draggableObjects.entities.values[i]);
       }
     }
   }, ScreenSpaceEventType.MOUSE_MOVE);
