@@ -3,6 +3,7 @@
 #### next release
 
 - Migrate to pnpm
+- Upgrade Cesium to 1.145
 
 #### 0.4.8
 

@@ -1,12 +1,13 @@
 import range from "lodash-es/range";
 import {
-  IObservableValue,
   action,
   computed,
+  IObservableValue,
   observable,
   runInAction,
   when
 } from "mobx";
+import { http, HttpResponse } from "msw";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import CesiumTerrainProvider from "terriajs-cesium/Source/Core/CesiumTerrainProvider";
@@ -33,20 +34,22 @@ import CommonStrata from "../../lib/Models/Definition/CommonStrata";
 import CreateModel from "../../lib/Models/Definition/CreateModel";
 import createStratumInstance from "../../lib/Models/Definition/createStratumInstance";
 import updateModelFromJson from "../../lib/Models/Definition/updateModelFromJson";
+import upsertModelFromJson from "../../lib/Models/Definition/upsertModelFromJson";
 import MapInteractionMode, {
   PickEventProps
 } from "../../lib/Models/MapInteractionMode";
-import upsertModelFromJson from "../../lib/Models/Definition/upsertModelFromJson";
 import Terria from "../../lib/Models/Terria";
 import CatalogMemberTraits from "../../lib/Traits/TraitsClasses/CatalogMemberTraits";
-import { RectangleTraits } from "../../lib/Traits/TraitsClasses/MappableTraits";
-import MappableTraits from "../../lib/Traits/TraitsClasses/MappableTraits";
+import MappableTraits, {
+  RectangleTraits
+} from "../../lib/Traits/TraitsClasses/MappableTraits";
 import OpacityTraits from "../../lib/Traits/TraitsClasses/OpacityTraits";
 import mixTraits from "../../lib/Traits/mixTraits";
 import TerriaViewer from "../../lib/ViewModels/TerriaViewer";
 import { worker } from "../mocks/browser";
-import { http, HttpResponse } from "msw";
 
+import Entity from "terriajs-cesium/Source/DataSources/Entity";
+import TerriaFeature from "../../lib/Models/Feature/Feature";
 import wmsCapabilities from "../../wwwroot/test/WMS/wms_1_1_1.xml";
 
 const describeIfSupported = supportsWebGL() ? describe : xdescribe;
@@ -994,6 +997,71 @@ describeIfSupported("Cesium Model", function () {
 
       baseMap.setTrait(CommonStrata.user, "opacity", -1);
       expect(cesium.scene.globe.translucency.enabled).toBe(true);
+    });
+  });
+
+  describe("picking a vector feature", function () {
+    /**
+     * A catalog item whose features are built by
+     * `FeatureInfoUrlTemplateMixin.getFeaturesFromPickResult` - the branch every
+     * GeoJSON, Cesium 3D Tiles and I3S item takes.
+     */
+    async function loadPointItem() {
+      const item = new GeoJsonCatalogItem("geojson-pick", terria);
+      updateModelFromJson(item, CommonStrata.definition, {
+        geoJsonData: {
+          type: "Feature",
+          properties: { nameProp: "a point" },
+          geometry: { type: "Point", coordinates: [145.0166, -37.7679] }
+        }
+      });
+      await item.loadMapItems();
+      return item;
+    }
+
+    /** Stands in for the clamped Billboard that Cesium's picking returns. */
+    function stubPick(item: GeoJsonCatalogItem, primitive: unknown) {
+      const entity = new Entity({ id: "picked-entity" });
+      (entity as any)._catalogItem = item;
+      spyOn(cesium.scene, "drillPick").and.returnValue([
+        { id: entity, primitive }
+      ]);
+      return entity;
+    }
+
+    async function pickedFeatures() {
+      await cesium.pickFromScreenPosition(new Cartesian2(0, 0), false);
+      const picked = terria.pickedFeatures;
+      await picked?.allFeaturesAvailablePromise;
+      return picked?.features ?? [];
+    }
+
+    it("keeps the picked primitive on the feature", async function () {
+      // The primitive carries the terrain-clamped position; without it the
+      // selection indicator falls back to the feature's own position, which for
+      // 2D source coordinates sits on the ellipsoid rather than on the terrain.
+      const clampedPrimitive = { _clampedPosition: new Cartesian3(1, 2, 3) };
+      stubPick(await loadPointItem(), clampedPrimitive);
+
+      const features = await pickedFeatures();
+
+      expect(features.length).toBe(1);
+      expect(features[0].cesiumPrimitive).toBe(clampedPrimitive);
+    });
+
+    it("does not overwrite a primitive the catalog item already resolved", async function () {
+      const item = await loadPointItem();
+      const ownPrimitive = { _clampedPosition: new Cartesian3(4, 5, 6) };
+      spyOn(item, "getFeaturesFromPickResult").and.callFake(async () => {
+        const feature = new TerriaFeature({ id: "built-by-item" });
+        feature.cesiumPrimitive = ownPrimitive;
+        return feature;
+      });
+      stubPick(item, { _clampedPosition: new Cartesian3(7, 8, 9) });
+
+      const features = await pickedFeatures();
+
+      expect(features[0].cesiumPrimitive).toBe(ownPrimitive);
     });
   });
 });
