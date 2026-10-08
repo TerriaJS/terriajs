@@ -67,7 +67,10 @@ export default async function toggleItemOnMapFromCatalog(
     viewState.terria.workbench.remove(item);
   }
 
-  addOrRemoveFromTimelineStack(viewState.terria, item, op);
+  // The item may have been removed from the workbench while it was loading
+  if (op === Op.Remove || viewState.terria.workbench.contains(item)) {
+    addOrRemoveFromTimelineStack(viewState.terria, item, op);
+  }
 
   viewState.terria.analytics.logEvent(
     Category.dataSource,
