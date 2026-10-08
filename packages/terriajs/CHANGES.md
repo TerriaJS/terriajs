@@ -3,8 +3,7 @@
 #### next release (8.x.x)
 
 - **Breaking changes:**
-  - Removed option `uiMode` from `MapInteractionMode`. This was mostly only
-    used internally for difftool.
+  - Removed option `uiMode` from `MapInteractionMode`. This was mostly only used internally for difftool.
 
 - Migrate to pnpm
 - Fixed the `<feedbacklink>` custom component rendering a literal `{{email}}` in error messages. An `email-message` override now has its `{{email}}` placeholder replaced with the support email address, instead of always having the address appended.
@@ -36,6 +35,7 @@
 - Add `pickEvent` and `mouseMoveEvent` to `MapInteractionMode`, raised for both 2D and 3D maps while the mode is active. Add an opt-in `enableScenePicking` option which, in 3D mode, also resolves a position on the picked scene features (3D tiles, primitives, terrain) and exposes it as `scenePosition` on both events and on `PickedFeatures`. Cesium mouse move handling is now throttled to 30/sec and `mouseMoveEvent` is throttled to one event per animation frame.
 - The distance legend (scale bar) no longer recalculates on every rendered frame in the 3D view. It skips frames where the camera and canvas size are unchanged and otherwise updates at most every 200ms, so panning and zooming no longer run two globe picks, a MobX action and a React re-render per frame.
 - Fix label background color for leaflet map. Previously label background color was being ignored.
+- Upgrade Cesium to 1.145
 - [The next improvement]
 
 #### 8.13.0 - 2026-09-11
