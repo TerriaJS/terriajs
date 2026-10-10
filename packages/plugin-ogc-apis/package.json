@@ -1,0 +1,43 @@
+{
+  "name": "@terriajs/plugin-ogc-apis",
+  "version": "0.0.1",
+  "description": "",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "assets",
+    "dist"
+  ],
+  "dependencies": {
+    "terriajs-plugin-api": "0.0.1-alpha.17"
+  },
+  "peerDependencies": {
+    "terriajs": "*",
+    "mobx": "*",
+    "mobx-react": "*",
+    "styled-components": "*"
+  },
+  "devDependencies": {
+    "@rollup/plugin-node-resolve": "^16.0.3",
+    "@rollup/plugin-terser": "^1.0.0",
+    "@rollup/plugin-typescript": "^12.3.0",
+    "rollup": "^4.60.2",
+    "typescript": "^5.9.2"
+  },
+  "scripts": {
+    "build": "rollup -c rollup.config.ts --configPlugin @rollup/plugin-typescript",
+    "watch": "rollup -c rollup.config.ts --configPlugin @rollup/plugin-typescript -w",
+    "build-specs": "webpack build --config buildprocess/webpack.config.specs.js --mode development",
+    "test": "npm run build-specs && jasmine-browser-runner runSpecs --config=spec/support/jasmine-browser.mjs",
+    "test-watch": "node buildprocess/test-watch.mjs",
+    "dev": "rollup -c rollup.config.ts --configPlugin @rollup/plugin-typescript -w & webpack build --config buildprocess/webpack.config.specs.js --mode development --watch & SPEC_LIVERELOAD=1 jasmine-browser-runner serve --config=spec/support/jasmine-browser.mjs & wait"
+  },
+  "author": "",
+  "license": "UNLICENSED"
+}
