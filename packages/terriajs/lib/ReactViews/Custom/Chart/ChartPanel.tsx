@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import ChartView from "../../../Charts/ChartView";
 import Result from "../../../Core/Result";
 import MappableMixin from "../../../ModelMixins/MappableMixin";
+import type Terria from "../../../Models/Terria";
 import Icon from "../../../Styled/Icon";
 import { useViewState } from "../../Context";
 import Loader from "../../Loader";
@@ -14,6 +15,32 @@ import { ChartPanelDownloadButton } from "./ChartPanelDownloadButton";
 
 const CHART_PANEL_HEIGHT = 300;
 const CHART_LEGEND_HEIGHT = 34;
+
+/**
+ * Loads the map items of all workbench items. Errors are raised unless they
+ * are shown on the workbench item, or the item has left the workbench while
+ * loading (e.g. a story scene replaced the workbench).
+ */
+export async function loadChartPanelMapItems(terria: Terria): Promise<void> {
+  const workbench = terria.workbench;
+  const mappableItems = workbench.items.filter((item) =>
+    MappableMixin.isMixedInto(item)
+  );
+  const results = await Promise.all(
+    mappableItems.map((item) => item.loadMapItems())
+  );
+  Result.combine(
+    results.filter(
+      (_result, index) =>
+        workbench.contains(mappableItems[index]) &&
+        !workbench.showsItemErrors(mappableItems[index])
+    ),
+    {
+      message: "Failed to load chart items",
+      importance: -1
+    }
+  ).raiseError(terria);
+}
 
 interface ChartPanelProps {
   onHeightChange?: () => void;
@@ -62,23 +89,7 @@ const ChartPanel: FC<ChartPanelProps> = observer(({ onHeightChange }) => {
     const items = viewState.terria.workbench.items;
     if (items.length === 0) return;
 
-    // Load all items
-    const mappableItems = items.filter((item) =>
-      MappableMixin.isMixedInto(item)
-    );
-    Promise.all(mappableItems.map((item) => item.loadMapItems())).then(
-      (results) =>
-        Result.combine(
-          results.filter(
-            (_result, index) =>
-              !viewState.terria.workbench.showsItemErrors(mappableItems[index])
-          ),
-          {
-            message: "Failed to load chart items",
-            importance: -1
-          }
-        ).raiseError(viewState.terria)
-    );
+    loadChartPanelMapItems(viewState.terria);
 
     return (
       <BottomDockChart
