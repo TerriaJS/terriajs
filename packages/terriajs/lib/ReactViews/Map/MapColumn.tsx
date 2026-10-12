@@ -103,23 +103,29 @@ export const MapColumn: FC<IMapColumnProps> = observer(
               <div
                 css={`
                   position: absolute;
-                  margin-left: ${viewState.useSmallScreenInterface ||
-                  viewState.terria.elements.get("show-workbench")?.visible ===
-                    false
-                    ? `0px`
-                    : viewState.isMapFullScreen
-                      ? `${theme.workbenchMargin}px`
-                      : `calc(${theme.workbenchWidth}px + 2 * ${theme.workbenchMargin}px)`};
-                  margin-right: ${viewState.useSmallScreenInterface ||
-                  viewState.terria.elements.get("show-workbench")?.visible ===
-                    false
-                    ? `0px`
-                    : `calc(34px + 2 *${theme.workbenchMargin}px)`};
-                  bottom: ${viewState.useSmallScreenInterface ||
-                  viewState.terria.elements.get("show-workbench")?.visible ===
-                    false
-                    ? `0px`
-                    : `${theme.workbenchMargin}px`};
+                  margin-left: ${
+                    viewState.useSmallScreenInterface ||
+                    viewState.terria.elements.get("show-workbench")?.visible ===
+                      false
+                      ? `0px`
+                      : viewState.isMapFullScreen
+                        ? `${theme.workbenchMargin}px`
+                        : `calc(${theme.workbenchWidth}px + 2 * ${theme.workbenchMargin}px)`
+                  };
+                  margin-right: ${
+                    viewState.useSmallScreenInterface ||
+                    viewState.terria.elements.get("show-workbench")?.visible ===
+                      false
+                      ? `0px`
+                      : `calc(34px + 2 *${theme.workbenchMargin}px)`
+                  };
+                  bottom: ${
+                    viewState.useSmallScreenInterface ||
+                    viewState.terria.elements.get("show-workbench")?.visible ===
+                      false
+                      ? `0px`
+                      : `${theme.workbenchMargin}px`
+                  };
                   left: 0;
                   right: 0;
                 `}

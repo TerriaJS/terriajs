@@ -362,9 +362,7 @@ function ClippingMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
 
       const checkboxGroupInputs: SelectableDimensionCheckboxGroup["selectableDimensions"] =
         this.repositionClippingBoxTrigger
-          ? [
-              /* don't show options when repositioning clipping box */
-            ]
+          ? [/* don't show options when repositioning clipping box */]
           : [
               {
                 // Checkbox to show/hide clipping box

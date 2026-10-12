@@ -34,12 +34,14 @@ export const MonthView = ({
         {monthNames.map((m, i) => (
           <DTP.GridRow
             css={`
-              ${!isDefined(datesObject[i])
-                ? `:hover {
+              ${
+                !isDefined(datesObject[i])
+                  ? `:hover {
               background: transparent;
               cursor: default;
             }`
-                : ""}
+                  : ""
+              }
             `}
             key={m}
             onClick={() => isDefined(datesObject[i]) && onSelectMonth(i)}

@@ -29,7 +29,7 @@ const StyledMapIconButton = styled(RawButton)<IStyledMapIconButtonProps>`
   ${(props) => props.roundLeft && `border-radius: 16px 0 0 16px;`}
   ${(props) => props.roundRight && `border-radius: 0 16px 16px 0;`}
 
-  background:  ${(props) => props.theme.dark};
+  background: ${(props) => props.theme.dark};
   color: ${(props) => props.theme.textLight};
   border: 1px solid ${(props) => props.theme.darkLighter};
 
@@ -76,7 +76,6 @@ const StyledMapIconButton = styled(RawButton)<IStyledMapIconButtonProps>`
       fill: ${props.theme.textLight};
     }
   `}
-
 
   ${(props) =>
     props.disabled &&

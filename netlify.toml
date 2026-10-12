@@ -1,10 +1,10 @@
 # Lives at the repo root so Netlify picks it up. `base` points the build at the
 # terriajs package; `command` and `publish` are resolved relative to `base`.
 [build]
-  base = "packages/terriajs"
-  command = "pnpm gulp docs"
-  publish = "wwwroot/doc"
+base = "packages/terriajs"
+command = "pnpm gulp docs"
+publish = "wwwroot/doc"
 [build.environment]
-  NODE_VERSION = "24"
-  NODE_OPTIONS = "--max_old_space_size=4096"
-  PYTHON_VERSION = "3.13"
+NODE_VERSION = "24"
+NODE_OPTIONS = "--max_old_space_size=4096"
+PYTHON_VERSION = "3.13"

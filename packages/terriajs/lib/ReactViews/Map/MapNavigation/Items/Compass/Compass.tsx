@@ -109,7 +109,7 @@ const gyroWidth = ({
 const StyledCompassOuterRing = styled.div<StyledCompassProps>`
   ${(props) => props.theme.centerWithoutFlex()}
   // override the transform provided in centerWithoutFlex()
-  transform: translate(-50%,-50%) scale(0.9999);
+  transform: translate(-50%, -50%) scale(0.9999);
   z-index: ${(props) => (props.active ? "2" : "1")};
   width: 100%;
   ${(props) =>

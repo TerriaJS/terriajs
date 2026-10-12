@@ -1,4 +1,4 @@
-# Update .prettierignore whenever this file changes
+# Update .oxfmtrc.json ignorePatterns whenever this file changes
 docs/
 node_modules/
 .idea/

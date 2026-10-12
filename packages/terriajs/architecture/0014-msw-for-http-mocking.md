@@ -55,9 +55,7 @@ import { setupWorker, http, HttpResponse } from "msw";
 const globalHandlers = [
   // Example: Cesium Ion terrain mock
   http.get("https://api.cesium.com/v1/assets/1/endpoint", () =>
-    HttpResponse.json({
-      /* ... */
-    })
+    HttpResponse.json({/* ... */})
   )
 ];
 

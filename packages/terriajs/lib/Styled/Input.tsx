@@ -74,21 +74,21 @@ const commonStyles = css<InputProps | TextAreaProps>`
   `
   };
 `}
-${(props) =>
+  ${(props) =>
     props.white &&
     `
   color: ${props.theme.textDark};
   background: #FFFFFF;
 `}
-${(props) => props.fullHeight && `height: 100%;`}
-${(props) => props.styledWidth && `width: ${props.styledWidth};`}
-${(props) => props.styledHeight && `height: ${props.styledHeight};`}
-${(props) => props.styledMinHeight && `min-height: ${props.styledMinHeight};`}
-${(props) => props.styledMaxHeight && `max-height: ${props.styledMaxHeight};`}
-${(props) => props.large && `height: ${props.theme.inputHeightLarge};`}
-${(props) => props.rounded && `border-radius: 30px;`}
-${(props) => props.disabled && `opacity: 0.3;`}
-${(props) =>
+  ${(props) => props.fullHeight && `height: 100%;`}
+  ${(props) => props.styledWidth && `width: ${props.styledWidth};`}
+  ${(props) => props.styledHeight && `height: ${props.styledHeight};`}
+  ${(props) => props.styledMinHeight && `min-height: ${props.styledMinHeight};`}
+  ${(props) => props.styledMaxHeight && `max-height: ${props.styledMaxHeight};`}
+  ${(props) => props.large && `height: ${props.theme.inputHeightLarge};`}
+  ${(props) => props.rounded && `border-radius: 30px;`}
+  ${(props) => props.disabled && `opacity: 0.3;`}
+  ${(props) =>
     props.invalidValue &&
     `
   border-color: #d60000;

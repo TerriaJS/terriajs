@@ -280,9 +280,11 @@ class MapNavigationBase extends Component<PropTypes> {
           <ControlWrapper
             column={this.orientation === Orientation.VERTICAL}
             css={`
-              ${this.orientation === Orientation.HORIZONTAL &&
-              `margin-bottom: 5px;
-                flex-wrap: wrap;`}
+              ${
+                this.orientation === Orientation.HORIZONTAL &&
+                `margin-bottom: 5px;
+                flex-wrap: wrap;`
+              }
             `}
           >
             {items.map((item) => {

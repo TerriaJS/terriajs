@@ -396,9 +396,9 @@ function doCommonTest(methodName) {
       const appHttpServer = app.listen(0);
 
       await supertestReq(app)
-        [
-          methodName
-        ](`/proxy/http://127.0.0.1:${appHttpServer.address().port}/ping`)
+        [methodName](
+          `/proxy/http://127.0.0.1:${appHttpServer.address().port}/ping`
+        )
         .expect(200, "OK");
       expect(connectSpy).toHaveBeenCalledTimes(1);
 
@@ -416,9 +416,9 @@ function doCommonTest(methodName) {
       const appHttpServer = app.listen(64900);
 
       await supertestReq(app)
-        [
-          methodName
-        ](`/proxy/http://127.0.0.1:${appHttpServer.address().port}/ping`)
+        [methodName](
+          `/proxy/http://127.0.0.1:${appHttpServer.address().port}/ping`
+        )
         .expect(200, "OK");
       expect(connectSpy).not.toHaveBeenCalled();
 
@@ -435,9 +435,9 @@ function doCommonTest(methodName) {
       const appHttpServer = app.listen(64901);
 
       await supertestReq(app)
-        [
-          methodName
-        ](`/proxy/http://127.0.0.1:${appHttpServer.address().port}/ping`)
+        [methodName](
+          `/proxy/http://127.0.0.1:${appHttpServer.address().port}/ping`
+        )
         .expect(200, "OK");
       expect(connectSpy).toHaveBeenCalledTimes(1);
 
@@ -915,9 +915,9 @@ function doCommonTest(methodName) {
         });
 
         const response = await supertestReq(app)
-          [
-            methodName
-          ](`/proxy/localhost:${TEST_SERVER_PORT}/cache-auth-fallback`)
+          [methodName](
+            `/proxy/localhost:${TEST_SERVER_PORT}/cache-auth-fallback`
+          )
           .set("Authorization", "Bearer bad-token")
           .expect(200)
           .expect("Cache-Control", "public,max-age=1209600");
@@ -1286,9 +1286,9 @@ function doCommonTest(methodName) {
       });
 
       await supertestReq(app)
-        [
-          methodName
-        ](`/proxy/localhost:${TEST_SERVER_PORT}/something?already=here`)
+        [methodName](
+          `/proxy/localhost:${TEST_SERVER_PORT}/something?already=here`
+        )
         .expect(200, {
           data: "have extended search params with foo=bar"
         });
@@ -1322,9 +1322,9 @@ function doCommonTest(methodName) {
       });
 
       await supertestReq(app)
-        [
-          methodName
-        ](`/proxy/localhost:${TEST_SERVER_PORT}/something?already=here`)
+        [methodName](
+          `/proxy/localhost:${TEST_SERVER_PORT}/something?already=here`
+        )
         .expect(200, {
           data: "haven\t set search params"
         });
@@ -1379,9 +1379,9 @@ function doCommonTest(methodName) {
       });
 
       const response = await supertestReq(app)
-        [
-          methodName
-        ](`/proxy/localhost:${TEST_SERVER_PORT}/redirect-to-blacklist`)
+        [methodName](
+          `/proxy/localhost:${TEST_SERVER_PORT}/redirect-to-blacklist`
+        )
         .expect(403);
       expect(response.text).toContain(
         "Host is not in list of allowed hosts: 202.168.1.1"
@@ -1407,9 +1407,9 @@ function doCommonTest(methodName) {
       });
 
       const response = await supertestReq(app)
-        [
-          methodName
-        ](`/proxy/localhost:${TEST_SERVER_PORT}/redirect-to-blacklist`)
+        [methodName](
+          `/proxy/localhost:${TEST_SERVER_PORT}/redirect-to-blacklist`
+        )
         .expect(403);
       expect(response.text).toContain(
         "Host is not in list of allowed hosts: localhost"
@@ -1469,9 +1469,9 @@ function doCommonTest(methodName) {
         });
 
         const response = await supertestReq(app)
-          [
-            methodName
-          ](`/proxy/localhost:${TEST_SERVER_PORT}/redirect-blacklisted-port`)
+          [methodName](
+            `/proxy/localhost:${TEST_SERVER_PORT}/redirect-blacklisted-port`
+          )
           .expect(403);
 
         expect(response.text).toMatch(/not allowed|not in list/i);
