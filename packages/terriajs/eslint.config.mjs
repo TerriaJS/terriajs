@@ -56,6 +56,8 @@ export default defineConfig([
     name: "terriajs/base-rules",
     rules: {
       "react-hooks/exhaustive-deps": "error",
+      "react-hooks/refs": "off",
+      "react-hooks/preserve-manual-memoization": "off",
 
       "react/jsx-boolean-value": [
         "error",
