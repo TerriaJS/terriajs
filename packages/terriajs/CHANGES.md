@@ -6,6 +6,8 @@
   - Removed option `uiMode` from `MapInteractionMode`. This was mostly only used internally for difftool.
 
 - Migrate to pnpm
+- `Terria#start` now loads the language files and the server config in parallel instead of one after the other.
+- Added an experimental `loadServerConfig` option to `Terria#start` (and a matching `load` argument to `ServerConfig#init`) so an application can serve a server config it has already requested, e.g. one prefetched during page load.
 - Fixed the `<feedbacklink>` custom component rendering a literal `{{email}}` in error messages. An `email-message` override now has its `{{email}}` placeholder replaced with the support email address, instead of always having the address appended.
 - Added `storyAutoStart` config parameter (default `false`). Set it to `true` to start playing a story as soon as a map containing one loads, instead of asking the user whether they want to view it. A share link that contains a story records the value in effect when it was created (as `settings.storyAutoStart`), so it keeps opening the same way if the map's configuration changes later. Because an auto-starting story sets the camera from its first scene, the current view is left out of share links that contain a story.
 - The `playStory` hash parameter now overrides `storyAutoStart` and shares its code path. It previously relied on a MobX reaction that never fired if the parameter was already set before `ViewState` was constructed, so `#playStory=1` did nothing in applications that create their `ViewState` after `Terria#start`.

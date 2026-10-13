@@ -493,6 +493,14 @@ interface StartOptions {
     /** The URL the config was loaded from, if known. */
     configUrl?: string;
   }>;
+  /**
+   * Fetches and parses the server config at `configParameters.serverConfigUrl`.
+   * Supply this to serve a server config that was already requested, e.g.
+   * prefetched during page load. Defaults to `loadJson`.
+   *
+   * @experimental - not ready for general consumption!
+   */
+  loadServerConfig?: (url: string) => Promise<any>;
   applicationUrl?: Location;
   shareDataService?: ShareDataService;
   errorService?: ErrorServiceProvider;
@@ -1195,15 +1203,16 @@ export default class Terria {
         message: `Couldn't load configuration`,
         severity: TerriaErrorSeverity.Error
       });
-    } finally {
-      if (!options.i18nOptions?.skipInit) {
-        await Internationalization.initLanguage(
+    }
+    // Language init and server config don't depend on each other, so load
+    // them in parallel rather than back to back.
+    const languageInitialized = options.i18nOptions?.skipInit
+      ? Promise.resolve()
+      : Internationalization.initLanguage(
           this.configParameters.languageConfiguration,
           options.i18nOptions,
           this.baseUrl
         );
-      }
-    }
     setCustomRequestSchedulerDomainLimits(
       this.configParameters.customRequestSchedulerLimits
     );
@@ -1225,9 +1234,13 @@ export default class Terria {
       launchUrlForAnalytics
     );
     this.serverConfig = new ServerConfig();
-    const serverConfig = await this.serverConfig.init(
-      this.configParameters.serverConfigUrl
-    );
+    const [, serverConfig] = await Promise.all([
+      languageInitialized,
+      this.serverConfig.init(
+        this.configParameters.serverConfigUrl,
+        options.loadServerConfig
+      )
+    ]);
     await this.initCorsProxy(this.configParameters, serverConfig);
     if (this.shareDataService && this.serverConfig.config) {
       this.shareDataService.init(this.serverConfig.config);
