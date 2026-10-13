@@ -1016,6 +1016,16 @@ export default class Terria {
     }
   }
 
+  /**
+   * Free a model's ID without removing it from the workbench.
+   */
+  @action
+  unregisterModel(model: BaseModel): void {
+    if (model.uniqueId && this.models.get(model.uniqueId) === model) {
+      this.models.delete(model.uniqueId);
+    }
+  }
+
   @action
   removeSelectedFeaturesForModel(model: BaseModel): void {
     const pickedFeatures = this.pickedFeatures;

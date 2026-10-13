@@ -738,6 +738,29 @@ describe("TerriaSpec", function () {
     });
   });
 
+  describe("unregisterModel", function () {
+    let model: SimpleCatalogItem;
+    beforeEach(function () {
+      model = new SimpleCatalogItem("testId", terria);
+      terria.addModel(model);
+    });
+
+    it("frees the model's ID but keeps it on the workbench", async function () {
+      await terria.workbench.add(model);
+      terria.unregisterModel(model);
+      expect(terria.getModelById(BaseModel, "testId")).toBeUndefined();
+      expect(terria.workbench.contains(model)).toBe(true);
+    });
+
+    it("leaves a different model registered under the same ID", function () {
+      terria.unregisterModel(model);
+      const other = new SimpleCatalogItem("testId", terria);
+      terria.addModel(other);
+      terria.unregisterModel(model);
+      expect(terria.getModelById(BaseModel, "testId")).toBe(other);
+    });
+  });
+
   //   it("tells us there's a time enabled WMS with `checkNowViewingForTimeWms()`", function(done) {
   //     terria
   //       .start({
