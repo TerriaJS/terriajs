@@ -43,6 +43,9 @@ jobs:
       - name: Check README parity
         run: pnpm sync-readme && git diff --exit-code -- README.md
 
+      - name: Type-check TerriaMap
+        run: pnpm --filter terriajs-map typecheck
+
       - name: Build TerriaJS tests
         run: pnpm --filter terriajs exec gulp lint build --continue
         env:

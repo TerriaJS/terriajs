@@ -23,6 +23,8 @@
     "@babel/preset-env": "^7.29.2",
     "@babel/preset-react": "^7.28.5",
     "@eslint/js": "10.0.1",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.1",
     "@typescript-eslint/eslint-plugin": "8.71.2",
     "@typescript-eslint/parser": "8.71.2",
     "babel-loader": "^10.1.1",
@@ -77,6 +79,7 @@
     "postinstall": "echo 'Installation successful. What to do next:\\n  pnpm gulp dev   # Starts the server on port 3001, builds TerriaMap and dependencies, and rebuilds if files change.'",
     "format": "oxfmt",
     "format:check": "oxfmt --check",
-    "lint": "gulp lint"
+    "lint": "gulp lint",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
   }
 }

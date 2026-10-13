@@ -5,6 +5,7 @@
     "lib/**/*.tsx",
     "lib/**/*.js",
     "lib/**/*.jsx",
-    "types/**/*.d.ts"
+    "types/**/*.d.ts",
+    "node_modules/terriajs/lib/ThirdParty/**/*.d.ts"
   ]
 }

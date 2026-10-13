@@ -1,6 +1,8 @@
 import { runInAction } from "mobx";
 import ViewState from "terriajs/lib/ReactViewModels/ViewState";
+// @ts-expect-error: no types
 import devDisclaimerPreambleText from "./DevelopmentDisclaimerPreamble.html";
+// @ts-expect-error: no types
 import globalDisclaimerText from "./GlobalDisclaimer.html";
 
 /**
