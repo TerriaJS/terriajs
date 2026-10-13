@@ -1662,6 +1662,15 @@ export default class Terria {
           if (typeof containerId !== "string") {
             return;
           }
+          // Skip containers that weren't saved and can't be found, e.g. transient search groups
+          if (
+            allModelStratumData[containerId] === undefined &&
+            (
+              await this.getModelByIdShareKeyOrCatalogIndex(containerId)
+            ).ignoreError() === undefined
+          ) {
+            return;
+          }
           try {
             const container = (
               await this.loadModelStratum(

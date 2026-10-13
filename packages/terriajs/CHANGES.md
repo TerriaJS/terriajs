@@ -37,6 +37,7 @@
 - The distance legend (scale bar) no longer recalculates on every rendered frame in the 3D view. It skips frames where the camera and canvas size are unchanged and otherwise updates at most every 200ms, so panning and zooming no longer run two globe picks, a MobX action and a React re-render per frame.
 - Fix label background color for leaflet map. Previously label background color was being ignored.
 - Upgrade Cesium to 1.145
+- Fixed story scenes and share links failing a model with `Could not create unknown model type .` when one of its `knownContainerUniqueIds` was not saved in the init data and can't be found in the catalog (e.g. a transient search results group). Such containers are now skipped instead of being created as a stub, which also broke later scenes that did save the container.
 - [The next improvement]
 
 #### 8.13.0 - 2026-09-11
