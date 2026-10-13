@@ -16,7 +16,7 @@ export default defineConfig([
   tseslint.configs.recommended,
   react.configs.flat.recommended,
   react.configs.flat["jsx-runtime"],
-  reactHooks.configs.flat.recommended,
+  reactHooks.configs.flat["recommended-latest"],
   {
     name: "terriajs/include-files",
     files: [
