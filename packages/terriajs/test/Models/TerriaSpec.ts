@@ -1083,6 +1083,116 @@ describe("TerriaSpec", function () {
           .toBeDefined();
       });
 
+      describe("when a container is referenced but not saved in a story scene", function () {
+        async function applyScene(models: any): Promise<unknown> {
+          try {
+            await terria.applyInitData({
+              initData: {
+                catalog: [goodItem],
+                models,
+                workbench: ["good-item"]
+              },
+              replaceStratum: true
+            });
+          } catch (e) {
+            return e;
+          }
+          return undefined;
+        }
+
+        const childOfTransientGroup = {
+          show: true,
+          knownContainerUniqueIds: ["/", "transient-group"]
+        };
+
+        const transientGroup = {
+          type: "group",
+          name: "More results",
+          isOpen: true,
+          members: ["good-item"]
+        };
+
+        function itemErrors() {
+          return terria.workbench.items.flatMap((item) =>
+            terria.workbench.getItemErrors(item)
+          );
+        }
+
+        it("loads the item without errors when the container is missing", async function () {
+          const error = await applyScene({
+            "good-item": childOfTransientGroup
+          });
+
+          expect(terria.workbench.itemIds).toEqual(["good-item"]);
+          expect(error).toBeUndefined();
+          expect(itemErrors())
+            .withContext("missing container reported on the workbench item")
+            .toEqual([]);
+        });
+
+        it("does not register a stub for a missing container", async function () {
+          await applyScene({ "good-item": childOfTransientGroup });
+
+          expect(
+            terria.getModelById(BaseModel, "transient-group")
+          ).toBeUndefined();
+        });
+
+        it("loads the item without errors when the container is saved as a stub", async function () {
+          const error = await applyScene({
+            "transient-group": { type: "stub" },
+            "good-item": childOfTransientGroup
+          });
+
+          expect(terria.workbench.itemIds).toEqual(["good-item"]);
+          expect(error).toBeUndefined();
+          expect(itemErrors()).toEqual([]);
+        });
+
+        it("loads the item without errors when the container is saved as a group", async function () {
+          const error = await applyScene({
+            "transient-group": transientGroup,
+            "good-item": childOfTransientGroup
+          });
+
+          expect(terria.workbench.itemIds).toEqual(["good-item"]);
+          expect(error).toBeUndefined();
+          expect(itemErrors()).toEqual([]);
+        });
+
+        it("keeps a container from an earlier scene for a later scene that omits it", async function () {
+          await applyScene({
+            "transient-group": transientGroup,
+            "good-item": childOfTransientGroup
+          });
+          const error = await applyScene({
+            "good-item": childOfTransientGroup
+          });
+
+          expect(error).toBeUndefined();
+          expect(itemErrors()).toEqual([]);
+          expect(terria.getModelById(BaseModel, "transient-group")?.type).toBe(
+            "group"
+          );
+        });
+
+        it("loads a container saved as a group after an earlier scene omitted it", async function () {
+          await applyScene({ "good-item": childOfTransientGroup });
+          const error = await applyScene({
+            "transient-group": transientGroup,
+            "good-item": childOfTransientGroup
+          });
+
+          expect(error)
+            .withContext("scene error after the container was first missing")
+            .toBeUndefined();
+          expect(itemErrors()).toEqual([]);
+          expect(terria.getModelById(BaseModel, "transient-group")?.type).toBe(
+            "group"
+          );
+        });
+      });
+
       it("loads the workbench when `initialCamera` is invalid", async function () {
         const error = await applyInitData({
           catalog: [goodItem, anotherGoodItem],
