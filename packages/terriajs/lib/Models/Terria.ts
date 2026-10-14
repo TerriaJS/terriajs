@@ -810,6 +810,9 @@ export default class Terria {
       false
     );
   }
+  /** True once `start` has restored the app state from the URL. */
+  private _appStateRestored = false;
+
   @observable storyPromptShown: number = 0; // Story Prompt modal will be rendered when this property changes. See StandardUserInterface, section regarding sui.notifications. Ideally move this to ViewState.
 
   /**
@@ -1287,7 +1290,11 @@ export default class Terria {
       }
     }
 
-    await this.restoreAppState(options);
+    try {
+      await this.restoreAppState(options);
+    } finally {
+      this._appStateRestored = true;
+    }
   }
 
   private async restoreAppState(options: StartOptions) {
@@ -2066,7 +2073,13 @@ export default class Terria {
         // - If there are multiple initSources, the setting from the last source takes effect
         try {
           const initialCamera = CameraView.fromJson(initData.initialCamera);
-          this.currentViewer.zoomTo(initialCamera, 2.0);
+          // Jump straight to the camera while restoring at start up: an
+          // application may already be showing the map, and a flight from the
+          // home view would be cut short (and reject) when a story starts.
+          this.currentViewer.zoomTo(
+            initialCamera,
+            this._appStateRestored ? 2.0 : 0.0
+          );
           // reset in case this was enabled by a previous initSource
           this.focusWorkbenchItemsAfterLoadingInitSources = false;
         } catch (error) {
