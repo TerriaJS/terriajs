@@ -7,6 +7,7 @@
 
 - Migrate to pnpm
 - `Terria#start` now loads the language files and the server config in parallel instead of one after the other.
+- The Cesium globe no longer shows as a solid blue disc while the base map loads. Its bare surface is now a muted ocean colour, and Cesium's bundled low resolution Natural Earth II imagery is drawn under the base map until the base map has rendered (unless the base map is translucent).
 - An init source's `initialCamera` applied while `Terria#start` restores app state now jumps straight to the view instead of flying there, so an application that shows the map before restoring doesn't animate from the home view (and a story starting straight away no longer cancels that flight).
 - Fixed the `<feedbacklink>` custom component rendering a literal `{{email}}` in error messages. An `email-message` override now has its `{{email}}` placeholder replaced with the support email address, instead of always having the address appended.
 - Added `storyAutoStart` config parameter (default `false`). Set it to `true` to start playing a story as soon as a map containing one loads, instead of asking the user whether they want to view it. A share link that contains a story records the value in effect when it was created (as `settings.storyAutoStart`), so it keeps opening the same way if the map's configuration changes later. Because an auto-starting story sets the camera from its first scene, the current view is left out of share links that contain a story.

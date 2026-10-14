@@ -36,6 +36,7 @@ import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import Matrix4 from "terriajs-cesium/Source/Core/Matrix4";
 import PerspectiveFrustum from "terriajs-cesium/Source/Core/PerspectiveFrustum";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
+import buildModuleUrl from "terriajs-cesium/Source/Core/buildModuleUrl";
 import sampleTerrain from "terriajs-cesium/Source/Core/sampleTerrain";
 import ScreenSpaceEventHandler from "terriajs-cesium/Source/Core/ScreenSpaceEventHandler";
 import ScreenSpaceEventType from "terriajs-cesium/Source/Core/ScreenSpaceEventType";
@@ -59,6 +60,7 @@ import PrimitiveCollection from "terriajs-cesium/Source/Scene/PrimitiveCollectio
 import Scene from "terriajs-cesium/Source/Scene/Scene";
 import SceneTransforms from "terriajs-cesium/Source/Scene/SceneTransforms";
 import SingleTileImageryProvider from "terriajs-cesium/Source/Scene/SingleTileImageryProvider";
+import TileMapServiceImageryProvider from "terriajs-cesium/Source/Scene/TileMapServiceImageryProvider";
 import SplitDirection from "terriajs-cesium/Source/Scene/SplitDirection";
 import CesiumWidget from "terriajs-cesium/Source/Widget/CesiumWidget";
 import Color from "terriajs-cesium/Source/Core/Color";
@@ -174,6 +176,13 @@ export default class Cesium extends GlobeOrMap {
   private readonly _disposeSplitterReaction: () => void;
   private readonly _disposeBaseMapOpacityReaction: () => void;
   private readonly _disposeQualityReaction: () => void;
+
+  /**
+   * Low resolution imagery bundled with Cesium, drawn under the base map until
+   * the base map has rendered, so the globe isn't bare while it loads.
+   */
+  private _placeholderImageryLayer: ImageryLayer | undefined;
+  @observable private _baseMapDrawn = false;
 
   private _createImageryLayer: (
     ip: ImageryProvider,
@@ -454,7 +463,14 @@ export default class Cesium extends GlobeOrMap {
       this._selectFeature();
     });
 
+    this._placeholderImageryLayer = ImageryLayer.fromProviderAsync(
+      TileMapServiceImageryProvider.fromUrl(
+        buildModuleUrl("Assets/Textures/NaturalEarthII")
+      ),
+      {}
+    );
     this._disposeWorkbenchMapItemsSubscription = this.observeModelLayer();
+    this.watchForBaseMapDrawn();
     this._disposeTerrainReaction = autorun(() => {
       this.cesiumWidget.terrainProvider = this.terrainProvider;
       this.scene.globe.splitDirection = this.terria.showSplitter
@@ -928,8 +944,55 @@ export default class Cesium extends GlobeOrMap {
       }
     });
 
+    const placeholder = this._placeholderImageryLayer;
+    const showPlaceholder = !this._baseMapDrawn && this.baseMapOpacity >= 1;
+    if (placeholder && showPlaceholder) {
+      topImageryLayers.push(placeholder);
+    }
+
     // Finally add imagery layers to the global scene.
     syncImageryCollection(this.scene.imageryLayers, topImageryLayers, true);
+
+    // Once dropped, the placeholder is gone for good (the sync above destroys
+    // it if it was in the scene).
+    if (placeholder && !showPlaceholder) {
+      if (!placeholder.isDestroyed()) placeholder.destroy();
+      this._placeholderImageryLayer = undefined;
+    }
+  }
+
+  /**
+   * Drops the placeholder imagery once the base map has drawn: its layer is
+   * ready and the globe has finished loading tiles after starting to load them.
+   * If the base map never loads, the placeholder stays as a fallback.
+   */
+  private watchForBaseMapDrawn() {
+    let sawTilesLoading = false;
+    let loadedFrames = 0;
+    this._eventHelper.add(this.scene.postRender, () => {
+      const placeholder = this._placeholderImageryLayer;
+      if (this._baseMapDrawn || !placeholder) return;
+
+      const layers = this.scene.imageryLayers;
+      const baseMapLayer =
+        this.terriaViewer.baseMap && layers.indexOf(placeholder) === 0
+          ? layers.get(1)
+          : undefined;
+      if (!baseMapLayer?.ready) return;
+
+      if (!this.scene.globe.tilesLoaded) {
+        sawTilesLoading = true;
+        loadedFrames = 0;
+        return;
+      }
+      // Cached base map tiles can render without the globe ever reporting
+      // that it's loading, so also accept a run of fully loaded frames.
+      if (sawTilesLoading || ++loadedFrames > 60) {
+        runInAction(() => {
+          this._baseMapDrawn = true;
+        });
+      }
+    });
   }
 
   /**
@@ -2042,12 +2105,15 @@ export default class Cesium extends GlobeOrMap {
       globe.showGroundAtmosphere = true;
       globe.undergroundColor = Color.BLACK;
       globe.translucency.enabled = false;
-      globe.baseColor = Color.BLUE;
+      globe.baseColor = GLOBE_BASE_COLOR;
     }
   }
 }
 
 const boundingSphereScratch = new BoundingSphere();
+
+/** Shown where the globe has no imagery yet; a dark neutral rather than Cesium's blue. */
+const GLOBE_BASE_COLOR = Color.fromCssColorString("#22364d");
 
 function zoomToDataSource(
   cesium: Cesium,
