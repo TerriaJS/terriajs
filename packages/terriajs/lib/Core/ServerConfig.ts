@@ -27,20 +27,16 @@ class ServerConfig {
    * logged and nothing else happens.
    *
    * @param  serverConfigUrl Optional override URL.
-   * @param  load Fetches and parses the config at a URL. Defaults to `loadJson`.
    * @return Promise that resolves to the configuration object itself.
    */
-  async init(
-    serverConfigUrl: string,
-    load: (url: string) => Promise<any> = loadJson
-  ) {
+  async init(serverConfigUrl: string) {
     if (this.config !== undefined) {
       return Promise.resolve(this.config);
     }
     this.serverConfigUrl = serverConfigUrl ?? DEFAULT_URL;
 
     try {
-      this.config = await load(this.serverConfigUrl);
+      this.config = await loadJson(this.serverConfigUrl);
       return this.config;
     } catch {
       console.error(

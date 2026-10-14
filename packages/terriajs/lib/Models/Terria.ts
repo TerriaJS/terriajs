@@ -493,14 +493,6 @@ interface StartOptions {
     /** The URL the config was loaded from, if known. */
     configUrl?: string;
   }>;
-  /**
-   * Fetches and parses the server config at `configParameters.serverConfigUrl`.
-   * Supply this to serve a server config that was already requested, e.g.
-   * prefetched during page load. Defaults to `loadJson`.
-   *
-   * @experimental - not ready for general consumption!
-   */
-  loadServerConfig?: (url: string) => Promise<any>;
   applicationUrl?: Location;
   shareDataService?: ShareDataService;
   errorService?: ErrorServiceProvider;
@@ -1239,10 +1231,7 @@ export default class Terria {
     this.serverConfig = new ServerConfig();
     const [, serverConfig] = await Promise.all([
       languageInitialized,
-      this.serverConfig.init(
-        this.configParameters.serverConfigUrl,
-        options.loadServerConfig
-      )
+      this.serverConfig.init(this.configParameters.serverConfigUrl)
     ]);
     await this.initCorsProxy(this.configParameters, serverConfig);
     if (this.shareDataService && this.serverConfig.config) {
