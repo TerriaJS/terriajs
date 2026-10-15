@@ -23,18 +23,7 @@
     "isolatedModules": true,
     "outDir": "ts-out",
     "resolveJsonModule": true,
-    "typeRoots": [
-      "./lib/ThirdParty/",
-      "./node_modules/",
-      "./node_modules/@types/",
-      "../node_modules/",
-      "../node_modules/@types/",
-      "../../node_modules/",
-      "../../node_modules/@types/",
-      "../../../node_modules/",
-      "../../../node_modules/@types/"
-    ],
-    "types": ["terriajs-cesium", "@testing-library/jasmine-dom"]
+    "types": ["terriajs-cesium"]
   },
   "include": ["./lib/**/*", "./test/**/*", "./buildprocess/**/*"]
 }
