@@ -69,7 +69,10 @@ export default class NotificationState {
         typeof notification.ignore === "function"
           ? notification.ignore()
           : (notification.ignore ?? false);
-      if (!ignore) this.notifications.push(notification);
+      // Keep `message` unwrapped so a function message still matches itself
+      // in the `alreadyQueued` check above
+      if (!ignore)
+        this.notifications.push(observable(notification, { message: false }));
     }
 
     if (notification.key !== undefined) {

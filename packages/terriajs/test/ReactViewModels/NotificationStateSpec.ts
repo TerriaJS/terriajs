@@ -49,4 +49,12 @@ describe("NotificationState", () => {
     notificationState.addNotificationToQueue(andAnotherTestNotification);
     expect(notificationState.currentNotification).toBeUndefined();
   });
+
+  it("does not queue a notification with the same title and function message twice", () => {
+    const message = () => "A rendered message";
+    notificationState.addNotificationToQueue({ title: "Test", message });
+    notificationState.addNotificationToQueue({ title: "Test", message });
+    expect(notificationState.getAllNotifications().length).toBe(1);
+    expect(notificationState.currentNotification?.message).toBe(message);
+  });
 });
