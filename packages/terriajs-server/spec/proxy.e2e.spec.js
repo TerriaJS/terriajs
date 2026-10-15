@@ -5,8 +5,9 @@ import { createTestServer } from "./support/test-http-server.js";
 import { createProxyServer } from "./support/http-proxy-server.js";
 
 // Test server ports
-const TEST_SERVER_PORT = 9876;
-const TEST_SERVER_2_PORT = 9877;
+// Not 9876: terriajs' jasmine-browser-runner (`gulp test`/`gulp dev`) listens there.
+const TEST_SERVER_PORT = 19876;
+const TEST_SERVER_2_PORT = 19877;
 
 async function buildApp(settings = {}, proxyAuth = {}) {
   const app = makeServer({
@@ -1294,7 +1295,7 @@ function doCommonTest(methodName) {
         });
     });
 
-    it('should not append "foo=bar" for "localhost:9876" when config is for "localhost:9877", preserving existing "already=here"', async () => {
+    it('should not append "foo=bar" for "localhost:19876" when config is for "localhost:19877", preserving existing "already=here"', async () => {
       testServer.addRoute(methodName, "/something", (req, res) => {
         // Verify only existing param is present (no "foo=bar" appended)
         if (req.query.already === "here" && !req.query.foo) {
