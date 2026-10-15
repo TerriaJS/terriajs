@@ -1,2 +1,0 @@
-ckanext
-ckanext.cesiumpreview

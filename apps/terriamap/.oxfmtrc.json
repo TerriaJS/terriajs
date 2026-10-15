@@ -33,7 +33,6 @@
     ".yarn/releases/",
     "wwwroot/public/",
     "wwwroot/*.html",
-    "ckanext-cesiumpreview",
     "deploy/helm/terria/charts/terriamap/templates/"
   ]
 }
