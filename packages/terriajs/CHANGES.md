@@ -38,6 +38,8 @@
 - Fix label background color for leaflet map. Previously label background color was being ignored.
 - Upgrade Cesium to 1.145
 - Fixed story scenes and share links failing a model with `Could not create unknown model type .` when one of its `knownContainerUniqueIds` was not saved in the init data and can't be found in the catalog (e.g. a transient search results group). Such containers are now skipped instead of being created as a stub, which also broke later scenes that did save the container.
+- Workbench items from an init source or share link now load concurrently instead of one at a time, so applying init data takes about as long as the slowest item rather than the sum of every item.
+- **Breaking:** A group on the workbench now contributes its nested-group members and its reference members, not just its direct mappable members. `Terria.pushAndLoadMapItems` previously started member loads without awaiting them, so anything pushed after an `await` — members of nested groups, and the targets of `ReferenceMixin` members — was pushed only after the workbench had already been assigned and was silently dropped; direct members were pushed in time but their `loadMapItems()` was never waited on. Applying init data now blocks until a workbench group's members have loaded.
 - [The next improvement]
 
 #### 8.13.0 - 2026-09-11

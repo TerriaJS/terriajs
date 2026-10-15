@@ -1882,9 +1882,18 @@ export default class Terria {
       errors.push(...modelErrorList);
       (await model.loadMembers()).pushErrorTo(errors);
 
-      model.memberModels.map(async (m) => {
-        await this.pushAndLoadMapItems(m, context);
-      });
+      const memberModels = model.memberModels;
+      // preserve order
+      const memberBuckets: BaseModel[][] = memberModels.map(() => []);
+      await Promise.all(
+        memberModels.map((m, i) =>
+          this.pushAndLoadMapItems(m, {
+            ...context,
+            newItems: memberBuckets[i]
+          })
+        )
+      );
+      newItems.push(...memberBuckets.flat());
     } else if (MappableMixin.isMixedInto(model)) {
       addItem(model, modelErrorList);
       (await model.loadMapItems()).pushErrorTo(modelErrorList);
@@ -2175,22 +2184,21 @@ export default class Terria {
       );
       const newItemsRaw = Array.from(new Set(workbenchModels));
 
-      // Maintain the model order in the workbench.
-      for (;;) {
-        const model = newItemsRaw.shift();
-        if (model) {
-          await applyPartAsync(`workbench item \`${model.uniqueId}\``, () =>
+      // Load every workbench item concurrently preserving order
+      const newItemBuckets: BaseModel[][] = newItemsRaw.map(() => []);
+      await Promise.all(
+        newItemsRaw.map((model, i) =>
+          applyPartAsync(`workbench item \`${model.uniqueId}\``, () =>
             this.pushAndLoadMapItems(model, {
-              newItems,
+              newItems: newItemBuckets[i],
               itemErrors,
               modelErrors,
               errors
             })
-          );
-        } else {
-          break;
-        }
-      }
+          )
+        )
+      );
+      newItems.push(...newItemBuckets.flat());
 
       newItems.forEach((item) => {
         applyPart(`workbench analytics for \`${item.uniqueId}\``, () => {
