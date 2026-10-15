@@ -1016,6 +1016,16 @@ export default class Terria {
     }
   }
 
+  /**
+   * Free a model's ID without removing it from the workbench.
+   */
+  @action
+  unregisterModel(model: BaseModel): void {
+    if (model.uniqueId && this.models.get(model.uniqueId) === model) {
+      this.models.delete(model.uniqueId);
+    }
+  }
+
   @action
   removeSelectedFeaturesForModel(model: BaseModel): void {
     const pickedFeatures = this.pickedFeatures;
@@ -1660,6 +1670,15 @@ export default class Terria {
       await Promise.all(
         containerIds.map(async (containerId) => {
           if (typeof containerId !== "string") {
+            return;
+          }
+          // Skip containers that weren't saved and can't be found, e.g. transient search groups
+          if (
+            allModelStratumData[containerId] === undefined &&
+            (
+              await this.getModelByIdShareKeyOrCatalogIndex(containerId)
+            ).ignoreError() === undefined
+          ) {
             return;
           }
           try {
