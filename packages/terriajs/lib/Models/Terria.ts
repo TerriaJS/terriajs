@@ -817,7 +817,7 @@ export default class Terria {
     );
   }
   /** True once `start` has restored the app state from the URL. */
-  private _appStateRestored = false;
+  @observable private _appStateRestored = false;
 
   private _preloadedWorldTerrain: Promise<TerrainProvider> | undefined;
 
@@ -1300,7 +1300,9 @@ export default class Terria {
     try {
       await this.restoreAppState(options);
     } finally {
-      this._appStateRestored = true;
+      runInAction(() => {
+        this._appStateRestored = true;
+      });
     }
   }
 
@@ -1326,6 +1328,17 @@ export default class Terria {
     this._preloadedWorldTerrain = createWorldTerrainAsync({});
     // Failures surface when a viewer takes the promise
     this._preloadedWorldTerrain.catch(() => {});
+  }
+
+  /**
+   * Whether the progressively loaded UI should show loading states: until
+   * `start` has restored app state, and while init sources load after that.
+   */
+  get isProgressivelyLoading(): boolean {
+    return (
+      this.progressiveLoading &&
+      (!this._appStateRestored || this.isLoadingInitSources)
+    );
   }
 
   /** Whether the `progressiveLoading` experimental feature is on. */

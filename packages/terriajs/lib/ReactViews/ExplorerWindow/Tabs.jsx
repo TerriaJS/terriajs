@@ -85,8 +85,7 @@ class Tabs extends Component {
             // init sources have loaded. Init sources keep loading workbench
             // items after the catalog arrives, so only while it's still empty.
             isLoadingTab={
-              this.props.terria.progressiveLoading &&
-              this.props.terria.isLoadingInitSources &&
+              this.props.terria.isProgressivelyLoading &&
               this.props.terria.catalog.group.memberModels.every(
                 (member) =>
                   member === this.props.terria.catalog.userAddedDataGroup

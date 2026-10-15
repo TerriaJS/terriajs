@@ -228,7 +228,7 @@ const SidePanel = observer<React.FC<SidePanelProps>>(
         >
           {terria.workbench.items.length > 0 ? (
             <Workbench viewState={viewState} terria={terria} />
-          ) : terria.progressiveLoading && terria.isLoadingInitSources ? (
+          ) : terria.isProgressivelyLoading ? (
             // With progressive loading the workbench shows before init
             // sources have added their items
             <Box paddedVertically={5}>
