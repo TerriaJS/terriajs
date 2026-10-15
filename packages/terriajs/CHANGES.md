@@ -6,10 +6,11 @@
   - Removed option `uiMode` from `MapInteractionMode`. This was mostly only used internally for difftool.
 
 - Migrate to pnpm
-- `Terria#start` now loads the language files and the server config in parallel instead of one after the other.
-- The Cesium globe no longer shows as a solid blue disc while the base map loads; its bare surface is now a muted ocean colour.
-- The Cesium globe no longer vanishes for a moment after loading when Cesium world terrain arrives. `Terria#start` starts loading world terrain as soon as the config asks for it, and the globe is held back until the initial terrain is ready instead of drawing on flat terrain and swapping (which discarded every tile). Added `Terria#preloadedWorldTerrain`.
-- An init source's `initialCamera` applied while `Terria#start` restores app state now jumps straight to the view instead of flying there, so an application that shows the map before restoring doesn't animate from the home view (and a story starting straight away no longer cancels that flight).
+- Added the experimental `nextExperimentalFeatures.progressiveLoading` config parameter (default `false`) for showing the map before everything has loaded, and the `Terria#progressiveLoading` and `Terria#preloadedWorldTerrain` getters. When it's on:
+  - `Terria#start` loads the language files and the server config in parallel instead of one after the other.
+  - `Terria#start` starts loading Cesium world terrain as soon as the config asks for it, and the globe is held back until the initial terrain is ready. Previously it drew on flat terrain and swapped terrain in, which discarded every tile and made the globe vanish for a moment.
+  - An init source's `initialCamera` applied while restoring app state is jumped to instead of flown to, so a map that's already on screen doesn't animate from the home view (and a story starting straight away no longer cancels that flight).
+  - The bare globe is a muted ocean colour instead of solid blue while the base map loads.
 - Fixed the `<feedbacklink>` custom component rendering a literal `{{email}}` in error messages. An `email-message` override now has its `{{email}}` placeholder replaced with the support email address, instead of always having the address appended.
 - Added `storyAutoStart` config parameter (default `false`). Set it to `true` to start playing a story as soon as a map containing one loads, instead of asking the user whether they want to view it. A share link that contains a story records the value in effect when it was created (as `settings.storyAutoStart`), so it keeps opening the same way if the map's configuration changes later. Because an auto-starting story sets the camera from its first scene, the current view is left out of share links that contain a story.
 - The `playStory` hash parameter now overrides `storyAutoStart` and shares its code path. It previously relied on a MobX reaction that never fired if the parameter was already set before `ViewState` was constructed, so `#playStory=1` did nothing in applications that create their `ViewState` after `Terria#start`.

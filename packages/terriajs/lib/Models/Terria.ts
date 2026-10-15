@@ -139,6 +139,18 @@ export interface NextExperimentalFeatures {
    * instead. Defaults to true; set to false to disable the item as before.
    */
   keepLayersOnMissingTiles?: boolean;
+  /**
+   * Show the map as soon as it can draw, and load the rest progressively.
+   * Defaults to false. When true:
+   * - language files and the server config load in parallel
+   * - Cesium world terrain starts loading as soon as config asks for it, and
+   *   the globe is held back until it's ready instead of swapping it in
+   * - an `initialCamera` applied while restoring app state is jumped to rather
+   *   than flown to, as the map may already be on screen
+   * - the bare globe is a muted ocean colour instead of blue
+   * Applications can also use it to show their UI before restoring app state.
+   */
+  progressiveLoading?: boolean;
 }
 
 export interface ConfigParameters {
@@ -1204,8 +1216,8 @@ export default class Terria {
       });
     }
     this.preloadWorldTerrain();
-    // Language init and server config don't depend on each other, so load
-    // them in parallel rather than back to back.
+    // Language init and server config don't depend on each other, so with
+    // progressive loading they load in parallel rather than back to back.
     const languageInitialized = options.i18nOptions?.skipInit
       ? Promise.resolve()
       : Internationalization.initLanguage(
@@ -1213,6 +1225,7 @@ export default class Terria {
           options.i18nOptions,
           this.baseUrl
         );
+    if (!this.progressiveLoading) await languageInitialized;
     setCustomRequestSchedulerDomainLimits(
       this.configParameters.customRequestSchedulerLimits
     );
@@ -1300,6 +1313,7 @@ export default class Terria {
     const config = this.configParameters;
     if (
       typeof window === "undefined" ||
+      !this.progressiveLoading ||
       !config.useCesiumIonTerrain ||
       config.cesiumTerrainAssetId !== undefined ||
       config.cesiumTerrainUrl
@@ -1312,6 +1326,14 @@ export default class Terria {
     this._preloadedWorldTerrain = createWorldTerrainAsync({});
     // Failures surface when a viewer takes the promise
     this._preloadedWorldTerrain.catch(() => {});
+  }
+
+  /** Whether the `progressiveLoading` experimental feature is on. */
+  get progressiveLoading(): boolean {
+    return (
+      this.configParameters.nextExperimentalFeatures?.progressiveLoading ===
+      true
+    );
   }
 
   /** Cesium world terrain requested during `start`, if config asked for it. */
@@ -2100,7 +2122,7 @@ export default class Terria {
           // home view would be cut short (and reject) when a story starts.
           this.currentViewer.zoomTo(
             initialCamera,
-            this._appStateRestored ? 2.0 : 0.0
+            this.progressiveLoading && !this._appStateRestored ? 0.0 : 2.0
           );
           // reset in case this was enabled by a previous initSource
           this.focusWorkbenchItemsAfterLoadingInitSources = false;

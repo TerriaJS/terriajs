@@ -471,17 +471,19 @@ export default class Cesium extends GlobeOrMap {
     // Hold the globe back until the initial terrain is ready. Swapping terrain
     // in after the globe has drawn discards every tile, so the globe would
     // vanish for a moment and its imagery reload.
-    this._disposeShowGlobeWhenTerrainReady = reaction(
-      () => this.isTerrainLoading,
-      (loading, _previous, r) => {
-        this.scene.globe.show = !loading;
-        if (!loading) {
-          r.dispose();
-          this.notifyRepaintRequired();
-        }
-      },
-      { fireImmediately: true }
-    );
+    this._disposeShowGlobeWhenTerrainReady = this.terria.progressiveLoading
+      ? reaction(
+          () => this.isTerrainLoading,
+          (loading, _previous, r) => {
+            this.scene.globe.show = !loading;
+            if (!loading) {
+              r.dispose();
+              this.notifyRepaintRequired();
+            }
+          },
+          { fireImmediately: true }
+        )
+      : () => {};
     this._disposeSplitterReaction = this._reactToSplitterChanges();
 
     this._disposeQualityReaction = autorun(() => {
@@ -2060,7 +2062,9 @@ export default class Cesium extends GlobeOrMap {
       globe.showGroundAtmosphere = true;
       globe.undergroundColor = Color.BLACK;
       globe.translucency.enabled = false;
-      globe.baseColor = GLOBE_BASE_COLOR;
+      globe.baseColor = this.terria.progressiveLoading
+        ? GLOBE_BASE_COLOR
+        : Color.BLUE;
     }
   }
 }
