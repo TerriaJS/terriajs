@@ -20,7 +20,8 @@
     "lint": "eslint .",
     "watch": "node --watch-path serverconfig.json --watch lib/app.js ",
     "start": "node lib/app.js",
-    "format": "oxfmt"
+    "format": "oxfmt",
+    "format:check": "oxfmt --check"
   },
   "bin": {
     "terriajs-server": "terriajs-server.js"
@@ -58,15 +59,15 @@
     "yargs": "^18.0.0"
   },
   "devDependencies": {
-    "@eslint/js": "^10.0.1",
-    "@eslint/json": "^2.0.1",
+    "@eslint/js": "10.0.1",
+    "@eslint/json": "2.1.1",
     "@testcontainers/localstack": "^12.0.4",
     "@types/express": "^5.0.6",
     "@types/node": "^26.1.1",
-    "eslint": "^10.7.0",
-    "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-n": "^18.2.2",
-    "globals": "^17.7.0",
+    "eslint": "10.12.0",
+    "eslint-config-prettier": "10.1.8",
+    "eslint-plugin-n": "18.4.1",
+    "globals": "17.13.0",
     "http-proxy": "^1.18.1",
     "jasmine": "^6.3.0",
     "msw": "^2.15.0",

@@ -200,6 +200,7 @@ function CesiumIonConnector() {
   useEffect(() => {
     if (loginToken.length === 0) return;
 
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsLoadingUserProfile(true);
 
     fetch("https://api.cesium.com/v1/me", {
@@ -223,6 +224,7 @@ function CesiumIonConnector() {
   useEffect(() => {
     if (loginToken.length === 0) return;
 
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsLoadingAssets(true);
 
     fetch("https://api.cesium.com/v1/assets", {
@@ -251,6 +253,7 @@ function CesiumIonConnector() {
       return;
     }
 
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsLoadingTokens(true);
 
     fetch("https://api.cesium.com/v2/tokens", {

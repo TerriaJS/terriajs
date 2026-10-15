@@ -46,7 +46,6 @@ export const SharePanelContent: FC<ISharePanelContentProps> = ({
     });
   }, [terria]);
 
-  // eslint-disable-next-line react-hooks/refs
   const shareUrl = shareUrlRef?.current;
 
   return (

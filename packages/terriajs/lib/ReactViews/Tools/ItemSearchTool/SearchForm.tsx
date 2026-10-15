@@ -46,6 +46,7 @@ const SearchForm: FC<SearchFormProps> = (props) => {
 
   useEffect(
     function setValuesFromProps() {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setQuery(props.query);
     },
     [props.query]

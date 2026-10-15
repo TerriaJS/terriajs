@@ -46,6 +46,7 @@ const ModalPopup: FC<IProps> = (props) => {
       animationTimeout.current = null;
     }
     if (props.isVisible) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       slideIn();
     } else {
       slideOut();

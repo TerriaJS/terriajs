@@ -113,6 +113,7 @@ export const useDragHook = (
 
   const stopDrag = useCallback(
     (e: Event) => {
+      // eslint-disable-next-line react-hooks/immutability
       dragUnsubscribe();
 
       const viewer = viewState.terria.currentViewer;

@@ -16,7 +16,7 @@ export default defineConfig([
   tseslint.configs.recommended,
   react.configs.flat.recommended,
   react.configs.flat["jsx-runtime"],
-  reactHooks.configs.flat.recommended,
+  reactHooks.configs.flat["recommended-latest"],
   {
     name: "terriajs/include-files",
     files: [
@@ -56,6 +56,8 @@ export default defineConfig([
     name: "terriajs/base-rules",
     rules: {
       "react-hooks/exhaustive-deps": "error",
+      "react-hooks/refs": "off",
+      "react-hooks/preserve-manual-memoization": "off",
 
       "react/jsx-boolean-value": [
         "error",
