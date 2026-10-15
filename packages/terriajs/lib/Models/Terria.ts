@@ -15,6 +15,8 @@ import CesiumEvent from "terriajs-cesium/Source/Core/Event";
 import RequestScheduler from "terriajs-cesium/Source/Core/RequestScheduler";
 import RuntimeError from "terriajs-cesium/Source/Core/RuntimeError";
 import TerrainProvider from "terriajs-cesium/Source/Core/TerrainProvider";
+import createWorldTerrainAsync from "terriajs-cesium/Source/Core/createWorldTerrainAsync";
+import Ion from "terriajs-cesium/Source/Core/Ion";
 import buildModuleUrl from "terriajs-cesium/Source/Core/buildModuleUrl";
 import defined from "terriajs-cesium/Source/Core/defined";
 import queryToObject from "terriajs-cesium/Source/Core/queryToObject";
@@ -805,6 +807,8 @@ export default class Terria {
   /** True once `start` has restored the app state from the URL. */
   private _appStateRestored = false;
 
+  private _preloadedWorldTerrain: Promise<TerrainProvider> | undefined;
+
   @observable storyPromptShown: number = 0; // Story Prompt modal will be rendered when this property changes. See StandardUserInterface, section regarding sui.notifications. Ideally move this to ViewState.
 
   /**
@@ -1199,6 +1203,7 @@ export default class Terria {
         severity: TerriaErrorSeverity.Error
       });
     }
+    this.preloadWorldTerrain();
     // Language init and server config don't depend on each other, so load
     // them in parallel rather than back to back.
     const languageInitialized = options.i18nOptions?.skipInit
@@ -1284,6 +1289,34 @@ export default class Terria {
     } finally {
       this._appStateRestored = true;
     }
+  }
+
+  /**
+   * Starts loading Cesium world terrain as soon as config says it's needed, so
+   * the Cesium viewer can start with it rather than swapping it in later.
+   * Swapping terrain in discards every globe tile, blanking the globe.
+   */
+  private preloadWorldTerrain() {
+    const config = this.configParameters;
+    if (
+      typeof window === "undefined" ||
+      !config.useCesiumIonTerrain ||
+      config.cesiumTerrainAssetId !== undefined ||
+      config.cesiumTerrainUrl
+    ) {
+      return;
+    }
+    if (config.cesiumIonAccessToken !== undefined) {
+      Ion.defaultAccessToken = config.cesiumIonAccessToken;
+    }
+    this._preloadedWorldTerrain = createWorldTerrainAsync({});
+    // Failures surface when a viewer takes the promise
+    this._preloadedWorldTerrain.catch(() => {});
+  }
+
+  /** Cesium world terrain requested during `start`, if config asked for it. */
+  get preloadedWorldTerrain(): Promise<TerrainProvider> | undefined {
+    return this._preloadedWorldTerrain;
   }
 
   private async restoreAppState(options: StartOptions) {
