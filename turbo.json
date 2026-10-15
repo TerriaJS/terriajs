@@ -1,5 +1,6 @@
 {
   "$schema": "https://turborepo.com/schema.json",
+  "globalPassThroughEnv": ["DOCKER_HOST", "TESTCONTAINERS_*"],
 
   "tasks": {
     "build": {
