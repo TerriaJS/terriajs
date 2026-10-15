@@ -48,4 +48,24 @@ describe("SettingsPanelCustomComponent", function () {
     await userEvent.click(settingsLink!);
     expect(viewState.settingsPanelIsVisible).toBe(true);
   });
+
+  it("does not dismiss the current notification when clicked", async function () {
+    viewState.terria.notificationState.addNotificationToQueue({
+      title: "Unrelated notification",
+      message: "Some message"
+    });
+
+    renderWithContexts(
+      parseCustomMarkdownToReact(
+        "Click to open <settingspanel title='Settings' />"
+      ),
+      viewState
+    );
+
+    await userEvent.click(screen.getByTitle("Settings"));
+    expect(viewState.settingsPanelIsVisible).toBe(true);
+    expect(viewState.terria.notificationState.currentNotification?.title).toBe(
+      "Unrelated notification"
+    );
+  });
 });

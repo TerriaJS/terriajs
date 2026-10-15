@@ -38,6 +38,8 @@
 - Fix label background color for leaflet map. Previously label background color was being ignored.
 - Upgrade Cesium to 1.145
 - Fixed story scenes and share links failing a model with `Could not create unknown model type .` when one of its `knownContainerUniqueIds` was not saved in the init data and can't be found in the catalog (e.g. a transient search results group). Such containers are now skipped instead of being created as a stub, which also broke later scenes that did save the container.
+- Fixed a time-varying layer staying on the timeline after it was removed from the workbench while the catalogue was still adding it. The catalogue now only adds an item to the timeline if it is still on the workbench once it has loaded, and no longer adds an item that failed to be added to the workbench.
+- The "Shadows disabled" toast now closes when its "Display settings" link is clicked to open the settings panel. Other `<settingspanel>` links are unchanged.
 - Workbench items from an init source or share link now load concurrently instead of one at a time, so applying init data takes about as long as the slowest item rather than the sum of every item.
 - **Breaking:** A group on the workbench now contributes its nested-group members and its reference members, not just its direct mappable members. `Terria.pushAndLoadMapItems` previously started member loads without awaiting them, so anything pushed after an `await` — members of nested groups, and the targets of `ReferenceMixin` members — was pushed only after the workbench had already been assigned and was silently dropped; direct members were pushed in time but their `loadMapItems()` was never waited on. Applying init data now blocks until a workbench group's members have loaded.
 - [The next improvement]
@@ -125,6 +127,7 @@
 - Update prettier to v3.
   - When merging the changes make sure to use pre-prettier-v3 and post-prettier-v3 tags to make merging easier. You can follow the guide for prettier v2 update https://github.com/TerriaJS/terriajs/discussions/6517.
 - Test environment modernization:
+
   - Refactor tests to use @testing-library/react instead of react-test-renderer and react-shallow-testutils, and remove deprecated libraries.(#7755, #7763)
   - Replace jasmine-ajax and fetch-mock with `msw` for mocking API requests in tests. (#7766, #7767, #7795, #7796, #7797, #7801)
   - Replace karma test runner with jasmine-browser-runner and upgrade jasmine to v6. (#7807)
@@ -184,6 +187,7 @@
 #### 8.11.0 - 2025-10-09
 
 - **Breaking changes:**
+
   - Replace unmaintained `svg-sprite-loader` with custom implementation of SvgSprite plugin based on `svg-sprite` package.
     - New implementation consists of svg sprite loader that loads svgs and svg webpack plugin that compiles them into a single sprite file.
 
@@ -207,6 +211,7 @@
 #### 8.10.0 - 2025-07-08
 
 - **Breaking changes:**
+
   - Update `protomaps-leafet` package to 5.0.1 which only support protomaps basempap tileset >v4.0
     - See [protomaps leaflet CHANGELOG](https://github.com/protomaps/protomaps-leaflet/blob/main/CHANGELOG.md#500).
   - Update react and react-dom to version 18
@@ -284,6 +289,7 @@
 
 - **Breaking changes:**
 - Major changes to UI
+
   - Changed workbench and bottom dock to absolute positioned over map with transparent background
   - Generally increase padding and font sizes to improve readability
   - Generally use a darker default theme
@@ -398,6 +404,7 @@
 #### 8.7.7 - 2024-10-01
 
 - **Breaking changes:**
+
   - Remove RollbarErrorServiceProvder
   - Error services now instantiated externally to terriajs
 
