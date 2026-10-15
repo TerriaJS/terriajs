@@ -702,6 +702,15 @@ describeIfSupported("Cesium Model", function () {
       );
     });
 
+    it("queues only one toast when asked repeatedly before it is dismissed", function () {
+      runInAction(() => {
+        terria.setBaseMaximumScreenSpaceError(3);
+      });
+      cesium.notifyIfShadowsSuppressed();
+      cesium.notifyIfShadowsSuppressed();
+      expect(terria.notificationState.getAllNotifications().length).toBe(1);
+    });
+
     it("does not notify while quality stays high enough to keep shadows on", function () {
       runInAction(() => {
         terria.setBaseMaximumScreenSpaceError(1);

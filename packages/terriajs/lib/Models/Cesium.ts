@@ -92,6 +92,7 @@ import MappableMixin, {
 } from "../ModelMixins/MappableMixin";
 import ShadowMixin from "../ModelMixins/ShadowMixin";
 import TileErrorHandlerMixin from "../ModelMixins/TileErrorHandlerMixin";
+import { shadowsDisabledNotificationMessage } from "../ReactViews/Notification/shadowsDisabledNotification";
 import OpacityTraits from "../Traits/TraitsClasses/OpacityTraits";
 import SplitterTraits from "../Traits/TraitsClasses/SplitterTraits";
 import TerriaViewer from "../ViewModels/TerriaViewer";
@@ -535,7 +536,7 @@ export default class Cesium extends GlobeOrMap {
     }
     this.terria.notificationState.addNotificationToQueue({
       title: i18next.t(($) => $.models.shadowsDisabledForPerformance.title),
-      message: i18next.t(($) => $.models.shadowsDisabledForPerformance.message),
+      message: shadowsDisabledNotificationMessage,
       showAsToast: true,
       ignore: () =>
         this.effectiveShadowsEnabled || !this.hasShadowRequestingWorkbenchItem
