@@ -28,6 +28,7 @@
     "@types/react-dom": "catalog:types",
     "@typescript-eslint/eslint-plugin": "catalog:lint",
     "@typescript-eslint/parser": "catalog:lint",
+    "@typescript/native": "catalog:build",
     "babel-loader": "catalog:build",
     "css-loader": "catalog:build",
     "eslint": "catalog:lint",
