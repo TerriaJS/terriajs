@@ -24,7 +24,6 @@ const LangPanel = (props: Props) => {
   }
 
   return (
-    //@ts-expect-error - not yet ready to tackle tsfying MenuPanel
     <MenuPanel
       theme={{
         btn: Styles.langBtn,

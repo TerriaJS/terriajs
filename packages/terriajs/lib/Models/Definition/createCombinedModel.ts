@@ -129,6 +129,17 @@ class CombinedStrata implements Map<string, StratumFromTraits<ModelTraits>> {
     this.top.strata.set(key, value);
     return this;
   }
+  // Required by the ES2026 Map type but unused by terriajs. Not implemented:
+  // NestedStrataMap.has reports keys whose nested value get() returns as
+  // undefined, so spec upsert semantics can't be honoured across strata maps.
+  getOrInsert(): never {
+    throw new DeveloperError("getOrInsert is not supported on CombinedStrata");
+  }
+  getOrInsertComputed(): never {
+    throw new DeveloperError(
+      "getOrInsertComputed is not supported on CombinedStrata"
+    );
+  }
   get size(): number {
     return this.strata.size;
   }
