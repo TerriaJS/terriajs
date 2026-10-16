@@ -105,6 +105,425 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+catalogs:
+  build:
+    '@babel/core':
+      specifier: ^7.29.0
+      version: 7.29.0
+    '@babel/plugin-proposal-decorators':
+      specifier: ^7.29.0
+      version: 7.29.0
+    '@babel/preset-env':
+      specifier: ^7.29.2
+      version: 7.29.2
+    '@babel/preset-react':
+      specifier: ^7.28.5
+      version: 7.28.5
+    '@babel/preset-typescript':
+      specifier: ^7.28.5
+      version: 7.28.5
+    babel-loader:
+      specifier: ^10.1.1
+      version: 10.1.1
+    copy-webpack-plugin:
+      specifier: ^14.0.0
+      version: 14.0.0
+    css-loader:
+      specifier: ^7.1.4
+      version: 7.1.4
+    fast-glob:
+      specifier: ^3.3.3
+      version: 3.3.3
+    fork-ts-checker-notifier-webpack-plugin:
+      specifier: ^9.0.0
+      version: 9.0.0
+    fork-ts-checker-webpack-plugin:
+      specifier: ^9.1.0
+      version: 9.1.0
+    fs-extra:
+      specifier: ^7.0.1
+      version: 7.0.1
+    gulp:
+      specifier: ^5.0.1
+      version: 5.0.1
+    html-webpack-plugin:
+      specifier: ^5.6.3
+      version: 5.6.7
+    mini-css-extract-plugin:
+      specifier: ^2.10.2
+      version: 2.10.2
+    minimist:
+      specifier: ^1.2.8
+      version: 1.2.8
+    node-notifier:
+      specifier: ^10.0.1
+      version: 10.0.1
+    plugin-error:
+      specifier: ^2.0.1
+      version: 2.0.1
+    resolve-url-loader:
+      specifier: ^5.0.0
+      version: 5.0.0
+    sass:
+      specifier: ^1.98.0
+      version: 1.98.0
+    sass-loader:
+      specifier: ^16.0.7
+      version: 16.0.7
+    style-loader:
+      specifier: ^4.0.0
+      version: 4.0.0
+    svg-sprite:
+      specifier: ^2.0.4
+      version: 2.0.4
+    terriajs-typings-for-css-modules-loader:
+      specifier: ^2.5.2
+      version: 2.5.2
+    turbo:
+      specifier: 2.9.16
+      version: 2.9.16
+    typescript:
+      specifier: ^5.9.2
+      version: 5.9.3
+    webpack:
+      specifier: ^5.111.0
+      version: 5.111.0
+    webpack-cli:
+      specifier: ^5.1.4
+      version: 5.1.4
+    worker-loader:
+      specifier: ^3.0.8
+      version: 3.0.8
+    yargs:
+      specifier: ^17.7.2
+      version: 17.7.2
+  d3:
+    d3-color:
+      specifier: ^3.1.0
+      version: 3.1.0
+    d3-ease:
+      specifier: ^3.0.1
+      version: 3.0.1
+    d3-interpolate:
+      specifier: ^3.0.1
+      version: 3.0.1
+    d3-scale-chromatic:
+      specifier: ^3.1.0
+      version: 3.1.0
+    d3-selection:
+      specifier: ^3.0.0
+      version: 3.0.0
+    d3-shape:
+      specifier: ^3.2.0
+      version: 3.2.0
+    d3-transition:
+      specifier: ^3.0.1
+      version: 3.0.1
+    d3-zoom:
+      specifier: ^3.0.0
+      version: 3.0.0
+  lint:
+    '@eslint/js':
+      specifier: 10.0.1
+      version: 10.0.1
+    '@eslint/json':
+      specifier: 2.1.1
+      version: 2.1.1
+    '@typescript-eslint/eslint-plugin':
+      specifier: 8.71.2
+      version: 8.71.2
+    '@typescript-eslint/parser':
+      specifier: 8.71.2
+      version: 8.71.2
+    eslint:
+      specifier: 10.12.0
+      version: 10.12.0
+    eslint-config-prettier:
+      specifier: 10.1.8
+      version: 10.1.8
+    eslint-plugin-n:
+      specifier: 18.4.1
+      version: 18.4.1
+    eslint-plugin-react:
+      specifier: 7.37.5
+      version: 7.37.5
+    eslint-plugin-react-hooks:
+      specifier: 7.1.1
+      version: 7.1.1
+    globals:
+      specifier: 17.13.0
+      version: 17.13.0
+    husky:
+      specifier: ^9.1.7
+      version: 9.1.7
+    oxfmt:
+      specifier: 0.72.0
+      version: 0.72.0
+    typescript-eslint:
+      specifier: 8.71.2
+      version: 8.71.2
+  runtime:
+    '@aws-sdk/client-s3':
+      specifier: ^3.1082.0
+      version: 3.1097.0
+    bottleneck:
+      specifier: ^2.19.5
+      version: 2.19.5
+    classnames:
+      specifier: ^2.5.1
+      version: 2.5.1
+    core-js:
+      specifier: ^3.50.0
+      version: 3.50.0
+    dompurify:
+      specifier: ^3.4.15
+      version: 3.4.16
+    express:
+      specifier: ^5.2.1
+      version: 5.2.1
+    json5:
+      specifier: ^2.2.3
+      version: 2.2.3
+    lodash:
+      specifier: ^4.17.21
+      version: 4.18.1
+    mobx:
+      specifier: ^6.13.7
+      version: 6.15.0
+    mobx-react:
+      specifier: ^9.2.0
+      version: 9.2.1
+    mustache:
+      specifier: ^2.3.2
+      version: 2.3.2
+    prop-types:
+      specifier: ^15.6.0
+      version: 15.8.1
+    react:
+      specifier: ^18.3.1
+      version: 18.3.1
+    react-dom:
+      specifier: ^18.3.1
+      version: 18.3.1
+    styled-components:
+      specifier: ^6.4.4
+      version: 6.5.3
+    urijs:
+      specifier: ^1.18.12
+      version: 1.19.11
+    zod:
+      specifier: ^4.4.3
+      version: 4.4.3
+  terria:
+    terriajs-cesium:
+      specifier: 26.3.0
+      version: 26.3.0
+    terriajs-cesium-widgets:
+      specifier: 16.2.0
+      version: 16.2.0
+    terriajs-html2canvas:
+      specifier: 1.0.0-alpha.12-terriajs-1
+      version: 1.0.0-alpha.12-terriajs-1
+    terriajs-plugin-api:
+      specifier: 0.0.1-alpha.17
+      version: 0.0.1-alpha.17
+    terriajs-plugin-sample:
+      specifier: 0.0.1-alpha.7
+      version: 0.0.1-alpha.7
+    terriajs-tiff-imagery-provider:
+      specifier: 2.13.3-webpack5-3
+      version: 2.13.3-webpack5-3
+  test:
+    '@testing-library/dom':
+      specifier: ^10.4.1
+      version: 10.4.1
+    '@testing-library/jasmine-dom':
+      specifier: ^1.3.3
+      version: 1.3.3
+    '@testing-library/react':
+      specifier: ^16.3.2
+      version: 16.3.2
+    '@testing-library/user-event':
+      specifier: ^14.6.1
+      version: 14.6.1
+    fetch-mock:
+      specifier: ^11.1.5
+      version: 11.1.5
+    jasmine-browser-runner:
+      specifier: ^4.0.0
+      version: 4.0.0
+    jasmine-core:
+      specifier: ^6.3.0
+      version: 6.3.0
+    jsdom:
+      specifier: ^29.0.1
+      version: 29.0.1
+    msw:
+      specifier: ^2.15.0
+      version: 2.15.0
+    testcontainers:
+      specifier: ^12.0.1
+      version: 12.1.0
+  translation:
+    i18next:
+      specifier: ^26.3.6
+      version: 26.4.5
+    i18next-browser-languagedetector:
+      specifier: ^8.2.1
+      version: 8.2.1
+    i18next-http-backend:
+      specifier: ^4.0.0
+      version: 4.0.0
+    i18next-resources-for-ts:
+      specifier: ^2.1.0
+      version: 2.1.0
+    react-i18next:
+      specifier: ^17.0.9
+      version: 17.0.16
+  types:
+    '@types/arcgis-rest-api':
+      specifier: ^10.4.5
+      version: 10.4.8
+    '@types/create-react-class':
+      specifier: ^15.6.2
+      version: 15.6.9
+    '@types/d3-color':
+      specifier: ^3.0.0
+      version: 3.1.3
+    '@types/d3-ease':
+      specifier: ^3.0.2
+      version: 3.0.2
+    '@types/d3-interpolate':
+      specifier: ^3.0.4
+      version: 3.0.4
+    '@types/d3-scale':
+      specifier: ^4.0.9
+      version: 4.0.9
+    '@types/d3-scale-chromatic':
+      specifier: ^3.0.3
+      version: 3.1.0
+    '@types/d3-selection':
+      specifier: ^3.0.10
+      version: 3.0.11
+    '@types/d3-shape':
+      specifier: ^3.1.7
+      version: 3.2.0
+    '@types/d3-transition':
+      specifier: ^3.0.8
+      version: 3.0.9
+    '@types/d3-zoom':
+      specifier: ^3.0.8
+      version: 3.0.8
+    '@types/dateformat':
+      specifier: ^5.0.1
+      version: 5.0.2
+    '@types/express':
+      specifier: ^5.0.6
+      version: 5.0.6
+    '@types/file-saver':
+      specifier: ^2.0.7
+      version: 2.0.7
+    '@types/flexsearch':
+      specifier: 0.7.6
+      version: 0.7.6
+    '@types/geojson':
+      specifier: ^7946.0.16
+      version: 7946.0.16
+    '@types/geojson-vt':
+      specifier: ^3.2.1
+      version: 3.2.5
+    '@types/jasmine':
+      specifier: ^6.0.0
+      version: 6.0.0
+    '@types/leaflet':
+      specifier: ^1.9.12
+      version: 1.9.16
+    '@types/linkify-it':
+      specifier: ^3.0.5
+      version: 3.0.5
+    '@types/lodash':
+      specifier: ^4.17.25
+      version: 4.17.25
+    '@types/lodash-es':
+      specifier: ^4.17.12
+      version: 4.17.12
+    '@types/markdown-it':
+      specifier: ^14.1.2
+      version: 14.1.2
+    '@types/math-expression-evaluator':
+      specifier: ^1.2.0
+      version: 1.3.3
+    '@types/ms':
+      specifier: ^0.7.31
+      version: 0.7.34
+    '@types/mustache':
+      specifier: ^0.8.32
+      version: 0.8.32
+    '@types/papaparse':
+      specifier: ^5.5.2
+      version: 5.5.2
+    '@types/pbf':
+      specifier: ^3.0.1
+      version: 3.0.5
+    '@types/prop-types':
+      specifier: ^15.7.14
+      version: 15.7.14
+    '@types/react-color':
+      specifier: ^3.0.6
+      version: 3.0.13
+    '@types/react-transition-group':
+      specifier: ^4.4.12
+      version: 4.4.12
+    '@types/retry':
+      specifier: ^0.12.0
+      version: 0.12.5
+    '@types/shpjs':
+      specifier: ^3.4.7
+      version: 3.4.7
+    '@types/svg-sprite':
+      specifier: ^0.0.39
+      version: 0.0.39
+    '@types/testing-library__jasmine-dom':
+      specifier: ^1.3.4
+      version: 1.3.4
+    '@types/urijs':
+      specifier: ^1.19.25
+      version: 1.19.25
+  visx:
+    '@visx/axis':
+      specifier: ^3.10.1
+      version: 3.12.0
+    '@visx/clip-path':
+      specifier: ^3.3.0
+      version: 3.12.0
+    '@visx/event':
+      specifier: ^3.3.0
+      version: 3.12.0
+    '@visx/glyph':
+      specifier: ^3.3.0
+      version: 3.12.0
+    '@visx/grid':
+      specifier: ^3.5.0
+      version: 3.12.0
+    '@visx/group':
+      specifier: ^3.3.0
+      version: 3.12.0
+    '@visx/legend':
+      specifier: ^3.5.0
+      version: 3.12.0
+    '@visx/responsive':
+      specifier: ^3.10.2
+      version: 3.12.0
+    '@visx/scale':
+      specifier: ^3.5.0
+      version: 3.12.0
+    '@visx/shape':
+      specifier: ^3.5.0
+      version: 3.12.0
+    '@visx/tooltip':
+      specifier: ^3.3.0
+      version: 3.12.0
+
 overrides:
   '@types/react': ^18.3.3
   '@types/react-dom': ^18.3.1
@@ -114,13 +533,13 @@ importers:
   .:
     devDependencies:
       husky:
-        specifier: ^9.1.7
+        specifier: catalog:lint
         version: 9.1.7
       oxfmt:
-        specifier: 0.72.0
+        specifier: catalog:lint
         version: 0.72.0
       turbo:
-        specifier: 2.9.16
+        specifier: catalog:build
         version: 2.9.16
 
   apps/terriamap:
@@ -130,16 +549,16 @@ importers:
         version: link:../../packages/terriajs-server
     devDependencies:
       '@babel/core':
-        specifier: ^7.29.0
+        specifier: catalog:build
         version: 7.29.0(supports-color@5.5.0)
       '@babel/preset-env':
-        specifier: ^7.29.2
+        specifier: catalog:build
         version: 7.29.2(@babel/core@7.29.0(supports-color@5.5.0))(supports-color@5.5.0)
       '@babel/preset-react':
-        specifier: ^7.28.5
+        specifier: catalog:build
         version: 7.28.5(@babel/core@7.29.0(supports-color@5.5.0))(supports-color@5.5.0)
       '@eslint/js':
-        specifier: 10.0.1
+        specifier: catalog:lint
         version: 10.0.1(eslint@10.12.0(supports-color@5.5.0))
       '@types/react':
         specifier: ^18.3.3
@@ -148,157 +567,154 @@ importers:
         specifier: ^18.3.1
         version: 18.3.5(@types/react@18.3.17)
       '@typescript-eslint/eslint-plugin':
-        specifier: 8.71.2
+        specifier: catalog:lint
         version: 8.71.2(@typescript-eslint/parser@8.71.2(eslint@10.12.0(supports-color@5.5.0))(supports-color@5.5.0)(typescript@5.9.3))(eslint@10.12.0(supports-color@5.5.0))(supports-color@5.5.0)(typescript@5.9.3)
       '@typescript-eslint/parser':
-        specifier: 8.71.2
+        specifier: catalog:lint
         version: 8.71.2(eslint@10.12.0(supports-color@5.5.0))(supports-color@5.5.0)(typescript@5.9.3)
       babel-loader:
-        specifier: ^10.1.1
+        specifier: catalog:build
         version: 10.1.1(@babel/core@7.29.0(supports-color@5.5.0))(webpack@5.111.0)
       css-loader:
-        specifier: ^7.1.4
+        specifier: catalog:build
         version: 7.1.4(webpack@5.111.0)
       eslint:
-        specifier: 10.12.0
+        specifier: catalog:lint
         version: 10.12.0(supports-color@5.5.0)
       eslint-config-prettier:
-        specifier: 10.1.8
+        specifier: catalog:lint
         version: 10.1.8(eslint@10.12.0(supports-color@5.5.0))
       eslint-plugin-react:
-        specifier: 7.37.5
+        specifier: catalog:lint
         version: 7.37.5(eslint@10.12.0(supports-color@5.5.0))
       eslint-plugin-react-hooks:
-        specifier: 7.1.1
+        specifier: catalog:lint
         version: 7.1.1(eslint@10.12.0(supports-color@5.5.0))(supports-color@5.5.0)
       fetch-mock:
-        specifier: ^11.1.5
+        specifier: catalog:test
         version: 11.1.5
       fork-ts-checker-notifier-webpack-plugin:
-        specifier: ^9.0.0
+        specifier: catalog:build
         version: 9.0.0(fork-ts-checker-webpack-plugin@9.1.0(typescript@5.9.3)(webpack@5.111.0))
       fork-ts-checker-webpack-plugin:
-        specifier: ^9.1.0
+        specifier: catalog:build
         version: 9.1.0(typescript@5.9.3)(webpack@5.111.0)
       fs-extra:
-        specifier: ^7.0.1
+        specifier: catalog:build
         version: 7.0.1
       globals:
-        specifier: 17.13.0
+        specifier: catalog:lint
         version: 17.13.0
       gulp:
-        specifier: ^5.0.1
+        specifier: catalog:build
         version: 5.0.1
       html-webpack-plugin:
-        specifier: ^5.6.3
+        specifier: catalog:build
         version: 5.6.7(webpack@5.111.0)
       husky:
-        specifier: ^9.1.7
+        specifier: catalog:lint
         version: 9.1.7
-      is-subdir:
-        specifier: ^1.2.0
-        version: 1.2.0
       json5:
-        specifier: ^2.1.0
+        specifier: catalog:runtime
         version: 2.2.3
       lodash:
-        specifier: ^4.17.21
+        specifier: catalog:runtime
         version: 4.18.1
       minimist:
-        specifier: ^1.2.8
+        specifier: catalog:build
         version: 1.2.8
       mobx:
-        specifier: ^6.13.7
+        specifier: catalog:runtime
         version: 6.15.0
       mobx-react:
-        specifier: ^9.2.0
+        specifier: catalog:runtime
         version: 9.2.1(mobx@6.15.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       msw:
-        specifier: ~2.12.14
-        version: 2.12.14(@types/node@26.4.0)(typescript@5.9.3)
+        specifier: catalog:test
+        version: 2.15.0(@types/node@26.4.0)(typescript@5.9.3)
       node-notifier:
-        specifier: ^10.0.1
+        specifier: catalog:build
         version: 10.0.1
       oxfmt:
-        specifier: 0.72.0
+        specifier: catalog:lint
         version: 0.72.0
       plugin-error:
-        specifier: ^2.0.1
+        specifier: catalog:build
         version: 2.0.1
       prop-types:
-        specifier: ^15.6.0
+        specifier: catalog:runtime
         version: 15.8.1
       react:
-        specifier: ^18.3.1
+        specifier: catalog:runtime
         version: 18.3.1
       react-dom:
-        specifier: ^18.3.1
+        specifier: catalog:runtime
         version: 18.3.1(react@18.3.1)
       resolve-url-loader:
-        specifier: ^5.0.0
+        specifier: catalog:build
         version: 5.0.0
       sass:
-        specifier: ^1.98.0
+        specifier: catalog:build
         version: 1.98.0
       sass-loader:
-        specifier: ^16.0.7
+        specifier: catalog:build
         version: 16.0.7(sass@1.98.0)(webpack@5.111.0)
       style-loader:
-        specifier: ^4.0.0
+        specifier: catalog:build
         version: 4.0.0(webpack@5.111.0)
       svg-sprite:
-        specifier: ^2.0.4
+        specifier: catalog:build
         version: 2.0.4
       terriajs:
         specifier: workspace:*
         version: link:../../packages/terriajs
       terriajs-cesium:
-        specifier: 26.3.0
+        specifier: catalog:terria
         version: 26.3.0
       terriajs-plugin-api:
-        specifier: 0.0.1-alpha.17
+        specifier: catalog:terria
         version: 0.0.1-alpha.17
       terriajs-plugin-sample:
-        specifier: 0.0.1-alpha.7
+        specifier: catalog:terria
         version: 0.0.1-alpha.7
       terriajs-typings-for-css-modules-loader:
-        specifier: ^2.5.2
+        specifier: catalog:build
         version: 2.5.2
       typescript:
-        specifier: ^5.9.2
+        specifier: catalog:build
         version: 5.9.3
       typescript-eslint:
-        specifier: 8.71.2
+        specifier: catalog:lint
         version: 8.71.2(eslint@10.12.0(supports-color@5.5.0))(supports-color@5.5.0)(typescript@5.9.3)
       urijs:
-        specifier: ^1.18.12
+        specifier: catalog:runtime
         version: 1.19.11
       webpack:
-        specifier: ^5.111.0
+        specifier: catalog:build
         version: 5.111.0(@swc/core@1.15.43)(clean-css@5.3.3)(csso@4.2.0)(esbuild@0.25.5)(html-minifier-terser@6.1.0)(postcss@8.5.8)(svgo@2.8.2)(webpack-cli@5.1.4)
       webpack-cli:
-        specifier: ^5.1.4
+        specifier: catalog:build
         version: 5.1.4(webpack@5.111.0)
       yargs:
-        specifier: ^17.7.2
+        specifier: catalog:build
         version: 17.7.2
 
   packages/terriajs:
     dependencies:
       '@babel/core':
-        specifier: ^7.29.0
+        specifier: catalog:build
         version: 7.29.0(supports-color@8.1.1)
       '@babel/plugin-proposal-decorators':
-        specifier: ^7.29.0
+        specifier: catalog:build
         version: 7.29.0(@babel/core@7.29.0(supports-color@8.1.1))(supports-color@8.1.1)
       '@babel/preset-env':
-        specifier: ^7.29.2
+        specifier: catalog:build
         version: 7.29.2(@babel/core@7.29.0(supports-color@8.1.1))(supports-color@8.1.1)
       '@babel/preset-react':
-        specifier: ^7.28.5
+        specifier: catalog:build
         version: 7.28.5(@babel/core@7.29.0(supports-color@8.1.1))(supports-color@8.1.1)
       '@babel/preset-typescript':
-        specifier: ^7.28.5
+        specifier: catalog:build
         version: 7.28.5(@babel/core@7.29.0(supports-color@8.1.1))(supports-color@8.1.1)
       '@emotion/is-prop-valid':
         specifier: ^1.4.0
@@ -316,16 +732,16 @@ importers:
         specifier: ^0.1.0
         version: 0.1.0
       '@testing-library/dom':
-        specifier: ^10.4.1
+        specifier: catalog:test
         version: 10.4.1
       '@testing-library/jasmine-dom':
-        specifier: ^1.3.3
+        specifier: catalog:test
         version: 1.3.3
       '@testing-library/react':
-        specifier: ^16.3.2
+        specifier: catalog:test
         version: 16.3.2(@testing-library/dom@10.4.1)(@types/react-dom@18.3.5(@types/react@18.3.17))(@types/react@18.3.17)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@testing-library/user-event':
-        specifier: ^14.6.1
+        specifier: catalog:test
         version: 14.6.1(@testing-library/dom@10.4.1)
       '@tinymce/tinymce-react':
         specifier: ^5.0.1
@@ -346,149 +762,149 @@ importers:
         specifier: ^25.0.0
         version: 25.0.0
       '@types/arcgis-rest-api':
-        specifier: ^10.4.5
+        specifier: catalog:types
         version: 10.4.8
       '@types/create-react-class':
-        specifier: ^15.6.2
+        specifier: catalog:types
         version: 15.6.9
       '@types/d3-color':
-        specifier: ^3.0.0
+        specifier: catalog:types
         version: 3.1.3
       '@types/d3-ease':
-        specifier: ^3.0.2
+        specifier: catalog:types
         version: 3.0.2
       '@types/d3-interpolate':
-        specifier: ^3.0.4
+        specifier: catalog:types
         version: 3.0.4
       '@types/d3-scale':
-        specifier: ^4.0.9
+        specifier: catalog:types
         version: 4.0.9
       '@types/d3-scale-chromatic':
-        specifier: ^3.0.3
+        specifier: catalog:types
         version: 3.1.0
       '@types/d3-selection':
-        specifier: ^3.0.10
+        specifier: catalog:types
         version: 3.0.11
       '@types/d3-shape':
-        specifier: ^3.1.7
+        specifier: catalog:types
         version: 3.2.0
       '@types/d3-transition':
-        specifier: ^3.0.8
+        specifier: catalog:types
         version: 3.0.9
       '@types/d3-zoom':
-        specifier: ^3.0.8
+        specifier: catalog:types
         version: 3.0.8
       '@types/dateformat':
-        specifier: ^5.0.1
+        specifier: catalog:types
         version: 5.0.2
       '@types/file-saver':
-        specifier: ^2.0.7
+        specifier: catalog:types
         version: 2.0.7
       '@types/flexsearch':
-        specifier: 0.7.6
+        specifier: catalog:types
         version: 0.7.6
       '@types/geojson':
-        specifier: ^7946.0.16
+        specifier: catalog:types
         version: 7946.0.16
       '@types/geojson-vt':
-        specifier: ^3.2.1
+        specifier: catalog:types
         version: 3.2.5
       '@types/jasmine':
-        specifier: ^6.0.0
+        specifier: catalog:types
         version: 6.0.0
       '@types/leaflet':
-        specifier: ^1.9.12
+        specifier: catalog:types
         version: 1.9.16
       '@types/linkify-it':
-        specifier: ^3.0.5
+        specifier: catalog:types
         version: 3.0.5
       '@types/lodash':
-        specifier: ^4.17.25
+        specifier: catalog:types
         version: 4.17.25
       '@types/lodash-es':
-        specifier: ^4.17.12
+        specifier: catalog:types
         version: 4.17.12
       '@types/markdown-it':
-        specifier: ^14.1.2
+        specifier: catalog:types
         version: 14.1.2
       '@types/math-expression-evaluator':
-        specifier: ^1.2.0
+        specifier: catalog:types
         version: 1.3.3
       '@types/ms':
-        specifier: ^0.7.31
+        specifier: catalog:types
         version: 0.7.34
       '@types/mustache':
-        specifier: ^0.8.32
+        specifier: catalog:types
         version: 0.8.32
       '@types/papaparse':
-        specifier: ^5.5.2
+        specifier: catalog:types
         version: 5.5.2
       '@types/pbf':
-        specifier: ^3.0.1
+        specifier: catalog:types
         version: 3.0.5
       '@types/prop-types':
-        specifier: ^15.7.14
+        specifier: catalog:types
         version: 15.7.14
       '@types/react':
         specifier: ^18.3.3
         version: 18.3.17
       '@types/react-color':
-        specifier: ^3.0.6
+        specifier: catalog:types
         version: 3.0.13(@types/react@18.3.17)
       '@types/react-dom':
         specifier: ^18.3.1
         version: 18.3.5(@types/react@18.3.17)
       '@types/react-transition-group':
-        specifier: ^4.4.12
+        specifier: catalog:types
         version: 4.4.12(@types/react@18.3.17)
       '@types/retry':
-        specifier: ^0.12.0
+        specifier: catalog:types
         version: 0.12.5
       '@types/shpjs':
-        specifier: ^3.4.7
+        specifier: catalog:types
         version: 3.4.7
       '@types/testing-library__jasmine-dom':
-        specifier: ^1.3.4
+        specifier: catalog:types
         version: 1.3.4
       '@types/urijs':
-        specifier: ^1.19.25
+        specifier: catalog:types
         version: 1.19.25
       '@visx/axis':
-        specifier: ^3.10.1
+        specifier: catalog:visx
         version: 3.12.0(react@18.3.1)
       '@visx/clip-path':
-        specifier: ^3.3.0
+        specifier: catalog:visx
         version: 3.12.0(react@18.3.1)
       '@visx/event':
-        specifier: ^3.3.0
+        specifier: catalog:visx
         version: 3.12.0
       '@visx/glyph':
-        specifier: ^3.3.0
+        specifier: catalog:visx
         version: 3.12.0(react@18.3.1)
       '@visx/grid':
-        specifier: ^3.5.0
+        specifier: catalog:visx
         version: 3.12.0(react@18.3.1)
       '@visx/group':
-        specifier: ^3.3.0
+        specifier: catalog:visx
         version: 3.12.0(react@18.3.1)
       '@visx/legend':
-        specifier: ^3.5.0
+        specifier: catalog:visx
         version: 3.12.0(react@18.3.1)
       '@visx/responsive':
-        specifier: ^3.10.2
+        specifier: catalog:visx
         version: 3.12.0(react@18.3.1)
       '@visx/scale':
-        specifier: ^3.5.0
+        specifier: catalog:visx
         version: 3.12.0
       '@visx/shape':
-        specifier: ^3.5.0
+        specifier: catalog:visx
         version: 3.12.0(react@18.3.1)
       '@visx/tooltip':
-        specifier: ^3.3.0
+        specifier: catalog:visx
         version: 3.12.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@zip.js/zip.js':
         specifier: ^2.8.2
-        version: 2.8.21
+        version: 2.23.0
       arcgis-pbf-parser:
         specifier: ^0.0.4
         version: 0.0.4
@@ -496,62 +912,62 @@ importers:
         specifier: ^0.0.7
         version: 0.0.7
       babel-loader:
-        specifier: ^10.1.1
+        specifier: catalog:build
         version: 10.1.1(@babel/core@7.29.0(supports-color@8.1.1))(webpack@5.111.0)
       bottleneck:
-        specifier: ^2.19.5
+        specifier: catalog:runtime
         version: 2.19.5
       catalog-converter:
         specifier: ^0.0.9
         version: 0.0.9
       classnames:
-        specifier: ^2.3.1
+        specifier: catalog:runtime
         version: 2.5.1
       commander:
         specifier: ^14.0.3
         version: 14.0.3
       copy-webpack-plugin:
-        specifier: ^14.0.0
+        specifier: catalog:build
         version: 14.0.0(webpack@5.111.0)
       core-js:
-        specifier: ^3.50.0
+        specifier: catalog:runtime
         version: 3.50.0
       create-react-class:
         specifier: ^15.7.0
         version: 15.7.0
       css-loader:
-        specifier: ^7.1.4
+        specifier: catalog:build
         version: 7.1.4(webpack@5.111.0)
       d3-color:
-        specifier: ^3.1.0
+        specifier: catalog:d3
         version: 3.1.0
       d3-ease:
-        specifier: ^3.0.1
+        specifier: catalog:d3
         version: 3.0.1
       d3-interpolate:
-        specifier: ^3.0.1
+        specifier: catalog:d3
         version: 3.0.1
       d3-scale-chromatic:
-        specifier: ^3.1.0
+        specifier: catalog:d3
         version: 3.1.0
       d3-selection:
-        specifier: ^3.0.0
+        specifier: catalog:d3
         version: 3.0.0
       d3-shape:
-        specifier: ^3.2.0
+        specifier: catalog:d3
         version: 3.2.0
       d3-transition:
-        specifier: ^3.0.1
+        specifier: catalog:d3
         version: 3.0.1(d3-selection@3.0.0)
       d3-zoom:
-        specifier: ^3.0.0
+        specifier: catalog:d3
         version: 3.0.0
       dateformat:
         specifier: ^5.0.3
         version: 5.0.3
       dompurify:
-        specifier: ^3.3.3
-        version: 3.3.3
+        specifier: catalog:runtime
+        version: 3.4.16
       file-saver:
         specifier: ^2.0.5
         version: 2.0.5
@@ -562,7 +978,7 @@ importers:
         specifier: ^3.2.1
         version: 3.2.1
       gulp:
-        specifier: ^5.0.1
+        specifier: catalog:build
         version: 5.0.1
       hoist-non-react-statics:
         specifier: ^3.3.2
@@ -571,16 +987,16 @@ importers:
         specifier: ^1.7.0
         version: 1.7.0(react@18.3.1)
       i18next:
-        specifier: ^26.3.1
-        version: 26.3.1(typescript@5.9.3)
+        specifier: catalog:translation
+        version: 26.4.5(typescript@5.9.3)
       i18next-browser-languagedetector:
-        specifier: ^8.2.1
+        specifier: catalog:translation
         version: 8.2.1
       i18next-http-backend:
-        specifier: ^4.0.0
+        specifier: catalog:translation
         version: 4.0.0
       i18next-resources-for-ts:
-        specifier: ^2.1.0
+        specifier: catalog:translation
         version: 2.1.0
       inobounce:
         specifier: ^0.1.2
@@ -589,7 +1005,7 @@ importers:
         specifier: ^0.7.1
         version: 0.7.1
       json5:
-        specifier: ^2.1.0
+        specifier: catalog:runtime
         version: 2.2.3
       leaflet:
         specifier: ^1.8.0
@@ -607,16 +1023,16 @@ importers:
         specifier: ^1.3.7
         version: 1.4.0
       mini-css-extract-plugin:
-        specifier: ^2.10.2
+        specifier: catalog:build
         version: 2.10.2(webpack@5.111.0)
       minisearch:
         specifier: ^3.0.2
         version: 3.3.0
       mobx:
-        specifier: ^6.13.7
+        specifier: catalog:runtime
         version: 6.15.0
       mobx-react:
-        specifier: ^9.2.0
+        specifier: catalog:runtime
         version: 9.2.1(mobx@6.15.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       mobx-utils:
         specifier: ^6.0.5
@@ -628,7 +1044,7 @@ importers:
         specifier: ^2.1.3
         version: 2.1.3
       mustache:
-        specifier: ^2.2.1
+        specifier: catalog:runtime
         version: 2.3.2
       papaparse:
         specifier: ^5.5.4
@@ -646,7 +1062,7 @@ importers:
         specifier: ^0.2.0
         version: 0.2.0(geotiff@2.1.3)
       prop-types:
-        specifier: ^15.6.0
+        specifier: catalog:runtime
         version: 15.8.1
       protomaps-leaflet:
         specifier: ^5.0.1
@@ -655,7 +1071,7 @@ importers:
         specifier: ^9.7.2
         version: 9.7.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react:
-        specifier: ^18.3.1
+        specifier: catalog:runtime
         version: 18.3.1
       react-anything-sortable:
         specifier: ^1.5.2
@@ -667,14 +1083,14 @@ importers:
         specifier: 7.6.0
         version: 7.6.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react-dom:
-        specifier: ^18.3.1
+        specifier: catalog:runtime
         version: 18.3.1(react@18.3.1)
       react-ga4:
         specifier: ^2.1.0
         version: 2.1.0
       react-i18next:
-        specifier: ^17.0.8
-        version: 17.0.8(i18next@26.3.1(typescript@5.9.3))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.9.3)
+        specifier: catalog:translation
+        version: 17.0.16(i18next@26.4.5(typescript@5.9.3))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.9.3)
       react-responsive:
         specifier: ^10.0.0
         version: 10.0.0(react@18.3.1)
@@ -691,37 +1107,37 @@ importers:
         specifier: ^2.10.4
         version: 2.10.4(react@18.3.1)
       resolve-url-loader:
-        specifier: ^5.0.0
+        specifier: catalog:build
         version: 5.0.0
       retry:
         specifier: ^0.12.0
         version: 0.12.0
       sass-loader:
-        specifier: ^16.0.7
+        specifier: catalog:build
         version: 16.0.7(sass@1.98.0)(webpack@5.111.0)
       shpjs:
         specifier: ^6.1.0
         version: 6.1.0(geotiff@2.1.3)
       style-loader:
-        specifier: ^4.0.0
+        specifier: catalog:build
         version: 4.0.0(webpack@5.111.0)
       styled-components:
-        specifier: ^6.4.4
+        specifier: catalog:runtime
         version: 6.5.3(css-to-react-native@3.2.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       terriajs-cesium:
-        specifier: 26.3.0
+        specifier: catalog:terria
         version: 26.3.0
       terriajs-cesium-widgets:
-        specifier: 16.2.0
+        specifier: catalog:terria
         version: 16.2.0
       terriajs-html2canvas:
-        specifier: 1.0.0-alpha.12-terriajs-1
+        specifier: catalog:terria
         version: 1.0.0-alpha.12-terriajs-1
       terriajs-tiff-imagery-provider:
-        specifier: 2.13.3-webpack5-3
+        specifier: catalog:terria
         version: 2.13.3-webpack5-3(terriajs-cesium@26.3.0)
       terriajs-typings-for-css-modules-loader:
-        specifier: ^2.5.2
+        specifier: catalog:build
         version: 2.5.2
       thredds-catalog-crawler:
         specifier: 0.0.7
@@ -730,23 +1146,23 @@ importers:
         specifier: ^7.6.0
         version: 7.6.0
       typescript:
-        specifier: ^5.9.2
+        specifier: catalog:build
         version: 5.9.3
       urijs:
-        specifier: ^1.18.12
+        specifier: catalog:runtime
         version: 1.19.11
       webpack:
-        specifier: ^5.111.0
+        specifier: catalog:build
         version: 5.111.0(@swc/core@1.15.43)(clean-css@5.3.3)(csso@4.2.0)(esbuild@0.25.5)(html-minifier-terser@6.1.0)(postcss@8.5.8)(svgo@2.8.2)(webpack-cli@5.1.4)
       worker-loader:
-        specifier: ^3.0.8
+        specifier: catalog:build
         version: 3.0.8(webpack@5.111.0)
       zod:
-        specifier: ^4.4.3
+        specifier: catalog:runtime
         version: 4.4.3
     devDependencies:
       '@eslint/js':
-        specifier: 10.0.1
+        specifier: catalog:lint
         version: 10.0.1(eslint@10.12.0(supports-color@8.1.1))
       '@mswjs/interceptors':
         specifier: ^0.41.9
@@ -758,79 +1174,79 @@ importers:
         specifier: ^24.3.1
         version: 24.10.13
       '@types/svg-sprite':
-        specifier: ^0.0.39
+        specifier: catalog:types
         version: 0.0.39
       '@typescript-eslint/eslint-plugin':
-        specifier: 8.71.2
+        specifier: catalog:lint
         version: 8.71.2(@typescript-eslint/parser@8.71.2(eslint@10.12.0(supports-color@8.1.1))(supports-color@8.1.1)(typescript@5.9.3))(eslint@10.12.0(supports-color@8.1.1))(supports-color@8.1.1)(typescript@5.9.3)
       '@typescript-eslint/parser':
-        specifier: 8.71.2
+        specifier: catalog:lint
         version: 8.71.2(eslint@10.12.0(supports-color@8.1.1))(supports-color@8.1.1)(typescript@5.9.3)
       babel-plugin-styled-components:
         specifier: ^2.1.4
         version: 2.1.4(@babel/core@7.29.0(supports-color@8.1.1))(styled-components@6.5.3(css-to-react-native@3.2.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(supports-color@8.1.1)
       eslint:
-        specifier: 10.12.0
+        specifier: catalog:lint
         version: 10.12.0(supports-color@8.1.1)
       eslint-config-prettier:
-        specifier: 10.1.8
+        specifier: catalog:lint
         version: 10.1.8(eslint@10.12.0(supports-color@8.1.1))
       eslint-plugin-react:
-        specifier: 7.37.5
+        specifier: catalog:lint
         version: 7.37.5(eslint@10.12.0(supports-color@8.1.1))
       eslint-plugin-react-hooks:
-        specifier: 7.1.1
+        specifier: catalog:lint
         version: 7.1.1(eslint@10.12.0(supports-color@8.1.1))(supports-color@8.1.1)
       express:
-        specifier: ^5.2.1
+        specifier: catalog:runtime
         version: 5.2.1(supports-color@8.1.1)
       fast-glob:
-        specifier: ^3.3.3
+        specifier: catalog:build
         version: 3.3.3
       fork-ts-checker-notifier-webpack-plugin:
-        specifier: ^9.0.0
+        specifier: catalog:build
         version: 9.0.0(fork-ts-checker-webpack-plugin@9.1.0(typescript@5.9.3)(webpack@5.111.0))
       fork-ts-checker-webpack-plugin:
-        specifier: ^9.1.0
+        specifier: catalog:build
         version: 9.1.0(typescript@5.9.3)(webpack@5.111.0)
       global-jsdom:
         specifier: ^29.0.0
         version: 29.0.0(jsdom@29.0.1(@noble/hashes@1.8.0))
       globals:
-        specifier: 17.13.0
+        specifier: catalog:lint
         version: 17.13.0
       jasmine-browser-runner:
-        specifier: ^4.0.0
+        specifier: catalog:test
         version: 4.0.0(jasmine-core@6.3.0)(supports-color@8.1.1)
       jasmine-core:
-        specifier: ^6.1.0
+        specifier: catalog:test
         version: 6.3.0
       jsdom:
-        specifier: ^29.0.1
+        specifier: catalog:test
         version: 29.0.1(@noble/hashes@1.8.0)
       minimist:
-        specifier: ^1.2.8
+        specifier: catalog:build
         version: 1.2.8
       msw:
-        specifier: ~2.12.14
-        version: 2.12.14(@types/node@24.10.13)(typescript@5.9.3)
+        specifier: catalog:test
+        version: 2.15.0(@types/node@24.10.13)(typescript@5.9.3)
       node-notifier:
-        specifier: ^10.0.1
+        specifier: catalog:build
         version: 10.0.1
       plugin-error:
-        specifier: ^2.0.1
+        specifier: catalog:build
         version: 2.0.1
       sass:
-        specifier: ^1.98.0
+        specifier: catalog:build
         version: 1.98.0
       svg-sprite:
-        specifier: ^2.0.4
+        specifier: catalog:build
         version: 2.0.4
       terriajs-server:
         specifier: workspace:*
         version: link:../terriajs-server
       typescript-eslint:
-        specifier: 8.71.2
+        specifier: catalog:lint
         version: 8.71.2(eslint@10.12.0(supports-color@8.1.1))(supports-color@8.1.1)(typescript@5.9.3)
       yaml:
         specifier: ^1.10.0
@@ -839,7 +1255,7 @@ importers:
   packages/terriajs-server:
     dependencies:
       '@aws-sdk/client-s3':
-        specifier: ^3.1082.0
+        specifier: catalog:runtime
         version: 3.1097.0
       base-x:
         specifier: ^5.0.1
@@ -860,13 +1276,13 @@ importers:
         specifier: ^2.8.6
         version: 2.8.6
       express:
-        specifier: ^5.2.1
+        specifier: catalog:runtime
         version: 5.2.1(supports-color@8.1.1)
       helmet:
         specifier: ^8.2.0
         version: 8.3.0
       json5:
-        specifier: ^2.2.3
+        specifier: catalog:runtime
         version: 2.2.3
       morgan:
         specifier: ^1.11.0
@@ -891,31 +1307,31 @@ importers:
         version: 18.0.0
     devDependencies:
       '@eslint/js':
-        specifier: 10.0.1
+        specifier: catalog:lint
         version: 10.0.1(eslint@10.12.0(supports-color@8.1.1))
       '@eslint/json':
-        specifier: 2.1.1
+        specifier: catalog:lint
         version: 2.1.1
       '@testcontainers/localstack':
         specifier: ^12.0.4
         version: 12.1.0(supports-color@8.1.1)
       '@types/express':
-        specifier: ^5.0.6
+        specifier: catalog:types
         version: 5.0.6
       '@types/node':
         specifier: ^26.1.1
         version: 26.4.0
       eslint:
-        specifier: 10.12.0
+        specifier: catalog:lint
         version: 10.12.0(supports-color@8.1.1)
       eslint-config-prettier:
-        specifier: 10.1.8
+        specifier: catalog:lint
         version: 10.1.8(eslint@10.12.0(supports-color@8.1.1))
       eslint-plugin-n:
-        specifier: 18.4.1
+        specifier: catalog:lint
         version: 18.4.1(eslint@10.12.0(supports-color@8.1.1))(typescript@5.9.3)
       globals:
-        specifier: 17.13.0
+        specifier: catalog:lint
         version: 17.13.0
       http-proxy:
         specifier: ^1.18.1
@@ -924,16 +1340,16 @@ importers:
         specifier: ^6.3.0
         version: 6.3.0
       msw:
-        specifier: ^2.15.0
+        specifier: catalog:test
         version: 2.15.0(@types/node@26.4.0)(typescript@5.9.3)
       oxfmt:
-        specifier: 0.72.0
+        specifier: catalog:lint
         version: 0.72.0
       supertest:
         specifier: ^7.2.2
         version: 7.2.2(supports-color@8.1.1)
       testcontainers:
-        specifier: ^12.0.1
+        specifier: catalog:test
         version: 12.1.0(supports-color@8.1.1)
 
 packages:
@@ -1971,35 +2387,13 @@ packages:
     peerDependencies:
       react: '*'
 
-  '@inquirer/ansi@1.0.2':
-    resolution: {integrity: sha512-S8qNSZiYzFd0wAcyG5AXCvUHC5Sr7xpZ9wZ2py9XR88jUz8wooStVx5M6dRzczbBWjic9NP7+rY0Xi7qqK/aMQ==}
-    engines: {node: '>=18'}
-
   '@inquirer/ansi@2.0.7':
     resolution: {integrity: sha512-3eTuUO1vH2cZm2ZKHeQxnOqlTi9EfZDGgIe3BL3I4u+rJHocr9Fz86M4fjYABPvFnQG/gGK551HqDiIcETwU6Q==}
     engines: {node: '>=23.5.0 || ^22.13.0 || ^20.17.0'}
 
-  '@inquirer/confirm@5.1.21':
-    resolution: {integrity: sha512-KR8edRkIsUayMXV+o3Gv+q4jlhENF9nMYUZs9PA2HzrXeHI8M5uDag70U7RJn9yyiMZSbtF5/UexBtAVtZGSbQ==}
-    engines: {node: '>=18'}
-    peerDependencies:
-      '@types/node': '>=18'
-    peerDependenciesMeta:
-      '@types/node':
-        optional: true
-
   '@inquirer/confirm@6.3.0':
     resolution: {integrity: sha512-pZHXJImFtERmSNMBHcjwuz8Ck5vEFEYNUZnwbb8aJpjHv/TwGuFErNxF2Hp8+V+pNJs2EYPMlyWscvFEqO9jOQ==}
     engines: {node: '>=23.5.0 || ^22.13.0 || ^20.17.0'}
-    peerDependencies:
-      '@types/node': '>=18'
-    peerDependenciesMeta:
-      '@types/node':
-        optional: true
-
-  '@inquirer/core@10.3.2':
-    resolution: {integrity: sha512-43RTuEbfP8MbKzedNqBrlhhNKVwoK//vUFNW3Q3vZ88BLcrs4kYpGg+B2mm5p2K/HfygoCxuKwJJiv8PbGmE0A==}
-    engines: {node: '>=18'}
     peerDependencies:
       '@types/node': '>=18'
     peerDependenciesMeta:
@@ -2015,22 +2409,9 @@ packages:
       '@types/node':
         optional: true
 
-  '@inquirer/figures@1.0.15':
-    resolution: {integrity: sha512-t2IEY+unGHOzAaVM5Xx6DEWKeXlDDcNPeDyUpsRc6CUhBfU3VQOEl+Vssh7VNp1dR8MdUJBWhuObjXCsVpjN5g==}
-    engines: {node: '>=18'}
-
   '@inquirer/figures@2.0.8':
     resolution: {integrity: sha512-tApbon79GM9ry56ja/Ud3SY2CL4TQsao9fIwDQbgTeNY55025GdMzQ2+UdegV/lx51VNGUB59M0v0nMpybYY4Q==}
     engines: {node: '>=23.5.0 || ^22.13.0 || ^20.17.0'}
-
-  '@inquirer/type@3.0.10':
-    resolution: {integrity: sha512-BvziSRxfz5Ov8ch0z/n3oijRSEcEsHnhggm4xFZe93DHcUCTlutlq9Ox4SVENAfcRD22UQq7T/atg9Wr3k09eA==}
-    engines: {node: '>=18'}
-    peerDependencies:
-      '@types/node': '>=18'
-    peerDependenciesMeta:
-      '@types/node':
-        optional: true
 
   '@inquirer/type@4.1.0':
     resolution: {integrity: sha512-FMiJpuHUG3Dk0ex+UIXkre7i+i4OcwHWk9YdcVtZHFwb/r2rnrU2ipTCNAB7A+QOP0ryzIcqOfy76fRyyvOEAw==}
@@ -3188,10 +3569,6 @@ packages:
     resolution: {integrity: sha512-K5obAqfrO7zhycnCupM9aaoZ9kx0SA0kv7+Z2oOUsdpWquv4s/Z4zyD7AdTqxrK3pgPM+ozaUi8kdRQbCWaIrQ==}
     engines: {bun: '>=0.7.0', deno: '>=1.0.0', node: '>=18.0.0'}
 
-  '@zip.js/zip.js@2.8.21':
-    resolution: {integrity: sha512-fkyzXISE3IMrstDO1AgPkJCx14MYHP/suIGiAovEYEuBjq3mffsuL6aMV7ohOSjW4rXtuACuUfpA3GtITgdtYg==}
-    engines: {bun: '>=0.7.0', deno: '>=1.0.0', node: '>=18.0.0'}
-
   abort-controller@3.0.0:
     resolution: {integrity: sha512-h8lQ8tacZYnR3vNQTgibj+tODHI5/+l06Au2Pcriv/Gmet0eaj4TwWH41sO9wnHDiQsEj19q0drzdWdeAHtweg==}
     engines: {node: '>=6.5'}
@@ -3502,10 +3879,6 @@ packages:
   bcrypt-pbkdf@1.0.2:
     resolution: {integrity: sha512-qeFIXtP4MSoi6NLqO12WfqARWWuCKi2Rn/9hJLEmtB5yTNr9DqFWkJRCf2qShWzPeAMRnOgCrq0sg/KLv5ES9w==}
 
-  better-path-resolve@1.0.0:
-    resolution: {integrity: sha512-pbnl5XzGBdrFU/wT4jqmJVPn2B6UHPBOhzMQkY/SPUPB6QtUXtmBHBIwCbXJol93mOpGMnQyP/+BB19q04xj7g==}
-    engines: {node: '>=4'}
-
   bidi-js@1.0.3:
     resolution: {integrity: sha512-RKshQI1R3YQ+n9YJz2QQ147P66ELpa1FQEg20Dk8oW9t2KgLbpDLLp9aGZ7y8WHSshDknG0bknqGw5/tyCs5tw==}
 
@@ -3673,6 +4046,7 @@ packages:
   clone-buffer@1.0.0:
     resolution: {integrity: sha512-KLLTJWrvwIP+OPfMn0x2PheDEP20RPUcGXj/ERegTgdmPEZylALQldygiqrPPu8P45uNuPs7ckmReLY6v/iA5g==}
     engines: {node: '>= 0.10'}
+    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
 
   clone-deep@4.0.1:
     resolution: {integrity: sha512-neHB9xuzh/wk0dIHweyAXv2aPGZIVk3pLMe+/RNzINf17fe0OG96QroktYAUm7SM1PBnzTabaLboqqxDyMU+SQ==}
@@ -4146,9 +4520,6 @@ packages:
   domhandler@5.0.3:
     resolution: {integrity: sha512-cgwlv/1iFQiFnU96XXgROh8xTeetsnJiDsTc7TYCLFd9+/WNkIqPTxiM/8pSd8VIrhXGTf1Ny1q1hquVqDJB5w==}
     engines: {node: '>= 4'}
-
-  dompurify@3.3.3:
-    resolution: {integrity: sha512-Oj6pzI2+RqBfFG+qOaOLbFXLQ90ARpcGG6UePL82bJLtdsa6CYJD7nmiU8MW9nQNOtCHV3lZ/Bzq1X0QYbBZCA==}
 
   dompurify@3.4.16:
     resolution: {integrity: sha512-sqo+pNp3qRhCIpbgRi1y8Tgk27Bo2Ry7w0dC1NBeNTdZChWjz9Xb/KOoZbRP/R6pQZ80Qw8YhXw13hWWBbMRnQ==}
@@ -4790,9 +5161,6 @@ packages:
     resolution: {integrity: sha512-F/1DnUGPopORZi0ni+CvrCgHQ5FyEAHRLSApuYWMmrbSwoN2Mn/7k+Gl38gJnR7yyDZk6WLXwiGod1JOWNDKGw==}
     hasBin: true
 
-  headers-polyfill@4.0.3:
-    resolution: {integrity: sha512-IScLbePpkvO846sIwOtOTDjutRMWdXdJmXdMvk6gCBHxFO8d+QKOQedyZSxFTTFYRSmlgSTDtXqqq4pcenBXLQ==}
-
   headers-polyfill@5.0.1:
     resolution: {integrity: sha512-1TJ6Fih/b8h5TIcv+1+Hw0PDQWJTKDKzFZzcKOiW1wJza3XoAQlkCuXLbymPYB8+ZQyw8mHvdw560e8zVFIWyA==}
 
@@ -4828,8 +5196,8 @@ packages:
     engines: {node: '>=12'}
     hasBin: true
 
-  html-parse-stringify@3.0.1:
-    resolution: {integrity: sha512-KknJ50kTInJ7qIScF3jeaFRpMpE8/lfiTdzf/twXyPBLAGrLRTmkz3AdTnKeh40X8k9L2fdYwEp/42WGXIRGcg==}
+  html-parse-stringify@4.0.1:
+    resolution: {integrity: sha512-0zHsZJrK7S3K2aucXWL6ycoYJ/iNtIcFHC/nYQgFklPtrv5LpJctIiSCroWZWeuoXvuyFdzp6KzjJQ+OT5MfFw==}
 
   html-to-react@1.7.0:
     resolution: {integrity: sha512-b5HTNaTGyOj5GGIMiWVr1k57egAZ/vGy0GGefnCQ1VW5hu9+eku8AXHtf2/DeD95cj/FKBKYa1J7SWBOX41yUQ==}
@@ -4881,10 +5249,10 @@ packages:
     resolution: {integrity: sha512-n5UexwEVt0OoIAhG2MWpSnAVJW1U8mQrQTmXyxc5DMAx+NLhcLZhSMJo/FnUsA5JQ3obTYqTgB7YIuZKWpDgow==}
     hasBin: true
 
-  i18next@26.3.1:
-    resolution: {integrity: sha512-txQqd5EULsqEh9OJqRH15aCaOuy/nLJyhw5EHCSKLKJE1aBbb3Zve2+uQIxgWhPm1QqUQoWyQBm2kfmmIrzkcQ==}
+  i18next@26.4.5:
+    resolution: {integrity: sha512-CY9xqbWNQ+eLGDhFX3eNl1kDO1amJixszVKjC4Nd0tvfxUFLKqarN0VUHRt+2b88U7bkNIhnL84dRKQ5mFI+fg==}
     peerDependencies:
-      typescript: ^5 || ^6
+      typescript: ^5 || ^6 || ^7
     peerDependenciesMeta:
       typescript:
         optional: true
@@ -5104,10 +5472,6 @@ packages:
   is-string@1.1.1:
     resolution: {integrity: sha512-BtEeSsoaQjlSPBemMQIrY1MY0uM6vnS1g5fmufYOtnxLGUZM2178PKbhsk7Ffv58IX+ZtcvoGwccYsh0PglkAA==}
     engines: {node: '>= 0.4'}
-
-  is-subdir@1.2.0:
-    resolution: {integrity: sha512-2AT6j+gXe/1ueqbW6fLZJiIw3F8iXGJtt0yDrZaBhAZEG1raiTxKWU+IPqMCzQAXOUCKdA4UDMgacKH25XG2Cw==}
-    engines: {node: '>=4'}
 
   is-subset@0.1.1:
     resolution: {integrity: sha512-6Ybun0IkarhmEqxXCNw/C0bna6Zb/TkfUX9UbwJtK6ObwAVCxmAP308WWTHviM/zAqXk05cdhYsUsZeGQh99iw==}
@@ -5607,16 +5971,6 @@ packages:
   ms@2.1.3:
     resolution: {integrity: sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==}
 
-  msw@2.12.14:
-    resolution: {integrity: sha512-4KXa4nVBIBjbDbd7vfQNuQ25eFxug0aropCQFoI0JdOBuJWamkT1yLVIWReFI8SiTRc+H1hKzaNk+cLk2N9rtQ==}
-    engines: {node: '>=18'}
-    hasBin: true
-    peerDependencies:
-      typescript: '>= 4.8.x'
-    peerDependenciesMeta:
-      typescript:
-        optional: true
-
   msw@2.15.0:
     resolution: {integrity: sha512-2wQAmKkQKxRuXvYJxVhPGG0wZNBQyD06oJvxqw90XqLvptdqxdlHrFUfEteKkpaNORX3Xzc+HtEl/q0nfmN2wQ==}
     engines: {node: '>=18'}
@@ -5643,10 +5997,6 @@ packages:
   mute-stdout@2.0.0:
     resolution: {integrity: sha512-32GSKM3Wyc8dg/p39lWPKYu8zci9mJFzV1Np9Of0ZEpe6Fhssn/FbI7ywAMd40uX+p3ZKh3T5EeCFv81qS3HmQ==}
     engines: {node: '>= 10.13.0'}
-
-  mute-stream@2.0.0:
-    resolution: {integrity: sha512-WWdIxpyjEn+FhQJQQv9aQAYlHoNVdzIzUySNV1gHUPDSdZJ3yZn7pAAbQcV7B56Mvu881q9FZV+0Vx2xC44VWA==}
-    engines: {node: ^18.17.0 || >=20.5.0}
 
   mute-stream@3.0.0:
     resolution: {integrity: sha512-dkEJPVvun4FryqBmZ5KhDo0K9iDXAwn08tMLDinNdRBNPcYEDiWYysLcc6k3mjTMlbP9KyylvRpd4wFtwrT9rw==}
@@ -6147,14 +6497,14 @@ packages:
   react-ga4@2.1.0:
     resolution: {integrity: sha512-ZKS7PGNFqqMd3PJ6+C2Jtz/o1iU9ggiy8Y8nUeksgVuvNISbmrQtJiZNvC/TjDsqD0QlU5Wkgs7i+w9+OjHhhQ==}
 
-  react-i18next@17.0.8:
-    resolution: {integrity: sha512-0ooKbGLU8JXhe1zwpQUWIeXSgLPOfwJmgheWRIUpcoA0CpyabpGhayjdG+/eA5esC1AQ8h2jWpXjJfzQzeDOCw==}
+  react-i18next@17.0.16:
+    resolution: {integrity: sha512-7uImVD9hG5yUOaP5KHVied1x0A004Di/KU031ULR35Ma+9e9H5GdnNZHgQEIByyAz+IAXBkRDTedNVzjPUH8ZA==}
     peerDependencies:
       i18next: '>= 26.2.0'
       react: '>= 16.8.0'
       react-dom: '*'
       react-native: '*'
-      typescript: ^5 || ^6
+      typescript: ^5 || ^6 || ^7
     peerDependenciesMeta:
       react-dom:
         optional: true
@@ -6372,9 +6722,6 @@ packages:
   retry@0.12.0:
     resolution: {integrity: sha512-9LkiTwjUh6rT555DtE9rTX+BKByPfrMzEAtnlEtdEwr3Nkffwiihqe2bWADg+OQRjt9gl6ICdmB/ZFDCGAtSow==}
     engines: {node: '>= 4'}
-
-  rettime@0.10.1:
-    resolution: {integrity: sha512-uyDrIlUEH37cinabq0AX4QbgV4HbFZ/gqoiunWQ1UqBtRvTTytwhNYjE++pO/MjPTZL5KQCf2bEoJ/BJNVQ5Kw==}
 
   rettime@0.11.11:
     resolution: {integrity: sha512-ILJRqVWBCTlg9r42fFgwVZx1gnFAcQF8mRoMkbgQfIrjEDf9nbBFDFx00oloOa+Q869FUtaYDXZvEfnecQSCoQ==}
@@ -7090,10 +7437,6 @@ packages:
     resolution: {integrity: sha512-0QwqXteBNXgnLCdWdvPQBX6FXRHtIH3VhJPTd5Lwn28tJXc34YqSCWUmkOvtJHBmB3gGoPtrOKk3Ts8/kEZ9aA==}
     engines: {node: '>=10.13.0'}
 
-  void-elements@3.1.0:
-    resolution: {integrity: sha512-Dhxzh5HZuiHQhbvTW9AMetFfBHDMYpo23Uo9btPXgdYP+3T5S+p+jgNy7spra+veYhBP2dCSgxR/i2Y02h5/6w==}
-    engines: {node: '>=0.10.0'}
-
   w3c-xmlserializer@5.0.0:
     resolution: {integrity: sha512-o8qghlI8NZHU1lLPrpi2+Uq7abh4GGPpYANlalzWxyWteJOCsr/P+oPBA49TOLu5FTZO4d3F9MnWJfiMo4BkmA==}
     engines: {node: '>=18'}
@@ -7303,10 +7646,6 @@ packages:
   yocto-queue@0.1.0:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}
     engines: {node: '>=10'}
-
-  yoctocolors-cjs@2.1.3:
-    resolution: {integrity: sha512-U/PBtDf35ff0D8X8D0jfdzHYEPFxAI7jJlxZXwCSez5M3190m+QobIfh+sWDWSHMCWWJN2AWamkegn6vr6YBTw==}
-    engines: {node: '>=18'}
 
   zip-stream@6.0.1:
     resolution: {integrity: sha512-zK7YHHz4ZXpW89AHXUPbQVGKI7uvkd3hzusTdotCg1UxyaVtg0zFJSTfW/Dq5f7OBBVnq6cZIaC8Ti4hb6dtCA==}
@@ -9220,23 +9559,14 @@ snapshots:
     dependencies:
       react: 18.3.1
 
-  '@inquirer/ansi@1.0.2': {}
-
   '@inquirer/ansi@2.0.7': {}
 
-  '@inquirer/confirm@5.1.21(@types/node@24.10.13)':
+  '@inquirer/confirm@6.3.0(@types/node@24.10.13)':
     dependencies:
-      '@inquirer/core': 10.3.2(@types/node@24.10.13)
-      '@inquirer/type': 3.0.10(@types/node@24.10.13)
+      '@inquirer/core': 12.0.1(@types/node@24.10.13)
+      '@inquirer/type': 4.1.0(@types/node@24.10.13)
     optionalDependencies:
       '@types/node': 24.10.13
-
-  '@inquirer/confirm@5.1.21(@types/node@26.4.0)':
-    dependencies:
-      '@inquirer/core': 10.3.2(@types/node@26.4.0)
-      '@inquirer/type': 3.0.10(@types/node@26.4.0)
-    optionalDependencies:
-      '@types/node': 26.4.0
 
   '@inquirer/confirm@6.3.0(@types/node@26.4.0)':
     dependencies:
@@ -9245,31 +9575,17 @@ snapshots:
     optionalDependencies:
       '@types/node': 26.4.0
 
-  '@inquirer/core@10.3.2(@types/node@24.10.13)':
+  '@inquirer/core@12.0.1(@types/node@24.10.13)':
     dependencies:
-      '@inquirer/ansi': 1.0.2
-      '@inquirer/figures': 1.0.15
-      '@inquirer/type': 3.0.10(@types/node@24.10.13)
+      '@inquirer/ansi': 2.0.7
+      '@inquirer/figures': 2.0.8
+      '@inquirer/type': 4.1.0(@types/node@24.10.13)
       cli-width: 4.1.0
-      mute-stream: 2.0.0
+      fast-wrap-ansi: 0.2.2
+      mute-stream: 3.0.0
       signal-exit: 4.1.0
-      wrap-ansi: 6.2.0
-      yoctocolors-cjs: 2.1.3
     optionalDependencies:
       '@types/node': 24.10.13
-
-  '@inquirer/core@10.3.2(@types/node@26.4.0)':
-    dependencies:
-      '@inquirer/ansi': 1.0.2
-      '@inquirer/figures': 1.0.15
-      '@inquirer/type': 3.0.10(@types/node@26.4.0)
-      cli-width: 4.1.0
-      mute-stream: 2.0.0
-      signal-exit: 4.1.0
-      wrap-ansi: 6.2.0
-      yoctocolors-cjs: 2.1.3
-    optionalDependencies:
-      '@types/node': 26.4.0
 
   '@inquirer/core@12.0.1(@types/node@26.4.0)':
     dependencies:
@@ -9283,17 +9599,11 @@ snapshots:
     optionalDependencies:
       '@types/node': 26.4.0
 
-  '@inquirer/figures@1.0.15': {}
-
   '@inquirer/figures@2.0.8': {}
 
-  '@inquirer/type@3.0.10(@types/node@24.10.13)':
+  '@inquirer/type@4.1.0(@types/node@24.10.13)':
     optionalDependencies:
       '@types/node': 24.10.13
-
-  '@inquirer/type@3.0.10(@types/node@26.4.0)':
-    optionalDependencies:
-      '@types/node': 26.4.0
 
   '@inquirer/type@4.1.0(@types/node@26.4.0)':
     optionalDependencies:
@@ -10557,8 +10867,6 @@ snapshots:
 
   '@zip.js/zip.js@2.23.0': {}
 
-  '@zip.js/zip.js@2.8.21': {}
-
   abort-controller@3.0.0:
     dependencies:
       event-target-shim: 5.0.1
@@ -10916,10 +11224,6 @@ snapshots:
   bcrypt-pbkdf@1.0.2:
     dependencies:
       tweetnacl: 0.14.5
-
-  better-path-resolve@1.0.0:
-    dependencies:
-      is-windows: 1.0.2
 
   bidi-js@1.0.3:
     dependencies:
@@ -11617,10 +11921,6 @@ snapshots:
   domhandler@5.0.3:
     dependencies:
       domelementtype: 2.3.0
-
-  dompurify@3.3.3:
-    optionalDependencies:
-      '@types/trusted-types': 2.0.7
 
   dompurify@3.4.16:
     optionalDependencies:
@@ -12520,8 +12820,6 @@ snapshots:
 
   he@1.2.0: {}
 
-  headers-polyfill@4.0.3: {}
-
   headers-polyfill@5.0.1:
     dependencies:
       '@types/set-cookie-parser': 2.4.10
@@ -12563,9 +12861,7 @@ snapshots:
       relateurl: 0.2.7
       terser: 5.48.0
 
-  html-parse-stringify@3.0.1:
-    dependencies:
-      void-elements: 3.1.0
+  html-parse-stringify@4.0.1: {}
 
   html-to-react@1.7.0(react@18.3.1):
     dependencies:
@@ -12633,7 +12929,7 @@ snapshots:
     transitivePeerDependencies:
       - '@swc/helpers'
 
-  i18next@26.3.1(typescript@5.9.3):
+  i18next@26.4.5(typescript@5.9.3):
     optionalDependencies:
       typescript: 5.9.3
 
@@ -12815,10 +13111,6 @@ snapshots:
     dependencies:
       call-bound: 1.0.4
       has-tostringtag: 1.0.2
-
-  is-subdir@1.2.0:
-    dependencies:
-      better-path-resolve: 1.0.0
 
   is-subset@0.1.1: {}
 
@@ -13259,45 +13551,20 @@ snapshots:
 
   ms@2.1.3: {}
 
-  msw@2.12.14(@types/node@24.10.13)(typescript@5.9.3):
+  msw@2.15.0(@types/node@24.10.13)(typescript@5.9.3):
     dependencies:
-      '@inquirer/confirm': 5.1.21(@types/node@24.10.13)
+      '@inquirer/confirm': 6.3.0(@types/node@24.10.13)
       '@mswjs/interceptors': 0.41.9
-      '@open-draft/deferred-promise': 2.2.0
+      '@open-draft/deferred-promise': 3.0.0
       '@types/statuses': 2.0.6
       cookie: 1.1.1
       graphql: 16.14.2
-      headers-polyfill: 4.0.3
+      headers-polyfill: 5.0.1
       is-node-process: 1.2.0
       outvariant: 1.4.3
       path-to-regexp: 6.3.0
       picocolors: 1.1.1
-      rettime: 0.10.1
-      statuses: 2.0.2
-      strict-event-emitter: 0.5.1
-      tough-cookie: 6.0.1
-      type-fest: 5.9.0
-      until-async: 3.0.2
-      yargs: 17.7.2
-    optionalDependencies:
-      typescript: 5.9.3
-    transitivePeerDependencies:
-      - '@types/node'
-
-  msw@2.12.14(@types/node@26.4.0)(typescript@5.9.3):
-    dependencies:
-      '@inquirer/confirm': 5.1.21(@types/node@26.4.0)
-      '@mswjs/interceptors': 0.41.9
-      '@open-draft/deferred-promise': 2.2.0
-      '@types/statuses': 2.0.6
-      cookie: 1.1.1
-      graphql: 16.14.2
-      headers-polyfill: 4.0.3
-      is-node-process: 1.2.0
-      outvariant: 1.4.3
-      path-to-regexp: 6.3.0
-      picocolors: 1.1.1
-      rettime: 0.10.1
+      rettime: 0.11.11
       statuses: 2.0.2
       strict-event-emitter: 0.5.1
       tough-cookie: 6.0.1
@@ -13345,8 +13612,6 @@ snapshots:
   mustache@4.2.0: {}
 
   mute-stdout@2.0.0: {}
-
-  mute-stream@2.0.0: {}
 
   mute-stream@3.0.0: {}
 
@@ -13896,11 +14161,11 @@ snapshots:
 
   react-ga4@2.1.0: {}
 
-  react-i18next@17.0.8(i18next@26.3.1(typescript@5.9.3))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.9.3):
+  react-i18next@17.0.16(i18next@26.4.5(typescript@5.9.3))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.9.3):
     dependencies:
       '@babel/runtime': 7.29.7
-      html-parse-stringify: 3.0.1
-      i18next: 26.3.1(typescript@5.9.3)
+      html-parse-stringify: 4.0.1
+      i18next: 26.4.5(typescript@5.9.3)
       react: 18.3.1
       use-sync-external-store: 1.6.0(react@18.3.1)
     optionalDependencies:
@@ -14142,8 +14407,6 @@ snapshots:
   ret@0.5.0: {}
 
   retry@0.12.0: {}
-
-  rettime@0.10.1: {}
 
   rettime@0.11.11: {}
 
@@ -15053,8 +15316,6 @@ snapshots:
       - bare-abort-controller
       - react-native-b4a
 
-  void-elements@3.1.0: {}
-
   w3c-xmlserializer@5.0.0:
     dependencies:
       xml-name-validator: 5.0.0
@@ -15324,8 +15585,6 @@ snapshots:
       yargs-parser: 22.0.0
 
   yocto-queue@0.1.0: {}
-
-  yoctocolors-cjs@2.1.3: {}
 
   zip-stream@6.0.1:
     dependencies:

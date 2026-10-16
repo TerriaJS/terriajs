@@ -16,8 +16,6 @@ import Terria from "../../lib/Models/Terria";
 import ViewerMode from "../../lib/Models/ViewerMode";
 import { RectangleTraits } from "../../lib/Traits/TraitsClasses/MappableTraits";
 import TerriaViewer from "../../lib/ViewModels/TerriaViewer";
-import { worker } from "../mocks/browser";
-import { http, HttpResponse } from "msw";
 
 describe("Leaflet Model", function () {
   let terria: Terria;
@@ -29,8 +27,6 @@ describe("Leaflet Model", function () {
   let terriaProgressEvt: jasmine.Spy;
 
   beforeEach(function () {
-    worker.use(http.get("http://example.com", () => HttpResponse.text("")));
-
     terria = new Terria({
       baseUrl: "./"
     });
@@ -45,11 +41,14 @@ describe("Leaflet Model", function () {
     terriaProgressEvt = spyOn(terria.tileLoadProgressEvent, "raiseEvent");
 
     leaflet = new Leaflet(terriaViewer, container);
+    // A data: URL never reaches the MSW service worker, so tiles still loading
+    // after a spec ends can't fail a later spec as an unhandled request.
+    const url = L.Util.emptyImageUrl;
     layers = [
-      new L.TileLayer("http://example.com"),
-      new L.TileLayer("http://example.com"),
+      new L.TileLayer(url),
+      new L.TileLayer(url),
       // Make sure there's a non-tile layer in there to make sure we're able to handle those.
-      new L.ImageOverlay("http://example.com", L.latLngBounds([1, 1], [3, 3]))
+      new L.ImageOverlay(url, L.latLngBounds([1, 1], [3, 3]))
     ];
 
     layers.forEach(function (layer) {

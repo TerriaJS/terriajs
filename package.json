@@ -20,8 +20,8 @@
     "prepare": "husky"
   },
   "devDependencies": {
-    "husky": "^9.1.7",
-    "oxfmt": "0.72.0",
-    "turbo": "2.9.16"
+    "husky": "catalog:lint",
+    "oxfmt": "catalog:lint",
+    "turbo": "catalog:build"
   }
 }
