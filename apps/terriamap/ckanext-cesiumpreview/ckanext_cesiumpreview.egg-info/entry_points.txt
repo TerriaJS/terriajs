@@ -1,4 +1,0 @@
-
-        [ckan.plugins]
-	cesium_viewer=ckanext.cesiumpreview.plugin:CesiumPreview
-	

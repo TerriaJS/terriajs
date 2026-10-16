@@ -4,6 +4,7 @@
 
 - Migrate to pnpm
 - Upgrade Cesium to 1.145
+- Removed `ckanext-cesiumpreview`, an unmaintained CKAN resource-view plugin from the original NationalMap repository. It was written for Python 2 and CKAN < 2.9, pointed at the retired `nationalmap.nicta.com.au`, and was not used by TerriaMap.
 
 #### 0.4.8
 

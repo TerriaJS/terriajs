@@ -4,6 +4,7 @@
 
 - **Breaking changes:**
   - Removed option `uiMode` from `MapInteractionMode`. This was mostly only used internally for difftool.
+  - A group on the workbench now contributes its nested-group members and its reference members, not just its direct mappable members. `Terria.pushAndLoadMapItems` previously started member loads without awaiting them, so anything pushed after an `await` — members of nested groups, and the targets of `ReferenceMixin` members — was pushed only after the workbench had already been assigned and was silently dropped; direct members were pushed in time but their `loadMapItems()` was never waited on. Applying init data now blocks until a workbench group's members have loaded.
 
 - Migrate to pnpm
 - Added the experimental `nextExperimentalFeatures.progressiveLoading` config parameter (default `false`) for showing the map before everything has loaded, and the `Terria#progressiveLoading`, `Terria#isProgressivelyLoading` and `Terria#preloadedWorldTerrain` getters. When it's on:
@@ -47,7 +48,6 @@
 - Fixed a time-varying layer staying on the timeline after it was removed from the workbench while the catalogue was still adding it. The catalogue now only adds an item to the timeline if it is still on the workbench once it has loaded, and no longer adds an item that failed to be added to the workbench.
 - The "Shadows disabled" toast now closes when its "Display settings" link is clicked to open the settings panel. Other `<settingspanel>` links are unchanged.
 - Workbench items from an init source or share link now load concurrently instead of one at a time, so applying init data takes about as long as the slowest item rather than the sum of every item.
-- **Breaking:** A group on the workbench now contributes its nested-group members and its reference members, not just its direct mappable members. `Terria.pushAndLoadMapItems` previously started member loads without awaiting them, so anything pushed after an `await` — members of nested groups, and the targets of `ReferenceMixin` members — was pushed only after the workbench had already been assigned and was silently dropped; direct members were pushed in time but their `loadMapItems()` was never waited on. Applying init data now blocks until a workbench group's members have loaded.
 - [The next improvement]
 
 #### 8.13.0 - 2026-09-11
