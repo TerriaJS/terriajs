@@ -81,6 +81,16 @@ class Tabs extends Component {
           <DataCatalogTab
             items={this.props.terria.catalog.group.memberModels}
             searchPlaceholder={t(($) => $.addData.searchPlaceholder)}
+            // With progressive loading the catalog can be opened before its
+            // init sources have loaded. Init sources keep loading workbench
+            // items after the catalog arrives, so only while it's still empty.
+            isLoadingTab={
+              this.props.terria.isProgressivelyLoading &&
+              this.props.terria.catalog.group.memberModels.every(
+                (member) =>
+                  member === this.props.terria.catalog.userAddedDataGroup
+              )
+            }
           />
         )
       });

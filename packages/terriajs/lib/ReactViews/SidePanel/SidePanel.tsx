@@ -19,6 +19,7 @@ import { useRefForTerria } from "../Hooks/useRefForTerria";
 import SearchBoxAndResults from "../Search/SearchBoxAndResults";
 import { useViewState, withViewState } from "../Context";
 import Workbench from "../Workbench/Workbench";
+import Loader from "../Loader";
 import { applyTranslationIfExists } from "../../Language/languageHelpers";
 import { Category, HelpAction } from "../../Core/Analytics/analyticEvents";
 import { runInAction } from "mobx";
@@ -227,6 +228,12 @@ const SidePanel = observer<React.FC<SidePanelProps>>(
         >
           {terria.workbench.items.length > 0 ? (
             <Workbench viewState={viewState} terria={terria} />
+          ) : terria.isProgressivelyLoading ? (
+            // With progressive loading the workbench shows before init
+            // sources have added their items
+            <Box paddedVertically={5}>
+              <Loader light textProps={{ textLight: true }} />
+            </Box>
           ) : (
             <EmptyWorkbench theme={theme} />
           )}
