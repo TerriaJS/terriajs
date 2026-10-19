@@ -1,23 +1,25 @@
-import TerriaError from "../../lib/Core/TerriaError";
 import i18next from "i18next";
 import L from "leaflet";
+import { http, HttpResponse } from "msw";
 import retry from "retry";
 import RequestErrorEvent from "terriajs-cesium/Source/Core/RequestErrorEvent";
 import Resource from "terriajs-cesium/Source/Core/Resource";
 import TileProviderError from "terriajs-cesium/Source/Core/TileProviderError";
 import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
 import WebMapServiceImageryProvider from "terriajs-cesium/Source/Scene/WebMapServiceImageryProvider";
+import TerriaError from "../../lib/Core/TerriaError";
 import MappableMixin, { MapItem } from "../../lib/ModelMixins/MappableMixin";
 import TileErrorHandlerMixin from "../../lib/ModelMixins/TileErrorHandlerMixin";
+import { ConfigStrata } from "../../lib/Models/Config/ConfigStrata";
 import CommonStrata from "../../lib/Models/Definition/CommonStrata";
 import CreateModel from "../../lib/Models/Definition/CreateModel";
 import Terria from "../../lib/Models/Terria";
-import CatalogMemberTraits from "../../lib/Traits/TraitsClasses/CatalogMemberTraits";
-import MappableTraits from "../../lib/Traits/TraitsClasses/MappableTraits";
 import mixTraits from "../../lib/Traits/mixTraits";
+import CatalogMemberTraits from "../../lib/Traits/TraitsClasses/CatalogMemberTraits";
 import ImageryProviderTraits from "../../lib/Traits/TraitsClasses/ImageryProviderTraits";
+import MappableTraits from "../../lib/Traits/TraitsClasses/MappableTraits";
 import UrlTraits from "../../lib/Traits/TraitsClasses/UrlTraits";
-import { ConfigStrata } from "../../lib/Models/Config/ConfigStrata";
+import { worker } from "../mocks/browser";
 
 class TestCatalogItem extends TileErrorHandlerMixin(
   MappableMixin(
@@ -169,10 +171,10 @@ describe("TileErrorHandlerMixin", function () {
     it("retries fetching the tile using xhr", async function () {
       try {
         const error = newError(randomIntBetween(500, 599));
-        spyOn(Resource, "fetchImage").and.rejectWith(error.error);
+        spyOn(Resource.prototype, "fetchImage").and.rejectWith(error.error);
         await onTileLoadError(item, error);
       } catch (_e) {}
-      expect(Resource.fetchImage).toHaveBeenCalled();
+      expect(Resource.prototype.fetchImage).toHaveBeenCalled();
     });
   });
 
@@ -269,10 +271,10 @@ describe("TileErrorHandlerMixin", function () {
     it("it fails after retrying a maximum of specified number of times", async function () {
       try {
         const error = newError(randomIntBetween(500, 599));
-        spyOn(Resource, "fetchImage").and.rejectWith(error.error);
+        spyOn(Resource.prototype, "fetchImage").and.rejectWith(error.error);
         await onTileLoadError(item, error);
       } catch {}
-      expect(Resource.fetchImage).toHaveBeenCalledTimes(
+      expect(Resource.prototype.fetchImage).toHaveBeenCalledTimes(
         !Array.isArray(item.tileRetryOptions)
           ? (item.tileRetryOptions.retries ?? 0)
           : 0
@@ -281,14 +283,42 @@ describe("TileErrorHandlerMixin", function () {
     });
 
     it("tells the map to reload the tile again if an xhr attempt succeeds", async function () {
-      spyOn(Resource, "fetchImage").and.resolveTo();
+      spyOn(Resource.prototype, "fetchImage").and.resolveTo();
       await onTileLoadError(item, newError(randomIntBetween(500, 599)));
       expect(item.tileFailures).toBe(0);
     });
 
+    it("sends the imagery provider's request headers", async function () {
+      const authorizationHeaders: (string | null)[] = [];
+      worker.use(
+        http.get("*/protected-wms", ({ request }) => {
+          authorizationHeaders.push(request.headers.get("Authorization"));
+          return new HttpResponse(null, { status: 500 });
+        })
+      );
+      imageryProvider = new WebMapServiceImageryProvider({
+        url: new Resource({
+          url: "/protected-wms",
+          headers: { Authorization: "Bearer test-token" }
+        }),
+        layers: "0"
+      });
+      item = new TestCatalogItem("test", new Terria(), imageryProvider);
+      item.setTrait(CommonStrata.user, "url", "/protected-wms");
+
+      try {
+        await onTileLoadError(item, newError(500));
+      } catch {}
+
+      expect(authorizationHeaders.length).toBeGreaterThan(0);
+      authorizationHeaders.forEach((header) =>
+        expect(header).toBe("Bearer test-token")
+      );
+    });
+
     it("fails if the xhr succeeds but the map fails to load the tile for more than 5 times", async function () {
       try {
-        spyOn(Resource, "fetchImage").and.resolveTo();
+        spyOn(Resource.prototype, "fetchImage").and.resolveTo();
         await onTileLoadError(item, newError(randomIntBetween(500, 599), 0));
         await onTileLoadError(item, newError(randomIntBetween(500, 599), 1));
         await onTileLoadError(item, newError(randomIntBetween(500, 599), 2));
@@ -348,7 +378,7 @@ describe("TileErrorHandlerMixin", function () {
     it("gives up silently if the item is hidden", async function () {
       try {
         const error = newError(randomIntBetween(500, 599));
-        spyOn(Resource, "fetchImage").and.rejectWith(error.error);
+        spyOn(Resource.prototype, "fetchImage").and.rejectWith(error.error);
         const result = onTileLoadError(item, error);
         item.setTrait(CommonStrata.user, "show", false);
         await result;
