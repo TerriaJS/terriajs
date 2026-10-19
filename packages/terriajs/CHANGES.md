@@ -63,6 +63,7 @@
 - Workbench items from an init source or share link now load concurrently instead of one at a time, so applying init data takes about as long as the slowest item rather than the sum of every item.
 - Fixed the timeline needle sometimes disappearing after a story scene (or any change of the top time-series layer) switched to a layer with a different time range. The timeline zoomed to the new layer's range before the clock had been moved to it, so it was clamped to the previous layer's range and the needle was drawn off-screen. Added `TimelineStack#clockRange`, the range last applied to the clock, which the timeline now follows.
 - Fixed CZML layers taking over the timeline clock in 3D. The Cesium widget copied each newly added data source's clock over the one `TimelineStack` had set, and the next clock tick then saved those values on the top layer. Switching story scenes while the timeline was playing could give a layer another layer's time range: its timeline disappeared (start after stop), or it showed nothing and couldn't be zoomed to. Terria now creates the widget with `automaticallyTrackDataSourceClocks: false`; each CZML item already applies its own clock through the timeline.
+- Add flag `ImageryProviderLeafletTileLayer.loadTilesWithResource` to load tiles in Leaflet mode using XHR instead of `img` tags. This behaviour useful when you want add custom headers like authentication headers in tile requests.
 - [The next improvement]
 
 #### 8.13.0 - 2026-09-11
