@@ -63,6 +63,30 @@ describe("TimelineStack", function () {
     expect(JulianDate.lessThan(clock.startTime, clock.stopTime)).toBe(true);
   });
 
+  it("records the clock range applied from a new top item", function () {
+    const older = new WebMapServiceCatalogItem("older", terria);
+    terria.addModel(older);
+    older.setTrait("definition", "startTime", "1840-01-01T00:00:00Z");
+    older.setTrait("definition", "stopTime", "2025-01-01T00:00:00Z");
+    older.setTrait("definition", "currentTime", "1860-01-01T00:00:00Z");
+
+    runInAction(() => {
+      terria.timelineStack.removeAll();
+      terria.timelineStack.addToTop(older);
+    });
+
+    const { clock, clockRange } = terria.timelineStack;
+    expect(clockRange).toBeDefined();
+    expect(JulianDate.toIso8601(clockRange!.start, 0)).toBe(
+      "1840-01-01T00:00:00Z"
+    );
+    expect(JulianDate.toIso8601(clockRange!.stop, 0)).toBe(
+      "2025-01-01T00:00:00Z"
+    );
+    expect(JulianDate.equals(clockRange!.start, clock.startTime)).toBe(true);
+    expect(JulianDate.equals(clockRange!.stop, clock.stopTime)).toBe(true);
+  });
+
   it("automatically syncs the clock with the top item", async function () {
     const wms2 = new WebMapServiceCatalogItem("test2", terria);
     terria.addModel(wms2);

@@ -65,13 +65,12 @@ const CesiumTimeline = createReactClass({
     );
 
     this.disposeZoomAutorun = autorun(() => {
-      const timelineStack = this.props.terria.timelineStack;
-      const topLayer = timelineStack.top;
-      if (topLayer) {
-        this.cesiumTimeline.zoomTo(
-          topLayer.startTimeAsJulianDate,
-          topLayer.stopTimeAsJulianDate
-        );
+      // zoomTo clamps to the clock's range, so follow the range TimelineStack
+      // has applied to the clock rather than the top layer's own times.
+      const clockRange = this.props.terria.timelineStack.clockRange;
+      if (clockRange) {
+        this.cesiumTimeline.zoomTo(clockRange.start, clockRange.stop);
+        this.cesiumTimeline.updateFromClock();
       }
     });
 
