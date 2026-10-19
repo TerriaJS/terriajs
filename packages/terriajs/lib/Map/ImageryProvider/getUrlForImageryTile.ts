@@ -2,32 +2,28 @@ import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
 import URI from "urijs";
 import Resource from "terriajs-cesium/Source/Core/Resource";
 
-function getUrlForImageryTile(
+/**
+ * Capture the Resource the imagery provider would request for a tile, without
+ * requesting it.
+ */
+export function getResourceForImageryTile(
   imageryProvider: ImageryProvider,
   x: number,
   y: number,
   level: number
-): string | undefined {
+): Resource | undefined {
   const oldLoadImage = ImageryProvider.loadImage;
 
-  let tileUrl;
+  let tileResource: Resource | undefined;
   try {
     ImageryProvider.loadImage = function (
       _imageryProvider: ImageryProvider,
       url: string | Resource
     ) {
       if (typeof url === "string" || url instanceof String) {
-        tileUrl = url;
+        tileResource = new Resource({ url: url.toString() });
       } else if (url.url) {
-        tileUrl = url.url;
-
-        // Add the Cesium Ion access token if there is one (for an IonResource).
-        const ionAccessToken = (url as any)._ionEndpoint?.accessToken;
-        if (ionAccessToken) {
-          tileUrl = new URI(tileUrl)
-            .addQuery("access_token", ionAccessToken)
-            .toString();
-        }
+        tileResource = url;
       }
       return undefined;
     };
@@ -37,7 +33,25 @@ function getUrlForImageryTile(
     ImageryProvider.loadImage = oldLoadImage;
   }
 
-  return tileUrl;
+  return tileResource;
+}
+
+function getUrlForImageryTile(
+  imageryProvider: ImageryProvider,
+  x: number,
+  y: number,
+  level: number
+): string | undefined {
+  const resource = getResourceForImageryTile(imageryProvider, x, y, level);
+  if (!resource) {
+    return undefined;
+  }
+
+  // Add the Cesium Ion access token if there is one (for an IonResource).
+  const ionAccessToken = (resource as any)._ionEndpoint?.accessToken;
+  return ionAccessToken
+    ? new URI(resource.url).addQuery("access_token", ionAccessToken).toString()
+    : resource.url;
 }
 
 export default getUrlForImageryTile;

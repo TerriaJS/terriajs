@@ -3,12 +3,13 @@ import { action, runInAction } from "mobx";
 import retry from "retry";
 import formatError from "terriajs-cesium/Source/Core/formatError";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
-import Resource from "terriajs-cesium/Source/Core/Resource";
 import TileProviderError from "terriajs-cesium/Source/Core/TileProviderError";
 import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
 import AbstractConstructor from "../Core/AbstractConstructor";
 import TerriaError from "../Core/TerriaError";
-import getUrlForImageryTile from "../Map/ImageryProvider/getUrlForImageryTile";
+import getUrlForImageryTile, {
+  getResourceForImageryTile
+} from "../Map/ImageryProvider/getUrlForImageryTile";
 import { ProviderCoords } from "../Map/PickedFeatures/PickedFeatures";
 import CompositeCatalogItem from "../Models/Catalog/CatalogItems/CompositeCatalogItem";
 import CommonStrata from "../Models/Definition/CommonStrata";
@@ -396,17 +397,15 @@ function TileErrorHandlerMixin<T extends AbstractConstructor<ModelType>>(
     tile: ProviderCoords,
     imageryProvider: ImageryProvider
   ) {
-    const tileUrl = getUrlForImageryTile(
+    const tileResource = getResourceForImageryTile(
       imageryProvider,
       tile.x,
       tile.y,
       tile.level
     );
-    if (tileUrl) {
-      return Resource.fetchImage({
-        url: tileUrl,
-        preferBlob: true
-      });
+    if (tileResource) {
+      // Use the provider's own Resource so the probe sends the same headers as the map
+      return tileResource.clone().fetchImage({ preferBlob: true });
     }
     return Promise.reject();
   }
