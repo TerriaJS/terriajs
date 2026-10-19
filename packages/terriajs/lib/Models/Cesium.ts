@@ -228,6 +228,9 @@ export default class Cesium extends GlobeOrMap {
 
     const options = {
       clock: this.terria.timelineClock,
+      // TimelineStack owns the clock. Tracking would copy each added data
+      // source's clock (e.g. a CZML's) over the top layer's time range.
+      automaticallyTrackDataSourceClocks: false,
       baseLayer: ImageryLayer.fromProviderAsync(
         SingleTileImageryProvider.fromUrl(img),
         {}

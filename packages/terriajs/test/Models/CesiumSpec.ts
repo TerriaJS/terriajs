@@ -13,8 +13,10 @@ import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import CesiumTerrainProvider from "terriajs-cesium/Source/Core/CesiumTerrainProvider";
 import Color from "terriajs-cesium/Source/Core/Color";
 import EllipsoidTerrainProvider from "terriajs-cesium/Source/Core/EllipsoidTerrainProvider";
+import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
+import CzmlDataSource from "terriajs-cesium/Source/DataSources/CzmlDataSource";
 import Cesium3DTileset from "terriajs-cesium/Source/Scene/Cesium3DTileset";
 import PrimitiveCollection from "terriajs-cesium/Source/Scene/PrimitiveCollection";
 import Scene from "terriajs-cesium/Source/Scene/Scene";
@@ -105,6 +107,31 @@ describeIfSupported("Cesium Model", function () {
     cesium.scene.globe.tileLoadProgressEvent.raiseEvent(2);
 
     expect(terriaProgressEvt).toHaveBeenCalledWith(2, 7);
+  });
+
+  it("does not let an added data source take over the timeline clock", async function () {
+    const clock = terria.timelineClock;
+    clock.startTime = JulianDate.fromIso8601("1840-01-01T00:00:00Z");
+    clock.stopTime = JulianDate.fromIso8601("2025-01-01T00:00:00Z");
+
+    const dataSource = await CzmlDataSource.load([
+      {
+        id: "document",
+        version: "1.0",
+        clock: {
+          interval: "2026-02-28T00:00:00Z/2026-03-25T00:00:00Z",
+          currentTime: "2026-03-11T00:00:00Z"
+        }
+      }
+    ]);
+    await cesium.dataSources.add(dataSource);
+
+    expect(JulianDate.toIso8601(clock.startTime, 0)).toBe(
+      "1840-01-01T00:00:00Z"
+    );
+    expect(JulianDate.toIso8601(clock.stopTime, 0)).toBe(
+      "2025-01-01T00:00:00Z"
+    );
   });
 
   it("should reset maximum length when the number of tiles to be loaded reaches 0", function () {
