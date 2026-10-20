@@ -1,6 +1,17 @@
 {
   "name": "@terria/design-system",
   "version": "0.0.0",
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not op_mini all"
+  ],
+  "dependencies": {
+    "@react-aria/utils": "3.34.1",
+    "lucide-react": "1.59.0",
+    "react-aria": "3.53.1",
+    "react-aria-components": "1.22.1"
+  },
   "devDependencies": {
     "@storybook/react-vite": "catalog:storybook",
     "@types/react": "catalog:types",
@@ -8,8 +19,10 @@
     "@typescript/native": "catalog:build",
     "@vitejs/plugin-react": "^6.1.2",
     "@vitest/browser-playwright": "catalog:test",
+    "autoprefixer": "catalog:runtime",
     "glob": "^13.0.6",
     "playwright": "catalog:runtime",
+    "postcss": "catalog:runtime",
     "react": "catalog:runtime",
     "react-dom": "catalog:runtime",
     "rollup": "catalog:runtime",
@@ -41,6 +54,10 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
     },
+    "./tokens.css": "./dist/tokens.css",
+    "./base.css": "./dist/base.css",
+    "./layers.css": "./dist/layers.css",
+    "./reset.css": "./dist/reset.css",
     "./*": {
       "types": "./dist/*/index.d.ts",
       "import": "./dist/*/index.js"
@@ -65,9 +82,12 @@
     "dev:types": "tsc --build --watch",
     "test": "vitest run",
     "test:watch": "vitest",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "tsc -p tsconfig.check.json",
     "lint": "eslint . && stylelint \"**/*.css\" --allow-empty-input"
   },
+  "sideEffects": [
+    "**/*.css"
+  ],
   "type": "module",
   "types": "./dist/index.d.ts"
 }

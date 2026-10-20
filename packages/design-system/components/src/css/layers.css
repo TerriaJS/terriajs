@@ -1,0 +1,11 @@
+/**
+ * CSS Layer Definition for @terria/design-system
+ *
+ * The layer order for the design system. The first @layer a page meets
+ * fixes the order, so import this before any other design system CSS.
+ *
+ * Usage:
+ * import "@terria/design-system/layers.css";
+ */
+
+@layer terria-ds.tokens, terria-ds.reset, terria-ds.base, terria-ds.components;

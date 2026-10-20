@@ -166,6 +166,7 @@ catalogs:
   runtime:
     "@aws-sdk/client-s3": ^3.1082.0
     "@turf/helpers": ^7.2.0
+    autoprefixer: 10.4.21
     bottleneck: ^2.19.5
     classnames: ^2.5.1
     core-js: ^3.50.0
@@ -177,6 +178,7 @@ catalogs:
     mobx-react: ^9.2.0
     mustache: ^2.3.2
     playwright: ^1.64.1
+    postcss: 8.5.31
     proj4: ^2.19.2
     prop-types: ^15.6.0
     react: ^18.3.1

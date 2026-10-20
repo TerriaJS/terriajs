@@ -1,7 +1,9 @@
 import type { Preview } from "@storybook/react-vite";
+// layers.css first: the first @layer a page meets fixes the order
 import "@terria/design-system/layers.css";
-import "@terria/design-system/base.css";
+import "@terria/design-system/reset.css";
 import "@terria/design-system/tokens.css";
+import "@terria/design-system/base.css";
 
 const preview: Preview = {
   parameters: {

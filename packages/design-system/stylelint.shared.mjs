@@ -1,8 +1,5 @@
 // @ts-check
-import { createRequire } from "node:module";
 import { fileURLToPath } from "node:url";
-
-// const require = createRequire(import.meta.url);
 
 // The design system's rules, for each of its packages' stylelint.config.mjs,
 // which resolves the plugins and config named here from the package
@@ -35,7 +32,7 @@ export default {
     "scale-unlimited/declaration-strict-value": [
       ["/color$/", "font-size", "font-weight", "z-index"],
       {
-        ignoreValues: ["inherit", "transparent", "currentColor", "none"]
+        ignoreValues: ["inherit", "transparent", "currentcolor", "none"]
       }
     ],
     "csstools/value-no-unknown-custom-properties": [
