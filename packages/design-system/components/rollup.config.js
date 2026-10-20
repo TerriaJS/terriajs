@@ -6,6 +6,7 @@ import { resolve, dirname, relative, join } from "node:path";
 import { glob } from "glob";
 import fs from "node:fs";
 
+const tokensCss = "src/css/tokens.css";
 
 /**
  * Custom PostCSS plugin that processes CSS files and preserves them next to components
@@ -64,6 +65,7 @@ const copyFiles = () => ({
     this.addWatchFile("src/css/reset.css");
     this.addWatchFile("src/css/base.css");
     this.addWatchFile("src/css/typography.css");
+    this.addWatchFile(tokensCss);
   },
   writeBundle() {
     fs.cpSync("src/css/layers.css", "dist/layers.css", { recursive: true });
@@ -72,11 +74,7 @@ const copyFiles = () => ({
     fs.cpSync("src/css/typography.css", "dist/typography.css", {
       recursive: true
     });
-    fs.cpSync(
-      "src/css/tokens.css",
-      "dist/tokens.css",
-      { recursive: true }
-    );
+    fs.cpSync(tokensCss, "dist/tokens.css", { recursive: true });
   }
 });
 
@@ -109,7 +107,7 @@ const config = {
     copyFiles()
   ],
   watch: {
-    include: "src/**",
+    include: ["src/**"],
     exclude: "node_modules/**",
     clearScreen: false
   }
