@@ -36,10 +36,16 @@ const ListBoxItemContext = createContext<ListBoxItemRenderProps | null>(null);
 export const ListBoxItem = <T extends object>({
   variant = "default",
   children,
+  textValue,
   ...props
 }: ListBoxItemProps<T>): React.ReactElement => {
   return (
     <AriaListBoxItem
+      // The children are wrapped below, so react-aria can't read plain text
+      // children as the item's text for typeahead or a Select's value
+      textValue={
+        textValue ?? (typeof children === "string" ? children : undefined)
+      }
       {...props}
       data-tds="list-box-item"
       data-tds-variant={variant}
