@@ -22,16 +22,6 @@ export default defineConfig(
     "**/*.config.mjs"
   ]),
   {
-    settings: {
-      "import/ignore": [
-        "\.(scss|less|css)$" // can't parse unprocessed CSS modules, either
-      ],
-      "import/resolver": {
-        // You will also need to install and configure the TypeScript resolver
-        // See also https://github.com/import-js/eslint-import-resolver-typescript#configuration
-        typescript: true
-      }
-    },
     languageOptions: {
       parserOptions: {
         projectService: true,
@@ -56,6 +46,53 @@ export default defineConfig(
       tseslint.configs.stylisticTypeChecked,
       importPlugin.flatConfigs.recommended
     ]
+  },
+  {
+    name: "Imports",
+    files: [
+      "**/*.js",
+      "**/*.cjs",
+      "**/*.mjs",
+      "**/*.jsx",
+      "**/*.ts",
+      "**/*.tsx"
+    ],
+    settings: {
+      "import/ignore": [
+        "\.(scss|less|css)$" // can't parse unprocessed CSS modules, either
+      ],
+      "import/resolver": {
+        // You will also need to install and configure the TypeScript resolver
+        // See also https://github.com/import-js/eslint-import-resolver-typescript#configuration
+        typescript: true
+      }
+    },
+    rules: {
+      // eslint-plugin-import's no-default-export reads context.parserOptions,
+      // which ESLint 10 removed; the core rule enforces the same policy
+      "no-restricted-exports": [
+        "error",
+        {
+          restrictDefaultExports: {
+            direct: true,
+            named: true,
+            defaultFrom: true,
+            namedFrom: true,
+            namespaceFrom: true
+          }
+        }
+      ],
+      "import/no-namespace": "error",
+      "import/no-deprecated": "warn",
+      "import/first": "error",
+      "import/no-mutable-exports": "error",
+      "import/no-duplicates": "error",
+      "import/newline-after-import": "error",
+      "import/no-absolute-path": "error",
+      "import/no-webpack-loader-syntax": "error",
+      "import/no-self-import": "error",
+      "import/no-relative-packages": "error"
+    }
   },
   {
     files: ["**/*.ts", "**/*.tsx", "**/*.jsx"],
