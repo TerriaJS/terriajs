@@ -3,6 +3,7 @@
 import eslintReact from "@eslint-react/eslint-plugin";
 import js from "@eslint/js";
 import prettier from "eslint-config-prettier";
+import importPlugin from "eslint-plugin-import";
 import jsxA11y from "eslint-plugin-jsx-a11y";
 import pluginReact from "eslint-plugin-react";
 import reactHooks from "eslint-plugin-react-hooks";
@@ -21,6 +22,16 @@ export default defineConfig(
     "**/*.config.mjs"
   ]),
   {
+    settings: {
+      "import/ignore": [
+        "\.(scss|less|css)$" // can't parse unprocessed CSS modules, either
+      ],
+      "import/resolver": {
+        // You will also need to install and configure the TypeScript resolver
+        // See also https://github.com/import-js/eslint-import-resolver-typescript#configuration
+        typescript: true
+      }
+    },
     languageOptions: {
       parserOptions: {
         projectService: true,
@@ -42,11 +53,12 @@ export default defineConfig(
     extends: [
       js.configs.recommended,
       tseslint.configs.strictTypeChecked,
-      tseslint.configs.stylisticTypeChecked
+      tseslint.configs.stylisticTypeChecked,
+      importPlugin.flatConfigs.recommended
     ]
   },
   {
-    files: ["**/*.ts", "**/*.tsx"],
+    files: ["**/*.ts", "**/*.tsx", "**/*.jsx"],
     settings: {
       react: {
         version: "18.2"
@@ -56,6 +68,7 @@ export default defineConfig(
       }
     },
     extends: [
+      importPlugin.flatConfigs.typescript,
       reactHooks.configs.flat.recommended,
       reactRefresh.configs.recommended,
       jsxA11y.flatConfigs.recommended,
