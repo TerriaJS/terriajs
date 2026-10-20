@@ -7,6 +7,7 @@ import jsxA11y from "eslint-plugin-jsx-a11y";
 import pluginReact from "eslint-plugin-react";
 import reactHooks from "eslint-plugin-react-hooks";
 import reactRefresh from "eslint-plugin-react-refresh";
+import storybook from "eslint-plugin-storybook";
 import { defineConfig, globalIgnores } from "eslint/config";
 import { dirname } from "node:path";
 import tseslint from "typescript-eslint";
@@ -24,6 +25,8 @@ export default defineConfig(
   js.configs.recommended,
   ...tseslint.configs.strictTypeChecked,
   ...tseslint.configs.stylisticTypeChecked,
+  // @ts-expect-error: storybook eslint config types are broken
+  ...storybook.configs["flat/recommended"],
   {
     languageOptions: {
       parserOptions: {
@@ -78,6 +81,13 @@ export default defineConfig(
       eslintReact.configs["disable-conflict-eslint-plugin-react"],
       eslintReact.configs["recommended-type-checked"]
     ]
+  },
+  {
+    files: ["**/*.stories.@(js|cjs|mjs|ts|tsx|jsx)"],
+    // Storybook render functions call hooks
+    rules: {
+      "@eslint-react/rules-of-hooks": "off"
+    }
   },
   prettier
 );

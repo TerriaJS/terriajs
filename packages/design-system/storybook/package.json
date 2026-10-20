@@ -1,0 +1,40 @@
+{
+  "name": "@terria/design-system-storybook",
+  "version": "0.0.0",
+  "dependencies": {
+    "@terria/design-system": "workspace:*",
+    "react": "catalog:runtime",
+    "react-dom": "catalog:runtime"
+  },
+  "devDependencies": {
+    "@storybook/addon-a11y": "catalog:storybook",
+    "@storybook/addon-docs": "catalog:storybook",
+    "@storybook/addon-vitest": "catalog:storybook",
+    "@storybook/react-vite": "catalog:storybook",
+    "@types/react": "catalog:types",
+    "@types/react-dom": "catalog:types",
+    "storybook": "catalog:storybook",
+    "typescript": "catalog:build",
+    "@eslint-react/eslint-plugin": "catalog:build",
+    "@eslint/js": "catalog:lint",
+    "eslint": "catalog:lint",
+    "eslint-config-prettier": "catalog:lint",
+    "eslint-plugin-jsx-a11y": "catalog:lint",
+    "eslint-plugin-react": "catalog:lint",
+    "eslint-plugin-react-hooks": "catalog:lint",
+    "eslint-plugin-react-refresh": "catalog:lint",
+    "eslint-plugin-storybook": "catalog:lint",
+    "stylelint": "catalog:lint",
+    "stylelint-config-standard": "catalog:lint",
+    "stylelint-declaration-strict-value": "catalog:lint",
+    "stylelint-value-no-unknown-custom-properties": "catalog:lint",
+    "typescript-eslint": "catalog:lint"
+  },
+  "private": true,
+  "scripts": {
+    "build-storybook": "storybook build",
+    "storybook": "storybook dev -p 6006",
+    "lint": "eslint . && stylelint \"**/*.css\" --allow-empty-input"
+  },
+  "type": "module"
+}

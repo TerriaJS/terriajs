@@ -56,6 +56,7 @@ catalogs:
     eslint-plugin-react: 7.37.5
     eslint-plugin-react-hooks: 7.1.1
     eslint-plugin-react-refresh: ^0.5.7
+    eslint-plugin-storybook: 10.6.2
     eslint-plugin-zod: 4.14.2
     globals: 17.13.0
     husky: ^9.1.7
@@ -151,6 +152,13 @@ catalogs:
     terriajs-plugin-api: 0.0.1-alpha.17
     terriajs-plugin-sample: 0.0.1-alpha.7
     terriajs-tiff-imagery-provider: 2.13.3-webpack5-3
+
+  storybook:
+    "@storybook/addon-a11y": 10.6.2
+    "@storybook/addon-docs": 10.6.2
+    "@storybook/addon-vitest": 10.6.2
+    "@storybook/react-vite": 10.6.2
+    storybook: 10.6.2
 
   runtime:
     "@aws-sdk/client-s3": ^3.1082.0

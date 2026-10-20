@@ -2,6 +2,7 @@
   "name": "@terria/design-system",
   "version": "0.0.0",
   "devDependencies": {
+    "@storybook/react-vite": "catalog:storybook",
     "@types/react": "catalog:types",
     "@types/react-dom": "catalog:types",
     "@typescript/native": "catalog:build",
@@ -13,6 +14,7 @@
     "react-dom": "catalog:runtime",
     "rollup": "catalog:runtime",
     "rollup-plugin-esbuild": "catalog:runtime",
+    "storybook": "catalog:storybook",
     "typescript": "catalog:build",
     "vite": "catalog:runtime",
     "vitest": "^5.0.5",
@@ -24,6 +26,7 @@
     "eslint-plugin-react": "catalog:lint",
     "eslint-plugin-react-hooks": "catalog:lint",
     "eslint-plugin-react-refresh": "catalog:lint",
+    "eslint-plugin-storybook": "catalog:lint",
     "stylelint": "catalog:lint",
     "stylelint-config-standard": "catalog:lint",
     "stylelint-declaration-strict-value": "catalog:lint",

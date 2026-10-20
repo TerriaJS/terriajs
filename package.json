@@ -25,7 +25,8 @@
     "format:check": "oxfmt --check",
     "sync-readme": "node -e \"require('node:fs').copyFileSync('packages/terriajs/README.md','README.md')\"",
     "prepare": "husky",
-    "knip": "knip"
+    "knip": "knip",
+    "storybook": "pnpm --filter @terria/design-system-storybook storybook"
   },
   "devDependencies": {
     "husky": "catalog:lint",
