@@ -77,14 +77,14 @@
   "scripts": {
     "build": "pnpm run build:js && pnpm run build:types",
     "build:js": "rollup -c",
-    "build:types": "tsc --build",
+    "build:types": "tsc --build tsconfig.build.json",
     "clean": "rm -rf dist",
     "dev": "pnpm run dev:js & pnpm run dev:types",
     "dev:js": "rollup -c --watch",
-    "dev:types": "tsc --build --watch",
+    "dev:types": "tsc --build tsconfig.build.json --watch",
     "test": "vitest run",
     "test:watch": "vitest",
-    "typecheck": "tsc -p tsconfig.check.json",
+    "typecheck": "tsc",
     "lint": "eslint . && stylelint \"**/*.css\" --allow-empty-input"
   },
   "sideEffects": [

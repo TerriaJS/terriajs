@@ -102,7 +102,7 @@ const config = {
     esbuild({
       target: "es2022",
       jsx: "automatic",
-      tsconfig: "./tsconfig.json"
+      tsconfig: "./tsconfig.build.json"
     }),
     copyFiles()
   ],
