@@ -129,3 +129,20 @@ export type {
   SwitchThumbProps,
   SwitchPrimitiveProps
 } from "./primitives/Switch";
+
+export {
+  Checkbox,
+  CheckboxContent,
+  CheckboxControl,
+  CheckboxIndicator,
+  CheckboxPrimitive,
+  CheckboxRoot
+} from "./primitives/Checkbox";
+export type {
+  CheckboxContentProps,
+  CheckboxControlProps,
+  CheckboxIndicatorProps,
+  CheckboxPrimitiveProps,
+  CheckboxProps,
+  CheckboxVariant
+} from "./primitives/Checkbox";
