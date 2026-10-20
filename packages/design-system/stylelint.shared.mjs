@@ -33,7 +33,7 @@ export default {
       }
     ],
     "scale-unlimited/declaration-strict-value": [
-      ["/color$/", "font-size", "z-index"],
+      ["/color$/", "font-size", "font-weight", "z-index"],
       {
         ignoreValues: ["inherit", "transparent", "currentColor", "none"]
       }
