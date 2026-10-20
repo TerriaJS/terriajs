@@ -17,6 +17,7 @@ import {
   type PopoverProps as AriaPopoverProps
 } from "react-aria-components/Popover";
 import { Pressable } from "react-aria-components/Pressable";
+import { ButtonGroupContext } from "../ButtonGroup/ButtonGroupContext";
 import "./Popover.css";
 
 export type PopoverProps = DialogTriggerProps;
@@ -32,7 +33,11 @@ export type PopoverContentProps = AriaPopoverProps;
 export const PopoverContent = (
   props: PopoverContentProps
 ): React.ReactElement => {
-  return <AriaPopover {...props} data-tds="popover" />;
+  return (
+    <ButtonGroupContext.Provider value={null}>
+      <AriaPopover {...props} data-tds="popover" />
+    </ButtonGroupContext.Provider>
+  );
 };
 
 PopoverContent.displayName = "Popover.Content";

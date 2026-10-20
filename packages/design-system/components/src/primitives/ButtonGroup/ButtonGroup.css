@@ -1,0 +1,105 @@
+/**
+ * ButtonGroup Component Styles
+ *
+ * Joins buttons into one control: no gaps, square inner corners, rounded ends.
+ */
+
+@layer terria-ds.components {
+  [data-tds="button-group"] {
+    --_btn-group-radius: var(
+      --terria-ds-button-radius,
+      var(--terria-ds-radius-full)
+    );
+
+    --_btn-group-focus-layer: 1;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    &[data-tds-orientation="vertical"] {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    & > [data-tds="button"] {
+      position: relative;
+      border-radius: 0;
+
+      /* Shrinking on press would open gaps between the buttons */
+      &[data-pressed] {
+        transform: none;
+      }
+
+      /* Raised so its focus ring shows over its neighbours */
+      &[data-focus-visible] {
+        z-index: var(--_btn-group-focus-layer);
+      }
+    }
+
+    &[data-tds-full-width] {
+      display: flex;
+      inline-size: 100%;
+
+      & > [data-tds="button"] {
+        flex: 1;
+      }
+    }
+
+    &[data-tds-orientation="horizontal"] > [data-tds="button"] {
+      &:first-child {
+        border-start-start-radius: var(--_btn-group-radius);
+        border-end-start-radius: var(--_btn-group-radius);
+      }
+
+      &:last-child {
+        border-start-end-radius: var(--_btn-group-radius);
+        border-end-end-radius: var(--_btn-group-radius);
+      }
+
+      /* Outline buttons share one border between neighbours */
+      &[data-tds-variant="outline"]:not(:first-child) {
+        border-inline-start-width: 0;
+      }
+    }
+
+    &[data-tds-orientation="vertical"] > [data-tds="button"] {
+      &:first-child {
+        border-start-start-radius: var(--_btn-group-radius);
+        border-start-end-radius: var(--_btn-group-radius);
+      }
+
+      &:last-child {
+        border-end-start-radius: var(--_btn-group-radius);
+        border-end-end-radius: var(--_btn-group-radius);
+      }
+
+      &[data-tds-variant="outline"]:not(:first-child) {
+        border-block-start-width: 0;
+      }
+    }
+  }
+
+  /* A faint line at the start edge of the button it sits in */
+  [data-tds="button-group-separator"] {
+    position: absolute;
+    border-radius: var(--terria-ds-radius-sm);
+    background-color: currentcolor;
+    opacity: 0.15;
+    pointer-events: none;
+
+    [data-tds-orientation="horizontal"] & {
+      inset-block-start: 25%;
+      inset-inline-start: -1px;
+      inline-size: 1px;
+      block-size: 50%;
+    }
+
+    [data-tds-orientation="vertical"] & {
+      inset-block-start: -1px;
+      inset-inline-start: 25%;
+      inline-size: 50%;
+      block-size: 1px;
+    }
+  }
+}

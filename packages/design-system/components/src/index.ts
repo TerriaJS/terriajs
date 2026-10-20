@@ -146,3 +146,14 @@ export type {
   CheckboxProps,
   CheckboxVariant
 } from "./primitives/Checkbox";
+
+export {
+  ButtonGroup,
+  ButtonGroupRoot,
+  ButtonGroupSeparator
+} from "./primitives/ButtonGroup";
+export type {
+  ButtonGroupOrientation,
+  ButtonGroupProps,
+  ButtonGroupSeparatorProps
+} from "./primitives/ButtonGroup";

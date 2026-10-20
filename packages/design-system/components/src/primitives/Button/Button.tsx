@@ -1,10 +1,11 @@
-import { forwardRef } from "react";
+import { forwardRef, useContext } from "react";
 import {
   Button as AriaButton,
   type ButtonProps as AriaButtonProps
 } from "react-aria-components/Button";
 import { composeRenderProps } from "react-aria-components/composeRenderProps";
 import "./Button.css";
+import { ButtonGroupContext } from "../ButtonGroup/ButtonGroupContext";
 import { ProgressCircle } from "../ProgressCircle";
 
 export type ButtonVariant =
@@ -28,20 +29,28 @@ export type ButtonProps = {
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   (
     {
-      variant = "primary",
-      size = "md",
+      variant: variantProp,
+      size: sizeProp,
+      isDisabled: isDisabledProp,
+      fullWidth: fullWidthProp,
       isIconOnly,
-      fullWidth,
       pendingLabel,
       children,
       ...props
     },
     ref
   ) => {
+    // Inside a ButtonGroup, unset props come from the group
+    const group = useContext(ButtonGroupContext);
+    const variant = variantProp ?? group?.variant ?? "primary";
+    const size = sizeProp ?? group?.size ?? "md";
+    const fullWidth = fullWidthProp ?? group?.fullWidth;
+
     return (
       <AriaButton
         ref={ref}
         {...props}
+        isDisabled={isDisabledProp ?? group?.isDisabled}
         data-tds="button"
         data-tds-variant={variant}
         data-tds-size={size}
