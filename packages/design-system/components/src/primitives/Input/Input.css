@@ -12,7 +12,12 @@
 
     box-sizing: border-box;
     min-inline-size: 0;
-    padding: var(--terria-ds-space-sm) var(--terria-ds-space-md);
+
+    /* Figma draws the border inside the box, so it comes out of the padding */
+    padding: calc(
+        var(--terria-ds-space-sm) - var(--terria-ds-field-border-width)
+      )
+      calc(var(--terria-ds-space-md) - var(--terria-ds-field-border-width));
     border: var(--terria-ds-field-border-width) solid
       var(--terria-ds-field-border);
     border-radius: var(--terria-ds-field-radius);
