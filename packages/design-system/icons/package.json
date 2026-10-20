@@ -13,7 +13,16 @@
     "rollup-plugin-esbuild": "catalog:runtime",
     "typescript": "catalog:build",
     "vite": "catalog:runtime",
-    "vitest": "^5.0.5"
+    "vitest": "^5.0.5",
+    "@eslint-react/eslint-plugin": "catalog:build",
+    "@eslint/js": "catalog:lint",
+    "eslint": "catalog:lint",
+    "eslint-config-prettier": "catalog:lint",
+    "eslint-plugin-jsx-a11y": "catalog:lint",
+    "eslint-plugin-react": "catalog:lint",
+    "eslint-plugin-react-hooks": "catalog:lint",
+    "eslint-plugin-react-refresh": "catalog:lint",
+    "typescript-eslint": "catalog:lint"
   },
   "exports": {
     ".": {
@@ -37,7 +46,8 @@
     "dev": "rollup -c --watch",
     "test": "vitest run",
     "test:watch": "vitest",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint ."
   },
   "type": "module",
   "types": "./dist/index.d.ts"

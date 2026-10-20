@@ -51,9 +51,11 @@ catalogs:
     "@typescript-eslint/parser": 8.71.2
     eslint: 10.12.0
     eslint-config-prettier: 10.1.8
+    eslint-plugin-jsx-a11y: 6.10.2
     eslint-plugin-n: 18.4.1
     eslint-plugin-react: 7.37.5
     eslint-plugin-react-hooks: 7.1.1
+    eslint-plugin-react-refresh: ^0.5.7
     eslint-plugin-zod: 4.14.2
     globals: 17.13.0
     husky: ^9.1.7
@@ -84,6 +86,7 @@ catalogs:
     "@babel/preset-env": ^7.29.2
     "@babel/preset-react": ^7.28.5
     "@babel/preset-typescript": ^7.28.5
+    "@eslint-react/eslint-plugin": ^5.28.2
     "@typescript/native": npm:typescript@^7.0.2
     babel-loader: ^10.1.1
     copy-webpack-plugin: ^14.0.0
