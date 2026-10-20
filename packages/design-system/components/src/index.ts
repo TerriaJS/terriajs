@@ -33,6 +33,9 @@ export type {
 export { Input } from "./primitives/Input";
 export type { InputProps, InputVariant } from "./primitives/Input";
 
+export { TextArea } from "./primitives/TextArea";
+export type { TextAreaProps } from "./primitives/TextArea";
+
 export {
   ProgressCircle,
   ProgressCircleFillCircle,

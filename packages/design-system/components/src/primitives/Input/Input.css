@@ -1,11 +1,11 @@
 /**
- * Input Component Styles
+ * Input Component Styles, shared with TextArea
  *
  * Variants only set --_input-* custom properties; the base rule consumes them.
  */
 
 @layer terria-ds.components {
-  [data-tds="input"] {
+  :is([data-tds="input"], [data-tds="textarea"]) {
     --_input-bg: var(--terria-ds-field-background);
     --_input-bg-hover: var(--terria-ds-field-background-hover);
     --_input-bg-focus: var(--terria-ds-field-background-focus);
@@ -61,11 +61,11 @@
   }
 
   /* Without it, the input keeps the browser's own width (its size attribute) */
-  [data-tds="input"][data-tds-full-width] {
+  :is([data-tds="input"], [data-tds="textarea"])[data-tds-full-width] {
     inline-size: 100%;
   }
 
-  [data-tds="input"][data-tds-variant="secondary"] {
+  :is([data-tds="input"], [data-tds="textarea"])[data-tds-variant="secondary"] {
     --_input-bg: var(--terria-ds-neutral);
     --_input-bg-hover: var(--terria-ds-neutral-hover);
     --_input-bg-focus: var(--terria-ds-neutral);
