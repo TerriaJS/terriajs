@@ -13,6 +13,24 @@ export type {
 } from "./primitives/Button";
 
 export {
+  Popover,
+  PopoverArrow,
+  PopoverContent,
+  PopoverDialog,
+  PopoverHeading,
+  PopoverRoot,
+  PopoverTrigger
+} from "./primitives/Popover";
+export type {
+  PopoverArrowProps,
+  PopoverContentProps,
+  PopoverDialogProps,
+  PopoverHeadingProps,
+  PopoverProps,
+  PopoverTriggerProps
+} from "./primitives/Popover";
+
+export {
   ProgressCircle,
   ProgressCircleFillCircle,
   ProgressCircleRoot,
