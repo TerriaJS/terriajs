@@ -4,3 +4,4 @@ import "./css/layers.css";
 import "./css/reset.css";
 import "./css/tokens.css";
 import "./css/base.css";
+import "./css/typography.css";

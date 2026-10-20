@@ -58,6 +58,7 @@
     "./base.css": "./dist/base.css",
     "./layers.css": "./dist/layers.css",
     "./reset.css": "./dist/reset.css",
+    "./typography.css": "./dist/typography.css",
     "./*": {
       "types": "./dist/*/index.d.ts",
       "import": "./dist/*/index.js"

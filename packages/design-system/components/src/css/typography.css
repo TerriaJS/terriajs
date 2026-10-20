@@ -1,0 +1,138 @@
+/**
+ * Typography, from the design's Foundations page
+ *
+ * Bare elements get the foundation styles: body base on the page, headings
+ * 1 to 6, paragraph spacing and links. The tds-* classes give any element
+ * the other styles. In the base layer, so components and the host's own
+ * unlayered CSS win over it.
+ */
+
+@layer terria-ds.base {
+  /* Body base, the default text: Regular 16px, 28px line height */
+  body {
+    font-size: var(--terria-ds-dimensions-font-text-base);
+    line-height: var(--terria-ds-dimensions-leading-text-lg);
+  }
+
+  /* Headings: Semi Bold */
+  :where(h1, h2, h3, h4, h5, h6),
+  .tds-h1,
+  .tds-h2,
+  .tds-h3,
+  .tds-h4,
+  .tds-h5,
+  .tds-h6 {
+    font-weight: var(--terria-ds-font-semi-bold);
+  }
+
+  :where(h1),
+  .tds-h1 {
+    font-size: var(--terria-ds-dimensions-font-text-4xl);
+    line-height: var(--terria-ds-dimensions-leading-text-4xl);
+  }
+
+  :where(h2),
+  .tds-h2 {
+    font-size: var(--terria-ds-dimensions-font-text-3xl);
+    line-height: var(--terria-ds-dimensions-leading-text-3xl);
+  }
+
+  :where(h3),
+  .tds-h3 {
+    font-size: var(--terria-ds-dimensions-font-text-2xl);
+    line-height: var(--terria-ds-dimensions-leading-text-2xl);
+  }
+
+  :where(h4),
+  .tds-h4 {
+    font-size: var(--terria-ds-dimensions-font-text-xl);
+    line-height: var(--terria-ds-dimensions-leading-text-xl);
+  }
+
+  :where(h5),
+  .tds-h5 {
+    font-size: var(--terria-ds-dimensions-font-text-lg);
+    line-height: var(--terria-ds-dimensions-leading-text-lg);
+  }
+
+  :where(h6),
+  .tds-h6 {
+    font-size: var(--terria-ds-dimensions-font-text-base);
+    line-height: var(--terria-ds-dimensions-leading-text-base);
+  }
+
+  /* No browser margins on text: spacing between blocks comes from layout.
+     The one exception is paragraph spacing, 8px between paragraphs */
+  :where(h1, h2, h3, h4, h5, h6, p, blockquote) {
+    margin-block-start: 0;
+  }
+
+  :where(p + p) {
+    margin-block-start: var(--terria-ds-dimensions-spacing-2);
+  }
+
+  /* Lists indent their markers by 1em, not the browser's 40px, which is
+     wasted in a narrow panel. Not role="list": the reset strips those, and
+     this layer would otherwise win over it */
+  :where(ul, ol):not([role="list"]) {
+    padding-inline-start: 1em;
+  }
+
+  /* Quotes: a rule down the start edge, indented clear of it */
+  :where(blockquote) {
+    margin-inline: 0;
+    padding-inline-start: 1em;
+    border-inline-start: 0.3em solid var(--terria-ds-border);
+  }
+
+  /* Links: Medium, underlined in a lighter grey drawn where the font puts it */
+  :where(a) {
+    color: var(--terria-ds-text-foreground);
+    font-weight: var(--terria-ds-font-medium);
+    text-decoration-line: underline;
+    text-decoration-color: var(--terria-ds-colors-gray-400);
+    text-decoration-skip-ink: none;
+    text-underline-position: from-font;
+  }
+
+  /* Opt-in vertical rhythm for long-form content, after Andy Bell's flow
+     utility: https://piccalil.li/blog/flow-utility/. Margins, not gap, so
+     the container keeps its own layout. Each element sets the space above
+     itself through --terria-ds-flow-space; 8px, the paragraph spacing, by
+     default. A heading gets more room above and keeps its section close */
+  .tds-flow > * + * {
+    margin-block-start: var(
+      --terria-ds-flow-space,
+      var(--terria-ds-dimensions-spacing-2)
+    );
+  }
+
+  .tds-flow > :where(h1, h2, h3, h4, h5, h6, blockquote) {
+    --terria-ds-flow-space: 1.5em;
+  }
+
+  .tds-flow > :where(h1, h2, h3, h4, h5, h6) + * {
+    --terria-ds-flow-space: 0.5em;
+  }
+
+  /* Body sizes, for supporting and dense text */
+  .tds-body {
+    font-size: var(--terria-ds-dimensions-font-text-base);
+    line-height: var(--terria-ds-dimensions-leading-text-lg);
+  }
+
+  .tds-body-sm {
+    font-size: var(--terria-ds-dimensions-font-text-sm);
+    line-height: var(--terria-ds-dimensions-leading-text-base);
+  }
+
+  .tds-body-xs {
+    font-size: var(--terria-ds-dimensions-font-text-xs);
+    line-height: var(--terria-ds-dimensions-leading-text-sm);
+  }
+
+  /* The medium weight of any body size */
+  .tds-medium {
+    font-weight: var(--terria-ds-font-medium);
+  }
+}
