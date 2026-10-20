@@ -11,3 +11,16 @@ export type {
   ButtonVariant,
   ButtonSize
 } from "./primitives/Button";
+
+export {
+  ProgressCircle,
+  ProgressCircleFillCircle,
+  ProgressCircleRoot,
+  ProgressCircleTrack,
+  ProgressCircleTrackCircle
+} from "./primitives/ProgressCircle";
+export type {
+  ProgressCircleColor,
+  ProgressCircleProps,
+  ProgressCircleSize
+} from "./primitives/ProgressCircle";

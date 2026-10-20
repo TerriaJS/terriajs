@@ -1,0 +1,95 @@
+/**
+ * ProgressCircle Component Styles
+ *
+ * Colors and sizes only set --_progress-circle-* custom properties.
+ */
+
+@layer terria-ds.components {
+  [data-tds="progress-circle"] {
+    --_progress-circle-stroke: var(--terria-ds-primary);
+    --_progress-circle-track-stroke: var(--terria-ds-neutral);
+    --_progress-circle-size: 1.75rem;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    [data-tds="progress-circle-track"] {
+      inline-size: var(--_progress-circle-size);
+      block-size: var(--_progress-circle-size);
+    }
+
+    [data-tds="progress-circle-track-circle"] {
+      stroke: var(--_progress-circle-track-stroke);
+    }
+
+    [data-tds="progress-circle-fill-circle"] {
+      stroke: var(--_progress-circle-stroke);
+      transition: stroke-dashoffset 300ms ease-out;
+
+      @media (prefers-reduced-motion: reduce) {
+        transition: none;
+      }
+    }
+
+    /* Indeterminate: no aria-valuenow, the track spins the quarter arc */
+    &:not([aria-valuenow]) [data-tds="progress-circle-track"] {
+      animation: terria-ds-progress-circle-spin 1s linear infinite;
+
+      @media (prefers-reduced-motion: reduce) {
+        animation: none;
+      }
+    }
+  }
+
+  @keyframes terria-ds-progress-circle-spin {
+    from {
+      transform: rotate(0deg);
+    }
+
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  /* ============================================================
+     SIZES
+     ============================================================ */
+
+  [data-tds="progress-circle"][data-tds-size="sm"] {
+    --_progress-circle-size: 1.25rem;
+  }
+
+  [data-tds="progress-circle"][data-tds-size="lg"] {
+    --_progress-circle-size: 2.25rem;
+  }
+
+  /* ============================================================
+     COLORS
+     ============================================================ */
+
+  [data-tds="progress-circle"][data-tds-color="default"] {
+    --_progress-circle-stroke: var(--terria-ds-neutral-foreground);
+  }
+
+  [data-tds="progress-circle"][data-tds-color="success"] {
+    --_progress-circle-stroke: var(--terria-ds-success);
+  }
+
+  [data-tds="progress-circle"][data-tds-color="warning"] {
+    --_progress-circle-stroke: var(--terria-ds-warning);
+  }
+
+  [data-tds="progress-circle"][data-tds-color="danger"] {
+    --_progress-circle-stroke: var(--terria-ds-danger);
+  }
+
+  [data-tds="progress-circle"][data-tds-color="current"] {
+    --_progress-circle-stroke: currentcolor;
+    --_progress-circle-track-stroke: color-mix(
+      in oklch,
+      currentcolor 25%,
+      transparent
+    );
+  }
+}
