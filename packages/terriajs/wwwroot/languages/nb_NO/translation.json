@@ -578,8 +578,8 @@
     "downloadData": "Last ned data",
     "downloadInFormat": "Last ned valgt data i {{format}}-format",
     "useLinkBelow": "Bruk lenken nedenfor for å laste ned dataen. Sjekk {{link}} for mer info om tilpassing av nettadresse-spørringsparameter.",
-    "wfs": "Dette er en <1>WFS-tjeneste</1>, som overfører rå jordoverflatedata på forespørsel. Den kan brukes i GIS-programvare med denne nettadressen:",
-    "wms": "Dette er en <1>WMS-tjeneste</1>, som genererer kartbilder på forespørsel. Den kan brukes i GIS-programvare med denne nettadressen:"
+    "wfs": "Dette er en &lt;1&gt;WFS-tjeneste, som overfører rå jordoverflatedata på forespørsel. Den kan brukes i GIS-programvare med denne nettadressen:",
+    "wms": "Dette er en &lt;1&gt;WMS-tjeneste, som genererer kartbilder på forespørsel. Den kan brukes i GIS-programvare med denne nettadressen:"
   },
   "preview": {
     "updateFrequency": "Oppdateringsfrekvens",
@@ -627,16 +627,16 @@
     "done": "Ferdig",
     "closeDataPanel": "Lukk datapanel",
     "btnHide": "Skjul",
-    "webFile": "<0>Steg 2:</0>Skriv inn nettadresse for datafilen eller vevtjenesten",
-    "webFileType": "<0>Steg 1:</0> Velg filtype (valgfritt)",
-    "localFileType": "<0>Steg 1:</0> Velg filtype (valgfritt)",
+    "webFile": "&lt;0&gt;Steg 2:Skriv inn nettadresse for datafilen eller vevtjenesten",
+    "webFileType": "&lt;0&gt;Steg 1: Velg filtype (valgfritt)",
+    "localFileType": "&lt;0&gt;Steg 1: Velg filtype (valgfritt)",
     "webAdd": "Legg til vev-data",
-    "localFile": "<0>Steg 2:</0> Velg fil",
+    "localFile": "&lt;0&gt;Steg 2: Velg fil",
     "localAdd": "Legg til lokal fil",
     "load": "Last inn lokal/vev-data",
     "searchPlaceholderWhole": "Søk i hele katalogen",
     "searchPlaceholder": "Søk i katalogen",
-    "note": "<0>Merk: </0>Data lagt til på denne måten hverken lagres eller er synlig for andre."
+    "note": "&lt;0&gt;Merk: Data lagt til på denne måten hverken lagres eller er synlig for andre."
   },
   "satelliteGuidance": {
     "dismissText": "Skjønner, takk.",
@@ -649,7 +649,7 @@
     "titleIII": "Laster inn historisk bildedata",
     "bodyII": "Det kan hende du må justere forstørrelsesnivået før satellittdata blir tilgjengelig på kartet.",
     "prevI": "Nei takk",
-    "menuTitle": "Du har tilgang til kartveildninger når som helst fra <2>hjelpemenyen</>."
+    "menuTitle": "Du har tilgang til kartveildninger når som helst fra &lt;2&gt;hjelpemenyen."
   },
   "story": {
     "mobileViewStory": "Vis historier",
@@ -680,8 +680,8 @@
     "removeAllStories": "Fjern alle",
     "view": "Vis",
     "viewStory": "vis",
-    "promptHtml1": "<0>Du kan vise og lage historier når som helst ved å klikke her.</0>",
-    "promptHtml2": "<0><0>Introduksjon av</0><1>Datahistorier</1><2>Opprett og del interaktive historier direkte fra kartet ditt.</2></0>",
+    "promptHtml1": "&lt;0&gt;Du kan vise og lage historier når som helst ved å klikke her.",
+    "promptHtml2": "&lt;0&gt;&lt;0&gt;Introduksjon av&lt;1&gt;Datahistorier&lt;2&gt;Opprett og del interaktive historier direkte fra kartet ditt.",
     "message": "<2>Dette er din historie-skaper</2><1>Opprett og del interaktive historier direkte fra kartet ditt<1><0><0></0>Begynn nå </0></1></1>"
   },
   "featureInfo": {
@@ -799,7 +799,7 @@
     "arTool": "verktøy for utvidet virkelighet",
     "title": "Eksperimentell funksjon: Utvidet virkelighet",
     "resetAlignmentTitle": "Tilbakestill justering",
-    "manualAlignmentMessage": "Juster din mobilenhet slik at den samsvarer med kartets retning, og klikk så på det blinkende kompasset. Hvis ingen landemerker å justere mot er synlige på kartet, kan du flytte det ved å bruke dra og knip til et gjenkjennbart landemerke er synlig før du justerer enheten med kartet. <br /><div>{{img}}</div> <br />Tips: Solen eller månen er gode landemerker å justere mot hvis du er på et sted du ikke kjenner (vær forsiktig med å se på solen, det kan skade øyene dine)."
+    "manualAlignmentMessage": "Juster din mobilenhet slik at den samsvarer med kartets retning, og klikk så på det blinkende kompasset. Hvis ingen landemerker å justere mot er synlige på kartet, kan du flytte det ved å bruke dra og knip til et gjenkjennbart landemerke er synlig før du justerer enheten med kartet. <br><div>{{img}}</div> <br>Tips: Solen eller månen er gode landemerker å justere mot hvis du er på et sted du ikke kjenner (vær forsiktig med å se på solen, det kan skade øyene dine)."
   },
   "compass": {
     "title": "Klikk og dra for å rotere kameraet"
@@ -898,7 +898,7 @@
     "lat": "Bre"
   },
   "dragDrop": {
-    "text": "<0>Dra og slipp</0><1>din data hvor som helst for å vise den på kartet<1>",
+    "text": "&lt;0&gt;Dra og slipp&lt;1&gt;din data hvor som helst for å vise den på kartet&lt;1&gt;",
     "not": "<0>bbbb</0>"
   },
   "mobile": {
