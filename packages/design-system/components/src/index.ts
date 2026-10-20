@@ -110,3 +110,22 @@ export type {
   AlertStatus,
   AlertTitleProps
 } from "./primitives/Alert";
+
+export {
+  Switch,
+  SwitchContent,
+  SwitchControl,
+  SwitchIcon,
+  SwitchRoot,
+  SwitchThumb,
+  SwitchPrimitive
+} from "./primitives/Switch";
+export type {
+  SwitchContentProps,
+  SwitchControlProps,
+  SwitchIconProps,
+  SwitchProps,
+  SwitchSize,
+  SwitchThumbProps,
+  SwitchPrimitiveProps
+} from "./primitives/Switch";
