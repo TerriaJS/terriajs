@@ -24,11 +24,13 @@
     "format": "oxfmt",
     "format:check": "oxfmt --check",
     "sync-readme": "node -e \"require('node:fs').copyFileSync('packages/terriajs/README.md','README.md')\"",
-    "prepare": "husky"
+    "prepare": "husky",
+    "knip": "knip"
   },
   "devDependencies": {
     "husky": "catalog:lint",
     "oxfmt": "catalog:lint",
-    "turbo": "catalog:build"
+    "turbo": "catalog:build",
+    "knip": "catalog:lint"
   }
 }

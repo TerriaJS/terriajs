@@ -1,0 +1,21 @@
+{
+  "$schema": "https://unpkg.com/knip@6/schema.json",
+  "ignoreExportsUsedInFile": {
+    "interface": true,
+    "type": true
+  },
+  "tags": ["-lintignore"],
+  "workspaces": {
+    ".": {
+      "entry": [],
+      "project": [],
+      "github-actions": false
+    },
+    "packages/design-system/*": {
+      "project": ["src/**/*.{ts,tsx}"]
+    }
+  },
+  "ignoreDependencies": ["react", "@types/react", "@terria/*"],
+  "exclude": ["catalog"],
+  "ignoreWorkspaces": ["apps/*", "packages/!(design-system)"]
+}

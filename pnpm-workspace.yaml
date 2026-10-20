@@ -57,6 +57,7 @@ catalogs:
     eslint-plugin-zod: 4.14.2
     globals: 17.13.0
     husky: ^9.1.7
+    knip: ^6.42.0
     oxfmt: 0.72.0
     typescript-eslint: 8.71.2
 

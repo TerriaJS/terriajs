@@ -206,6 +206,7 @@
 - **Breaking changes:**
 
 
+
 - Fix app crash when switching back and forth between 3D and 2D mode with clipping box enabled.
 - Fix app crash when encountering unsupported WPS input types.
 - Warn the user when the story causes shareData size exceed the limit set on the server as `shareMaxRequestSize`. #7636
@@ -413,6 +414,8 @@
 
 - **Breaking changes:**
 
+- Augment cesium types and start using import instead of require in ts files
+- Update to sass 1.79.1
 - Add option to import assets from Cesium ion through the Add data panel. Use map config parameter "cesiumIonOAuth2ApplicationID" to enable the feature.
 
 #### 8.7.6 - 2024-08-22
