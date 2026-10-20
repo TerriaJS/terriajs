@@ -36,6 +36,14 @@ export type { InputProps, InputVariant } from "./primitives/Input";
 export { TextArea } from "./primitives/TextArea";
 export type { TextAreaProps } from "./primitives/TextArea";
 
+export { Description, FieldError, Label, TextField } from "./primitives/Field";
+export type {
+  DescriptionProps,
+  FieldErrorProps,
+  LabelProps,
+  TextFieldProps
+} from "./primitives/Field";
+
 export {
   ProgressCircle,
   ProgressCircleFillCircle,

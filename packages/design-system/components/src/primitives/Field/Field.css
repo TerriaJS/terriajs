@@ -1,0 +1,65 @@
+/**
+ * Field styles: TextField and its Label, Description and FieldError
+ */
+
+@layer terria-ds.components {
+  [data-tds="text-field"] {
+    display: flex;
+    flex-direction: column;
+    gap: var(--terria-ds-space-xs);
+  }
+
+  [data-tds="label"] {
+    display: inline-flex;
+    gap: var(--terria-ds-space-xs);
+    align-items: center;
+    inline-size: fit-content;
+    color: var(--terria-ds-text-foreground);
+    font-size: var(--terria-ds-text-size-body);
+    font-weight: var(--terria-ds-font-medium);
+    line-height: var(--terria-ds-line-height-body-lg);
+
+    /* Only atomic fields get the marker, not groups or their options */
+    [data-required]:not([role="group"], [role="radiogroup"]) > & {
+      &::after {
+        content: "*";
+        color: var(--terria-ds-danger);
+      }
+    }
+
+    /* An icon, like an info icon, sits after the required marker */
+    & > svg {
+      flex-shrink: 0;
+      order: 1;
+    }
+
+    [data-invalid] > & {
+      color: var(--terria-ds-danger);
+    }
+  }
+
+  [data-tds="description"],
+  [data-tds="field-error"] {
+    font-size: var(--terria-ds-text-size-nano);
+    line-height: var(--terria-ds-line-height-body);
+    overflow-wrap: break-word;
+  }
+
+  [data-tds="description"] {
+    color: var(--terria-ds-text-muted);
+
+    /* The error message replaces the description while the field is invalid */
+    [data-invalid] > & {
+      display: none;
+    }
+  }
+
+  [data-tds="field-error"] {
+    color: var(--terria-ds-danger);
+  }
+
+  /* A disabled field fades its text; the control fades itself */
+  [data-disabled] > :is([data-tds="label"], [data-tds="description"]) {
+    opacity: var(--terria-ds-effects-disabled-opacity);
+  }
+}
