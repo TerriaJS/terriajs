@@ -146,7 +146,6 @@
   - When merging the changes make sure to use pre-prettier-v3 and post-prettier-v3 tags to make merging easier. You can follow the guide for prettier v2 update https://github.com/TerriaJS/terriajs/discussions/6517.
 - Test environment modernization:
 
-  - Refactor tests to use @testing-library/react instead of react-test-renderer and react-shallow-testutils, and remove deprecated libraries.(#7755, #7763)
   - Replace jasmine-ajax and fetch-mock with `msw` for mocking API requests in tests. (#7766, #7767, #7795, #7796, #7797, #7801)
   - Replace karma test runner with jasmine-browser-runner and upgrade jasmine to v6. (#7807)
   - Test runner is now exposed at port so to run tests in the browser, run `yarn gulp dev` and open `http://localhost:9876` in the browser.
@@ -206,8 +205,6 @@
 
 - **Breaking changes:**
 
-  - Replace unmaintained `svg-sprite-loader` with custom implementation of SvgSprite plugin based on `svg-sprite` package.
-    - New implementation consists of svg sprite loader that loads svgs and svg webpack plugin that compiles them into a single sprite file.
 
 - Fix app crash when switching back and forth between 3D and 2D mode with clipping box enabled.
 - Fix app crash when encountering unsupported WPS input types.
@@ -230,9 +227,6 @@
 
 - **Breaking changes:**
 
-  - Update `protomaps-leafet` package to 5.0.1 which only support protomaps basempap tileset >v4.0
-    - See [protomaps leaflet CHANGELOG](https://github.com/protomaps/protomaps-leaflet/blob/main/CHANGELOG.md#500).
-  - Update react and react-dom to version 18
   - Update mobx-react to version 9
     - It no longer convert props automatically to observable in class components. See [MobX React v9 class components guide](https://github.com/mobxjs/mobx/blob/mobx-react%409.2.0/packages/mobx-react/README.md#class-components) for more details on how to migrate
 
@@ -308,10 +302,6 @@
 - **Breaking changes:**
 - Major changes to UI
 
-  - Changed workbench and bottom dock to absolute positioned over map with transparent background
-  - Generally increase padding and font sizes to improve readability
-  - Generally use a darker default theme
-  - Increases logo size, redesign of collapsed workbench panel
   - Update help text for empty workbench
   - Decrease border radii
   - Changed workbench and bottom dock to absolute positioned over map with transparent background
@@ -423,12 +413,6 @@
 
 - **Breaking changes:**
 
-  - Remove RollbarErrorServiceProvder
-  - Error services now instantiated externally to terriajs
-
-- Fix remaining lint warnings
-- Augment cesium types and start using import instead of require in ts files
-- Update to sass 1.79.1
 - Add option to import assets from Cesium ion through the Add data panel. Use map config parameter "cesiumIonOAuth2ApplicationID" to enable the feature.
 
 #### 8.7.6 - 2024-08-22

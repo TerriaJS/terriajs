@@ -1,0 +1,53 @@
+{
+  "name": "@terria/design-system",
+  "version": "0.0.0",
+  "devDependencies": {
+    "@types/react": "catalog:types",
+    "@types/react-dom": "catalog:types",
+    "@typescript/native": "catalog:build",
+    "@vitejs/plugin-react": "^6.1.2",
+    "@vitest/browser-playwright": "catalog:test",
+    "glob": "^13.0.6",
+    "playwright": "catalog:runtime",
+    "react": "catalog:runtime",
+    "react-dom": "catalog:runtime",
+    "rollup": "catalog:runtime",
+    "rollup-plugin-esbuild": "catalog:runtime",
+    "typescript": "catalog:build",
+    "vite": "catalog:runtime",
+    "vitest": "^5.0.5"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./*": {
+      "types": "./dist/*/index.d.ts",
+      "import": "./dist/*/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "peerDependencies": {
+    "react": "^18.2.0 || ^19.0.0",
+    "react-dom": "^18.2.0 || ^19.0.0"
+  },
+  "scripts": {
+    "build": "pnpm run build:js && pnpm run build:types",
+    "build:js": "rollup -c",
+    "build:types": "tsc --build",
+    "clean": "rm -rf dist",
+    "dev": "pnpm run dev:js & pnpm run dev:types",
+    "dev:js": "rollup -c --watch",
+    "dev:types": "tsc --build --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit"
+  },
+  "type": "module",
+  "types": "./dist/index.d.ts"
+}
