@@ -1,0 +1,19 @@
+/**
+ * Header Component Styles
+ */
+
+@layer terria-ds.components {
+  [data-tds="header"] {
+    box-sizing: border-box;
+    inline-size: 100%;
+
+    /* Lines up with the text of the items below it */
+    padding: var(--terria-ds-dimensions-spacing-2-5) var(--terria-ds-space-md)
+      var(--terria-ds-space-xs);
+    color: var(--terria-ds-text-muted);
+    font-size: var(--terria-ds-text-size-nano);
+    font-weight: var(--terria-ds-font-medium);
+    line-height: var(--terria-ds-line-height-body);
+    text-align: start;
+  }
+}

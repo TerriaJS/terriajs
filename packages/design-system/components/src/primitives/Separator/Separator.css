@@ -1,0 +1,36 @@
+/**
+ * Separator Component Styles
+ */
+
+@layer terria-ds.components {
+  [data-tds="separator"] {
+    --_separator-color: var(--terria-ds-border-color-subtle);
+
+    /* The line sits in the middle of a 12px band */
+    --_separator-space: calc((var(--terria-ds-space-md) - 1px) / 2);
+
+    flex-shrink: 0;
+    margin: 0;
+    border: none;
+    background-color: var(--_separator-color);
+
+    &[data-orientation="horizontal"] {
+      block-size: 1px;
+      margin-block: var(--_separator-space);
+    }
+
+    &[data-orientation="vertical"] {
+      align-self: stretch;
+      inline-size: 1px;
+      margin-inline: var(--_separator-space);
+    }
+  }
+
+  [data-tds="separator"][data-tds-variant="secondary"] {
+    --_separator-color: var(--terria-ds-border-color-default);
+  }
+
+  [data-tds="separator"][data-tds-variant="tertiary"] {
+    --_separator-color: var(--terria-ds-border-color-strong);
+  }
+}

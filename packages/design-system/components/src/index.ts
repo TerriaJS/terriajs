@@ -44,6 +44,12 @@ export type {
   TextFieldProps
 } from "./primitives/Field";
 
+export { Header } from "./primitives/Header";
+export type { HeaderProps } from "./primitives/Header";
+
+export { Separator } from "./primitives/Separator";
+export type { SeparatorProps, SeparatorVariant } from "./primitives/Separator";
+
 export {
   ProgressCircle,
   ProgressCircleFillCircle,
