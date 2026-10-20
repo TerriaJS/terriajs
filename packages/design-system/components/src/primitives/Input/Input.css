@@ -1,0 +1,73 @@
+/**
+ * Input Component Styles
+ *
+ * Variants only set --_input-* custom properties; the base rule consumes them.
+ */
+
+@layer terria-ds.components {
+  [data-tds="input"] {
+    --_input-bg: var(--terria-ds-field-background);
+    --_input-bg-hover: var(--terria-ds-field-background-hover);
+    --_input-bg-focus: var(--terria-ds-field-background-focus);
+
+    box-sizing: border-box;
+    min-inline-size: 0;
+    padding: var(--terria-ds-space-sm) var(--terria-ds-space-md);
+    border: var(--terria-ds-field-border-width) solid
+      var(--terria-ds-field-border);
+    border-radius: var(--terria-ds-field-radius);
+    outline: none;
+    background-color: var(--_input-bg);
+    color: var(--terria-ds-field-foreground);
+    font: inherit;
+    font-size: var(--terria-ds-text-size-body);
+    line-height: var(--terria-ds-line-height-body);
+    transition:
+      background-color 150ms ease-out,
+      border-color 150ms ease-out,
+      box-shadow 150ms ease-out;
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
+
+    &::placeholder {
+      color: var(--terria-ds-field-placeholder);
+    }
+
+    &[data-hovered] {
+      background-color: var(--_input-bg-hover);
+    }
+
+    /* Text fields show focus for pointer and keyboard alike */
+    &[data-focused] {
+      border-color: var(--terria-ds-field-border-focus);
+      background-color: var(--_input-bg-focus);
+      box-shadow: var(--terria-ds-shadow-focus-ring-field);
+
+      /* Shadows are dropped in forced-colors mode; this outline shows there instead */
+      outline: var(--terria-ds-focus-ring-width) solid transparent;
+    }
+
+    &[data-invalid],
+    &[aria-invalid="true"] {
+      border-color: var(--terria-ds-danger);
+    }
+
+    &[data-disabled] {
+      opacity: var(--terria-ds-effects-disabled-opacity);
+      cursor: not-allowed;
+    }
+  }
+
+  /* Without it, the input keeps the browser's own width (its size attribute) */
+  [data-tds="input"][data-tds-full-width] {
+    inline-size: 100%;
+  }
+
+  [data-tds="input"][data-tds-variant="secondary"] {
+    --_input-bg: var(--terria-ds-neutral);
+    --_input-bg-hover: var(--terria-ds-neutral-hover);
+    --_input-bg-focus: var(--terria-ds-neutral);
+  }
+}

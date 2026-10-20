@@ -30,6 +30,9 @@ export type {
   PopoverTriggerProps
 } from "./primitives/Popover";
 
+export { Input } from "./primitives/Input";
+export type { InputProps, InputVariant } from "./primitives/Input";
+
 export {
   ProgressCircle,
   ProgressCircleFillCircle,
