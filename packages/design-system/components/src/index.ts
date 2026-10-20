@@ -77,3 +77,19 @@ export type {
   ProgressCircleProps,
   ProgressCircleSize
 } from "./primitives/ProgressCircle";
+
+export {
+  Select,
+  SelectIndicator,
+  SelectPopover,
+  SelectRoot,
+  SelectTrigger,
+  SelectValue
+} from "./primitives/Select";
+export type {
+  SelectIndicatorProps,
+  SelectPopoverProps,
+  SelectProps,
+  SelectTriggerProps,
+  SelectValueProps
+} from "./primitives/Select";

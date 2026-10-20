@@ -1,11 +1,11 @@
 /**
- * Input Component Styles, shared with TextArea
+ * Input Component Styles, shared with TextArea and the Select trigger
  *
  * Variants only set --_input-* custom properties; the base rule consumes them.
  */
 
 @layer terria-ds.components {
-  :is([data-tds="input"], [data-tds="textarea"]) {
+  :is([data-tds="input"], [data-tds="textarea"], [data-tds="select-trigger"]) {
     --_input-bg: var(--terria-ds-field-background);
     --_input-bg-hover: var(--terria-ds-field-background-hover);
     --_input-bg-focus: var(--terria-ds-field-background-focus);
@@ -44,16 +44,6 @@
       background-color: var(--_input-bg-hover);
     }
 
-    /* Text fields show focus for pointer and keyboard alike */
-    &[data-focused] {
-      border-color: var(--terria-ds-field-border-focus);
-      background-color: var(--_input-bg-focus);
-      box-shadow: var(--terria-ds-shadow-focus-ring-field);
-
-      /* Shadows are dropped in forced-colors mode; this outline shows there instead */
-      outline: var(--terria-ds-focus-ring-width) solid transparent;
-    }
-
     &[data-invalid],
     &[aria-invalid="true"] {
       border-color: var(--terria-ds-danger);
@@ -63,6 +53,18 @@
       opacity: var(--terria-ds-effects-disabled-opacity);
       cursor: not-allowed;
     }
+  }
+
+  /* Text fields show focus for pointer and keyboard alike; the Select trigger
+     is a button, so only for the keyboard */
+  :is([data-tds="input"], [data-tds="textarea"])[data-focused],
+  [data-tds="select-trigger"][data-focus-visible] {
+    border-color: var(--terria-ds-field-border-focus);
+    background-color: var(--_input-bg-focus);
+    box-shadow: var(--terria-ds-shadow-focus-ring-field);
+
+    /* Shadows are dropped in forced-colors mode; this outline shows there instead */
+    outline: var(--terria-ds-focus-ring-width) solid transparent;
   }
 
   /* Without it, the input keeps the browser's own width (its size attribute) */
