@@ -93,3 +93,20 @@ export type {
   SelectTriggerProps,
   SelectValueProps
 } from "./primitives/Select";
+
+export {
+  Alert,
+  AlertContent,
+  AlertDescription,
+  AlertIndicator,
+  AlertRoot,
+  AlertTitle
+} from "./primitives/Alert";
+export type {
+  AlertContentProps,
+  AlertDescriptionProps,
+  AlertIndicatorProps,
+  AlertProps,
+  AlertStatus,
+  AlertTitleProps
+} from "./primitives/Alert";

@@ -1,0 +1,109 @@
+/**
+ * Alert Component Styles
+ *
+ * Statuses only set --_alert-* custom properties; the base rule consumes them.
+ */
+
+@layer terria-ds.components {
+  [data-tds="alert"] {
+    --_alert-bg: var(--terria-ds-neutral-soft);
+    --_alert-bg-hover: var(--terria-ds-neutral-soft-hover);
+    --_alert-border-color: var(--terria-ds-border-color-default);
+    --_alert-fg: var(--terria-ds-text-foreground);
+    --_alert-action-fg: var(--terria-ds-neutral-soft-foreground);
+
+    display: flex;
+    gap: var(--terria-ds-space-sm);
+    align-items: flex-start;
+    box-sizing: border-box;
+    inline-size: 100%;
+
+    /* Figma draws the border inside the box, so it comes out of the padding */
+    padding: calc(
+        var(--terria-ds-space-md) - var(--terria-ds-border-width-default)
+      )
+      calc(var(--terria-ds-space-lg) - var(--terria-ds-border-width-default));
+    border: var(--terria-ds-border-width-default) solid
+      var(--_alert-border-color);
+    border-radius: var(--terria-ds-radius-lg);
+    background-color: var(--_alert-bg);
+    backdrop-filter: var(--terria-ds-backdrop-blur);
+    font-size: var(--terria-ds-text-size-body);
+    line-height: var(--terria-ds-line-height-body);
+
+    /* The action: a small outline Button in the status colour */
+    [data-tds="button"][data-tds-variant="outline"] {
+      --_btn-fg: var(--_alert-action-fg);
+      --_btn-border-color: var(--_alert-action-fg);
+      --_btn-bg-hover: var(--_alert-bg-hover);
+
+      flex-shrink: 0;
+    }
+  }
+
+  [data-tds="alert"][data-tds-status="accent"] {
+    --_alert-bg: var(--terria-ds-primary-soft);
+    --_alert-bg-hover: var(--terria-ds-primary-soft-hover);
+    --_alert-border-color: var(--terria-ds-border-color-primary);
+    --_alert-fg: var(--terria-ds-primary-soft-foreground);
+    --_alert-action-fg: var(--_alert-fg);
+  }
+
+  [data-tds="alert"][data-tds-status="success"] {
+    --_alert-bg: var(--terria-ds-success-soft);
+    --_alert-bg-hover: var(--terria-ds-success-soft-hover);
+    --_alert-border-color: var(--terria-ds-border-color-success);
+    --_alert-fg: var(--terria-ds-success-soft-foreground);
+    --_alert-action-fg: var(--_alert-fg);
+  }
+
+  [data-tds="alert"][data-tds-status="warning"] {
+    --_alert-bg: var(--terria-ds-warning-soft);
+    --_alert-bg-hover: var(--terria-ds-warning-soft-hover);
+    --_alert-border-color: var(--terria-ds-border-color-warning);
+    --_alert-fg: var(--terria-ds-warning-soft-foreground);
+    --_alert-action-fg: var(--_alert-fg);
+  }
+
+  [data-tds="alert"][data-tds-status="danger"] {
+    --_alert-bg: var(--terria-ds-danger-soft);
+    --_alert-bg-hover: var(--terria-ds-danger-soft-hover);
+    --_alert-border-color: var(--terria-ds-border-color-danger);
+    --_alert-fg: var(--terria-ds-danger-soft-foreground);
+    --_alert-action-fg: var(--_alert-fg);
+  }
+
+  /* A 16px icon in a 20px box, so it lines up with the title's first line */
+  [data-tds="alert-indicator"] {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    inline-size: var(--terria-ds-dimensions-icon-size-md);
+    block-size: var(--terria-ds-dimensions-icon-size-md);
+    color: var(--_alert-fg);
+
+    & > svg {
+      inline-size: var(--terria-ds-dimensions-icon-size-sm);
+      block-size: var(--terria-ds-dimensions-icon-size-sm);
+    }
+  }
+
+  [data-tds="alert-content"] {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-inline-size: 0;
+    overflow-wrap: break-word;
+  }
+
+  [data-tds="alert-title"] {
+    margin: 0;
+    color: var(--_alert-fg);
+    font-weight: var(--terria-ds-font-medium);
+  }
+
+  [data-tds="alert-description"] {
+    color: var(--terria-ds-neutral-soft-foreground);
+  }
+}
