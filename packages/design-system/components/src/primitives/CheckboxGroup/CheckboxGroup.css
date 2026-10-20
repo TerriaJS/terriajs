@@ -1,18 +1,21 @@
 /**
- * CheckboxGroup Component Styles
+ * CheckboxGroup Component Styles, shared with RadioGroup
  *
- * The Label and Description head the group, the checkboxes follow, and the
+ * The Label and Description head the group, the options follow, and the
  * FieldError closes it.
  */
 
 @layer terria-ds.components {
-  [data-tds="checkbox-group"] {
+  :is([data-tds="checkbox-group"], [data-tds="radio-group"]) {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
 
-    /* Gap between the heading and the first checkbox */
-    & > :not([data-tds="checkbox"]):has(+ [data-tds="checkbox"]) {
+    /* Gap between the heading and the first option */
+    &
+      > :not([data-tds="checkbox"], [data-tds="radio"]):has(
+        + :is([data-tds="checkbox"], [data-tds="radio"])
+      ) {
       margin-block-end: var(--terria-ds-dimensions-spacing-4);
     }
 
@@ -26,8 +29,11 @@
     }
   }
 
-  /* Checkboxes share one row equally; everything else takes a row of its own */
-  [data-tds="checkbox-group"][data-tds-orientation="horizontal"] {
+  /* Options share one row equally; everything else takes a row of its own */
+  :is(
+    [data-tds="checkbox-group"],
+    [data-tds="radio-group"]
+  )[data-tds-orientation="horizontal"] {
     flex-flow: row wrap;
     column-gap: var(--terria-ds-dimensions-spacing-4);
 
@@ -35,14 +41,17 @@
       flex-basis: 100%;
     }
 
-    & > [data-tds="checkbox"] {
+    & > :is([data-tds="checkbox"], [data-tds="radio"]) {
       flex: 1;
     }
   }
 
-  [data-tds="checkbox-group"][data-tds-orientation="vertical"]
-    > [data-tds="checkbox"]
-    + [data-tds="checkbox"] {
+  :is(
+      [data-tds="checkbox-group"],
+      [data-tds="radio-group"]
+    )[data-tds-orientation="vertical"]
+    > :is([data-tds="checkbox"], [data-tds="radio"])
+    + :is([data-tds="checkbox"], [data-tds="radio"]) {
     margin-block-start: var(--terria-ds-dimensions-spacing-3);
   }
 }

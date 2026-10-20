@@ -1,0 +1,161 @@
+/**
+ * Radio Component Styles
+ *
+ * States only set --_radio-* custom properties; the base rules consume them.
+ */
+
+@layer terria-ds.components {
+  [data-tds="radio"] {
+    --_radio-size: var(--terria-ds-dimensions-spacing-4);
+    --_radio-gap: var(--terria-ds-dimensions-spacing-3);
+    --_radio-bg: var(--terria-ds-field-background);
+    --_radio-bg-hover: var(--terria-ds-field-background-hover);
+    --_radio-bg-focus: var(--_radio-bg);
+    --_radio-border: var(--terria-ds-field-border);
+    --_radio-border-hover: var(--terria-ds-field-border-hover);
+    --_radio-dot: var(--terria-ds-primary-foreground);
+
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+
+    &[data-disabled] {
+      opacity: var(--terria-ds-effects-disabled-opacity);
+    }
+
+    /* Help text lines up with the label, past the circle */
+    & > :is([data-tds="description"], [data-tds="field-error"]) {
+      box-sizing: border-box;
+      inline-size: 100%;
+      padding-inline-start: calc(var(--_radio-size) + var(--_radio-gap));
+      line-height: var(--terria-ds-line-height-nano);
+    }
+
+    /* The group shows the error; each radio keeps its description */
+    &[data-invalid] > [data-tds="description"] {
+      display: block;
+    }
+  }
+
+  [data-tds="radio-group"][data-tds-variant="secondary"] [data-tds="radio"] {
+    --_radio-bg: var(--terria-ds-neutral);
+    --_radio-bg-hover: var(--terria-ds-neutral-hover);
+    --_radio-bg-focus: var(--terria-ds-neutral-hover);
+  }
+
+  [data-tds="radio"][data-selected] {
+    --_radio-bg: var(--terria-ds-primary);
+    --_radio-bg-hover: var(--terria-ds-primary-hover);
+    --_radio-bg-focus: var(--terria-ds-primary);
+    --_radio-border: var(--terria-ds-primary);
+    --_radio-border-hover: var(--terria-ds-primary-hover);
+  }
+
+  [data-tds="radio"][data-invalid] {
+    --_radio-border: var(--terria-ds-danger);
+    --_radio-border-hover: var(--terria-ds-danger);
+    --_radio-dot: var(--terria-ds-danger-foreground);
+
+    &[data-selected] {
+      --_radio-bg: var(--terria-ds-danger);
+      --_radio-bg-hover: var(--terria-ds-danger);
+      --_radio-bg-focus: var(--terria-ds-danger);
+    }
+  }
+
+  /* The clickable label: circle and Label, top-aligned so the circle stays on line 1 */
+  [data-tds="radio-content"] {
+    display: inline-flex;
+    gap: var(--_radio-gap);
+    align-items: flex-start;
+    outline: none;
+    color: var(--terria-ds-text-foreground);
+    font-size: var(--terria-ds-text-size-body);
+    font-weight: var(--terria-ds-font-medium);
+    line-height: var(--terria-ds-line-height-body);
+    cursor: pointer;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+
+    [data-disabled] > & {
+      cursor: not-allowed;
+    }
+
+    [data-invalid] > & {
+      color: var(--terria-ds-danger);
+    }
+
+    [data-tds="label"] {
+      color: inherit;
+      line-height: inherit;
+    }
+  }
+
+  /* The circle: 16px, centred on the label's 20px first line */
+  [data-tds="radio-control"] {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    inline-size: var(--_radio-size);
+    block-size: var(--_radio-size);
+    margin-block-start: calc(
+      (var(--terria-ds-line-height-body) - var(--_radio-size)) / 2
+    );
+    border: var(--terria-ds-field-border-width) solid var(--_radio-border);
+    border-radius: var(--terria-ds-radius-full);
+    background-color: var(--_radio-bg);
+    color: var(--_radio-dot);
+    transition:
+      background-color 200ms ease-out,
+      border-color 200ms ease-out,
+      box-shadow 150ms ease-out;
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
+
+    [data-tds="radio-content"][data-hovered] > & {
+      border-color: var(--_radio-border-hover);
+      background-color: var(--_radio-bg-hover);
+    }
+
+    [data-tds="radio-content"][data-focus-visible] > & {
+      background-color: var(--_radio-bg-focus);
+      box-shadow: var(--terria-ds-shadow-focus-ring);
+
+      /* Shadows are dropped in forced-colors mode; this outline shows there instead */
+      outline: var(--terria-ds-focus-ring-width) solid transparent;
+    }
+  }
+
+  [data-tds="radio-indicator"] {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* The default dot, grown in when selected. Top-level rules: nesting can't
+     reach a pseudo-element through & */
+  [data-tds="radio-indicator"]:empty::before {
+    content: "";
+    inline-size: var(--terria-ds-dimensions-spacing-1-5);
+    block-size: var(--terria-ds-dimensions-spacing-1-5);
+    border-radius: var(--terria-ds-radius-full);
+    background-color: currentcolor;
+    box-shadow: 0 1px 1px 0 oklch(0% 0 0deg / 5%);
+    scale: 0;
+    transition: scale 200ms ease-out;
+  }
+
+  [data-selected] [data-tds="radio-indicator"]:empty::before {
+    scale: 1;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-tds="radio-indicator"]:empty::before {
+      transition: none;
+    }
+  }
+}

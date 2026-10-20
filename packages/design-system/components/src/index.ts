@@ -154,6 +154,28 @@ export type {
 } from "./primitives/CheckboxGroup";
 
 export {
+  Radio,
+  RadioContent,
+  RadioControl,
+  RadioIndicator,
+  RadioPrimitive,
+  RadioRoot
+} from "./primitives/Radio";
+export type {
+  RadioContentProps,
+  RadioControlProps,
+  RadioIndicatorProps,
+  RadioPrimitiveProps,
+  RadioProps
+} from "./primitives/Radio";
+
+export { RadioGroup } from "./primitives/RadioGroup";
+export type {
+  RadioGroupProps,
+  RadioGroupVariant
+} from "./primitives/RadioGroup";
+
+export {
   ButtonGroup,
   ButtonGroupRoot,
   ButtonGroupSeparator
