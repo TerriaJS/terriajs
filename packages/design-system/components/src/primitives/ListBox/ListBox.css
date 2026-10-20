@@ -1,0 +1,114 @@
+/**
+ * ListBox Component Styles
+ */
+
+@layer terria-ds.components {
+  [data-tds="list-box"] {
+    position: relative;
+    box-sizing: border-box;
+    inline-size: 100%;
+    overflow: clip;
+    outline: none;
+  }
+
+  [data-tds="list-box-section"] {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  [data-tds="list-box-item"] {
+    --_list-box-item-fg: var(--terria-ds-text-foreground);
+
+    position: relative;
+    display: flex;
+    gap: var(--terria-ds-space-md);
+    align-items: center;
+    box-sizing: border-box;
+    inline-size: 100%;
+    min-block-size: 2.25rem;
+    padding: var(--terria-ds-dimensions-spacing-1-5) var(--terria-ds-space-md);
+    border-radius: var(--terria-ds-radius-lg);
+    outline: none;
+    color: var(--_list-box-item-fg);
+    font-size: var(--terria-ds-text-size-body);
+    line-height: var(--terria-ds-line-height-body);
+    -webkit-tap-highlight-color: transparent;
+    transition:
+      background-color 150ms ease-out,
+      box-shadow 150ms ease-out;
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
+
+    &[data-tds-variant="danger"] {
+      --_list-box-item-fg: var(--terria-ds-danger);
+    }
+
+    /* A title Label takes the item color; its Description stays muted */
+    [data-tds="label"] {
+      color: inherit;
+    }
+
+    [data-tds="label"],
+    [data-tds="description"] {
+      pointer-events: none;
+      user-select: none;
+    }
+
+    /* react-aria only hovers items that select or have an action, so static items stay plain */
+    @media (hover: hover) {
+      &[data-hovered] {
+        background-color: var(--terria-ds-neutral);
+        cursor: pointer;
+      }
+    }
+
+    &[data-focus-visible] {
+      background-color: var(--terria-ds-neutral);
+      box-shadow: var(--terria-ds-shadow-focus-ring);
+
+      /* Shadows are dropped in forced-colors mode; this outline shows there instead */
+      outline: var(--terria-ds-focus-ring-width) solid transparent;
+      outline-offset: var(--terria-ds-focus-ring-offset);
+    }
+
+    &[data-tds-variant="danger"][data-focus-visible] {
+      box-shadow:
+        inset 0 0 0 var(--terria-ds-border-width-default)
+          var(--terria-ds-danger),
+        var(--terria-ds-shadow-focus-ring);
+    }
+
+    &[data-disabled] {
+      opacity: var(--terria-ds-effects-disabled-opacity);
+      cursor: not-allowed;
+    }
+  }
+
+  /* Sits at the end of the row, after the title */
+  [data-tds="list-box-item-indicator"] {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    inline-size: var(--terria-ds-dimensions-icon-size-sm);
+    block-size: var(--terria-ds-dimensions-icon-size-sm);
+    margin-inline-start: auto;
+  }
+
+  [data-tds="list-box-item-checkmark"] {
+    inline-size: 0.625rem;
+    block-size: 0.625rem;
+
+    /* Draws the checkmark in when its item becomes selected */
+    [data-selected] & {
+      transition: stroke-dashoffset 250ms linear;
+
+      @media (prefers-reduced-motion: reduce) {
+        transition: none;
+      }
+    }
+  }
+}
