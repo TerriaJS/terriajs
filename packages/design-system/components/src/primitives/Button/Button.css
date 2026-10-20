@@ -56,7 +56,14 @@
       transition: none;
     }
 
-    & svg {
+    & > span {
+      display: inline-flex;
+      gap: inherit;
+      align-items: center;
+      justify-content: center;
+    }
+
+    & svg:not([data-tds="button-loader"] svg) {
       flex-shrink: 0;
       inline-size: var(--terria-ds-dimensions-icon-size-sm);
       block-size: var(--terria-ds-dimensions-icon-size-sm);
@@ -90,6 +97,20 @@
       opacity: var(--terria-ds-effects-disabled-opacity);
       cursor: not-allowed;
       pointer-events: none;
+    }
+
+    &[data-pending] {
+      pointer-events: none;
+
+      & > [data-tds="button-label"] {
+        opacity: 0;
+      }
+
+      [data-tds="button-loader"] {
+        position: absolute;
+        display: flex;
+        align-items: center;
+      }
     }
   }
 

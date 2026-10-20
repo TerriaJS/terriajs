@@ -4,7 +4,9 @@ import { fn } from "storybook/test";
 
 import { Settings } from "lucide-react";
 
-import { Button } from "./Button";
+import { useEffect } from "react";
+import { useArgs } from "storybook/preview-api";
+import { Button, type ButtonProps } from "./Button";
 
 const meta = {
   title: "Example/Button",
@@ -92,5 +94,40 @@ export const FullWidth: Story = {
   args: {
     fullWidth: true,
     children: "Button"
+  }
+};
+
+export const Pending: Story = {
+  render: (args) => {
+    const [{ isPending, onPress }, updateArgs] = useArgs<ButtonProps>();
+    useEffect(() => {
+      const timer = setTimeout(() => {
+        updateArgs({ isPending: false });
+      }, 2000);
+
+      return () => {
+        clearTimeout(timer);
+      };
+    }, [isPending, updateArgs]);
+
+    return (
+      <div>
+        <Button
+          {...args}
+          isPending={isPending}
+          onPress={(ev) => {
+            onPress?.(ev);
+            updateArgs({ isPending: true });
+          }}
+          pendingLabel={args.pendingLabel}
+        >
+          Test async
+        </Button>
+      </div>
+    );
+  },
+  args: {
+    isPending: false,
+    pendingLabel: "Async action in progres"
   }
 };

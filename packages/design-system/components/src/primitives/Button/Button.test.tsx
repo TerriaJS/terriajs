@@ -1,4 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
+import { userEvent } from "vitest/browser";
 import { render } from "vitest-browser-react";
 import { Button } from "./Button";
 
@@ -53,5 +54,23 @@ describe("Button", () => {
     await screen.getByRole("button").click();
 
     expect(onPress).toHaveBeenCalledOnce();
+  });
+
+  it("shows a labelled spinner and ignores presses while pending", async () => {
+    const onPress = vi.fn();
+    const screen = await render(
+      <Button isPending pendingLabel="Saving" onPress={onPress}>
+        Save
+      </Button>
+    );
+
+    // A pending button takes no pointer events, so press it from the keyboard
+    screen.getByRole("button").element().focus();
+    await userEvent.keyboard("{Enter}");
+
+    await expect
+      .element(screen.getByRole("progressbar", { name: "Saving" }))
+      .toBeInTheDocument();
+    expect(onPress).not.toHaveBeenCalled();
   });
 });
