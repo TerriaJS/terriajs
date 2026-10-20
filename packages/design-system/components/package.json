@@ -15,7 +15,11 @@
     "rollup-plugin-esbuild": "catalog:runtime",
     "typescript": "catalog:build",
     "vite": "catalog:runtime",
-    "vitest": "^5.0.5"
+    "vitest": "^5.0.5",
+    "stylelint": "catalog:lint",
+    "stylelint-config-standard": "catalog:lint",
+    "stylelint-declaration-strict-value": "catalog:lint",
+    "stylelint-value-no-unknown-custom-properties": "catalog:lint"
   },
   "exports": {
     ".": {
