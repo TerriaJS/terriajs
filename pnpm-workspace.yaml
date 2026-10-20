@@ -45,6 +45,7 @@ catalogs:
     "@types/urijs": ^1.19.25
 
   lint:
+    "@eslint/css": ^2.0.1
     "@eslint/js": 10.0.1
     "@eslint/json": 2.1.1
     "@typescript-eslint/eslint-plugin": 8.71.2

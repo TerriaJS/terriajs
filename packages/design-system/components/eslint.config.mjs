@@ -11,6 +11,7 @@ import storybook from "eslint-plugin-storybook";
 import { defineConfig, globalIgnores } from "eslint/config";
 import { dirname } from "node:path";
 import tseslint from "typescript-eslint";
+import css from "@eslint/css";
 
 export default defineConfig(
   globalIgnores([
@@ -21,12 +22,6 @@ export default defineConfig(
     "**/*.config.cjs",
     "**/*.config.mjs"
   ]),
-
-  js.configs.recommended,
-  ...tseslint.configs.strictTypeChecked,
-  ...tseslint.configs.stylisticTypeChecked,
-  // @ts-expect-error: storybook eslint config types are broken
-  ...storybook.configs["flat/recommended"],
   {
     languageOptions: {
       parserOptions: {
@@ -35,7 +30,43 @@ export default defineConfig(
         // package's own leaves out, like icons' scripts
         tsconfigRootDir: dirname(import.meta.dirname)
       }
+    }
+  },
+  {
+    files: [
+      "**/*.js",
+      "**/*.cjs",
+      "**/*.mjs",
+      "**/*.jsx",
+      "**/*.ts",
+      "**/*.tsx"
+    ],
+    extends: [
+      js.configs.recommended,
+      tseslint.configs.strictTypeChecked,
+      tseslint.configs.stylisticTypeChecked,
+      storybook.configs["flat/recommended"]
+    ]
+  },
+  {
+    files: ["**/*.ts", "**/*.tsx"],
+    settings: {
+      react: {
+        version: "18.2"
+      },
+      "react-x": {
+        version: "18.2"
+      }
     },
+    extends: [
+      reactHooks.configs.flat.recommended,
+      reactRefresh.configs.recommended,
+      jsxA11y.flatConfigs.recommended,
+      pluginReact.configs.flat.recommended,
+      pluginReact.configs.flat["jsx-runtime"],
+      eslintReact.configs["disable-conflict-eslint-plugin-react"],
+      eslintReact.configs["recommended-type-checked"]
+    ],
     rules: {
       "@typescript-eslint/no-explicit-any": "error",
       "@typescript-eslint/no-unused-vars": [
@@ -63,24 +94,24 @@ export default defineConfig(
     }
   },
   {
-    files: ["**/*.ts", "**/*.tsx"],
-    settings: {
-      react: {
-        version: "18.2"
-      },
-      "react-x": {
-        version: "18.2"
-      }
-    },
-    extends: [
-      reactHooks.configs.flat.recommended,
-      reactRefresh.configs.recommended,
-      jsxA11y.flatConfigs.recommended,
-      pluginReact.configs.flat.recommended,
-      pluginReact.configs.flat["jsx-runtime"],
-      eslintReact.configs["disable-conflict-eslint-plugin-react"],
-      eslintReact.configs["recommended-type-checked"]
-    ]
+    files: ["**/*.css"],
+    language: "css/css",
+    plugins: { css },
+    extends: ["css/recommended"],
+    rules: {
+      "css/no-invalid-properties": ["error", { allowUnknownVariables: true }],
+      "css/font-family-fallbacks": "off",
+      "css/use-layers": "error",
+      "css/prefer-logical-properties": "error",
+      "css/use-baseline": [
+        "error",
+        {
+          available: "newly",
+          allowFunctions: ["oklch"],
+          allowProperties: ["user-select"]
+        }
+      ]
+    }
   },
   {
     files: ["**/*.stories.@(js|cjs|mjs|ts|tsx|jsx)"],

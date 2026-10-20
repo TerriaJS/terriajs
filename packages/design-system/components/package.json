@@ -19,6 +19,7 @@
     "vite": "catalog:runtime",
     "vitest": "^5.0.5",
     "@eslint-react/eslint-plugin": "catalog:build",
+    "@eslint/css": "catalog:lint",
     "@eslint/js": "catalog:lint",
     "eslint": "catalog:lint",
     "eslint-config-prettier": "catalog:lint",

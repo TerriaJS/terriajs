@@ -20,10 +20,6 @@ export default defineConfig(
     "**/*.config.cjs",
     "**/*.config.mjs"
   ]),
-
-  js.configs.recommended,
-  ...tseslint.configs.strictTypeChecked,
-  ...tseslint.configs.stylisticTypeChecked,
   {
     languageOptions: {
       parserOptions: {
@@ -32,7 +28,42 @@ export default defineConfig(
         // package's own leaves out, like icons' scripts
         tsconfigRootDir: dirname(import.meta.dirname)
       }
+    }
+  },
+  {
+    files: [
+      "**/*.js",
+      "**/*.cjs",
+      "**/*.mjs",
+      "**/*.jsx",
+      "**/*.ts",
+      "**/*.tsx"
+    ],
+    extends: [
+      js.configs.recommended,
+      tseslint.configs.strictTypeChecked,
+      tseslint.configs.stylisticTypeChecked
+    ]
+  },
+  {
+    files: ["**/*.ts", "**/*.tsx"],
+    settings: {
+      react: {
+        version: "18.2"
+      },
+      "react-x": {
+        version: "18.2"
+      }
     },
+    extends: [
+      reactHooks.configs.flat.recommended,
+      reactRefresh.configs.recommended,
+      jsxA11y.flatConfigs.recommended,
+      pluginReact.configs.flat.recommended,
+      pluginReact.configs.flat["jsx-runtime"],
+      eslintReact.configs["disable-conflict-eslint-plugin-react"],
+      eslintReact.configs["recommended-type-checked"]
+    ],
     rules: {
       "@typescript-eslint/no-explicit-any": "error",
       "@typescript-eslint/no-unused-vars": [
@@ -58,26 +89,6 @@ export default defineConfig(
       "no-console": ["warn", { allow: ["warn", "error"] }],
       "react/display-name": "error"
     }
-  },
-  {
-    files: ["**/*.ts", "**/*.tsx"],
-    settings: {
-      react: {
-        version: "18.2"
-      },
-      "react-x": {
-        version: "18.2"
-      }
-    },
-    extends: [
-      reactHooks.configs.flat.recommended,
-      reactRefresh.configs.recommended,
-      jsxA11y.flatConfigs.recommended,
-      pluginReact.configs.flat.recommended,
-      pluginReact.configs.flat["jsx-runtime"],
-      eslintReact.configs["disable-conflict-eslint-plugin-react"],
-      eslintReact.configs["recommended-type-checked"]
-    ]
   },
   prettier
 );
