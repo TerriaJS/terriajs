@@ -147,6 +147,12 @@ export type {
   CheckboxVariant
 } from "./primitives/Checkbox";
 
+export { CheckboxGroup } from "./primitives/CheckboxGroup";
+export type {
+  CheckboxGroupOrientation,
+  CheckboxGroupProps
+} from "./primitives/CheckboxGroup";
+
 export {
   ButtonGroup,
   ButtonGroupRoot,

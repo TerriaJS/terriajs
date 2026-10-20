@@ -1,0 +1,48 @@
+/**
+ * CheckboxGroup Component Styles
+ *
+ * The Label and Description head the group, the checkboxes follow, and the
+ * FieldError closes it.
+ */
+
+@layer terria-ds.components {
+  [data-tds="checkbox-group"] {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+
+    /* Gap between the heading and the first checkbox */
+    & > :not([data-tds="checkbox"]):has(+ [data-tds="checkbox"]) {
+      margin-block-end: var(--terria-ds-dimensions-spacing-4);
+    }
+
+    & > [data-tds="field-error"]:not(:first-child) {
+      margin-block-start: var(--terria-ds-dimensions-spacing-4);
+    }
+
+    /* Unlike text fields, the description stays above the error while invalid */
+    &[data-invalid] > [data-tds="description"] {
+      display: block;
+    }
+  }
+
+  /* Checkboxes share one row equally; everything else takes a row of its own */
+  [data-tds="checkbox-group"][data-tds-orientation="horizontal"] {
+    flex-flow: row wrap;
+    column-gap: var(--terria-ds-dimensions-spacing-4);
+
+    & > * {
+      flex-basis: 100%;
+    }
+
+    & > [data-tds="checkbox"] {
+      flex: 1;
+    }
+  }
+
+  [data-tds="checkbox-group"][data-tds-orientation="vertical"]
+    > [data-tds="checkbox"]
+    + [data-tds="checkbox"] {
+    margin-block-start: var(--terria-ds-dimensions-spacing-3);
+  }
+}

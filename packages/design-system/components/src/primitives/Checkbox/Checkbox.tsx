@@ -14,6 +14,7 @@ import {
   type CheckboxFieldRenderProps
 } from "react-aria-components/Checkbox";
 import { LabelContext } from "react-aria-components/Label";
+import { CheckboxGroupContext } from "../CheckboxGroup/CheckboxGroupContext";
 import { Description, FieldError } from "../Field";
 import "./Checkbox.css";
 
@@ -26,19 +27,22 @@ const CheckboxStateContext = createContext<CheckboxFieldRenderProps | null>(
 // The field: wraps Checkbox.Content and an optional Description or FieldError
 export type CheckboxRootProps = Omit<AriaCheckboxFieldProps, "children"> & {
   children: ReactNode | ((values: CheckboxFieldRenderProps) => ReactNode);
+  /** Defaults to the CheckboxGroup's variant, then primary */
   variant?: CheckboxVariant;
 };
 
 export const CheckboxRoot = ({
-  variant = "primary",
+  variant,
   children,
   ...props
 }: CheckboxRootProps): React.ReactElement => {
+  const group = useContext(CheckboxGroupContext);
+
   return (
     <AriaCheckboxField
       {...props}
       data-tds="checkbox"
-      data-tds-variant={variant}
+      data-tds-variant={variant ?? group?.variant ?? "primary"}
     >
       {(values) => (
         <CheckboxStateContext.Provider value={values}>
