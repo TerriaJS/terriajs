@@ -20,6 +20,7 @@ const FIGMA_PAGES = {
   Separator: "5375-70816",
   Slider: "5375-69689",
   Switch: "5375-71127",
+  Tabs: "5375-79785",
   TextArea: "17293-35712",
   TextField: "5375-69732",
   Tooltip: "5375-71565",

@@ -245,3 +245,22 @@ export type {
   ChipSize,
   ChipVariant
 } from "./primitives/Chip";
+
+export {
+  Tabs,
+  TabsIndicator,
+  TabsList,
+  TabsPanel,
+  TabsRoot,
+  TabsSeparator,
+  TabsTab
+} from "./primitives/Tabs";
+export type {
+  TabsIndicatorProps,
+  TabsListProps,
+  TabsPanelProps,
+  TabsProps,
+  TabsSeparatorProps,
+  TabsTabProps,
+  TabsVariant
+} from "./primitives/Tabs";
