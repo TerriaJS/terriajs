@@ -1,0 +1,295 @@
+/**
+ * Modal Component Styles
+ *
+ * The container carries the gap to the viewport's edge as padding, so the
+ * dialog inside it can simply fill it.
+ */
+
+@layer terria-ds.components {
+  [data-tds="modal-backdrop"] {
+    --_modal-ease: cubic-bezier(0.4, 0, 0.2, 1);
+
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    /* React Aria tracks the visual viewport, so the modal stays in view above
+       an on-screen keyboard */
+    /* stylelint-disable-next-line custom-property-pattern -- The value is defined by react-aria */
+    block-size: var(--visual-viewport-height, 100dvb);
+    background-color: var(--terria-ds-backdrop);
+
+    /* Outside scrolling: the backdrop scrolls the whole dialog */
+    &:has(> [data-tds-scroll="outside"]) {
+      overflow: auto;
+      align-items: flex-start;
+    }
+
+    &[data-tds-variant="blur"] {
+      backdrop-filter: var(--terria-ds-backdrop-blur);
+    }
+
+    /* The page stays in view, but still can't be used while the modal is open */
+    &[data-tds-variant="transparent"] {
+      background-color: transparent;
+    }
+
+    &[data-entering] {
+      animation: terria-ds-modal-fade 200ms var(--_modal-ease);
+
+      @media (prefers-reduced-motion: reduce) {
+        animation: none;
+      }
+    }
+
+    &[data-exiting] {
+      animation: terria-ds-modal-fade 150ms var(--_modal-ease) reverse forwards;
+
+      @media (prefers-reduced-motion: reduce) {
+        animation: none;
+      }
+    }
+  }
+
+  [data-tds="modal-container"] {
+    --_modal-width: 30rem;
+    --_modal-inset: var(--terria-ds-dimensions-spacing-4);
+    --_modal-radius: var(--terria-ds-radius-lg);
+
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    inline-size: 100%;
+    max-inline-size: calc(var(--_modal-width) + 2 * var(--_modal-inset));
+    max-block-size: 100%;
+    padding: var(--_modal-inset);
+    outline: none;
+
+    /* Empty padding belongs to the backdrop for outside-click dismissal. */
+    pointer-events: none;
+
+    &[data-tds-scroll="outside"] {
+      flex-shrink: 0;
+      max-block-size: none;
+      margin-block: auto;
+
+      &[data-tds-placement="top"] {
+        margin-block-start: 0;
+      }
+
+      &[data-tds-placement="bottom"] {
+        margin-block-end: 0;
+      }
+
+      &[data-tds-size="cover"],
+      &[data-tds-size="full"] {
+        block-size: auto;
+        min-block-size: 100%;
+      }
+
+      @media (width < 768px) {
+        /* --terria-ds-dimensions-screens-sm */
+        &[data-tds-placement="auto"] {
+          margin-block-end: 0;
+        }
+      }
+    }
+
+    &[data-tds-size="xs"] {
+      --_modal-width: 20rem;
+    }
+
+    &[data-tds-size="md"] {
+      --_modal-width: 40rem;
+    }
+
+    &[data-tds-size="lg"] {
+      --_modal-width: 50rem;
+    }
+
+    &[data-tds-size="cover"],
+    &[data-tds-size="full"] {
+      max-inline-size: none;
+      block-size: 100%;
+    }
+
+    &[data-tds-placement="top"] {
+      align-self: flex-start;
+    }
+
+    &[data-tds-placement="bottom"] {
+      align-self: flex-end;
+    }
+
+    &[data-tds-size="cover"] {
+      --_modal-inset: var(--terria-ds-dimensions-spacing-10);
+    }
+
+    &[data-tds-size="full"] {
+      --_modal-inset: 0;
+      --_modal-radius: 0;
+    }
+
+    [data-entering] > & {
+      animation: terria-ds-modal-enter 200ms var(--_modal-ease);
+
+      @media (prefers-reduced-motion: reduce) {
+        animation: none;
+      }
+    }
+
+    [data-exiting] > & {
+      animation: terria-ds-modal-enter 150ms var(--_modal-ease) reverse forwards;
+
+      @media (prefers-reduced-motion: reduce) {
+        animation: none;
+      }
+    }
+
+    /* Phones: every size spans the screen, with a smaller gap at the edge */
+    @media (width < 768px) {
+      /* --terria-ds-dimensions-screens-sm */
+      max-inline-size: none;
+
+      &[data-tds-placement="auto"] {
+        align-self: flex-end;
+      }
+
+      &[data-tds-size="cover"] {
+        --_modal-inset: var(--terria-ds-dimensions-spacing-4);
+      }
+    }
+  }
+
+  @keyframes terria-ds-modal-fade {
+    from {
+      opacity: 0;
+    }
+  }
+
+  @keyframes terria-ds-modal-enter {
+    from {
+      opacity: 0;
+      scale: 0.96;
+    }
+  }
+
+  /* Grows to fill the cover and full sizes; the others fit their content */
+  [data-tds="modal-dialog"] {
+    pointer-events: auto;
+    position: relative;
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    gap: var(--terria-ds-dimensions-spacing-5);
+    box-sizing: border-box;
+    min-block-size: 0;
+    padding: var(--terria-ds-dimensions-spacing-6);
+    border-radius: var(--_modal-radius);
+    outline: none;
+    background-color: var(--terria-ds-overlay);
+    box-shadow: var(--terria-ds-shadow-overlay);
+    backdrop-filter: var(--terria-ds-backdrop-blur);
+    color: var(--terria-ds-text-foreground);
+    font-size: var(--terria-ds-text-size-body);
+    line-height: var(--terria-ds-line-height-body);
+
+    [data-tds-scroll="outside"] > & {
+      flex-shrink: 0;
+    }
+
+    /* The close button sits in the corner, over the header's end padding */
+    & > [data-tds="close-button"] {
+      position: absolute;
+      inset-block-start: var(--terria-ds-dimensions-spacing-4);
+      inset-inline-end: var(--terria-ds-dimensions-spacing-4);
+    }
+  }
+
+  [data-tds="modal-header"] {
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    gap: var(--terria-ds-dimensions-spacing-3);
+    align-items: flex-start;
+
+    /* Keeps the title clear of the close button */
+    padding-inline-end: var(--terria-ds-dimensions-spacing-6);
+
+    &[data-tds-align="center"] {
+      align-items: center;
+      padding-inline: var(--terria-ds-dimensions-spacing-6);
+      text-align: center;
+    }
+  }
+
+  /* A 40px circle holding a 16px icon */
+  [data-tds="modal-icon"] {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    inline-size: var(--terria-ds-dimensions-spacing-10);
+    block-size: var(--terria-ds-dimensions-spacing-10);
+    border-radius: var(--terria-ds-radius-full);
+    background-color: var(--terria-ds-neutral);
+    color: var(--terria-ds-text-foreground);
+
+    & > svg {
+      inline-size: var(--terria-ds-dimensions-icon-size-sm);
+      block-size: var(--terria-ds-dimensions-icon-size-sm);
+    }
+  }
+
+  [data-tds="modal-heading"] {
+    margin: 0;
+    font-size: var(--terria-ds-text-size-body-lg);
+    font-weight: var(--terria-ds-font-medium);
+    line-height: var(--terria-ds-line-height-body-lg);
+  }
+
+  /* Scrolls when the content is taller than the screen, keeping the header
+     and footer in view. The header's gap to the body is 8px, not the
+     dialog's 20px */
+  [data-tds="modal-body"] {
+    flex: 1 1 auto;
+    min-block-size: 0;
+    overflow: auto;
+    color: var(--terria-ds-text-muted);
+
+    [data-tds="modal-header"] + & {
+      margin-block-start: calc(
+        var(--terria-ds-dimensions-spacing-2) -
+          var(--terria-ds-dimensions-spacing-5)
+      );
+    }
+
+    [data-tds-scroll="outside"] > [data-tds="modal-dialog"] > & {
+      flex-shrink: 0;
+      overflow: visible;
+    }
+  }
+
+  [data-tds="modal-footer"] {
+    display: flex;
+    flex-shrink: 0;
+    flex-wrap: wrap;
+    gap: var(--terria-ds-dimensions-spacing-2);
+    align-items: center;
+    justify-content: flex-end;
+
+    /* Phones: full-width buttons, stacked with the main action on top */
+    @media (width < 768px) {
+      /* --terria-ds-dimensions-screens-sm */
+      flex-direction: column-reverse;
+      align-items: stretch;
+
+      /* Buttons size to their label, so stretching alone doesn't widen them */
+      & > [data-tds="button"] {
+        inline-size: 100%;
+      }
+    }
+  }
+}

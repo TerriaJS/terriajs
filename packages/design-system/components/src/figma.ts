@@ -14,6 +14,7 @@ const FIGMA_PAGES = {
   CloseButton: "5375-69669",
   Input: "17293-26222",
   ListBox: "5375-70869",
+  Modal: "5375-77858",
   Popover: "6192-4931",
   ProgressCircle: "21302-79204",
   RadioGroup: "5375-70882",

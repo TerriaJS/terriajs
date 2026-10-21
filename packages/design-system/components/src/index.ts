@@ -13,6 +13,36 @@ export type {
 } from "./primitives/Button";
 
 export {
+  Modal,
+  ModalBackdrop,
+  ModalBody,
+  ModalCloseTrigger,
+  ModalContainer,
+  ModalDialog,
+  ModalFooter,
+  ModalHeader,
+  ModalHeading,
+  ModalIcon,
+  ModalRoot
+} from "./primitives/Modal";
+export type {
+  ModalBackdropProps,
+  ModalBackdropVariant,
+  ModalBodyProps,
+  ModalCloseTriggerProps,
+  ModalContainerProps,
+  ModalDialogProps,
+  ModalFooterProps,
+  ModalHeaderAlign,
+  ModalHeaderProps,
+  ModalHeadingProps,
+  ModalIconProps,
+  ModalPlacement,
+  ModalProps,
+  ModalSize,
+  ModalScroll
+} from "./primitives/Modal";
+export {
   Popover,
   PopoverArrow,
   PopoverContent,
