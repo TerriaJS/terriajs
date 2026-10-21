@@ -5,6 +5,7 @@ import "@terria/design-system/reset.css";
 import "@terria/design-system/tokens.css";
 import "@terria/design-system/base.css";
 import "@terria/design-system/typography.css";
+import "@terria/design-system/fonts.css";
 import { themes } from "storybook/theming";
 
 // The backgrounds toolbar doubles as the theme switch: the tokens define the

@@ -51,7 +51,7 @@ const config: StorybookConfig = {
       resolve: {
         alias: [
           {
-            find: /^@terria\/design-system\/(layers|tokens|reset|base|typography)\.css$/,
+            find: /^@terria\/design-system\/(layers|tokens|reset|base|typography|fonts)\.css$/,
             replacement: resolve(__dirname, "../../components/src/css/$1.css")
           },
           {

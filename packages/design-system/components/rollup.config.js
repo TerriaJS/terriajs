@@ -65,6 +65,7 @@ const copyFiles = () => ({
     this.addWatchFile("src/css/reset.css");
     this.addWatchFile("src/css/base.css");
     this.addWatchFile("src/css/typography.css");
+    this.addWatchFile("src/css/fonts.css");
     this.addWatchFile(tokensCss);
   },
   writeBundle() {
@@ -74,6 +75,7 @@ const copyFiles = () => ({
     fs.cpSync("src/css/typography.css", "dist/typography.css", {
       recursive: true
     });
+    fs.cpSync("src/css/fonts.css", "dist/fonts.css", { recursive: true });
     fs.cpSync(tokensCss, "dist/tokens.css", { recursive: true });
   }
 });

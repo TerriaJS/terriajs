@@ -21,6 +21,36 @@ The reset is optional: it normalises box sizing, margins, media and form control
 
 Each component imports its own CSS. All styles live in the `terria-ds` cascade layer, so unlayered application CSS always wins.
 
+## Fonts
+
+The design system's typeface is Inter. Components use whatever `--terria-ds-font` names, falling back to the system sans-serif. Load the font one of two ways.
+
+**Let the design system load it.** Import `fonts.css` after the other stylesheets:
+
+```ts
+import "@terria/design-system/fonts.css";
+```
+
+It loads the variable Inter from `@fontsource-variable/inter` and points `--terria-ds-font` at it. Your bundler emits the font files, split by script so browsers only download what a page uses. With webpack, that needs a rule for `.woff2` files:
+
+```js
+{ test: /\.woff2$/, type: "asset/resource" }
+```
+
+**Load it yourself**, for example with `next/font`, and skip `fonts.css`. Set `--terria-ds-font` to the loaded family on `:root`:
+
+```tsx
+const inter = Inter({ subsets: ["latin"] });
+
+<style jsx global>{`
+  :root {
+    --terria-ds-font: ${inter.style.fontFamily};
+  }
+`}</style>;
+```
+
+Set it on `:root`, not on a wrapper element: modals, popovers and tooltips render at the end of `<body>`, outside your app's wrapper.
+
 ## Theming
 
 Components read the `--terria-ds-*` custom properties defined in `tokens.css`. Set `data-theme="dark"` on an ancestor to switch to the dark theme.
