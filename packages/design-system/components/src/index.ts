@@ -192,6 +192,30 @@ export type {
 } from "./primitives/Tooltip";
 
 export {
+  Slider,
+  SliderFill,
+  SliderMarks,
+  SliderOutput,
+  SliderPrimitive,
+  SliderRoot,
+  SliderThumb,
+  SliderTicks,
+  SliderTrack
+} from "./primitives/Slider";
+export type {
+  SliderFillProps,
+  SliderMark,
+  SliderMarksProps,
+  SliderOutputProps,
+  SliderPrimitiveProps,
+  SliderProps,
+  SliderThumbProps,
+  SliderTicksProps,
+  SliderTooltipContent,
+  SliderTrackProps
+} from "./primitives/Slider";
+
+export {
   ButtonGroup,
   ButtonGroupRoot,
   ButtonGroupSeparator
