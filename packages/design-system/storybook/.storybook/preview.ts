@@ -37,7 +37,8 @@ const preview: Preview = {
       test: "todo"
     },
     docs: {
-      theme: themes.light
+      theme: themes.light,
+      codePanel: true
     },
     backgrounds: {
       options: {
