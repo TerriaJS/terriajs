@@ -1,12 +1,17 @@
 /**
  * Modal Component Styles
  *
+ * The layout here is shared with AlertDialog: each rule matches both
+ * components' parts. What differs between them (the surface and body line
+ * height) is set per component through --_dialog-* properties, at the end of
+ * this file and in AlertDialog.css.
+ *
  * The container carries the gap to the viewport's edge as padding, so the
  * dialog inside it can simply fill it.
  */
 
 @layer terria-ds.components {
-  [data-tds="modal-backdrop"] {
+  :is([data-tds="modal-backdrop"], [data-tds="alert-dialog-backdrop"]) {
     --_modal-ease: cubic-bezier(0.4, 0, 0.2, 1);
 
     position: fixed;
@@ -53,7 +58,7 @@
     }
   }
 
-  [data-tds="modal-container"] {
+  :is([data-tds="modal-container"], [data-tds="alert-dialog-container"]) {
     --_modal-width: 30rem;
     --_modal-inset: var(--terria-ds-dimensions-spacing-4);
     --_modal-radius: var(--terria-ds-radius-lg);
@@ -177,7 +182,7 @@
   }
 
   /* Grows to fill the cover and full sizes; the others fit their content */
-  [data-tds="modal-dialog"] {
+  :is([data-tds="modal-dialog"], [data-tds="alert-dialog-dialog"]) {
     pointer-events: auto;
     position: relative;
     display: flex;
@@ -189,7 +194,7 @@
     padding: var(--terria-ds-dimensions-spacing-6);
     border-radius: var(--_modal-radius);
     outline: none;
-    background-color: var(--terria-ds-overlay);
+    background-color: var(--_dialog-bg);
     box-shadow: var(--terria-ds-shadow-overlay);
     backdrop-filter: var(--terria-ds-backdrop-blur);
     color: var(--terria-ds-text-foreground);
@@ -208,7 +213,7 @@
     }
   }
 
-  [data-tds="modal-header"] {
+  :is([data-tds="modal-header"], [data-tds="alert-dialog-header"]) {
     display: flex;
     flex-direction: column;
     flex-shrink: 0;
@@ -226,7 +231,7 @@
   }
 
   /* A 40px circle holding a 16px icon */
-  [data-tds="modal-icon"] {
+  :is([data-tds="modal-icon"], [data-tds="alert-dialog-icon"]) {
     display: flex;
     flex-shrink: 0;
     align-items: center;
@@ -243,7 +248,7 @@
     }
   }
 
-  [data-tds="modal-heading"] {
+  :is([data-tds="modal-heading"], [data-tds="alert-dialog-heading"]) {
     margin: 0;
     font-size: var(--terria-ds-text-size-body-lg);
     font-weight: var(--terria-ds-font-medium);
@@ -253,26 +258,27 @@
   /* Scrolls when the content is taller than the screen, keeping the header
      and footer in view. The header's gap to the body is 8px, not the
      dialog's 20px */
-  [data-tds="modal-body"] {
+  :is([data-tds="modal-body"], [data-tds="alert-dialog-body"]) {
+    line-height: var(--_dialog-body-line-height);
     flex: 1 1 auto;
     min-block-size: 0;
     overflow: auto;
     color: var(--terria-ds-text-muted);
 
-    [data-tds="modal-header"] + & {
+    :is([data-tds="modal-header"], [data-tds="alert-dialog-header"]) + & {
       margin-block-start: calc(
         var(--terria-ds-dimensions-spacing-2) -
           var(--terria-ds-dimensions-spacing-5)
       );
     }
 
-    [data-tds-scroll="outside"] > [data-tds="modal-dialog"] > & {
+    [data-tds-scroll="outside"] > :is([data-tds="modal-dialog"], [data-tds="alert-dialog-dialog"]) > & {
       flex-shrink: 0;
       overflow: visible;
     }
   }
 
-  [data-tds="modal-footer"] {
+  :is([data-tds="modal-footer"], [data-tds="alert-dialog-footer"]) {
     display: flex;
     flex-shrink: 0;
     flex-wrap: wrap;
@@ -291,5 +297,10 @@
         inline-size: 100%;
       }
     }
+  }
+
+  [data-tds="modal-dialog"] {
+    --_dialog-bg: var(--terria-ds-overlay);
+    --_dialog-body-line-height: var(--terria-ds-line-height-body);
   }
 }

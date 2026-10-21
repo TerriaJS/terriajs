@@ -13,6 +13,37 @@ export type {
 } from "./primitives/Button";
 
 export {
+  AlertDialog,
+  AlertDialogBackdrop,
+  AlertDialogBody,
+  AlertDialogCloseTrigger,
+  AlertDialogContainer,
+  AlertDialogDialog,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogHeading,
+  AlertDialogIcon,
+  AlertDialogRoot
+} from "./primitives/AlertDialog";
+export type {
+  AlertDialogBackdropProps,
+  AlertDialogBackdropVariant,
+  AlertDialogBodyProps,
+  AlertDialogCloseTriggerProps,
+  AlertDialogContainerProps,
+  AlertDialogDialogProps,
+  AlertDialogFooterProps,
+  AlertDialogHeaderAlign,
+  AlertDialogHeaderProps,
+  AlertDialogHeadingProps,
+  AlertDialogIconProps,
+  AlertDialogPlacement,
+  AlertDialogProps,
+  AlertDialogScroll,
+  AlertDialogSize
+} from "./primitives/AlertDialog";
+
+export {
   Modal,
   ModalBackdrop,
   ModalBody,

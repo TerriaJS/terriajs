@@ -5,6 +5,7 @@ const FIGMA_FILE =
 
 const FIGMA_PAGES = {
   Alert: "5375-72355",
+  AlertDialog: "7814-319",
   Badge: "19865-36040",
   Button: "5375-69211",
   ButtonGroup: "14202-4550",
