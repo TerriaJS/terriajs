@@ -11,6 +11,7 @@ const FIGMA_PAGES = {
   Checkbox: "5375-70992",
   CheckboxGroup: "17290-24388",
   Chip: "5375-71211",
+  CloseButton: "5375-69669",
   Input: "17293-26222",
   ListBox: "5375-70869",
   Popover: "6192-4931",

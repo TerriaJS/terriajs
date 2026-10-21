@@ -237,6 +237,8 @@ export type {
   BadgeVariant
 } from "./primitives/Badge";
 
+export { CloseButton } from "./primitives/CloseButton";
+export type { CloseButtonProps } from "./primitives/CloseButton";
 export { Chip, ChipLabel, ChipRoot } from "./primitives/Chip";
 export type {
   ChipColor,
