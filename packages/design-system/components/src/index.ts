@@ -225,3 +225,14 @@ export type {
   ButtonGroupProps,
   ButtonGroupSeparatorProps
 } from "./primitives/ButtonGroup";
+
+export { Badge, BadgeAnchor, BadgeLabel, BadgeRoot } from "./primitives/Badge";
+export type {
+  BadgeAnchorProps,
+  BadgeColor,
+  BadgeLabelProps,
+  BadgePlacement,
+  BadgeProps,
+  BadgeSize,
+  BadgeVariant
+} from "./primitives/Badge";

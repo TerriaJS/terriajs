@@ -1,0 +1,176 @@
+/**
+ * Badge Component Styles
+ *
+ * Colours, variants and sizes only set --_badge-* custom properties; the base
+ * rule consumes them.
+ */
+
+@layer terria-ds.components {
+  [data-tds="badge"] {
+    --_badge-bg: var(--terria-ds-neutral);
+    --_badge-fg: var(--terria-ds-neutral-foreground);
+    --_badge-size: var(--terria-ds-dimensions-spacing-7);
+    --_badge-padding: var(--terria-ds-dimensions-spacing-1-5);
+    --_badge-font-size: var(--terria-ds-text-size-nano);
+    --_badge-line-height: var(--terria-ds-line-height-body);
+    --_badge-icon: var(--terria-ds-dimensions-icon-size-xs);
+
+    display: inline-flex;
+    flex-shrink: 0;
+    gap: var(--terria-ds-dimensions-spacing-0-5);
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    min-inline-size: var(--_badge-size);
+    block-size: var(--_badge-size);
+    padding-inline: var(--_badge-padding);
+    border-radius: var(--terria-ds-radius-full);
+    background-color: var(--_badge-bg);
+    color: var(--_badge-fg);
+    font-size: var(--_badge-font-size);
+    font-weight: var(--terria-ds-font-medium);
+    line-height: var(--_badge-line-height);
+    white-space: nowrap;
+
+    & > svg {
+      flex-shrink: 0;
+      inline-size: var(--_badge-icon);
+      block-size: var(--_badge-icon);
+    }
+  }
+
+  /* Sizes */
+  [data-tds="badge"][data-tds-size="sm"] {
+    --_badge-size: var(--terria-ds-dimensions-spacing-4);
+    --_badge-padding: var(--terria-ds-dimensions-spacing-0-5);
+    --_badge-line-height: 1.34;
+    --_badge-icon: 0.625rem;
+  }
+
+  [data-tds="badge"][data-tds-size="lg"] {
+    --_badge-size: var(--terria-ds-dimensions-spacing-8);
+    --_badge-font-size: var(--terria-ds-text-size-body);
+    --_badge-line-height: var(--terria-ds-line-height-body-lg);
+    --_badge-icon: var(--terria-ds-dimensions-icon-size-sm);
+  }
+
+  /* Primary: the colour's solid fill */
+  [data-tds="badge"][data-tds-variant="primary"] {
+    &[data-tds-color="accent"] {
+      --_badge-bg: var(--terria-ds-primary);
+      --_badge-fg: var(--terria-ds-primary-foreground);
+    }
+
+    &[data-tds-color="success"] {
+      --_badge-bg: var(--terria-ds-success);
+      --_badge-fg: var(--terria-ds-success-foreground);
+    }
+
+    &[data-tds-color="warning"] {
+      --_badge-bg: var(--terria-ds-warning);
+      --_badge-fg: var(--terria-ds-warning-foreground);
+    }
+
+    &[data-tds-color="danger"] {
+      --_badge-bg: var(--terria-ds-danger);
+      --_badge-fg: var(--terria-ds-danger-foreground);
+    }
+  }
+
+  /* Secondary: neutral fill, coloured text */
+  [data-tds="badge"][data-tds-variant="secondary"] {
+    &[data-tds-color="accent"] {
+      --_badge-fg: var(--terria-ds-primary-soft-foreground);
+    }
+
+    &[data-tds-color="success"] {
+      --_badge-fg: var(--terria-ds-success-soft-foreground);
+    }
+
+    &[data-tds-color="warning"] {
+      --_badge-fg: var(--terria-ds-warning-soft-foreground);
+    }
+
+    &[data-tds-color="danger"] {
+      --_badge-fg: var(--terria-ds-danger-soft-foreground);
+    }
+  }
+
+  /* Soft: the colour's soft fill */
+  [data-tds="badge"][data-tds-variant="soft"] {
+    &[data-tds-color="default"] {
+      --_badge-bg: var(--terria-ds-neutral-soft);
+      --_badge-fg: var(--terria-ds-neutral-soft-foreground);
+    }
+
+    &[data-tds-color="accent"] {
+      --_badge-bg: var(--terria-ds-primary-soft);
+      --_badge-fg: var(--terria-ds-primary-soft-foreground);
+    }
+
+    &[data-tds-color="success"] {
+      --_badge-bg: var(--terria-ds-success-soft);
+      --_badge-fg: var(--terria-ds-success-soft-foreground);
+    }
+
+    &[data-tds-color="warning"] {
+      --_badge-bg: var(--terria-ds-warning-soft);
+      --_badge-fg: var(--terria-ds-warning-soft-foreground);
+    }
+
+    &[data-tds-color="danger"] {
+      --_badge-bg: var(--terria-ds-danger-soft);
+      --_badge-fg: var(--terria-ds-danger-soft-foreground);
+    }
+  }
+
+  [data-tds="badge-anchor"] {
+    position: relative;
+    display: inline-flex;
+    flex-shrink: 0;
+  }
+
+  /* The badge's centre sits a quarter of its size in from its anchor's
+     corner. Right and left follow the reading direction */
+  [data-tds="badge"][data-tds-placement] {
+    --_badge-shift-x: 25%;
+    --_badge-shift-y: 25%;
+
+    position: absolute;
+
+    &[data-tds-placement^="top"] {
+      inset-block-start: 0;
+    }
+
+    &[data-tds-placement^="bottom"] {
+      inset-block-end: 0;
+    }
+
+    &[data-tds-placement="top-right"] {
+      inset-inline-end: 0;
+      translate: var(--_badge-shift-x) calc(-1 * var(--_badge-shift-y));
+    }
+
+    &[data-tds-placement="top-left"] {
+      inset-inline-start: 0;
+      translate: calc(-1 * var(--_badge-shift-x))
+        calc(-1 * var(--_badge-shift-y));
+    }
+
+    &[data-tds-placement="bottom-right"] {
+      inset-inline-end: 0;
+      translate: var(--_badge-shift-x) var(--_badge-shift-y);
+    }
+
+    &[data-tds-placement="bottom-left"] {
+      inset-inline-start: 0;
+      translate: calc(-1 * var(--_badge-shift-x)) var(--_badge-shift-y);
+    }
+
+    /* translate is physical, so its horizontal shift flips with the corner in
+       right-to-left */
+    &:dir(rtl) {
+      --_badge-shift-x: -25%;
+    }
+  }
+}
