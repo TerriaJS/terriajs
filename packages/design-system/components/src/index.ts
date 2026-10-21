@@ -236,3 +236,12 @@ export type {
   BadgeSize,
   BadgeVariant
 } from "./primitives/Badge";
+
+export { Chip, ChipLabel, ChipRoot } from "./primitives/Chip";
+export type {
+  ChipColor,
+  ChipLabelProps,
+  ChipProps,
+  ChipSize,
+  ChipVariant
+} from "./primitives/Chip";
