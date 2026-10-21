@@ -95,7 +95,9 @@ const config = {
     "react",
     "react-dom",
     "react/jsx-runtime",
-    /^react-aria-components(\/.*)?$/
+    /^react-aria-components(\/.*)?$/,
+    /^react-aria(\/.*)?$/,
+    "@react-aria/utils"
   ],
   plugins: [
     postcssPlugin(),

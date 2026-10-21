@@ -1,0 +1,144 @@
+/**
+ * Tooltip Component Styles
+ */
+
+@layer terria-ds.components {
+  [data-tds="tooltip"] {
+    --_tooltip-bg: var(--terria-ds-surface-overlay);
+    --_tooltip-fg: var(--terria-ds-text-foreground);
+    --_tooltip-slide: 0.25rem;
+    --_tooltip-ease: cubic-bezier(0.4, 0, 0.2, 1);
+    --_tooltip-arrow-layer: -1;
+
+    box-sizing: border-box;
+    max-inline-size: 20rem;
+    padding: var(--terria-ds-dimensions-spacing-1)
+      var(--terria-ds-dimensions-spacing-2);
+    border-radius: var(--terria-ds-radius-md);
+    background-color: var(--_tooltip-bg);
+    box-shadow: inset 0 0 1px 0 var(--terria-ds-effects-overlay-shadow);
+    color: var(--_tooltip-fg);
+    font-family: inherit;
+    font-size: var(--terria-ds-text-size-nano);
+    line-height: var(--terria-ds-line-height-body);
+    overflow-wrap: break-word;
+
+    /* A filter rather than box-shadow, so the arrow casts the same shadow */
+    filter: drop-shadow(0 2px 4px oklch(0% 0 0deg / 6%))
+      drop-shadow(0 -6px 6px oklch(0% 0 0deg / 3%))
+      drop-shadow(0 14px 14px oklch(0% 0 0deg / 8%));
+    backdrop-filter: var(--terria-ds-backdrop-blur);
+    /* stylelint-disable-next-line custom-property-pattern -- The value is defined by react-aria */
+    transform-origin: var(--trigger-anchor-point, center);
+
+    &[data-tds-inverse] {
+      --_tooltip-bg: var(--terria-ds-surface-inverse);
+      --_tooltip-fg: var(--terria-ds-text-inverse);
+    }
+
+    /* Enter from the trigger's side */
+    &[data-placement="top"] {
+      --_tooltip-from: 0 var(--_tooltip-slide);
+    }
+
+    &[data-placement="bottom"] {
+      --_tooltip-from: 0 calc(-1 * var(--_tooltip-slide));
+    }
+
+    &[data-placement="left"] {
+      --_tooltip-from: var(--_tooltip-slide) 0;
+    }
+
+    &[data-placement="right"] {
+      --_tooltip-from: calc(-1 * var(--_tooltip-slide)) 0;
+    }
+
+    &[data-entering] {
+      animation: terria-ds-tooltip-enter 150ms var(--_tooltip-ease);
+    }
+
+    &[data-exiting] {
+      animation: terria-ds-tooltip-exit 100ms var(--_tooltip-ease) forwards;
+
+      /* Stays non-interactive while closing, even if the animation is interrupted */
+      pointer-events: none;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      &[data-entering],
+      &[data-exiting] {
+        animation: none;
+      }
+    }
+
+    /* React Aria positions the arrow, which would paint it over the text its
+       inner half reaches. The tooltip's filter makes it a stacking context, so
+       -1 keeps the arrow above the tooltip's background but under its text */
+    [data-tds="tooltip-arrow"] {
+      z-index: var(--_tooltip-arrow-layer);
+    }
+
+    /* A 10px square turned 45deg. Its centre sits 2px inside the edge, as in
+       the design, so its side corners stay under the body's rounded ends */
+    [data-tds="tooltip-arrow-shape"] {
+      --_tooltip-arrow-inset: calc(50% + 0.125rem);
+
+      display: block;
+      inline-size: 0.625rem;
+      block-size: 0.625rem;
+      background-color: var(--_tooltip-bg);
+      rotate: 45deg;
+    }
+
+    &[data-placement="top"] [data-tds="tooltip-arrow-shape"] {
+      translate: 0 calc(-1 * var(--_tooltip-arrow-inset));
+    }
+
+    &[data-placement="bottom"] [data-tds="tooltip-arrow-shape"] {
+      translate: 0 var(--_tooltip-arrow-inset);
+    }
+
+    &[data-placement="left"] [data-tds="tooltip-arrow-shape"] {
+      translate: calc(-1 * var(--_tooltip-arrow-inset)) 0;
+    }
+
+    &[data-placement="right"] [data-tds="tooltip-arrow-shape"] {
+      translate: var(--_tooltip-arrow-inset) 0;
+    }
+  }
+
+  @keyframes terria-ds-tooltip-enter {
+    from {
+      opacity: 0;
+      translate: var(--_tooltip-from, 0);
+      scale: 0.9;
+    }
+  }
+
+  @keyframes terria-ds-tooltip-exit {
+    to {
+      opacity: 0;
+      scale: 0.95;
+    }
+  }
+
+  [data-tds="tooltip-trigger"] {
+    display: inline-block;
+    border-radius: var(--terria-ds-radius-sm);
+    outline: none;
+    transition: box-shadow 150ms ease-out;
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
+
+    /* useFocusable sets no data-focus-visible, so this uses the native pseudo-class */
+    &:focus-visible {
+      box-shadow: var(--terria-ds-shadow-focus-ring);
+
+      /* Shadows are dropped in forced-colors mode; this outline shows there instead */
+      outline: var(--terria-ds-focus-ring-width) solid transparent;
+      outline-offset: var(--terria-ds-focus-ring-offset);
+    }
+  }
+}

@@ -176,6 +176,22 @@ export type {
 } from "./primitives/RadioGroup";
 
 export {
+  Tooltip,
+  TooltipArrow,
+  TooltipContent,
+  TooltipPrimitive,
+  TooltipRoot,
+  TooltipTrigger
+} from "./primitives/Tooltip";
+export type {
+  TooltipArrowProps,
+  TooltipContentProps,
+  TooltipPrimitiveProps,
+  TooltipProps,
+  TooltipTriggerProps
+} from "./primitives/Tooltip";
+
+export {
   ButtonGroup,
   ButtonGroupRoot,
   ButtonGroupSeparator
