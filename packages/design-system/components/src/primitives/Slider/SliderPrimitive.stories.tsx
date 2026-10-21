@@ -1,10 +1,12 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Label } from "../Field";
 import { SliderPrimitive } from ".";
+import { figmaDesign } from "../../figma";
 
 const meta = {
   title: "Example/Slider/Primitive",
   component: SliderPrimitive,
+  parameters: figmaDesign("Slider"),
   args: { defaultValue: 30 },
   decorators: [
     (Story) => (

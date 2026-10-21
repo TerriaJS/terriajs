@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Circle, Layers } from "lucide-react";
 import { Chip } from ".";
+import { figmaDesign } from "../../figma";
 
 const COLORS = ["accent", "default", "success", "warning", "danger"] as const;
 const VARIANTS = ["primary", "secondary", "tertiary", "soft"] as const;
@@ -9,6 +10,7 @@ const SIZES = ["lg", "md", "sm"] as const;
 const meta = {
   title: "Example/Chip",
   component: Chip,
+  parameters: figmaDesign("Chip"),
   args: {
     children: "Satellite",
     color: "default",

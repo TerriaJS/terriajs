@@ -1,9 +1,11 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Checkbox } from ".";
+import { figmaDesign } from "../../figma";
 
 const meta = {
   title: "Example/Checkbox/Default",
   component: Checkbox,
+  parameters: figmaDesign("Checkbox"),
   args: { children: "Show suburbs", variant: "primary" },
   argTypes: {
     variant: { control: "inline-radio", options: ["primary", "secondary"] }

@@ -2,10 +2,12 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Info } from "lucide-react";
 import { Button } from "../Button";
 import { TooltipPrimitive } from ".";
+import { figmaDesign } from "../../figma";
 
 const meta = {
   title: "Example/Tooltip/Primitive",
   component: TooltipPrimitive,
+  parameters: figmaDesign("Tooltip"),
   args: { delay: 0, children: null },
   decorators: [
     (Story) => (

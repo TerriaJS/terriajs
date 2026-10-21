@@ -4,10 +4,12 @@ import { Button } from "../Button";
 import { Checkbox } from "../Checkbox";
 import { Description, FieldError, Label } from "../Field";
 import { CheckboxGroup } from ".";
+import { figmaDesign } from "../../figma";
 
 const meta = {
   title: "Example/CheckboxGroup",
   component: CheckboxGroup,
+  parameters: figmaDesign("CheckboxGroup"),
   args: { orientation: "vertical", variant: "primary" },
   argTypes: {
     orientation: {

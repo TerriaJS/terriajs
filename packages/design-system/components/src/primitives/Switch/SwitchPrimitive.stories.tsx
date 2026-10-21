@@ -10,10 +10,12 @@ import {
   SwitchThumb,
   type SwitchSize
 } from ".";
+import { figmaDesign } from "../../figma";
 
 const meta = {
   title: "Example/Switch/Primitive",
   component: SwitchPrimitive,
+  parameters: figmaDesign("Switch"),
   subcomponents: { SwitchContent, SwitchControl, SwitchThumb, SwitchIcon },
   args: { size: "md", children: null },
   argTypes: {

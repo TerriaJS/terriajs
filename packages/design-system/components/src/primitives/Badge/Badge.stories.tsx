@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Bell, Circle } from "lucide-react";
 import { Button } from "../Button";
 import { Badge } from ".";
+import { figmaDesign } from "../../figma";
 
 const COLORS = ["accent", "default", "success", "warning", "danger"] as const;
 const VARIANTS = ["primary", "secondary", "soft"] as const;
@@ -23,6 +24,7 @@ const Swatch = (): React.ReactElement => (
 const meta = {
   title: "Example/Badge",
   component: Badge,
+  parameters: figmaDesign("Badge"),
   args: { children: "5", color: "danger", variant: "primary", size: "md" },
   argTypes: {
     color: { control: "inline-radio", options: COLORS },

@@ -4,10 +4,12 @@ import { Button } from "../Button";
 import { Description, FieldError, Label } from "../Field";
 import { Radio, RadioPrimitive } from "../Radio";
 import { RadioGroup } from ".";
+import { figmaDesign } from "../../figma";
 
 const meta = {
   title: "Example/RadioGroup",
   component: RadioGroup,
+  parameters: figmaDesign("RadioGroup"),
   args: { orientation: "vertical", variant: "primary" },
   argTypes: {
     orientation: {

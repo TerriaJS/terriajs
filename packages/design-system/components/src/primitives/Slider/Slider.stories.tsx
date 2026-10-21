@@ -1,10 +1,12 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { I18nProvider } from "react-aria-components/I18nProvider";
 import { Slider } from ".";
+import { figmaDesign } from "../../figma";
 
 const meta = {
   title: "Example/Slider/Default",
   component: Slider,
+  parameters: figmaDesign("Slider"),
   args: { label: "Opacity", defaultValue: 30, showValue: true },
   decorators: [
     (Story) => (

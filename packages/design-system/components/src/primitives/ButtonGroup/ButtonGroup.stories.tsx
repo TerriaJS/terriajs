@@ -12,10 +12,12 @@ import {
 import { Button, type ButtonVariant } from "../Button";
 import { Popover } from "../Popover";
 import { ButtonGroup, ButtonGroupSeparator } from ".";
+import { figmaDesign } from "../../figma";
 
 const meta = {
   title: "Example/ButtonGroup",
   component: ButtonGroup,
+  parameters: figmaDesign("ButtonGroup"),
   subcomponents: { ButtonGroupSeparator },
   // Each story renders its own buttons; this only satisfies the required arg
   args: { "aria-label": "Map tools", children: null, variant: "secondary" },

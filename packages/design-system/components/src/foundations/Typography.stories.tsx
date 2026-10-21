@@ -1,7 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { figmaDesign } from "../figma";
 
 const meta = {
-  title: "Foundations/Typography"
+  title: "Foundations/Typography",
+  parameters: figmaDesign("Typography")
 } satisfies Meta;
 
 export default meta;

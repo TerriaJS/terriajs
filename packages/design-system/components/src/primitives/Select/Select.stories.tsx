@@ -17,10 +17,12 @@ import {
   SelectTrigger,
   SelectValue
 } from ".";
+import { figmaDesign } from "../../figma";
 
 const meta = {
   title: "Example/Select",
   component: Select,
+  parameters: figmaDesign("Select"),
   subcomponents: {
     SelectTrigger,
     SelectValue,

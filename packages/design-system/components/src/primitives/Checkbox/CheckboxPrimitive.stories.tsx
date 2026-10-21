@@ -8,10 +8,12 @@ import {
   CheckboxIndicator,
   CheckboxPrimitive
 } from ".";
+import { figmaDesign } from "../../figma";
 
 const meta = {
   title: "Example/Checkbox/Primitive",
   component: CheckboxPrimitive,
+  parameters: figmaDesign("Checkbox"),
   subcomponents: { CheckboxContent, CheckboxControl, CheckboxIndicator },
   args: { children: null }
 } satisfies Meta<typeof CheckboxPrimitive>;

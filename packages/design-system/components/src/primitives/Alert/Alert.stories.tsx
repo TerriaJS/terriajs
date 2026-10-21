@@ -10,10 +10,12 @@ import {
   AlertTitle,
   type AlertStatus
 } from ".";
+import { figmaDesign } from "../../figma";
 
 const meta = {
   title: "Example/Alert",
   component: Alert,
+  parameters: figmaDesign("Alert"),
   subcomponents: { AlertIndicator, AlertContent, AlertTitle, AlertDescription },
   // Each story renders its own content; this only satisfies the required arg
   args: { status: "default", children: null },

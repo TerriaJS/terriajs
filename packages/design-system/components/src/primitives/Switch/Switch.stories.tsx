@@ -1,10 +1,12 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
 import { Switch, type SwitchProps, type SwitchSize } from ".";
+import { figmaDesign } from "../../figma";
 
 const meta = {
   title: "Example/Switch/Default",
   component: Switch,
+  parameters: figmaDesign("Switch"),
   args: { children: "Show labels", size: "md" },
   argTypes: {
     size: { control: "inline-radio", options: ["sm", "md", "lg"] }

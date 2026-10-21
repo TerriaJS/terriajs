@@ -1,10 +1,12 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import { Separator } from "./Separator";
+import { figmaDesign } from "../../figma";
 
 const meta = {
   title: "Example/Separator",
   component: Separator,
+  parameters: figmaDesign("Separator"),
   argTypes: {
     variant: {
       control: "inline-radio",

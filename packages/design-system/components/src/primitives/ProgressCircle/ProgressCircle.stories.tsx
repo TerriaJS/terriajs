@@ -6,10 +6,12 @@ import {
   ProgressCircleTrack,
   ProgressCircleTrackCircle
 } from ".";
+import { figmaDesign } from "../../figma";
 
 const meta = {
   title: "Example/ProgressCircle",
   component: ProgressCircle,
+  parameters: figmaDesign("ProgressCircle"),
   subcomponents: {
     ProgressCircleTrack,
     ProgressCircleTrackCircle,

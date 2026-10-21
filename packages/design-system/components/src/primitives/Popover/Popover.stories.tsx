@@ -10,10 +10,12 @@ import {
   PopoverHeading,
   PopoverTrigger
 } from ".";
+import { figmaDesign } from "../../figma";
 
 const meta = {
   title: "Example/Popover",
   component: Popover,
+  parameters: figmaDesign("Popover"),
   subcomponents: {
     PopoverTrigger,
     PopoverContent,

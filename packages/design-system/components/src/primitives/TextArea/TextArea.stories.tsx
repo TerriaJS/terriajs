@@ -1,10 +1,12 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import { TextArea } from "./TextArea";
+import { figmaDesign } from "../../figma";
 
 const meta = {
   title: "Example/TextArea",
   component: TextArea,
+  parameters: figmaDesign("TextArea"),
   args: {
     "aria-label": "Layer notes",
     placeholder: "Add notes about this layer"

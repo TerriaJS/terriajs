@@ -1,10 +1,12 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import { Input } from "./Input";
+import { figmaDesign } from "../../figma";
 
 const meta = {
   title: "Example/Input",
   component: Input,
+  parameters: figmaDesign("Input"),
   args: { "aria-label": "Layer name", placeholder: "Search layers" },
   argTypes: {
     variant: { control: "inline-radio", options: ["primary", "secondary"] }

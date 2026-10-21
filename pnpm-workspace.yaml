@@ -158,6 +158,7 @@ catalogs:
 
   storybook:
     "@storybook/addon-a11y": 10.6.2
+    "@storybook/addon-designs": 12.0.0
     "@storybook/addon-docs": 10.6.2
     "@storybook/addon-vitest": 10.6.2
     "@storybook/react-vite": 10.6.2

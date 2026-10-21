@@ -2,10 +2,12 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Info } from "lucide-react";
 import { Button } from "../Button";
 import { Tooltip, TooltipTrigger } from ".";
+import { figmaDesign } from "../../figma";
 
 const meta = {
   title: "Example/Tooltip/Default",
   component: Tooltip,
+  parameters: figmaDesign("Tooltip"),
   args: {
     content: "Zoom in one level",
     delay: 0,

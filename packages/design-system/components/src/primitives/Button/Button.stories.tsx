@@ -7,10 +7,12 @@ import { Settings } from "lucide-react";
 import { useEffect } from "react";
 import { useArgs } from "storybook/preview-api";
 import { Button, type ButtonProps } from "./Button";
+import { figmaDesign } from "../../figma";
 
 const meta = {
   title: "Example/Button",
   component: Button,
+  parameters: figmaDesign("Button"),
   args: {
     onPress: fn()
   }

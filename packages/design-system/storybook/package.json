@@ -8,6 +8,7 @@
   },
   "devDependencies": {
     "@storybook/addon-a11y": "catalog:storybook",
+    "@storybook/addon-designs": "catalog:storybook",
     "@storybook/addon-docs": "catalog:storybook",
     "@storybook/addon-vitest": "catalog:storybook",
     "@storybook/react-vite": "catalog:storybook",

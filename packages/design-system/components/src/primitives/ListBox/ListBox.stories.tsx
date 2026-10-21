@@ -7,10 +7,12 @@ import { Description, Label } from "../Field";
 import { Header } from "../Header";
 import { Separator } from "../Separator";
 import { ListBox, ListBoxItem, ListBoxItemIndicator, ListBoxSection } from ".";
+import { figmaDesign } from "../../figma";
 
 const meta = {
   title: "Example/ListBox",
   component: ListBox,
+  parameters: figmaDesign("ListBox"),
   subcomponents: { ListBoxItem, ListBoxItemIndicator, ListBoxSection },
   args: { "aria-label": "Base map" },
   decorators: [

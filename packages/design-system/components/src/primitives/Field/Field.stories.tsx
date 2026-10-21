@@ -4,10 +4,12 @@ import { Info } from "lucide-react";
 import { Input } from "../Input";
 import { TextArea } from "../TextArea";
 import { Description, FieldError, Label, TextField } from ".";
+import { figmaDesign } from "../../figma";
 
 const meta = {
   title: "Example/Field",
   component: TextField,
+  parameters: figmaDesign("TextField"),
   subcomponents: { Label, Description, FieldError },
   decorators: [
     (Story) => (
