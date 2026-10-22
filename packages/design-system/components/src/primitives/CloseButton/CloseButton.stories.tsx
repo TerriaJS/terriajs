@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Minus } from "lucide-react";
+import { MinusIcon } from "@terria/design-system-icons";
 import { CloseButton } from ".";
 import { figmaDesign } from "../../figma";
 
@@ -20,7 +20,7 @@ export const WithLabel: Story = {
 };
 
 export const CustomIcon: Story = {
-  args: { "aria-label": "Minimise", children: <Minus /> }
+  args: { "aria-label": "Minimise", children: <MinusIcon /> }
 };
 
 export const Disabled: Story = {

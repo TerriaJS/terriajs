@@ -1,6 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
-import { Info, Settings2 } from "lucide-react";
+import {
+  AdjustmentsHorizontalIcon,
+  InfoCircleIcon
+} from "@terria/design-system-icons";
 import { Button } from "../Button";
 import {
   Popover,
@@ -38,7 +41,7 @@ export const WithArrow: Story = {
   render: (args) => (
     <Popover {...args}>
       <Button isIconOnly aria-label="Map settings">
-        <Settings2 size={20} />
+        <AdjustmentsHorizontalIcon size={20} />
       </Button>
       <Popover.Content>
         <Popover.Dialog>
@@ -55,7 +58,7 @@ export const WithoutArrow: Story = {
   render: (args) => (
     <Popover {...args}>
       <Button isIconOnly aria-label="Map settings">
-        <Settings2 size={20} />
+        <AdjustmentsHorizontalIcon size={20} />
       </Button>
       <Popover.Content>
         <Popover.Dialog>
@@ -132,7 +135,7 @@ export const CustomTrigger: Story = {
   render: (args) => (
     <Popover {...args}>
       <Popover.Trigger aria-label="Layer info">
-        <Info size={20} />
+        <InfoCircleIcon size={20} />
       </Popover.Trigger>
       <Popover.Content>
         <Popover.Dialog>

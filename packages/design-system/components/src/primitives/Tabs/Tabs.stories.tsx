@@ -1,14 +1,18 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Layers, List, Share2 } from "lucide-react";
+import {
+  Category2Icon,
+  ShareIcon,
+  StackFrontIcon
+} from "@terria/design-system-icons";
 import { useState } from "react";
 import type { Key } from "react-aria-components";
 import { Tabs } from ".";
 import { figmaDesign } from "../../figma";
 
 const TABS = [
-  { id: "layers", label: "Layers", icon: <Layers size={16} /> },
-  { id: "legend", label: "Legend", icon: <List size={16} /> },
-  { id: "share", label: "Share", icon: <Share2 size={16} /> }
+  { id: "layers", label: "Layers", icon: <StackFrontIcon size={16} /> },
+  { id: "legend", label: "Legend", icon: <Category2Icon size={16} /> },
+  { id: "share", label: "Share", icon: <ShareIcon size={16} /> }
 ] as const;
 
 const meta = {

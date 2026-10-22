@@ -1,4 +1,4 @@
-import { ChevronDown, X } from "lucide-react";
+import { ChevronDownIcon, XIcon } from "@terria/design-system-icons";
 import {
   forwardRef,
   createContext,
@@ -136,7 +136,7 @@ export const SelectIndicator = forwardRef<
 >(({ children, ...props }, ref) => {
   return (
     <span aria-hidden="true" {...props} ref={ref} data-tds="select-indicator">
-      {children ?? <ChevronDown />}
+      {children ?? <ChevronDownIcon />}
     </span>
   );
 });
@@ -175,7 +175,7 @@ export const SelectClearButton = forwardRef<
         onClick?.(event);
       }}
     >
-      {children ?? <X size={14} />}
+      {children ?? <XIcon size={14} />}
     </span>
   );
 });

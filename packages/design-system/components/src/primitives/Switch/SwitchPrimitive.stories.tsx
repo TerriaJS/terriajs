@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
-import { Moon, Sun } from "lucide-react";
+import { EyeClosedIcon, EyeIcon } from "@terria/design-system-icons";
 import { Description, Label } from "../Field";
 import {
   SwitchPrimitive,
@@ -96,11 +96,11 @@ export const WithIcon: Story = {
           <SwitchPrimitive.Control>
             <SwitchPrimitive.Thumb>
               <SwitchPrimitive.Icon>
-                {isSelected ? <Moon /> : <Sun />}
+                {isSelected ? <EyeIcon /> : <EyeClosedIcon />}
               </SwitchPrimitive.Icon>
             </SwitchPrimitive.Thumb>
           </SwitchPrimitive.Control>
-          <Label>Dark mode</Label>
+          <Label>Show layer</Label>
         </SwitchPrimitive.Content>
       )}
     </SwitchPrimitive>

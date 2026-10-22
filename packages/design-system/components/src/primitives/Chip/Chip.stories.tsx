@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Circle, Layers } from "lucide-react";
+import { CircleDashedIcon, StackFrontIcon } from "@terria/design-system-icons";
 import { Chip } from ".";
 import { figmaDesign } from "../../figma";
 
@@ -33,7 +33,7 @@ export const WithIcon: Story = {
   args: { color: "accent", variant: "soft" },
   render: (args) => (
     <Chip {...args}>
-      <Layers />
+      <StackFrontIcon />
       <Chip.Label>3 layers</Chip.Label>
     </Chip>
   )
@@ -106,9 +106,9 @@ export const All: Story = {
               variant={variant}
               size={size}
             >
-              <Circle />
+              <CircleDashedIcon />
               <Chip.Label>Label</Chip.Label>
-              <Circle />
+              <CircleDashedIcon />
             </Chip>
           ))
         )

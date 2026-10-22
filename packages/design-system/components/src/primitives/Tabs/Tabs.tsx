@@ -1,9 +1,9 @@
 import {
-  ChevronDown,
-  ChevronLeft,
-  ChevronRight,
-  ChevronUp
-} from "lucide-react";
+  ChevronDownIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  ChevronUpIcon
+} from "@terria/design-system-icons";
 import {
   createContext,
   forwardRef,
@@ -136,8 +136,8 @@ export const TabsList = <T extends object>(
     });
   };
 
-  const Previous = vertical ? ChevronUp : ChevronLeft;
-  const Next = vertical ? ChevronDown : ChevronRight;
+  const Previous = vertical ? ChevronUpIcon : ChevronLeftIcon;
+  const Next = vertical ? ChevronDownIcon : ChevronRightIcon;
 
   return (
     <div

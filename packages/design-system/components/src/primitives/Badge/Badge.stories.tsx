@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Bell, Circle } from "lucide-react";
+import { CircleDashedIcon, StackFrontIcon } from "@terria/design-system-icons";
 import { Button } from "../Button";
 import { Badge } from ".";
 import { figmaDesign } from "../../figma";
@@ -45,8 +45,8 @@ export const Default: Story = {
   args: { size: "sm" },
   render: (args) => (
     <Badge.Anchor>
-      <Button variant="tertiary" isIconOnly aria-label="Notifications">
-        <Bell size={16} />
+      <Button variant="tertiary" isIconOnly aria-label="Layers">
+        <StackFrontIcon size={16} />
       </Button>
       <Badge {...args} />
     </Badge.Anchor>
@@ -99,9 +99,9 @@ export const All: Story = {
               key={`${size}-${variant}-${color}`}
               style={OFF_ANCHOR}
             >
-              <Circle />
+              <CircleDashedIcon />
               <Badge.Label>Label</Badge.Label>
-              <Circle />
+              <CircleDashedIcon />
             </Badge>
           ))
         )

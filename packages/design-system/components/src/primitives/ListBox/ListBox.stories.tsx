@@ -2,7 +2,12 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { ListLayout, Virtualizer } from "react-aria-components/Virtualizer";
 import { fn } from "storybook/test";
 
-import { Globe, Mountain, Satellite, Trash2 } from "lucide-react";
+import {
+  MapIcon,
+  TrashIcon,
+  WorldIcon,
+  WorldMapIcon
+} from "@terria/design-system-icons";
 import { Description, Label } from "../Field";
 import { Header } from "../Header";
 import { Separator } from "../Separator";
@@ -59,7 +64,7 @@ export const WithDescriptions: Story = {
   render: (args) => (
     <ListBox {...args}>
       <ListBox.Item id="osm" textValue="OpenStreetMap">
-        <Globe aria-hidden size={20} />
+        <MapIcon aria-hidden size={20} />
         <div style={titleStyle}>
           <Label>OpenStreetMap</Label>
           <Description>Streets and places</Description>
@@ -67,7 +72,7 @@ export const WithDescriptions: Story = {
         <ListBox.ItemIndicator />
       </ListBox.Item>
       <ListBox.Item id="satellite" textValue="Satellite">
-        <Satellite aria-hidden size={20} />
+        <WorldIcon aria-hidden size={20} />
         <div style={titleStyle}>
           <Label>Satellite</Label>
           <Description>Aerial imagery</Description>
@@ -75,7 +80,7 @@ export const WithDescriptions: Story = {
         <ListBox.ItemIndicator />
       </ListBox.Item>
       <ListBox.Item id="terrain" textValue="Terrain">
-        <Mountain aria-hidden size={20} />
+        <WorldMapIcon aria-hidden size={20} />
         <div style={titleStyle}>
           <Label>Terrain</Label>
           <Description>Elevation shaded relief</Description>
@@ -91,14 +96,14 @@ export const Danger: Story = {
   render: (args) => (
     <ListBox {...args}>
       <ListBox.Item textValue="Zoom to layer">
-        <Globe aria-hidden size={20} />
+        <MapIcon aria-hidden size={20} />
         <div style={titleStyle}>
           <Label>Zoom to layer</Label>
           <Description>Fit the map to its extent</Description>
         </div>
       </ListBox.Item>
       <ListBox.Item textValue="Remove layer" variant="danger">
-        <Trash2 aria-hidden size={20} />
+        <TrashIcon aria-hidden size={20} />
         <div style={titleStyle}>
           <Label>Remove layer</Label>
           <Description>Removes it from the workbench</Description>

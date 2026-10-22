@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Info } from "lucide-react";
+import { InfoCircleIcon } from "@terria/design-system-icons";
 import { Button } from "../Button";
 import { Tooltip, TooltipTrigger } from ".";
 import { figmaDesign } from "../../figma";
@@ -40,7 +40,7 @@ export const CustomTrigger: Story = {
     content: "Data from the 2021 census",
     children: (
       <TooltipTrigger aria-label="About this layer">
-        <Info size={16} />
+        <InfoCircleIcon size={16} />
       </TooltipTrigger>
     )
   }
@@ -96,7 +96,7 @@ export const Placements: Story = {
             isIconOnly
             aria-label={placement}
           >
-            <Info size={16} />
+            <InfoCircleIcon size={16} />
           </Button>
         </Tooltip>
       ))}

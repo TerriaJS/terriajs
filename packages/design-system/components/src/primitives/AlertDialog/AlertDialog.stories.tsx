@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { CloudOff, Trash2 } from "lucide-react";
+import { DownloadOffIcon, TrashIcon } from "@terria/design-system-icons";
 import { Button } from "../Button";
 import {
   AlertDialog,
@@ -45,7 +45,7 @@ export const Default: Story = {
             <AlertDialog.CloseTrigger />
             <AlertDialog.Header>
               <AlertDialog.Icon>
-                <Trash2 />
+                <TrashIcon />
               </AlertDialog.Icon>
               <AlertDialog.Heading>
                 Remove “Flood extent 2022”?
@@ -115,7 +115,7 @@ export const CenteredHeader: Story = {
           <AlertDialog.Dialog>
             <AlertDialog.Header align="center">
               <AlertDialog.Icon>
-                <CloudOff />
+                <DownloadOffIcon />
               </AlertDialog.Icon>
               <AlertDialog.Heading>Work offline?</AlertDialog.Heading>
             </AlertDialog.Header>

@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
-import { X } from "lucide-react";
+import { XIcon } from "@terria/design-system-icons";
 import { Description, Label } from "../Field";
 import {
   CheckboxContent,
@@ -43,7 +43,7 @@ export const CustomIndicator: Story = {
         <CheckboxPrimitive.Content>
           <CheckboxPrimitive.Control>
             <CheckboxPrimitive.Indicator>
-              {isSelected ? <X /> : null}
+              {isSelected ? <XIcon /> : null}
             </CheckboxPrimitive.Indicator>
           </CheckboxPrimitive.Control>
           <Label>Hide this layer</Label>

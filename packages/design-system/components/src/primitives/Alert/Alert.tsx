@@ -1,4 +1,8 @@
-import { Check, CircleAlert, TriangleAlert } from "lucide-react";
+import {
+  AlertCircleIcon,
+  AlertTriangleIcon,
+  CheckIcon
+} from "@terria/design-system-icons";
 import {
   createContext,
   forwardRef,
@@ -19,11 +23,11 @@ export type AlertStatus =
 const AlertContext = createContext<AlertStatus>("default");
 
 const STATUS_ICONS = {
-  default: CircleAlert,
-  accent: CircleAlert,
-  success: Check,
-  warning: TriangleAlert,
-  danger: CircleAlert
+  default: AlertCircleIcon,
+  accent: AlertCircleIcon,
+  success: CheckIcon,
+  warning: AlertTriangleIcon,
+  danger: AlertCircleIcon
 } satisfies Record<AlertStatus, unknown>;
 
 // Like react-aria components, each part takes `render` to swap in a custom

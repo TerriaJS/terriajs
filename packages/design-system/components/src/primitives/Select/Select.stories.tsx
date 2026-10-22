@@ -1,6 +1,11 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
-import { ChevronsUpDown, Globe, Mountain, Satellite } from "lucide-react";
+import {
+  CaretUpDownIcon,
+  MapIcon,
+  WorldIcon,
+  WorldMapIcon
+} from "@terria/design-system-icons";
 import { Collection } from "react-aria-components/Collection";
 import { ListBoxLoadMoreItem } from "react-aria-components/ListBox";
 import { useAsyncList } from "react-aria-components/useAsyncList";
@@ -134,7 +139,7 @@ export const RichOptions: Story = {
           <ListBox.Section>
             <Header>Maps</Header>
             <ListBox.Item id="osm" textValue="OpenStreetMap">
-              <Globe aria-hidden size={16} />
+              <MapIcon aria-hidden size={16} />
               <div style={titleStyle}>
                 <Label>OpenStreetMap</Label>
                 <Description>Streets and places</Description>
@@ -142,7 +147,7 @@ export const RichOptions: Story = {
               <ListBox.ItemIndicator />
             </ListBox.Item>
             <ListBox.Item id="terrain" textValue="Terrain">
-              <Mountain aria-hidden size={16} />
+              <WorldMapIcon aria-hidden size={16} />
               <div style={titleStyle}>
                 <Label>Terrain</Label>
                 <Description>Elevation shaded relief</Description>
@@ -154,7 +159,7 @@ export const RichOptions: Story = {
           <ListBox.Section>
             <Header>Imagery</Header>
             <ListBox.Item id="satellite" textValue="Satellite">
-              <Satellite aria-hidden size={16} />
+              <WorldIcon aria-hidden size={16} />
               <div style={titleStyle}>
                 <Label>Satellite</Label>
                 <Description>Aerial imagery</Description>
@@ -201,7 +206,7 @@ export const CustomIndicator: Story = {
       <Select.Trigger>
         <Select.Value />
         <Select.Indicator>
-          <ChevronsUpDown size={16} />
+          <CaretUpDownIcon size={16} />
         </Select.Indicator>
       </Select.Trigger>
       {stateOptions}
@@ -226,9 +231,9 @@ export const ClearButton: Story = {
 };
 
 const baseMaps = [
-  { id: "osm", name: "OpenStreetMap", Icon: Globe },
-  { id: "terrain", name: "Terrain", Icon: Mountain },
-  { id: "satellite", name: "Satellite", Icon: Satellite }
+  { id: "osm", name: "OpenStreetMap", Icon: MapIcon },
+  { id: "terrain", name: "Terrain", Icon: WorldMapIcon },
+  { id: "satellite", name: "Satellite", Icon: WorldIcon }
 ];
 
 export const CustomValue: Story = {

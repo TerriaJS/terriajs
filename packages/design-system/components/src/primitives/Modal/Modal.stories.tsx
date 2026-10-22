@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Layers, Trash2 } from "lucide-react";
+import { StackFrontIcon, TrashIcon } from "@terria/design-system-icons";
 import { useRef, useState } from "react";
 import { mergeProps } from "react-aria/mergeProps";
 import { UNSAFE_PortalProvider } from "react-aria/PortalProvider";
@@ -61,7 +61,7 @@ export const Default: Story = {
             <Modal.CloseTrigger />
             <Modal.Header>
               <Modal.Icon>
-                <Layers />
+                <StackFrontIcon />
               </Modal.Icon>
               <Modal.Heading>Add data to the map</Modal.Heading>
             </Modal.Header>
@@ -561,7 +561,7 @@ export const CenteredHeader: Story = {
           <Modal.Dialog role="alertdialog">
             <Modal.Header align="center">
               <Modal.Icon>
-                <Trash2 />
+                <TrashIcon />
               </Modal.Icon>
               <Modal.Heading>Remove “Flood extent 2022”?</Modal.Heading>
             </Modal.Header>

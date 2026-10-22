@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
-import { MapPinned } from "lucide-react";
+import { MapPinIcon } from "@terria/design-system-icons";
 import { Button } from "../Button";
 import {
   Alert,
@@ -103,7 +103,7 @@ export const CustomIndicator: Story = {
   render: (args) => (
     <Alert {...args}>
       <Alert.Indicator>
-        <MapPinned size={16} />
+        <MapPinIcon size={16} />
       </Alert.Indicator>
       <Alert.Content>
         <Alert.Title>Location found</Alert.Title>

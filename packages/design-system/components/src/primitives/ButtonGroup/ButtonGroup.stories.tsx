@@ -1,14 +1,14 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import {
-  AlignCenter,
-  AlignLeft,
-  AlignRight,
-  Ellipsis,
-  Minus,
-  Plus,
-  Ruler
-} from "lucide-react";
+  DotsIcon,
+  LineIcon,
+  MinusIcon,
+  PlusIcon,
+  PolygonIcon,
+  RulerMeasureIcon,
+  ShapeIcon
+} from "@terria/design-system-icons";
 import { Button, type ButtonVariant } from "../Button";
 import { Popover } from "../Popover";
 import { ButtonGroup, ButtonGroupSeparator } from ".";
@@ -79,19 +79,19 @@ export const Variants: Story = {
 
 // Icon buttons with separators, as a map toolbar
 export const IconToolbar: Story = {
-  args: { "aria-label": "Text alignment" },
+  args: { "aria-label": "Drawing tools" },
   render: (args) => (
     <ButtonGroup {...args}>
-      <Button isIconOnly aria-label="Align left">
-        <AlignLeft size={16} />
+      <Button isIconOnly aria-label="Draw a line">
+        <LineIcon size={16} />
       </Button>
-      <Button isIconOnly aria-label="Align centre">
+      <Button isIconOnly aria-label="Draw a polygon">
         <ButtonGroup.Separator />
-        <AlignCenter size={16} />
+        <PolygonIcon size={16} />
       </Button>
-      <Button isIconOnly aria-label="Align right">
+      <Button isIconOnly aria-label="Draw a shape">
         <ButtonGroup.Separator />
-        <AlignRight size={16} />
+        <ShapeIcon size={16} />
       </Button>
     </ButtonGroup>
   )
@@ -102,11 +102,11 @@ export const Vertical: Story = {
   render: (args) => (
     <ButtonGroup {...args}>
       <Button isIconOnly aria-label="Zoom in">
-        <Plus size={16} />
+        <PlusIcon size={16} />
       </Button>
       <Button isIconOnly aria-label="Zoom out">
         <ButtonGroup.Separator />
-        <Minus size={16} />
+        <MinusIcon size={16} />
       </Button>
     </ButtonGroup>
   )
@@ -137,12 +137,12 @@ export const WithPopover: Story = {
       <Button>Share</Button>
       <Popover>
         <Button isIconOnly aria-label="More tools">
-          <Ellipsis size={16} />
+          <DotsIcon size={16} />
         </Button>
         <Popover.Content>
           <Popover.Dialog aria-label="More tools">
             <Button size="sm">
-              <Ruler size={16} />
+              <RulerMeasureIcon size={16} />
               Measure
             </Button>
           </Popover.Dialog>

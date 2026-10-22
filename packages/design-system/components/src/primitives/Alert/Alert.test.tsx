@@ -1,3 +1,9 @@
+import {
+  AlertCircleIcon,
+  AlertTriangleIcon,
+  CheckIcon,
+  type Icon
+} from "@terria/design-system-icons";
 import { createRef } from "react";
 import { describe, expect, it } from "vitest";
 import { render } from "vitest-browser-react";
@@ -29,18 +35,22 @@ describe("Alert", () => {
       .toBeVisible();
   });
 
-  it.each<[AlertStatus, string]>([
-    ["default", "lucide-circle-alert"],
-    ["accent", "lucide-circle-alert"],
-    ["success", "lucide-check"],
-    ["warning", "lucide-triangle-alert"],
-    ["danger", "lucide-circle-alert"]
-  ])("shows the %s icon, hidden from screen readers", async (status, icon) => {
+  it.each<[AlertStatus, Icon]>([
+    ["default", AlertCircleIcon],
+    ["accent", AlertCircleIcon],
+    ["success", CheckIcon],
+    ["warning", AlertTriangleIcon],
+    ["danger", AlertCircleIcon]
+  ])("shows the %s icon, hidden from screen readers", async (status, Icon) => {
     const screen = await renderAlert(status);
     const indicator = screen.getByTestId("indicator");
+    // The same shape as the icon drawn on its own
+    const expected = await render(<Icon />);
 
     await expect.element(indicator).toHaveAttribute("aria-hidden", "true");
-    expect(indicator.element().querySelector(`svg.${icon}`)).not.toBeNull();
+    expect(indicator.element().querySelector("svg")?.innerHTML).toBe(
+      expected.container.querySelector("svg")?.innerHTML
+    );
   });
 
   it("uses a custom icon instead of the status icon", async () => {

@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
-import { Info } from "lucide-react";
+import { InfoCircleIcon } from "@terria/design-system-icons";
 import { Input } from "../Input";
 import { TextArea } from "../TextArea";
 import { Description, FieldError, Label, TextField } from ".";
@@ -44,7 +44,7 @@ export const WithInfoIcon: Story = {
     <TextField {...args}>
       <Label>
         Your name
-        <Info aria-hidden size={12} />
+        <InfoCircleIcon aria-hidden size={12} />
       </Label>
       <Input fullWidth placeholder="John" />
       <Description>We&apos;ll never share this with anyone else</Description>

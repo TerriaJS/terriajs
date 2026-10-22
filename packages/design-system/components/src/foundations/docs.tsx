@@ -1,4 +1,4 @@
-import { Check, Copy } from "lucide-react";
+import { CheckIcon, CopyIcon } from "@terria/design-system-icons";
 import { useState, type ReactNode } from "react";
 import { Button } from "../primitives/Button";
 import { token } from "./tokens";
@@ -32,7 +32,7 @@ export const CopyButton = ({
         setIsCopied(false);
       }}
     >
-      {isCopied ? <Check /> : <Copy />}
+      {isCopied ? <CheckIcon /> : <CopyIcon />}
     </Button>
   );
 };

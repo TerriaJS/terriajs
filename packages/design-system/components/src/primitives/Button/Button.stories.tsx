@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import { fn } from "storybook/test";
 
-import { Settings } from "lucide-react";
+import { SettingsIcon } from "@terria/design-system-icons";
 
 import { useEffect } from "react";
 import { useArgs } from "storybook/preview-api";
@@ -88,7 +88,7 @@ export const IconOnly: Story = {
   args: {
     isIconOnly: true,
     "aria-label": "Settings",
-    children: <Settings />
+    children: <SettingsIcon />
   }
 };
 

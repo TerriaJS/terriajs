@@ -1,4 +1,4 @@
-import { X } from "lucide-react";
+import { XIcon } from "@terria/design-system-icons";
 import { forwardRef } from "react";
 import {
   Button as AriaButton,
@@ -16,7 +16,7 @@ export const CloseButton = forwardRef<HTMLButtonElement, CloseButtonProps>(
       aria-label={ariaLabel}
       data-tds="close-button"
     >
-      {children ?? <X aria-hidden />}
+      {children ?? <XIcon aria-hidden />}
     </AriaButton>
   )
 );

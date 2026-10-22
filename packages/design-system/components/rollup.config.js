@@ -99,7 +99,8 @@ const config = {
     "react/jsx-runtime",
     /^react-aria-components(\/.*)?$/,
     /^react-aria(\/.*)?$/,
-    "@react-aria/utils"
+    "@react-aria/utils",
+    /^@terria\/design-system-icons(\/.*)?$/
   ],
   plugins: [
     postcssPlugin(),
