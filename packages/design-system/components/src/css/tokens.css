@@ -3,7 +3,7 @@
  */
 
 @layer terria-ds.tokens {
-  :root {
+  :root, [data-theme='light'] {
     --terria-ds-colors-white: oklch(100% 0 none);
     --terria-ds-colors-snow: oklch(99.1% 0 none);
     --terria-ds-colors-black: oklch(0% 0 none);

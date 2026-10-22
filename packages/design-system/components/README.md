@@ -53,7 +53,7 @@ Set it on `:root`, not on a wrapper element: modals, popovers and tooltips rende
 
 ## Theming
 
-Components read the `--terria-ds-*` custom properties defined in `tokens.css`. Set `data-theme="dark"` on an ancestor to switch to the dark theme.
+Components read the `--terria-ds-*` custom properties defined in `tokens.css`. Set `data-theme="dark"` on an ancestor to switch to the dark theme, and `data-theme="light"` on an element inside it to switch a region back.
 
 ## Overriding styles
 
