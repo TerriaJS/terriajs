@@ -1,0 +1,89 @@
+/**
+ * Styles for the Icons docs page, on top of docs.stories.css. Each size
+ * sample's size comes in as a --_size custom property.
+ */
+
+@layer storybook {
+  .icon-gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(7.5rem, 1fr));
+    gap: var(--terria-ds-dimensions-spacing-1);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  /* The icon centred above its name, the copy button in the corner when the
+     tile is hovered or focused */
+  .icon-tile {
+    position: relative;
+    display: grid;
+    grid-template-rows: var(--terria-ds-dimensions-spacing-12) auto;
+    place-items: center;
+    padding: var(--terria-ds-dimensions-spacing-3)
+      var(--terria-ds-dimensions-spacing-2);
+    border-radius: var(--terria-ds-radius-lg);
+    text-align: center;
+    transition: background-color 150ms ease-out;
+
+    &:hover,
+    &:focus-within {
+      background-color: var(--terria-ds-surface-tint);
+    }
+
+    & > .docs-copy {
+      position: absolute;
+      inset-block-start: var(--terria-ds-dimensions-spacing-1);
+      inset-inline-end: var(--terria-ds-dimensions-spacing-1);
+      opacity: 0;
+      transition: opacity 150ms ease-out;
+    }
+
+    &:hover > .docs-copy,
+    &:focus-within > .docs-copy {
+      opacity: 1;
+    }
+  }
+
+  /* No hover on touch screens: the copy button stays */
+  @media (hover: none) {
+    .icon-tile > .docs-copy {
+      opacity: 1;
+    }
+  }
+
+  .icon-tile-name {
+    color: var(--terria-ds-text-muted);
+    font-size: var(--terria-ds-dimensions-font-text-xs);
+    line-height: var(--terria-ds-dimensions-leading-text-xs);
+    overflow-wrap: anywhere;
+  }
+
+  .icon-sizes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--terria-ds-dimensions-spacing-6);
+    align-items: end;
+  }
+
+  .icon-size {
+    --terria-ds-flow-space: var(--terria-ds-dimensions-spacing-2);
+
+    margin: 0;
+    font-size: var(--terria-ds-dimensions-font-text-sm);
+    line-height: var(--terria-ds-dimensions-leading-text-sm);
+  }
+
+  .icon-size-sample {
+    /* Set per sample from the story */
+    --_size: var(--terria-ds-dimensions-icon-size-md);
+
+    display: block;
+
+    & > svg {
+      display: block;
+      inline-size: var(--_size);
+      block-size: var(--_size);
+    }
+  }
+}

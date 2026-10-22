@@ -15,6 +15,7 @@
   },
   "devDependencies": {
     "@storybook/react-vite": "catalog:storybook",
+    "@terria/design-system-icons": "workspace:*",
     "@types/react": "catalog:types",
     "@types/react-dom": "catalog:types",
     "@typescript/native": "catalog:build",

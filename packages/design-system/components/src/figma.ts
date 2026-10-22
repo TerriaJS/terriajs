@@ -15,6 +15,7 @@ const FIGMA_PAGES = {
   CloseButton: "5375-69669",
   Effects: "17422-36753",
   Colors: "17361-32787",
+  Icons: "2217-823",
   Input: "17293-26222",
   ListBox: "5375-70869",
   Modal: "5375-77858",

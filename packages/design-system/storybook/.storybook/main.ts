@@ -72,6 +72,10 @@ const config: StorybookConfig = {
             replacement: resolve(__dirname, "../../components/src/css/$1.css")
           },
           {
+            find: "@terria/design-system-icons",
+            replacement: resolve(__dirname, "../../icons/src")
+          },
+          {
             find: "@terria/design-system",
             replacement: resolve(__dirname, "../../components/src")
           }
