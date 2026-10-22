@@ -1,0 +1,83 @@
+import { Meta, Story, Unstyled } from "@storybook/addon-docs/blocks";
+import * as TypographyStories from "./Typography.stories";
+
+<Meta of={TypographyStories} />
+
+{/* Rendered in the type system it documents, not Storybook's docs styles */}
+
+<Unstyled>
+<div className="type-docs tds-flow tds-body">
+
+# Typography
+
+Typography is designed to be functional, neutral and scalable. Its primary
+role is to support content clarity and hierarchy rather than express brand
+personality through decoration.
+
+The system favors predictable scale, consistent rhythm and strong defaults, so
+that most text decisions can be made automatically. `typography.css` styles
+bare headings, paragraphs and links, and adds classes for the same styles on
+any element.
+
+## Type scale
+
+Every text style, from the page title down to the smallest print. Each spec is
+read from the rendered style, so it always matches the CSS.
+
+<Story of={TypographyStories.Scale} />
+
+## Flow
+
+`tds-flow` on a container spaces long-form content: 8px between blocks and
+none before the first, with more room above a heading and less after it. Set
+`--terria-ds-flow-space` on an element to change the space above it.
+
+<Story of={TypographyStories.Flow} />
+
+## Guidelines
+
+How to use the type scale so text stays readable and accessible.
+
+### Headings
+
+Choose `h1`…`h6` by the structure of the page, not by size: the levels are how
+screen reader users navigate. Use one `h1` per screen, don't skip levels, and
+change how a heading looks with the `tds-h1`…`tds-h6` classes.
+
+### Line length
+
+Body text reads best at about 45 to 75 characters a line. Give long-form text
+a `max-inline-size` of around `65ch` in wide panels.
+
+<Story of={TypographyStories.LineLength} />
+
+### Numbers
+
+Inter's figures are proportional by default, so numbers in a column don't line
+up and a value that changes in place shifts. Add `tds-numeric` to tables,
+legends, coordinates and live values for figures of equal width.
+
+<Story of={TypographyStories.Numbers} />
+
+### Resizing and spacing
+
+Sizes and line heights are in `rem`, so text follows the browser's font size
+(WCAG 1.4.4). Don't fix the height of text containers or clip their text:
+people who need more space override the line height and letter, word and
+paragraph spacing (WCAG 1.4.12), and the text has to grow with it.
+
+### Wrapping
+
+`reset.css` balances the lines of headings, avoids a single word on the last
+line of a paragraph, and breaks long words and URLs rather than letting them
+overflow. Leave these in place, and truncate with an ellipsis only where the
+full text is available another way, such as a tooltip.
+
+### Font
+
+Load Inter with `@terria/design-system/fonts.css`, or point
+`--terria-ds-font` at a copy your app already loads. See the README's Fonts
+section.
+
+</div>
+</Unstyled>

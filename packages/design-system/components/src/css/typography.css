@@ -115,6 +115,11 @@
     --terria-ds-flow-space: 0.5em;
   }
 
+  /* Except another heading, which keeps its room above */
+  .tds-flow > :where(h1, h2, h3, h4, h5, h6) + :where(h1, h2, h3, h4, h5, h6) {
+    --terria-ds-flow-space: 1.5em;
+  }
+
   /* Body sizes, for supporting and dense text */
   .tds-body {
     font-size: var(--terria-ds-dimensions-font-text-base);
@@ -134,5 +139,11 @@
   /* The medium weight of any body size */
   .tds-medium {
     font-weight: var(--terria-ds-font-medium);
+  }
+
+  /* Figures of equal width, for numbers that line up in columns or change in
+     place: tables, legends, coordinates, live values */
+  .tds-numeric {
+    font-variant-numeric: tabular-nums;
   }
 }

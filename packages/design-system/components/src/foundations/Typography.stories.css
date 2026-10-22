@@ -1,0 +1,146 @@
+/**
+ * Styles for the Typography docs page. Widths have no tokens, so they're
+ * given in rem.
+ */
+
+@layer storybook {
+  /* The docs page itself, in the design system's own type */
+  .type-docs {
+    color: var(--terria-ds-text-foreground);
+
+    /* Examples sit a little further from the text that introduces them */
+    & > .sb-story {
+      --terria-ds-flow-space: var(--terria-ds-dimensions-spacing-4);
+    }
+
+    /* Custom properties inherit: inside, tds-flow keeps its own spacing */
+    & > .sb-story > * {
+      --terria-ds-flow-space: initial;
+    }
+
+    /* Its prose follows its own line-length guideline */
+    & > :where(p, ul, ol, blockquote) {
+      max-inline-size: 65ch;
+    }
+
+    & :not(pre) > code {
+      padding-inline: var(--terria-ds-dimensions-spacing-1);
+      border-radius: var(--terria-ds-dimensions-radius-rounded-sm);
+      background-color: var(--terria-ds-neutral);
+      font-size: var(--terria-ds-dimensions-font-text-sm);
+    }
+  }
+
+  /* The same width as the prose around it */
+  .type-scale {
+    max-inline-size: 65ch;
+  }
+
+  /* One style per row, like the Figma page: spec on the left, sample and
+     description on the right. A divider between rows */
+  .type-spec {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 26rem);
+    gap: var(--terria-ds-dimensions-spacing-8);
+    padding-block: var(--terria-ds-dimensions-spacing-8);
+    border-block-end: var(--terria-ds-border-width-default) solid
+      var(--terria-ds-border);
+
+    &:last-child {
+      border-block-end: 0;
+    }
+  }
+
+  .type-spec-meta,
+  .type-spec-description {
+    font-size: var(--terria-ds-dimensions-font-text-sm);
+    line-height: var(--terria-ds-dimensions-leading-text-sm);
+  }
+
+  /* The family and the weight and size lines */
+  .type-spec-meta strong {
+    display: block;
+    font-weight: var(--terria-ds-font-semi-bold);
+  }
+
+  .type-spec-hooks {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--terria-ds-dimensions-spacing-1);
+    margin-block-start: var(--terria-ds-dimensions-spacing-2);
+  }
+
+  /* tds-flow spaces the sample and its description */
+  .type-spec-sample {
+    --terria-ds-flow-space: var(--terria-ds-dimensions-spacing-4);
+  }
+
+  .type-spec-description {
+    color: var(--terria-ds-text-muted);
+  }
+
+
+
+  /* An example on the page, framed so it doesn't read as part of the docs */
+  .type-example {
+    padding: var(--terria-ds-dimensions-spacing-6);
+    border: var(--terria-ds-border-width-default) solid
+      var(--terria-ds-border);
+    border-radius: var(--terria-ds-radius-lg);
+  }
+
+  /* An example as wide as the page's prose */
+  .type-example-narrow {
+    max-inline-size: 65ch;
+  }
+
+  /* Two captioned versions of an example, side by side */
+  .type-example-columns {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--terria-ds-dimensions-spacing-8)
+      var(--terria-ds-dimensions-spacing-14);
+
+    & > figure {
+      margin: 0;
+    }
+  }
+
+  /* Versions of an example in one frame, a divider between them */
+  .type-example-rows {
+    & > figure {
+      margin: 0;
+    }
+
+    & > figure + figure {
+      margin-block-start: var(--terria-ds-dimensions-spacing-6);
+      padding-block-start: var(--terria-ds-dimensions-spacing-6);
+      border-block-start: var(--terria-ds-border-width-default) solid
+        var(--terria-ds-border);
+    }
+  }
+
+
+  .type-example-caption {
+    color: var(--terria-ds-text-muted);
+    font-size: var(--terria-ds-dimensions-font-text-sm);
+    line-height: var(--terria-ds-dimensions-leading-text-sm);
+  }
+
+  .type-measure {
+    max-inline-size: 65ch;
+  }
+
+  /* Right-aligned, so equal-width figures line up by place value */
+  .type-numbers {
+    inline-size: max-content;
+
+    /* The browser's; tds-flow sets the space above */
+    margin-block-end: 0;
+    padding: 0;
+    list-style: none;
+    font-size: var(--terria-ds-dimensions-font-text-xl);
+    line-height: var(--terria-ds-dimensions-leading-text-xl);
+    text-align: end;
+  }
+}

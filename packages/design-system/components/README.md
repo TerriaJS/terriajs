@@ -16,7 +16,7 @@ import "@terria/design-system/typography.css";
 
 The reset is optional: it normalises box sizing, margins, media and form controls page-wide, in the lowest layer. Leave it out where existing styles rely on the browser's defaults.
 
-`typography.css` styles bare headings, paragraphs and links with the foundation's type scale, and adds `tds-h1`…`tds-h6`, `tds-body`, `tds-body-sm`, `tds-body-xs` and `tds-medium` classes for any element.
+`typography.css` styles bare headings, paragraphs and links with the foundation's type scale, and adds `tds-h1`…`tds-h6`, `tds-body`, `tds-body-sm`, `tds-body-xs`, `tds-medium` and `tds-numeric` (equal-width figures) classes for any element.
 `tds-flow` on a container spaces long-form content (8px between blocks, more above headings); set `--terria-ds-flow-space` on an element to change the space above it.
 
 Each component imports its own CSS. All styles live in the `terria-ds` cascade layer, so unlayered application CSS always wins.
