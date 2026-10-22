@@ -19,7 +19,10 @@ export default defineConfig(
     "**/*.config.ts",
     "**/*.config.js",
     "**/*.config.cjs",
-    "**/*.config.mjs"
+    "**/*.config.mjs",
+    // Generated from SVGs by scripts/generate-icons.ts
+    "src/icons/**",
+    "src/sprite/names.ts"
   ]),
   {
     languageOptions: {

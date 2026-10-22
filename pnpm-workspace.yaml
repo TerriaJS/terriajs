@@ -191,6 +191,7 @@ catalogs:
     styled-components: ^6.4.4
     urijs: ^1.18.12
     vite: ^8.3.4
+    vitest-browser-react: ^2.3.0
     zod: ^4.5.0
 allowBuilds:
   "@parcel/watcher": false

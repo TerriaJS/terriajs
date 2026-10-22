@@ -2,12 +2,16 @@
   "name": "@terria/design-system-icons",
   "version": "0.0.0",
   "devDependencies": {
+    "@svgr/core": "8.1.0",
+    "@svgr/plugin-jsx": "8.1.0",
     "@types/react": "catalog:types",
+    "@types/react-dom": "catalog:types",
     "@typescript/native": "catalog:build",
     "@vitejs/plugin-react": "^6.1.2",
     "@vitest/browser-playwright": "catalog:test",
     "playwright": "catalog:runtime",
     "react": "catalog:runtime",
+    "react-dom": "catalog:runtime",
     "rollup": "catalog:runtime",
     "rollup-plugin-dts": "^6.5.1",
     "rollup-plugin-esbuild": "catalog:runtime",
@@ -15,6 +19,7 @@
     "typescript": "catalog:build",
     "vite": "catalog:runtime",
     "vitest": "^5.0.5",
+    "vitest-browser-react": "catalog:runtime",
     "@types/node": "catalog:types",
     "@eslint-react/eslint-plugin": "catalog:build",
     "@eslint/js": "catalog:lint",
@@ -32,6 +37,15 @@
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
+    },
+    "./sprite": {
+      "types": "./dist/sprite/index.d.ts",
+      "import": "./dist/sprite/index.js"
+    },
+    "./sprite.svg": "./dist/sprite/sprite.svg",
+    "./*": {
+      "types": "./dist/icons/*.d.ts",
+      "import": "./dist/icons/*.js"
     }
   },
   "files": [
@@ -45,15 +59,17 @@
   },
   "private": true,
   "scripts": {
-    "build": "rollup -c",
+    "build": "node scripts/generate-icons.ts && rollup -c && cp src/sprite/sprite.svg dist/sprite/",
     "clean": "rm -rf dist *.tsbuildinfo",
-    "dev": "rollup -c --watch",
-    "fetch-icons": "node --env-file-if-exists=../../../.env scripts/fetch-icons.ts",
-    "test": "vitest run",
-    "test:watch": "vitest",
-    "typecheck": "tsc --noEmit && tsc -p tsconfig.scripts.json",
+    "dev": "node scripts/generate-icons.ts && rollup -c --watch",
+    "fetch-icons": "node --env-file-if-exists=../../../.env scripts/fetch-icons.ts && node scripts/generate-icons.ts",
+    "generate-icons": "node scripts/generate-icons.ts",
+    "test": "node scripts/generate-icons.ts && vitest run",
+    "test:watch": "node scripts/generate-icons.ts && vitest",
+    "typecheck": "node scripts/generate-icons.ts && tsc --noEmit && tsc -p tsconfig.scripts.json",
     "lint": "eslint ."
   },
   "type": "module",
-  "types": "./dist/index.d.ts"
+  "types": "./dist/index.d.ts",
+  "sideEffects": false
 }

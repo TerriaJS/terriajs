@@ -32,7 +32,7 @@
     "typescript": "catalog:build",
     "vite": "catalog:runtime",
     "vitest": "^5.0.5",
-    "vitest-browser-react": "^2.3.0",
+    "vitest-browser-react": "catalog:runtime",
     "@eslint-react/eslint-plugin": "catalog:build",
     "@eslint/css": "catalog:lint",
     "@eslint/js": "catalog:lint",

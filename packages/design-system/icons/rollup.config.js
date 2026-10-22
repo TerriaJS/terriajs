@@ -6,11 +6,14 @@ import dts from "rollup-plugin-dts";
 export default [
   // JavaScript build
   {
-    input: "src/index.ts",
+    input: { index: "src/index.ts", "sprite/index": "src/sprite/index.ts" },
+    // A file per icon, so apps can import one icon by path
     output: {
-      file: "dist/index.js",
+      dir: "dist",
       format: "es",
-      sourcemap: true
+      sourcemap: true,
+      preserveModules: true,
+      preserveModulesRoot: "src"
     },
     external: ["react", "react-dom", "react/jsx-runtime"],
     plugins: [
@@ -23,10 +26,12 @@ export default [
   },
   // TypeScript declarations
   {
-    input: "src/index.ts",
+    input: { index: "src/index.ts", "sprite/index": "src/sprite/index.ts" },
     output: {
-      file: "dist/index.d.ts",
-      format: "es"
+      dir: "dist",
+      format: "es",
+      preserveModules: true,
+      preserveModulesRoot: "src"
     },
     external: ["react", "react-dom", "react/jsx-runtime"],
     plugins: [dts()]

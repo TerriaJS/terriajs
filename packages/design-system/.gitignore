@@ -40,3 +40,8 @@ temp/
 
 *storybook.log
 storybook-static
+
+# Generated from icons/svg by its generate-icons script
+icons/src/icons/
+icons/src/sprite/names.ts
+icons/src/sprite/sprite.svg
