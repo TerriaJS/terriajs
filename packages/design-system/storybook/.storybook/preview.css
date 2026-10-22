@@ -1,0 +1,6 @@
+/* The canvas follows the theme, like an app's page would */
+@layer storybook {
+  body {
+    background-color: var(--terria-ds-surface-bg);
+  }
+}

@@ -14,10 +14,16 @@ const config: StorybookConfig = {
     "@storybook/addon-vitest",
     "@storybook/addon-a11y",
     "@storybook/addon-docs",
-    "@storybook/addon-designs"
+    "@storybook/addon-designs",
+    "storybook-dark-mode"
   ],
   core: {
     disableTelemetry: true
+  },
+  // The dark mode toggle themes the canvas; the backgrounds toolbar would
+  // compete with it
+  features: {
+    backgrounds: false
   },
   typescript: {
     check: true,

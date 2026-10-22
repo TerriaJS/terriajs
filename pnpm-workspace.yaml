@@ -163,6 +163,7 @@ catalogs:
     "@storybook/addon-vitest": 10.6.2
     "@storybook/react-vite": 10.6.2
     storybook: 10.6.2
+    storybook-dark-mode: 5.0.0
 
   runtime:
     "@aws-sdk/client-s3": ^3.1082.0
