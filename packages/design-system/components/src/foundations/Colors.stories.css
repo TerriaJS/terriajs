@@ -1,0 +1,156 @@
+/**
+ * Styles for the Colors docs page, on top of docs.stories.css. Each swatch's
+ * colour comes in as a --_swatch or --_role* custom property.
+ */
+
+@layer storybook {
+  .color-themes {
+    display: grid;
+    gap: var(--terria-ds-dimensions-spacing-4);
+
+    &[data-layout="columns"] {
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr));
+    }
+  }
+
+  /* One theme's panel, its own colours on its own background */
+  .color-theme {
+    --terria-ds-flow-space: var(--terria-ds-dimensions-spacing-3);
+
+    padding: var(--terria-ds-dimensions-spacing-3);
+    border: var(--terria-ds-border-width-default) solid var(--terria-ds-border);
+    border-radius: var(--terria-ds-radius-lg);
+    background-color: var(--terria-ds-surface-bg);
+    color: var(--terria-ds-text-foreground);
+  }
+
+  .color-roles {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--terria-ds-dimensions-spacing-3);
+  }
+
+  .color-role,
+  .color-swatch {
+    --terria-ds-flow-space: var(--terria-ds-dimensions-spacing-2);
+
+    margin: 0;
+  }
+
+  /* The role's colour, with its hover and foreground colours on it */
+  .color-role-card {
+    /* Set per role from the story; the neutral role by default */
+    --_role: var(--terria-ds-neutral);
+    --_role-hover: var(--terria-ds-neutral-hover);
+    --_role-foreground: var(--terria-ds-neutral-foreground);
+
+    display: grid;
+    gap: var(--terria-ds-dimensions-spacing-2);
+    padding: var(--terria-ds-dimensions-spacing-3);
+    border-radius: var(--terria-ds-radius-lg);
+    background-color: var(--_role);
+    color: var(--_role-foreground);
+    font-size: var(--terria-ds-dimensions-font-text-sm);
+    font-weight: var(--terria-ds-font-medium);
+    line-height: var(--terria-ds-dimensions-leading-text-sm);
+
+    & > span:not(:first-child) {
+      padding: var(--terria-ds-dimensions-spacing-1)
+        var(--terria-ds-dimensions-spacing-2);
+      border-radius: var(--terria-ds-radius-sm);
+    }
+  }
+
+  .color-role-hover {
+    background-color: var(--_role-hover);
+  }
+
+  /* The foreground colour as a fill, with the role's colour as its text */
+  .color-role-foreground {
+    background-color: var(--_role-foreground);
+    color: var(--_role);
+  }
+
+  .color-swatches {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
+    gap: var(--terria-ds-dimensions-spacing-4);
+  }
+
+  /* Outlined, so pale and transparent colours still show their edge */
+  .color-swatch-chip {
+    /* Set per swatch from the story */
+    --_swatch: transparent;
+
+    display: block;
+    block-size: var(--terria-ds-dimensions-spacing-14);
+    border: var(--terria-ds-border-width-default) solid var(--terria-ds-border);
+    border-radius: var(--terria-ds-radius-lg);
+    background-color: var(--_swatch);
+  }
+
+  /* Captions in small type, so a wrapped token name stays compact: the line
+     height has to be on the caption, not just the code in it */
+  .color-role figcaption,
+  .color-swatch figcaption {
+    font-size: var(--terria-ds-dimensions-font-text-sm);
+    line-height: var(--terria-ds-dimensions-leading-text-sm);
+  }
+
+  .color-swatch-name {
+    display: block;
+    font-size: var(--terria-ds-dimensions-font-text-sm);
+    font-weight: var(--terria-ds-font-medium);
+    line-height: var(--terria-ds-dimensions-leading-text-sm);
+  }
+
+  /* The primitive palette: one row per family, its steps side by side */
+  .color-palette {
+    display: grid;
+    gap: var(--terria-ds-dimensions-spacing-3);
+  }
+
+  .color-family {
+    display: grid;
+    grid-template-columns: 8rem minmax(0, 1fr);
+    gap: var(--terria-ds-dimensions-spacing-4);
+    align-items: start;
+  }
+
+  .color-family-name {
+    padding-block-start: var(--terria-ds-dimensions-spacing-2);
+    font-size: var(--terria-ds-dimensions-font-text-sm);
+    font-weight: var(--terria-ds-font-medium);
+    line-height: var(--terria-ds-dimensions-leading-text-sm);
+  }
+
+  .color-family-steps {
+    display: grid;
+
+    /* Every scale has 11 steps (50 to 950), always on one row */
+    grid-template-columns: repeat(11, minmax(0, 1fr));
+    gap: var(--terria-ds-dimensions-spacing-1);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .color-step {
+    /* Set per step from the story */
+    --_swatch: transparent;
+
+    display: block;
+    block-size: var(--terria-ds-dimensions-spacing-10);
+    border: var(--terria-ds-border-width-default) solid var(--terria-ds-border);
+    border-radius: var(--terria-ds-radius-sm);
+    background-color: var(--_swatch);
+  }
+
+  .color-step-label {
+    display: block;
+    margin-block-start: var(--terria-ds-dimensions-spacing-1);
+    color: var(--terria-ds-text-muted);
+    font-size: var(--terria-ds-dimensions-font-text-xs);
+    line-height: var(--terria-ds-dimensions-leading-text-xs);
+  }
+}

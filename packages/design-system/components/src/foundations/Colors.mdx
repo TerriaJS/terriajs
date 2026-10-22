@@ -1,0 +1,125 @@
+import { Meta, Story, Unstyled } from "@storybook/addon-docs/blocks";
+import * as ColorsStories from "./Colors.stories";
+
+<Meta of={ColorsStories} />
+
+{/* Rendered in the design system's own type, not Storybook's docs styles */}
+
+<Unstyled>
+<div className="docs-page tds-flow tds-body">
+
+# Colors
+
+The color system is built around semantic intent, not visual abundance.
+Instead of exposing large raw palettes, it defines a small, meaningful set of
+color roles that cover most interface needs.
+
+Most colors are derived from a few base values, which keeps contrast,
+hierarchy and theming consistent, and the system easy to reason about and
+change. Colors should communicate purpose and state first. Visual variation
+comes from scale, emphasis and context.
+
+Every color is a `--terria-ds-` custom property; the name under each color
+is the rest of it. Each one switches with the theme: set `data-theme="dark"` or
+`data-theme="light"` on any element, and everything inside it follows.
+
+## Accent
+
+The accent color represents the primary brand or product identity. It is used
+to draw attention to key actions, highlights and moments of emphasis.
+
+Use it intentionally and sparingly: overuse reduces its impact and can harm
+visual hierarchy. Each role comes with a hover color, a foreground color for
+text and icons on it, and a soft variant for subtler backgrounds.
+
+<Story of={ColorsStories.Accent} />
+
+## Default (neutrals)
+
+Default colors form the neutral backbone of the system. They are used for most
+non-emphasized UI elements.
+
+<Story of={ColorsStories.Default} />
+
+## Success
+
+Success colors communicate positive outcomes, confirmations and completed
+states. They are typically used in feedback components, status indicators and
+validation states.
+
+<Story of={ColorsStories.Success} />
+
+## Warning
+
+Warning colors indicate caution, risk, or actions that require attention but
+are not destructive. They are commonly used for alerts, messages and
+transitional states where the user should pause or review information.
+
+<Story of={ColorsStories.Warning} />
+
+## Danger
+
+Danger colors represent destructive, irreversible or critical actions and
+states. They should be immediately recognizable and used consistently for
+errors, destructive buttons and critical alerts.
+
+<Story of={ColorsStories.Danger} />
+
+## Foreground
+
+Foreground colors are used for primary content such as text and icons. They
+are chosen for readability and adapt to the background and surface they sit
+on. Never hard-code a text color in a component.
+
+<Story of={ColorsStories.Foreground} />
+
+## Background
+
+Background colors define the base canvas of the interface. They establish the
+overall contrast and mood while staying visually quiet.
+
+<Story of={ColorsStories.Background} />
+
+## Surface
+
+Surface colors sit on top of backgrounds and are used for containers such as
+cards, panels, modals and dropdowns. They create separation and hierarchy
+through elevation, contrast and layering rather than strong color shifts.
+
+<Story of={ColorsStories.Surface} />
+
+## Form field
+
+Form field colors are used for inputs, controls and interactive fields, across
+their default, hover, focus and error states. Keeping them separate gives form
+elements a visual language distinct from buttons and the rest of the UI.
+
+<Story of={ColorsStories.FormField} />
+
+## Separator
+
+Separator colors are used for dividers, outlines and subtle boundaries. They
+structure content and guide the eye without adding noise, so they stay low
+contrast and unobtrusive. The status colors outline alerts and validation.
+
+<Story of={ColorsStories.Separator} />
+
+## Other
+
+The default border, the backdrop behind modals, the overlay surface, the
+selected segment of segmented controls, and keyboard focus.
+
+<Story of={ColorsStories.Other} />
+
+## Palette
+
+The raw colors the roles above are built from, the same in both themes. Use
+them to define new roles, not in components: a component that uses a
+primitive directly won't follow the theme. Each one is
+`--terria-ds-colors-<family>-<step>`, or `--terria-ds-colors-<name>` for the
+ones without steps. Hover a color for its full name.
+
+<Story of={ColorsStories.Primitives} />
+
+</div>
+</Unstyled>

@@ -4,6 +4,7 @@ import { Button } from "../primitives/Button";
 import { Chip } from "../primitives/Chip";
 import { Input } from "../primitives/Input";
 import { figmaDesign } from "../figma";
+import "./docs.stories.css";
 import "./Typography.stories.css";
 
 const meta = {
@@ -92,7 +93,7 @@ export const Scale: Story = {
   // Shown in Typography.mdx only, not in the sidebar
   tags: ["!dev"],
   render: () => (
-    <div className="type-scale">
+    <div>
       <Spec
         code={["h1", ".tds-h1"]}
         description="Used for the main screen title, should be used only once per screen. It pairs with body base."
@@ -213,7 +214,7 @@ export const Flow: Story = {
   // Shown in Typography.mdx only, not in the sidebar
   tags: ["!dev"],
   render: () => (
-    <article className="tds-flow type-example type-example-narrow">
+    <article className="tds-flow docs-example">
       <h2>Exploring the map</h2>
       <p>{LONG}</p>
       <p>
@@ -240,11 +241,9 @@ export const LineLength: Story = {
   // Shown in Typography.mdx only, not in the sidebar
   tags: ["!dev"],
   render: () => (
-    <div className="type-example type-example-rows">
+    <div className="docs-example docs-example-rows">
       <figure className="tds-flow">
-        <figcaption className="type-example-caption">
-          About 65 characters
-        </figcaption>
+        <figcaption className="docs-caption">About 65 characters</figcaption>
         <p className="type-measure">
           {LONG} Add data from the catalogue, or drag in your own files. Each
           layer shows in the workbench, where you can change its style and
@@ -252,7 +251,7 @@ export const LineLength: Story = {
         </p>
       </figure>
       <figure className="tds-flow">
-        <figcaption className="type-example-caption">The full width</figcaption>
+        <figcaption className="docs-caption">The full width</figcaption>
         <p>
           {LONG} Add data from the catalogue, or drag in your own files. Each
           layer shows in the workbench, where you can change its style and
@@ -270,9 +269,9 @@ export const Numbers: Story = {
   // Shown in Typography.mdx only, not in the sidebar
   tags: ["!dev"],
   render: () => (
-    <div className="type-example-columns type-example type-example-narrow">
+    <div className="docs-example-columns docs-example">
       <figure className="tds-flow">
-        <figcaption className="type-example-caption">Default</figcaption>
+        <figcaption className="docs-caption">Default</figcaption>
         <ul className="type-numbers">
           {VALUES.map((value) => (
             <li key={value}>{value}</li>
@@ -280,7 +279,7 @@ export const Numbers: Story = {
         </ul>
       </figure>
       <figure className="tds-flow">
-        <figcaption className="type-example-caption">tds-numeric</figcaption>
+        <figcaption className="docs-caption">tds-numeric</figcaption>
         <ul className="type-numbers tds-numeric">
           {VALUES.map((value) => (
             <li key={value}>{value}</li>
