@@ -72,4 +72,35 @@
     font-size: var(--terria-ds-dimensions-font-text-sm);
     line-height: var(--terria-ds-dimensions-leading-text-sm);
   }
+
+  /* A copy button, as small as the code next to it */
+  .docs-copy {
+    flex-shrink: 0;
+  }
+
+  /* A usage example, with its copy button in the corner */
+  .docs-usage {
+    --terria-ds-flow-space: var(--terria-ds-dimensions-spacing-4);
+
+    position: relative;
+    margin-inline: 0;
+
+    & pre {
+      margin: 0;
+      padding: var(--terria-ds-dimensions-spacing-4);
+      overflow: auto;
+      border: var(--terria-ds-border-width-default) solid
+        var(--terria-ds-border);
+      border-radius: var(--terria-ds-radius-lg);
+      background-color: var(--terria-ds-neutral-soft);
+      font-size: var(--terria-ds-dimensions-font-text-sm);
+      line-height: var(--terria-ds-dimensions-leading-text-sm);
+    }
+
+    & > .docs-copy {
+      position: absolute;
+      inset-block-start: var(--terria-ds-dimensions-spacing-2);
+      inset-inline-end: var(--terria-ds-dimensions-spacing-2);
+    }
+  }
 }

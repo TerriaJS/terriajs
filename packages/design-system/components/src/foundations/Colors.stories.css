@@ -97,6 +97,13 @@
     line-height: var(--terria-ds-dimensions-leading-text-sm);
   }
 
+  /* A token name and the button that copies it */
+  .color-token {
+    display: flex;
+    gap: var(--terria-ds-dimensions-spacing-1);
+    align-items: center;
+  }
+
   .color-swatch-name {
     display: block;
     font-size: var(--terria-ds-dimensions-font-text-sm);

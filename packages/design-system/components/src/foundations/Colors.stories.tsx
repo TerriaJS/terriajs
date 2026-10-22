@@ -1,5 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { Check, Copy } from "lucide-react";
 import { useState, type CSSProperties, type ReactNode } from "react";
+import { Button } from "../primitives/Button";
 import { figmaDesign } from "../figma";
 import "./docs.stories.css";
 import "./Colors.stories.css";
@@ -21,9 +23,57 @@ const token = (name: string): string => `var(--terria-ds-${name})`;
 const colors = (properties: Record<string, string>): CSSProperties =>
   properties;
 
-// Long names, so code that wraps at its hyphens rather than a chip
+// Copies text to the clipboard. Shows a check once it has, until the pointer
+// or focus moves on
+const CopyButton = ({
+  text,
+  label
+}: {
+  text: string;
+  label: string;
+}): ReactNode => {
+  const [isCopied, setIsCopied] = useState(false);
+  return (
+    <Button
+      variant="ghost"
+      size="sm"
+      isIconOnly
+      className="docs-copy"
+      aria-label={isCopied ? `Copied ${label}` : `Copy ${label}`}
+      onPress={() => {
+        void navigator.clipboard.writeText(text).then(() => {
+          setIsCopied(true);
+        });
+      }}
+      onHoverEnd={() => {
+        setIsCopied(false);
+      }}
+      onBlur={() => {
+        setIsCopied(false);
+      }}
+    >
+      {isCopied ? <Check /> : <Copy />}
+    </Button>
+  );
+};
+
+// Long names, so code that wraps at its hyphens rather than a chip. Copying
+// gives the whole var(), the way to use it
 const TokenName = ({ name }: { name: string }): ReactNode => (
-  <code>{name}</code>
+  <span className="color-token">
+    <code>{name}</code>
+    <CopyButton text={token(name)} label={token(name)} />
+  </span>
+);
+
+// A short CSS example of a section's tokens in use
+const Usage = ({ code }: { code: string }): ReactNode => (
+  <figure className="docs-usage">
+    <pre>
+      <code>{code}</code>
+    </pre>
+    <CopyButton text={code} label="the example" />
+  </figure>
 );
 
 // The same colours twice, in a light and a dark region
@@ -72,13 +122,39 @@ const Role = ({ name, base }: { name: string; base: string }): ReactNode => (
   </figure>
 );
 
-const Roles = ({ name, base }: { name: string; base: string }): ReactNode => (
-  <Themes layout="columns">
-    <div className="color-roles">
-      <Role name={name} base={base} />
-      <Role name={`${name} soft`} base={`${base}-soft`} />
-    </div>
-  </Themes>
+const roleUsage = (base: string, selector: string): string => `${selector} {
+  background-color: ${token(base)};
+  color: ${token(`${base}-foreground`)};
+}
+
+${selector}:hover {
+  background-color: ${token(`${base}-hover`)};
+}
+
+${selector}-subtle {
+  background-color: ${token(`${base}-soft`)};
+  color: ${token(`${base}-soft-foreground`)};
+}`;
+
+const Roles = ({
+  name,
+  base,
+  selector
+}: {
+  name: string;
+  base: string;
+  // What the usage example styles
+  selector: string;
+}): ReactNode => (
+  <div className="tds-flow">
+    <Themes layout="columns">
+      <div className="color-roles">
+        <Role name={name} base={base} />
+        <Role name={`${name} soft`} base={`${base}-soft`} />
+      </div>
+    </Themes>
+    <Usage code={roleUsage(base, selector)} />
+  </div>
 );
 
 type SwatchProps = { name: string; token: string };
@@ -96,14 +172,23 @@ const Swatch = ({ name, token: tokenName }: SwatchProps): ReactNode => (
   </figure>
 );
 
-const Swatches = ({ swatches }: { swatches: SwatchProps[] }): ReactNode => (
-  <Themes layout="rows">
-    <div className="color-swatches">
-      {swatches.map((swatch) => (
-        <Swatch key={swatch.token} {...swatch} />
-      ))}
-    </div>
-  </Themes>
+const Swatches = ({
+  swatches,
+  usage
+}: {
+  swatches: SwatchProps[];
+  usage: string;
+}): ReactNode => (
+  <div className="tds-flow">
+    <Themes layout="rows">
+      <div className="color-swatches">
+        {swatches.map((swatch) => (
+          <Swatch key={swatch.token} {...swatch} />
+        ))}
+      </div>
+    </Themes>
+    <Usage code={usage} />
+  </div>
 );
 
 // Shown in Colors.mdx only, not in the sidebar
@@ -111,27 +196,33 @@ const docsOnly = ["!dev"];
 
 export const Accent: Story = {
   tags: docsOnly,
-  render: () => <Roles name="Accent" base="primary" />
+  render: () => (
+    <Roles name="Accent" base="primary" selector=".primary-action" />
+  )
 };
 
 export const Default: Story = {
   tags: docsOnly,
-  render: () => <Roles name="Default" base="neutral" />
+  render: () => <Roles name="Default" base="neutral" selector=".tag" />
 };
 
 export const Success: Story = {
   tags: docsOnly,
-  render: () => <Roles name="Success" base="success" />
+  render: () => (
+    <Roles name="Success" base="success" selector=".success-message" />
+  )
 };
 
 export const Warning: Story = {
   tags: docsOnly,
-  render: () => <Roles name="Warning" base="warning" />
+  render: () => (
+    <Roles name="Warning" base="warning" selector=".warning-message" />
+  )
 };
 
 export const Danger: Story = {
   tags: docsOnly,
-  render: () => <Roles name="Danger" base="danger" />
+  render: () => <Roles name="Danger" base="danger" selector=".error-message" />
 };
 
 export const Foreground: Story = {
@@ -146,6 +237,13 @@ export const Foreground: Story = {
         { name: "Inverse", token: "text-inverse" },
         { name: "Link", token: "text-link" }
       ]}
+      usage={`.caption {
+  color: var(--terria-ds-text-muted);
+}
+
+a {
+  color: var(--terria-ds-text-link);
+}`}
     />
   )
 };
@@ -158,6 +256,10 @@ export const Background: Story = {
         { name: "Background", token: "surface-bg" },
         { name: "Inverse", token: "surface-inverse" }
       ]}
+      usage={`body {
+  background-color: var(--terria-ds-surface-bg);
+  color: var(--terria-ds-text-foreground);
+}`}
     />
   )
 };
@@ -175,6 +277,13 @@ export const Surface: Story = {
         { name: "Glass", token: "surface-glass" },
         { name: "Transparent", token: "surface-transparent" }
       ]}
+      usage={`.card {
+  background-color: var(--terria-ds-surface-default);
+}
+
+.menu {
+  background-color: var(--terria-ds-surface-overlay);
+}`}
     />
   )
 };
@@ -194,6 +303,20 @@ export const FormField: Story = {
         { name: "Border focus", token: "field-border-focus" },
         { name: "Border error", token: "field-border-error" }
       ]}
+      usage={`.field {
+  border: var(--terria-ds-border-width-default) solid
+    var(--terria-ds-field-border);
+  background-color: var(--terria-ds-field-background);
+  color: var(--terria-ds-field-foreground);
+}
+
+.field:hover {
+  border-color: var(--terria-ds-field-border-hover);
+}
+
+.field::placeholder {
+  color: var(--terria-ds-field-placeholder);
+}`}
     />
   )
 };
@@ -211,6 +334,11 @@ export const Separator: Story = {
         { name: "Warning", token: "border-color-warning" },
         { name: "Danger", token: "border-color-danger" }
       ]}
+      usage={`hr {
+  border: 0;
+  border-block-start: var(--terria-ds-border-width-default) solid
+    var(--terria-ds-border-color-subtle);
+}`}
     />
   )
 };
@@ -227,6 +355,13 @@ export const Other: Story = {
         { name: "Focus ring", token: "focus-ring" },
         { name: "Focus halo", token: "focus-ring-halo" }
       ]}
+      usage={`.modal-backdrop {
+  background-color: var(--terria-ds-backdrop);
+}
+
+:focus-visible {
+  box-shadow: var(--terria-ds-shadow-focus-ring);
+}`}
     />
   )
 };
