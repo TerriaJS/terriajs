@@ -103,4 +103,32 @@
       inset-inline-end: var(--terria-ds-dimensions-spacing-2);
     }
   }
+
+  /* The same examples in a light and a dark panel */
+  .docs-themes {
+    display: grid;
+    gap: var(--terria-ds-dimensions-spacing-4);
+
+    &[data-layout="columns"] {
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr));
+    }
+  }
+
+  /* One theme's panel, its own colours on its own background */
+  .docs-theme {
+    --terria-ds-flow-space: var(--terria-ds-dimensions-spacing-3);
+
+    padding: var(--terria-ds-dimensions-spacing-3);
+    border: var(--terria-ds-border-width-default) solid var(--terria-ds-border);
+    border-radius: var(--terria-ds-radius-lg);
+    background-color: var(--terria-ds-surface-bg);
+    color: var(--terria-ds-text-foreground);
+  }
+
+  /* A token name and the button that copies it */
+  .docs-token {
+    display: flex;
+    gap: var(--terria-ds-dimensions-spacing-1);
+    align-items: center;
+  }
 }

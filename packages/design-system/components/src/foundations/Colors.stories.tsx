@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Check, Copy } from "lucide-react";
-import { useState, type CSSProperties, type ReactNode } from "react";
-import { Button } from "../primitives/Button";
+import { useState, type ReactNode } from "react";
 import { figmaDesign } from "../figma";
+import { Themes, TokenName, Usage } from "./docs";
+import { customProperties, readTokens, token } from "./tokens";
 import "./docs.stories.css";
 import "./Colors.stories.css";
 
@@ -16,97 +16,13 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-const token = (name: string): string => `var(--terria-ds-${name})`;
-
-// Which token a swatch shows is data, so it goes in as custom properties for
-// Colors.stories.css to style with
-const colors = (properties: Record<string, string>): CSSProperties =>
-  properties;
-
-// Copies text to the clipboard. Shows a check once it has, until the pointer
-// or focus moves on
-const CopyButton = ({
-  text,
-  label
-}: {
-  text: string;
-  label: string;
-}): ReactNode => {
-  const [isCopied, setIsCopied] = useState(false);
-  return (
-    <Button
-      variant="ghost"
-      size="sm"
-      isIconOnly
-      className="docs-copy"
-      aria-label={isCopied ? `Copied ${label}` : `Copy ${label}`}
-      onPress={() => {
-        void navigator.clipboard.writeText(text).then(() => {
-          setIsCopied(true);
-        });
-      }}
-      onHoverEnd={() => {
-        setIsCopied(false);
-      }}
-      onBlur={() => {
-        setIsCopied(false);
-      }}
-    >
-      {isCopied ? <Check /> : <Copy />}
-    </Button>
-  );
-};
-
-// Long names, so code that wraps at its hyphens rather than a chip. Copying
-// gives the whole var(), the way to use it
-const TokenName = ({ name }: { name: string }): ReactNode => (
-  <span className="color-token">
-    <code>{name}</code>
-    <CopyButton text={token(name)} label={token(name)} />
-  </span>
-);
-
-// A short CSS example of a section's tokens in use
-const Usage = ({ code }: { code: string }): ReactNode => (
-  <figure className="docs-usage">
-    <pre>
-      <code>{code}</code>
-    </pre>
-    <CopyButton text={code} label="the example" />
-  </figure>
-);
-
-// The same colours twice, in a light and a dark region
-const Themes = ({
-  layout,
-  children
-}: {
-  // Side by side, or one above the other for long rows of swatches
-  layout: "columns" | "rows";
-  children: ReactNode;
-}): ReactNode => (
-  <div className="color-themes" data-layout={layout}>
-    {(["light", "dark"] as const).map((theme) => (
-      <section
-        key={theme}
-        data-theme={theme}
-        className="color-theme tds-flow"
-        aria-label={theme === "light" ? "Light theme" : "Dark theme"}
-      >
-        <p className="docs-caption">{theme === "light" ? "Light" : "Dark"}</p>
-        {children}
-      </section>
-    ))}
-  </div>
-);
-
 // A role's colour with its hover and foreground colours on it, as the Figma
 // page shows them
 const Role = ({ name, base }: { name: string; base: string }): ReactNode => (
   <figure className="color-role tds-flow">
     <div
       className="color-role-card"
-      style={colors({
+      style={customProperties({
         "--_role": token(base),
         "--_role-hover": token(`${base}-hover`),
         "--_role-foreground": token(`${base}-foreground`)
@@ -163,7 +79,7 @@ const Swatch = ({ name, token: tokenName }: SwatchProps): ReactNode => (
   <figure className="color-swatch tds-flow">
     <span
       className="color-swatch-chip"
-      style={colors({ "--_swatch": token(tokenName) })}
+      style={customProperties({ "--_swatch": token(tokenName) })}
     />
     <figcaption className="tds-flow">
       <span className="color-swatch-name">{name}</span>
@@ -368,32 +284,9 @@ export const Other: Story = {
 
 const PRIMITIVE = "--terria-ds-colors-";
 
-// Every primitive colour, in the order tokens.css declares them, read from the
-// loaded stylesheet so the palette can't drift from it
-const readPrimitives = (): string[] => {
-  const names = new Set<string>();
-  const visit = (rules: CSSRuleList): void => {
-    for (const rule of Array.from(rules)) {
-      if (rule instanceof CSSStyleRule) {
-        for (const property of Array.from(rule.style)) {
-          if (property.startsWith(PRIMITIVE)) {
-            names.add(property.slice(PRIMITIVE.length));
-          }
-        }
-      }
-      // Layers, and rules nested in rules
-      if (rule instanceof CSSGroupingRule) visit(rule.cssRules);
-    }
-  };
-  for (const sheet of Array.from(document.styleSheets)) {
-    try {
-      visit(sheet.cssRules);
-    } catch {
-      // A cross-origin stylesheet can't be read, and holds no tokens
-    }
-  }
-  return [...names];
-};
+// Every primitive colour, without its colors- prefix
+const readPrimitives = (): string[] =>
+  readTokens("colors-").map((name) => name.slice("colors-".length));
 
 type Family = { name: string; colors: { name: string; label: string }[] };
 
@@ -451,7 +344,9 @@ const PaletteFamily = ({ family }: { family: Family }): ReactNode => (
         <li key={color.name} title={`${PRIMITIVE}${color.name}`}>
           <span
             className="color-step"
-            style={colors({ "--_swatch": token(`colors-${color.name}`) })}
+            style={customProperties({
+              "--_swatch": token(`colors-${color.name}`)
+            })}
           />
           <span className="color-step-label">{color.label}</span>
         </li>
