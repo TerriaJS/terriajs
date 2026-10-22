@@ -37,6 +37,7 @@
   },
   "private": true,
   "scripts": {
+    "test": "node --test tests/*.test.mjs",
     "build-storybook": "storybook build",
     "storybook": "storybook dev -p 6006",
     "lint": "eslint . && stylelint \"**/*.css\" --allow-empty-input"

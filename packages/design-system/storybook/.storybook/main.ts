@@ -31,15 +31,25 @@ const config: StorybookConfig = {
     reactDocgen: "react-docgen-typescript",
     reactDocgenTypescriptOptions: {
       shouldExtractLiteralValuesFromEnum: true,
+      shouldRemoveUndefinedFromOptional: true,
       compilerOptions: {
         allowSyntheticDefaultImports: false,
         esModuleInterop: false
       },
       propFilter: (prop) => {
         if (prop.name.startsWith("aria-")) return false;
-        if (prop.parent)
-          return !prop.parent.fileName.includes("@terria/design-system");
-        return true;
+        if (!prop.parent?.fileName.includes("node_modules")) return true;
+        if (["defaultValue", "defaultChecked", "autoFocus"].includes(prop.name))
+          return true;
+        // Keep component APIs, but omit the generic DOM/React prop tables.
+        return ![
+          "DOMAttributes",
+          "HTMLAttributes",
+          "GlobalDOMAttributes",
+          "GlobalDOMEvents",
+          "RefAttributes",
+          "Attributes"
+        ].includes(prop.parent.name);
       },
       include: [
         path.resolve(__dirname, "../../components/src/**/*.tsx") // Your external library
