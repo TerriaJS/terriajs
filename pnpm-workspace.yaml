@@ -163,6 +163,7 @@ catalogs:
     "@storybook/addon-docs": 10.6.2
     "@storybook/addon-vitest": 10.6.2
     "@storybook/react-vite": 10.6.2
+    chromatic: ^18.13.0
     storybook: 10.6.2
     storybook-dark-mode: 5.0.0
 

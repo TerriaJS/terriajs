@@ -17,6 +17,7 @@
     "storybook": "catalog:storybook",
     "storybook-dark-mode": "catalog:storybook",
     "typescript": "catalog:build",
+    "chromatic": "catalog:storybook",
     "@eslint-react/eslint-plugin": "catalog:build",
     "@eslint/css": "catalog:lint",
     "@eslint/js": "catalog:lint",
@@ -40,7 +41,8 @@
     "test": "node --test tests/*.test.mjs",
     "build-storybook": "pnpm --filter @terria/design-system-icons generate-icons && storybook build",
     "storybook": "pnpm --filter @terria/design-system-icons generate-icons && storybook dev -p 6006",
-    "lint": "eslint . && stylelint \"**/*.css\" --allow-empty-input"
+    "lint": "eslint . && stylelint \"**/*.css\" --allow-empty-input",
+    "chromatic": "chromatic --config-file ../chromatic.config.json"
   },
   "type": "module"
 }
