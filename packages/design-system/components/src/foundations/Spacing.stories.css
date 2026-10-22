@@ -1,0 +1,117 @@
+/**
+ * Styles for the Spacing docs page, on top of docs.stories.css. Each bar's
+ * length comes in as a --_size custom property.
+ */
+
+@layer storybook {
+  .spacing-sizes {
+    display: grid;
+    gap: var(--terria-ds-dimensions-spacing-2);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  /* Name, token and bar on one row, the bars lined up */
+  .spacing-size {
+    display: grid;
+    grid-template-columns: 3rem 15rem minmax(0, 1fr);
+    gap: var(--terria-ds-dimensions-spacing-4);
+    align-items: center;
+    font-size: var(--terria-ds-dimensions-font-text-sm);
+    line-height: var(--terria-ds-dimensions-leading-text-sm);
+  }
+
+  .spacing-label {
+    font-weight: var(--terria-ds-font-medium);
+  }
+
+  .spacing-bar {
+    /* Set per size from the story */
+    --_size: 0;
+
+    inline-size: var(--_size);
+    block-size: var(--terria-ds-dimensions-spacing-4);
+    border-radius: var(--terria-ds-dimensions-radius-rounded-xs);
+    background-color: var(--terria-ds-primary);
+  }
+
+  .spacing-demos {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 10rem), 1fr));
+    gap: var(--terria-ds-dimensions-spacing-6)
+      var(--terria-ds-dimensions-spacing-4);
+  }
+
+  .spacing-demo {
+    --terria-ds-flow-space: var(--terria-ds-dimensions-spacing-2);
+
+    margin: 0;
+
+    & figcaption {
+      font-size: var(--terria-ds-dimensions-font-text-sm);
+      line-height: var(--terria-ds-dimensions-leading-text-sm);
+    }
+  }
+
+  /* A fixed area, so the examples line up whatever their size */
+  .spacing-demo-stage {
+    display: flex;
+    align-items: center;
+    min-block-size: var(--terria-ds-dimensions-spacing-24);
+  }
+
+  /* The space, hatched: fine diagonal lines of the accent on its soft tint,
+     showing as padding around the content or between items as the gap */
+  .spacing-demo-box {
+    /* Set per example from the story */
+    --_padding: 0;
+    --_gap: 0;
+
+    display: flex;
+    gap: var(--_gap);
+    padding: var(--_padding);
+    background-color: var(--terria-ds-primary-soft);
+    background-image: repeating-linear-gradient(
+      -45deg,
+      var(--terria-ds-primary) 0 var(--terria-ds-border-width-default),
+      transparent var(--terria-ds-border-width-default)
+        var(--terria-ds-dimensions-spacing-1-5)
+    );
+
+    &[data-layout="column"] {
+      flex-direction: column;
+      align-items: stretch;
+    }
+  }
+
+  /* What the space surrounds, plain on the page's surface */
+  .spacing-demo-item {
+    padding: var(--terria-ds-dimensions-spacing-1) var(--terria-ds-space-sm);
+    border: var(--terria-ds-border-width-default) solid
+      var(--terria-ds-border-color-subtle);
+    background-color: var(--terria-ds-surface-overlay);
+    font-size: var(--terria-ds-dimensions-font-text-sm);
+    line-height: var(--terria-ds-dimensions-leading-text-sm);
+    white-space: nowrap;
+
+    /* As tall as the text beside it, so only the gap shows hatched */
+    &[data-kind="icon"] {
+      display: flex;
+      align-items: center;
+
+      &::before {
+        content: "";
+        inline-size: var(--terria-ds-dimensions-icon-size-sm);
+        block-size: var(--terria-ds-dimensions-icon-size-sm);
+        border-radius: var(--terria-ds-dimensions-radius-rounded-xs);
+        background-color: var(--terria-ds-text-muted);
+      }
+    }
+
+    &[data-kind="field"] {
+      min-inline-size: var(--terria-ds-dimensions-spacing-32);
+      block-size: var(--terria-ds-dimensions-spacing-8);
+    }
+  }
+}
