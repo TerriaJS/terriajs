@@ -8,6 +8,7 @@ import { createRef } from "react";
 import { describe, expect, it } from "vitest";
 import { render } from "vitest-browser-react";
 import { Alert, type AlertStatus } from ".";
+import { Button } from "../Button";
 
 const renderAlert = (
   status: AlertStatus,
@@ -80,6 +81,24 @@ describe("Alert", () => {
     const title = screen.getByText("Layer added");
     await expect.element(title).toHaveClass("custom-title");
     await expect.element(title).toHaveAttribute("data-tds", "alert-title");
+  });
+
+  // The alert blurs what's behind it; a button blurring again inside it would
+  // only see the alert and go dark
+  it("keeps its action buttons from blurring again", async () => {
+    const screen = await render(
+      <Alert status="danger">
+        <Alert.Content>
+          <Alert.Title>Layer failed to load</Alert.Title>
+        </Alert.Content>
+        <Button variant="secondary">Retry</Button>
+      </Alert>
+    );
+
+    expect(
+      getComputedStyle(screen.getByRole("button", { name: "Retry" }).element())
+        .backdropFilter
+    ).toBe("none");
   });
 });
 

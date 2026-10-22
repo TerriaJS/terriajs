@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import { describe, expect, it, vi } from "vitest";
 import { userEvent } from "vitest/browser";
 import { render } from "vitest-browser-react";
@@ -72,5 +73,39 @@ describe("Button", () => {
       .element(screen.getByRole("progressbar", { name: "Saving" }))
       .toBeInTheDocument();
     expect(onPress).not.toHaveBeenCalled();
+  });
+
+  it.each(["ghost", "outline"] as const)(
+    "blurs what's behind a %s button on hover, so its hover fill reads over busy content like a map",
+    async (variant) => {
+      const screen = await render(<Button variant={variant}>Upload</Button>);
+      const button = screen.getByRole("button", { name: "Upload" });
+
+      await userEvent.hover(button);
+
+      await expect.element(button).toHaveAttribute("data-hovered", "true");
+      // The blur fades in, so wait for the transition to end
+      await expect
+        .poll(() => getComputedStyle(button.element()).backdropFilter)
+        .toMatch(/^blur\([1-9]/);
+    }
+  );
+
+  // A nested backdrop-filter only sees the surface it's in, so the button
+  // would go dark: surfaces that blur already turn the buttons' blur off
+  it("doesn't blur inside a surface that blurs already, at rest or on hover", async () => {
+    const screen = await render(
+      <div style={{ "--terria-ds-button-backdrop": "none" } as CSSProperties}>
+        <Button variant="secondary">Settings</Button>
+        <Button variant="ghost">Upload</Button>
+      </div>
+    );
+    const secondary = screen.getByRole("button", { name: "Settings" });
+    const ghost = screen.getByRole("button", { name: "Upload" });
+
+    expect(getComputedStyle(secondary.element()).backdropFilter).toBe("none");
+    await userEvent.hover(ghost);
+    await expect.element(ghost).toHaveAttribute("data-hovered", "true");
+    expect(getComputedStyle(ghost.element()).backdropFilter).toBe("none");
   });
 });

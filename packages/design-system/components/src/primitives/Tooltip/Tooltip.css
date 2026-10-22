@@ -28,6 +28,9 @@
       drop-shadow(0 -6px 6px oklch(0% 0 0deg / 3%))
       drop-shadow(0 14px 14px oklch(0% 0 0deg / 8%));
     backdrop-filter: var(--terria-ds-backdrop-blur);
+
+    /* Buttons in it don't blur again */
+    --terria-ds-button-backdrop: none;
     /* stylelint-disable-next-line custom-property-pattern -- The value is defined by react-aria */
     transform-origin: var(--trigger-anchor-point, center);
 

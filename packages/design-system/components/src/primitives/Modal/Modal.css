@@ -197,6 +197,9 @@
     background-color: var(--_dialog-bg);
     box-shadow: var(--terria-ds-shadow-overlay);
     backdrop-filter: var(--terria-ds-backdrop-blur);
+
+    /* Buttons in it don't blur again */
+    --terria-ds-button-backdrop: none;
     color: var(--terria-ds-text-foreground);
     font-size: var(--terria-ds-text-size-body);
     line-height: var(--terria-ds-line-height-body);

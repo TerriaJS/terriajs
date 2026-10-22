@@ -38,7 +38,13 @@
     outline: none;
     background-color: var(--_btn-bg);
     color: var(--_btn-fg);
-    backdrop-filter: var(--_btn-backdrop-filter);
+
+    /* Surfaces that blur already set --terria-ds-button-backdrop: none, since
+       a nested backdrop-filter only sees the surface and goes dark */
+    backdrop-filter: var(
+      --terria-ds-button-backdrop,
+      var(--_btn-backdrop-filter)
+    );
     font-family: inherit;
     font-size: var(--_btn-font-size);
     font-weight: var(--terria-ds-font-medium);
@@ -50,6 +56,7 @@
     transition:
       transform 250ms ease-out,
       background-color 100ms ease-out,
+      backdrop-filter 100ms ease-out,
       box-shadow 100ms ease-out;
 
     @media (prefers-reduced-motion: reduce) {
@@ -73,7 +80,10 @@
     @media (hover: hover) {
       &[data-hovered] {
         background-color: var(--_btn-bg-hover);
-        backdrop-filter: var(--_btn-backdrop-filter-hover);
+        backdrop-filter: var(
+          --terria-ds-button-backdrop,
+          var(--_btn-backdrop-filter-hover)
+        );
       }
     }
 
@@ -85,7 +95,10 @@
 
     &[data-focus-visible] {
       background-color: var(--_btn-bg-hover);
-      backdrop-filter: var(--_btn-backdrop-filter-hover);
+      backdrop-filter: var(
+          --terria-ds-button-backdrop,
+          var(--_btn-backdrop-filter-hover)
+        );
       box-shadow: var(--terria-ds-shadow-focus-ring);
 
       /* Shadows are dropped in forced-colors mode; this outline shows there instead */
@@ -168,6 +181,10 @@
   [data-tds="button"][data-tds-variant="ghost"],
   [data-tds="button"][data-tds-variant="outline"] {
     --_btn-bg: transparent;
+
+    /* Blur fades in with the hover fill, from none at rest, so the fill reads
+       over busy content like a map */
+    --_btn-backdrop-filter: blur(0);
     --_btn-backdrop-filter-hover: var(--_btn-blur);
     --_btn-bg-hover: var(--terria-ds-neutral);
     --_btn-fg: var(--terria-ds-neutral-foreground);

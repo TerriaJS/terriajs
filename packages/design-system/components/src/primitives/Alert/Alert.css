@@ -28,6 +28,9 @@
     border-radius: var(--terria-ds-radius-lg);
     background-color: var(--_alert-bg);
     backdrop-filter: var(--terria-ds-backdrop-blur);
+
+    /* Buttons in it don't blur again */
+    --terria-ds-button-backdrop: none;
     font-size: var(--terria-ds-text-size-body);
     line-height: var(--terria-ds-line-height-body);
 

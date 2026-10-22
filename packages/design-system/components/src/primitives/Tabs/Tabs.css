@@ -81,6 +81,9 @@
     background-color: var(--_tabs-container-bg);
     backdrop-filter: var(--terria-ds-backdrop-blur);
 
+    /* Buttons in it don't blur again */
+    --terria-ds-button-backdrop: none;
+
     [data-tds-full-width] > & {
       inline-size: auto;
     }
