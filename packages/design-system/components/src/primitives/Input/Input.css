@@ -46,7 +46,7 @@
 
     &[data-invalid],
     &[aria-invalid="true"] {
-      border-color: var(--terria-ds-danger);
+      border-color: var(--terria-ds-field-border-error);
     }
 
     &[data-disabled] {
@@ -65,6 +65,18 @@
 
     /* Shadows are dropped in forced-colors mode; this outline shows there instead */
     outline: var(--terria-ds-focus-ring-width) solid transparent;
+  }
+
+  /* An invalid field in focus keeps its error border, with the halo in danger,
+     so it doesn't show two colours at once */
+  :is([data-tds="input"], [data-tds="textarea"])[data-focused]:is(
+      [data-invalid],
+      [aria-invalid="true"]
+    ),
+  [data-tds="select"][data-invalid]
+    > [data-tds="select-trigger"][data-focus-visible] {
+    border-color: var(--terria-ds-field-border-error);
+    box-shadow: var(--terria-ds-shadow-focus-ring-danger);
   }
 
   /* Without it, the input keeps the browser's own width (its size attribute) */

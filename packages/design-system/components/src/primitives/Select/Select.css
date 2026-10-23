@@ -30,7 +30,7 @@
     }
 
     [data-tds="select"][data-invalid] > & {
-      border-color: var(--terria-ds-danger);
+      border-color: var(--terria-ds-field-border-error);
     }
 
     /* Hovering the clear button highlights only the button, not the trigger too */
