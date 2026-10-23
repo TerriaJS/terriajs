@@ -29,6 +29,7 @@ const FIGMA_PAGES = {
   Select: "5375-70822",
   Separator: "5375-70816",
   Slider: "5375-69689",
+  Spinner: "5375-71607",
   Switch: "5375-71127",
   Tabs: "5375-79785",
   TextArea: "17293-35712",

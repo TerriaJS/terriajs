@@ -6,7 +6,7 @@ import {
 import { composeRenderProps } from "react-aria-components/composeRenderProps";
 import "./Button.css";
 import { ButtonGroupContext } from "../ButtonGroup/ButtonGroupContext";
-import { ProgressCircle } from "../ProgressCircle";
+import { Spinner } from "../Spinner";
 
 type ButtonVariant =
   | "primary"
@@ -67,17 +67,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
             </span>
             {isPending && (
               <span data-tds="button-loader">
-                <ProgressCircle
-                  aria-label={pendingLabel}
-                  isIndeterminate
-                  color="current"
-                  size="sm"
-                >
-                  <ProgressCircle.Track>
-                    <ProgressCircle.TrackCircle />
-                    <ProgressCircle.FillCircle />
-                  </ProgressCircle.Track>
-                </ProgressCircle>
+                <Spinner aria-label={pendingLabel} color="current" size="sm" />
               </span>
             )}
           </>

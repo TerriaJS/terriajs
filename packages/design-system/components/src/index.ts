@@ -185,6 +185,13 @@ export type {
   ProgressCircleSize
 } from "./primitives/ProgressCircle";
 
+export { Spinner } from "./primitives/Spinner";
+export type {
+  SpinnerColor,
+  SpinnerProps,
+  SpinnerSize
+} from "./primitives/Spinner";
+
 export {
   Select,
   SelectIndicator,
