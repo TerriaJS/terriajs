@@ -1,0 +1,103 @@
+/**
+ * ProgressBar Component Styles
+ *
+ * Colors and sizes only set --_progress-bar-* custom properties.
+ */
+
+@layer terria-ds.components {
+  /* The label and value on one row, the track below them */
+  [data-tds="progress-bar"] {
+    --_progress-bar-fill: var(--terria-ds-primary);
+    --_progress-bar-height: var(--terria-ds-dimensions-spacing-2);
+
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: var(--terria-ds-dimensions-spacing-1);
+    align-items: center;
+    inline-size: 100%;
+  }
+
+  [data-tds="progress-bar-output"] {
+    grid-column: 2;
+    color: var(--terria-ds-text-foreground);
+    font-size: var(--terria-ds-text-size-body);
+    font-weight: var(--terria-ds-font-medium);
+    font-variant-numeric: tabular-nums;
+    line-height: var(--terria-ds-line-height-body-lg);
+  }
+
+  [data-tds="progress-bar-track"] {
+    position: relative;
+    grid-column: 1 / -1;
+    block-size: var(--_progress-bar-height);
+    overflow: hidden;
+    border-radius: var(--terria-ds-radius-md);
+    background-color: var(--terria-ds-neutral);
+  }
+
+  [data-tds="progress-bar-fill"] {
+    block-size: 100%;
+    border-radius: var(--terria-ds-dimensions-radius-rounded-xl);
+    background-color: var(--_progress-bar-fill);
+    transition: inline-size 300ms ease-out;
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
+
+    /* Indeterminate: no aria-valuenow, a part of the track slides along it */
+    [data-tds="progress-bar"]:not([aria-valuenow]) & {
+      position: absolute;
+      inset-block: 0;
+      inline-size: 40%;
+      animation: terria-ds-progress-bar-slide 1.5s ease-in-out infinite;
+
+      @media (prefers-reduced-motion: reduce) {
+        inset-inline-start: 30%;
+        animation: none;
+      }
+    }
+  }
+
+  @keyframes terria-ds-progress-bar-slide {
+    from {
+      inset-inline-start: -40%;
+    }
+
+    to {
+      inset-inline-start: 100%;
+    }
+  }
+
+  /* ============================================================
+     SIZES
+     ============================================================ */
+
+  [data-tds="progress-bar"][data-tds-size="sm"] {
+    --_progress-bar-height: var(--terria-ds-dimensions-spacing-1);
+  }
+
+  [data-tds="progress-bar"][data-tds-size="lg"] {
+    --_progress-bar-height: var(--terria-ds-dimensions-spacing-3);
+  }
+
+  /* ============================================================
+     COLORS
+     ============================================================ */
+
+  [data-tds="progress-bar"][data-tds-color="default"] {
+    --_progress-bar-fill: var(--terria-ds-neutral-foreground);
+  }
+
+  [data-tds="progress-bar"][data-tds-color="success"] {
+    --_progress-bar-fill: var(--terria-ds-success);
+  }
+
+  [data-tds="progress-bar"][data-tds-color="warning"] {
+    --_progress-bar-fill: var(--terria-ds-warning);
+  }
+
+  [data-tds="progress-bar"][data-tds-color="danger"] {
+    --_progress-bar-fill: var(--terria-ds-danger);
+  }
+}

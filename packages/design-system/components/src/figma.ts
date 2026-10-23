@@ -22,6 +22,7 @@ const FIGMA_PAGES = {
   ListBox: "5375-70869",
   Modal: "5375-77858",
   Popover: "6192-4931",
+  ProgressBar: "21302-78002",
   ProgressCircle: "21302-79204",
   Radius: "17421-36561",
   RadioGroup: "5375-70882",

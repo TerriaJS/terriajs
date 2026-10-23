@@ -157,6 +157,22 @@ export type {
 } from "./primitives/Dropdown";
 
 export {
+  ProgressBar,
+  ProgressBarFill,
+  ProgressBarOutput,
+  ProgressBarRoot,
+  ProgressBarTrack
+} from "./primitives/ProgressBar";
+export type {
+  ProgressBarColor,
+  ProgressBarFillProps,
+  ProgressBarOutputProps,
+  ProgressBarProps,
+  ProgressBarSize,
+  ProgressBarTrackProps
+} from "./primitives/ProgressBar";
+
+export {
   ProgressCircle,
   ProgressCircleFillCircle,
   ProgressCircleRoot,
