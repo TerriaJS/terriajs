@@ -86,4 +86,18 @@ describe("ButtonGroup", () => {
 
     expect(ref.current?.getAttribute("role")).toBe("group");
   });
+
+  it("makes its buttons one width when vertical", async () => {
+    const screen = await render(
+      <ButtonGroup aria-label="Map tools" orientation="vertical">
+        <Button>In</Button>
+        <Button>Reset view</Button>
+      </ButtonGroup>
+    );
+    const width = (name: string): number =>
+      screen.getByRole("button", { name }).element().getBoundingClientRect()
+        .width;
+
+    expect(width("In")).toBe(width("Reset view"));
+  });
 });

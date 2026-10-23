@@ -64,6 +64,10 @@
     }
 
     &[data-tds-orientation="vertical"] > [data-tds="button"] {
+      /* Buttons size to their content; let the column stretch them to the
+         widest instead */
+      inline-size: auto;
+
       &:first-child {
         border-start-start-radius: var(--_btn-group-radius);
         border-start-end-radius: var(--_btn-group-radius);
