@@ -26,8 +26,8 @@ type InputGroupProps = AriaGroupProps & {
 };
 
 // An input with a prefix, a suffix, or both, inside one field border. In a
-// TextField, the field labels the input and sets the group's invalid and
-// disabled states
+// TextField or NumberField, the field labels the input and sets the group's
+// invalid and disabled states
 const InputGroupRoot = forwardRef<HTMLDivElement, InputGroupProps>(
   (
     {

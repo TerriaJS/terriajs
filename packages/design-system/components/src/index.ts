@@ -200,6 +200,20 @@ export type {
   InputGroupTextAreaProps
 } from "./primitives/InputGroup";
 
+export {
+  NumberField,
+  NumberFieldDecrementButton,
+  NumberFieldGroup,
+  NumberFieldIncrementButton,
+  NumberFieldInput,
+  NumberFieldRoot
+} from "./primitives/NumberField";
+export type {
+  NumberFieldButtonProps,
+  NumberFieldGroupProps,
+  NumberFieldProps
+} from "./primitives/NumberField";
+
 export { Spinner } from "./primitives/Spinner";
 export type {
   SpinnerColor,

@@ -22,6 +22,7 @@ const FIGMA_PAGES = {
   Kbd: "5375-70805",
   ListBox: "5375-70869",
   Modal: "5375-77858",
+  NumberField: "17293-33571",
   Popover: "6192-4931",
   ProgressBar: "21302-78002",
   ProgressCircle: "21302-79204",

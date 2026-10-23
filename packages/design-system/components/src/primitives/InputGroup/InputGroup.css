@@ -102,7 +102,11 @@
     );
   }
 
-  :is([data-tds="input-group-prefix"], [data-tds="input-group-suffix"]) {
+  :is(
+    [data-tds="input-group-prefix"],
+    [data-tds="input-group-suffix"],
+    [data-tds="number-field-button"]
+  ) {
     --_input-group-affix-padding: var(--terria-ds-space-md);
 
     display: inline-flex;
