@@ -281,6 +281,22 @@
     }
   }
 
+  /* As wide as the label will be once selected: a hidden semibold copy of
+     it takes the width, so selecting a tab doesn't shift the others */
+  [data-tds="tabs-tab-label"] {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  [data-tds="tabs-tab-label-reserve"] {
+    block-size: 0;
+    overflow: hidden;
+    font-weight: var(--terria-ds-font-semi-bold);
+    visibility: hidden;
+    user-select: none;
+  }
+
   /* React Aria draws it in the selected tab, then slides it to the next one */
   [data-tds="tabs-indicator"] {
     --_tabs-indicator-layer: -1;

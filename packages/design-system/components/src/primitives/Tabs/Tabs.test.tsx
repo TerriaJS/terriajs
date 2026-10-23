@@ -98,6 +98,23 @@ describe("Tabs", () => {
     expect(indicatorIn("Layers")).toBeNull();
   });
 
+  it("keeps every tab's width when the selection changes", async () => {
+    const screen = await renderTabs();
+    const widths = (): number[] =>
+      screen
+        .getByRole("tab")
+        .elements()
+        .map((tab) => tab.getBoundingClientRect().width);
+    const before = widths();
+
+    await screen.getByRole("tab", { name: "Legend" }).click();
+
+    await expect
+      .element(screen.getByRole("tab", { name: "Legend" }))
+      .toHaveAttribute("aria-selected", "true");
+    expect(widths()).toEqual(before);
+  });
+
   it("hugs its tabs by default and shares the width equally when full width", async () => {
     const hug = await renderTabs();
     const hugWidth = hug

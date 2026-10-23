@@ -5,6 +5,7 @@ import {
   ChevronUpIcon
 } from "@terria/design-system-icons";
 import {
+  Children,
   createContext,
   forwardRef,
   useContext,
@@ -12,9 +13,11 @@ import {
   useRef,
   useState,
   type ComponentPropsWithoutRef,
+  type ReactNode,
   type RefObject
 } from "react";
 import type { DOMRenderProps } from "react-aria-components";
+import { composeRenderProps } from "react-aria-components/composeRenderProps";
 import {
   SelectionIndicator,
   type SelectionIndicatorProps
@@ -181,9 +184,31 @@ TabsList.displayName = "Tabs.List";
 
 export type TabsTabProps = AriaTabProps;
 
-export const TabsTab = (props: TabsTabProps): React.ReactElement => {
-  return <AriaTab {...props} data-tds="tabs-tab" />;
-};
+// A plain-text label gets a hidden semibold copy that reserves the width it
+// takes once selected, so selecting doesn't shift the tabs
+const reserveLabelWidth = (children: ReactNode): ReactNode =>
+  // eslint-disable-next-line @eslint-react/no-children-map -- Only plain-text children are wrapped; elements, like the indicator, pass through untouched
+  Children.map(children, (child) =>
+    typeof child === "string" || typeof child === "number" ? (
+      <span data-tds="tabs-tab-label">
+        {child}
+        <span data-tds="tabs-tab-label-reserve" aria-hidden>
+          {child}
+        </span>
+      </span>
+    ) : (
+      child
+    )
+  );
+
+export const TabsTab = ({
+  children,
+  ...props
+}: TabsTabProps): React.ReactElement => (
+  <AriaTab {...props} data-tds="tabs-tab">
+    {composeRenderProps(children, reserveLabelWidth)}
+  </AriaTab>
+);
 
 TabsTab.displayName = "Tabs.Tab";
 
