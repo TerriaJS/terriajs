@@ -49,8 +49,7 @@
     --_tabs-list-padding: 0;
     --_tabs-list-gap: 0;
     --_tabs-tab-padding: var(--terria-ds-dimensions-spacing-1)
-      var(--terria-ds-dimensions-spacing-3)
-      var(--terria-ds-dimensions-spacing-1-5);
+      var(--terria-ds-dimensions-spacing-3);
     --_tabs-tab-radius: 0;
     --_tabs-fg-hover: var(--terria-ds-text-foreground);
     --_tabs-bg-hover: transparent;
@@ -65,8 +64,7 @@
     --_tabs-line: var(--terria-ds-dimensions-spacing-0-5);
 
     &[data-orientation="vertical"] {
-      --_tabs-tab-padding: var(--terria-ds-dimensions-spacing-2)
-        var(--terria-ds-dimensions-spacing-3)
+      --_tabs-tab-padding: var(--terria-ds-dimensions-spacing-2-5)
         var(--terria-ds-dimensions-spacing-3);
     }
   }
@@ -236,7 +234,7 @@
     color: var(--_tabs-fg);
     font-size: var(--terria-ds-text-size-body);
     font-weight: var(--terria-ds-font-medium);
-    line-height: var(--terria-ds-line-height-body-lg);
+    line-height: var(--terria-ds-line-height-body);
     text-align: center;
     white-space: nowrap;
     cursor: pointer;
@@ -258,6 +256,7 @@
 
     &[data-selected] {
       color: var(--_tabs-fg-selected);
+      font-weight: var(--terria-ds-font-semi-bold);
     }
 
     &[data-hovered]:not([data-selected], [data-disabled]) {
