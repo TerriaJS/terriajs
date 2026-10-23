@@ -97,12 +97,12 @@
        The arrow is positioned against the popover, so this doesn't clip it. */
     max-block-size: inherit;
     overflow: auto;
-    padding: var(--terria-ds-space-lg);
+    padding: var(--terria-ds-space-lg) var(--terria-ds-space-xl);
     outline: none;
   }
 
   [data-tds="popover-heading"] {
-    margin: 0;
+    margin: 0 0 var(--terria-ds-dimensions-spacing-2);
     font-size: inherit;
     font-weight: var(--terria-ds-font-medium);
   }
