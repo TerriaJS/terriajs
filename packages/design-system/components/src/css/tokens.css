@@ -714,6 +714,10 @@
     --terria-ds-shadow-focus-ring-field: 0 0 0 3px
       var(--terria-ds-focus-ring-halo);
 
+    /* Keyboard focus on an invalid field: the same halo, in danger */
+    --terria-ds-shadow-focus-ring-danger: 0 0 0 3px
+      var(--terria-ds-focus-danger-ring-halo);
+
     /* Frosted surfaces, for backdrop-filter. Figma's blur radius is twice
        CSS's */
     --terria-ds-backdrop-blur: blur(calc(var(--terria-ds-effects-blur) / 2));
