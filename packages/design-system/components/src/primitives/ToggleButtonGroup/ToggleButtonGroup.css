@@ -20,6 +20,10 @@
 
     gap: var(--terria-ds-space-lg);
 
+    &[data-tds-orientation="vertical"] {
+      gap: var(--terria-ds-dimensions-spacing-1);
+    }
+
     & > [data-tds="button"] {
       border-radius: var(--_btn-group-radius);
     }
