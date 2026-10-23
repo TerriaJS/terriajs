@@ -59,6 +59,10 @@ export const LongContent: Story = {
 export const Placements: Story = {
   args: { isOpen: true, content: "I am a tooltip" },
   argTypes: { isOpen: { control: false } },
+  // The tooltips are open from the start and placed against the window. On
+  // the docs page that is the whole page, where the story starts out of
+  // view, so they'd flip or hide; an iframe gives the story its own window
+  parameters: { docs: { story: { inline: false, iframeHeight: 520 } } },
   render: (args) => (
     <div
       style={{
