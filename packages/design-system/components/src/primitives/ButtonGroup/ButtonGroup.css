@@ -93,10 +93,11 @@
     pointer-events: none;
 
     [data-tds-orientation="horizontal"] & {
-      inset-block-start: 25%;
+      inset-block-start: 50%;
       inset-inline-start: -1px;
       inline-size: 1px;
-      block-size: 50%;
+      block-size: var(--terria-ds-dimensions-spacing-5);
+      translate: 0 -50%;
     }
 
     [data-tds-orientation="vertical"] & {
@@ -104,6 +105,14 @@
       inset-inline-start: 25%;
       inline-size: 50%;
       block-size: 1px;
+    }
+
+    [data-tds-orientation="horizontal"] [data-tds-size="sm"] & {
+      block-size: var(--terria-ds-dimensions-spacing-4);
+    }
+
+    [data-tds-orientation="horizontal"] [data-tds-size="lg"] & {
+      block-size: var(--terria-ds-dimensions-spacing-6);
     }
   }
 }
