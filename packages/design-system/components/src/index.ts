@@ -214,6 +214,21 @@ export type {
   NumberFieldProps
 } from "./primitives/NumberField";
 
+export {
+  SearchField,
+  SearchFieldClearButton,
+  SearchFieldGroup,
+  SearchFieldInput,
+  SearchFieldRoot,
+  SearchFieldSearchIcon
+} from "./primitives/SearchField";
+export type {
+  SearchFieldClearButtonProps,
+  SearchFieldGroupProps,
+  SearchFieldProps,
+  SearchFieldSearchIconProps
+} from "./primitives/SearchField";
+
 export { Spinner } from "./primitives/Spinner";
 export type {
   SpinnerColor,

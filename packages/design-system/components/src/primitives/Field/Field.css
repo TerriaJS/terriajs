@@ -1,10 +1,14 @@
 /**
- * Field styles: TextField and NumberField, and their Label, Description and
- * FieldError
+ * Field styles: TextField, NumberField and SearchField, and their Label,
+ * Description and FieldError
  */
 
 @layer terria-ds.components {
-  :is([data-tds="text-field"], [data-tds="number-field"]) {
+  :is(
+    [data-tds="text-field"],
+    [data-tds="number-field"],
+    [data-tds="search-field"]
+  ) {
     display: inline-flex;
     flex-direction: column;
     gap: var(--terria-ds-space-xs);
