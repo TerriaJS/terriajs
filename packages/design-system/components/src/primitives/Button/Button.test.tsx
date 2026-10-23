@@ -108,4 +108,20 @@ describe("Button", () => {
     await expect.element(ghost).toHaveAttribute("data-hovered", "true");
     expect(getComputedStyle(ghost.element()).backdropFilter).toBe("none");
   });
+
+  it.each(["secondary", "ghost"] as const)(
+    "keeps its resting background on keyboard focus (%s)",
+    async (variant) => {
+      const screen = await render(<Button variant={variant}>Save</Button>);
+      const button = screen.getByRole("button", { name: "Save" }).element();
+      const resting = getComputedStyle(button).backgroundColor;
+
+      await userEvent.tab();
+
+      await expect.element(button).toHaveAttribute("data-focus-visible");
+      await expect
+        .poll(() => getComputedStyle(button).backgroundColor)
+        .toBe(resting);
+    }
+  );
 });

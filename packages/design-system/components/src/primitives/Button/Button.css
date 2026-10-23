@@ -93,12 +93,8 @@
       will-change: transform;
     }
 
+    /* Focus only adds the ring; the background stays as it is at rest */
     &[data-focus-visible] {
-      background-color: var(--_btn-bg-hover);
-      backdrop-filter: var(
-          --terria-ds-button-backdrop,
-          var(--_btn-backdrop-filter-hover)
-        );
       box-shadow: var(--terria-ds-shadow-focus-ring);
 
       /* Shadows are dropped in forced-colors mode; this outline shows there instead */
