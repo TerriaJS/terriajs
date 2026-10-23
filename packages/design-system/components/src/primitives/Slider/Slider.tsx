@@ -172,15 +172,19 @@ export const SliderMarks = ({
           typeof mark === "number"
             ? { value: mark, label: state.getFormattedValue(mark) }
             : mark;
+        const percent = state.getValuePercent(value);
         return (
           <span
             key={value}
             data-tds="slider-mark"
+            data-tds-edge={
+              percent === 0 ? "start" : percent === 1 ? "end" : undefined
+            }
             style={{
               [state.orientation === "vertical"
                 ? "insetBlockEnd"
                 : "insetInlineStart"]:
-                `${String(state.getValuePercent(value) * 100)}%`
+                `${String(percent * 100)}%`
             }}
           >
             {label}

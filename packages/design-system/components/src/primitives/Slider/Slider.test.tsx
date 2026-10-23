@@ -249,6 +249,38 @@ describe("Slider", () => {
       .element(screen.getByRole("slider", { name: "Opacity" }))
       .toBeDisabled();
   });
+
+  // Centred labels at the ends would hang off the slider: they line up with
+  // its edges instead
+  it("keeps labels at the minimum and maximum inside the slider", async () => {
+    const screen = await render(
+      <div style={{ inlineSize: 240 }}>
+        <Slider
+          label="Map quality"
+          minValue={1}
+          maxValue={3}
+          defaultValue={2}
+          marks={[
+            { value: 1, label: "Quality" },
+            { value: 3, label: "Performance" }
+          ]}
+        />
+      </div>
+    );
+    const slider = screen
+      .getByRole("slider")
+      .element()
+      .closest("[data-tds='slider']")
+      ?.getBoundingClientRect();
+    const first = screen.getByText("Quality").element().getBoundingClientRect();
+    const last = screen
+      .getByText("Performance")
+      .element()
+      .getBoundingClientRect();
+
+    expect(first.left).toBeGreaterThanOrEqual(slider?.left ?? Infinity);
+    expect(last.right).toBeLessThanOrEqual(slider?.right ?? -Infinity);
+  });
 });
 
 describe("SliderPrimitive", () => {

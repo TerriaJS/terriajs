@@ -207,6 +207,24 @@
       &:dir(rtl) {
         translate: 50% 0;
       }
+
+      /* Labels at the ends line up with the slider's edges, so they don't
+         hang off it; the ends sit half a thumb outside the marks */
+      &[data-tds-edge="start"] {
+        translate: calc(-1 * var(--_slider-end)) 0;
+
+        &:dir(rtl) {
+          translate: var(--_slider-end) 0;
+        }
+      }
+
+      &[data-tds-edge="end"] {
+        translate: calc(var(--_slider-end) - 100%) 0;
+
+        &:dir(rtl) {
+          translate: calc(100% - var(--_slider-end)) 0;
+        }
+      }
     }
 
     [data-tds="slider-tick"] {
