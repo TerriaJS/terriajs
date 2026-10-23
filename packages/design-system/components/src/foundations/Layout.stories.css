@@ -1,0 +1,74 @@
+/**
+ * Styles for the Layout docs page, on top of docs.stories.css. The examples
+ * show each layout's gaps and padding hatched, as on the Spacing page.
+ */
+
+@layer storybook {
+  .layout-example {
+    display: grid;
+    gap: var(--terria-ds-dimensions-spacing-2);
+    margin: 0;
+  }
+
+  /* Examples one after another stand apart, like sections of the page */
+  .layout-example + .layout-example {
+    margin-block-start: var(--terria-ds-dimensions-spacing-6);
+  }
+
+  /* The space between and around the items, hatched: fine diagonal lines of
+     the accent on its soft tint */
+  .layout-demo {
+    background-color: var(--terria-ds-primary-soft);
+    background-image: repeating-linear-gradient(
+      -45deg,
+      var(--terria-ds-primary) 0 var(--terria-ds-border-width-default),
+      transparent var(--terria-ds-border-width-default)
+        var(--terria-ds-dimensions-spacing-1-5)
+    );
+  }
+
+  /* A cluster narrow enough to wrap */
+  .layout-narrow {
+    max-inline-size: var(--terria-ds-dimensions-spacing-64);
+  }
+
+  .layout-columns {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .layout-fit {
+    --terria-ds-grid-item-min: 8rem;
+  }
+
+  /* Tall enough for alignment to show */
+  .layout-tall {
+    min-block-size: var(--terria-ds-dimensions-spacing-16);
+  }
+
+  .layout-padding {
+    inline-size: fit-content;
+  }
+
+  .layout-gaps,
+  .layout-alignments {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 12rem), 1fr));
+    gap: var(--terria-ds-dimensions-spacing-6)
+      var(--terria-ds-dimensions-spacing-4);
+  }
+
+  /* What the layout arranges, plain on the page's surface */
+  .layout-item {
+    padding: var(--terria-ds-dimensions-spacing-1) var(--terria-ds-space-sm);
+    border: var(--terria-ds-border-width-default) solid
+      var(--terria-ds-border-color-subtle);
+    background-color: var(--terria-ds-surface-overlay);
+    font-size: var(--terria-ds-dimensions-font-text-sm);
+    line-height: var(--terria-ds-dimensions-leading-text-sm);
+    white-space: nowrap;
+  }
+
+  .layout-item-tall {
+    padding-block: var(--terria-ds-dimensions-spacing-3);
+  }
+}

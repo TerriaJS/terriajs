@@ -1,0 +1,85 @@
+import { Meta, Story, Unstyled } from "@storybook/addon-docs/blocks";
+import * as LayoutStories from "./Layout.stories";
+
+<Meta of={LayoutStories} />
+
+{/* Rendered in the design system's own type, not Storybook's docs styles */}
+
+<Unstyled>
+<div className="docs-page tds-flow tds-body">
+
+# Layout
+
+Layout classes arrange any element's children with flex or grid, spaced by
+the spacing scale. Import `@terria/design-system/layout.css` after
+`typography.css`. A layout spaces its children by its gap alone: it clears
+their margins, so paragraphs in a stack don't add their own space. The
+hatched areas below are the gaps and padding.
+
+## Stack
+
+Children in a column, `space-md` apart: a form, a panel's sections.
+
+<Story of={LayoutStories.Stack} />
+
+## Cluster
+
+Children in a row that wraps when they don't fit, `space-sm` apart and
+centred on each other: tags, chips, a group of buttons.
+
+<Story of={LayoutStories.Cluster} />
+
+## Row
+
+Children in one row that doesn't wrap, `space-sm` apart: a toolbar or a
+header. `tds-ms-auto` on a child pushes it, and what follows, to the end.
+
+<Story of={LayoutStories.Row} />
+
+## Grid
+
+`tds-grid` spaces a grid's children `space-md` apart; set its columns in your
+CSS. `tds-grid-fit` fits as many equal columns as there's room for, for
+galleries and card listings, and falls back to one. Three custom properties
+size them, none inherited by a nested grid:
+
+- `--terria-ds-grid-item-min`: a column's minimum width, 15rem unless set
+- `--terria-ds-grid-item-max`: how wide a column can grow, `1fr` unless set
+- `--terria-ds-grid-auto-layout`: `auto-fit`, the default, stretches a short
+  row's children across it; `auto-fill` keeps the empty columns, so they
+  stay their minimum width and line up with full rows
+
+<Story of={LayoutStories.Grid} />
+
+## Gaps
+
+A layout's gap comes from a custom property, `--terria-ds-flex-gap` or the
+grid's `--terria-ds-grid-column-gap` and `--terria-ds-grid-row-gap`, which the
+gap classes set on the spacing scale: `tds-flex-gap-*`, `tds-grid-gap-*`, and
+`tds-grid-gap-x-*` and `-y-*` for columns and rows. They aren't inherited, so
+a nested layout keeps its own.
+
+<Story of={LayoutStories.Gaps} />
+
+## Alignment
+
+`tds-items-*` aligns children across the layout (`start`, `center`, `end`,
+`baseline`, `stretch`), and `tds-justify-*` along it (`start`, `center`,
+`end`, `between`). They work on grids too, and win over a layout's defaults.
+`tds-flex`, `tds-flex-col`, `tds-wrap`, `tds-grow` and `tds-shrink-0` build a
+layout from scratch.
+
+<Story of={LayoutStories.Alignment} />
+
+## Spacing
+
+Padding and margin on the spacing scale, in logical properties so they follow
+the reading direction: `p` and `m` for all sides, `x` inline, `y` block, `t`
+and `b` for block start and end, `s` and `e` for inline start and end, in
+sizes `0`, `2xs` … `2xl`. `tds-mx-auto` centres a block. Utilities sit in a
+layer after the components, so they win over a component's own styles.
+
+<Story of={LayoutStories.Spacing} />
+
+</div>
+</Unstyled>
