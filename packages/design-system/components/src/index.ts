@@ -287,6 +287,12 @@ export type {
   ButtonGroupSeparatorProps
 } from "./primitives/ButtonGroup";
 
+export { ToggleButton } from "./primitives/ToggleButton";
+export type {
+  ToggleButtonProps,
+  ToggleButtonVariant
+} from "./primitives/ToggleButton";
+
 export { Badge, BadgeAnchor, BadgeLabel, BadgeRoot } from "./primitives/Badge";
 export type {
   BadgeAnchorProps,

@@ -1,0 +1,20 @@
+/* Layout for the ToggleButton and ToggleButtonGroup stories */
+
+@layer storybook {
+  .toggle-stories-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--terria-ds-space-md);
+    align-items: center;
+  }
+
+  .toggle-stories-stack {
+    display: grid;
+    gap: var(--terria-ds-space-lg);
+    justify-items: start;
+  }
+
+  .toggle-stories-fill {
+    inline-size: 24rem;
+  }
+}

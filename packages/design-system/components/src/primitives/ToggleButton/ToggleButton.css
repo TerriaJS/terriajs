@@ -1,0 +1,13 @@
+/**
+ * ToggleButton Component Styles
+ *
+ * Styled as a Button; this adds only the on state: the soft accent.
+ */
+
+@layer terria-ds.components {
+  [data-tds="button"][data-tds-toggle][data-selected] {
+    --_btn-bg: var(--terria-ds-primary-soft);
+    --_btn-bg-hover: var(--terria-ds-primary-soft-hover);
+    --_btn-fg: var(--terria-ds-primary-soft-foreground);
+  }
+}
