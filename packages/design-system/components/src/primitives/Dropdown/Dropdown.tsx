@@ -25,30 +25,28 @@ import { PopoverContent, type PopoverContentProps } from "../Popover";
 import "../ListBox/ListBox.css";
 import "./Dropdown.css";
 
-export type DropdownProps = AriaMenuTriggerProps;
+type DropdownProps = AriaMenuTriggerProps;
 
 // Opens its menu from its first child: a Button, or a Dropdown.Trigger
-export const DropdownRoot = (props: DropdownProps): React.ReactElement => {
+const DropdownRoot = (props: DropdownProps): React.ReactElement => {
   return <AriaMenuTrigger {...props} />;
 };
 
 DropdownRoot.displayName = "Dropdown";
 
-export type DropdownPopoverProps = PopoverContentProps;
+type DropdownPopoverProps = PopoverContentProps;
 
 // react-aria places it: below the trigger's start for the menu, beside its
 // item for a submenu
-export const DropdownPopover = (
-  props: DropdownPopoverProps
-): React.ReactElement => {
+const DropdownPopover = (props: DropdownPopoverProps): React.ReactElement => {
   return <PopoverContent {...props} />;
 };
 
 DropdownPopover.displayName = "Dropdown.Popover";
 
-export type DropdownMenuProps<T extends object> = AriaMenuProps<T>;
+type DropdownMenuProps<T extends object> = AriaMenuProps<T>;
 
-export const DropdownMenu = <T extends object>(
+const DropdownMenu = <T extends object>(
   props: DropdownMenuProps<T>
 ): React.ReactElement => {
   return <AriaMenu {...props} data-tds="dropdown-menu" />;
@@ -56,7 +54,7 @@ export const DropdownMenu = <T extends object>(
 
 DropdownMenu.displayName = "Dropdown.Menu";
 
-export type DropdownItemProps<T extends object> = AriaMenuItemProps<T> & {
+type DropdownItemProps<T extends object> = AriaMenuItemProps<T> & {
   variant?: ListBoxItemVariant;
 };
 
@@ -73,7 +71,7 @@ const labelPlainText = (children: ReactNode): ReactNode =>
   );
 
 // Styled as a ListBox item, so a menu and a list look alike
-export const DropdownItem = <T extends object>({
+const DropdownItem = <T extends object>({
   variant = "default",
   children,
   textValue,
@@ -105,9 +103,9 @@ export const DropdownItem = <T extends object>({
 
 DropdownItem.displayName = "Dropdown.Item";
 
-export type DropdownSectionProps<T extends object> = AriaMenuSectionProps<T>;
+type DropdownSectionProps<T extends object> = AriaMenuSectionProps<T>;
 
-export const DropdownSection = <T extends object>(
+const DropdownSection = <T extends object>(
   props: DropdownSectionProps<T>
 ): React.ReactElement => {
   return <AriaMenuSection {...props} data-tds="list-box-section" />;
@@ -115,10 +113,10 @@ export const DropdownSection = <T extends object>(
 
 DropdownSection.displayName = "Dropdown.Section";
 
-export type DropdownSubmenuTriggerProps = AriaSubmenuTriggerProps;
+type DropdownSubmenuTriggerProps = AriaSubmenuTriggerProps;
 
 // An item that opens the Dropdown.Popover after it, as a submenu
-export const DropdownSubmenuTrigger = (
+const DropdownSubmenuTrigger = (
   props: DropdownSubmenuTriggerProps
 ): React.ReactElement => {
   return <AriaSubmenuTrigger {...props} />;
@@ -126,10 +124,10 @@ export const DropdownSubmenuTrigger = (
 
 DropdownSubmenuTrigger.displayName = "Dropdown.SubmenuTrigger";
 
-export type DropdownSubmenuIndicatorProps = ComponentPropsWithoutRef<"span">;
+type DropdownSubmenuIndicatorProps = ComponentPropsWithoutRef<"span">;
 
 // Marks an item that opens a submenu; a chevron unless children replace it
-export const DropdownSubmenuIndicator = forwardRef<
+const DropdownSubmenuIndicator = forwardRef<
   HTMLSpanElement,
   DropdownSubmenuIndicatorProps
 >(({ children, ...props }, ref) => {
@@ -146,3 +144,22 @@ export const DropdownSubmenuIndicator = forwardRef<
 });
 
 DropdownSubmenuIndicator.displayName = "Dropdown.SubmenuIndicator";
+
+export {
+  DropdownRoot,
+  DropdownPopover,
+  DropdownMenu,
+  DropdownItem,
+  DropdownSection,
+  DropdownSubmenuTrigger,
+  DropdownSubmenuIndicator
+};
+export type {
+  DropdownProps,
+  DropdownPopoverProps,
+  DropdownMenuProps,
+  DropdownItemProps,
+  DropdownSectionProps,
+  DropdownSubmenuTriggerProps,
+  DropdownSubmenuIndicatorProps
+};

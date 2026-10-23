@@ -7,16 +7,16 @@ import type { CheckboxVariant } from "../Checkbox";
 import { CheckboxGroupContext } from "./CheckboxGroupContext";
 import "./CheckboxGroup.css";
 
-export type CheckboxGroupOrientation = "vertical" | "horizontal";
+type CheckboxGroupOrientation = "vertical" | "horizontal";
 
-export type CheckboxGroupProps = AriaCheckboxGroupProps & {
+type CheckboxGroupProps = AriaCheckboxGroupProps & {
   orientation?: CheckboxGroupOrientation;
   /** The variant of checkboxes that don't set their own */
   variant?: CheckboxVariant;
 };
 
 // Stacks a Label, a Description, its Checkboxes and a FieldError
-export const CheckboxGroup = ({
+const CheckboxGroup = ({
   orientation = "vertical",
   variant,
   ...props
@@ -35,3 +35,6 @@ export const CheckboxGroup = ({
 };
 
 CheckboxGroup.displayName = "CheckboxGroup";
+
+export { CheckboxGroup };
+export type { CheckboxGroupOrientation, CheckboxGroupProps };

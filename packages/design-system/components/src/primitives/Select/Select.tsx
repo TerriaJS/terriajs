@@ -22,7 +22,7 @@ import { PopoverContent, type PopoverContentProps } from "../Popover";
 import "../Input/Input.css";
 import "./Select.css";
 
-export type SelectProps<
+type SelectProps<
   T extends object,
   M extends "single" | "multiple" = "single"
 > = AriaSelectProps<T, M> & {
@@ -34,7 +34,7 @@ export type SelectProps<
 
 const SelectContext = createContext<{ onClear?: () => void }>({});
 
-export const SelectRoot = <
+const SelectRoot = <
   T extends object,
   M extends "single" | "multiple" = "single"
 >({
@@ -72,9 +72,9 @@ const useClear = (): (() => void) => {
   };
 };
 
-export type SelectTriggerProps = AriaButtonProps;
+type SelectTriggerProps = AriaButtonProps;
 
-export const SelectTrigger = ({
+const SelectTrigger = ({
   onKeyDown,
   ...props
 }: SelectTriggerProps): React.ReactElement => {
@@ -108,11 +108,11 @@ export const SelectTrigger = ({
 
 SelectTrigger.displayName = "Select.Trigger";
 
-export type SelectValueProps<T extends object> = AriaSelectValueProps<T>;
+type SelectValueProps<T extends object> = AriaSelectValueProps<T>;
 
 // Shows the option's text only; an option's icon or description would stretch
 // the trigger. Pass children to render something else.
-export const SelectValue = <T extends object>({
+const SelectValue = <T extends object>({
   children,
   ...props
 }: SelectValueProps<T>): React.ReactElement => {
@@ -127,67 +127,80 @@ export const SelectValue = <T extends object>({
 
 SelectValue.displayName = "Select.Value";
 
-export type SelectIndicatorProps = ComponentPropsWithoutRef<"span">;
+type SelectIndicatorProps = ComponentPropsWithoutRef<"span">;
 
 // A chevron that flips while the list is open, unless children replace it
-export const SelectIndicator = forwardRef<
-  HTMLSpanElement,
-  SelectIndicatorProps
->(({ children, ...props }, ref) => {
-  return (
-    <span aria-hidden="true" {...props} ref={ref} data-tds="select-indicator">
-      {children ?? <ChevronDownIcon />}
-    </span>
-  );
-});
+const SelectIndicator = forwardRef<HTMLSpanElement, SelectIndicatorProps>(
+  ({ children, ...props }, ref) => {
+    return (
+      <span aria-hidden="true" {...props} ref={ref} data-tds="select-indicator">
+        {children ?? <ChevronDownIcon />}
+      </span>
+    );
+  }
+);
 
 SelectIndicator.displayName = "Select.Indicator";
 
-export type SelectClearButtonProps = ComponentPropsWithoutRef<"span">;
+type SelectClearButtonProps = ComponentPropsWithoutRef<"span">;
 
 // A span, not a button: buttons can't nest inside the trigger button
-export const SelectClearButton = forwardRef<
-  HTMLSpanElement,
-  SelectClearButtonProps
->(({ children, onClick, onPointerDown, ...props }, ref) => {
-  const state = useContext(SelectStateContext);
-  const clear = useClear();
-  const isEmpty = (state?.selectionManager.selectedKeys.size ?? 0) === 0;
+const SelectClearButton = forwardRef<HTMLSpanElement, SelectClearButtonProps>(
+  ({ children, onClick, onPointerDown, ...props }, ref) => {
+    const state = useContext(SelectStateContext);
+    const clear = useClear();
+    const isEmpty = (state?.selectionManager.selectedKeys.size ?? 0) === 0;
 
-  return (
-    <span
-      aria-hidden="true"
-      aria-label="Clear selection"
-      aria-description="Press backspace or delete to clear value"
-      {...props}
-      ref={ref}
-      data-tds="select-clear-button"
-      data-empty={isEmpty || undefined}
-      onPointerDown={(event) => {
-        // Keep the press from reaching the trigger, which would open the list
-        event.stopPropagation();
-        onPointerDown?.(event);
-      }}
-      onClick={(event) => {
-        event.preventDefault();
-        event.stopPropagation();
-        clear();
-        onClick?.(event);
-      }}
-    >
-      {children ?? <XIcon size={14} />}
-    </span>
-  );
-});
+    return (
+      <span
+        aria-hidden="true"
+        aria-label="Clear selection"
+        aria-description="Press backspace or delete to clear value"
+        {...props}
+        ref={ref}
+        data-tds="select-clear-button"
+        data-empty={isEmpty || undefined}
+        onPointerDown={(event) => {
+          // Keep the press from reaching the trigger, which would open the list
+          event.stopPropagation();
+          onPointerDown?.(event);
+        }}
+        onClick={(event) => {
+          event.preventDefault();
+          event.stopPropagation();
+          clear();
+          onClick?.(event);
+        }}
+      >
+        {children ?? <XIcon size={14} />}
+      </span>
+    );
+  }
+);
 
 SelectClearButton.displayName = "Select.ClearButton";
 
-export type SelectPopoverProps = PopoverContentProps;
+type SelectPopoverProps = PopoverContentProps;
 
-export const SelectPopover = (
-  props: SelectPopoverProps
-): React.ReactElement => {
+const SelectPopover = (props: SelectPopoverProps): React.ReactElement => {
   return <PopoverContent placement="bottom" {...props} />;
 };
 
 SelectPopover.displayName = "Select.Popover";
+
+export {
+  SelectRoot,
+  SelectTrigger,
+  SelectValue,
+  SelectIndicator,
+  SelectClearButton,
+  SelectPopover
+};
+export type {
+  SelectProps,
+  SelectTriggerProps,
+  SelectValueProps,
+  SelectIndicatorProps,
+  SelectClearButtonProps,
+  SelectPopoverProps
+};

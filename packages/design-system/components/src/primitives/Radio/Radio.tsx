@@ -16,9 +16,9 @@ import "./Radio.css";
 
 // The field: wraps Radio.Content and an optional Description. Must sit in a
 // RadioGroup, which owns the value, validation and variant
-export type RadioRootProps = AriaRadioFieldProps;
+type RadioRootProps = AriaRadioFieldProps;
 
-export const RadioRoot = (props: RadioRootProps): React.ReactElement => {
+const RadioRoot = (props: RadioRootProps): React.ReactElement => {
   return <AriaRadioField {...props} data-tds="radio" />;
 };
 
@@ -27,10 +27,10 @@ RadioRoot.displayName = "Radio";
 // A Label inside renders as a span: the content is already the <label>
 const LABEL_SPAN_CONTEXT = { elementType: "span" };
 
-export type RadioContentProps = AriaRadioButtonProps & { children: ReactNode };
+type RadioContentProps = AriaRadioButtonProps & { children: ReactNode };
 
 // The clickable label holding the control and the Label
-export const RadioContent = ({
+const RadioContent = ({
   children,
   ...props
 }: RadioContentProps): React.ReactElement => {
@@ -48,10 +48,10 @@ RadioContent.displayName = "Radio.Content";
 type SpanProps = ComponentPropsWithoutRef<"span"> &
   DOMRenderProps<"span", undefined>;
 
-export type RadioControlProps = SpanProps & { children: ReactNode };
+type RadioControlProps = SpanProps & { children: ReactNode };
 
 // The circle
-export const RadioControl = forwardRef<HTMLSpanElement, RadioControlProps>(
+const RadioControl = forwardRef<HTMLSpanElement, RadioControlProps>(
   ({ render, ...props }, ref) => {
     const controlProps = { ...props, ref, "data-tds": "radio-control" };
     return render ? (
@@ -65,10 +65,10 @@ export const RadioControl = forwardRef<HTMLSpanElement, RadioControlProps>(
 
 RadioControl.displayName = "Radio.Control";
 
-export type RadioIndicatorProps = SpanProps;
+type RadioIndicatorProps = SpanProps;
 
 // The dot while selected, unless children replace it
-export const RadioIndicator = forwardRef<HTMLSpanElement, RadioIndicatorProps>(
+const RadioIndicator = forwardRef<HTMLSpanElement, RadioIndicatorProps>(
   ({ render, ...props }, ref) => {
     const indicatorProps = {
       "aria-hidden": true,
@@ -87,14 +87,14 @@ export const RadioIndicator = forwardRef<HTMLSpanElement, RadioIndicatorProps>(
 
 RadioIndicator.displayName = "Radio.Indicator";
 
-export type RadioProps = Omit<RadioRootProps, "children"> & {
+type RadioProps = Omit<RadioRootProps, "children"> & {
   /** The label */
   children: ReactNode;
   description?: string;
 };
 
 // The everyday radio: circle, label and optional description
-export const Radio = ({
+const Radio = ({
   children,
   description,
   ...props
@@ -110,4 +110,13 @@ export const Radio = ({
       {description && <Description>{description}</Description>}
     </RadioRoot>
   );
+};
+
+export { RadioRoot, RadioContent, RadioControl, RadioIndicator, Radio };
+export type {
+  RadioRootProps,
+  RadioContentProps,
+  RadioControlProps,
+  RadioIndicatorProps,
+  RadioProps
 };

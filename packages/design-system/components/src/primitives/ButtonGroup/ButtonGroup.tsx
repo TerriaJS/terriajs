@@ -10,9 +10,9 @@ import type { ButtonSize, ButtonVariant } from "../Button/Button";
 import { ButtonGroupContext } from "./ButtonGroupContext";
 import "./ButtonGroup.css";
 
-export type ButtonGroupOrientation = "horizontal" | "vertical";
+type ButtonGroupOrientation = "horizontal" | "vertical";
 
-export type ButtonGroupProps = Omit<GroupProps, "children"> & {
+type ButtonGroupProps = Omit<GroupProps, "children"> & {
   children: ReactNode;
   /** Applied to every button that doesn't set its own */
   size?: ButtonSize;
@@ -23,7 +23,7 @@ export type ButtonGroupProps = Omit<GroupProps, "children"> & {
 };
 
 // Related buttons joined into one control
-export const ButtonGroupRoot = forwardRef<HTMLDivElement, ButtonGroupProps>(
+const ButtonGroupRoot = forwardRef<HTMLDivElement, ButtonGroupProps>(
   (
     {
       size,
@@ -57,11 +57,11 @@ export const ButtonGroupRoot = forwardRef<HTMLDivElement, ButtonGroupProps>(
 
 ButtonGroupRoot.displayName = "ButtonGroup";
 
-export type ButtonGroupSeparatorProps = ComponentPropsWithoutRef<"span"> &
+type ButtonGroupSeparatorProps = ComponentPropsWithoutRef<"span"> &
   DOMRenderProps<"span", undefined>;
 
 // A divider at the start of a button, between it and the one before
-export const ButtonGroupSeparator = forwardRef<
+const ButtonGroupSeparator = forwardRef<
   HTMLSpanElement,
   ButtonGroupSeparatorProps
 >(({ render, ...props }, ref) => {
@@ -79,3 +79,10 @@ export const ButtonGroupSeparator = forwardRef<
 });
 
 ButtonGroupSeparator.displayName = "ButtonGroup.Separator";
+
+export { ButtonGroupRoot, ButtonGroupSeparator };
+export type {
+  ButtonGroupOrientation,
+  ButtonGroupProps,
+  ButtonGroupSeparatorProps
+};

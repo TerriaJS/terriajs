@@ -6,19 +6,10 @@ import {
 import type { DOMRenderProps } from "react-aria-components";
 import "./Badge.css";
 
-export type BadgeColor =
-  | "default"
-  | "accent"
-  | "success"
-  | "warning"
-  | "danger";
-export type BadgeVariant = "primary" | "secondary" | "soft";
-export type BadgeSize = "sm" | "md" | "lg";
-export type BadgePlacement =
-  | "top-right"
-  | "top-left"
-  | "bottom-right"
-  | "bottom-left";
+type BadgeColor = "default" | "accent" | "success" | "warning" | "danger";
+type BadgeVariant = "primary" | "secondary" | "soft";
+type BadgeSize = "sm" | "md" | "lg";
+type BadgePlacement = "top-right" | "top-left" | "bottom-right" | "bottom-left";
 
 // Like react-aria components, each part takes `render` to swap in a custom
 // element. Parts use forwardRef: React 18 doesn't pass `ref` to plain function
@@ -27,7 +18,7 @@ export type BadgePlacement =
 type SpanProps = Omit<ComponentPropsWithoutRef<"span">, "color"> &
   DOMRenderProps<"span", undefined>;
 
-export type BadgeProps = SpanProps & {
+type BadgeProps = SpanProps & {
   color?: BadgeColor;
   variant?: BadgeVariant;
   size?: BadgeSize;
@@ -36,7 +27,7 @@ export type BadgeProps = SpanProps & {
 };
 
 // A count or short status on a corner of a Badge.Anchor
-export const BadgeRoot = forwardRef<HTMLSpanElement, BadgeProps>(
+const BadgeRoot = forwardRef<HTMLSpanElement, BadgeProps>(
   (
     {
       color = "default",
@@ -76,9 +67,9 @@ export const BadgeRoot = forwardRef<HTMLSpanElement, BadgeProps>(
 
 BadgeRoot.displayName = "Badge";
 
-export type BadgeLabelProps = SpanProps & { children: ReactNode };
+type BadgeLabelProps = SpanProps & { children: ReactNode };
 
-export const BadgeLabel = forwardRef<HTMLSpanElement, BadgeLabelProps>(
+const BadgeLabel = forwardRef<HTMLSpanElement, BadgeLabelProps>(
   ({ render, ...props }, ref) => {
     const labelProps = { ...props, ref, "data-tds": "badge-label" };
     return render ? render(labelProps, undefined) : <span {...labelProps} />;
@@ -87,10 +78,10 @@ export const BadgeLabel = forwardRef<HTMLSpanElement, BadgeLabelProps>(
 
 BadgeLabel.displayName = "Badge.Label";
 
-export type BadgeAnchorProps = SpanProps & { children: ReactNode };
+type BadgeAnchorProps = SpanProps & { children: ReactNode };
 
 // Wraps the element a Badge sits on, like an avatar or icon button
-export const BadgeAnchor = forwardRef<HTMLSpanElement, BadgeAnchorProps>(
+const BadgeAnchor = forwardRef<HTMLSpanElement, BadgeAnchorProps>(
   ({ render, ...props }, ref) => {
     const anchorProps = { ...props, ref, "data-tds": "badge-anchor" };
     return render ? render(anchorProps, undefined) : <span {...anchorProps} />;
@@ -98,3 +89,14 @@ export const BadgeAnchor = forwardRef<HTMLSpanElement, BadgeAnchorProps>(
 );
 
 BadgeAnchor.displayName = "Badge.Anchor";
+
+export { BadgeRoot, BadgeLabel, BadgeAnchor };
+export type {
+  BadgeColor,
+  BadgeVariant,
+  BadgeSize,
+  BadgePlacement,
+  BadgeProps,
+  BadgeLabelProps,
+  BadgeAnchorProps
+};

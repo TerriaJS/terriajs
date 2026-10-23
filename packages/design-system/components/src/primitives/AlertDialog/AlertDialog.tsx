@@ -20,25 +20,23 @@ import { CloseButton, type CloseButtonProps } from "../CloseButton";
 import "../Modal/Modal.css";
 import "./AlertDialog.css";
 
-export type AlertDialogProps = AriaDialogTriggerProps;
+type AlertDialogProps = AriaDialogTriggerProps;
 
-export const AlertDialogRoot = (
-  props: AlertDialogProps
-): React.ReactElement => {
+const AlertDialogRoot = (props: AlertDialogProps): React.ReactElement => {
   return <AriaDialogTrigger {...props} />;
 };
 
 AlertDialogRoot.displayName = "AlertDialog";
 
-export type AlertDialogBackdropVariant = "opaque" | "blur" | "transparent";
+type AlertDialogBackdropVariant = "opaque" | "blur" | "transparent";
 
-export type AlertDialogBackdropProps = AriaModalOverlayProps & {
+type AlertDialogBackdropProps = AriaModalOverlayProps & {
   variant?: AlertDialogBackdropVariant;
 };
 
 // Pressing outside doesn't close it, so it isn't dismissed by accident.
 // Escape still cancels.
-export const AlertDialogBackdrop = ({
+const AlertDialogBackdrop = ({
   isDismissable = false,
   variant = "opaque",
   ...props
@@ -55,12 +53,12 @@ export const AlertDialogBackdrop = ({
 
 AlertDialogBackdrop.displayName = "AlertDialog.Backdrop";
 
-export type AlertDialogSize = "xs" | "sm" | "md" | "lg";
+type AlertDialogSize = "xs" | "sm" | "md" | "lg";
 // auto: a bottom sheet on phones, centred on wider screens
-export type AlertDialogPlacement = "auto" | "center" | "top" | "bottom";
-export type AlertDialogScroll = "inside" | "outside";
+type AlertDialogPlacement = "auto" | "center" | "top" | "bottom";
+type AlertDialogScroll = "inside" | "outside";
 
-export type AlertDialogContainerProps = Omit<
+type AlertDialogContainerProps = Omit<
   AriaModalOverlayProps,
   "isDismissable" | "isKeyboardDismissDisabled"
 > & {
@@ -69,7 +67,7 @@ export type AlertDialogContainerProps = Omit<
   scroll?: AlertDialogScroll;
 };
 
-export const AlertDialogContainer = ({
+const AlertDialogContainer = ({
   size = "sm",
   placement = "center",
   scroll = "inside",
@@ -90,9 +88,9 @@ export const AlertDialogContainer = ({
 
 AlertDialogContainer.displayName = "AlertDialog.Container";
 
-export type AlertDialogDialogProps = Omit<AriaDialogProps, "role">;
+type AlertDialogDialogProps = Omit<AriaDialogProps, "role">;
 
-export const AlertDialogDialog = (
+const AlertDialogDialog = (
   props: AlertDialogDialogProps
 ): React.ReactElement => {
   return (
@@ -102,10 +100,10 @@ export const AlertDialogDialog = (
 
 AlertDialogDialog.displayName = "AlertDialog.Dialog";
 
-export type AlertDialogCloseTriggerProps = CloseButtonProps;
+type AlertDialogCloseTriggerProps = CloseButtonProps;
 
 // slot="close" lets the dialog close itself when this is pressed
-export const AlertDialogCloseTrigger = (
+const AlertDialogCloseTrigger = (
   props: AlertDialogCloseTriggerProps
 ): React.ReactElement => {
   return <CloseButton slot="close" {...props} />;
@@ -113,13 +111,13 @@ export const AlertDialogCloseTrigger = (
 
 AlertDialogCloseTrigger.displayName = "AlertDialog.CloseTrigger";
 
-export type AlertDialogHeaderAlign = "start" | "center";
+type AlertDialogHeaderAlign = "start" | "center";
 
-export type AlertDialogHeaderProps = ComponentPropsWithoutRef<"header"> & {
+type AlertDialogHeaderProps = ComponentPropsWithoutRef<"header"> & {
   align?: AlertDialogHeaderAlign;
 };
 
-export const AlertDialogHeader = ({
+const AlertDialogHeader = ({
   align = "start",
   ...props
 }: AlertDialogHeaderProps): React.ReactElement => {
@@ -130,21 +128,19 @@ export const AlertDialogHeader = ({
 
 AlertDialogHeader.displayName = "AlertDialog.Header";
 
-export type AlertDialogIconProps = ComponentPropsWithoutRef<"span">;
+type AlertDialogIconProps = ComponentPropsWithoutRef<"span">;
 
-export const AlertDialogIcon = (
-  props: AlertDialogIconProps
-): React.ReactElement => {
+const AlertDialogIcon = (props: AlertDialogIconProps): React.ReactElement => {
   return <span aria-hidden {...props} data-tds="alert-dialog-icon" />;
 };
 
 AlertDialogIcon.displayName = "AlertDialog.Icon";
 
-export type AlertDialogHeadingProps = AriaHeadingProps & {
+type AlertDialogHeadingProps = AriaHeadingProps & {
   children: ReactNode;
 };
 
-export const AlertDialogHeading = (
+const AlertDialogHeading = (
   props: AlertDialogHeadingProps
 ): React.ReactElement => {
   return (
@@ -154,22 +150,50 @@ export const AlertDialogHeading = (
 
 AlertDialogHeading.displayName = "AlertDialog.Heading";
 
-export type AlertDialogBodyProps = ComponentPropsWithoutRef<"div">;
+type AlertDialogBodyProps = ComponentPropsWithoutRef<"div">;
 
-export const AlertDialogBody = (
-  props: AlertDialogBodyProps
-): React.ReactElement => {
+const AlertDialogBody = (props: AlertDialogBodyProps): React.ReactElement => {
   return <div {...props} data-tds="alert-dialog-body" />;
 };
 
 AlertDialogBody.displayName = "AlertDialog.Body";
 
-export type AlertDialogFooterProps = ComponentPropsWithoutRef<"footer">;
+type AlertDialogFooterProps = ComponentPropsWithoutRef<"footer">;
 
-export const AlertDialogFooter = (
+const AlertDialogFooter = (
   props: AlertDialogFooterProps
 ): React.ReactElement => {
   return <footer {...props} data-tds="alert-dialog-footer" />;
 };
 
 AlertDialogFooter.displayName = "AlertDialog.Footer";
+
+export {
+  AlertDialogRoot,
+  AlertDialogBackdrop,
+  AlertDialogContainer,
+  AlertDialogDialog,
+  AlertDialogCloseTrigger,
+  AlertDialogHeader,
+  AlertDialogIcon,
+  AlertDialogHeading,
+  AlertDialogBody,
+  AlertDialogFooter
+};
+export type {
+  AlertDialogProps,
+  AlertDialogBackdropVariant,
+  AlertDialogBackdropProps,
+  AlertDialogSize,
+  AlertDialogPlacement,
+  AlertDialogScroll,
+  AlertDialogContainerProps,
+  AlertDialogDialogProps,
+  AlertDialogCloseTriggerProps,
+  AlertDialogHeaderAlign,
+  AlertDialogHeaderProps,
+  AlertDialogIconProps,
+  AlertDialogHeadingProps,
+  AlertDialogBodyProps,
+  AlertDialogFooterProps
+};

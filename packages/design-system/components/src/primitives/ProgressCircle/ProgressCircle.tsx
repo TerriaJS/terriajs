@@ -17,16 +17,16 @@ const RADIUS = CENTER - STROKE_WIDTH / 2;
 const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
 
 // `current` follows the surrounding text color
-export type ProgressCircleColor =
+type ProgressCircleColor =
   | "accent"
   | "default"
   | "success"
   | "warning"
   | "danger"
   | "current";
-export type ProgressCircleSize = "sm" | "md" | "lg";
+type ProgressCircleSize = "sm" | "md" | "lg";
 
-export type ProgressCircleProps = {
+type ProgressCircleProps = {
   color?: ProgressCircleColor;
   size?: ProgressCircleSize;
 } & AriaProgressBarProps;
@@ -35,7 +35,7 @@ const ProgressCircleContext = createContext<ProgressBarRenderProps | null>(
   null
 );
 
-export const ProgressCircleRoot = ({
+const ProgressCircleRoot = ({
   color = "accent",
   size = "md",
   children,
@@ -59,30 +59,29 @@ export const ProgressCircleRoot = ({
 
 ProgressCircleRoot.displayName = "ProgressCircle";
 
-export type ProgressCircleTrackProps = ComponentPropsWithoutRef<"svg">;
+type ProgressCircleTrackProps = ComponentPropsWithoutRef<"svg">;
 
-export const ProgressCircleTrack = forwardRef<
-  SVGSVGElement,
-  ProgressCircleTrackProps
->(({ children, ...props }, ref) => {
-  return (
-    <svg
-      data-tds="progress-circle-track"
-      fill="none"
-      viewBox={`0 0 ${String(CENTER * 2)} ${String(CENTER * 2)}`}
-      {...props}
-      ref={ref}
-    >
-      {children}
-    </svg>
-  );
-});
+const ProgressCircleTrack = forwardRef<SVGSVGElement, ProgressCircleTrackProps>(
+  ({ children, ...props }, ref) => {
+    return (
+      <svg
+        data-tds="progress-circle-track"
+        fill="none"
+        viewBox={`0 0 ${String(CENTER * 2)} ${String(CENTER * 2)}`}
+        {...props}
+        ref={ref}
+      >
+        {children}
+      </svg>
+    );
+  }
+);
 
 ProgressCircleTrack.displayName = "ProgressCircle.Track";
 
-export type ProgressCircleTrackCircleProps = ComponentPropsWithoutRef<"circle">;
+type ProgressCircleTrackCircleProps = ComponentPropsWithoutRef<"circle">;
 
-export const ProgressCircleTrackCircle = forwardRef<
+const ProgressCircleTrackCircle = forwardRef<
   SVGCircleElement,
   ProgressCircleTrackCircleProps
 >((props, ref) => {
@@ -101,9 +100,9 @@ export const ProgressCircleTrackCircle = forwardRef<
 
 ProgressCircleTrackCircle.displayName = "ProgressCircle.TrackCircle";
 
-export type ProgressCircleFillCircleProps = ComponentPropsWithoutRef<"circle">;
+type ProgressCircleFillCircleProps = ComponentPropsWithoutRef<"circle">;
 
-export const ProgressCircleFillCircle = forwardRef<
+const ProgressCircleFillCircle = forwardRef<
   SVGCircleElement,
   ProgressCircleFillCircleProps
 >((props, ref) => {
@@ -133,3 +132,18 @@ export const ProgressCircleFillCircle = forwardRef<
 });
 
 ProgressCircleFillCircle.displayName = "ProgressCircle.FillCircle";
+
+export {
+  ProgressCircleRoot,
+  ProgressCircleTrack,
+  ProgressCircleTrackCircle,
+  ProgressCircleFillCircle
+};
+export type {
+  ProgressCircleColor,
+  ProgressCircleSize,
+  ProgressCircleProps,
+  ProgressCircleTrackProps,
+  ProgressCircleTrackCircleProps,
+  ProgressCircleFillCircleProps
+};

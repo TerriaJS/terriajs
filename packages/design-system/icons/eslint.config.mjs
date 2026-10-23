@@ -88,6 +88,7 @@ export default defineConfig(
       "import/no-namespace": "error",
       "import/no-deprecated": "warn",
       "import/first": "error",
+      "import/exports-last": "error",
       "import/no-mutable-exports": "error",
       "import/no-duplicates": "error",
       "import/newline-after-import": "error",

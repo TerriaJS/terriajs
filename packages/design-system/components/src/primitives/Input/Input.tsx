@@ -5,14 +5,14 @@ import {
 } from "react-aria-components/Input";
 import "./Input.css";
 
-export type InputVariant = "primary" | "secondary";
+type InputVariant = "primary" | "secondary";
 
-export type InputProps = AriaInputProps & {
+type InputProps = AriaInputProps & {
   variant?: InputVariant;
   fullWidth?: boolean;
 };
 
-export const Input = forwardRef<HTMLInputElement, InputProps>(
+const Input = forwardRef<HTMLInputElement, InputProps>(
   ({ children: _children, variant = "primary", fullWidth, ...props }, ref) => {
     return (
       <AriaInput
@@ -26,3 +26,6 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
   }
 );
 Input.displayName = "Input";
+
+export { Input };
+export type { InputVariant, InputProps };

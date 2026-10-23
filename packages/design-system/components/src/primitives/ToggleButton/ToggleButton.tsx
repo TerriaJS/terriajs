@@ -8,9 +8,9 @@ import "../Button/Button.css";
 import { ButtonGroupContext } from "../ButtonGroup/ButtonGroupContext";
 import "./ToggleButton.css";
 
-export type ToggleButtonVariant = "default" | "ghost";
+type ToggleButtonVariant = "default" | "ghost";
 
-export type ToggleButtonProps = AriaToggleButtonProps & {
+type ToggleButtonProps = AriaToggleButtonProps & {
   variant?: ToggleButtonVariant;
   size?: ButtonSize;
   isIconOnly?: boolean;
@@ -26,7 +26,7 @@ const BUTTON_VARIANTS = {
 
 // A button that stays on until it's pressed again. It's styled as a Button,
 // so it takes Button's sizes and states; when on, it's the soft accent
-export const ToggleButton = forwardRef<HTMLButtonElement, ToggleButtonProps>(
+const ToggleButton = forwardRef<HTMLButtonElement, ToggleButtonProps>(
   (
     {
       variant = "default",
@@ -59,3 +59,6 @@ export const ToggleButton = forwardRef<HTMLButtonElement, ToggleButtonProps>(
 );
 
 ToggleButton.displayName = "ToggleButton";
+
+export { ToggleButton };
+export type { ToggleButtonVariant, ToggleButtonProps };

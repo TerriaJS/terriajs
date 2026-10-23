@@ -6,9 +6,9 @@ import {
 } from "react-aria-components/Button";
 import "./CloseButton.css";
 
-export type CloseButtonProps = AriaButtonProps;
+type CloseButtonProps = AriaButtonProps;
 
-export const CloseButton = forwardRef<HTMLButtonElement, CloseButtonProps>(
+const CloseButton = forwardRef<HTMLButtonElement, CloseButtonProps>(
   ({ "aria-label": ariaLabel = "Close", children, ...props }, ref) => (
     <AriaButton
       ref={ref}
@@ -22,3 +22,6 @@ export const CloseButton = forwardRef<HTMLButtonElement, CloseButtonProps>(
 );
 
 CloseButton.displayName = "CloseButton";
+
+export { CloseButton };
+export type { CloseButtonProps };

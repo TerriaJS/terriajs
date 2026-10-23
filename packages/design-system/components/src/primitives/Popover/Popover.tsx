@@ -20,19 +20,17 @@ import { Pressable } from "react-aria-components/Pressable";
 import { ButtonGroupContext } from "../ButtonGroup/ButtonGroupContext";
 import "./Popover.css";
 
-export type PopoverProps = DialogTriggerProps;
+type PopoverProps = DialogTriggerProps;
 
-export const PopoverRoot = (props: PopoverProps): React.ReactElement => {
+const PopoverRoot = (props: PopoverProps): React.ReactElement => {
   return <DialogTrigger {...props} />;
 };
 
 PopoverRoot.displayName = "Popover";
 
-export type PopoverContentProps = AriaPopoverProps;
+type PopoverContentProps = AriaPopoverProps;
 
-export const PopoverContent = (
-  props: PopoverContentProps
-): React.ReactElement => {
+const PopoverContent = (props: PopoverContentProps): React.ReactElement => {
   return (
     <ButtonGroupContext.Provider value={null}>
       <AriaPopover {...props} data-tds="popover" />
@@ -42,19 +40,17 @@ export const PopoverContent = (
 
 PopoverContent.displayName = "Popover.Content";
 
-export type PopoverDialogProps = DialogProps;
+type PopoverDialogProps = DialogProps;
 
-export const PopoverDialog = (
-  props: PopoverDialogProps
-): React.ReactElement => {
+const PopoverDialog = (props: PopoverDialogProps): React.ReactElement => {
   return <Dialog {...props} data-tds="popover-dialog" />;
 };
 
 PopoverDialog.displayName = "Popover.Dialog";
 
-export type PopoverArrowProps = OverlayArrowProps;
+type PopoverArrowProps = OverlayArrowProps;
 
-export const PopoverArrow = ({
+const PopoverArrow = ({
   children,
   ...props
 }: PopoverArrowProps): React.ReactElement => {
@@ -71,22 +67,20 @@ export const PopoverArrow = ({
 
 PopoverArrow.displayName = "Popover.Arrow";
 
-export type PopoverHeadingProps = HeadingProps & { children: ReactNode };
+type PopoverHeadingProps = HeadingProps & { children: ReactNode };
 
-export const PopoverHeading = (
-  props: PopoverHeadingProps
-): React.ReactElement => {
+const PopoverHeading = (props: PopoverHeadingProps): React.ReactElement => {
   return <Heading slot="title" {...props} data-tds="popover-heading" />;
 };
 
 PopoverHeading.displayName = "Popover.Heading";
 
-export type PopoverTriggerProps = ComponentPropsWithoutRef<"div"> & {
+type PopoverTriggerProps = ComponentPropsWithoutRef<"div"> & {
   children: ReactNode;
 };
 
 // Lets content that isn't a button open the popover, like an icon or a chip
-export const PopoverTrigger = forwardRef<HTMLDivElement, PopoverTriggerProps>(
+const PopoverTrigger = forwardRef<HTMLDivElement, PopoverTriggerProps>(
   (props, ref) => {
     // Marked disabled, it looks it (Popover.css), so it doesn't open either
     const isDisabled =
@@ -100,3 +94,20 @@ export const PopoverTrigger = forwardRef<HTMLDivElement, PopoverTriggerProps>(
 );
 
 PopoverTrigger.displayName = "Popover.Trigger";
+
+export {
+  PopoverRoot,
+  PopoverContent,
+  PopoverDialog,
+  PopoverArrow,
+  PopoverHeading,
+  PopoverTrigger
+};
+export type {
+  PopoverProps,
+  PopoverContentProps,
+  PopoverDialogProps,
+  PopoverArrowProps,
+  PopoverHeadingProps,
+  PopoverTriggerProps
+};

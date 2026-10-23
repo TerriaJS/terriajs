@@ -3,7 +3,7 @@ import jsx from "@svgr/plugin-jsx";
 import type { IconStyle } from "./icons.ts";
 
 // chevron-down → ChevronDownIcon; filled variants are ChevronDownFilledIcon
-export const exportName = (name: string, style: IconStyle): string =>
+const exportName = (name: string, style: IconStyle): string =>
   `${name
     .split("-")
     .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
@@ -46,14 +46,14 @@ const config: Config = {
   template
 };
 
-export type IconFile = { name: string; svg: string };
+type IconFile = { name: string; svg: string };
 
 // An icon's component file
-export const renderIcon = async ({ name, svg }: IconFile): Promise<string> =>
+const renderIcon = async ({ name, svg }: IconFile): Promise<string> =>
   `${HEADER}\n${await transform(svg, config, { componentName: name })}`;
 
 // The icons folder's index, re-exporting every icon from its file
-export const renderIndex = (names: string[]): string =>
+const renderIndex = (names: string[]): string =>
   [
     HEADER,
     ...names.map((name) => `export { ${name} } from "./${name}";`),
@@ -64,7 +64,7 @@ const XMLNS = 'xmlns="http://www.w3.org/2000/svg"';
 
 // Every icon as a <symbol>, its id the icon's file name, for
 // <svg><use href="sprite.svg#map" /></svg>
-export const renderSprite = (icons: { id: string; svg: string }[]): string =>
+const renderSprite = (icons: { id: string; svg: string }[]): string =>
   `<svg ${XMLNS}>${icons
     .map(({ id, svg }) =>
       svg
@@ -76,13 +76,23 @@ export const renderSprite = (icons: { id: string; svg: string }[]): string =>
     .join("")}</svg>\n`;
 
 // map-pin → map-pin; its filled variant → map-pin-filled
-export const spriteId = (name: string, style: IconStyle): string =>
+const spriteId = (name: string, style: IconStyle): string =>
   style === "filled" ? `${name}-filled` : name;
 
 // The sprite's symbol ids, as the type SpriteIcon's name takes
-export const renderNames = (ids: string[]): string =>
+const renderNames = (ids: string[]): string =>
   [
     HEADER,
     `export type IconName = ${ids.map((id) => JSON.stringify(id)).join(" | ")};`,
     ""
   ].join("\n");
+
+export {
+  exportName,
+  renderIcon,
+  renderIndex,
+  renderSprite,
+  spriteId,
+  renderNames
+};
+export type { IconFile };

@@ -4,14 +4,14 @@ import {
 } from "react-aria-components/RadioGroup";
 import "../CheckboxGroup/CheckboxGroup.css";
 
-export type RadioGroupVariant = "primary" | "secondary";
+type RadioGroupVariant = "primary" | "secondary";
 
-export type RadioGroupProps = AriaRadioGroupProps & {
+type RadioGroupProps = AriaRadioGroupProps & {
   variant?: RadioGroupVariant;
 };
 
 // Stacks a Label, a Description, its Radios and a FieldError
-export const RadioGroup = ({
+const RadioGroup = ({
   orientation = "vertical",
   variant = "primary",
   ...props
@@ -28,3 +28,6 @@ export const RadioGroup = ({
 };
 
 RadioGroup.displayName = "RadioGroup";
+
+export { RadioGroup };
+export type { RadioGroupVariant, RadioGroupProps };

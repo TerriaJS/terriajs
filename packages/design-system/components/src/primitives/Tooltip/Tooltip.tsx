@@ -39,14 +39,14 @@ const AnimationScope = ({
   );
 };
 
-export type TooltipRootProps = TooltipTriggerComponentProps & {
+type TooltipRootProps = TooltipTriggerComponentProps & {
   /** Skip the fade when one tooltip replaces another */
   shouldSkipAnimation?: boolean;
 };
 
 // Shows Tooltip.Content while its trigger, a Button or Tooltip.Trigger, is
 // hovered or has keyboard focus
-export const TooltipRoot = ({
+const TooltipRoot = ({
   children,
   closeDelay,
   delay,
@@ -73,7 +73,7 @@ export const TooltipRoot = ({
 
 TooltipRoot.displayName = "Tooltip";
 
-export type TooltipContentProps = AriaTooltipProps & {
+type TooltipContentProps = AriaTooltipProps & {
   /** Dark surface, for tooltips over light content */
   isInverse?: boolean;
   /** Leaves room for a Tooltip.Arrow */
@@ -84,7 +84,7 @@ export type TooltipContentProps = AriaTooltipProps & {
 // side, (28px - 10px) / 2, and on taller ones keeps its corners under the curve
 const ARROW_BOUNDARY_OFFSET = 9;
 
-export const TooltipContent = ({
+const TooltipContent = ({
   isInverse = false,
   showArrow = false,
   offset,
@@ -104,9 +104,9 @@ export const TooltipContent = ({
 
 TooltipContent.displayName = "Tooltip.Content";
 
-export type TooltipArrowProps = OverlayArrowProps;
+type TooltipArrowProps = OverlayArrowProps;
 
-export const TooltipArrow = ({
+const TooltipArrow = ({
   children,
   ...props
 }: TooltipArrowProps): React.ReactElement => {
@@ -119,14 +119,14 @@ export const TooltipArrow = ({
 
 TooltipArrow.displayName = "Tooltip.Arrow";
 
-export type TooltipTriggerProps = ComponentPropsWithoutRef<"div"> & {
+type TooltipTriggerProps = ComponentPropsWithoutRef<"div"> & {
   children: ReactNode;
 };
 
 // Lets content that isn't a button show the tooltip, like an icon or a badge.
 // useFocusable rather than <Focusable>: the component's dev check warns
 // wrongly when the trigger sits in an inert subtree, like behind a modal
-export const TooltipTrigger = forwardRef<HTMLDivElement, TooltipTriggerProps>(
+const TooltipTrigger = forwardRef<HTMLDivElement, TooltipTriggerProps>(
   (props, forwardedRef) => {
     const triggerRef = useObjectRef(forwardedRef);
     const { focusableProps } = useFocusable({}, triggerRef);
@@ -143,7 +143,7 @@ export const TooltipTrigger = forwardRef<HTMLDivElement, TooltipTriggerProps>(
 
 TooltipTrigger.displayName = "Tooltip.Trigger";
 
-export type TooltipProps = Omit<TooltipRootProps, "children"> &
+type TooltipProps = Omit<TooltipRootProps, "children"> &
   Pick<
     TooltipContentProps,
     "placement" | "offset" | "crossOffset" | "isInverse" | "showArrow"
@@ -154,7 +154,7 @@ export type TooltipProps = Omit<TooltipRootProps, "children"> &
   };
 
 // The everyday tooltip: its content, with an arrow pointing at the trigger
-export const Tooltip = ({
+const Tooltip = ({
   children,
   content,
   placement,
@@ -179,4 +179,13 @@ export const Tooltip = ({
       </TooltipContent>
     </TooltipRoot>
   );
+};
+
+export { TooltipRoot, TooltipContent, TooltipArrow, TooltipTrigger, Tooltip };
+export type {
+  TooltipRootProps,
+  TooltipContentProps,
+  TooltipArrowProps,
+  TooltipTriggerProps,
+  TooltipProps
 };

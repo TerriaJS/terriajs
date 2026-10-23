@@ -16,9 +16,9 @@ import { ItemLabelSlot } from "./ItemLabelSlot";
 import { ListBoxItemContext } from "./ListBoxItemContext";
 import "./ListBox.css";
 
-export type ListBoxProps<T extends object> = AriaListBoxProps<T>;
+type ListBoxProps<T extends object> = AriaListBoxProps<T>;
 
-export const ListBoxRoot = <T extends object>(
+const ListBoxRoot = <T extends object>(
   props: ListBoxProps<T>
 ): React.ReactElement => {
   return <AriaListBox {...props} data-tds="list-box" />;
@@ -26,13 +26,13 @@ export const ListBoxRoot = <T extends object>(
 
 ListBoxRoot.displayName = "ListBox";
 
-export type ListBoxItemVariant = "default" | "danger";
+type ListBoxItemVariant = "default" | "danger";
 
-export type ListBoxItemProps<T extends object> = AriaListBoxItemProps<T> & {
+type ListBoxItemProps<T extends object> = AriaListBoxItemProps<T> & {
   variant?: ListBoxItemVariant;
 };
 
-export const ListBoxItem = <T extends object>({
+const ListBoxItem = <T extends object>({
   variant = "default",
   children,
   textValue,
@@ -62,9 +62,9 @@ export const ListBoxItem = <T extends object>({
 
 ListBoxItem.displayName = "ListBox.Item";
 
-export type ListBoxItemIndicatorType = "checkmark" | "dot";
+type ListBoxItemIndicatorType = "checkmark" | "dot";
 
-export type ListBoxItemIndicatorProps = Omit<
+type ListBoxItemIndicatorProps = Omit<
   ComponentPropsWithoutRef<"span">,
   "children"
 > & {
@@ -76,7 +76,7 @@ export type ListBoxItemIndicatorProps = Omit<
 
 // Shows whether its item is selected: a checkmark or a dot, unless children
 // replace it
-export const ListBoxItemIndicator = forwardRef<
+const ListBoxItemIndicator = forwardRef<
   HTMLSpanElement,
   ListBoxItemIndicatorProps
 >(({ type = "checkmark", children, ...props }, ref) => {
@@ -118,12 +118,22 @@ export const ListBoxItemIndicator = forwardRef<
 
 ListBoxItemIndicator.displayName = "ListBox.ItemIndicator";
 
-export type ListBoxSectionProps<T extends object> = AriaListBoxSectionProps<T>;
+type ListBoxSectionProps<T extends object> = AriaListBoxSectionProps<T>;
 
-export const ListBoxSection = <T extends object>(
+const ListBoxSection = <T extends object>(
   props: ListBoxSectionProps<T>
 ): React.ReactElement => {
   return <AriaListBoxSection {...props} data-tds="list-box-section" />;
 };
 
 ListBoxSection.displayName = "ListBox.Section";
+
+export { ListBoxRoot, ListBoxItem, ListBoxItemIndicator, ListBoxSection };
+export type {
+  ListBoxProps,
+  ListBoxItemVariant,
+  ListBoxItemProps,
+  ListBoxItemIndicatorType,
+  ListBoxItemIndicatorProps,
+  ListBoxSectionProps
+};

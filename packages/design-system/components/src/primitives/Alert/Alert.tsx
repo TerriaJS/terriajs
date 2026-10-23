@@ -13,12 +13,7 @@ import {
 import type { DOMRenderProps } from "react-aria-components";
 import "./Alert.css";
 
-export type AlertStatus =
-  | "default"
-  | "accent"
-  | "success"
-  | "warning"
-  | "danger";
+type AlertStatus = "default" | "accent" | "success" | "warning" | "danger";
 
 const AlertContext = createContext<AlertStatus>("default");
 
@@ -37,14 +32,14 @@ type PartProps<E extends "div" | "p" | "span"> = ComponentPropsWithoutRef<E> &
   DOMRenderProps<E, undefined>;
 
 // Required: an alert with nothing in it is a mistake
-export type AlertProps = PartProps<"div"> & {
+type AlertProps = PartProps<"div"> & {
   children: ReactNode;
   status?: AlertStatus;
 };
 
 // An inline, persistent message tied to content. Pass role="alert" or
 // role="status" when it appears in response to something
-export const AlertRoot = forwardRef<HTMLDivElement, AlertProps>(
+const AlertRoot = forwardRef<HTMLDivElement, AlertProps>(
   ({ status = "default", render, ...props }, ref) => {
     const rootProps = {
       ...props,
@@ -63,10 +58,10 @@ export const AlertRoot = forwardRef<HTMLDivElement, AlertProps>(
 
 AlertRoot.displayName = "Alert";
 
-export type AlertIndicatorProps = PartProps<"div">;
+type AlertIndicatorProps = PartProps<"div">;
 
 // The status icon, unless children replace it
-export const AlertIndicator = forwardRef<HTMLDivElement, AlertIndicatorProps>(
+const AlertIndicator = forwardRef<HTMLDivElement, AlertIndicatorProps>(
   ({ children, render, ...props }, ref) => {
     const Icon = STATUS_ICONS[useContext(AlertContext)];
     const icon = children ?? <Icon />;
@@ -87,9 +82,9 @@ export const AlertIndicator = forwardRef<HTMLDivElement, AlertIndicatorProps>(
 
 AlertIndicator.displayName = "Alert.Indicator";
 
-export type AlertContentProps = PartProps<"div"> & { children: ReactNode };
+type AlertContentProps = PartProps<"div"> & { children: ReactNode };
 
-export const AlertContent = forwardRef<HTMLDivElement, AlertContentProps>(
+const AlertContent = forwardRef<HTMLDivElement, AlertContentProps>(
   ({ render, ...props }, ref) => {
     const contentProps = { ...props, ref, "data-tds": "alert-content" };
     return render ? render(contentProps, undefined) : <div {...contentProps} />;
@@ -98,9 +93,9 @@ export const AlertContent = forwardRef<HTMLDivElement, AlertContentProps>(
 
 AlertContent.displayName = "Alert.Content";
 
-export type AlertTitleProps = PartProps<"p"> & { children: ReactNode };
+type AlertTitleProps = PartProps<"p"> & { children: ReactNode };
 
-export const AlertTitle = forwardRef<HTMLParagraphElement, AlertTitleProps>(
+const AlertTitle = forwardRef<HTMLParagraphElement, AlertTitleProps>(
   ({ render, ...props }, ref) => {
     const titleProps = { ...props, ref, "data-tds": "alert-title" };
     return render ? render(titleProps, undefined) : <p {...titleProps} />;
@@ -109,18 +104,33 @@ export const AlertTitle = forwardRef<HTMLParagraphElement, AlertTitleProps>(
 
 AlertTitle.displayName = "Alert.Title";
 
-export type AlertDescriptionProps = PartProps<"span">;
+type AlertDescriptionProps = PartProps<"span">;
 
-export const AlertDescription = forwardRef<
-  HTMLSpanElement,
-  AlertDescriptionProps
->(({ render, ...props }, ref) => {
-  const descriptionProps = { ...props, ref, "data-tds": "alert-description" };
-  return render ? (
-    render(descriptionProps, undefined)
-  ) : (
-    <span {...descriptionProps} />
-  );
-});
+const AlertDescription = forwardRef<HTMLSpanElement, AlertDescriptionProps>(
+  ({ render, ...props }, ref) => {
+    const descriptionProps = { ...props, ref, "data-tds": "alert-description" };
+    return render ? (
+      render(descriptionProps, undefined)
+    ) : (
+      <span {...descriptionProps} />
+    );
+  }
+);
 
 AlertDescription.displayName = "Alert.Description";
+
+export {
+  AlertRoot,
+  AlertIndicator,
+  AlertContent,
+  AlertTitle,
+  AlertDescription
+};
+export type {
+  AlertStatus,
+  AlertProps,
+  AlertIndicatorProps,
+  AlertContentProps,
+  AlertTitleProps,
+  AlertDescriptionProps
+};

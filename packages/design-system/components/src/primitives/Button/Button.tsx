@@ -8,7 +8,7 @@ import "./Button.css";
 import { ButtonGroupContext } from "../ButtonGroup/ButtonGroupContext";
 import { ProgressCircle } from "../ProgressCircle";
 
-export type ButtonVariant =
+type ButtonVariant =
   | "primary"
   | "secondary"
   | "tertiary"
@@ -16,9 +16,9 @@ export type ButtonVariant =
   | "ghost"
   | "danger"
   | "danger-soft";
-export type ButtonSize = "sm" | "md" | "lg";
+type ButtonSize = "sm" | "md" | "lg";
 
-export type ButtonProps = {
+type ButtonProps = {
   variant?: ButtonVariant;
   size?: ButtonSize;
   isIconOnly?: boolean;
@@ -26,7 +26,7 @@ export type ButtonProps = {
   pendingLabel?: string;
 } & AriaButtonProps;
 
-export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
+const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   (
     {
       variant: variantProp,
@@ -88,3 +88,6 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 );
 
 Button.displayName = "Button";
+
+export { Button };
+export type { ButtonVariant, ButtonSize, ButtonProps };

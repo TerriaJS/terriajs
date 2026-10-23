@@ -11,15 +11,10 @@ import {
 } from "react-aria-components/ProgressBar";
 import "./ProgressBar.css";
 
-export type ProgressBarColor =
-  | "accent"
-  | "default"
-  | "success"
-  | "warning"
-  | "danger";
-export type ProgressBarSize = "sm" | "md" | "lg";
+type ProgressBarColor = "accent" | "default" | "success" | "warning" | "danger";
+type ProgressBarSize = "sm" | "md" | "lg";
 
-export type ProgressBarProps = {
+type ProgressBarProps = {
   color?: ProgressBarColor;
   size?: ProgressBarSize;
 } & AriaProgressBarProps;
@@ -27,7 +22,7 @@ export type ProgressBarProps = {
 const ProgressBarContext = createContext<ProgressBarRenderProps | null>(null);
 
 // A Label names it; its parts read the value from here
-export const ProgressBarRoot = ({
+const ProgressBarRoot = ({
   color = "accent",
   size = "md",
   children,
@@ -51,40 +46,38 @@ export const ProgressBarRoot = ({
 
 ProgressBarRoot.displayName = "ProgressBar";
 
-export type ProgressBarOutputProps = ComponentPropsWithoutRef<"span">;
+type ProgressBarOutputProps = ComponentPropsWithoutRef<"span">;
 
 // The value as text, like 60%; empty while indeterminate
-export const ProgressBarOutput = forwardRef<
-  HTMLSpanElement,
-  ProgressBarOutputProps
->(({ children, ...props }, ref) => {
-  const valueText = useContext(ProgressBarContext)?.valueText;
+const ProgressBarOutput = forwardRef<HTMLSpanElement, ProgressBarOutputProps>(
+  ({ children, ...props }, ref) => {
+    const valueText = useContext(ProgressBarContext)?.valueText;
 
-  return (
-    <span {...props} ref={ref} data-tds="progress-bar-output">
-      {children ?? valueText}
-    </span>
-  );
-});
+    return (
+      <span {...props} ref={ref} data-tds="progress-bar-output">
+        {children ?? valueText}
+      </span>
+    );
+  }
+);
 
 ProgressBarOutput.displayName = "ProgressBar.Output";
 
-export type ProgressBarTrackProps = ComponentPropsWithoutRef<"div">;
+type ProgressBarTrackProps = ComponentPropsWithoutRef<"div">;
 
-export const ProgressBarTrack = forwardRef<
-  HTMLDivElement,
-  ProgressBarTrackProps
->((props, ref) => {
-  return <div {...props} ref={ref} data-tds="progress-bar-track" />;
-});
+const ProgressBarTrack = forwardRef<HTMLDivElement, ProgressBarTrackProps>(
+  (props, ref) => {
+    return <div {...props} ref={ref} data-tds="progress-bar-track" />;
+  }
+);
 
 ProgressBarTrack.displayName = "ProgressBar.Track";
 
-export type ProgressBarFillProps = ComponentPropsWithoutRef<"div">;
+type ProgressBarFillProps = ComponentPropsWithoutRef<"div">;
 
 // As wide as the value; while indeterminate a part of the track that slides
 // along it
-export const ProgressBarFill = forwardRef<HTMLDivElement, ProgressBarFillProps>(
+const ProgressBarFill = forwardRef<HTMLDivElement, ProgressBarFillProps>(
   ({ style, ...props }, ref) => {
     const state = useContext(ProgressBarContext);
     const isIndeterminate = state?.isIndeterminate ?? false;
@@ -105,3 +98,18 @@ export const ProgressBarFill = forwardRef<HTMLDivElement, ProgressBarFillProps>(
 );
 
 ProgressBarFill.displayName = "ProgressBar.Fill";
+
+export {
+  ProgressBarRoot,
+  ProgressBarOutput,
+  ProgressBarTrack,
+  ProgressBarFill
+};
+export type {
+  ProgressBarColor,
+  ProgressBarSize,
+  ProgressBarProps,
+  ProgressBarOutputProps,
+  ProgressBarTrackProps,
+  ProgressBarFillProps
+};

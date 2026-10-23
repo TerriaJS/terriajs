@@ -6,9 +6,9 @@ import {
 import type { DOMRenderProps } from "react-aria-components";
 import "./Chip.css";
 
-export type ChipColor = "default" | "accent" | "success" | "warning" | "danger";
-export type ChipVariant = "primary" | "secondary" | "tertiary" | "soft";
-export type ChipSize = "sm" | "md" | "lg";
+type ChipColor = "default" | "accent" | "success" | "warning" | "danger";
+type ChipVariant = "primary" | "secondary" | "tertiary" | "soft";
+type ChipSize = "sm" | "md" | "lg";
 
 // Like react-aria components, each part takes `render` to swap in a custom
 // element. Parts use forwardRef: React 18 doesn't pass `ref` to plain function
@@ -17,14 +17,14 @@ export type ChipSize = "sm" | "md" | "lg";
 type SpanProps = Omit<ComponentPropsWithoutRef<"span">, "color"> &
   DOMRenderProps<"span", undefined>;
 
-export type ChipProps = SpanProps & {
+type ChipProps = SpanProps & {
   color?: ChipColor;
   variant?: ChipVariant;
   size?: ChipSize;
 };
 
 // A compact label for a category, status or attribute
-export const ChipRoot = forwardRef<HTMLSpanElement, ChipProps>(
+const ChipRoot = forwardRef<HTMLSpanElement, ChipProps>(
   (
     {
       color = "default",
@@ -62,9 +62,9 @@ export const ChipRoot = forwardRef<HTMLSpanElement, ChipProps>(
 
 ChipRoot.displayName = "Chip";
 
-export type ChipLabelProps = SpanProps & { children: ReactNode };
+type ChipLabelProps = SpanProps & { children: ReactNode };
 
-export const ChipLabel = forwardRef<HTMLSpanElement, ChipLabelProps>(
+const ChipLabel = forwardRef<HTMLSpanElement, ChipLabelProps>(
   ({ render, ...props }, ref) => {
     const labelProps = { ...props, ref, "data-tds": "chip-label" };
     return render ? render(labelProps, undefined) : <span {...labelProps} />;
@@ -72,3 +72,6 @@ export const ChipLabel = forwardRef<HTMLSpanElement, ChipLabelProps>(
 );
 
 ChipLabel.displayName = "Chip.Label";
+
+export { ChipRoot, ChipLabel };
+export type { ChipColor, ChipVariant, ChipSize, ChipProps, ChipLabelProps };

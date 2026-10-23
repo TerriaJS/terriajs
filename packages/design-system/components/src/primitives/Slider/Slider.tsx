@@ -18,9 +18,9 @@ import { TooltipArrow, TooltipContent } from "../Tooltip";
 import "./Slider.css";
 
 // Lays out a Label, Slider.Output and Slider.Track
-export type SliderRootProps = AriaSliderProps;
+type SliderRootProps = AriaSliderProps;
 
-export const SliderRoot = ({
+const SliderRoot = ({
   orientation = "horizontal",
   ...props
 }: SliderRootProps): React.ReactElement => {
@@ -29,10 +29,10 @@ export const SliderRoot = ({
 
 SliderRoot.displayName = "Slider";
 
-export type SliderOutputProps = AriaSliderOutputProps;
+type SliderOutputProps = AriaSliderOutputProps;
 
 // The current value, or a range's two values, unless children format it
-export const SliderOutput = ({
+const SliderOutput = ({
   children,
   ...props
 }: SliderOutputProps): React.ReactElement => {
@@ -72,21 +72,21 @@ const getFillRange = (
   return { start: Math.min(from, to), end: Math.max(from, to) };
 };
 
-export type SliderTrackProps = AriaSliderTrackProps;
+type SliderTrackProps = AriaSliderTrackProps;
 
 // The bar. It's exactly the range values map onto; its rounded ends, where
 // the thumbs sit at the extremes, are drawn outside it
-export const SliderTrack = (props: SliderTrackProps): React.ReactElement => {
+const SliderTrack = (props: SliderTrackProps): React.ReactElement => {
   return <AriaSliderTrack {...props} data-tds="slider-track" />;
 };
 
 SliderTrack.displayName = "Slider.Track";
 
-export type SliderFillProps = AriaSliderFillProps;
+type SliderFillProps = AriaSliderFillProps;
 
 // From the offset to the thumb, or between a range's two thumbs. It also
 // fills the track's rounded ends when it reaches them
-export const SliderFill = (props: SliderFillProps): React.ReactElement => {
+const SliderFill = (props: SliderFillProps): React.ReactElement => {
   const state = useContext(SliderStateContext);
   const range = state ? getFillRange(state, props.offset) : undefined;
   const start = range && state ? state.getValuePercent(range.start) : 0;
@@ -105,12 +105,12 @@ export const SliderFill = (props: SliderFillProps): React.ReactElement => {
 SliderFill.displayName = "Slider.Fill";
 
 // A dot at every step value, drawn lighter where the fill covers it
-export type SliderTicksProps = {
+type SliderTicksProps = {
   /** The Fill's offset, so the ticks it covers are drawn lighter */
   fillOffset?: number;
 };
 
-export const SliderTicks = ({
+const SliderTicks = ({
   fillOffset
 }: SliderTicksProps): React.ReactElement | null => {
   const state = useContext(SliderStateContext);
@@ -150,16 +150,16 @@ export const SliderTicks = ({
 
 SliderTicks.displayName = "Slider.Ticks";
 
-export type SliderMark = number | { value: number; label: ReactNode };
+type SliderMark = number | { value: number; label: ReactNode };
 
-export type SliderMarksProps = {
+type SliderMarksProps = {
   /** Values to label, in the slider's format unless given a label */
   marks: readonly SliderMark[];
 };
 
 // Labels under the track, each centred on its value. Hidden from assistive
 // tech, which already hears the value through the thumb
-export const SliderMarks = ({
+const SliderMarks = ({
   marks
 }: SliderMarksProps): React.ReactElement | null => {
   const state = useContext(SliderStateContext);
@@ -196,9 +196,9 @@ export const SliderMarks = ({
 
 SliderMarks.displayName = "Slider.Marks";
 
-export type SliderThumbProps = AriaSliderThumbProps;
+type SliderThumbProps = AriaSliderThumbProps;
 
-export const SliderThumb = forwardRef<HTMLDivElement, SliderThumbProps>(
+const SliderThumb = forwardRef<HTMLDivElement, SliderThumbProps>(
   (props, ref) => {
     return <AriaSliderThumb {...props} ref={ref} data-tds="slider-thumb" />;
   }
@@ -206,12 +206,12 @@ export const SliderThumb = forwardRef<HTMLDivElement, SliderThumbProps>(
 
 SliderThumb.displayName = "Slider.Thumb";
 
-export type SliderTooltipContent = (thumb: {
+type SliderTooltipContent = (thumb: {
   index: number;
   value: number;
 }) => ReactNode;
 
-export type SliderProps = Omit<SliderRootProps, "children"> & {
+type SliderProps = Omit<SliderRootProps, "children"> & {
   label?: ReactNode;
   /** Shows the value opposite the label */
   showValue?: boolean;
@@ -265,7 +265,7 @@ const Thumb = ({
 };
 
 // The everyday slider: a label, its value, and a thumb for each value
-export const Slider = ({
+const Slider = ({
   label,
   showValue = true,
   showSteps = false,
@@ -296,4 +296,27 @@ export const Slider = ({
       {marks && <SliderMarks marks={marks} />}
     </SliderRoot>
   );
+};
+
+export {
+  SliderRoot,
+  SliderOutput,
+  SliderTrack,
+  SliderFill,
+  SliderTicks,
+  SliderMarks,
+  SliderThumb,
+  Slider
+};
+export type {
+  SliderRootProps,
+  SliderOutputProps,
+  SliderTrackProps,
+  SliderFillProps,
+  SliderTicksProps,
+  SliderMark,
+  SliderMarksProps,
+  SliderThumbProps,
+  SliderTooltipContent,
+  SliderProps
 };

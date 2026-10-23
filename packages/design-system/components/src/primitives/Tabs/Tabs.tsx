@@ -34,12 +34,12 @@ import {
 } from "react-aria-components/Tabs";
 import "./Tabs.css";
 
-export type TabsVariant = "primary" | "secondary";
+type TabsVariant = "primary" | "secondary";
 
 // Tabs.List lays out its scroll arrows by the root's orientation
 const VerticalContext = createContext(false);
 
-export type TabsProps = AriaTabsProps & {
+type TabsProps = AriaTabsProps & {
   /** primary: tabs in a pill; secondary: tabs on an underline */
   variant?: TabsVariant;
   /** Stretches the tab list to its container, sharing the width equally */
@@ -47,7 +47,7 @@ export type TabsProps = AriaTabsProps & {
 };
 
 // Holds a Tabs.List and a Tabs.Panel for each tab
-export const TabsRoot = ({
+const TabsRoot = ({
   variant = "primary",
   fullWidth = false,
   orientation = "horizontal",
@@ -71,7 +71,7 @@ export const TabsRoot = ({
 
 TabsRoot.displayName = "Tabs";
 
-export type TabsListProps<T extends object = object> = AriaTabListProps<T>;
+type TabsListProps<T extends object = object> = AriaTabListProps<T>;
 
 // Whether there's more to scroll to before and after what's in view
 const useScrollEdges = (
@@ -119,7 +119,7 @@ const useScrollEdges = (
 // The pill, or the underline, holding the tabs. When they don't fit, the
 // list scrolls, its ends fade, and arrows scroll it a page at a time. The
 // arrows sit beside the list, not in it: a tablist holds only tabs
-export const TabsList = <T extends object>(
+const TabsList = <T extends object>(
   props: TabsListProps<T>
 ): React.ReactElement => {
   const vertical = useContext(VerticalContext);
@@ -182,7 +182,7 @@ export const TabsList = <T extends object>(
 
 TabsList.displayName = "Tabs.List";
 
-export type TabsTabProps = AriaTabProps;
+type TabsTabProps = AriaTabProps;
 
 // A plain-text label gets a hidden semibold copy that reserves the width it
 // takes once selected, so selecting doesn't shift the tabs
@@ -201,10 +201,7 @@ const reserveLabelWidth = (children: ReactNode): ReactNode =>
     )
   );
 
-export const TabsTab = ({
-  children,
-  ...props
-}: TabsTabProps): React.ReactElement => (
+const TabsTab = ({ children, ...props }: TabsTabProps): React.ReactElement => (
   <AriaTab {...props} data-tds="tabs-tab">
     {composeRenderProps(children, reserveLabelWidth)}
   </AriaTab>
@@ -212,13 +209,11 @@ export const TabsTab = ({
 
 TabsTab.displayName = "Tabs.Tab";
 
-export type TabsIndicatorProps = SelectionIndicatorProps;
+type TabsIndicatorProps = SelectionIndicatorProps;
 
 // Marks the selected tab, and slides to a newly selected one. Put one in each
 // Tabs.Tab; only the selected tab's shows
-export const TabsIndicator = (
-  props: TabsIndicatorProps
-): React.ReactElement => {
+const TabsIndicator = (props: TabsIndicatorProps): React.ReactElement => {
   return <SelectionIndicator {...props} data-tds="tabs-indicator" />;
 };
 
@@ -227,10 +222,10 @@ TabsIndicator.displayName = "Tabs.Indicator";
 type SpanProps = ComponentPropsWithoutRef<"span"> &
   DOMRenderProps<"span", undefined>;
 
-export type TabsSeparatorProps = SpanProps;
+type TabsSeparatorProps = SpanProps;
 
 // A divider at a tab's start, hidden beside the selected tab
-export const TabsSeparator = forwardRef<HTMLSpanElement, TabsSeparatorProps>(
+const TabsSeparator = forwardRef<HTMLSpanElement, TabsSeparatorProps>(
   ({ render, ...props }, ref) => {
     const separatorProps = {
       "aria-hidden": true,
@@ -249,10 +244,21 @@ export const TabsSeparator = forwardRef<HTMLSpanElement, TabsSeparatorProps>(
 
 TabsSeparator.displayName = "Tabs.Separator";
 
-export type TabsPanelProps = AriaTabPanelProps;
+type TabsPanelProps = AriaTabPanelProps;
 
-export const TabsPanel = (props: TabsPanelProps): React.ReactElement => {
+const TabsPanel = (props: TabsPanelProps): React.ReactElement => {
   return <AriaTabPanel {...props} data-tds="tabs-panel" />;
 };
 
 TabsPanel.displayName = "Tabs.Panel";
+
+export { TabsRoot, TabsList, TabsTab, TabsIndicator, TabsSeparator, TabsPanel };
+export type {
+  TabsVariant,
+  TabsProps,
+  TabsListProps,
+  TabsTabProps,
+  TabsIndicatorProps,
+  TabsSeparatorProps,
+  TabsPanelProps
+};

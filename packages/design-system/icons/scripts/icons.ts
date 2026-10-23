@@ -1,23 +1,23 @@
 import { optimize } from "svgo";
 
 // The parts of a Figma REST API node the icon search reads
-export type FigmaNode = {
+type FigmaNode = {
   id: string;
   name: string;
   type: string;
   children?: FigmaNode[];
 };
 
-export type IconStyle = "regular" | "filled";
+type IconStyle = "regular" | "filled";
 
-export type Icon = { id: string; name: string; style: IconStyle };
+type Icon = { id: string; name: string; style: IconStyle };
 
 const PREFIX = "terria-icons/";
 const VARIANT = /^style=(regular|filled)$/;
 
 // Every icon component under a node: a component named terria-icons/<name>,
 // or a style=regular or style=filled component in a terria-icons/<name> frame
-export const findIcons = (node: FigmaNode, group?: string): Icon[] => {
+const findIcons = (node: FigmaNode, group?: string): Icon[] => {
   if (node.type === "COMPONENT") {
     if (node.name.startsWith(PREFIX)) {
       return [
@@ -42,7 +42,7 @@ const COLOR = /\b(?:fill|stroke)="([^"]+)"/g;
 // An exported icon, ready to commit: drawn in currentColor so it takes the
 // text colour, sized by its viewBox only, and minified. Rejects what
 // currentColor or the 24px grid can't represent
-export const normalizeSvg = (name: string, svg: string): string => {
+const normalizeSvg = (name: string, svg: string): string => {
   const viewBox = /viewBox="([^"]+)"/.exec(svg)?.[1];
   if (viewBox !== VIEW_BOX) {
     throw new Error(`${name}: viewBox is ${String(viewBox)}, not ${VIEW_BOX}`);
@@ -70,12 +70,12 @@ export const normalizeSvg = (name: string, svg: string): string => {
   }).data;
 };
 
-export type IconFile = { id: string; path: string; svg: string };
+type IconFile = { id: string; path: string; svg: string };
 
 // One file per path. Figma can hold the same icon twice; that's fine when
 // they're drawn the same, and an error when two different icons would
 // overwrite each other
-export const resolveIcons = (files: IconFile[]): IconFile[] => {
+const resolveIcons = (files: IconFile[]): IconFile[] => {
   const byPath = new Map<string, IconFile[]>();
   for (const file of files) {
     byPath.set(file.path, [...(byPath.get(file.path) ?? []), file]);
@@ -93,3 +93,6 @@ export const resolveIcons = (files: IconFile[]): IconFile[] => {
     return first;
   });
 };
+
+export { findIcons, normalizeSvg, resolveIcons };
+export type { FigmaNode, IconStyle, Icon, IconFile };

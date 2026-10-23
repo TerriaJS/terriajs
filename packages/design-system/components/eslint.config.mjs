@@ -87,6 +87,7 @@ export default defineConfig(
       "import/no-namespace": "error",
       "import/no-deprecated": "warn",
       "import/first": "error",
+      "import/exports-last": "error",
       "import/no-mutable-exports": "error",
       "import/no-duplicates": "error",
       "import/newline-after-import": "error",
@@ -150,7 +151,8 @@ export default defineConfig(
     // @ts-expect-error: storybook eslint types are broken
     extends: [storybook.configs["flat/recommended"]],
     rules: {
-      "no-restricted-exports": "off"
+      "no-restricted-exports": "off",
+      "import/exports-last": "off"
     }
   },
   {

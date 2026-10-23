@@ -4,13 +4,13 @@ import {
 } from "react-aria-components/Separator";
 import "./Separator.css";
 
-export type SeparatorVariant = "primary" | "secondary" | "tertiary";
+type SeparatorVariant = "primary" | "secondary" | "tertiary";
 
-export type SeparatorProps = AriaSeparatorProps & {
+type SeparatorProps = AriaSeparatorProps & {
   variant?: SeparatorVariant;
 };
 
-export const Separator = ({
+const Separator = ({
   orientation = "horizontal",
   variant = "primary",
   ...props
@@ -27,3 +27,6 @@ export const Separator = ({
 };
 
 Separator.displayName = "Separator";
+
+export { Separator };
+export type { SeparatorVariant, SeparatorProps };

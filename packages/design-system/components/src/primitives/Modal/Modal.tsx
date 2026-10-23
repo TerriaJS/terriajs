@@ -18,22 +18,22 @@ import { ButtonGroupContext } from "../ButtonGroup/ButtonGroupContext";
 import { CloseButton, type CloseButtonProps } from "../CloseButton";
 import "./Modal.css";
 
-export type ModalProps = AriaDialogTriggerProps;
+type ModalProps = AriaDialogTriggerProps;
 
-export const ModalRoot = (props: ModalProps): React.ReactElement => {
+const ModalRoot = (props: ModalProps): React.ReactElement => {
   return <AriaModalTrigger {...props} />;
 };
 
 ModalRoot.displayName = "Modal";
 
-export type ModalBackdropVariant = "opaque" | "blur" | "transparent";
+type ModalBackdropVariant = "opaque" | "blur" | "transparent";
 
-export type ModalBackdropProps = AriaModalOverlayProps & {
+type ModalBackdropProps = AriaModalOverlayProps & {
   variant?: ModalBackdropVariant;
 };
 
 // Pressing outside the dialog closes it, unless isDismissable is false
-export const ModalBackdrop = ({
+const ModalBackdrop = ({
   isDismissable = true,
   variant = "opaque",
   ...props
@@ -50,12 +50,12 @@ export const ModalBackdrop = ({
 
 ModalBackdrop.displayName = "Modal.Backdrop";
 
-export type ModalSize = "xs" | "sm" | "md" | "lg" | "cover" | "full";
+type ModalSize = "xs" | "sm" | "md" | "lg" | "cover" | "full";
 // auto: a bottom sheet on phones, centred on wider screens
-export type ModalPlacement = "auto" | "center" | "top" | "bottom";
-export type ModalScroll = "inside" | "outside";
+type ModalPlacement = "auto" | "center" | "top" | "bottom";
+type ModalScroll = "inside" | "outside";
 
-export type ModalContainerProps = Omit<
+type ModalContainerProps = Omit<
   AriaModalOverlayProps,
   "isDismissable" | "isKeyboardDismissDisabled"
 > & {
@@ -64,7 +64,7 @@ export type ModalContainerProps = Omit<
   scroll?: ModalScroll;
 };
 
-export const ModalContainer = ({
+const ModalContainer = ({
   size = "sm",
   placement = "center",
   scroll = "inside",
@@ -85,18 +85,18 @@ export const ModalContainer = ({
 
 ModalContainer.displayName = "Modal.Container";
 
-export type ModalDialogProps = AriaDialogProps;
+type ModalDialogProps = AriaDialogProps;
 
-export const ModalDialog = (props: ModalDialogProps): React.ReactElement => {
+const ModalDialog = (props: ModalDialogProps): React.ReactElement => {
   return <AriaDialog {...props} data-tds="modal-dialog" />;
 };
 
 ModalDialog.displayName = "Modal.Dialog";
 
-export type ModalCloseTriggerProps = CloseButtonProps;
+type ModalCloseTriggerProps = CloseButtonProps;
 
 // slot="close" lets the dialog close itself when this is pressed
-export const ModalCloseTrigger = (
+const ModalCloseTrigger = (
   props: ModalCloseTriggerProps
 ): React.ReactElement => {
   return <CloseButton slot="close" {...props} />;
@@ -104,13 +104,13 @@ export const ModalCloseTrigger = (
 
 ModalCloseTrigger.displayName = "Modal.CloseTrigger";
 
-export type ModalHeaderAlign = "start" | "center";
+type ModalHeaderAlign = "start" | "center";
 
-export type ModalHeaderProps = ComponentPropsWithoutRef<"header"> & {
+type ModalHeaderProps = ComponentPropsWithoutRef<"header"> & {
   align?: ModalHeaderAlign;
 };
 
-export const ModalHeader = ({
+const ModalHeader = ({
   align = "start",
   ...props
 }: ModalHeaderProps): React.ReactElement => {
@@ -119,34 +119,64 @@ export const ModalHeader = ({
 
 ModalHeader.displayName = "Modal.Header";
 
-export type ModalIconProps = ComponentPropsWithoutRef<"span">;
+type ModalIconProps = ComponentPropsWithoutRef<"span">;
 
-export const ModalIcon = (props: ModalIconProps): React.ReactElement => {
+const ModalIcon = (props: ModalIconProps): React.ReactElement => {
   return <span aria-hidden {...props} data-tds="modal-icon" />;
 };
 
 ModalIcon.displayName = "Modal.Icon";
 
-export type ModalHeadingProps = AriaHeadingProps & { children: ReactNode };
+type ModalHeadingProps = AriaHeadingProps & { children: ReactNode };
 
-export const ModalHeading = (props: ModalHeadingProps): React.ReactElement => {
+const ModalHeading = (props: ModalHeadingProps): React.ReactElement => {
   return <AriaHeading slot="title" {...props} data-tds="modal-heading" />;
 };
 
 ModalHeading.displayName = "Modal.Heading";
 
-export type ModalBodyProps = ComponentPropsWithoutRef<"div">;
+type ModalBodyProps = ComponentPropsWithoutRef<"div">;
 
-export const ModalBody = (props: ModalBodyProps): React.ReactElement => {
+const ModalBody = (props: ModalBodyProps): React.ReactElement => {
   return <div {...props} data-tds="modal-body" />;
 };
 
 ModalBody.displayName = "Modal.Body";
 
-export type ModalFooterProps = ComponentPropsWithoutRef<"footer">;
+type ModalFooterProps = ComponentPropsWithoutRef<"footer">;
 
-export const ModalFooter = (props: ModalFooterProps): React.ReactElement => {
+const ModalFooter = (props: ModalFooterProps): React.ReactElement => {
   return <footer {...props} data-tds="modal-footer" />;
 };
 
 ModalFooter.displayName = "Modal.Footer";
+
+export {
+  ModalRoot,
+  ModalBackdrop,
+  ModalContainer,
+  ModalDialog,
+  ModalCloseTrigger,
+  ModalHeader,
+  ModalIcon,
+  ModalHeading,
+  ModalBody,
+  ModalFooter
+};
+export type {
+  ModalProps,
+  ModalBackdropVariant,
+  ModalBackdropProps,
+  ModalSize,
+  ModalPlacement,
+  ModalScroll,
+  ModalContainerProps,
+  ModalDialogProps,
+  ModalCloseTriggerProps,
+  ModalHeaderAlign,
+  ModalHeaderProps,
+  ModalIconProps,
+  ModalHeadingProps,
+  ModalBodyProps,
+  ModalFooterProps
+};

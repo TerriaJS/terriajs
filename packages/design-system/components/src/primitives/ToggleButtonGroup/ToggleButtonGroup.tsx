@@ -8,7 +8,7 @@ import "../ButtonGroup/ButtonGroup.css";
 import { ButtonGroupContext } from "../ButtonGroup/ButtonGroupContext";
 import "./ToggleButtonGroup.css";
 
-export type ToggleButtonGroupProps = AriaToggleButtonGroupProps & {
+type ToggleButtonGroupProps = AriaToggleButtonGroupProps & {
   /** Applied to every button that doesn't set its own */
   size?: ButtonSize;
   fullWidth?: boolean;
@@ -18,7 +18,7 @@ export type ToggleButtonGroupProps = AriaToggleButtonGroupProps & {
 
 // Toggle buttons with one selection between them, or several with
 // selectionMode="multiple". Laid out as a ButtonGroup: joined, unless detached
-export const ToggleButtonGroupRoot = forwardRef<
+const ToggleButtonGroupRoot = forwardRef<
   HTMLDivElement,
   ToggleButtonGroupProps
 >(
@@ -57,3 +57,6 @@ export const ToggleButtonGroupRoot = forwardRef<
 );
 
 ToggleButtonGroupRoot.displayName = "ToggleButtonGroup";
+
+export { ToggleButtonGroupRoot };
+export type { ToggleButtonGroupProps };

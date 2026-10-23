@@ -17,14 +17,14 @@ import {
 import { Description, FieldError } from "../Field";
 import "./Switch.css";
 
-export type SwitchSize = "sm" | "md" | "lg";
+type SwitchSize = "sm" | "md" | "lg";
 
 // The field: wraps Switch.Content and an optional Description or FieldError
-export type SwitchRootProps = AriaSwitchFieldProps & {
+type SwitchRootProps = AriaSwitchFieldProps & {
   size?: SwitchSize;
 };
 
-export const SwitchRoot = ({
+const SwitchRoot = ({
   size = "md",
   ...props
 }: SwitchRootProps): React.ReactElement => {
@@ -36,10 +36,10 @@ SwitchRoot.displayName = "Switch";
 // A Label inside renders as a span: the content is already the <label>
 const LABEL_SPAN_CONTEXT = { elementType: "span" };
 
-export type SwitchContentProps = AriaSwitchButtonProps;
+type SwitchContentProps = AriaSwitchButtonProps;
 
 // The clickable label holding the control and the Label
-export const SwitchContent = ({
+const SwitchContent = ({
   children,
   ...props
 }: SwitchContentProps): React.ReactElement => {
@@ -59,10 +59,10 @@ SwitchContent.displayName = "Switch.Content";
 type SpanProps = ComponentPropsWithoutRef<"span"> &
   DOMRenderProps<"span", undefined>;
 
-export type SwitchControlProps = SpanProps & { children: ReactNode };
+type SwitchControlProps = SpanProps & { children: ReactNode };
 
 // The track
-export const SwitchControl = forwardRef<HTMLSpanElement, SwitchControlProps>(
+const SwitchControl = forwardRef<HTMLSpanElement, SwitchControlProps>(
   ({ render, ...props }, ref) => {
     const spanProps = { ...props, ref, "data-tds": "switch-control" };
     // eslint-disable-next-line react-hooks/refs -- `render` must receive the ref, as in react-aria
@@ -72,9 +72,9 @@ export const SwitchControl = forwardRef<HTMLSpanElement, SwitchControlProps>(
 
 SwitchControl.displayName = "Switch.Control";
 
-export type SwitchThumbProps = SpanProps;
+type SwitchThumbProps = SpanProps;
 
-export const SwitchThumb = forwardRef<HTMLSpanElement, SwitchThumbProps>(
+const SwitchThumb = forwardRef<HTMLSpanElement, SwitchThumbProps>(
   ({ render, ...props }, ref) => {
     const spanProps = { ...props, ref, "data-tds": "switch-thumb" };
     // eslint-disable-next-line react-hooks/refs -- `render` must receive the ref, as in react-aria
@@ -84,10 +84,10 @@ export const SwitchThumb = forwardRef<HTMLSpanElement, SwitchThumbProps>(
 
 SwitchThumb.displayName = "Switch.Thumb";
 
-export type SwitchIconProps = SpanProps & { children: ReactNode };
+type SwitchIconProps = SpanProps & { children: ReactNode };
 
 // An icon inside the thumb
-export const SwitchIcon = forwardRef<HTMLSpanElement, SwitchIconProps>(
+const SwitchIcon = forwardRef<HTMLSpanElement, SwitchIconProps>(
   ({ render, ...props }, ref) => {
     const spanProps = { ...props, ref, "data-tds": "switch-icon" };
     // eslint-disable-next-line react-hooks/refs -- `render` must receive the ref, as in react-aria
@@ -97,13 +97,13 @@ export const SwitchIcon = forwardRef<HTMLSpanElement, SwitchIconProps>(
 
 SwitchIcon.displayName = "Switch.Icon";
 
-export type SwitchProps = SwitchRootProps & {
+type SwitchProps = SwitchRootProps & {
   children: ReactNode;
   description?: string;
   errorMessage?: string | ((validation: ValidationResult) => string);
 };
 
-export const Switch = ({
+const Switch = ({
   children,
   description,
   errorMessage,
@@ -121,4 +121,22 @@ export const Switch = ({
       <FieldError>{errorMessage}</FieldError>
     </SwitchRoot>
   );
+};
+
+export {
+  SwitchRoot,
+  SwitchContent,
+  SwitchControl,
+  SwitchThumb,
+  SwitchIcon,
+  Switch
+};
+export type {
+  SwitchSize,
+  SwitchRootProps,
+  SwitchContentProps,
+  SwitchControlProps,
+  SwitchThumbProps,
+  SwitchIconProps,
+  SwitchProps
 };
