@@ -293,6 +293,12 @@ export type {
   ToggleButtonVariant
 } from "./primitives/ToggleButton";
 
+export {
+  ToggleButtonGroup,
+  ToggleButtonGroupRoot
+} from "./primitives/ToggleButtonGroup";
+export type { ToggleButtonGroupProps } from "./primitives/ToggleButtonGroup";
+
 export { Badge, BadgeAnchor, BadgeLabel, BadgeRoot } from "./primitives/Badge";
 export type {
   BadgeAnchorProps,

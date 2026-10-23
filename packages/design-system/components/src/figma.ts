@@ -31,6 +31,7 @@ const FIGMA_PAGES = {
   TextArea: "17293-35712",
   TextField: "5375-69732",
   ToggleButton: "15237-23433",
+  ToggleButtonGroup: "15251-25651",
   Tooltip: "5375-71565",
   Typography: "17411-35676"
 } as const;
