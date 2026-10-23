@@ -8,4 +8,4 @@
  * import "@terria/design-system/layers.css";
  */
 
-@layer terria-ds.tokens, terria-ds.reset, terria-ds.base, terria-ds.components;
+@layer terria-ds.tokens, terria-ds.reset, terria-ds.base, terria-ds.components, terria-ds.utilities;

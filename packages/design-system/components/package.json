@@ -62,6 +62,7 @@
     "./layers.css": "./dist/layers.css",
     "./reset.css": "./dist/reset.css",
     "./typography.css": "./dist/typography.css",
+    "./layout.css": "./dist/layout/index.css",
     "./fonts.css": "./dist/fonts.css",
     "./*": {
       "types": "./dist/*/index.d.ts",

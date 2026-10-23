@@ -6,6 +6,7 @@ import "@terria/design-system/reset.css";
 import "@terria/design-system/tokens.css";
 import "@terria/design-system/base.css";
 import "@terria/design-system/typography.css";
+import "@terria/design-system/layout.css";
 import "@terria/design-system/fonts.css";
 import "./preview.css";
 import { DesignSystemTheme, ThemedDocsContainer, type Theme } from "./theme";

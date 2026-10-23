@@ -65,6 +65,9 @@ const copyFiles = () => ({
     this.addWatchFile("src/css/reset.css");
     this.addWatchFile("src/css/base.css");
     this.addWatchFile("src/css/typography.css");
+    this.addWatchFile("src/css/layout/index.css");
+    this.addWatchFile("src/css/layout/flex.css");
+    this.addWatchFile("src/css/layout/grid.css");
     this.addWatchFile("src/css/fonts.css");
     this.addWatchFile(tokensCss);
   },
@@ -74,6 +77,11 @@ const copyFiles = () => ({
     fs.cpSync("src/css/base.css", "dist/base.css", { recursive: true });
     fs.cpSync("src/css/typography.css", "dist/typography.css", {
       recursive: true
+    });
+    // Its index imports the others by relative paths, so they're copied together
+    fs.cpSync("src/css/layout", "dist/layout", {
+      recursive: true,
+      filter: (source) => !source.endsWith(".test.tsx")
     });
     fs.cpSync("src/css/fonts.css", "dist/fonts.css", { recursive: true });
     fs.cpSync(tokensCss, "dist/tokens.css", { recursive: true });

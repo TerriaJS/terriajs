@@ -12,12 +12,17 @@ import "@terria/design-system/reset.css"; // optional
 import "@terria/design-system/tokens.css";
 import "@terria/design-system/base.css";
 import "@terria/design-system/typography.css";
+import "@terria/design-system/layout.css"; // optional
 ```
 
 The reset is optional: it normalises box sizing, margins, media and form controls page-wide, in the lowest layer. Leave it out where existing styles rely on the browser's defaults.
 
 `typography.css` styles bare headings, paragraphs and links with the foundation's type scale, and adds `tds-h1`…`tds-h6`, `tds-body`, `tds-body-sm`, `tds-body-xs`, `tds-medium` and `tds-numeric` (equal-width figures) classes for any element.
 `tds-flow` on a container spaces long-form content (8px between blocks, more above headings); set `--terria-ds-flow-space` on an element to change the space above it.
+
+`layout.css` adds flex and grid layouts for any element; import it after `typography.css`. A layout spaces its children by its gap alone: it clears their margins, without specificity, so a margin set on a child still wins. Flex: `tds-stack` (a column), `tds-cluster` (a row that wraps) and `tds-row` (a row that doesn't), and utilities to build or adjust one: `tds-flex`, `tds-inline-flex`, `tds-flex-row`, `tds-flex-col`, `tds-wrap`, `tds-nowrap`, `tds-items-*` (`start`, `center`, `end`, `baseline`, `stretch`), `tds-justify-*` (`start`, `center`, `end`, `between`), `tds-grow`, `tds-shrink-0` and `tds-flex-gap-*` (`0`, `2xs` … `2xl`), which sets the layout's gap through `--terria-ds-flex-gap`. Grid: `tds-grid` (set its columns, or one column), and `tds-grid-fit` (as many equal columns as fit, sized by `--terria-ds-grid-item-min` (15rem), `--terria-ds-grid-item-max` (`1fr`) and `--terria-ds-grid-auto-layout` (`auto-fit`, or `auto-fill` to keep empty columns)), with `tds-grid-gap-*`, `tds-grid-gap-x-*` (between columns) and `tds-grid-gap-y-*` (between rows) setting `--terria-ds-grid-gap`, `-column-gap` and `-row-gap`. The gap properties aren't inherited, so a nested layout keeps its own. The alignment utilities work on grids too, and a utility always wins over a layout's defaults: `tds-cluster tds-flex-gap-lg tds-items-start`.
+Spacing: padding and margin on the spacing scale, in logical properties: `tds-p-*`, `tds-px-*` (inline), `tds-py-*` (block), `tds-pt-*` / `tds-pb-*` (block start and end), `tds-ps-*` / `tds-pe-*` (inline start and end), and the same with `m` for margin, in sizes `0`, `2xs` … `2xl`; plus `tds-mx-auto`, `tds-ms-auto` and `tds-me-auto`.
+Utilities sit in their own layer after the components, so they win over a component's styles as well as a layout's: `<Button className="tds-ms-auto">`.
 
 Each component imports its own CSS. All styles live in the `terria-ds` cascade layer, so unlayered application CSS always wins.
 
