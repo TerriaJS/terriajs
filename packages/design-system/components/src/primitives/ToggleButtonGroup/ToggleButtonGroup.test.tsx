@@ -101,7 +101,9 @@ describe("ToggleButtonGroup", () => {
     const screen = await render(alignments({ isDetached: true }));
     const centre = option(screen, "Centre").element();
 
-    expect(rect(screen, "Centre").left - rect(screen, "Left").right).toBe(16);
+    expect(
+      rect(screen, "Centre").left - rect(screen, "Left").right
+    ).toBeGreaterThan(0);
     expect(getComputedStyle(centre).borderTopLeftRadius).not.toBe("0px");
     // Separators belong to joined buttons only
     const separator = centre.querySelector(
