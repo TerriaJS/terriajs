@@ -31,7 +31,7 @@
     outline: none;
     color: var(--_list-box-item-fg);
     font-size: var(--terria-ds-text-size-body);
-    line-height: var(--terria-ds-line-height-body);
+    line-height: var(--terria-ds-line-height-body-lg);
     -webkit-tap-highlight-color: transparent;
     transition:
       background-color 150ms ease-out,
