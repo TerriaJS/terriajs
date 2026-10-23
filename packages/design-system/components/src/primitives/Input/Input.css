@@ -1,14 +1,21 @@
 /**
- * Input Component Styles, shared with TextArea and the Select trigger
+ * Input Component Styles, shared with TextArea, InputGroup and the Select
+ * trigger
  *
  * Variants only set --_input-* custom properties; the base rule consumes them.
  */
 
 @layer terria-ds.components {
-  :is([data-tds="input"], [data-tds="textarea"], [data-tds="select-trigger"]) {
+  :is(
+    [data-tds="input"],
+    [data-tds="textarea"],
+    [data-tds="input-group"],
+    [data-tds="select-trigger"]
+  ) {
     --_input-bg: var(--terria-ds-field-background);
     --_input-bg-hover: var(--terria-ds-field-background-hover);
     --_input-bg-focus: var(--terria-ds-field-background-focus);
+    --_input-border-hover: var(--terria-ds-field-border);
 
     box-sizing: border-box;
     min-inline-size: 0;
@@ -41,7 +48,13 @@
     }
 
     &[data-hovered] {
+      border-color: var(--_input-border-hover);
       background-color: var(--_input-bg-hover);
+    }
+
+    /* Over a button in an input group, only the button shows hover */
+    &[data-hovered]:has(:is(button, a)[data-hovered]) {
+      background-color: var(--_input-bg);
     }
 
     &[data-invalid],
@@ -55,9 +68,11 @@
     }
   }
 
-  /* Text fields show focus for pointer and keyboard alike; the Select trigger
-     is a button, so only for the keyboard */
+  /* Text fields show focus for pointer and keyboard alike, an input group
+     while its input has it; the Select trigger is a button, so only for the
+     keyboard */
   :is([data-tds="input"], [data-tds="textarea"])[data-focused],
+  [data-tds="input-group"][data-focus-within],
   [data-tds="select-trigger"][data-focus-visible] {
     border-color: var(--terria-ds-field-border-focus);
     background-color: var(--_input-bg-focus);
@@ -73,6 +88,15 @@
       [data-invalid],
       [aria-invalid="true"]
     ),
+  [data-tds="input-group"][data-focus-within]:is(
+      [data-invalid],
+      :has(
+        > :is(
+          [data-tds="input-group-input"],
+          [data-tds="input-group-textarea"]
+        )[data-invalid]
+      )
+    ),
   [data-tds="select"][data-invalid]
     > [data-tds="select-trigger"][data-focus-visible] {
     border-color: var(--terria-ds-field-border-error);
@@ -80,13 +104,29 @@
   }
 
   /* Without it, the input keeps the browser's own width (its size attribute) */
-  :is([data-tds="input"], [data-tds="textarea"])[data-tds-full-width] {
+  :is(
+    [data-tds="input"],
+    [data-tds="textarea"],
+    [data-tds="input-group"]
+  )[data-tds-full-width] {
     inline-size: 100%;
   }
 
-  :is([data-tds="input"], [data-tds="textarea"])[data-tds-variant="secondary"] {
+  :is(
+    [data-tds="input"],
+    [data-tds="textarea"],
+    [data-tds="input-group"]
+  )[data-tds-variant="secondary"] {
     --_input-bg: var(--terria-ds-neutral);
     --_input-bg-hover: var(--terria-ds-neutral-hover);
     --_input-bg-focus: var(--terria-ds-neutral);
+
+    /* The hover background is the border color, so the border darkens to
+       stay visible */
+    --_input-border-hover: color-mix(
+      in oklch,
+      var(--terria-ds-field-placeholder) 30%,
+      transparent
+    );
   }
 }

@@ -1,0 +1,11 @@
+/* Layout for the InputGroup stories */
+
+@layer storybook {
+  .input-group-stories-width {
+    inline-size: 17.5rem;
+  }
+
+  .input-group-stories-wide {
+    inline-size: 32rem;
+  }
+}

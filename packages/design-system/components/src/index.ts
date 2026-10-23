@@ -185,6 +185,21 @@ export type {
   ProgressCircleSize
 } from "./primitives/ProgressCircle";
 
+export {
+  InputGroup,
+  InputGroupInput,
+  InputGroupPrefix,
+  InputGroupRoot,
+  InputGroupSuffix,
+  InputGroupTextArea
+} from "./primitives/InputGroup";
+export type {
+  InputGroupAffixProps,
+  InputGroupInputProps,
+  InputGroupProps,
+  InputGroupTextAreaProps
+} from "./primitives/InputGroup";
+
 export { Spinner } from "./primitives/Spinner";
 export type {
   SpinnerColor,

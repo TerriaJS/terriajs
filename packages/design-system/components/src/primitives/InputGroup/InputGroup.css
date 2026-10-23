@@ -1,0 +1,227 @@
+/**
+ * InputGroup Component Styles
+ *
+ * The group draws the field (Input.css); its input is borderless inside it.
+ * Prefixes and suffixes are muted text or icons; a control in one takes the
+ * field's text color.
+ */
+
+@layer terria-ds.components {
+  [data-tds="input-group"] {
+    --_input-group-edge: calc(
+      var(--terria-ds-space-md) - var(--terria-ds-field-border-width)
+    );
+    --_input-group-divider: var(--terria-ds-field-border);
+
+    display: inline-flex;
+    gap: var(--terria-ds-dimensions-spacing-0-5);
+    align-items: stretch;
+    padding: 0;
+    overflow: clip;
+
+    /* The secondary background turns the border color on hover, so its
+       lines are a shade of the placeholder color that shows on either */
+    &[data-tds-variant="secondary"] {
+      --_input-group-divider: color-mix(
+        in oklch,
+        var(--terria-ds-field-placeholder) 30%,
+        transparent
+      );
+    }
+
+    /* Divided, the space is the input's own padding by the lines, so two
+       affixes side by side have only a line between them */
+    &[data-tds-divided] {
+      gap: 0;
+    }
+
+    /* In a TextField the field sets these on the input, not the group */
+    &:has(
+      > :is(
+        [data-tds="input-group-input"],
+        [data-tds="input-group-textarea"]
+      )[data-invalid]
+    ) {
+      border-color: var(--terria-ds-field-border-error);
+    }
+
+    &:has(
+      > :is(
+        [data-tds="input-group-input"],
+        [data-tds="input-group-textarea"]
+      )[data-disabled]
+    ) {
+      opacity: var(--terria-ds-effects-disabled-opacity);
+      cursor: not-allowed;
+    }
+  }
+
+  :is([data-tds="input-group-input"], [data-tds="input-group-textarea"]) {
+    flex: 1;
+    min-inline-size: 0;
+    padding: calc(
+        var(--terria-ds-space-sm) - var(--terria-ds-field-border-width)
+      )
+      0;
+    border: none;
+    outline: none;
+    background: none;
+    color: inherit;
+    font: inherit;
+
+    &::placeholder {
+      color: var(--terria-ds-field-placeholder);
+    }
+
+    &:first-child {
+      padding-inline-start: var(--_input-group-edge);
+    }
+
+    &:last-child {
+      padding-inline-end: var(--_input-group-edge);
+    }
+
+    [data-tds-divided] > &:not(:first-child) {
+      padding-inline-start: var(--terria-ds-space-md);
+    }
+
+    [data-tds-divided] > &:not(:last-child) {
+      padding-inline-end: var(--terria-ds-space-md);
+    }
+
+    &[data-disabled] {
+      cursor: not-allowed;
+    }
+  }
+
+  [data-tds="input-group-textarea"] {
+    /* Never shorter than a single-line group */
+    min-block-size: calc(
+      var(--terria-ds-dimensions-spacing-9) - 2 *
+        var(--terria-ds-field-border-width)
+    );
+  }
+
+  :is([data-tds="input-group-prefix"], [data-tds="input-group-suffix"]) {
+    --_input-group-affix-padding: var(--terria-ds-space-md);
+
+    display: inline-flex;
+    flex-shrink: 0;
+    gap: var(--terria-ds-dimensions-spacing-1-5);
+    align-items: center;
+    padding-inline: var(--_input-group-affix-padding);
+    color: var(--terria-ds-field-placeholder);
+    white-space: nowrap;
+
+    /* At the group's edge the border takes its width out of the padding */
+    &:first-child {
+      padding-inline-start: calc(
+        var(--_input-group-affix-padding) - var(--terria-ds-field-border-width)
+      );
+    }
+
+    &:last-child {
+      padding-inline-end: calc(
+        var(--_input-group-affix-padding) - var(--terria-ds-field-border-width)
+      );
+    }
+
+    /* A key or chip has a background of its own; it sits a little in from
+       the edge */
+    &:has(> :is([data-tds="kbd"], [data-tds="chip"])) {
+      --_input-group-affix-padding: var(--terria-ds-dimensions-spacing-1-5);
+    }
+
+    /* A button brings its own padding: less around it puts its icon where a
+       plain icon would sit */
+    &:has(> :is(button, a)) {
+      --_input-group-affix-padding: var(--terria-ds-space-xs);
+    }
+
+    /* The line sits on the side facing the input */
+    [data-tds-divided]
+      > &:has(
+        ~ :is([data-tds="input-group-input"], [data-tds="input-group-textarea"])
+      ) {
+      border-inline-end: var(--terria-ds-field-border-width) solid
+        var(--_input-group-divider);
+    }
+
+    [data-tds-divided]
+      > :is([data-tds="input-group-input"], [data-tds="input-group-textarea"])
+      ~ & {
+      border-inline-start: var(--terria-ds-field-border-width) solid
+        var(--_input-group-divider);
+    }
+
+    & > svg {
+      flex-shrink: 0;
+    }
+  }
+
+  /* Beside a text area, the prefix and suffix line up with its first line:
+     one row a line high, each item centred on it. A taller item, like a
+     button, overflows the row evenly */
+  [data-tds="input-group"]:has(> [data-tds="input-group-textarea"])
+    > :is([data-tds="input-group-prefix"], [data-tds="input-group-suffix"]) {
+    display: grid;
+    grid-auto-flow: column;
+    grid-template-rows: var(--terria-ds-line-height-body);
+    align-content: start;
+    align-items: center;
+    padding-block: calc(
+      var(--terria-ds-space-sm) - var(--terria-ds-field-border-width)
+    );
+    line-height: var(--terria-ds-line-height-body);
+  }
+
+  /* Its resize handle would sit mid-field, beside the suffix */
+  [data-tds="input-group-textarea"]:has(+ [data-tds="input-group-suffix"]) {
+    /* eslint-disable-next-line css/use-baseline -- where resize is
+       unsupported there is no handle to hide */
+    resize: none;
+  }
+
+  /* Vertical: the prefix above, the text area, the suffix below, each a full
+     row; rows of controls use the layout utilities, like tds-ms-auto */
+  [data-tds="input-group"][data-tds-orientation="vertical"] {
+    flex-direction: column;
+    gap: var(--terria-ds-space-sm);
+    padding-block: calc(
+      var(--terria-ds-space-sm) - var(--terria-ds-field-border-width)
+    );
+
+    & > :is([data-tds="input-group-input"], [data-tds="input-group-textarea"]) {
+      padding-block: 0;
+      padding-inline: var(--_input-group-edge);
+    }
+
+    & > :is([data-tds="input-group-prefix"], [data-tds="input-group-suffix"]) {
+      /* Rows of controls, not lined up with the text area's first line */
+      display: flex;
+      gap: var(--terria-ds-space-sm);
+      align-items: center;
+      padding: 0 var(--_input-group-edge);
+      border: none;
+    }
+
+    /* Dividers run across, between the rows */
+    &[data-tds-divided] > [data-tds="input-group-prefix"] {
+      padding-block-end: var(--terria-ds-space-sm);
+      border-block-end: var(--terria-ds-field-border-width) solid
+        var(--_input-group-divider);
+    }
+
+    &[data-tds-divided] > [data-tds="input-group-suffix"] {
+      padding-block-start: var(--terria-ds-space-sm);
+      border-block-start: var(--terria-ds-field-border-width) solid
+        var(--_input-group-divider);
+    }
+  }
+
+  /* A control in an affix */
+  :is([data-tds="input-group-prefix"], [data-tds="input-group-suffix"])
+    > :is(button, a) {
+    color: var(--terria-ds-field-foreground);
+  }
+}
