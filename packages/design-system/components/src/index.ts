@@ -436,3 +436,13 @@ export type {
   TabsTabProps,
   TabsVariant
 } from "./primitives/Tabs";
+
+export {
+  Breadcrumbs,
+  BreadcrumbsItem,
+  BreadcrumbsRoot
+} from "./primitives/Breadcrumbs";
+export type {
+  BreadcrumbsItemProps,
+  BreadcrumbsProps
+} from "./primitives/Breadcrumbs";

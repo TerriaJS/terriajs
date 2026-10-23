@@ -8,6 +8,7 @@ const FIGMA_PAGES = {
   AlertDialog: "7814-319",
   Badge: "19865-36040",
   Button: "5375-69211",
+  Breadcrumbs: "14153-3704",
   ButtonGroup: "14202-4550",
   Checkbox: "5375-70992",
   CheckboxGroup: "17290-24388",
