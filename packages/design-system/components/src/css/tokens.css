@@ -308,7 +308,9 @@
     --terria-ds-colors-alpha-gray-900-75: oklch(21% 0.032 265 / 0.75);
     --terria-ds-colors-alpha-gray-900-95: oklch(21% 0.032 265 / 0.95);
     --terria-ds-colors-alpha-teal-700-25: oklch(49.7% 0.081 225 / 0.25);
-    --terria-ds-colors-alpha-teal-400-25: oklch(74.5% 0.101 217 / 0.3);
+    --terria-ds-colors-alpha-teal-400-30: oklch(74.5% 0.101 217 / 0.3);
+    --terria-ds-colors-alpha-red-700-25: oklch(50.5% 0.19 27.5 / 0.25);
+    --terria-ds-colors-alpha-red-400-30: oklch(71.1% 0.166 22.2 / 0.3);
     --terria-ds-dimensions-radius-rounded-none: 0;
     --terria-ds-dimensions-radius-rounded-xs: 0.125rem;
     --terria-ds-dimensions-radius-rounded-sm: 0.25rem;
@@ -401,6 +403,7 @@
     --terria-ds-font-medium: 500;
     --terria-ds-font-regular: 400;
     --terria-ds-letter-spacing: 0;
+    --terria-ds-segment: oklch(100% 0 none);
     --terria-ds-primary: oklch(49.7% 0.081 225);
     --terria-ds-primary-hover: oklch(43.6% 0.065 224);
     --terria-ds-primary-foreground: oklch(100% 0 none);
@@ -448,7 +451,7 @@
     --terria-ds-danger-soft-hover: oklch(88.5% 0.059 18.3);
     --terria-ds-danger-soft-foreground: oklch(44.4% 0.161 26.9);
     --terria-ds-text-foreground: oklch(21% 0.032 265);
-    --terria-ds-text-muted: oklch(55.1% 0.023 264);
+    --terria-ds-text-muted: oklch(44.6% 0.026 257);
     --terria-ds-text-inverse: oklch(100% 0 none);
     --terria-ds-text-disabled: oklch(71.4% 0.019 261);
     --terria-ds-border-color-subtle: oklch(92.8% 0.006 265);
@@ -507,10 +510,12 @@
     --terria-ds-line-height-body-lg: 1.5rem;
     --terria-ds-line-height-heading: 1.75rem;
     --terria-ds-line-height-display: 2rem;
+    --terria-ds-focus-danger-ring-offset: 2px;
+    --terria-ds-focus-danger-ring-width: 2px;
+    --terria-ds-focus-danger-ring-halo: oklch(50.5% 0.19 27.5 / 0.25);
     --terria-ds-border: var(--terria-ds-border-color-default);
     --terria-ds-backdrop: var(--terria-ds-surface-backdrop);
     --terria-ds-overlay: var(--terria-ds-surface-bg);
-    --terria-ds-segment: var(--terria-ds-neutral);
     --terria-ds-text-segment: var(--terria-ds-text-foreground);
     --terria-ds-text-link: var(--terria-ds-primary);
     --terria-ds-effects-shadow-scroll: var(--terria-ds-surface-bg);
@@ -521,6 +526,7 @@
     --terria-ds-field-foreground: var(--terria-ds-text-foreground);
     --terria-ds-field-border-focus: var(--terria-ds-primary);
     --terria-ds-field-border-error: var(--terria-ds-danger);
+    --terria-ds-focus-danger-ring: var(--terria-ds-danger);
   }
 }
 
@@ -530,6 +536,7 @@
 
 @layer terria-ds.tokens {
   [data-theme='dark'] {
+    --terria-ds-segment: oklch(44.6% 0.026 257);
     --terria-ds-primary: oklch(74.5% 0.101 217);
     --terria-ds-primary-hover: oklch(83.1% 0.076 214);
     --terria-ds-primary-foreground: oklch(28.6% 0.044 231);
@@ -577,9 +584,10 @@
     --terria-ds-danger-soft-hover: oklch(39.6% 0.133 25.7);
     --terria-ds-danger-soft-foreground: oklch(88.5% 0.059 18.3);
     --terria-ds-text-foreground: oklch(100% 0 none);
-    --terria-ds-text-muted: oklch(71.4% 0.019 261);
+    --terria-ds-text-muted: oklch(87.2% 0.009 258);
     --terria-ds-text-inverse: oklch(21% 0.032 265);
-    --terria-ds-text-disabled: oklch(44.6% 0.026 257);
+    --terria-ds-text-link: oklch(83.1% 0.076 214);
+    --terria-ds-text-disabled: oklch(55.1% 0.023 264);
     --terria-ds-border-color-subtle: oklch(100% 0 none / 0.05);
     --terria-ds-border-color-default: oklch(37.3% 0.031 260);
     --terria-ds-border-color-strong: oklch(44.6% 0.026 257);
@@ -636,12 +644,13 @@
     --terria-ds-line-height-body-lg: 1.5rem;
     --terria-ds-line-height-heading: 1.75rem;
     --terria-ds-line-height-display: 2rem;
+    --terria-ds-focus-danger-ring-offset: 2px;
+    --terria-ds-focus-danger-ring-width: 2px;
+    --terria-ds-focus-danger-ring-halo: oklch(71.1% 0.166 22.2 / 0.3);
     --terria-ds-border: var(--terria-ds-border-color-default);
     --terria-ds-backdrop: var(--terria-ds-surface-backdrop);
     --terria-ds-overlay: var(--terria-ds-surface-bg);
-    --terria-ds-segment: var(--terria-ds-neutral);
     --terria-ds-text-segment: var(--terria-ds-text-foreground);
-    --terria-ds-text-link: var(--terria-ds-primary);
     --terria-ds-effects-shadow-scroll: var(--terria-ds-surface-bg);
     --terria-ds-effects-shadow-scroll-on-surface: var(--terria-ds-surface-bg);
     --terria-ds-focus-ring: var(--terria-ds-primary);
@@ -650,6 +659,7 @@
     --terria-ds-field-foreground: var(--terria-ds-text-foreground);
     --terria-ds-field-border-focus: var(--terria-ds-primary);
     --terria-ds-field-border-error: var(--terria-ds-danger);
+    --terria-ds-focus-danger-ring: var(--terria-ds-danger);
   }
 }
 
