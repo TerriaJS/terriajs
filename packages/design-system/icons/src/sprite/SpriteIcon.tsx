@@ -14,7 +14,9 @@ export const IconSpriteProvider = ({
   children: ReactNode;
 }): ReactNode => (
   // .Provider, not the context itself: apps on React 18 don't have that
-  <SpriteHrefContext.Provider value={href}>{children}</SpriteHrefContext.Provider>
+  <SpriteHrefContext.Provider value={href}>
+    {children}
+  </SpriteHrefContext.Provider>
 );
 
 // An icon drawn from the sprite: like the icon components, 24px unless given

@@ -183,8 +183,7 @@ export const SliderMarks = ({
             style={{
               [state.orientation === "vertical"
                 ? "insetBlockEnd"
-                : "insetInlineStart"]:
-                `${String(percent * 100)}%`
+                : "insetInlineStart"]: `${String(percent * 100)}%`
             }}
           >
             {label}
