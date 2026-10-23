@@ -1,0 +1,29 @@
+/* Layout for the Dropdown stories */
+
+@layer storybook {
+  /* An item's title above its description */
+  .dropdown-stories-text {
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Room around the triggers for their menus to open into */
+  .dropdown-stories-placements {
+    display: grid;
+    gap: var(--terria-ds-space-xl);
+    padding: var(--terria-ds-dimensions-spacing-40)
+      var(--terria-ds-dimensions-spacing-64);
+  }
+
+  .dropdown-stories-placement-row {
+    display: flex;
+    gap: var(--terria-ds-space-md);
+    align-items: center;
+  }
+
+  .dropdown-stories-placement-side {
+    inline-size: var(--terria-ds-dimensions-spacing-16);
+    color: var(--terria-ds-text-muted);
+    font-size: var(--terria-ds-text-size-caption);
+  }
+}

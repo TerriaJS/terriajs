@@ -137,6 +137,26 @@ export type {
 } from "./primitives/Kbd";
 
 export {
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownPopover,
+  DropdownRoot,
+  DropdownSection,
+  DropdownSubmenuIndicator,
+  DropdownSubmenuTrigger
+} from "./primitives/Dropdown";
+export type {
+  DropdownItemProps,
+  DropdownMenuProps,
+  DropdownPopoverProps,
+  DropdownProps,
+  DropdownSectionProps,
+  DropdownSubmenuIndicatorProps,
+  DropdownSubmenuTriggerProps
+} from "./primitives/Dropdown";
+
+export {
   ProgressCircle,
   ProgressCircleFillCircle,
   ProgressCircleRoot,
