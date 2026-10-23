@@ -17,6 +17,7 @@ const FIGMA_PAGES = {
   Colors: "17361-32787",
   Icons: "2217-823",
   Input: "17293-26222",
+  Kbd: "5375-70805",
   ListBox: "5375-70869",
   Modal: "5375-77858",
   Popover: "6192-4931",

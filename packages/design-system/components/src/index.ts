@@ -126,6 +126,15 @@ export type {
   ListBoxSectionProps
 } from "./primitives/ListBox";
 
+export { KBD_KEYS, Kbd, KbdAbbr, KbdContent, KbdRoot } from "./primitives/Kbd";
+export type {
+  KbdAbbrProps,
+  KbdContentProps,
+  KbdKey,
+  KbdProps,
+  KbdVariant
+} from "./primitives/Kbd";
+
 export {
   ProgressCircle,
   ProgressCircleFillCircle,
