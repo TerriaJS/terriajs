@@ -277,7 +277,7 @@
      and footer in view. The header's gap to the body is 8px, not the
      dialog's 20px */
   :is([data-tds="modal-body"], [data-tds="alert-dialog-body"]) {
-    line-height: var(--_dialog-body-line-height);
+    line-height: var(--terria-ds-line-height-body-lg);
     flex: 1 1 auto;
     min-block-size: 0;
     overflow: auto;
@@ -321,6 +321,5 @@
 
   [data-tds="modal-dialog"] {
     --_dialog-bg: var(--terria-ds-overlay);
-    --_dialog-body-line-height: var(--terria-ds-line-height-body);
   }
 }
