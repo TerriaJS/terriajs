@@ -54,7 +54,7 @@
     --_chip-padding: var(--terria-ds-dimensions-spacing-3);
     --_chip-font-size: var(--terria-ds-text-size-body);
     --_chip-line-height: var(--terria-ds-line-height-body);
-    --_chip-icon: 0.875rem;
+    --_chip-icon: var(--terria-ds-dimensions-spacing-3-5);
   }
 
   /* Primary: the colour's solid fill */

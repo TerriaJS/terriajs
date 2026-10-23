@@ -5,6 +5,6 @@
 @layer terria-ds.components {
   [data-tds="textarea"] {
     /* Never shorter than a single-line Input */
-    min-block-size: 2.25rem;
+    min-block-size: var(--terria-ds-dimensions-spacing-9);
   }
 }

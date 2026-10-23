@@ -12,7 +12,7 @@
     --_btn-fg: currentcolor;
     --_btn-border-width: 0;
     --_btn-border-color: transparent;
-    --_btn-height: 2.25rem;
+    --_btn-height: var(--terria-ds-dimensions-spacing-9);
     --_btn-padding-inline: var(--terria-ds-space-lg);
     --_btn-font-size: var(--terria-ds-text-size-body);
     --_btn-line-height: var(--terria-ds-line-height-body);
@@ -128,14 +128,14 @@
      ============================================================ */
 
   [data-tds="button"][data-tds-size="sm"] {
-    --_btn-height: 2rem;
+    --_btn-height: var(--terria-ds-dimensions-spacing-8);
     --_btn-padding-inline: var(--terria-ds-space-md);
     --_btn-gap: var(--terria-ds-space-xs);
     --_btn-pressed-scale: 0.98;
   }
 
   [data-tds="button"][data-tds-size="lg"] {
-    --_btn-height: 2.5rem;
+    --_btn-height: var(--terria-ds-dimensions-spacing-10);
     --_btn-font-size: var(--terria-ds-text-size-body-lg);
     --_btn-line-height: var(--terria-ds-line-height-body-lg);
     --_btn-pressed-scale: 0.96;

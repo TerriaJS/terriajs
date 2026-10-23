@@ -44,7 +44,7 @@
     --_badge-size: var(--terria-ds-dimensions-spacing-4);
     --_badge-padding: var(--terria-ds-dimensions-spacing-0-5);
     --_badge-line-height: 1.34;
-    --_badge-icon: 0.625rem;
+    --_badge-icon: var(--terria-ds-dimensions-spacing-2-5);
   }
 
   [data-tds="badge"][data-tds-size="lg"] {

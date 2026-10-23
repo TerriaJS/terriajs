@@ -8,7 +8,7 @@
   [data-tds="progress-circle"] {
     --_progress-circle-stroke: var(--terria-ds-primary);
     --_progress-circle-track-stroke: var(--terria-ds-neutral);
-    --_progress-circle-size: 1.75rem;
+    --_progress-circle-size: var(--terria-ds-dimensions-spacing-7);
 
     display: inline-flex;
     align-items: center;
@@ -57,11 +57,11 @@
      ============================================================ */
 
   [data-tds="progress-circle"][data-tds-size="sm"] {
-    --_progress-circle-size: 1.25rem;
+    --_progress-circle-size: var(--terria-ds-dimensions-spacing-5);
   }
 
   [data-tds="progress-circle"][data-tds-size="lg"] {
-    --_progress-circle-size: 2.25rem;
+    --_progress-circle-size: var(--terria-ds-dimensions-spacing-9);
   }
 
   /* ============================================================

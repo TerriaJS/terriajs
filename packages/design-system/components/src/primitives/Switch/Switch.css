@@ -134,8 +134,8 @@
 
   [data-tds="switch-icon"] {
     display: flex;
-    inline-size: 0.625rem;
-    block-size: 0.625rem;
+    inline-size: var(--terria-ds-dimensions-spacing-2-5);
+    block-size: var(--terria-ds-dimensions-spacing-2-5);
 
     [data-tds-size="sm"] & {
       inline-size: var(--terria-ds-space-sm);

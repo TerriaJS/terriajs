@@ -25,7 +25,7 @@
     align-items: center;
     box-sizing: border-box;
     inline-size: 100%;
-    min-block-size: 2.25rem;
+    min-block-size: var(--terria-ds-dimensions-spacing-9);
     padding: var(--terria-ds-dimensions-spacing-1-5) var(--terria-ds-space-md);
     border-radius: var(--terria-ds-radius-lg);
     outline: none;
