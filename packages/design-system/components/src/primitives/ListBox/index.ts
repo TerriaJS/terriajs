@@ -16,6 +16,7 @@ export const ListBox = Object.assign(ListBoxRoot, {
 export { ListBoxItem, ListBoxItemIndicator, ListBoxRoot, ListBoxSection };
 export type {
   ListBoxItemIndicatorProps,
+  ListBoxItemIndicatorType,
   ListBoxItemProps,
   ListBoxItemVariant,
   ListBoxProps,

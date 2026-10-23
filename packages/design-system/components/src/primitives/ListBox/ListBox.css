@@ -86,7 +86,8 @@
     }
   }
 
-  /* Sits at the end of the row, after the title */
+  /* Where it's placed: first, it leads the row and keeps its space while
+     hidden, so the titles line up; after the title, it sits at the end */
   [data-tds="list-box-item-indicator"] {
     display: flex;
     flex-shrink: 0;
@@ -94,20 +95,38 @@
     justify-content: center;
     inline-size: var(--terria-ds-dimensions-icon-size-sm);
     block-size: var(--terria-ds-dimensions-icon-size-sm);
-    margin-inline-start: auto;
+
+    &:not(:first-child) {
+      margin-inline-start: auto;
+    }
+  }
+
+  /* Grows in when its item becomes selected */
+  [data-tds="list-box-item-dot"] {
+    inline-size: var(--terria-ds-dimensions-spacing-1-5);
+    block-size: var(--terria-ds-dimensions-spacing-1-5);
+    border-radius: var(--terria-ds-radius-full);
+    background-color: currentcolor;
+    scale: 0;
+    transition: scale 150ms ease-out;
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
+
+    [data-visible] > & {
+      scale: 1;
+    }
   }
 
   [data-tds="list-box-item-checkmark"] {
-    inline-size: 0.625rem;
-    block-size: 0.625rem;
+    inline-size: var(--terria-ds-dimensions-spacing-2-5);
+    block-size: var(--terria-ds-dimensions-spacing-2-5);
 
-    /* Draws the checkmark in when its item becomes selected */
-    [data-selected] & {
-      transition: stroke-dashoffset 250ms linear;
+    transition: stroke-dashoffset 250ms linear;
 
-      @media (prefers-reduced-motion: reduce) {
-        transition: none;
-      }
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
     }
   }
 }

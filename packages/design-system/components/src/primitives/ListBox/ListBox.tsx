@@ -1,18 +1,19 @@
 import {
   forwardRef,
-  createContext,
   useContext,
-  type ComponentPropsWithoutRef
+  type ComponentPropsWithoutRef,
+  type ReactNode
 } from "react";
 import {
   ListBox as AriaListBox,
   ListBoxItem as AriaListBoxItem,
   ListBoxSection as AriaListBoxSection,
   type ListBoxItemProps as AriaListBoxItemProps,
-  type ListBoxItemRenderProps,
   type ListBoxProps as AriaListBoxProps,
   type ListBoxSectionProps as AriaListBoxSectionProps
 } from "react-aria-components/ListBox";
+import { ItemLabelSlot } from "./ItemLabelSlot";
+import { ListBoxItemContext } from "./ListBoxItemContext";
 import "./ListBox.css";
 
 export type ListBoxProps<T extends object> = AriaListBoxProps<T>;
@@ -30,8 +31,6 @@ export type ListBoxItemVariant = "default" | "danger";
 export type ListBoxItemProps<T extends object> = AriaListBoxItemProps<T> & {
   variant?: ListBoxItemVariant;
 };
-
-const ListBoxItemContext = createContext<ListBoxItemRenderProps | null>(null);
 
 export const ListBoxItem = <T extends object>({
   variant = "default",
@@ -52,7 +51,9 @@ export const ListBoxItem = <T extends object>({
     >
       {(values) => (
         <ListBoxItemContext.Provider value={values}>
-          {typeof children === "function" ? children(values) : children}
+          <ItemLabelSlot>
+            {typeof children === "function" ? children(values) : children}
+          </ItemLabelSlot>
         </ListBoxItemContext.Provider>
       )}
     </AriaListBoxItem>
@@ -61,14 +62,43 @@ export const ListBoxItem = <T extends object>({
 
 ListBoxItem.displayName = "ListBox.Item";
 
-export type ListBoxItemIndicatorProps = ComponentPropsWithoutRef<"span">;
+export type ListBoxItemIndicatorType = "checkmark" | "dot";
 
-// Shows whether its item is selected; a checkmark unless children replace it
+export type ListBoxItemIndicatorProps = Omit<
+  ComponentPropsWithoutRef<"span">,
+  "children"
+> & {
+  /** The default mark: a checkmark, or a dot for one choice among several */
+  type?: ListBoxItemIndicatorType;
+  /** Replaces the default mark; a function is told whether its item is selected */
+  children?: ReactNode | ((values: { isSelected: boolean }) => ReactNode);
+};
+
+// Shows whether its item is selected: a checkmark or a dot, unless children
+// replace it
 export const ListBoxItemIndicator = forwardRef<
   HTMLSpanElement,
   ListBoxItemIndicatorProps
->(({ children, ...props }, ref) => {
+>(({ type = "checkmark", children, ...props }, ref) => {
   const isSelected = useContext(ListBoxItemContext)?.isSelected ?? false;
+  const mark =
+    type === "dot" ? (
+      <span data-tds="list-box-item-dot" />
+    ) : (
+      <svg
+        data-tds="list-box-item-checkmark"
+        fill="none"
+        stroke="currentColor"
+        strokeDasharray={22}
+        strokeDashoffset={isSelected ? 44 : 66}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={2}
+        viewBox="0 0 17 18"
+      >
+        <polyline points="1 9 7 14 15 4" />
+      </svg>
+    );
 
   return (
     <span
@@ -76,23 +106,12 @@ export const ListBoxItemIndicator = forwardRef<
       {...props}
       ref={ref}
       data-tds="list-box-item-indicator"
+      data-tds-type={type}
       data-visible={isSelected || undefined}
     >
-      {children ?? (
-        <svg
-          data-tds="list-box-item-checkmark"
-          fill="none"
-          stroke="currentColor"
-          strokeDasharray={22}
-          strokeDashoffset={isSelected ? 44 : 66}
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth={2}
-          viewBox="0 0 17 18"
-        >
-          <polyline points="1 9 7 14 15 4" />
-        </svg>
-      )}
+      {typeof children === "function"
+        ? children({ isSelected })
+        : (children ?? mark)}
     </span>
   );
 });

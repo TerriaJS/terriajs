@@ -120,6 +120,7 @@ export {
 } from "./primitives/ListBox";
 export type {
   ListBoxItemIndicatorProps,
+  ListBoxItemIndicatorType,
   ListBoxItemProps,
   ListBoxItemVariant,
   ListBoxProps,
