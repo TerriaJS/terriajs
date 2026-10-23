@@ -8,10 +8,15 @@ import "@terria/design-system/base.css";
 import "@terria/design-system/typography.css";
 import "@terria/design-system/fonts.css";
 import "./preview.css";
-import { DesignSystemTheme, ThemedDocsContainer } from "./theme";
+import { DesignSystemTheme, ThemedDocsContainer, type Theme } from "./theme";
 
-const withDesignSystemTheme: Decorator = (Story) => (
-  <DesignSystemTheme>
+const isTheme = (value: unknown): value is Theme =>
+  value === "light" || value === "dark";
+
+const withDesignSystemTheme: Decorator = (Story, { globals }) => (
+  <DesignSystemTheme
+    theme={isTheme(globals["theme"]) ? globals["theme"] : undefined}
+  >
     <Story />
   </DesignSystemTheme>
 );
@@ -40,7 +45,19 @@ const preview: Preview = {
     docs: {
       container: ThemedDocsContainer,
       codePanel: true
+    },
+    // Every story is snapshotted in both themes; the theme global is set
+    // only here, so in Storybook the toolbar toggle decides
+    chromatic: {
+      modes: {
+        light: { theme: "light" },
+        dark: { theme: "dark" }
+      }
     }
+  },
+  // Declared, with no toolbar, so Chromatic's modes can set it
+  globalTypes: {
+    theme: { description: "Design-system theme for visual tests" }
   },
   decorators: [withDesignSystemTheme],
   tags: ["autodocs"]

@@ -3,14 +3,20 @@ import { useLayoutEffect, type ComponentProps, type ReactNode } from "react";
 import { useDarkMode } from "storybook-dark-mode";
 import { themes } from "storybook/theming";
 
+export type Theme = "light" | "dark";
+
 // storybook-dark-mode's toolbar toggle themes Storybook itself; the tokens
-// switch on data-theme, so the preview's root follows it
+// switch on data-theme, so the preview's root follows it. A theme given
+// directly, as Chromatic's modes do, wins over the toggle
 export const DesignSystemTheme = ({
+  theme: forced,
   children
 }: {
+  theme?: Theme;
   children: ReactNode;
 }): ReactNode => {
-  const theme = useDarkMode() ? "dark" : "light";
+  const toggled = useDarkMode() ? "dark" : "light";
+  const theme = forced ?? toggled;
   useLayoutEffect(() => {
     document.documentElement.setAttribute("data-theme", theme);
   }, [theme]);
