@@ -37,11 +37,23 @@ const FieldError = (props: FieldErrorProps): React.ReactElement => {
 
 FieldError.displayName = "FieldError";
 
-type TextFieldProps = AriaTextFieldProps;
+type TextFieldProps = AriaTextFieldProps & {
+  /** Fill the container's width; otherwise the field hugs its input */
+  fullWidth?: boolean;
+};
 
 // Stacks a Label, an Input or TextArea, and a Description or FieldError
-const TextField = (props: TextFieldProps): React.ReactElement => {
-  return <AriaTextField {...props} data-tds="text-field" />;
+const TextField = ({
+  fullWidth,
+  ...props
+}: TextFieldProps): React.ReactElement => {
+  return (
+    <AriaTextField
+      {...props}
+      data-tds="text-field"
+      data-tds-full-width={fullWidth ? true : undefined}
+    />
+  );
 };
 
 TextField.displayName = "TextField";

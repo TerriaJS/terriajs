@@ -4,9 +4,15 @@
 
 @layer terria-ds.components {
   [data-tds="text-field"] {
-    display: flex;
+    display: inline-flex;
     flex-direction: column;
     gap: var(--terria-ds-space-xs);
+
+    /* As a Select: forms and cards fill, inline and toolbar fields hug */
+    &[data-tds-full-width] {
+      display: flex;
+      inline-size: 100%;
+    }
   }
 
   [data-tds="label"] {

@@ -11,6 +11,7 @@ const meta = {
   component: TextField,
   parameters: figmaDesign("TextField"),
   subcomponents: { Label, Description, FieldError },
+  args: { fullWidth: true },
   decorators: [
     (Story) => (
       <div style={{ inlineSize: 280 }}>
