@@ -149,3 +149,12 @@ export const CustomTrigger: Story = {
     </Popover>
   )
 };
+
+// Open, for visual tests; Storybook leaves it closed until pressed
+export const Opened: Story = {
+  ...WithArrow,
+  tags: ["!autodocs"],
+  play: async ({ canvas, userEvent }) => {
+    await userEvent.click(canvas.getByRole("button", { name: "Map settings" }));
+  }
+};

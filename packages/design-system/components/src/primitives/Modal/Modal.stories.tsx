@@ -618,3 +618,22 @@ export const ScrollOutside: Story = {
   args: { scroll: "outside" },
   render: ScrollInside.render
 };
+
+// Open, for visual tests; Storybook leaves it closed until pressed
+export const Opened: Story = {
+  ...Default,
+  tags: ["!autodocs"],
+  play: async ({ canvas, userEvent }) => {
+    await userEvent.click(canvas.getByRole("button", { name: "Add data" }));
+  }
+};
+
+// The wider sizes round more
+export const OpenedMedium: Story = {
+  ...Default,
+  args: { size: "md" },
+  tags: ["!autodocs"],
+  play: async ({ canvas, userEvent }) => {
+    await userEvent.click(canvas.getByRole("button", { name: "Add data" }));
+  }
+};

@@ -13,6 +13,7 @@ import { Button, type ButtonVariant } from "../Button";
 import { Popover } from "../Popover";
 import { ButtonGroup, ButtonGroupSeparator } from ".";
 import { figmaDesign } from "../../figma";
+import "./button-group.stories.css";
 
 const meta = {
   title: "Example/ButtonGroup",
@@ -149,5 +150,26 @@ export const WithPopover: Story = {
         </Popover.Content>
       </Popover>
     </ButtonGroup>
+  )
+};
+
+// Separators grow with the size
+export const Sizes: Story = {
+  render: (args) => (
+    <div className="button-group-stories-stack">
+      {(["sm", "md", "lg"] as const).map((size) => (
+        <ButtonGroup key={size} {...args} size={size}>
+          <Button>Day</Button>
+          <Button>
+            <ButtonGroup.Separator />
+            Week
+          </Button>
+          <Button>
+            <ButtonGroup.Separator />
+            Month
+          </Button>
+        </ButtonGroup>
+      ))}
+    </div>
   )
 };

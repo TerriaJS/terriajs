@@ -167,3 +167,12 @@ export const Dismissable: Story = {
     </AlertDialog>
   )
 };
+
+// Open, for visual tests; Storybook leaves it closed until pressed
+export const Opened: Story = {
+  ...Default,
+  tags: ["!autodocs"],
+  play: async ({ canvas, userEvent }) => {
+    await userEvent.click(canvas.getByRole("button", { name: "Remove layer" }));
+  }
+};

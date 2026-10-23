@@ -133,3 +133,12 @@ export const Pending: Story = {
     pendingLabel: "Async action in progres"
   }
 };
+
+// Keyboard focus, for visual tests: the ring around the resting button
+export const KeyboardFocus: Story = {
+  args: { variant: "secondary", children: "Button" },
+  tags: ["!autodocs"],
+  play: async ({ userEvent }) => {
+    await userEvent.tab();
+  }
+};

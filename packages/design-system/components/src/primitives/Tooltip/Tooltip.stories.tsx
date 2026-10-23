@@ -103,3 +103,11 @@ export const Placements: Story = {
     </div>
   )
 };
+
+// Shown, for visual tests: keyboard focus opens it straight away
+export const Opened: Story = {
+  tags: ["!autodocs"],
+  play: async ({ userEvent }) => {
+    await userEvent.tab();
+  }
+};

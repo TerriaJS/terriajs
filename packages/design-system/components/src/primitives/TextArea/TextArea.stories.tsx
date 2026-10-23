@@ -54,3 +54,12 @@ export const FullWidth: Story = {
 export const Disabled: Story = {
   args: { defaultValue: "Read-only notes", disabled: true }
 };
+
+// An invalid field in keyboard focus, for visual tests: the error border with a danger halo
+export const InvalidFocused: Story = {
+  args: Invalid.args,
+  tags: ["!autodocs"],
+  play: async ({ userEvent }) => {
+    await userEvent.tab();
+  }
+};

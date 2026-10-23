@@ -106,3 +106,12 @@ export const Disabled: Story = {
   args: { isDisabled: true, defaultSelectedKeys: ["2d"] },
   render: (args) => <ToggleButtonGroup {...args}>{views}</ToggleButtonGroup>
 };
+
+export const DetachedVertical: Story = {
+  args: {
+    isDetached: true,
+    orientation: "vertical",
+    defaultSelectedKeys: ["2d"]
+  },
+  render: (args) => <ToggleButtonGroup {...args}>{views}</ToggleButtonGroup>
+};

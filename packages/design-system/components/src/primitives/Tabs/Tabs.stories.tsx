@@ -189,3 +189,22 @@ export const Controlled: Story = {
     );
   }
 };
+
+// Keyboard focus, for visual tests: the ring rides on the selected pill
+export const KeyboardFocus: Story = {
+  tags: ["!autodocs"],
+  play: async ({ userEvent }) => {
+    await userEvent.tab();
+    await userEvent.keyboard("{ArrowRight}");
+  }
+};
+
+// With manual activation the ring stays on the focused tab, not the selected one
+export const ManualActivationFocus: Story = {
+  args: { keyboardActivation: "manual" },
+  tags: ["!autodocs"],
+  play: async ({ userEvent }) => {
+    await userEvent.tab();
+    await userEvent.keyboard("{ArrowRight}");
+  }
+};

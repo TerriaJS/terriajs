@@ -1,0 +1,9 @@
+/* Layout for the ButtonGroup stories */
+
+@layer storybook {
+  .button-group-stories-stack {
+    display: grid;
+    gap: var(--terria-ds-space-lg);
+    justify-items: start;
+  }
+}
