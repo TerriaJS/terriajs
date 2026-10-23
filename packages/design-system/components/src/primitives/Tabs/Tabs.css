@@ -19,6 +19,7 @@
     --_tabs-tab-radius: var(--terria-ds-radius-full);
     --_tabs-fg: var(--terria-ds-text-muted);
     --_tabs-fg-hover: var(--terria-ds-text-segment);
+    --_tabs-bg-hover: var(--terria-ds-surface-tint);
     --_tabs-fg-selected: var(--terria-ds-text-segment);
     --_tabs-indicator-bg: var(--terria-ds-segment);
     --_tabs-indicator-radius: var(--terria-ds-radius-full);
@@ -51,7 +52,8 @@
       var(--terria-ds-dimensions-spacing-3)
       var(--terria-ds-dimensions-spacing-1-5);
     --_tabs-tab-radius: 0;
-    --_tabs-fg-hover: var(--terria-ds-text-muted);
+    --_tabs-fg-hover: var(--terria-ds-text-foreground);
+    --_tabs-bg-hover: transparent;
     --_tabs-fg-selected: var(--terria-ds-text-foreground);
     --_tabs-indicator-bg: transparent;
     --_tabs-indicator-radius: 0;
@@ -242,8 +244,8 @@
     /* Its own layer, so the indicator's -1 sits above the list's background */
     isolation: isolate;
     transition:
-      color 150ms ease-out,
-      opacity 150ms ease-out;
+      background-color 150ms ease-out,
+      color 150ms ease-out;
     -webkit-tap-highlight-color: transparent;
 
     @media (prefers-reduced-motion: reduce) {
@@ -259,8 +261,8 @@
     }
 
     &[data-hovered]:not([data-selected], [data-disabled]) {
+      background-color: var(--_tabs-bg-hover);
       color: var(--_tabs-fg-hover);
-      opacity: var(--terria-ds-effects-disabled-opacity);
     }
 
     &[data-disabled] {

@@ -4,6 +4,16 @@ import { render } from "vitest-browser-react";
 import { Button } from "../Button";
 import { AlertDialog, type AlertDialogContainerProps } from ".";
 
+// A token's radius as the browser computes it, to compare with an element's
+const tokenRadius = (token: string): string => {
+  const probe = document.createElement("div");
+  probe.style.borderTopLeftRadius = `var(${token})`;
+  document.body.append(probe);
+  const radius = getComputedStyle(probe).borderTopLeftRadius;
+  probe.remove();
+  return radius;
+};
+
 const RemoveLayer = ({
   size,
   isDismissable
@@ -101,4 +111,15 @@ describe("AlertDialog", () => {
       ).toHaveAttribute("data-tds-size", size);
     }
   );
+
+  it("has the large radius", async () => {
+    const screen = await render(<RemoveLayer />);
+
+    await open(screen);
+
+    expect(
+      getComputedStyle(page.getByRole("alertdialog").element())
+        .borderTopLeftRadius
+    ).toBe(tokenRadius("--terria-ds-radius-lg"));
+  });
 });

@@ -6,6 +6,16 @@ import { Description, Label } from "../Field";
 import { ListBox } from "../ListBox";
 import { Select } from ".";
 
+// A token's radius as the browser computes it, to compare with an element's
+const tokenRadius = (token: string): string => {
+  const probe = document.createElement("div");
+  probe.style.borderTopLeftRadius = `var(${token})`;
+  document.body.append(probe);
+  const radius = getComputedStyle(probe).borderTopLeftRadius;
+  probe.remove();
+  return radius;
+};
+
 const renderSelect = (): ReturnType<typeof render> =>
   render(
     <Select placeholder="Select one">
@@ -219,5 +229,19 @@ describe("Select refs", () => {
       "select-indicator"
     );
     expect(clear.current?.getAttribute("data-tds")).toBe("select-clear-button");
+  });
+
+  it("keeps the large radius on its list", async () => {
+    const screen = await renderSelect();
+
+    await screen.getByRole("button", { name: /Base map/ }).click();
+    const popover = screen
+      .getByRole("listbox")
+      .element()
+      .closest("[data-tds='popover']");
+
+    expect(popover && getComputedStyle(popover).borderTopLeftRadius).toBe(
+      tokenRadius("--terria-ds-radius-lg")
+    );
   });
 });

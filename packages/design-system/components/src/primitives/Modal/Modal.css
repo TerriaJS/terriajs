@@ -114,6 +114,14 @@
       --_modal-width: 50rem;
     }
 
+    /* The wider modals round more; alert dialogs keep the large radius */
+    &[data-tds="modal-container"]:is(
+        [data-tds-size="md"],
+        [data-tds-size="lg"]
+      ) {
+      --_modal-radius: var(--terria-ds-dimensions-radius-rounded-3xl);
+    }
+
     &[data-tds-size="cover"],
     &[data-tds-size="full"] {
       max-inline-size: none;
@@ -164,6 +172,13 @@
 
       &[data-tds-size="cover"] {
         --_modal-inset: var(--terria-ds-dimensions-spacing-4);
+      }
+
+      &[data-tds="modal-container"]:is(
+          [data-tds-size="md"],
+          [data-tds-size="lg"]
+        ) {
+        --_modal-radius: var(--terria-ds-radius-lg);
       }
     }
   }
@@ -275,7 +290,9 @@
       );
     }
 
-    [data-tds-scroll="outside"] > :is([data-tds="modal-dialog"], [data-tds="alert-dialog-dialog"]) > & {
+    [data-tds-scroll="outside"]
+      > :is([data-tds="modal-dialog"], [data-tds="alert-dialog-dialog"])
+      > & {
       flex-shrink: 0;
       overflow: visible;
     }

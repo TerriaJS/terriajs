@@ -4,9 +4,9 @@
 
 @layer terria-ds.components {
   [data-tds="popover"] {
-    --_popover-bg: var(--terria-ds-surface-overlay);
+    --_popover-bg: var(--terria-ds-overlay);
     --_popover-fg: var(--terria-ds-text-foreground);
-    --_popover-radius: var(--terria-ds-radius-lg);
+    --_popover-radius: var(--terria-ds-radius-md);
     --_popover-shadow: var(--terria-ds-shadow-overlay);
     --_popover-slide: 0.25rem;
     --_popover-ease: cubic-bezier(0.4, 0, 0.2, 1);

@@ -127,6 +127,8 @@
 
   /* The list: as wide as the trigger, items 2px apart */
   [data-tds="popover"][data-trigger="Select"] {
+    --_popover-radius: var(--terria-ds-radius-lg);
+
     box-sizing: border-box;
     /* stylelint-disable-next-line custom-property-pattern -- The value is defined by react-aria */
     min-inline-size: var(--trigger-width, auto);
