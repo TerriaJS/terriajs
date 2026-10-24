@@ -153,11 +153,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 0;
-    border: 0;
-    background: none;
     color: var(--terria-ds-text-foreground);
-    cursor: pointer;
     transition: opacity 150ms ease-out;
 
     @media (prefers-reduced-motion: reduce) {

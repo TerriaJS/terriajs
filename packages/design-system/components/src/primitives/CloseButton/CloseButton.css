@@ -12,13 +12,10 @@
     inline-size: var(--terria-ds-dimensions-spacing-6);
     block-size: var(--terria-ds-dimensions-spacing-6);
     padding: var(--terria-ds-dimensions-spacing-1);
-    border: 0;
     border-radius: var(--terria-ds-dimensions-radius-rounded-xl);
     outline: none;
     background-color: var(--terria-ds-neutral);
     color: var(--terria-ds-text-muted);
-    cursor: pointer;
-    -webkit-tap-highlight-color: transparent;
     transition:
       background-color 150ms ease-out,
       box-shadow 150ms ease-out;

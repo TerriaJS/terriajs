@@ -9,12 +9,7 @@
   /* Scoped to the group so it wins over the affix rules whatever the order
      the stylesheets load in */
   [data-tds="input-group"] > [data-tds="number-field-button"] {
-    margin: 0;
-    border: none;
-    background: none;
     color: var(--terria-ds-field-foreground);
-    font: inherit;
-    cursor: pointer;
     transition: background-color 150ms ease-out;
 
     @media (prefers-reduced-motion: reduce) {

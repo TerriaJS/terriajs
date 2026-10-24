@@ -68,6 +68,18 @@
     color: inherit;
   }
 
+  /* Buttons start bare; a component or Button gives them their look */
+  :where(button) {
+    padding: 0;
+    border: 0;
+    background: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  :where(button:enabled) {
+    cursor: pointer;
+  }
+
   :where(a:not([class])) {
     color: currentcolor;
     text-decoration-skip-ink: auto;
