@@ -34,6 +34,7 @@ const FIGMA_PAGES = {
   Separator: "5375-70816",
   Slider: "5375-69689",
   Spinner: "5375-71607",
+  Surface: "17294-52295",
   Switch: "5375-71127",
   Tabs: "5375-79785",
   TextArea: "17293-35712",

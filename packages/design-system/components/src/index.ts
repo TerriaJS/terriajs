@@ -418,6 +418,9 @@ export type {
   ChipVariant
 } from "./primitives/Chip";
 
+export { Surface } from "./primitives/Surface";
+export type { SurfaceProps, SurfaceVariant } from "./primitives/Surface";
+
 export {
   Tabs,
   TabsIndicator,
