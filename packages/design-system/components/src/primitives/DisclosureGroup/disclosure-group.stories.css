@@ -1,0 +1,7 @@
+/* Layout for the DisclosureGroup stories */
+
+@layer storybook {
+  .disclosure-group-stories-width {
+    inline-size: 23rem;
+  }
+}
