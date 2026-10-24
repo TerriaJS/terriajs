@@ -76,8 +76,6 @@ export const Dot: Story = {
 
 // Badges always sit on an anchor; this overview takes them off it to compare
 // every variant, colour and size side by side, as laid out in the design
-const OFF_ANCHOR = { position: "static", translate: "none" } as const;
-
 export const All: Story = {
   render: () => (
     <div
@@ -97,7 +95,6 @@ export const All: Story = {
               variant={variant}
               size={size}
               key={`${size}-${variant}-${color}`}
-              style={OFF_ANCHOR}
             >
               <CircleDashedIcon />
               <Badge.Label>Label</Badge.Label>

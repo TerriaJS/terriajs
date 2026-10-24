@@ -83,6 +83,20 @@ describe("Badge", () => {
     expect(badge.top).toBeLessThan(anchor.top);
   });
 
+  it("sits inline, after its text, outside an anchor", async () => {
+    const screen = await render(
+      <p>
+        <span>Selected layers</span> <Badge data-testid="badge">1</Badge>
+      </p>
+    );
+
+    const badge = screen.getByTestId("badge").element();
+    expect(getComputedStyle(badge).position).toBe("static");
+    expect(badge.getBoundingClientRect().left).toBeGreaterThan(
+      screen.getByText("Selected layers").element().getBoundingClientRect().left
+    );
+  });
+
   it("forwards its ref to the badge element", async () => {
     const ref = createRef<HTMLSpanElement>();
     await render(<Badge ref={ref}>5</Badge>);

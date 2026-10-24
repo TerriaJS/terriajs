@@ -130,9 +130,10 @@
     flex-shrink: 0;
   }
 
-  /* The badge's centre sits a quarter of its size in from its anchor's
-     corner. Right and left follow the reading direction */
-  [data-tds="badge"][data-tds-placement] {
+  /* In an anchor, the badge's centre sits a quarter of its size in from the
+     anchor's corner; outside one it sits inline. Right and left follow the
+     reading direction */
+  [data-tds="badge-anchor"] > [data-tds="badge"][data-tds-placement] {
     --_badge-shift-x: 25%;
     --_badge-shift-y: 25%;
 
