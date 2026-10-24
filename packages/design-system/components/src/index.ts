@@ -157,6 +157,9 @@ export type {
 export { DisclosureGroup } from "./primitives/DisclosureGroup";
 export type { DisclosureGroupProps } from "./primitives/DisclosureGroup";
 
+export { FileTrigger } from "./primitives/FileTrigger";
+export type { FileTriggerProps } from "./primitives/FileTrigger";
+
 export {
   Dropdown,
   DropdownItem,
