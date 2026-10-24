@@ -274,6 +274,27 @@ export type {
 } from "./primitives/Select";
 
 export {
+  Accordion,
+  AccordionBody,
+  AccordionHeading,
+  AccordionIndicator,
+  AccordionItem,
+  AccordionPanel,
+  AccordionRoot,
+  AccordionTrigger
+} from "./primitives/Accordion";
+export type {
+  AccordionBodyProps,
+  AccordionHeadingProps,
+  AccordionIndicatorProps,
+  AccordionItemProps,
+  AccordionPanelProps,
+  AccordionProps,
+  AccordionTriggerProps,
+  AccordionVariant
+} from "./primitives/Accordion";
+
+export {
   Alert,
   AlertContent,
   AlertDescription,

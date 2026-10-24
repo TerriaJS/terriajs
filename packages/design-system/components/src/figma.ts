@@ -4,6 +4,7 @@ const FIGMA_FILE =
   "https://www.figma.com/design/dsDXz50atuBer9WlJXaflS/Terria-Design-System--WIP-";
 
 const FIGMA_PAGES = {
+  Accordion: "5375-79876",
   Alert: "5375-72355",
   AlertDialog: "7814-319",
   Badge: "19865-36040",
