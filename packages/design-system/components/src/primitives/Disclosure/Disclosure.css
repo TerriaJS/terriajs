@@ -1,0 +1,161 @@
+/**
+ * Disclosure Component Styles
+ *
+ * The trigger is a plain button and the body is spacing only: a Button as the
+ * trigger, or a Surface around the body, comes from where the disclosure is
+ * used.
+ */
+
+@layer terria-ds.components {
+  [data-tds="disclosure"] {
+    --_disclosure-gap: var(--terria-ds-space-lg);
+
+    /* Full width: the trigger spans the width, its content starting at the
+       start, and the content attaches to it */
+    &[data-tds-full-width] {
+      --_disclosure-gap: 0;
+    }
+  }
+
+  /* A Button trigger centres in the heading; full width, it fills it. As a
+     flex box the heading adds no line of its own text size around it */
+  [data-tds="disclosure-heading"] {
+    display: flex;
+    justify-content: center;
+  }
+
+  /* The plain trigger: a bare button (reset.css) the width of the heading,
+     laying out an icon, title and indicator in a row, with the focus ring */
+  [data-tds="disclosure-trigger"] {
+    display: flex;
+    flex: 1;
+    gap: var(--terria-ds-space-sm);
+    align-items: center;
+    border-radius: var(--terria-ds-radius-sm);
+    outline: none;
+    text-align: start;
+
+    &[data-focus-visible] {
+      box-shadow: var(--terria-ds-shadow-focus-ring);
+
+      /* Shadows are dropped in forced-colors mode; this outline shows there instead */
+      outline: var(--terria-ds-focus-ring-width) solid transparent;
+      outline-offset: var(--terria-ds-focus-ring-offset);
+    }
+
+    &[data-disabled] {
+      opacity: var(--terria-ds-effects-disabled-opacity);
+      cursor: not-allowed;
+    }
+  }
+
+  /* A full-width Button trigger starts its content at the start */
+  [data-tds="disclosure-heading"] > [data-tds="button"][data-tds-full-width] {
+    justify-content: flex-start;
+
+    & > span {
+      flex: 1;
+      justify-content: flex-start;
+    }
+  }
+
+  [data-tds="disclosure"][data-tds-full-width]
+    > [data-tds="disclosure-heading"]
+    > [data-tds="button"] {
+    --terria-ds-button-radius: var(--terria-ds-radius-lg);
+
+    flex: 1;
+    justify-content: flex-start;
+
+    & > span {
+      justify-content: flex-start;
+    }
+  }
+
+  [data-tds="disclosure"][data-tds-full-width][data-expanded]
+    > [data-tds="disclosure-heading"]
+    > [data-tds="button"] {
+    border-end-start-radius: 0;
+    border-end-end-radius: 0;
+  }
+
+  /* The indicator and content set their own timing, so they animate in an
+     Accordion item too */
+  [data-tds="disclosure-indicator"] {
+    --_disclosure-duration: 250ms;
+
+    display: inline-flex;
+    flex-shrink: 0;
+    transition: rotate var(--_disclosure-duration) ease-out;
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
+
+    &[data-expanded]:not([data-tds-static]) {
+      rotate: 180deg;
+    }
+
+    /* After the title it sits at the end, where the trigger has room */
+    &:last-child {
+      margin-inline-start: auto;
+    }
+  }
+
+  /* The panel animates its height and fades its content in. It clips while
+     it moves, and stops clipping once open, so focus rings, shadows and
+     popovers inside show */
+  [data-tds="disclosure-content"] {
+    --_disclosure-duration: 250ms;
+
+    /* stylelint-disable-next-line custom-property-pattern -- The value is defined by react-aria */
+    block-size: var(--disclosure-panel-height, auto);
+    overflow: clip;
+    opacity: 0;
+    transition:
+      block-size var(--_disclosure-duration) ease-in-out,
+      opacity var(--_disclosure-duration) ease-out,
+      overflow 0s allow-discrete;
+
+    [data-expanded] > & {
+      overflow: visible;
+      opacity: 1;
+      transition:
+        block-size var(--_disclosure-duration) ease-in-out,
+        opacity var(--_disclosure-duration) ease-out,
+        overflow 0s var(--_disclosure-duration) allow-discrete;
+
+      @starting-style {
+        overflow: clip;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      /* stylelint-disable-next-line block-no-redundant-nested-style-rules */
+      & {
+        transition: none;
+      }
+    }
+  }
+
+  /* The gap is a margin on the content's first child, a Surface or the
+     Body, inside the panel so it collapses with it. Full width, the content
+     attaches to the trigger */
+  [data-tds="disclosure-content"] > :first-child {
+    margin-block-start: var(--_disclosure-gap);
+
+    [data-tds-full-width] & {
+      border-start-start-radius: 0;
+      border-start-end-radius: 0;
+    }
+  }
+
+  /* Padding for content on a Surface. It lives here, not on the panel, so a
+     collapsed panel takes no space; content without a Surface can skip it */
+  [data-tds="disclosure-body"] {
+    display: flex;
+    flex-direction: column;
+    gap: var(--terria-ds-space-lg);
+    padding: var(--terria-ds-space-lg) var(--terria-ds-space-xl);
+  }
+}

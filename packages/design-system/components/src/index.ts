@@ -137,6 +137,24 @@ export type {
 } from "./primitives/Kbd";
 
 export {
+  Disclosure,
+  DisclosureBody,
+  DisclosureContent,
+  DisclosureHeading,
+  DisclosureIndicator,
+  DisclosureRoot,
+  DisclosureTrigger
+} from "./primitives/Disclosure";
+export type {
+  DisclosureBodyProps,
+  DisclosureContentProps,
+  DisclosureHeadingProps,
+  DisclosureIndicatorProps,
+  DisclosureProps,
+  DisclosureTriggerProps
+} from "./primitives/Disclosure";
+
+export {
   Dropdown,
   DropdownItem,
   DropdownMenu,

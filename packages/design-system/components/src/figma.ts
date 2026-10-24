@@ -14,6 +14,7 @@ const FIGMA_PAGES = {
   CheckboxGroup: "17290-24388",
   Chip: "5375-71211",
   CloseButton: "5375-69669",
+  Disclosure: "6160-642",
   Dropdown: "5375-70150",
   Effects: "17422-36753",
   Colors: "17361-32787",
