@@ -172,4 +172,19 @@ describe("Disclosure", () => {
 
     await expect.element(trigger).toHaveAttribute("aria-expanded", "true");
   });
+
+  it("keeps the gap above its content inside the panel, so it opens without a jump", async () => {
+    const screen = await renderDisclosure({ defaultExpanded: true });
+    const panel = screen.container.querySelector(
+      '[data-tds="disclosure-content"]'
+    );
+    const body = screen.container.querySelector('[data-tds="disclosure-body"]');
+    if (!panel || !body) throw new Error("content not rendered");
+
+    // The gap is the body's top margin; inside the panel, the body starts
+    // below the panel's top, and the panel's height, which animates, holds it
+    expect(body.getBoundingClientRect().top).toBeGreaterThan(
+      panel.getBoundingClientRect().top
+    );
+  });
 });

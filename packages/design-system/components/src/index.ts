@@ -420,6 +420,20 @@ export type {
   SliderTooltipContent,
   SliderTrackProps
 } from "./primitives/Slider";
+export {
+  moveItems,
+  SortableList,
+  SortableListDragHandle,
+  SortableListRoot
+} from "./primitives/SortableList";
+export type {
+  SortableItemState,
+  SortableListAxis,
+  SortableListDragFrom,
+  SortableListDragHandleProps,
+  SortableListDropIndicator,
+  SortableListProps
+} from "./primitives/SortableList";
 
 export {
   ButtonGroup,

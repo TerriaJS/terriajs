@@ -108,6 +108,10 @@
   [data-tds="disclosure-content"] {
     --_disclosure-duration: 250ms;
 
+    /* Holds the first child's top margin, the gap: clip alone lets it pass
+       through, so it would appear at once and only then the height grow */
+    display: flow-root;
+
     /* stylelint-disable-next-line custom-property-pattern -- The value is defined by react-aria */
     block-size: var(--disclosure-panel-height, auto);
     overflow: clip;
