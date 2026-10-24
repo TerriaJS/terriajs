@@ -157,6 +157,9 @@ export type {
 export { DisclosureGroup } from "./primitives/DisclosureGroup";
 export type { DisclosureGroupProps } from "./primitives/DisclosureGroup";
 
+export { DropZone, DropZoneLabel, DropZoneRoot } from "./primitives/DropZone";
+export type { DropZoneLabelProps, DropZoneProps } from "./primitives/DropZone";
+
 export { FileTrigger } from "./primitives/FileTrigger";
 export type { FileTriggerProps } from "./primitives/FileTrigger";
 

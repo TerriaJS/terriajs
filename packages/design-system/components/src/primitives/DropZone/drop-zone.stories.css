@@ -1,0 +1,26 @@
+/* A look for the DropZone stories; the design system leaves it to usage */
+
+@layer storybook {
+  .drop-zone-story {
+    display: grid;
+    gap: var(--terria-ds-space-sm);
+    justify-items: center;
+    inline-size: 22.5rem;
+    padding: var(--terria-ds-space-xl);
+    border: var(--terria-ds-border-width-default) dashed
+      var(--terria-ds-border-color-default);
+    border-radius: var(--terria-ds-radius-lg);
+    color: var(--terria-ds-text-muted);
+    text-align: center;
+    transition:
+      border-color 150ms ease-out,
+      background-color 150ms ease-out;
+
+    /* Something is dragged over it */
+    &[data-drop-target] {
+      border-color: var(--terria-ds-primary);
+      background-color: var(--terria-ds-primary-soft);
+      color: var(--terria-ds-primary-soft-foreground);
+    }
+  }
+}
