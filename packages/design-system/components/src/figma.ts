@@ -16,6 +16,7 @@ const FIGMA_PAGES = {
   Chip: "5375-71211",
   CloseButton: "5375-69669",
   ColorSwatch: "18408-5727",
+  ColorSwatchPicker: "18411-2327",
   Disclosure: "6160-642",
   DisclosureGroup: "17293-43646",
   Dropdown: "5375-70150",

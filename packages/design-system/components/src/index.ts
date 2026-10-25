@@ -158,6 +158,19 @@ export { DisclosureGroup } from "./primitives/DisclosureGroup";
 export type { DisclosureGroupProps } from "./primitives/DisclosureGroup";
 
 export { ColorSwatch, ColorSwatchRoot } from "./primitives/ColorSwatch";
+export {
+  ColorSwatchPicker,
+  ColorSwatchPickerIndicator,
+  ColorSwatchPickerItem,
+  ColorSwatchPickerRoot,
+  ColorSwatchPickerSwatch
+} from "./primitives/ColorSwatchPicker";
+export type {
+  ColorSwatchPickerIndicatorProps,
+  ColorSwatchPickerItemProps,
+  ColorSwatchPickerProps,
+  ColorSwatchPickerSwatchProps
+} from "./primitives/ColorSwatchPicker";
 export type {
   ColorSwatchProps,
   ColorSwatchShape,

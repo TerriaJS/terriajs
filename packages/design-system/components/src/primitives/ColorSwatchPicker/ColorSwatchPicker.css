@@ -1,0 +1,159 @@
+/**
+ * ColorSwatchPicker Component Styles
+ *
+ * A row of swatches. The picked one shrinks inside a ring of its own colour,
+ * with a check; sizes only set --_color-swatch-picker-* custom properties.
+ */
+
+@layer terria-ds.components {
+  [data-tds="color-swatch-picker"] {
+    --_color-swatch-picker-gap: var(--terria-ds-space-md);
+    --_color-swatch-picker-ring: var(--terria-ds-dimensions-border-width-2);
+
+    /* How small the picked swatch gets, leaving a gap inside the ring: 4px
+       smaller, as the design has it */
+    --_color-swatch-picker-picked: calc(28 / 32);
+
+    /* How long picking takes to show: the swatch shrinking, the ring and
+       the check appearing */
+    --_color-swatch-picker-duration: 200ms;
+
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--_color-swatch-picker-gap);
+    outline: none;
+
+    @media (prefers-reduced-motion: reduce) {
+      --_color-swatch-picker-duration: 0s;
+    }
+
+    &[data-layout="stack"] {
+      flex-direction: column;
+    }
+
+    &:is([data-tds-size="xs"], [data-tds-size="sm"]) {
+      --_color-swatch-picker-gap: var(--terria-ds-space-sm);
+    }
+
+    &:is([data-tds-size="lg"], [data-tds-size="xl"]) {
+      --_color-swatch-picker-ring: var(--terria-ds-dimensions-spacing-1);
+    }
+
+    &[data-tds-size="xs"] {
+      --_color-swatch-picker-picked: calc(14 / 16);
+    }
+
+    &[data-tds-size="sm"] {
+      --_color-swatch-picker-picked: calc(20 / 24);
+    }
+
+    &[data-tds-size="lg"] {
+      --_color-swatch-picker-picked: calc(32 / 36);
+    }
+
+    &[data-tds-size="xl"] {
+      --_color-swatch-picker-picked: calc(36 / 40);
+    }
+  }
+
+  [data-tds="color-swatch-picker-item"] {
+    /* Set from the item's colour */
+    --_color-swatch-picker-item-color: transparent;
+
+    position: relative;
+    display: flex;
+    border-radius: var(--terria-ds-radius-full);
+    outline: none;
+    cursor: pointer;
+
+    [data-tds-shape="square"] > & {
+      border-radius: var(--terria-ds-dimensions-radius-rounded-md);
+    }
+
+    &[data-focus-visible] {
+      box-shadow: var(--terria-ds-shadow-focus-ring);
+    }
+
+    &[data-disabled] {
+      opacity: var(--terria-ds-effects-disabled-opacity);
+      cursor: not-allowed;
+    }
+
+    /* A ring of its colour just outside it, which grows into place as it's
+       picked */
+    &::after {
+      position: absolute;
+      inset: calc(-1 * var(--_color-swatch-picker-ring));
+      border: var(--_color-swatch-picker-ring) solid
+        var(--_color-swatch-picker-item-color);
+      border-radius: calc(
+        var(--terria-ds-dimensions-radius-rounded-md) +
+          var(--_color-swatch-picker-ring)
+      );
+      content: "";
+      opacity: 0;
+      scale: var(--_color-swatch-picker-picked);
+      transition:
+        opacity var(--_color-swatch-picker-duration) ease-out,
+        scale var(--_color-swatch-picker-duration) ease-out;
+      pointer-events: none;
+    }
+
+    &[data-selected]::after {
+      opacity: 1;
+      scale: 1;
+    }
+
+    [data-tds-shape="circle"] > &::after {
+      border-radius: var(--terria-ds-radius-full);
+    }
+  }
+
+  /* Holds the swatch, with the check over it */
+  [data-tds="color-swatch-picker-item-content"] {
+    position: relative;
+    display: flex;
+
+    & > [data-tds="color-swatch"] {
+      transition: scale var(--_color-swatch-picker-duration) ease-out;
+    }
+
+    /* Picked, the swatch shrinks, leaving a gap inside the ring */
+    [data-selected] > & > [data-tds="color-swatch"] {
+      scale: var(--_color-swatch-picker-picked);
+    }
+  }
+
+  /* Centred over the swatch, a third of its size */
+  [data-tds="color-swatch-picker-indicator"] {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    inline-size: 35%;
+    block-size: 35%;
+    margin: auto;
+    color: var(--terria-ds-colors-white);
+    opacity: 0;
+    visibility: hidden;
+    scale: 0.5;
+    transition:
+      opacity var(--_color-swatch-picker-duration) ease-out,
+      scale var(--_color-swatch-picker-duration) ease-out,
+      visibility var(--_color-swatch-picker-duration);
+
+    [data-selected] > * > & {
+      opacity: 1;
+      visibility: visible;
+      scale: 1;
+    }
+
+    [data-tds-light] > & {
+      color: var(--terria-ds-colors-gray-950);
+    }
+
+    & > svg {
+      inline-size: 100%;
+      block-size: 100%;
+    }
+  }
+}
