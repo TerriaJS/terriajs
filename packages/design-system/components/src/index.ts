@@ -157,6 +157,12 @@ export type {
 export { DisclosureGroup } from "./primitives/DisclosureGroup";
 export type { DisclosureGroupProps } from "./primitives/DisclosureGroup";
 
+export { ColorSwatch, ColorSwatchRoot } from "./primitives/ColorSwatch";
+export type {
+  ColorSwatchProps,
+  ColorSwatchShape,
+  ColorSwatchSize
+} from "./primitives/ColorSwatch";
 export { DropZone, DropZoneLabel, DropZoneRoot } from "./primitives/DropZone";
 export type { DropZoneLabelProps, DropZoneProps } from "./primitives/DropZone";
 

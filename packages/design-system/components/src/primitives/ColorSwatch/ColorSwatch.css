@@ -1,0 +1,58 @@
+/**
+ * ColorSwatch Component Styles
+ *
+ * The colour, from --_color-swatch-color, over a checkerboard that shows
+ * through a transparent colour; sizes and shapes only set --_color-swatch-*.
+ */
+
+@layer terria-ds.components {
+  [data-tds="color-swatch"] {
+    /* Set from the color prop */
+    --_color-swatch-color: transparent;
+    --_color-swatch-size: var(--terria-ds-dimensions-spacing-8);
+    --_color-swatch-radius: var(--terria-ds-radius-full);
+    --_color-swatch-check: var(--terria-ds-dimensions-spacing-2);
+
+    box-sizing: border-box;
+    flex-shrink: 0;
+    inline-size: var(--_color-swatch-size);
+    block-size: var(--_color-swatch-size);
+    border-radius: var(--_color-swatch-radius);
+    /* eslint-disable css/no-invalid-properties -- valid; its grammar can't read a var() colour stop with a position */
+    background-image:
+      linear-gradient(var(--_color-swatch-color), var(--_color-swatch-color)),
+      repeating-conic-gradient(
+        var(--terria-ds-neutral) 0% 25%,
+        var(--terria-ds-surface-default) 0% 50%
+      );
+    /* eslint-enable css/no-invalid-properties */
+    background-position: center;
+    background-size:
+      auto,
+      var(--_color-swatch-check) var(--_color-swatch-check);
+
+    /* An edge, so a colour like the background's still shows */
+    box-shadow: var(--terria-ds-shadow-inner);
+
+    &[data-tds-shape="square"] {
+      --_color-swatch-radius: var(--terria-ds-dimensions-radius-rounded-md);
+    }
+
+    &[data-tds-size="xs"] {
+      --_color-swatch-size: var(--terria-ds-dimensions-spacing-4);
+      --_color-swatch-check: var(--terria-ds-dimensions-spacing-1);
+    }
+
+    &[data-tds-size="sm"] {
+      --_color-swatch-size: var(--terria-ds-dimensions-spacing-6);
+    }
+
+    &[data-tds-size="lg"] {
+      --_color-swatch-size: var(--terria-ds-dimensions-spacing-9);
+    }
+
+    &[data-tds-size="xl"] {
+      --_color-swatch-size: var(--terria-ds-dimensions-spacing-10);
+    }
+  }
+}
