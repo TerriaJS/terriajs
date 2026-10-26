@@ -11,6 +11,7 @@ const FIGMA_PAGES = {
   Button: "5375-69211",
   Breadcrumbs: "14153-3704",
   ButtonGroup: "14202-4550",
+  Calendar: "5375-71626",
   Card: "5375-72791",
   Checkbox: "5375-70992",
   CheckboxGroup: "17290-24388",

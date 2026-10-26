@@ -1,0 +1,417 @@
+/**
+ * Calendar Component Styles
+ *
+ * The design's values: 36px days, the selected one in primary, today in soft
+ * primary, the selected year in soft primary.
+ */
+
+@layer terria-ds.components {
+  [data-tds="calendar"] {
+    inline-size: var(--terria-ds-dimensions-spacing-64);
+    max-inline-size: 100%;
+    color: var(--terria-ds-text-foreground);
+    font-size: var(--terria-ds-text-size-body);
+    line-height: var(--terria-ds-line-height-body-lg);
+
+    /* Days and years stand in columns: figures of equal width line them up,
+       as the foundations' numbers rule (tds-numeric) has it */
+    font-variant-numeric: tabular-nums;
+    container-type: inline-size;
+
+    /* The year grid lies over the day grid */
+    &:has([data-tds="calendar-year-picker-grid"]) {
+      position: relative;
+    }
+  }
+
+  /* -------------------------------------------------------------------------
+   * Header
+   * ---------------------------------------------------------------------- */
+  [data-tds="calendar-header"] {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-block-size: var(--terria-ds-dimensions-spacing-14);
+    padding-block: var(--terria-ds-space-lg);
+    box-sizing: border-box;
+  }
+
+  [data-tds="calendar-heading"] {
+    flex: 1;
+    margin: 0;
+    font-size: var(--terria-ds-text-size-body);
+    font-weight: var(--terria-ds-font-medium);
+    line-height: var(--terria-ds-line-height-body-lg);
+  }
+
+  [data-tds="calendar-nav-button"] {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    inline-size: var(--terria-ds-dimensions-spacing-6);
+    block-size: var(--terria-ds-dimensions-spacing-6);
+    padding: 0;
+    border: none;
+    border-radius: var(--terria-ds-radius-sm);
+    outline: none;
+    background: none;
+    color: var(--terria-ds-primary-soft-foreground);
+    cursor: pointer;
+    transition:
+      transform 250ms ease-out,
+      background-color 100ms ease-out,
+      box-shadow 100ms ease-out,
+      opacity 150ms ease-out;
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
+
+    &[data-hovered] {
+      background-color: var(--terria-ds-neutral);
+    }
+
+    &[data-pressed] {
+      transform: scale(0.95);
+    }
+
+    &[data-focus-visible] {
+      outline: var(--terria-ds-focus-ring-width) solid transparent;
+      box-shadow: var(--terria-ds-shadow-focus-ring);
+    }
+
+    &[data-disabled] {
+      opacity: var(--terria-ds-effects-disabled-opacity);
+      cursor: not-allowed;
+    }
+
+    /* The arrows step months, which the open year grid hides */
+    [data-tds="calendar-header"]:has(
+        [data-tds="calendar-year-picker-trigger"][data-open]
+      )
+      & {
+      opacity: 0;
+      pointer-events: none;
+    }
+  }
+
+  [data-tds="calendar-nav-button-icon"] {
+    inline-size: var(--terria-ds-dimensions-spacing-4);
+    block-size: var(--terria-ds-dimensions-spacing-4);
+
+    &:dir(rtl) {
+      rotate: 180deg;
+    }
+  }
+
+  /* -------------------------------------------------------------------------
+   * Grid: CSS grid in place of the table, with rows and sections flattened
+   * so every cell sits in it
+   * ---------------------------------------------------------------------- */
+  [data-tds="calendar-grid"] {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    inline-size: 100%;
+    border-collapse: collapse;
+
+    /* Day view: header and body in grids of their own, so fewer than seven
+       days don't share a row with the weekday names */
+    [data-tds="calendar"][data-tds-view="day"] > & {
+      display: flex;
+      flex-direction: column;
+    }
+  }
+
+  :is([data-tds="calendar-grid-header"], [data-tds="calendar-grid-body"]) {
+    display: contents;
+
+    & > tr {
+      display: contents;
+    }
+
+    [data-tds="calendar"][data-tds-view="day"] & {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      inline-size: 100%;
+    }
+  }
+
+  [data-tds="calendar-grid-body"] > tr:first-child > td {
+    margin-block-start: var(--terria-ds-space-sm);
+  }
+
+  [data-tds="calendar-header-cell"] {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-block-end: var(--terria-ds-space-sm);
+    color: var(--terria-ds-text-muted);
+    font-size: var(--terria-ds-text-size-body);
+    font-weight: var(--terria-ds-font-medium);
+  }
+
+  /* -------------------------------------------------------------------------
+   * Days
+   * ---------------------------------------------------------------------- */
+  [data-tds="calendar-cell"] {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    inline-size: var(--terria-ds-dimensions-spacing-9);
+    block-size: var(--terria-ds-dimensions-spacing-9);
+    margin-inline: auto;
+    border-radius: var(--terria-ds-radius-full);
+    outline: none;
+    font-weight: var(--terria-ds-font-medium);
+    text-align: center;
+    cursor: pointer;
+    transition:
+      transform 250ms ease-out,
+      box-shadow 100ms ease-out;
+    -webkit-tap-highlight-color: transparent;
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
+
+    &[data-focus-visible] {
+      outline: var(--terria-ds-focus-ring-width) solid transparent;
+      box-shadow: var(--terria-ds-shadow-focus-ring);
+    }
+
+    &[data-hovered]:not([data-selected]) {
+      background-color: var(--terria-ds-neutral);
+    }
+
+    &[data-today] {
+      background-color: var(--terria-ds-primary-soft);
+      color: var(--terria-ds-primary-soft-foreground);
+
+      &[data-hovered]:not([data-selected]) {
+        background-color: var(--terria-ds-primary-soft-hover);
+      }
+    }
+
+    &[data-selected] {
+      background-color: var(--terria-ds-primary);
+      color: var(--terria-ds-primary-foreground);
+    }
+
+    &[data-pressed] {
+      background-color: var(--terria-ds-neutral);
+      transform: scale(0.95);
+
+      &[data-selected] {
+        background-color: var(--terria-ds-primary-hover);
+      }
+    }
+
+    &[data-outside-month] {
+      color: var(--terria-ds-text-muted);
+      opacity: var(--terria-ds-effects-disabled-opacity);
+    }
+
+    &[data-selected][data-outside-month] {
+      background-color: var(--terria-ds-neutral);
+    }
+
+    &[data-unavailable] {
+      opacity: var(--terria-ds-effects-disabled-opacity);
+      cursor: not-allowed;
+    }
+
+    &[data-disabled]:not([data-outside-month]) {
+      opacity: var(--terria-ds-effects-disabled-opacity);
+      text-decoration: line-through;
+      cursor: not-allowed;
+    }
+
+    /* A read-only calendar shows its value but doesn't take one */
+    [aria-readonly="true"] & {
+      pointer-events: none;
+    }
+
+    /* Week and day views: only filled cells take space, and stay round */
+    [data-tds="calendar"]:is([data-tds-view="week"], [data-tds-view="day"]) & {
+      inline-size: 100%;
+      block-size: auto;
+      aspect-ratio: 1;
+      place-self: center;
+    }
+  }
+
+  /* A 3px dot under the day's number */
+  [data-tds="calendar-cell-indicator"] {
+    position: absolute;
+    inset-block-end: var(--terria-ds-dimensions-spacing-1);
+    inset-inline-start: 50%;
+    inline-size: 3px;
+    block-size: 3px;
+    border-radius: var(--terria-ds-radius-full);
+    background-color: var(--terria-ds-text-muted);
+    translate: -50% 0;
+
+    [data-selected] > & {
+      background-color: var(--terria-ds-primary-foreground);
+    }
+  }
+
+  /* -------------------------------------------------------------------------
+   * Year picker: the day grid fades out before the year grid fades in, and
+   * back, so they're never both half there
+   * ---------------------------------------------------------------------- */
+  [data-tds="calendar"]:has([data-tds="calendar-year-picker-grid"])
+    > [data-tds="calendar-grid"] {
+    transition:
+      opacity 150ms ease-out,
+      visibility 0ms linear;
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
+  }
+
+  [data-tds="calendar"]:has([data-tds="calendar-year-picker-grid"][data-open])
+    > [data-tds="calendar-grid"] {
+    visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
+    transition:
+      opacity 150ms ease-out,
+      visibility 0ms linear 150ms;
+  }
+
+  [data-tds="calendar-year-picker-trigger"] {
+    display: flex;
+    flex: 1;
+    gap: var(--terria-ds-dimensions-spacing-1-5);
+    align-items: center;
+    justify-content: flex-start;
+    padding: 0;
+    border: none;
+    border-radius: var(--terria-ds-radius-sm);
+    outline: none;
+    background: none;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+    touch-action: manipulation;
+
+    &[data-focus-visible] {
+      outline: var(--terria-ds-focus-ring-width) solid transparent;
+      box-shadow: var(--terria-ds-shadow-focus-ring);
+    }
+  }
+
+  [data-tds="calendar-year-picker-trigger-heading"] {
+    font-size: var(--terria-ds-text-size-body);
+    font-weight: var(--terria-ds-font-medium);
+    transition: color 150ms ease-out;
+
+    [data-open] > & {
+      color: var(--terria-ds-primary-soft-foreground);
+    }
+  }
+
+  [data-tds="calendar-year-picker-trigger-indicator"] {
+    display: inline-flex;
+    color: var(--terria-ds-primary-soft-foreground);
+    transition: transform 150ms ease-out;
+
+    & > svg {
+      inline-size: var(--terria-ds-dimensions-spacing-3);
+      block-size: var(--terria-ds-dimensions-spacing-3);
+    }
+
+    &:dir(rtl) {
+      transform: rotate(180deg);
+    }
+
+    /* Points down while open */
+    [data-open] > & {
+      transform: rotate(90deg);
+    }
+  }
+
+  :is(
+    [data-tds="calendar-year-picker-trigger-heading"],
+    [data-tds="calendar-year-picker-trigger-indicator"]
+  ) {
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
+  }
+
+  /* Placed over the day grid; Calendar.YearPickerGrid sets its top and height
+     to the day grid's */
+  [data-tds="calendar-year-picker-grid"] {
+    position: absolute;
+    inset-inline: 0;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--terria-ds-space-sm);
+    align-content: start;
+    padding: var(--terria-ds-dimensions-spacing-1);
+    overflow: auto;
+    outline: none;
+    opacity: 0;
+    pointer-events: none;
+
+    &[data-open] {
+      opacity: 1;
+      pointer-events: auto;
+
+      /* A little after the day grid starts fading out */
+      transition: opacity 200ms ease-out 50ms;
+
+      @media (prefers-reduced-motion: reduce) {
+        transition: none;
+      }
+    }
+  }
+
+  [data-tds="calendar-year-picker-cell"] {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    block-size: var(--terria-ds-dimensions-spacing-8);
+    padding-inline: var(--terria-ds-dimensions-spacing-2-5);
+    border: none;
+    border-radius: var(--terria-ds-radius-full);
+    outline: none;
+    background: none;
+    color: var(--terria-ds-field-foreground);
+    font: inherit;
+    font-weight: var(--terria-ds-font-medium);
+    cursor: pointer;
+    user-select: none;
+    touch-action: manipulation;
+    transition:
+      background-color 100ms ease-out,
+      color 100ms ease-out,
+      box-shadow 100ms ease-out;
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
+
+    &[data-hovered]:not([data-selected]) {
+      background-color: var(--terria-ds-neutral);
+    }
+
+    &[data-selected] {
+      background-color: var(--terria-ds-primary-soft);
+      color: var(--terria-ds-primary-soft-foreground);
+
+      &[data-hovered] {
+        background-color: var(--terria-ds-primary-soft-hover);
+      }
+    }
+
+    &[data-focus-visible] {
+      outline: var(--terria-ds-focus-ring-width) solid transparent;
+      box-shadow: var(--terria-ds-shadow-focus-ring);
+    }
+  }
+}

@@ -12,7 +12,8 @@
     "@react-aria/utils": "3.34.1",
     "@terria/design-system-icons": "workspace:*",
     "react-aria": "3.53.1",
-    "react-aria-components": "1.22.1"
+    "react-aria-components": "1.22.1",
+    "react-stately": "3.51.0"
   },
   "devDependencies": {
     "@storybook/addon-docs": "catalog:storybook",

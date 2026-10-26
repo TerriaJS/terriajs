@@ -1,0 +1,25 @@
+/* Layout for the Calendar stories */
+
+@layer storybook {
+  /* As wide as its months: a size container would ignore them, so it's
+     reset */
+  .calendar-stories-months {
+    display: flex;
+    gap: var(--terria-ds-space-xl);
+    inline-size: auto;
+    container-type: normal;
+  }
+
+  .calendar-stories-month {
+    inline-size: var(--terria-ds-dimensions-spacing-64);
+
+    & [data-tds="calendar-heading"] {
+      text-align: center;
+    }
+  }
+
+  /* Holds the place of the arrow the other month has */
+  .calendar-stories-spacer {
+    inline-size: var(--terria-ds-dimensions-spacing-6);
+  }
+}

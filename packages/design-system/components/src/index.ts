@@ -228,6 +228,51 @@ export type {
 export { DropZone, DropZoneLabel, DropZoneRoot } from "./primitives/DropZone";
 export type { DropZoneLabelProps, DropZoneProps } from "./primitives/DropZone";
 export {
+  Calendar,
+  CalendarCell,
+  CalendarCellIndicator,
+  CalendarGrid,
+  CalendarGridBody,
+  CalendarGridHeader,
+  CalendarHeader,
+  CalendarHeaderCell,
+  CalendarHeading,
+  CalendarNavButton,
+  CalendarRoot,
+  CalendarYearPickerCell,
+  CalendarYearPickerGrid,
+  CalendarYearPickerGridBody,
+  CalendarYearPickerTrigger,
+  CalendarYearPickerTriggerHeading,
+  CalendarYearPickerTriggerIndicator,
+  YearPickerContext,
+  useCalendarOrRangeState,
+  useYearPicker
+} from "./primitives/Calendar";
+export type {
+  CalendarCellIndicatorProps,
+  CalendarCellProps,
+  CalendarGridBodyProps,
+  CalendarGridHeaderProps,
+  CalendarGridProps,
+  CalendarHeaderCellProps,
+  CalendarHeaderProps,
+  CalendarHeadingProps,
+  CalendarNavButtonProps,
+  CalendarProps,
+  CalendarRootProps,
+  CalendarSelectionMode,
+  CalendarYearPickerCellProps,
+  CalendarYearPickerCellRenderProps,
+  CalendarYearPickerGridBodyProps,
+  CalendarYearPickerGridProps,
+  CalendarYearPickerTriggerHeadingProps,
+  CalendarYearPickerTriggerIndicatorProps,
+  CalendarYearPickerTriggerProps,
+  CalendarYearPickerTriggerRenderProps,
+  YearPickerContextValue
+} from "./primitives/Calendar";
+export {
   DateInputGroupInput,
   DateInputGroupInputContainer,
   DateInputGroupPrefix,
