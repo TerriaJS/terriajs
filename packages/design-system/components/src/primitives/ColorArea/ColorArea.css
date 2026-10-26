@@ -1,0 +1,70 @@
+/**
+ * ColorArea Component Styles
+ *
+ * React Aria draws the area's gradient and places the thumb in the colour
+ * picked; this sets their shape and states.
+ */
+
+@layer terria-ds.components {
+  [data-tds="color-area"] {
+    flex-shrink: 0;
+    inline-size: 100%;
+    max-inline-size: var(--terria-ds-dimensions-spacing-60);
+    aspect-ratio: 1;
+    border-radius: var(--terria-ds-dimensions-radius-rounded-2xl);
+
+    /* An edge, so it shows on a background like its colours */
+    box-shadow: var(--terria-ds-shadow-inner);
+
+    &[data-disabled] {
+      opacity: var(--terria-ds-effects-disabled-opacity);
+    }
+
+    /* With showDots, a grid of faint dots over it */
+    &[data-tds-dots]::after {
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background-image: radial-gradient(
+        circle,
+        color-mix(in oklch, var(--terria-ds-colors-white) 20%, transparent)
+          var(--terria-ds-dimensions-border-width-1),
+        transparent var(--terria-ds-dimensions-border-width-1)
+      );
+      background-size: var(--terria-ds-space-sm) var(--terria-ds-space-sm);
+      content: "";
+      pointer-events: none;
+    }
+  }
+
+  /* A ring around the colour picked; larger while dragged */
+  [data-tds="color-area-thumb"] {
+    --_color-area-thumb-size: var(--terria-ds-dimensions-spacing-4);
+
+    box-sizing: border-box;
+    inline-size: var(--_color-area-thumb-size);
+    block-size: var(--_color-area-thumb-size);
+    border: calc(3 * var(--terria-ds-dimensions-border-width-1)) solid
+      var(--terria-ds-colors-white);
+    border-radius: var(--terria-ds-radius-full);
+    box-shadow:
+      0 0 0 var(--terria-ds-dimensions-border-width-1)
+        var(--terria-ds-effects-shadow-inner),
+      var(--terria-ds-shadow-inner);
+    transition:
+      inline-size 150ms ease-out,
+      block-size 150ms ease-out;
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
+
+    &[data-dragging] {
+      --_color-area-thumb-size: var(--terria-ds-dimensions-spacing-5);
+    }
+
+    &[data-focus-visible] {
+      box-shadow: var(--terria-ds-shadow-focus-ring);
+    }
+  }
+}

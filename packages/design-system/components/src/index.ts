@@ -157,6 +157,15 @@ export type {
 export { DisclosureGroup } from "./primitives/DisclosureGroup";
 export type { DisclosureGroupProps } from "./primitives/DisclosureGroup";
 
+export {
+  ColorArea,
+  ColorAreaRoot,
+  ColorAreaThumb
+} from "./primitives/ColorArea";
+export type {
+  ColorAreaProps,
+  ColorAreaThumbProps
+} from "./primitives/ColorArea";
 export { ColorSwatch, ColorSwatchRoot } from "./primitives/ColorSwatch";
 export {
   ColorSwatchPicker,
