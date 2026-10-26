@@ -287,6 +287,18 @@ export type {
   DatePickerTriggerProps
 } from "./primitives/DatePicker";
 export {
+  DateTimeSelector,
+  canGoBack,
+  defaultPath,
+  getView,
+  parentPath
+} from "./primitives/DateTimeSelector";
+export type {
+  DateTimePath,
+  DateTimeSelectorProps,
+  DateTimeView
+} from "./primitives/DateTimeSelector";
+export {
   DateInputGroupInput,
   DateInputGroupInputContainer,
   DateInputGroupPrefix,

@@ -1,0 +1,15 @@
+/* Layout for the DateTimeSelector stories */
+
+@layer storybook {
+  .date-time-selector-stories-row {
+    display: flex;
+    gap: var(--terria-ds-space-md);
+    align-items: center;
+  }
+
+  /* The 4px a Select's or Dropdown's popover has around its list; the
+     Dialog's own suits text, wider at the sides */
+  .date-time-selector-stories-dialog {
+    padding: var(--terria-ds-space-xs);
+  }
+}
