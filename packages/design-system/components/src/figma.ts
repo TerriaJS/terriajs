@@ -16,6 +16,7 @@ const FIGMA_PAGES = {
   Chip: "5375-71211",
   CloseButton: "5375-69669",
   ColorArea: "18514-47954",
+  ColorField: "18530-48241",
   ColorPicker: "18553-86417",
   ColorSlider: "18553-85013",
   ColorSwatch: "18408-5727",

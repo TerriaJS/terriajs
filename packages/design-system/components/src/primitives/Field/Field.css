@@ -1,5 +1,5 @@
 /**
- * Field styles: TextField, NumberField and SearchField, and their Label,
+ * Field styles: TextField, NumberField, SearchField and ColorField, and their Label,
  * Description and FieldError
  */
 
@@ -7,7 +7,8 @@
   :is(
     [data-tds="text-field"],
     [data-tds="number-field"],
-    [data-tds="search-field"]
+    [data-tds="search-field"],
+    [data-tds="color-field"]
   ) {
     display: inline-flex;
     flex-direction: column;

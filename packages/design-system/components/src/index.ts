@@ -167,6 +167,18 @@ export type {
   ColorAreaThumbProps
 } from "./primitives/ColorArea";
 export {
+  ColorField,
+  ColorFieldGroup,
+  ColorFieldInput,
+  ColorFieldRoot,
+  ColorFieldSwatch
+} from "./primitives/ColorField";
+export type {
+  ColorFieldGroupProps,
+  ColorFieldProps,
+  ColorFieldSwatchProps
+} from "./primitives/ColorField";
+export {
   ColorPicker,
   ColorPickerIndicator,
   ColorPickerPopover,

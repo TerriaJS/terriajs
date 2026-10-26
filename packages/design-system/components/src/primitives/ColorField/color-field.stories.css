@@ -1,0 +1,7 @@
+/* The width a ColorField fills in the stories, as in the design */
+
+@layer storybook {
+  .color-field-story {
+    inline-size: var(--terria-ds-dimensions-spacing-72);
+  }
+}

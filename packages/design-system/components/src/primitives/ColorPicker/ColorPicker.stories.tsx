@@ -9,11 +9,11 @@ import {
 import { ColorPicker } from ".";
 import { Button } from "../Button";
 import { ColorArea } from "../ColorArea";
+import { ColorField } from "../ColorField";
 import { ColorSlider } from "../ColorSlider";
 import { ColorSwatch } from "../ColorSwatch";
 import { ColorSwatchPicker } from "../ColorSwatchPicker";
-import { Label, TextField } from "../Field";
-import { InputGroup } from "../InputGroup";
+import { Label } from "../Field";
 import { ListBox } from "../ListBox";
 import { Select } from "../Select";
 import { figmaDesign } from "../../figma";
@@ -71,6 +71,16 @@ const hueAndShuffle = (onShuffle: () => void): React.ReactElement => (
   </div>
 );
 
+// The colour as hex, as at the bottom of the design's popover
+const hexField = (): React.ReactElement => (
+  <ColorField aria-label="Hex" fullWidth>
+    <ColorField.Group variant="secondary">
+      <ColorField.Swatch />
+      <ColorField.Input />
+    </ColorField.Group>
+  </ColorField>
+);
+
 const meta = {
   title: "Example/Color/ColorPicker",
   component: ColorPicker,
@@ -102,8 +112,8 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 /** As in the design: the trigger shows the colour, and the popover has the
- * suggested colours, the area, the hue slider and a button picking a colour
- * at random. Swatches, areas and sliders inside a ColorPicker show and change
+ * suggested colours, the area, the hue slider, a button picking a colour at
+ * random, and the colour as hex. Swatches, areas and sliders inside a ColorPicker show and change
  * its colour, with no value of their own */
 export const Default: Story = {
   render: function Render(args) {
@@ -121,6 +131,7 @@ export const Default: Story = {
           {hueAndShuffle(() => {
             setColor(randomColor());
           })}
+          {hexField()}
         </ColorPicker.Popover>
       </ColorPicker>
     );
@@ -252,30 +263,27 @@ export const Sliders: Story = {
   }
 };
 
-/** A colour marker inside a field opens the picker: the field's prefix is
- * ColorPicker.Trigger with a swatch, in the trigger slot, and the popover's
- * triggerRef is the field, so it opens below the whole field. The input
- * shows the colour as hex */
+/** A colour marker inside a ColorField opens the picker: the field's swatch
+ * is in ColorPicker.Trigger, and the popover's triggerRef is the field's
+ * group, so it opens below the whole field. The field changes the picker's
+ * colour, and the picker the field's */
 export const FieldMarker: Story = {
   render: function Render(args) {
-    const fieldRef = useRef<HTMLDivElement>(null);
-    const [color, setColor] = useState(() => parseColor("#0485f7"));
+    const groupRef = useRef<HTMLDivElement>(null);
 
     return (
       <div className="color-picker-story-field">
-        <ColorPicker {...args} value={color} onChange={setColor}>
-          <TextField fullWidth isReadOnly value={color.toString("hex")}>
+        <ColorPicker {...args} defaultValue="#0485f7">
+          <ColorField fullWidth>
             <Label>Fill</Label>
-            <InputGroup ref={fieldRef}>
-              <InputGroup.Prefix>
-                <ColorPicker.Trigger aria-label="Pick a colour">
-                  <ColorSwatch size="xs" />
-                </ColorPicker.Trigger>
-              </InputGroup.Prefix>
-              <InputGroup.Input />
-            </InputGroup>
-          </TextField>
-          <ColorPicker.Popover triggerRef={fieldRef}>
+            <ColorField.Group ref={groupRef}>
+              <ColorPicker.Trigger aria-label="Pick a colour">
+                <ColorField.Swatch />
+              </ColorPicker.Trigger>
+              <ColorField.Input />
+            </ColorField.Group>
+          </ColorField>
+          <ColorPicker.Popover triggerRef={groupRef}>
             {suggestions()}
             <ColorArea aria-label="Saturation and brightness" />
             <ColorSlider
