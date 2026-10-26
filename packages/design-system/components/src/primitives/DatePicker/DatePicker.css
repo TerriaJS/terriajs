@@ -1,0 +1,79 @@
+/**
+ * DatePicker Component Styles
+ *
+ * The field is a DateField's
+ * (Field.css, DateInputGroup.css); the popover is the Popover's
+ * (Popover.css).
+ */
+
+@layer terria-ds.components {
+  [data-tds="date-picker"] {
+    display: inline-flex;
+    flex-direction: column;
+    gap: var(--terria-ds-space-xs);
+  }
+
+  /* Names the popover after the field; takes focus but shows no ring */
+  [data-tds="date-picker-dialog"] {
+    outline: none;
+  }
+
+  /* The trigger in the field's suffix: an icon button */
+  [data-tds="date-picker-trigger"] {
+    display: inline-flex;
+    align-items: center;
+    padding: var(--terria-ds-dimensions-spacing-1);
+    border: none;
+    border-radius: var(--terria-ds-radius-sm);
+    outline: none;
+    background: none;
+    color: var(--terria-ds-field-placeholder);
+    cursor: pointer;
+    transition: box-shadow 150ms ease-out;
+    -webkit-tap-highlight-color: transparent;
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
+
+    &[data-focus-visible] {
+      outline: var(--terria-ds-focus-ring-width) solid transparent;
+      box-shadow: var(--terria-ds-shadow-focus-ring);
+    }
+
+    &[data-disabled] {
+      opacity: var(--terria-ds-effects-disabled-opacity);
+      cursor: not-allowed;
+    }
+  }
+
+  [data-tds="date-picker-trigger-indicator"] {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    & > svg {
+      inline-size: var(--terria-ds-dimensions-spacing-4);
+      block-size: var(--terria-ds-dimensions-spacing-4);
+    }
+  }
+
+  /* The trigger has a focus ring of its own; the field doesn't show one
+     around it too */
+  [data-tds="input-group"][data-focus-within]:has(
+      [data-tds="date-picker-trigger"][data-focused]
+    ) {
+    border-color: var(--terria-ds-field-border);
+    box-shadow: none;
+  }
+
+  [data-tds="popover"][data-trigger="DatePicker"] {
+    --_popover-radius: var(--terria-ds-radius-lg);
+
+    inline-size: fit-content;
+    padding: var(--terria-ds-space-md);
+    overflow: auto;
+    scrollbar-width: none;
+    outline: none;
+  }
+}

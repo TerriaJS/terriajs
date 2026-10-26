@@ -273,6 +273,20 @@ export type {
   YearPickerContextValue
 } from "./primitives/Calendar";
 export {
+  DatePicker,
+  DatePickerPopover,
+  DatePickerRoot,
+  DatePickerTrigger,
+  DatePickerTriggerIndicator
+} from "./primitives/DatePicker";
+export type {
+  DatePickerPopoverProps,
+  DatePickerProps,
+  DatePickerRootProps,
+  DatePickerTriggerIndicatorProps,
+  DatePickerTriggerProps
+} from "./primitives/DatePicker";
+export {
   DateInputGroupInput,
   DateInputGroupInputContainer,
   DateInputGroupPrefix,

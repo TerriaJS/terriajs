@@ -24,6 +24,7 @@ const FIGMA_PAGES = {
   ColorSwatch: "18408-5727",
   ColorSwatchPicker: "18411-2327",
   DateField: "17293-41856",
+  DatePicker: "5375-72308",
   Disclosure: "6160-642",
   DisclosureGroup: "17293-43646",
   Dropdown: "5375-70150",
