@@ -1,0 +1,24 @@
+/* The popover's rows in the ColorPicker stories, as in the design */
+
+@layer storybook {
+  .color-picker-story-suggestions {
+    justify-content: center;
+  }
+
+  /* The hue slider, and the button picking a colour at random */
+  .color-picker-story-hue {
+    display: flex;
+    gap: var(--terria-ds-space-sm);
+    align-items: center;
+    padding-inline: var(--terria-ds-space-xs);
+
+    & > [data-tds="color-slider"] {
+      flex: 1;
+    }
+  }
+
+  /* A field as wide as the picker's popover */
+  .color-picker-story-field {
+    inline-size: var(--terria-ds-dimensions-spacing-60);
+  }
+}
