@@ -73,6 +73,37 @@ export type {
   ModalSize,
   ModalScroll
 } from "./primitives/Modal";
+
+export {
+  Drawer,
+  DrawerBackdrop,
+  DrawerBody,
+  DrawerCloseTrigger,
+  DrawerContent,
+  DrawerDialog,
+  DrawerFooter,
+  DrawerHandle,
+  DrawerHeader,
+  DrawerHeading,
+  DrawerRoot,
+  DrawerTrigger
+} from "./primitives/Drawer";
+export type {
+  DrawerBackdropProps,
+  DrawerBackdropVariant,
+  DrawerBodyProps,
+  DrawerCloseTriggerProps,
+  DrawerContentProps,
+  DrawerDialogProps,
+  DrawerFooterProps,
+  DrawerHandleProps,
+  DrawerHeaderProps,
+  DrawerHeadingProps,
+  DrawerPlacement,
+  DrawerProps,
+  DrawerRootProps,
+  DrawerTriggerProps
+} from "./primitives/Drawer";
 export {
   Popover,
   PopoverArrow,

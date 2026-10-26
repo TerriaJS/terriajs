@@ -27,6 +27,7 @@ const FIGMA_PAGES = {
   DatePicker: "5375-72308",
   Disclosure: "6160-642",
   DisclosureGroup: "17293-43646",
+  Drawer: "21149-43114",
   Dropdown: "5375-70150",
   Effects: "17422-36753",
   Colors: "17361-32787",

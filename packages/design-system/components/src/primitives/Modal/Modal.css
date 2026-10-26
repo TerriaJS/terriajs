@@ -1,17 +1,21 @@
 /**
  * Modal Component Styles
  *
- * The layout here is shared with AlertDialog: each rule matches both
- * components' parts. What differs between them (the surface and body line
+ * The layout here is shared with AlertDialog and Drawer: each rule matches
+ * their parts too. What differs between them (the surface and body line
  * height) is set per component through --_dialog-* properties, at the end of
- * this file and in AlertDialog.css.
+ * this file, in AlertDialog.css and in Drawer.css.
  *
  * The container carries the gap to the viewport's edge as padding, so the
  * dialog inside it can simply fill it.
  */
 
 @layer terria-ds.components {
-  :is([data-tds="modal-backdrop"], [data-tds="alert-dialog-backdrop"]) {
+  :is(
+    [data-tds="modal-backdrop"],
+    [data-tds="alert-dialog-backdrop"],
+    [data-tds="drawer-backdrop"]
+  ) {
     --_modal-ease: cubic-bezier(0.4, 0, 0.2, 1);
 
     position: fixed;
@@ -197,7 +201,11 @@
   }
 
   /* Grows to fill the cover and full sizes; the others fit their content */
-  :is([data-tds="modal-dialog"], [data-tds="alert-dialog-dialog"]) {
+  :is(
+    [data-tds="modal-dialog"],
+    [data-tds="alert-dialog-dialog"],
+    [data-tds="drawer-dialog"]
+  ) {
     pointer-events: auto;
     position: relative;
     display: flex;
@@ -231,7 +239,11 @@
     }
   }
 
-  :is([data-tds="modal-header"], [data-tds="alert-dialog-header"]) {
+  :is(
+    [data-tds="modal-header"],
+    [data-tds="alert-dialog-header"],
+    [data-tds="drawer-header"]
+  ) {
     display: flex;
     flex-direction: column;
     flex-shrink: 0;
@@ -276,14 +288,23 @@
   /* Scrolls when the content is taller than the screen, keeping the header
      and footer in view. The header's gap to the body is 8px, not the
      dialog's 20px */
-  :is([data-tds="modal-body"], [data-tds="alert-dialog-body"]) {
+  :is(
+    [data-tds="modal-body"],
+    [data-tds="alert-dialog-body"],
+    [data-tds="drawer-body"]
+  ) {
     line-height: var(--terria-ds-line-height-body-lg);
     flex: 1 1 auto;
     min-block-size: 0;
     overflow: auto;
     color: var(--terria-ds-text-muted);
 
-    :is([data-tds="modal-header"], [data-tds="alert-dialog-header"]) + & {
+    :is(
+        [data-tds="modal-header"],
+        [data-tds="alert-dialog-header"],
+        [data-tds="drawer-header"]
+      )
+      + & {
       margin-block-start: calc(
         var(--terria-ds-dimensions-spacing-2) -
           var(--terria-ds-dimensions-spacing-5)
@@ -298,7 +319,11 @@
     }
   }
 
-  :is([data-tds="modal-footer"], [data-tds="alert-dialog-footer"]) {
+  :is(
+    [data-tds="modal-footer"],
+    [data-tds="alert-dialog-footer"],
+    [data-tds="drawer-footer"]
+  ) {
     display: flex;
     flex-shrink: 0;
     flex-wrap: wrap;
