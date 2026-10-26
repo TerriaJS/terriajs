@@ -515,6 +515,23 @@ export type {
   ButtonGroupProps,
   ButtonGroupSeparatorProps
 } from "./primitives/ButtonGroup";
+export {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardRoot,
+  CardTitle
+} from "./primitives/Card";
+export type {
+  CardContentProps,
+  CardDescriptionProps,
+  CardFooterProps,
+  CardHeaderProps,
+  CardProps,
+  CardTitleProps
+} from "./primitives/Card";
 
 export { ToggleButton } from "./primitives/ToggleButton";
 export type {

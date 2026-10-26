@@ -1,0 +1,60 @@
+/**
+ * Card Component Styles
+ *
+ * Surface draws the card; this lays out what's in it.
+ */
+
+@layer terria-ds.components {
+  [data-tds-card] {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: var(--terria-ds-space-md);
+    padding: var(--terria-ds-space-lg);
+
+    /* Over the header's end, which leaves space for it */
+    & > [data-tds="close-button"] {
+      position: absolute;
+      inset-block-start: var(--terria-ds-space-lg);
+      inset-inline-end: var(--terria-ds-space-md);
+    }
+  }
+
+  [data-tds="card-header"] {
+    display: flex;
+    flex-direction: column;
+    gap: var(--terria-ds-space-lg);
+    overflow-wrap: break-word;
+  }
+
+  [data-tds-card]:has(> [data-tds="close-button"]) > [data-tds="card-header"] {
+    padding-inline-end: var(--terria-ds-space-xl);
+  }
+
+  [data-tds="card-title"] {
+    margin: 0;
+    font-size: var(--terria-ds-text-size-body);
+    font-weight: var(--terria-ds-font-medium);
+    line-height: var(--terria-ds-line-height-body-lg);
+  }
+
+  [data-tds="card-description"] {
+    margin: 0;
+    color: var(--terria-ds-text-muted);
+    font-size: var(--terria-ds-text-size-nano);
+    line-height: var(--terria-ds-line-height-body);
+  }
+
+  [data-tds="card-content"] {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: var(--terria-ds-space-xs);
+  }
+
+  [data-tds="card-footer"] {
+    display: flex;
+    gap: var(--terria-ds-space-sm);
+    align-items: center;
+  }
+}
