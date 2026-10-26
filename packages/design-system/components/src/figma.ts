@@ -22,6 +22,7 @@ const FIGMA_PAGES = {
   ColorSlider: "18553-85013",
   ColorSwatch: "18408-5727",
   ColorSwatchPicker: "18411-2327",
+  DateField: "17293-41856",
   Disclosure: "6160-642",
   DisclosureGroup: "17293-43646",
   Dropdown: "5375-70150",
@@ -53,6 +54,7 @@ const FIGMA_PAGES = {
   TextField: "5375-69732",
   ToggleButton: "15237-23433",
   ToggleButtonGroup: "15251-25651",
+  TimeField: "17293-42243",
   Tooltip: "5375-71565",
   Typography: "17411-35676"
 } as const;

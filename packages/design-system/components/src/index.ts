@@ -227,6 +227,32 @@ export type {
 } from "./primitives/ColorSwatch";
 export { DropZone, DropZoneLabel, DropZoneRoot } from "./primitives/DropZone";
 export type { DropZoneLabelProps, DropZoneProps } from "./primitives/DropZone";
+export {
+  DateInputGroupInput,
+  DateInputGroupInputContainer,
+  DateInputGroupPrefix,
+  DateInputGroupRoot,
+  DateInputGroupSegment,
+  DateInputGroupSuffix
+} from "./primitives/DateInputGroup";
+export type {
+  DateInputGroupInputContainerProps,
+  DateInputGroupInputProps,
+  DateInputGroupPrefixProps,
+  DateInputGroupRootProps,
+  DateInputGroupSegmentProps,
+  DateInputGroupSuffixProps
+} from "./primitives/DateInputGroup";
+export { DateField, DateFieldRoot } from "./primitives/DateField";
+export type {
+  DateFieldProps,
+  DateFieldRootProps
+} from "./primitives/DateField";
+export { TimeField, TimeFieldRoot } from "./primitives/TimeField";
+export type {
+  TimeFieldProps,
+  TimeFieldRootProps
+} from "./primitives/TimeField";
 export { Link, LinkIcon, LinkRoot } from "./primitives/Link";
 export type { LinkIconProps, LinkProps } from "./primitives/Link";
 

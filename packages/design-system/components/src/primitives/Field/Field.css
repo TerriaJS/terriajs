@@ -1,6 +1,6 @@
 /**
- * Field styles: TextField, NumberField, SearchField and ColorField, and their Label,
- * Description and FieldError
+ * Field styles: TextField, NumberField, SearchField, ColorField, DateField and
+ * TimeField, and their Label, Description and FieldError
  */
 
 @layer terria-ds.components {
@@ -8,7 +8,9 @@
     [data-tds="text-field"],
     [data-tds="number-field"],
     [data-tds="search-field"],
-    [data-tds="color-field"]
+    [data-tds="color-field"],
+    [data-tds="date-field"],
+    [data-tds="time-field"]
   ) {
     display: inline-flex;
     flex-direction: column;
