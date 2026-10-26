@@ -166,6 +166,21 @@ export type {
   ColorAreaProps,
   ColorAreaThumbProps
 } from "./primitives/ColorArea";
+export {
+  ColorSlider,
+  ColorSliderOutput,
+  ColorSliderPrimitive,
+  ColorSliderRoot,
+  ColorSliderThumb,
+  ColorSliderTrack
+} from "./primitives/ColorSlider";
+export type {
+  ColorSliderOutputProps,
+  ColorSliderPrimitiveProps,
+  ColorSliderProps,
+  ColorSliderThumbProps,
+  ColorSliderTrackProps
+} from "./primitives/ColorSlider";
 export { ColorSwatch, ColorSwatchRoot } from "./primitives/ColorSwatch";
 export {
   ColorSwatchPicker,
