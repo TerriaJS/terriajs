@@ -9,12 +9,11 @@ import {
   createContext,
   forwardRef,
   useContext,
-  useLayoutEffect,
   useRef,
   useState,
   type ComponentPropsWithoutRef,
-  type ReactNode,
-  type RefObject
+  type CSSProperties,
+  type ReactNode
 } from "react";
 import type { DOMRenderProps } from "react-aria-components";
 import { composeRenderProps } from "react-aria-components/composeRenderProps";
@@ -32,6 +31,7 @@ import {
   type TabProps as AriaTabProps,
   type TabsProps as AriaTabsProps
 } from "react-aria-components/Tabs";
+import { ScrollShadow, type ScrollShadowVisibility } from "../ScrollShadow";
 import "./Tabs.css";
 
 type TabsVariant = "primary" | "secondary";
@@ -73,58 +73,20 @@ TabsRoot.displayName = "Tabs";
 
 type TabsListProps<T extends object = object> = AriaTabListProps<T>;
 
-// Whether there's more to scroll to before and after what's in view
-const useScrollEdges = (
-  ref: RefObject<HTMLDivElement | null>,
-  vertical: boolean
-): { start: boolean; end: boolean } => {
-  const [edges, setEdges] = useState({ start: false, end: false });
-
-  useLayoutEffect(() => {
-    const list = ref.current;
-    if (!list) return;
-
-    const update = (): void => {
-      // Right-to-left scroll positions run from 0 at the start to negative
-      const position = vertical ? list.scrollTop : Math.abs(list.scrollLeft);
-      const max = vertical
-        ? list.scrollHeight - list.clientHeight
-        : list.scrollWidth - list.clientWidth;
-      const start = position > 1;
-      const end = position < max - 1;
-      setEdges((current) =>
-        current.start === start && current.end === end
-          ? current
-          : { start, end }
-      );
-    };
-
-    update();
-    list.addEventListener("scroll", update, { passive: true });
-    // ponytail: observes the tabs there at mount; tabs added later are seen
-    // on the next scroll or resize
-    const observer = new ResizeObserver(update);
-    observer.observe(list);
-    for (const tab of list.children) observer.observe(tab);
-
-    return () => {
-      list.removeEventListener("scroll", update);
-      observer.disconnect();
-    };
-  }, [ref, vertical]);
-
-  return edges;
-};
-
 // The pill, or the underline, holding the tabs. When they don't fit, the
-// list scrolls, its ends fade, and arrows scroll it a page at a time. The
-// arrows sit beside the list, not in it: a tablist holds only tabs
+// list scrolls in a ScrollShadow, its ends fade, and arrows scroll it a page
+// at a time. The arrows sit beside the list, not in it: a tablist holds only
+// tabs
 const TabsList = <T extends object>(
   props: TabsListProps<T>
 ): React.ReactElement => {
   const vertical = useContext(VerticalContext);
   const listRef = useRef<HTMLDivElement>(null);
-  const edges = useScrollEdges(listRef, vertical);
+  const [shadows, setShadows] = useState<ScrollShadowVisibility>("none");
+  const edges = {
+    start: shadows === "both" || shadows === (vertical ? "top" : "left"),
+    end: shadows === "both" || shadows === (vertical ? "bottom" : "right")
+  };
 
   const scrollBy = (direction: 1 | -1): void => {
     const list = listRef.current;
@@ -143,12 +105,21 @@ const TabsList = <T extends object>(
   const Next = vertical ? ChevronDownIcon : ChevronRightIcon;
 
   return (
-    <div
-      data-tds="tabs-list-container"
-      data-tds-scroll-start={edges.start || undefined}
-      data-tds-scroll-end={edges.end || undefined}
-    >
-      <AriaTabList {...props} ref={listRef} data-tds="tabs-list" />
+    <div data-tds="tabs-list-container">
+      <ScrollShadow
+        ref={listRef}
+        orientation={vertical ? "vertical" : "horizontal"}
+        hideScrollBar
+        onVisibilityChange={setShadows}
+        // Each variant fades by its own amount
+        style={
+          {
+            "--terria-ds-scroll-shadow-size": "var(--_tabs-fade)"
+          } as CSSProperties
+        }
+      >
+        <AriaTabList {...props} data-tds="tabs-list" />
+      </ScrollShadow>
       {/* Not tab stops: the arrow keys already move between tabs */}
       <button
         type="button"

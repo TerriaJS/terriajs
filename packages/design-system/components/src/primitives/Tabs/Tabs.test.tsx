@@ -194,6 +194,13 @@ const renderMany = (dir?: "rtl"): ReturnType<typeof render> =>
     </div>
   );
 
+// The tablist scrolls in the ScrollShadow around it
+const scrollerOf = (tablist: Element): HTMLElement => {
+  const scroller = tablist.closest<HTMLElement>('[data-tds="scroll-shadow"]');
+  if (!scroller) throw new Error("No ScrollShadow around the tablist");
+  return scroller;
+};
+
 describe("Tabs scroll arrows", () => {
   it("don't show while the tabs fit", async () => {
     const screen = await renderTabs();
@@ -219,7 +226,7 @@ describe("Tabs scroll arrows", () => {
 
   it("show towards the hidden tabs, and scroll to them when pressed", async () => {
     const screen = await renderMany();
-    const list = screen.getByRole("tablist").element();
+    const list = scrollerOf(screen.getByRole("tablist").element());
     const next = screen.getByRole("button", { name: "Scroll to next tabs" });
     const previous = screen.getByRole("button", {
       name: "Scroll to previous tabs",
@@ -237,7 +244,7 @@ describe("Tabs scroll arrows", () => {
 
   it("scroll towards the end in right-to-left", async () => {
     const screen = await renderMany("rtl");
-    const list = screen.getByRole("tablist").element();
+    const list = scrollerOf(screen.getByRole("tablist").element());
 
     await screen.getByRole("button", { name: "Scroll to next tabs" }).click();
 
@@ -271,7 +278,7 @@ describe("Tabs that don't fit", () => {
         </Tabs>
       </div>
     );
-    const list = screen.getByRole("tablist").element();
+    const list = scrollerOf(screen.getByRole("tablist").element());
 
     expect(list.getBoundingClientRect().width).toBeLessThanOrEqual(200);
     expect(list.scrollWidth).toBeGreaterThan(list.clientWidth);

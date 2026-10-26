@@ -40,6 +40,7 @@ const FIGMA_PAGES = {
   ProgressCircle: "21302-79204",
   Radius: "17421-36561",
   RadioGroup: "5375-70882",
+  ScrollShadow: "5375-73776",
   SearchField: "17293-34733",
   Select: "5375-70822",
   Separator: "5375-70816",

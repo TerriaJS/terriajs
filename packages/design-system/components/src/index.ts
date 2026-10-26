@@ -567,6 +567,18 @@ export type {
   ChipVariant
 } from "./primitives/Chip";
 
+export {
+  ScrollShadow,
+  ScrollShadowRoot,
+  useScrollShadow
+} from "./primitives/ScrollShadow";
+export type {
+  ScrollShadowProps,
+  ScrollShadowRootProps,
+  ScrollShadowVisibility,
+  UseScrollShadowProps
+} from "./primitives/ScrollShadow";
+
 export { Surface } from "./primitives/Surface";
 export type { SurfaceProps, SurfaceVariant } from "./primitives/Surface";
 

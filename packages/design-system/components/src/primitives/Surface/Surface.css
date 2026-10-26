@@ -15,6 +15,15 @@
        only see the surface, and go dark */
     --terria-ds-button-backdrop: none;
 
+    /* Blurred scroll shadows tint to the surface's own colour, whichever
+       variant, not the page's. Declared here, so it takes each variant's
+       --_surface-bg */
+    --terria-ds-scroll-shadow-tint: color-mix(
+      in oklab,
+      var(--_surface-bg) 70%,
+      transparent
+    );
+
     border-radius: var(--terria-ds-radius-lg);
     background-color: var(--_surface-bg);
     color: var(--_surface-fg);
@@ -34,6 +43,7 @@
     &[data-tds-variant="transparent"] {
       --_surface-bg: var(--terria-ds-surface-transparent);
       --terria-ds-button-backdrop: initial;
+      --terria-ds-scroll-shadow-tint: initial;
 
       box-shadow: none;
       color: inherit;

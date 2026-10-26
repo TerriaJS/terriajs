@@ -99,49 +99,32 @@
     }
   }
 
-  /* Scrolls when the tabs don't fit. Scrolling clips what pokes out, hence
-     the tabs' inset focus ring */
-  [data-tds="tabs-list"] {
-    --_tabs-fade-start: 0px;
-    --_tabs-fade-end: 0px;
-    --_tabs-fade-to: right;
-
-    display: flex;
-    gap: var(--_tabs-list-gap);
+  /* Scrolls when the tabs don't fit, its ends fading where there's more;
+     the pill behind doesn't. Scrolling clips what pokes out, hence the
+     tabs' inset focus ring */
+  [data-tds="tabs-list-container"] > [data-tds="scroll-shadow"] {
     box-sizing: border-box;
     max-block-size: 100%;
-    padding: var(--_tabs-list-padding);
-    overflow: auto;
 
     /* A tab scrolled into view keeps the list's padding clear */
     scroll-padding: var(--_tabs-list-padding);
-    scrollbar-width: none;
+  }
 
-    /* The ends fade where there's more to scroll to; the pill behind doesn't */
-    mask-image: linear-gradient(
-      to var(--_tabs-fade-to),
-      transparent,
-      black var(--_tabs-fade-start),
-      black calc(100% - var(--_tabs-fade-end)),
-      transparent
-    );
+  [data-tds="tabs-list"] {
+    display: flex;
+    gap: var(--_tabs-list-gap);
+    box-sizing: border-box;
+    padding: var(--_tabs-list-padding);
 
-    &:dir(rtl) {
-      --_tabs-fade-to: left;
+    /* Wide as its tabs, so the end padding scrolls into view too; at least
+       as wide as the pill, so full-width tabs fill it */
+    &[data-orientation="horizontal"] {
+      inline-size: max-content;
+      min-inline-size: 100%;
     }
 
     &[data-orientation="vertical"] {
-      --_tabs-fade-to: bottom;
-
       flex-direction: column;
-    }
-
-    [data-tds-scroll-start] > & {
-      --_tabs-fade-start: var(--_tabs-fade);
-    }
-
-    [data-tds-scroll-end] > & {
-      --_tabs-fade-end: var(--_tabs-fade);
     }
   }
 
