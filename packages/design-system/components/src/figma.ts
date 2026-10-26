@@ -30,6 +30,7 @@ const FIGMA_PAGES = {
   Input: "17293-26222",
   InputGroup: "17293-29953",
   Kbd: "5375-70805",
+  Link: "5375-69635",
   ListBox: "5375-70869",
   Modal: "5375-77858",
   NumberField: "17293-33571",

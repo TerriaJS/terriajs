@@ -1,0 +1,55 @@
+/**
+ * Link Component Styles
+ *
+ * Medium text in the link colour, underlined while hovered; an icon after
+ * it sits towards the top of the text.
+ */
+
+@layer terria-ds.components {
+  [data-tds="link"] {
+    display: inline-flex;
+    gap: var(--terria-ds-dimensions-spacing-0-5);
+    align-items: flex-start;
+    padding-inline: var(--terria-ds-dimensions-spacing-0-5);
+    border-radius: var(--terria-ds-dimensions-radius-rounded-xl);
+    outline: none;
+    color: var(--terria-ds-text-link);
+    font-weight: var(--terria-ds-font-medium);
+    text-decoration: none;
+    text-decoration-color: var(--terria-ds-text-muted);
+    text-decoration-thickness: 10%;
+    text-underline-offset: 0.15em;
+    cursor: pointer;
+    transition: opacity 100ms ease-out;
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
+
+    &[data-hovered] {
+      text-decoration-line: underline;
+      opacity: 0.8;
+    }
+
+    &[data-focus-visible] {
+      box-shadow: var(--terria-ds-shadow-focus-ring);
+    }
+
+    &[data-disabled] {
+      opacity: var(--terria-ds-effects-disabled-opacity);
+      cursor: not-allowed;
+    }
+  }
+
+  /* 10px beside 14px text, as in the design; it scales with the text */
+  [data-tds="link-icon"] {
+    display: inline-flex;
+    flex-shrink: 0;
+    padding-block-start: 0.15em;
+
+    & > svg {
+      inline-size: 0.7em;
+      block-size: 0.7em;
+    }
+  }
+}

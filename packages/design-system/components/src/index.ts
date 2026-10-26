@@ -227,6 +227,8 @@ export type {
 } from "./primitives/ColorSwatch";
 export { DropZone, DropZoneLabel, DropZoneRoot } from "./primitives/DropZone";
 export type { DropZoneLabelProps, DropZoneProps } from "./primitives/DropZone";
+export { Link, LinkIcon, LinkRoot } from "./primitives/Link";
+export type { LinkIconProps, LinkProps } from "./primitives/Link";
 
 export { FileTrigger } from "./primitives/FileTrigger";
 export type { FileTriggerProps } from "./primitives/FileTrigger";
