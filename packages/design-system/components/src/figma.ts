@@ -7,6 +7,7 @@ const FIGMA_PAGES = {
   Accordion: "5375-79876",
   Alert: "5375-72355",
   AlertDialog: "7814-319",
+  Autocomplete: "14339-37049",
   Badge: "19865-36040",
   Button: "5375-69211",
   Breadcrumbs: "14153-3704",

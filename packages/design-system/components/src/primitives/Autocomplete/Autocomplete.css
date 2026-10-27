@@ -1,0 +1,215 @@
+/**
+ * Autocomplete Component Styles
+ *
+ * The trigger's field box comes from Input.css and its value from
+ * Select.css; this places the chevron and clear button in the trigger, and
+ * the search field above the scrolling list in the popover.
+ */
+
+@layer terria-ds.components {
+  [data-tds="autocomplete"] {
+    display: flex;
+    flex-direction: column;
+    gap: var(--terria-ds-space-xs);
+
+    &[data-tds-full-width] {
+      inline-size: 100%;
+    }
+  }
+
+  [data-tds="autocomplete-trigger"] {
+    position: relative;
+    isolation: isolate;
+    display: flex;
+    gap: var(--terria-ds-dimensions-spacing-0-5);
+    align-items: center;
+    min-block-size: var(--terria-ds-dimensions-spacing-9);
+    text-align: start;
+    user-select: none;
+    cursor: pointer;
+
+    /* Room for the chevron: 12px either side of it */
+    &:has([data-tds="autocomplete-indicator"]) {
+      padding-inline-end: calc(
+        var(--terria-ds-dimensions-spacing-10) -
+          var(--terria-ds-field-border-width)
+      );
+    }
+
+    [data-tds="autocomplete"][data-tds-variant="secondary"] > & {
+      --_input-bg: var(--terria-ds-neutral);
+      --_input-bg-hover: var(--terria-ds-neutral-hover);
+      --_input-bg-focus: var(--terria-ds-neutral);
+    }
+
+    [data-tds="autocomplete"][data-invalid] > & {
+      border-color: var(--terria-ds-field-border-error);
+    }
+
+    [data-tds="autocomplete"][data-disabled] > & {
+      opacity: var(--terria-ds-effects-disabled-opacity);
+      cursor: not-allowed;
+    }
+
+    /* Hovering the clear button highlights only the button, not the field */
+    &[data-hovered]:has([data-tds="autocomplete-clear-button"]:hover) {
+      background-color: var(--_input-bg);
+    }
+  }
+
+  /* The chevron at the end, turning while the list is open. The field shows
+     the focus ring, so the button doesn't */
+  [data-tds="autocomplete-indicator"] {
+    position: absolute;
+    inset-block: 0;
+    inset-inline-end: calc(
+      var(--terria-ds-space-md) - var(--terria-ds-field-border-width)
+    );
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    margin-block: auto;
+    padding: 0;
+    border: none;
+    outline: none;
+    background: none;
+    color: var(--terria-ds-field-placeholder);
+    cursor: pointer;
+    transition: rotate 150ms ease-out;
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
+
+    & > svg {
+      inline-size: var(--terria-ds-dimensions-icon-size-sm);
+      block-size: var(--terria-ds-dimensions-icon-size-sm);
+    }
+
+    &[data-open] {
+      rotate: 180deg;
+    }
+  }
+
+  /* A 12px cross in a 14px box; its circle, and the area it can be pressed
+     in, are 24px */
+  [data-tds="autocomplete-clear-button"] {
+    position: relative;
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    align-self: center;
+    inline-size: var(--terria-ds-dimensions-spacing-3-5);
+    block-size: var(--terria-ds-dimensions-spacing-3-5);
+    padding: 0;
+    border: none;
+    outline: none;
+    background: none;
+    color: var(--terria-ds-text-muted);
+    cursor: pointer;
+
+    /* Transitions only while there's something to clear, so it goes at once */
+    &:not([data-empty]) {
+      transition:
+        opacity 150ms ease-out,
+        scale 150ms ease-out;
+
+      @media (prefers-reduced-motion: reduce) {
+        transition: none;
+      }
+    }
+
+    &::before {
+      position: absolute;
+      inset: calc(
+        (
+            var(--terria-ds-dimensions-spacing-3-5) -
+              var(--terria-ds-dimensions-spacing-6)
+          ) /
+          2
+      );
+      border-radius: var(--terria-ds-radius-full);
+      background-color: var(--terria-ds-neutral);
+      opacity: 0;
+      content: "";
+      transition: opacity 150ms ease-out;
+
+      @media (prefers-reduced-motion: reduce) {
+        transition: none;
+      }
+    }
+
+    @media (hover: hover) {
+      &:hover::before {
+        opacity: 1;
+      }
+    }
+
+    &:active {
+      scale: 0.93;
+    }
+
+    /* Positioned, so it paints over the circle */
+    & > svg {
+      position: relative;
+      inline-size: var(--terria-ds-dimensions-spacing-3);
+      block-size: var(--terria-ds-dimensions-spacing-3);
+    }
+
+    &[data-empty] {
+      opacity: 0;
+      pointer-events: none;
+    }
+  }
+
+  /* As wide as the field. The search field stays at the top; the list below
+     it scrolls */
+  [data-tds="popover"][data-tds-autocomplete] {
+    --_popover-bg: var(--terria-ds-surface-overlay);
+    --_popover-radius: var(--terria-ds-radius-lg);
+
+    display: flex;
+    flex-direction: column;
+    /* stylelint-disable custom-property-pattern -- The value is defined by react-aria */
+    inline-size: var(--trigger-width, auto);
+    max-inline-size: var(--trigger-width, none);
+    /* stylelint-enable custom-property-pattern */
+    padding: var(--terria-ds-space-xs) 0 0;
+    overflow: hidden;
+
+    /* Scrolling past the end of the list doesn't scroll the page. Without
+       support the page just scrolls, as before */
+    /* eslint-disable-next-line css/use-baseline */
+    overscroll-behavior: contain;
+
+    & [data-tds="search-field"] {
+      flex-shrink: 0;
+      padding: var(--terria-ds-space-xs) var(--terria-ds-space-md);
+    }
+
+    /* min-block-size: 0 lets the list shrink below 320px when the popover is
+       held shorter (a short viewport, or inside a Modal); otherwise the
+       popover would clip its last options out of reach */
+    [data-tds="list-box"] {
+      min-block-size: 0;
+      max-block-size: var(--terria-ds-dimensions-spacing-80);
+      padding: 0 var(--terria-ds-space-xs) var(--terria-ds-space-xs);
+      overflow: auto;
+      outline: none;
+      scroll-padding-block: var(--terria-ds-space-xs);
+    }
+
+    [data-tds="list-box-item"] + [data-tds="list-box-item"] {
+      margin-block-start: var(--terria-ds-dimensions-spacing-0-5);
+    }
+
+    /* Nothing matches what's typed */
+    [data-tds="list-box"][data-empty] {
+      padding: var(--terria-ds-space-sm);
+      color: var(--terria-ds-text-muted);
+      text-align: center;
+    }
+  }
+}

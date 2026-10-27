@@ -1,6 +1,6 @@
 /**
- * Input Component Styles, shared with TextArea, InputGroup and the Select
- * trigger
+ * Input Component Styles, shared with TextArea, InputGroup, and the Select
+ * and Autocomplete triggers
  *
  * Variants only set --_input-* custom properties; the base rule consumes them.
  */
@@ -10,7 +10,8 @@
     [data-tds="input"],
     [data-tds="textarea"],
     [data-tds="input-group"],
-    [data-tds="select-trigger"]
+    [data-tds="select-trigger"],
+    [data-tds="autocomplete-trigger"]
   ) {
     --_input-bg: var(--terria-ds-field-background);
     --_input-bg-hover: var(--terria-ds-field-background-hover);
@@ -73,7 +74,8 @@
      keyboard */
   :is([data-tds="input"], [data-tds="textarea"])[data-focused],
   [data-tds="input-group"][data-focus-within],
-  [data-tds="select-trigger"][data-focus-visible] {
+  [data-tds="select-trigger"][data-focus-visible],
+  [data-tds="autocomplete-trigger"][data-focus-visible] {
     border-color: var(--terria-ds-field-border-focus);
     background-color: var(--_input-bg-focus);
     box-shadow: var(--terria-ds-shadow-focus-ring-field);
@@ -98,7 +100,9 @@
       )
     ),
   [data-tds="select"][data-invalid]
-    > [data-tds="select-trigger"][data-focus-visible] {
+    > [data-tds="select-trigger"][data-focus-visible],
+  [data-tds="autocomplete"][data-invalid]
+    > [data-tds="autocomplete-trigger"][data-focus-visible] {
     border-color: var(--terria-ds-field-border-error);
     box-shadow: var(--terria-ds-shadow-focus-ring-danger);
   }

@@ -469,6 +469,26 @@ export type {
 } from "./primitives/Spinner";
 
 export {
+  Autocomplete,
+  AutocompleteClearButton,
+  AutocompleteFilter,
+  AutocompleteIndicator,
+  AutocompletePopover,
+  AutocompleteRoot,
+  AutocompleteTrigger,
+  AutocompleteValue
+} from "./primitives/Autocomplete";
+export type {
+  AutocompleteClearButtonProps,
+  AutocompleteFilterProps,
+  AutocompleteIndicatorProps,
+  AutocompletePopoverProps,
+  AutocompleteProps,
+  AutocompleteRootProps,
+  AutocompleteTriggerProps
+} from "./primitives/Autocomplete";
+
+export {
   Select,
   SelectIndicator,
   SelectPopover,
