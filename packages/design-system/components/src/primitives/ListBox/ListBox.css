@@ -86,19 +86,25 @@
     }
   }
 
-  /* Where it's placed: first, it leads the row and keeps its space while
-     hidden, so the titles line up; after the title, it sits at the end */
+  /* The item keeps room at its end for the indicator */
+  [data-tds="list-box-item"]:has(> [data-tds="list-box-item-indicator"]) {
+    padding-inline-end: calc(
+      var(--terria-ds-space-md) * 2 + var(--terria-ds-dimensions-icon-size-sm)
+    );
+  }
+
+  /* Pinned to the item's end, wherever it is among the children */
   [data-tds="list-box-item-indicator"] {
+    position: absolute;
+    inset-block: 0;
+    inset-inline-end: var(--terria-ds-space-md);
     display: flex;
     flex-shrink: 0;
     align-items: center;
     justify-content: center;
     inline-size: var(--terria-ds-dimensions-icon-size-sm);
     block-size: var(--terria-ds-dimensions-icon-size-sm);
-
-    &:not(:first-child) {
-      margin-inline-start: auto;
-    }
+    margin-block: auto;
   }
 
   /* Grows in when its item becomes selected */

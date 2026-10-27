@@ -61,6 +61,34 @@ describe("ListBox", () => {
   });
 });
 
+describe("ListBox item indicator", () => {
+  it("sits at the end after a plain-text label", async () => {
+    const screen = await render(
+      <ListBox
+        aria-label="Layers"
+        selectionMode="single"
+        defaultSelectedKeys={["schools"]}
+      >
+        <ListBox.Item id="schools">
+          Schools
+          <ListBox.ItemIndicator />
+        </ListBox.Item>
+      </ListBox>
+    );
+    const item = screen.getByRole("option", { name: "Schools" }).element();
+    const indicator = item.querySelector(
+      '[data-tds="list-box-item-indicator"]'
+    );
+    if (!indicator) throw new Error("No indicator");
+
+    // 12px in from the item's end, as the design has it
+    expect(
+      item.getBoundingClientRect().right -
+        indicator.getBoundingClientRect().right
+    ).toBeCloseTo(12, 0);
+  });
+});
+
 // React 18 drops `ref` from plain function components; each part forwards it
 describe("ListBox refs", () => {
   it("reaches the item indicator element", async () => {
