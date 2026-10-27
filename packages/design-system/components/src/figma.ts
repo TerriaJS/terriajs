@@ -50,6 +50,7 @@ const FIGMA_PAGES = {
   SearchField: "17293-34733",
   Select: "5375-70822",
   Separator: "5375-70816",
+  Skeleton: "6141-14118",
   Slider: "5375-69689",
   Spinner: "5375-71607",
   Surface: "17294-52295",

@@ -388,6 +388,12 @@ export type {
   DropdownSubmenuTriggerProps
 } from "./primitives/Dropdown";
 
+export { Skeleton } from "./primitives/Skeleton";
+export type {
+  SkeletonAnimationType,
+  SkeletonProps
+} from "./primitives/Skeleton";
+
 export {
   Meter,
   MeterFill,

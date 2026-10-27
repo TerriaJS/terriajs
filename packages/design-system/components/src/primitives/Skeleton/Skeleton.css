@@ -1,0 +1,81 @@
+/**
+ * Skeleton Component Styles
+ */
+
+@layer terria-ds.components {
+  [data-tds="skeleton"] {
+    --_skeleton-shine: var(--terria-ds-surface-overlay);
+
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--terria-ds-radius-sm);
+    background-color: var(--terria-ds-neutral-soft);
+    pointer-events: none;
+  }
+
+  /* A light band that passes over it, start to end */
+  [data-tds="skeleton"][data-tds-animation="shimmer"]::after {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to right,
+      transparent,
+      var(--_skeleton-shine),
+      transparent
+    );
+    content: "";
+    translate: -100% 0;
+    animation: terria-ds-skeleton-shimmer 2s linear infinite;
+  }
+
+  [data-tds="skeleton"][data-tds-animation="pulse"] {
+    animation: terria-ds-skeleton-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  /* Holding other skeletons it draws only them, and animates them as one:
+     the shapes inside keep still while it pulses, or while its one band
+     passes over the lot */
+  [data-tds="skeleton"]:has([data-tds="skeleton"]) {
+    background: none;
+
+    & [data-tds="skeleton"] {
+      animation: none;
+    }
+
+    & [data-tds="skeleton"]::after {
+      content: none;
+      animation: none;
+    }
+
+    /* Blended as an overlay, the band shows on the shapes, not on the page
+       between them. Last in the tree, it paints over them */
+    &[data-tds-animation="shimmer"]::after {
+      background: linear-gradient(
+        to right,
+        transparent,
+        color-mix(in oklch, var(--_skeleton-shine) 50%, transparent),
+        transparent
+      );
+      mix-blend-mode: overlay;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-tds="skeleton"],
+    [data-tds="skeleton"]::after {
+      animation: none;
+    }
+  }
+
+  @keyframes terria-ds-skeleton-shimmer {
+    to {
+      translate: 200% 0;
+    }
+  }
+
+  @keyframes terria-ds-skeleton-pulse {
+    50% {
+      opacity: 0.5;
+    }
+  }
+}
