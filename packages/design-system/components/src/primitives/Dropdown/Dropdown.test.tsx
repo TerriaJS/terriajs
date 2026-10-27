@@ -116,6 +116,44 @@ describe("Dropdown", () => {
     ).not.toHaveAttribute("data-visible");
   });
 
+  it("leads each item with its indicator, before the text", async () => {
+    const screen = await render(
+      <Dropdown defaultOpen>
+        <Button>Base map</Button>
+        <Dropdown.Popover>
+          <Dropdown.Menu selectionMode="single" defaultSelectedKeys={["osm"]}>
+            <Dropdown.Item id="osm" textValue="OpenStreetMap">
+              <Dropdown.ItemIndicator />
+              <Label>OpenStreetMap</Label>
+            </Dropdown.Item>
+          </Dropdown.Menu>
+        </Dropdown.Popover>
+      </Dropdown>
+    );
+    const item = screen
+      .getByRole("menuitemradio", { name: "OpenStreetMap" })
+      .element();
+    const indicator = item.querySelector(
+      "[data-tds='list-box-item-indicator']"
+    );
+    const label = item.querySelector("[data-tds='label']");
+    if (!indicator || !label) throw new Error("No indicator or label");
+
+    // 12px in from the item's start, and 12px clear of the text, once the
+    // menu has grown in from its opening animation
+    await expect
+      .poll(
+        () =>
+          indicator.getBoundingClientRect().left -
+          item.getBoundingClientRect().left
+      )
+      .toBeCloseTo(12, 0);
+    expect(
+      label.getBoundingClientRect().left -
+        indicator.getBoundingClientRect().right
+    ).toBeCloseTo(12, 0);
+  });
+
   it("checks several items when it selects many", async () => {
     const screen = await render(
       <Dropdown defaultOpen>

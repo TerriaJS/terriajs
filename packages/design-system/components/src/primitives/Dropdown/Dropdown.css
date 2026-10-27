@@ -75,6 +75,20 @@
       }
     }
 
+    /* A menu leads its items with the indicator, where a list box ends
+       them with it: the item keeps room at its start instead */
+    [data-tds="list-box-item"]:has(> [data-tds="list-box-item-indicator"]) {
+      padding-inline: calc(
+          var(--terria-ds-space-md) * 2 +
+            var(--terria-ds-dimensions-icon-size-sm)
+        )
+        var(--terria-ds-space-md);
+    }
+
+    [data-tds="list-box-item-indicator"] {
+      inset-inline: var(--terria-ds-space-md) auto;
+    }
+
     [data-tds="label"] {
       line-height: inherit;
     }
