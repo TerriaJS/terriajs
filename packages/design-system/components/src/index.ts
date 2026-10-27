@@ -737,6 +737,25 @@ export type {
 } from "./primitives/Tabs";
 
 export {
+  Tag,
+  TagGroup,
+  TagGroupList,
+  TagGroupRoot,
+  TagRemoveButton,
+  TagRoot
+} from "./primitives/TagGroup";
+export type {
+  TagGroupListProps,
+  TagGroupProps,
+  TagGroupRootProps,
+  TagProps,
+  TagRemoveButtonProps,
+  TagRootProps,
+  TagSize,
+  TagVariant
+} from "./primitives/TagGroup";
+
+export {
   Breadcrumbs,
   BreadcrumbsItem,
   BreadcrumbsRoot

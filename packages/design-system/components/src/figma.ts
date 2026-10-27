@@ -53,6 +53,7 @@ const FIGMA_PAGES = {
   Surface: "17294-52295",
   Switch: "5375-71127",
   Tabs: "5375-79785",
+  TagGroup: "14288-4550",
   TextArea: "17293-35712",
   TextField: "5375-69732",
   ToggleButton: "15237-23433",

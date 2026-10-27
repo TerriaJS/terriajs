@@ -1,0 +1,8 @@
+/* Layout for the TagGroup stories */
+
+@layer storybook {
+  .tag-group-stories-stack {
+    display: grid;
+    gap: var(--terria-ds-space-xl);
+  }
+}
