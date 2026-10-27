@@ -41,6 +41,7 @@ const FIGMA_PAGES = {
   Meter: "21302-75220",
   Modal: "5375-77858",
   NumberField: "17293-33571",
+  Pagination: "19140-12498",
   Popover: "6192-4931",
   ProgressBar: "21302-78002",
   ProgressCircle: "21302-79204",

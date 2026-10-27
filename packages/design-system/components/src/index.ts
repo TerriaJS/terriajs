@@ -388,6 +388,32 @@ export type {
   DropdownSubmenuTriggerProps
 } from "./primitives/Dropdown";
 
+export {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationNextIcon,
+  PaginationPrevious,
+  PaginationPreviousIcon,
+  PaginationRoot,
+  PaginationSummary
+} from "./primitives/Pagination";
+export type {
+  PaginationContentProps,
+  PaginationEllipsisProps,
+  PaginationIconProps,
+  PaginationItemProps,
+  PaginationLinkProps,
+  PaginationNextProps,
+  PaginationPreviousProps,
+  PaginationProps,
+  PaginationSize,
+  PaginationSummaryProps
+} from "./primitives/Pagination";
+
 export { Skeleton } from "./primitives/Skeleton";
 export type {
   SkeletonAnimationType,

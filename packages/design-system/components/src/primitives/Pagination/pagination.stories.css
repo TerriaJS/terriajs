@@ -1,0 +1,18 @@
+/* Layout for the Pagination stories */
+
+@layer storybook {
+  .pagination-stories-frame {
+    max-inline-size: 100%;
+  }
+
+  /* The design's width, so the summary and pages sit apart on one row */
+  .pagination-stories-wide {
+    inline-size: 62rem;
+    max-inline-size: 100%;
+  }
+
+  .pagination-stories-stack {
+    display: grid;
+    gap: var(--terria-ds-space-xl);
+  }
+}
