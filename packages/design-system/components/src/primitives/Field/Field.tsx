@@ -37,6 +37,17 @@ const FieldError = (props: FieldErrorProps): React.ReactElement => {
 
 FieldError.displayName = "FieldError";
 
+type ErrorMessageProps = Omit<TextProps, "slot">;
+
+// An error for components that don't validate, such as a TagGroup: shown
+// whenever it's rendered, where a FieldError shows only when its field is
+// invalid
+const ErrorMessage = (props: ErrorMessageProps): React.ReactElement => {
+  return <Text {...props} slot="errorMessage" data-tds="field-error" />;
+};
+
+ErrorMessage.displayName = "ErrorMessage";
+
 type TextFieldProps = AriaTextFieldProps & {
   /** Fill the container's width; otherwise the field hugs its input */
   fullWidth?: boolean;
@@ -58,5 +69,11 @@ const TextField = ({
 
 TextField.displayName = "TextField";
 
-export { Label, Description, FieldError, TextField };
-export type { LabelProps, DescriptionProps, FieldErrorProps, TextFieldProps };
+export { Label, Description, FieldError, ErrorMessage, TextField };
+export type {
+  LabelProps,
+  DescriptionProps,
+  FieldErrorProps,
+  ErrorMessageProps,
+  TextFieldProps
+};

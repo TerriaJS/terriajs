@@ -128,9 +128,16 @@ export type { InputProps, InputVariant } from "./primitives/Input";
 export { TextArea } from "./primitives/TextArea";
 export type { TextAreaProps } from "./primitives/TextArea";
 
-export { Description, FieldError, Label, TextField } from "./primitives/Field";
+export {
+  Description,
+  ErrorMessage,
+  FieldError,
+  Label,
+  TextField
+} from "./primitives/Field";
 export type {
   DescriptionProps,
+  ErrorMessageProps,
   FieldErrorProps,
   LabelProps,
   TextFieldProps
