@@ -1,0 +1,80 @@
+/**
+ * Meter Component Styles
+ *
+ * Colors and sizes only set --_meter-* custom properties.
+ */
+
+@layer terria-ds.components {
+  /* The label and value on one row, the track below them */
+  [data-tds="meter"] {
+    --_meter-fill: var(--terria-ds-primary);
+    --_meter-height: var(--terria-ds-dimensions-spacing-2);
+
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: var(--terria-ds-dimensions-spacing-1);
+    align-items: center;
+    inline-size: 100%;
+  }
+
+  [data-tds="meter-output"] {
+    grid-column: 2;
+    color: var(--terria-ds-text-foreground);
+    font-size: var(--terria-ds-text-size-body);
+    font-weight: var(--terria-ds-font-medium);
+    font-variant-numeric: tabular-nums;
+    line-height: var(--terria-ds-line-height-body-lg);
+  }
+
+  [data-tds="meter-track"] {
+    position: relative;
+    grid-column: 1 / -1;
+    block-size: var(--_meter-height);
+    overflow: hidden;
+    border-radius: var(--terria-ds-radius-md);
+    background-color: var(--terria-ds-neutral);
+  }
+
+  [data-tds="meter-fill"] {
+    block-size: 100%;
+    border-radius: var(--terria-ds-dimensions-radius-rounded-xl);
+    background-color: var(--_meter-fill);
+    transition: inline-size 300ms ease-out;
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
+  }
+
+  /* ============================================================
+     SIZES
+     ============================================================ */
+
+  [data-tds="meter"][data-tds-size="sm"] {
+    --_meter-height: var(--terria-ds-dimensions-spacing-1);
+  }
+
+  [data-tds="meter"][data-tds-size="lg"] {
+    --_meter-height: var(--terria-ds-dimensions-spacing-3);
+  }
+
+  /* ============================================================
+     COLORS
+     ============================================================ */
+
+  [data-tds="meter"][data-tds-color="default"] {
+    --_meter-fill: var(--terria-ds-neutral-foreground);
+  }
+
+  [data-tds="meter"][data-tds-color="success"] {
+    --_meter-fill: var(--terria-ds-success);
+  }
+
+  [data-tds="meter"][data-tds-color="warning"] {
+    --_meter-fill: var(--terria-ds-warning);
+  }
+
+  [data-tds="meter"][data-tds-color="danger"] {
+    --_meter-fill: var(--terria-ds-danger);
+  }
+}

@@ -38,6 +38,7 @@ const FIGMA_PAGES = {
   Kbd: "5375-70805",
   Link: "5375-69635",
   ListBox: "5375-70869",
+  Meter: "21302-75220",
   Modal: "5375-77858",
   NumberField: "17293-33571",
   Popover: "6192-4931",

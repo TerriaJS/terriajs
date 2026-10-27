@@ -389,6 +389,22 @@ export type {
 } from "./primitives/Dropdown";
 
 export {
+  Meter,
+  MeterFill,
+  MeterOutput,
+  MeterRoot,
+  MeterTrack
+} from "./primitives/Meter";
+export type {
+  MeterColor,
+  MeterFillProps,
+  MeterOutputProps,
+  MeterProps,
+  MeterSize,
+  MeterTrackProps
+} from "./primitives/Meter";
+
+export {
   ProgressBar,
   ProgressBarFill,
   ProgressBarOutput,
