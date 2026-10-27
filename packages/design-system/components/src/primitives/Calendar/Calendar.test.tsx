@@ -1,9 +1,4 @@
-import {
-  CalendarDate,
-  getLocalTimeZone,
-  parseDate,
-  today
-} from "@internationalized/date";
+import { CalendarDate, parseDate } from "@internationalized/date";
 import { describe, expect, it, vi } from "vitest";
 import { I18nProvider } from "react-aria-components/I18nProvider";
 import { render } from "vitest-browser-react";
@@ -83,13 +78,10 @@ describe("Calendar", () => {
 
   it("marks today", async () => {
     const screen = await render(calendar());
-    const now = today(getLocalTimeZone());
 
-    const cell = screen
-      .getByRole("button", {
-        name: new RegExp(`${String(now.day)}, ${String(now.year)}`)
-      })
-      .first();
+    // Only today's name starts so; the same day of the month either side
+    // can be in view too
+    const cell = screen.getByRole("button", { name: /^Today, / });
     await expect.element(cell).toHaveAttribute("data-today");
   });
 
