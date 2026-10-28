@@ -26,7 +26,7 @@
     "finish": "Acabar",
     "previous": "Anterior",
     "exploreMapDataButton": {
-      "content": "## Explora dades del Bessó Digital\n\nExploreu el catàleg de dades disponibles del Terreny i afegiu-lo al Bessó Digital aquí. Podeu afegir diversos conjunts de dades alhora, i els veureu a continuació en el panell de dades del Bessó Digital."
+      "content": "## Explora dades del mapa\n\nExploreu el catàleg de dades disponibles del Terreny i afegiu-lo al mapa aquí. Podeu afegir diversos conjunts de dades alhora, i els veureu a continuació en el panell de dades del mapa."
     },
     "mapNavigationCompassOuterRing": {
       "content": "## Control de vista\n\nAquí podeu canviar la vista del mapa. Podeu canviar l'orientació de la vista utilitzant l'anell exterior i podeu inclinar l'angle de la càmera amb l'anell interior. Feu doble clic per restablir la vista."
