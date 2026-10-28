@@ -153,9 +153,14 @@ const suburbs = Array.from({ length: 5000 }, (_, i) => ({
   name: `Suburb ${String(i + 1)}`
 }));
 
-// Only the rows in view are rendered, so long lists stay fast
+// Only the rows in view are rendered, so long lists stay fast. Accessibility
+// checks run from the panel's button: run on each scroll, they stall it. The
+// code shown is the story's own: written out from the render, it would list
+// every item, and the page hangs sending it
 export const Virtualized: Story = {
   args: { "aria-label": "Suburbs", selectionMode: "multiple" },
+  globals: { a11y: { manual: true } },
+  parameters: { docs: { source: { type: "code" } } },
   render: (args) => (
     <Virtualizer layout={ListLayout} layoutOptions={{ rowHeight: 36 }}>
       <ListBox
