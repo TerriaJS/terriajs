@@ -4,6 +4,7 @@ import {
   type TextAreaProps as AriaTextAreaProps
 } from "react-aria-components/TextArea";
 import type { InputVariant } from "../Input";
+import { dataAttr } from "../../utils/dataAttr";
 import "../Input/Input.css";
 import "./TextArea.css";
 
@@ -20,7 +21,7 @@ const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
         ref={ref}
         data-tds="textarea"
         data-tds-variant={variant}
-        data-tds-full-width={fullWidth ? true : undefined}
+        data-tds-full-width={dataAttr(fullWidth)}
       />
     );
   }

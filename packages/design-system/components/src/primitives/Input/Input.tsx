@@ -3,6 +3,7 @@ import {
   Input as AriaInput,
   type InputProps as AriaInputProps
 } from "react-aria-components/Input";
+import { dataAttr } from "../../utils/dataAttr";
 import "./Input.css";
 
 type InputVariant = "primary" | "secondary";
@@ -20,7 +21,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
         ref={ref}
         data-tds="input"
         data-tds-variant={variant}
-        data-tds-full-width={fullWidth ? true : undefined}
+        data-tds-full-width={dataAttr(fullWidth)}
       />
     );
   }

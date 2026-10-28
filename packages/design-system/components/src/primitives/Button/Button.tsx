@@ -4,6 +4,7 @@ import {
   type ButtonProps as AriaButtonProps
 } from "react-aria-components/Button";
 import { composeRenderProps } from "react-aria-components/composeRenderProps";
+import { dataAttr } from "../../utils/dataAttr";
 import "./Button.css";
 import { ButtonGroupContext } from "../ButtonGroup/ButtonGroupContext";
 import { Spinner } from "../Spinner";
@@ -54,8 +55,8 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         data-tds="button"
         data-tds-variant={variant}
         data-tds-size={size}
-        data-tds-icon-only={isIconOnly ? true : undefined}
-        data-tds-full-width={fullWidth ? true : undefined}
+        data-tds-icon-only={dataAttr(isIconOnly)}
+        data-tds-full-width={dataAttr(fullWidth)}
       >
         {composeRenderProps(children, (children, { isPending }) => (
           <>

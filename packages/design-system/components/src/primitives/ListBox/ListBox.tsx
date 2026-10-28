@@ -14,6 +14,7 @@ import {
 } from "react-aria-components/ListBox";
 import { ItemLabelSlot } from "./ItemLabelSlot";
 import { ListBoxItemContext } from "./ListBoxItemContext";
+import { dataAttr } from "../../utils/dataAttr";
 import "./ListBox.css";
 
 type ListBoxProps<T extends object> = AriaListBoxProps<T>;
@@ -107,7 +108,7 @@ const ListBoxItemIndicator = forwardRef<
       ref={ref}
       data-tds="list-box-item-indicator"
       data-tds-type={type}
-      data-visible={isSelected || undefined}
+      data-visible={dataAttr(isSelected)}
     >
       {typeof children === "function"
         ? children({ isSelected })

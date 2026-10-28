@@ -32,6 +32,7 @@ import {
   type TabsProps as AriaTabsProps
 } from "react-aria-components/Tabs";
 import { ScrollShadow, type ScrollShadowVisibility } from "../ScrollShadow";
+import { dataAttr } from "../../utils/dataAttr";
 import "./Tabs.css";
 
 type TabsVariant = "primary" | "secondary";
@@ -63,7 +64,7 @@ const TabsRoot = ({
         data-tds="tabs"
         data-tds-keyboard-activation={keyboardActivation}
         data-tds-variant={variant}
-        data-tds-full-width={fullWidth || undefined}
+        data-tds-full-width={dataAttr(fullWidth)}
       />
     </VerticalContext.Provider>
   );

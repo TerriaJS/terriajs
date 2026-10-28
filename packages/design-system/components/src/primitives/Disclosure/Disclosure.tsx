@@ -15,6 +15,7 @@ import {
   Heading as AriaHeading,
   type HeadingProps as AriaHeadingProps
 } from "react-aria-components/Heading";
+import { dataAttr } from "../../utils/dataAttr";
 import "./Disclosure.css";
 
 type DisclosureProps = AriaDisclosureProps & {
@@ -29,7 +30,7 @@ const DisclosureRoot = forwardRef<HTMLDivElement, DisclosureProps>(
         {...props}
         ref={ref}
         data-tds="disclosure"
-        data-tds-full-width={fullWidth ? true : undefined}
+        data-tds-full-width={dataAttr(fullWidth)}
       />
     );
   }
@@ -89,8 +90,8 @@ const DisclosureIndicator = forwardRef<
       ref={ref}
       aria-hidden
       data-tds="disclosure-indicator"
-      data-expanded={isExpanded || undefined}
-      data-tds-static={isStatic ? true : undefined}
+      data-expanded={dataAttr(isExpanded)}
+      data-tds-static={dataAttr(isStatic)}
     >
       {children ?? <ChevronDownIcon size={16} />}
     </span>

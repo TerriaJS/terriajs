@@ -5,6 +5,7 @@ import {
   type CSSProperties
 } from "react";
 import { useScrollShadow } from "./useScrollShadow";
+import { dataAttr } from "../../utils/dataAttr";
 import "./ScrollShadow.css";
 
 // Ported from HeroUI v3's scroll-shadow.tsx. The blur variant is ours, from
@@ -166,7 +167,7 @@ const ScrollShadowRoot = forwardRef<HTMLDivElement, ScrollShadowRootProps>(
         ref={internalRef}
         data-tds="scroll-shadow"
         data-tds-variant={variant}
-        data-tds-hide-scrollbar={hideScrollBar || undefined}
+        data-tds-hide-scrollbar={dataAttr(hideScrollBar)}
         data-orientation={orientation}
         // Selects the scroll-driven fade where supported. Controlled and
         // disabled modes stay attribute-driven, matching what the hook does

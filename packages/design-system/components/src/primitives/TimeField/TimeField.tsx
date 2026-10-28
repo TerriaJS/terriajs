@@ -3,6 +3,7 @@ import {
   type TimeFieldProps as AriaTimeFieldProps,
   type TimeValue
 } from "react-aria-components/TimeField";
+import { dataAttr } from "../../utils/dataAttr";
 import "../Field/Field.css";
 
 type TimeFieldRootProps<T extends TimeValue> = AriaTimeFieldProps<T> & {
@@ -21,7 +22,7 @@ const TimeFieldRoot = <T extends TimeValue>({
     <AriaTimeField
       {...props}
       data-tds="time-field"
-      data-tds-full-width={fullWidth ? true : undefined}
+      data-tds-full-width={dataAttr(fullWidth)}
     />
   );
 };

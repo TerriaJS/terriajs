@@ -26,6 +26,7 @@ import {
 } from "react-aria-components/Button";
 import { getYearRange } from "./calendarUtils";
 import { useCalendarOrRangeState, useYearPicker } from "./YearPickerContext";
+import { dataAttr } from "../../utils/dataAttr";
 
 // A heading that opens a grid of years over the day grid, and the grid. React Aria has no year
 // picker component, only its hooks
@@ -85,7 +86,7 @@ const CalendarYearPickerTrigger = forwardRef<
         ref={ref}
         aria-expanded={isYearPickerOpen}
         aria-label={`${monthYear}, year selector`}
-        data-open={isYearPickerOpen || undefined}
+        data-open={dataAttr(isYearPickerOpen)}
         data-tds="calendar-year-picker-trigger"
         // Not one of the Calendar's previous and next slots
         slot={null}
@@ -530,7 +531,7 @@ const CalendarYearPickerCell = forwardRef<
         aria-label={formattedYear}
         // The grid is a group of buttons, which can't be selected
         aria-current={isSelected || undefined}
-        data-selected={isSelected || undefined}
+        data-selected={dataAttr(isSelected)}
         data-tds="calendar-year-picker-cell"
         data-year={year}
         excludeFromTabOrder={

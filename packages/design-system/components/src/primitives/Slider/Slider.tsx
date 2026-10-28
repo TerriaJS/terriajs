@@ -15,6 +15,7 @@ import {
 import { TooltipTriggerStateContext } from "react-aria-components/Tooltip";
 import { Label } from "../Field";
 import { TooltipArrow, TooltipContent } from "../Tooltip";
+import { dataAttr } from "../../utils/dataAttr";
 import "./Slider.css";
 
 // Lays out a Label, Slider.Output and Slider.Track
@@ -96,8 +97,8 @@ const SliderFill = (props: SliderFillProps): React.ReactElement => {
     <AriaSliderFill
       {...props}
       data-tds="slider-fill"
-      data-tds-fill-start={(start === 0 && end > start) || undefined}
-      data-tds-fill-end={(end === 1 && end > start) || undefined}
+      data-tds-fill-start={dataAttr(start === 0 && end > start)}
+      data-tds-fill-end={dataAttr(end === 1 && end > start)}
     />
   );
 };

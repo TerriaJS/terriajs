@@ -4,6 +4,7 @@ import {
   type ToggleButtonProps as AriaToggleButtonProps
 } from "react-aria-components/ToggleButton";
 import type { ButtonSize } from "../Button/Button";
+import { dataAttr } from "../../utils/dataAttr";
 import "../Button/Button.css";
 import { ButtonGroupContext } from "../ButtonGroup/ButtonGroupContext";
 import "./ToggleButton.css";
@@ -51,8 +52,8 @@ const ToggleButton = forwardRef<HTMLButtonElement, ToggleButtonProps>(
         data-tds-toggle
         data-tds-variant={BUTTON_VARIANTS[variant]}
         data-tds-size={sizeProp ?? group?.size ?? "md"}
-        data-tds-icon-only={isIconOnly ? true : undefined}
-        data-tds-full-width={fullWidth ? true : undefined}
+        data-tds-icon-only={dataAttr(isIconOnly)}
+        data-tds-full-width={dataAttr(fullWidth)}
       />
     );
   }

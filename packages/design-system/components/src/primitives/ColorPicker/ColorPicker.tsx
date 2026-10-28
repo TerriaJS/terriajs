@@ -22,6 +22,7 @@ import {
 import { DEFAULT_SLOT } from "react-aria-components/slots";
 import { ColorSwatch } from "../ColorSwatch";
 import { Popover, type PopoverContentProps } from "../Popover";
+import { dataAttr } from "../../utils/dataAttr";
 import "./ColorPicker.css";
 
 type ColorPickerProps = Omit<AriaColorPickerProps, "children"> & {
@@ -118,7 +119,7 @@ const ColorPickerIndicator = forwardRef<
       {...props}
       ref={ref}
       data-tds="color-picker-indicator"
-      data-tds-empty={isEmpty ? true : undefined}
+      data-tds-empty={dataAttr(isEmpty)}
     >
       {!isEmpty && (
         <>

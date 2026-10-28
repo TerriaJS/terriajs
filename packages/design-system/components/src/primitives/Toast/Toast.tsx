@@ -36,6 +36,7 @@ import {
 import { Button, type ButtonProps } from "../Button";
 import { CloseButton, type CloseButtonProps } from "../CloseButton";
 import { Spinner } from "../Spinner";
+import { dataAttr } from "../../utils/dataAttr";
 import {
   DEFAULT_GAP,
   DEFAULT_HOTKEY,
@@ -299,11 +300,11 @@ const ToastInner = <T extends object = ToastContentValue>(
       data-tds="toast"
       data-tds-variant={variant}
       data-tds-placement={finalPlacement}
-      data-entering={isEntering ? true : undefined}
-      data-exiting={isExiting ? true : undefined}
-      data-expanded={isExpanded ? true : undefined}
-      data-frontmost={isFrontmost ? true : undefined}
-      data-hidden={isHidden ? true : undefined}
+      data-entering={dataAttr(isEntering)}
+      data-exiting={dataAttr(isExiting)}
+      data-expanded={dataAttr(isExpanded)}
+      data-frontmost={dataAttr(isFrontmost)}
+      data-hidden={dataAttr(isHidden)}
       data-index={index}
     >
       {children}
@@ -370,7 +371,7 @@ const ToastIndicator = forwardRef<HTMLDivElement, ToastIndicatorProps>(
         {...props}
         ref={ref}
         data-tds="toast-indicator"
-        data-swapped={hasSwapped ? true : undefined}
+        data-swapped={dataAttr(hasSwapped)}
       >
         {children ?? <Icon aria-hidden />}
       </div>
@@ -792,7 +793,7 @@ const ToastProviderInner = <T extends object = ToastContentValue>(
       style={regionStyle}
       data-tds="toast-region"
       data-tds-placement={placement}
-      data-expanded={isExpanded ? true : undefined}
+      data-expanded={dataAttr(isExpanded)}
     >
       {(renderProps) => (
         <ToastContext.Provider value={contextValue}>

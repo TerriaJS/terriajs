@@ -3,6 +3,7 @@ import {
   type DateFieldProps as AriaDateFieldProps,
   type DateValue
 } from "react-aria-components/DateField";
+import { dataAttr } from "../../utils/dataAttr";
 import "../Field/Field.css";
 
 type DateFieldRootProps<T extends DateValue> = AriaDateFieldProps<T> & {
@@ -21,7 +22,7 @@ const DateFieldRoot = <T extends DateValue>({
     <AriaDateField
       {...props}
       data-tds="date-field"
-      data-tds-full-width={fullWidth ? true : undefined}
+      data-tds-full-width={dataAttr(fullWidth)}
     />
   );
 };

@@ -21,6 +21,7 @@ import {
   parentPath,
   type DateTimePath
 } from "./dateTimeSelectorModel";
+import { dataAttr } from "../../utils/dataAttr";
 import "./DateTimeSelector.css";
 
 type DateTimeSelectorProps = Omit<
@@ -179,7 +180,7 @@ const DateTimeSelector = forwardRef<HTMLDivElement, DateTimeSelectorProps>(
             <span
               key={index}
               data-tds="date-time-selector-dot"
-              data-tds-filled={filled.includes(index + firstDot) || undefined}
+              data-tds-filled={dataAttr(filled.includes(index + firstDot))}
             />
           ))}
         </span>

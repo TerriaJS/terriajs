@@ -13,6 +13,7 @@ import {
   InputGroupRoot,
   type InputGroupProps
 } from "../InputGroup";
+import { dataAttr } from "../../utils/dataAttr";
 import "../Field/Field.css";
 import "./NumberField.css";
 
@@ -30,7 +31,7 @@ const NumberFieldRoot = forwardRef<HTMLDivElement, NumberFieldProps>(
         {...props}
         ref={ref}
         data-tds="number-field"
-        data-tds-full-width={fullWidth ? true : undefined}
+        data-tds-full-width={dataAttr(fullWidth)}
       />
     );
   }

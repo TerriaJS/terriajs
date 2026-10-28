@@ -22,6 +22,7 @@ import {
   DisclosureGroup as AriaDisclosureGroup,
   type DisclosureGroupProps as AriaDisclosureGroupProps
 } from "react-aria-components/DisclosureGroup";
+import { dataAttr } from "../../utils/dataAttr";
 import "./Accordion.css";
 
 type AccordionVariant = "default" | "secondary";
@@ -44,7 +45,7 @@ const AccordionRoot = forwardRef<HTMLDivElement, AccordionProps>(
         ref={ref}
         data-tds="accordion"
         data-tds-variant={variant}
-        data-tds-hide-separator={hideSeparator ? true : undefined}
+        data-tds-hide-separator={dataAttr(hideSeparator)}
       />
     );
   }
@@ -113,8 +114,8 @@ const AccordionIndicator = forwardRef<HTMLSpanElement, AccordionIndicatorProps>(
         ref={ref}
         aria-hidden
         data-tds="accordion-indicator"
-        data-expanded={isExpanded || undefined}
-        data-tds-static={isStatic ? true : undefined}
+        data-expanded={dataAttr(isExpanded)}
+        data-tds-static={dataAttr(isStatic)}
       >
         {typeof children === "function"
           ? children({ isExpanded })

@@ -11,6 +11,7 @@ import {
   InputGroupRoot,
   type InputGroupProps
 } from "../InputGroup";
+import { dataAttr } from "../../utils/dataAttr";
 import "../Field/Field.css";
 import "./ColorField.css";
 
@@ -29,7 +30,7 @@ const ColorFieldRoot = forwardRef<HTMLDivElement, ColorFieldProps>(
         {...props}
         ref={ref}
         data-tds="color-field"
-        data-tds-full-width={fullWidth ? true : undefined}
+        data-tds-full-width={dataAttr(fullWidth)}
       />
     );
   }

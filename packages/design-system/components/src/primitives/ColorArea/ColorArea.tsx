@@ -5,6 +5,7 @@ import {
   type ColorAreaProps as AriaColorAreaProps,
   type ColorThumbProps as AriaColorThumbProps
 } from "react-aria-components/ColorArea";
+import { dataAttr } from "../../utils/dataAttr";
 import "./ColorArea.css";
 
 type ColorAreaProps = Omit<AriaColorAreaProps, "children"> & {
@@ -38,7 +39,7 @@ const ColorAreaRoot = forwardRef<HTMLDivElement, ColorAreaProps>(
         yChannel={yChannel}
         ref={ref}
         data-tds="color-area"
-        data-tds-dots={showDots ? true : undefined}
+        data-tds-dots={dataAttr(showDots)}
       >
         {children ?? <ColorAreaThumb />}
       </AriaColorArea>

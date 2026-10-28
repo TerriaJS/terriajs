@@ -8,6 +8,7 @@ import type { DOMRenderProps } from "react-aria-components";
 import { Group, type GroupProps } from "react-aria-components/Group";
 import type { ButtonSize, ButtonVariant } from "../Button/Button";
 import { ButtonGroupContext } from "./ButtonGroupContext";
+import { dataAttr } from "../../utils/dataAttr";
 import "./ButtonGroup.css";
 
 type ButtonGroupOrientation = "horizontal" | "vertical";
@@ -48,7 +49,7 @@ const ButtonGroupRoot = forwardRef<HTMLDivElement, ButtonGroupProps>(
           isDisabled={isDisabled}
           data-tds="button-group"
           data-tds-orientation={orientation}
-          data-tds-full-width={fullWidth ? true : undefined}
+          data-tds-full-width={dataAttr(fullWidth)}
         />
       </ButtonGroupContext.Provider>
     );

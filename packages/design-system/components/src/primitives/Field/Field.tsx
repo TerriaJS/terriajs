@@ -11,6 +11,7 @@ import {
   TextField as AriaTextField,
   type TextFieldProps as AriaTextFieldProps
 } from "react-aria-components/TextField";
+import { dataAttr } from "../../utils/dataAttr";
 import "./Field.css";
 
 type LabelProps = AriaLabelProps;
@@ -62,7 +63,7 @@ const TextField = ({
     <AriaTextField
       {...props}
       data-tds="text-field"
-      data-tds-full-width={fullWidth ? true : undefined}
+      data-tds-full-width={dataAttr(fullWidth)}
     />
   );
 };

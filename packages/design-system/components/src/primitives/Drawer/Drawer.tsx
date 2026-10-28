@@ -29,6 +29,7 @@ import {
 import { ButtonGroupContext } from "../ButtonGroup/ButtonGroupContext";
 import { CloseButton, type CloseButtonProps } from "../CloseButton";
 import { useDrawerDrag, type DrawerPlacement } from "./useDrawerDrag";
+import { dataAttr } from "../../utils/dataAttr";
 import "../Modal/Modal.css";
 import "./Drawer.css";
 
@@ -153,7 +154,7 @@ const DrawerDialog = forwardRef<HTMLElement, DrawerDialogProps>(
         ref={mergedRef}
         data-tds="drawer-dialog"
         data-tds-placement={placement}
-        data-tds-dismissable={isDismissable || undefined}
+        data-tds-dismissable={dataAttr(isDismissable)}
       />
     );
   }

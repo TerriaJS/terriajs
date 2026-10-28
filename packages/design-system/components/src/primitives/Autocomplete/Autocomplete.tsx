@@ -31,6 +31,7 @@ import {
 import type { InputVariant } from "../Input";
 import { PopoverContent, type PopoverContentProps } from "../Popover";
 import { SelectValue } from "../Select";
+import { dataAttr } from "../../utils/dataAttr";
 import "../Input/Input.css";
 import "./Autocomplete.css";
 
@@ -83,7 +84,7 @@ const AutocompleteRoot = <
         isDisabled={isDisabled}
         data-tds="autocomplete"
         data-tds-variant={variant}
-        data-tds-full-width={fullWidth ? true : undefined}
+        data-tds-full-width={dataAttr(fullWidth)}
       />
     </AutocompleteContext.Provider>
   );
@@ -152,7 +153,7 @@ const AutocompleteIndicator = forwardRef<
       {...props}
       ref={ref}
       data-tds="autocomplete-indicator"
-      data-open={state?.isOpen ? true : undefined}
+      data-open={dataAttr(state?.isOpen)}
     >
       {children ?? <ChevronDownIcon aria-hidden />}
     </AriaButton>
@@ -194,7 +195,7 @@ const AutocompleteClearButton = forwardRef<
       {...props}
       ref={mergedRef}
       data-tds="autocomplete-clear-button"
-      data-empty={isEmpty || undefined}
+      data-empty={dataAttr(isEmpty)}
       onClick={(event) => {
         // A single select won't take an empty selection, so its value is
         // reset instead

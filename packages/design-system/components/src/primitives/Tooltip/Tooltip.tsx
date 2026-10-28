@@ -17,6 +17,7 @@ import {
 } from "react-aria-components/Tooltip";
 import { parseCSSTime } from "../../utils/parseCSSTime";
 import { useCSSVariable } from "../../hooks/useCSSVariable";
+import { dataAttr } from "../../utils/dataAttr";
 import "./Tooltip.css";
 
 // React Aria skips the enter and exit animations while one tooltip replaces
@@ -97,7 +98,7 @@ const TooltipContent = ({
       offset={offset ?? (showArrow ? 7 : 3)}
       arrowBoundaryOffset={arrowBoundaryOffset}
       data-tds="tooltip"
-      data-tds-inverse={isInverse || undefined}
+      data-tds-inverse={dataAttr(isInverse)}
     />
   );
 };

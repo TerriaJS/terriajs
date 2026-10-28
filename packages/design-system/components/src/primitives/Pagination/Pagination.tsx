@@ -4,6 +4,7 @@ import {
   Button as AriaButton,
   type ButtonProps as AriaButtonProps
 } from "react-aria-components/Button";
+import { dataAttr } from "../../utils/dataAttr";
 import "./Pagination.css";
 
 type PaginationSize = "sm" | "md" | "lg";
@@ -78,7 +79,7 @@ const PaginationLink = forwardRef<HTMLButtonElement, PaginationLinkProps>(
         {...props}
         ref={ref}
         data-tds="pagination-link"
-        data-active={isActive ? true : undefined}
+        data-active={dataAttr(isActive)}
       />
     );
   }

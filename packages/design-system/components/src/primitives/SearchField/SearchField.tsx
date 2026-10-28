@@ -13,6 +13,7 @@ import {
   InputGroupRoot,
   type InputGroupProps
 } from "../InputGroup";
+import { dataAttr } from "../../utils/dataAttr";
 import "../CloseButton/CloseButton.css";
 import "../Field/Field.css";
 import "./SearchField.css";
@@ -31,7 +32,7 @@ const SearchFieldRoot = forwardRef<HTMLDivElement, SearchFieldProps>(
         {...props}
         ref={ref}
         data-tds="search-field"
-        data-tds-full-width={fullWidth ? true : undefined}
+        data-tds-full-width={dataAttr(fullWidth)}
       />
     );
   }

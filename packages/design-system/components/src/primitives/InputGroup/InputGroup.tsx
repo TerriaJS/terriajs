@@ -12,6 +12,7 @@ import {
   type TextAreaProps as AriaTextAreaProps
 } from "react-aria-components/TextArea";
 import type { InputVariant } from "../Input";
+import { dataAttr } from "../../utils/dataAttr";
 import "../Input/Input.css";
 import "./InputGroup.css";
 
@@ -45,8 +46,8 @@ const InputGroupRoot = forwardRef<HTMLDivElement, InputGroupProps>(
         ref={ref}
         data-tds="input-group"
         data-tds-variant={variant}
-        data-tds-full-width={fullWidth ? true : undefined}
-        data-tds-divided={isDivided ? true : undefined}
+        data-tds-full-width={dataAttr(fullWidth)}
+        data-tds-divided={dataAttr(isDivided)}
         data-tds-orientation={orientation}
       />
     );

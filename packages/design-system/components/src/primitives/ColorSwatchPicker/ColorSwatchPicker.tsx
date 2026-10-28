@@ -20,6 +20,7 @@ import {
   type ColorSwatchShape,
   type ColorSwatchSize
 } from "../ColorSwatch";
+import { dataAttr } from "../../utils/dataAttr";
 import "./ColorSwatchPicker.css";
 
 type ColorSwatchPickerProps = AriaColorSwatchPickerProps & {
@@ -95,7 +96,7 @@ const ColorSwatchPickerItem = forwardRef<
       {({ color }) => (
         <span
           data-tds="color-swatch-picker-item-content"
-          data-tds-light={isLight(color) || undefined}
+          data-tds-light={dataAttr(isLight(color))}
         >
           {children ?? (
             <>

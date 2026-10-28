@@ -4,6 +4,7 @@ import {
   type ToggleButtonGroupProps as AriaToggleButtonGroupProps
 } from "react-aria-components/ToggleButtonGroup";
 import type { ButtonSize } from "../Button/Button";
+import { dataAttr } from "../../utils/dataAttr";
 import "../ButtonGroup/ButtonGroup.css";
 import { ButtonGroupContext } from "../ButtonGroup/ButtonGroupContext";
 import "./ToggleButtonGroup.css";
@@ -48,8 +49,8 @@ const ToggleButtonGroupRoot = forwardRef<
           data-tds="button-group"
           data-tds-toggle
           data-tds-orientation={orientation}
-          data-tds-full-width={fullWidth ? true : undefined}
-          data-tds-detached={isDetached ? true : undefined}
+          data-tds-full-width={dataAttr(fullWidth)}
+          data-tds-detached={dataAttr(isDetached)}
         />
       </ButtonGroupContext.Provider>
     );

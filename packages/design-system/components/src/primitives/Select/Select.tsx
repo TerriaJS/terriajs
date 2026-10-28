@@ -19,6 +19,7 @@ import {
 } from "react-aria-components/Select";
 import type { InputVariant } from "../Input";
 import { PopoverContent, type PopoverContentProps } from "../Popover";
+import { dataAttr } from "../../utils/dataAttr";
 import "../Input/Input.css";
 import "./Select.css";
 
@@ -51,7 +52,7 @@ const SelectRoot = <
         {...props}
         data-tds="select"
         data-tds-variant={variant}
-        data-tds-full-width={fullWidth ? true : undefined}
+        data-tds-full-width={dataAttr(fullWidth)}
       />
     </SelectContext.Provider>
   );
@@ -159,7 +160,7 @@ const SelectClearButton = forwardRef<HTMLSpanElement, SelectClearButtonProps>(
         {...props}
         ref={ref}
         data-tds="select-clear-button"
-        data-empty={isEmpty || undefined}
+        data-empty={dataAttr(isEmpty)}
         onPointerDown={(event) => {
           // Keep the press from reaching the trigger, which would open the list
           event.stopPropagation();
