@@ -707,17 +707,21 @@ export {
   TreeItemContent,
   TreeItemLabel,
   TreeLoadMoreItem,
-  TreeRoot
+  TreeRoot,
+  useTreeItems
 } from "./primitives/Tree";
 export type {
   TreeIndicatorProps,
+  TreeItemNode,
+  TreeItems,
   TreeItemContentProps,
   TreeItemLabelProps,
   TreeItemProps,
   TreeLoadMoreItemProps,
   TreeProps,
   TreeSize,
-  TreeVariant
+  TreeVariant,
+  UseTreeItemsOptions
 } from "./primitives/Tree";
 
 export {

@@ -6,7 +6,7 @@ import {
   StackFrontIcon,
   TrashIcon
 } from "@terria/design-system-icons";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import type { Key, Selection } from "react-aria-components";
 import { Collection } from "react-aria-components/Collection";
 import { useTreeData } from "react-stately";
@@ -17,11 +17,13 @@ import {
   TreeItemContent,
   TreeItemLabel,
   TreeLoadMoreItem,
-  TreeRoot
+  TreeRoot,
+  useTreeItems
 } from ".";
 import { Button } from "../Button";
 import { CheckboxPrimitive } from "../Checkbox";
 import { Chip } from "../Chip";
+import { SearchField } from "../SearchField";
 import "./tree.stories.css";
 
 type CatalogNode = {
@@ -361,6 +363,49 @@ export const ExpandAndCollapseAll: Story = {
         </div>
         <Tree {...args} expandedKeys={expanded} onExpandedChange={setExpanded}>
           {rows(CATALOG)}
+        </Tree>
+      </div>
+    );
+  }
+};
+
+/** useTreeItems filters the catalog to the datasets that match, keeping the
+ * groups that hold them, and lists those groups to expand them all */
+export const Search: Story = {
+  render: function Render(args) {
+    const [query, setQuery] = useState("");
+    const { filterTree } = useTreeItems({ items: CATALOG });
+    const filtered = useMemo(
+      () =>
+        query
+          ? filterTree((node) =>
+              node.name.toLowerCase().includes(query.toLowerCase())
+            )
+          : CATALOG,
+      [filterTree, query]
+    );
+    const { expandableKeys } = useTreeItems({ items: filtered });
+    return (
+      <div className="tree-stories-stack">
+        <SearchField
+          aria-label="Search the catalog"
+          value={query}
+          onChange={setQuery}
+        >
+          <SearchField.Group>
+            <SearchField.SearchIcon />
+            <SearchField.Input placeholder="Search datasets…" />
+            <SearchField.ClearButton />
+          </SearchField.Group>
+        </SearchField>
+        <Tree
+          // A new search expands every group with a match
+          key={query}
+          {...args}
+          defaultExpandedKeys={query ? expandableKeys : EXPANDED}
+          renderEmptyState={() => "No datasets match your search"}
+        >
+          {rows(filtered)}
         </Tree>
       </div>
     );
