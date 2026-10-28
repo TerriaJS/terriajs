@@ -266,6 +266,9 @@ catalogs:
     '@aws-sdk/client-s3':
       specifier: ^3.1082.0
       version: 3.1097.0
+    '@turf/helpers':
+      specifier: ^7.2.0
+      version: 7.3.4
     bottleneck:
       specifier: ^2.19.5
       version: 2.19.5
@@ -759,7 +762,7 @@ importers:
         specifier: ^7.2.0
         version: 7.3.4
       '@turf/helpers':
-        specifier: ^7.2.0
+        specifier: catalog:runtime
         version: 7.3.4
       '@tweenjs/tween.js':
         specifier: ^25.0.0
