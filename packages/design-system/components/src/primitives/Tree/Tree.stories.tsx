@@ -18,7 +18,9 @@ import {
   TreeItemContent,
   TreeItemLabel,
   TreeLoadMoreItem,
+  TreeDragHandle,
   TreeRoot,
+  useTreeDragAndDrop,
   useTreeItems
 } from ".";
 import { Button } from "../Button";
@@ -168,6 +170,7 @@ const meta = {
   title: "Example/Tree",
   component: TreeRoot,
   subcomponents: {
+    TreeDragHandle,
     TreeItem,
     TreeItemContent,
     TreeIndicator,
@@ -441,6 +444,94 @@ export const DynamicCollection: Story = {
                 >
                   <TrashIcon />
                 </Button>
+              </Tree.ItemContent>
+              <Collection items={item.children ?? []}>{renderNode}</Collection>
+            </Tree.Item>
+          );
+        }}
+      </Tree>
+    );
+  }
+};
+
+/** Rows dragged by their handle move before, after or into others; with
+ * the keyboard, press Enter on a handle, arrow to a place and press Enter.
+ * useTreeDragAndDrop moves them in the useTreeData items */
+export const DragAndDrop: Story = {
+  args: { selectionMode: "multiple" },
+  render: function Render(args) {
+    const tree = useTreeData({
+      initialItems: CATALOG,
+      getKey: (node) => node.id,
+      getChildren: (node) => node.children ?? []
+    });
+    const { dragAndDropHooks } = useTreeDragAndDrop({ tree });
+    return (
+      <Tree {...args} items={tree.items} dragAndDropHooks={dragAndDropHooks}>
+        {function renderNode(item) {
+          return (
+            <Tree.Item id={item.key} textValue={item.value.name}>
+              <Tree.ItemContent>
+                <Tree.Indicator />
+                {item.value.children ? (
+                  <StackFrontIcon aria-hidden size={16} />
+                ) : (
+                  <MapIcon aria-hidden size={16} />
+                )}
+                <Tree.ItemLabel>{item.value.name}</Tree.ItemLabel>
+                <Tree.DragHandle />
+              </Tree.ItemContent>
+              <Collection items={item.children ?? []}>{renderNode}</Collection>
+            </Tree.Item>
+          );
+        }}
+      </Tree>
+    );
+  }
+};
+
+/** Where rows can go is limited by their kind. Each row's drag carries a
+ * type, a group's or a dataset's; only groups take rows into them, so a
+ * dataset never becomes a group, and datasets can't be placed at the top
+ * level, among the groups */
+export const DragAndDropLimits: Story = {
+  render: function Render(args) {
+    const tree = useTreeData({
+      initialItems: CATALOG,
+      getKey: (node) => node.id,
+      getChildren: (node) => node.children ?? []
+    });
+    const isGroup = (key: Key): boolean =>
+      tree.getItem(key)?.value.children !== undefined;
+    const { dragAndDropHooks } = useTreeDragAndDrop({
+      tree,
+      getItems: (keys) =>
+        [...keys].map((key) => ({
+          [isGroup(key) ? "terria/group" : "terria/dataset"]: String(key)
+        })),
+      shouldAcceptItemDrop: (target) => isGroup(target.key),
+      getDropOperation: (target, types) =>
+        target.type === "item" &&
+        target.dropPosition !== "on" &&
+        types.has("terria/dataset") &&
+        tree.getItem(target.key)?.parentKey == null
+          ? "cancel"
+          : "move"
+    });
+    return (
+      <Tree {...args} items={tree.items} dragAndDropHooks={dragAndDropHooks}>
+        {function renderNode(item) {
+          return (
+            <Tree.Item id={item.key} textValue={item.value.name}>
+              <Tree.ItemContent>
+                <Tree.Indicator />
+                {item.value.children ? (
+                  <StackFrontIcon aria-hidden size={16} />
+                ) : (
+                  <MapIcon aria-hidden size={16} />
+                )}
+                <Tree.ItemLabel>{item.value.name}</Tree.ItemLabel>
+                <Tree.DragHandle />
               </Tree.ItemContent>
               <Collection items={item.children ?? []}>{renderNode}</Collection>
             </Tree.Item>

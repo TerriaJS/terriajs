@@ -130,10 +130,21 @@
       cursor: not-allowed;
     }
 
+    /* Rows dropped here go inside it */
+    &[data-drop-target] {
+      background-color: var(--terria-ds-primary-soft);
+      box-shadow: inset 0 0 0 var(--terria-ds-border-width-default)
+        var(--terria-ds-primary);
+    }
+
     /* The contents fade, not the row, so its guide lines stay unbroken.
        react-aria's cell is display: contents, so its children are the row's */
     &[data-disabled] > [role="gridcell"] > * {
       opacity: var(--terria-ds-effects-disabled-opacity);
+    }
+
+    &[data-dragging] > [role="gridcell"] > * {
+      opacity: 0.4;
     }
   }
 
@@ -258,5 +269,81 @@
     [data-expanded] > &:dir(rtl) {
       rotate: -90deg;
     }
+  }
+
+  /* Shows while its row is hovered or focused; always where nothing hovers */
+  [data-tds="tree-drag-handle"] {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    inline-size: var(--_tree-indicator-size);
+    block-size: var(--_tree-indicator-size);
+    padding: 0;
+    border: none;
+    border-radius: var(--terria-ds-radius-sm);
+    outline: none;
+    background: none;
+    color: var(--terria-ds-text-muted);
+    cursor: grab;
+    transition: opacity 150ms ease-out;
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
+
+    @media (hover: hover) {
+      opacity: 0;
+
+      [data-tds="tree-item"]:is([data-hovered], [data-focus-visible]) &,
+      [data-tds="tree-item"]:focus-within &,
+      [data-tds="tree-item"][data-dragging] & {
+        opacity: 1;
+      }
+    }
+
+    &[data-focus-visible] {
+      box-shadow: var(--terria-ds-shadow-focus-ring);
+    }
+  }
+
+  /* While dragging, React Aria adds rows of its own: drop indicators, and
+     hidden ones for screen readers. They take no space, so they cancel the
+     gap they'd add */
+  [data-tds="tree"] > [role="row"]:not([data-tds]) {
+    margin-block-start: calc(var(--_tree-row-gap) * -1);
+  }
+
+  /* A line where dragged rows will land, at the indent of the level they'll
+     join, drawn in the gap between rows. Its hidden button takes focus in a
+     keyboard drag */
+  .tds-tree-drop-indicator {
+    /* stylelint-disable-next-line custom-property-pattern -- The value is defined by react-aria */
+    --_tree-level: var(--tree-item-level, 1);
+
+    position: relative;
+    block-size: 0;
+    outline: none;
+
+    &[data-drop-target]::before {
+      position: absolute;
+      inset-inline: calc(
+          var(--_tree-padding-inline) + (var(--_tree-level) - 1) *
+            var(--_tree-indent)
+        )
+        var(--_tree-padding-inline);
+      block-size: var(--terria-ds-dimensions-border-width-2);
+      border-radius: var(--terria-ds-radius-full);
+      background-color: var(--terria-ds-primary);
+      content: "";
+      translate: 0 calc(var(--_tree-row-gap) / 2 - 50%);
+    }
+  }
+
+  /* Dropped onto the tree itself, rows go to its end */
+  [data-tds="tree"][data-drop-target] {
+    box-shadow: inset 0 0 0 var(--terria-ds-border-width-default)
+      var(--terria-ds-primary);
   }
 }

@@ -1,4 +1,7 @@
-import { ChevronRightIcon } from "@terria/design-system-icons";
+import {
+  ChevronRightIcon,
+  GripVerticalIcon
+} from "@terria/design-system-icons";
 import {
   createContext,
   forwardRef,
@@ -157,6 +160,25 @@ const TreeIndicator = forwardRef<HTMLButtonElement, TreeIndicatorProps>(
 
 TreeIndicator.displayName = "Tree.Indicator";
 
+type TreeDragHandleProps = Omit<AriaButtonProps, "children" | "slot"> & {
+  /** Replaces the grip */
+  children?: ReactNode;
+};
+
+// Drags its row, with the keyboard too, in a tree given dragAndDropHooks.
+// It shows while its row is hovered or focused
+const TreeDragHandle = forwardRef<HTMLButtonElement, TreeDragHandleProps>(
+  ({ children, ...props }, ref) => {
+    return (
+      <AriaButton {...props} ref={ref} slot="drag" data-tds="tree-drag-handle">
+        {children ?? <GripVerticalIcon size={16} />}
+      </AriaButton>
+    );
+  }
+);
+
+TreeDragHandle.displayName = "Tree.DragHandle";
+
 type TreeItemLabelProps = ComponentPropsWithoutRef<"span">;
 
 // The row's name, cut short with an ellipsis when it doesn't fit
@@ -198,6 +220,7 @@ const TreeLoadMoreItem = ({
 TreeLoadMoreItem.displayName = "Tree.LoadMoreItem";
 
 export {
+  TreeDragHandle,
   TreeIndicator,
   TreeItem,
   TreeItemContent,
@@ -206,6 +229,7 @@ export {
   TreeRoot
 };
 export type {
+  TreeDragHandleProps,
   TreeIndicatorProps,
   TreeItemContentProps,
   TreeItemLabelProps,

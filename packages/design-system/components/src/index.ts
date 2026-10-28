@@ -702,15 +702,19 @@ export type {
 
 export {
   Tree,
+  TreeDragHandle,
   TreeIndicator,
   TreeItem,
   TreeItemContent,
   TreeItemLabel,
   TreeLoadMoreItem,
   TreeRoot,
+  useTreeDragAndDrop,
   useTreeItems
 } from "./primitives/Tree";
 export type {
+  TreeDragHandleProps,
+  TreeDropTarget,
   TreeIndicatorProps,
   TreeItemNode,
   TreeItems,
@@ -721,6 +725,7 @@ export type {
   TreeProps,
   TreeSize,
   TreeVariant,
+  UseTreeDragAndDropOptions,
   UseTreeItemsOptions
 } from "./primitives/Tree";
 
