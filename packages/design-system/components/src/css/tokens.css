@@ -424,6 +424,7 @@
     --terria-ds-neutral-soft-foreground: oklch(21% 0.032 265);
     --terria-ds-surface-bg: oklch(96.7% 0.003 265);
     --terria-ds-surface-default: oklch(98.5% 0.002 248);
+    --terria-ds-surface-skeleton: oklch(92.8% 0.006 265);
     --terria-ds-surface-raised: oklch(100% 0 none);
     --terria-ds-surface-overlay: oklch(100% 0 none);
     --terria-ds-surface-glass: oklch(100% 0 none / 0.85);
@@ -519,7 +520,8 @@
     --terria-ds-text-segment: var(--terria-ds-text-foreground);
     --terria-ds-text-link: var(--terria-ds-primary);
     --terria-ds-effects-shadow-scroll: var(--terria-ds-surface-bg);
-    --terria-ds-effects-shadow-scroll-on-surface: var(--terria-ds-surface-bg);
+    --terria-ds-effects-shadow-scroll-on-surface: var(--terria-ds-surface-raised);
+    --terria-ds-effects-shadow-scroll-on-overlay: var(--terria-ds-surface-overlay);
     --terria-ds-focus-ring: var(--terria-ds-primary);
     --terria-ds-field-radius: var(--terria-ds-radius-md);
     --terria-ds-field-placeholder: var(--terria-ds-text-muted);
@@ -557,6 +559,7 @@
     --terria-ds-neutral-soft-foreground: oklch(96.7% 0.003 265);
     --terria-ds-surface-bg: oklch(13% 0.027 262);
     --terria-ds-surface-default: oklch(21% 0.032 265);
+    --terria-ds-surface-skeleton: oklch(44.6% 0.026 257);
     --terria-ds-surface-raised: oklch(27.8% 0.03 257);
     --terria-ds-surface-overlay: oklch(37.3% 0.031 260);
     --terria-ds-surface-glass: oklch(21% 0.032 265 / 0.75);
@@ -652,7 +655,8 @@
     --terria-ds-overlay: var(--terria-ds-surface-bg);
     --terria-ds-text-segment: var(--terria-ds-text-foreground);
     --terria-ds-effects-shadow-scroll: var(--terria-ds-surface-bg);
-    --terria-ds-effects-shadow-scroll-on-surface: var(--terria-ds-surface-bg);
+    --terria-ds-effects-shadow-scroll-on-surface: var(--terria-ds-surface-raised);
+    --terria-ds-effects-shadow-scroll-on-overlay: var(--terria-ds-surface-overlay);
     --terria-ds-focus-ring: var(--terria-ds-primary);
     --terria-ds-field-radius: var(--terria-ds-radius-md);
     --terria-ds-field-placeholder: var(--terria-ds-text-muted);
