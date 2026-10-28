@@ -106,15 +106,17 @@
       &[data-hovered] {
         background-color: color-mix(
           in oklch,
-          var(--terria-ds-neutral) 50%,
+          var(--terria-ds-neutral-hover) 50%,
           transparent
         );
         cursor: pointer;
       }
     }
 
+    /* neutral-hover, not neutral: in dark mode neutral is the card's own
+       colour, so a selected row on it wouldn't show */
     &[data-selected] {
-      background-color: var(--terria-ds-neutral);
+      background-color: var(--terria-ds-neutral-hover);
     }
 
     &[data-focus-visible] {
@@ -198,6 +200,10 @@
 
   /* The chevron points along the reading direction, and down when expanded */
   [data-tds="tree-indicator"] {
+    /* From the text colour, so it shows on any row, selected too, in either
+       theme */
+    --_tree-indicator-hover: color-mix(in oklch, currentcolor 15%, transparent);
+
     display: inline-flex;
     flex-shrink: 0;
     align-items: center;
@@ -227,13 +233,13 @@
     /* A target of its own within the row, which hovers too */
     @media (hover: hover) {
       &[data-hovered] {
-        background-color: var(--terria-ds-neutral-hover);
+        background-color: var(--_tree-indicator-hover);
         color: var(--terria-ds-text-foreground);
       }
     }
 
     &[data-pressed] {
-      background-color: var(--terria-ds-neutral-hover);
+      background-color: var(--_tree-indicator-hover);
     }
 
     &[data-focus-visible] {
