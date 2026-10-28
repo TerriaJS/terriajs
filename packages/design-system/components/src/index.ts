@@ -805,6 +805,43 @@ export type {
 } from "./primitives/Tabs";
 
 export {
+  Table,
+  TableBody,
+  TableCell,
+  TableCollection,
+  TableColumn,
+  TableColumnResizer,
+  TableContent,
+  TableFooter,
+  TableHeader,
+  TableLoadMoreContent,
+  TableLoadMoreItem,
+  TableResizableContainer,
+  TableRoot,
+  TableRow,
+  TableScrollContainer,
+  TableSortableColumnHeader
+} from "./primitives/Table";
+export type {
+  TableBodyProps,
+  TableCellProps,
+  TableColumnProps,
+  TableColumnResizerProps,
+  TableContentProps,
+  TableFooterProps,
+  TableHeaderProps,
+  TableLoadMoreContentProps,
+  TableLoadMoreItemProps,
+  TableProps,
+  TableResizableContainerProps,
+  TableRowProps,
+  TableScrollContainerProps,
+  TableSortableColumnHeaderProps,
+  TableSortDirection,
+  TableVariant
+} from "./primitives/Table";
+
+export {
   Tag,
   TagGroup,
   TagGroupList,

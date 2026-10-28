@@ -1,0 +1,407 @@
+/**
+ * Table Component Styles
+ *
+ * Primary: a white card holding the header and, on their own grey panel,
+ * the rows. Secondary: the header is a white card of its own and the rows
+ * sit open on the page. The rows' panel is drawn on the cells, so its
+ * rounded corners clip their backgrounds in every browser.
+ */
+
+@layer terria-ds.components {
+  [data-tds="table"] {
+    --_table-radius: var(--terria-ds-dimensions-radius-rounded-2xl);
+    --_table-cell-bg: var(--terria-ds-surface-bg);
+    --_table-row-line: color-mix(
+      in oklch,
+      var(--terria-ds-border-color-strong) 50%,
+      transparent
+    );
+    --_table-focus: inset 0 0 0 var(--terria-ds-focus-ring-width)
+      var(--terria-ds-focus-ring);
+
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    inline-size: 100%;
+    overflow: clip;
+
+    &[data-tds-variant="primary"] {
+      padding: var(--terria-ds-space-xs);
+      border-radius: var(--terria-ds-dimensions-radius-rounded-2-5xl);
+      background-color: var(--terria-ds-surface-overlay);
+    }
+
+    &[data-tds-variant="secondary"] {
+      --_table-cell-bg: transparent;
+    }
+  }
+
+  /* Scrolls a table wider than its frame; the frame's grid column keeps the
+     footer the frame's width */
+  [data-tds="table-scroll-container"] {
+    overflow: auto;
+  }
+
+  [data-tds="table-content"] {
+    inline-size: 100%;
+    border-spacing: 0;
+    border-collapse: separate;
+    font-size: var(--terria-ds-text-size-body);
+  }
+
+  /* The card's colour, so rows scrolled beneath it when virtualized don't
+     show through. Secondary has no card; its columns are */
+  [data-tds="table-header"] {
+    background-color: transparent;
+
+    [data-tds="table"][data-tds-variant="primary"] & {
+      background-color: var(--terria-ds-surface-overlay);
+    }
+  }
+
+  /* Virtualized, the header's columns are placed inside it, so it fills its
+     sticky box to have something to paint */
+  div[data-tds="table-header"] {
+    inline-size: 100%;
+    block-size: 100%;
+  }
+
+  /* --------------------------------------------------------------------
+     Columns
+     -------------------------------------------------------------------- */
+
+  [data-tds="table-column"] {
+    position: relative;
+    padding: var(--terria-ds-dimensions-spacing-2-5) var(--terria-ds-space-lg);
+    outline: none;
+    color: var(--terria-ds-text-muted);
+    font-size: var(--terria-ds-text-size-nano);
+    font-weight: var(--terria-ds-font-medium);
+    line-height: var(--terria-ds-line-height-body);
+    text-align: start;
+    white-space: nowrap;
+
+    /* A short line between columns */
+    &::after {
+      position: absolute;
+      inset-block: 0;
+      inset-inline-end: 0;
+      inline-size: var(--terria-ds-border-width-default);
+      block-size: var(--terria-ds-dimensions-spacing-4);
+      margin-block: auto;
+      background-color: var(--terria-ds-border-color-subtle);
+      content: "";
+      pointer-events: none;
+    }
+
+    /* None after the last column, nor where a resizer takes its place */
+    &:is(
+        :last-child:not(:only-child),
+        :has([data-tds="table-column-resizer"])
+      )::after {
+      content: none;
+    }
+
+    &[data-allows-sorting] {
+      cursor: pointer;
+    }
+
+    /* Hovered, or sorted by */
+    &[data-sort-direction] {
+      color: var(--terria-ds-text-foreground);
+    }
+
+    @media (hover: hover) {
+      &[data-allows-sorting][data-hovered] {
+        color: var(--terria-ds-text-foreground);
+      }
+    }
+
+    &[data-focus-visible] {
+      border-radius: var(--terria-ds-radius-md);
+      box-shadow: var(--_table-focus);
+    }
+
+    [data-tds="table"][data-tds-variant="secondary"] & {
+      background-color: var(--terria-ds-surface-overlay);
+    }
+
+    /* The secondary header's card: round its ends */
+    [data-tds="table"][data-tds-variant="secondary"] &:first-child {
+      border-start-start-radius: var(--_table-radius);
+      border-end-start-radius: var(--_table-radius);
+    }
+
+    [data-tds="table"][data-tds-variant="secondary"] &:last-child {
+      border-start-end-radius: var(--_table-radius);
+      border-end-end-radius: var(--_table-radius);
+    }
+  }
+
+  /* Virtualized, each column sits in a wrapper of its own, so the line after
+     the last is hidden from the last wrapper, and the secondary header's
+     ends round from the first and last */
+  [role="row"]
+    > [role="presentation"]:last-of-type:not(:only-of-type)
+    > [data-tds="table-column"]::after {
+    content: none;
+  }
+
+  [data-tds="table"][data-tds-variant="secondary"]
+    [role="row"]
+    > [role="presentation"]:first-of-type
+    > [data-tds="table-column"] {
+    border-start-start-radius: var(--_table-radius);
+    border-end-start-radius: var(--_table-radius);
+  }
+
+  [data-tds="table"][data-tds-variant="secondary"]
+    [role="row"]
+    > [role="presentation"]:last-of-type
+    > [data-tds="table-column"] {
+    border-start-end-radius: var(--_table-radius);
+    border-end-end-radius: var(--_table-radius);
+  }
+
+  /* A sortable column's label, and its chevron at the end */
+  [data-tds="table-sort-header"] {
+    display: flex;
+    gap: var(--terria-ds-space-sm);
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  /* Up ascending; turned down descending */
+  [data-tds="table-sort-indicator"] {
+    flex-shrink: 0;
+    inline-size: var(--terria-ds-dimensions-spacing-2-5);
+    block-size: var(--terria-ds-dimensions-spacing-2-5);
+    transition: rotate 100ms ease-out;
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
+
+    &[data-direction="descending"] {
+      rotate: 180deg;
+    }
+  }
+
+  /* --------------------------------------------------------------------
+     Rows and cells
+     -------------------------------------------------------------------- */
+
+  /* No rows: the empty state fills the panel, in the cell React Aria gives
+     it */
+  [data-tds="table-body"][data-empty] td {
+    padding: var(--terria-ds-space-lg);
+    border-radius: var(--_table-radius);
+    background-color: var(--_table-cell-bg);
+    text-align: center;
+  }
+
+  /* Virtualized, rows and cells are divs in wrappers, so the primary panel
+     rounds and clips the body itself */
+  div[data-tds="table-body"] {
+    position: relative;
+    block-size: 100%;
+
+    [data-tds="table"][data-tds-variant="primary"] & {
+      overflow: clip;
+      border-radius: var(--_table-radius);
+    }
+  }
+
+  /* The primary rows' panel rounds at its corners */
+  [data-tds="table"][data-tds-variant="primary"] [data-tds="table-body"] {
+    & tr:first-child td:first-child {
+      border-start-start-radius: var(--_table-radius);
+    }
+
+    & tr:first-child td:last-child {
+      border-start-end-radius: var(--_table-radius);
+    }
+
+    & tr:last-child td:first-child {
+      border-end-start-radius: var(--_table-radius);
+    }
+
+    & tr:last-child td:last-child {
+      border-end-end-radius: var(--_table-radius);
+    }
+  }
+
+  /* Hovered and selected rows tint the panel with neutral, rather than
+     replacing it; on open secondary rows, that's neutral seen through.
+     Virtualized, a row fills the box the virtualizer sizes */
+  [data-tds="table-row"] {
+    --_table-row-bg: var(--_table-cell-bg);
+    --_table-row-hover: color-mix(
+      in oklch,
+      var(--_table-cell-bg),
+      var(--terria-ds-neutral) 30%
+    );
+    --_table-row-selected: color-mix(
+      in oklch,
+      var(--_table-cell-bg),
+      var(--terria-ds-neutral) 50%
+    );
+
+    position: relative;
+    block-size: 100%;
+    outline: none;
+
+    @media (hover: hover) {
+      &[data-hovered] {
+        --_table-row-bg: var(--_table-row-hover);
+      }
+    }
+
+    &[data-selected] {
+      --_table-row-bg: var(--_table-row-selected);
+    }
+
+    &[data-disabled] {
+      opacity: var(--terria-ds-effects-disabled-opacity);
+    }
+
+    &[data-dragging] {
+      opacity: 0.5;
+    }
+
+    &[data-drop-target] {
+      --_table-row-bg: var(--terria-ds-primary-soft);
+    }
+  }
+
+  [data-tds="table-cell"] {
+    block-size: 3.5rem;
+    box-sizing: border-box;
+    padding: var(--terria-ds-space-md) var(--terria-ds-space-lg);
+    border-block-end: var(--terria-ds-border-width-default) solid
+      var(--_table-row-line);
+    outline: none;
+    background-color: var(--_table-row-bg, var(--_table-cell-bg));
+    color: var(--terria-ds-text-foreground);
+    line-height: var(--terria-ds-line-height-body-lg);
+    vertical-align: middle;
+
+    &[data-focus-visible] {
+      border-radius: var(--terria-ds-radius-md);
+      box-shadow: var(--_table-focus);
+    }
+
+    /* Tree rows indent by their level, which React Aria sets on the row */
+    &[data-tree-column] {
+      /* stylelint-disable-next-line custom-property-pattern -- The value is defined by react-aria */
+      padding-inline-start: calc(1rem * var(--table-row-level, 1));
+    }
+  }
+
+  /* A focused row: one ring around all its cells, each cell drawing its
+     part */
+  [data-tds="table-row"][data-focus-visible] > [data-tds="table-cell"] {
+    box-shadow:
+      inset 0 var(--terria-ds-focus-ring-width) 0 0 var(--terria-ds-focus-ring),
+      inset 0 calc(-1 * var(--terria-ds-focus-ring-width)) 0 0
+        var(--terria-ds-focus-ring);
+
+    &:first-child {
+      border-start-start-radius: var(--terria-ds-radius-md);
+      border-end-start-radius: var(--terria-ds-radius-md);
+      box-shadow:
+        inset var(--terria-ds-focus-ring-width) 0 0 0
+          var(--terria-ds-focus-ring),
+        inset 0 var(--terria-ds-focus-ring-width) 0 0
+          var(--terria-ds-focus-ring),
+        inset 0 calc(-1 * var(--terria-ds-focus-ring-width)) 0 0
+          var(--terria-ds-focus-ring);
+    }
+
+    &:last-child {
+      border-start-end-radius: var(--terria-ds-radius-md);
+      border-end-end-radius: var(--terria-ds-radius-md);
+      box-shadow:
+        inset calc(-1 * var(--terria-ds-focus-ring-width)) 0 0 0
+          var(--terria-ds-focus-ring),
+        inset 0 var(--terria-ds-focus-ring-width) 0 0
+          var(--terria-ds-focus-ring),
+        inset 0 calc(-1 * var(--terria-ds-focus-ring-width)) 0 0
+          var(--terria-ds-focus-ring);
+    }
+
+    &:only-child {
+      border-radius: var(--terria-ds-radius-md);
+      box-shadow: var(--_table-focus);
+    }
+  }
+
+  /* Primary: no line under the last row, at the panel's edge */
+  [data-tds="table"][data-tds-variant="primary"]
+    [data-tds="table-row"]:last-child
+    > [data-tds="table-cell"] {
+    border-block-end-color: transparent;
+  }
+
+  /* --------------------------------------------------------------------
+     Footer, resizing and loading
+     -------------------------------------------------------------------- */
+
+  [data-tds="table-footer"] {
+    display: flex;
+    align-items: center;
+    padding: var(--terria-ds-dimensions-spacing-2-5) var(--terria-ds-space-lg);
+  }
+
+  [data-tds="table-resizable-container"] {
+    position: relative;
+    overflow: auto;
+  }
+
+  /* The separator line, made draggable: a wider area to press, and a full
+     height line while hovered, dragged or focused */
+  [data-tds="table-column-resizer"] {
+    position: absolute;
+    inset-block: 0;
+    inset-inline-end: 0;
+    box-sizing: content-box;
+    inline-size: var(--terria-ds-border-width-default);
+    block-size: var(--terria-ds-dimensions-spacing-4);
+    margin-block: auto;
+    padding-inline: var(--terria-ds-space-sm);
+    border: none;
+    outline: none;
+    background-color: var(--terria-ds-border-color-subtle);
+    background-clip: content-box;
+    cursor: col-resize;
+    touch-action: none;
+    translate: 50% 0;
+
+    &:dir(rtl) {
+      translate: -50% 0;
+    }
+
+    &:is([data-hovered], [data-resizing], [data-focus-visible]) {
+      inline-size: var(--terria-ds-dimensions-spacing-0-5);
+      block-size: 100%;
+      background-color: var(--terria-ds-primary);
+    }
+
+    &[data-focus-visible] {
+      background-color: var(--terria-ds-focus-ring);
+    }
+  }
+
+  [data-tds="table-load-more"] :is(td, [role="rowheader"]) {
+    padding-block: var(--terria-ds-space-md);
+    text-align: center;
+  }
+
+  [data-tds="table-load-more-content"] {
+    display: flex;
+    gap: var(--terria-ds-space-sm);
+    align-items: center;
+    justify-content: center;
+    padding-block: var(--terria-ds-space-sm);
+  }
+}

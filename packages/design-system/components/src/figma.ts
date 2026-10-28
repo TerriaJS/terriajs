@@ -56,6 +56,7 @@ const FIGMA_PAGES = {
   Spinner: "5375-71607",
   Surface: "17294-52295",
   Switch: "5375-71127",
+  Table: "18729-23034",
   Tabs: "5375-79785",
   TagGroup: "14288-4550",
   TextArea: "17293-35712",
