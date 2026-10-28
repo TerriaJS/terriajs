@@ -116,7 +116,7 @@
   }
 
   [data-tds="drawer-dialog"] {
-    --_dialog-bg: var(--terria-ds-overlay);
+    --_dialog-bg: var(--terria-ds-surface-overlay);
     --_modal-radius: var(--terria-ds-radius-lg);
 
     flex: 1 1 auto;

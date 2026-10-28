@@ -9,7 +9,7 @@
     position: relative;
     overflow: hidden;
     border-radius: var(--terria-ds-radius-sm);
-    background-color: var(--terria-ds-neutral-soft);
+    background-color: var(--terria-ds-surface-skeleton);
     pointer-events: none;
   }
 

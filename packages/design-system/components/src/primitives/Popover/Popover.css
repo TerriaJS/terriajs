@@ -4,7 +4,7 @@
 
 @layer terria-ds.components {
   [data-tds="popover"] {
-    --_popover-bg: var(--terria-ds-overlay);
+    --_popover-bg: var(--terria-ds-surface-overlay);
     --_popover-fg: var(--terria-ds-text-foreground);
     --_popover-radius: var(--terria-ds-radius-md);
     --_popover-shadow: var(--terria-ds-shadow-overlay);

@@ -345,6 +345,6 @@
   }
 
   [data-tds="modal-dialog"] {
-    --_dialog-bg: var(--terria-ds-overlay);
+    --_dialog-bg: var(--terria-ds-surface-overlay);
   }
 }

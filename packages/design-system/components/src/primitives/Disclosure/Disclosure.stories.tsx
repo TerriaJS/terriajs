@@ -7,7 +7,6 @@ import {
 import { Disclosure, type DisclosureProps } from ".";
 import { Button } from "../Button";
 import { Chip } from "../Chip";
-import { Surface } from "../Surface";
 import { figmaDesign } from "../../figma";
 import "./disclosure.stories.css";
 
@@ -39,23 +38,21 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-// The content shown in every example, on a Surface as in the design: the
-// card is the example's choice, not the disclosure's. Called as a function,
-// not rendered as a component, so a story's code shows the markup it returns
+// The content shown in every example, in a Body: its own tinted surface, as
+// in the design. Called as a function, not rendered as a component, so a
+// story's code shows the markup it returns
 const body = (): React.ReactElement => (
-  <Surface>
-    <Disclosure.Body>
-      <p>
-        Population counts by suburb from the 2021 census, updated every five
-        years.
-      </p>
-      <Button size="sm">Add to the map</Button>
-    </Disclosure.Body>
-  </Surface>
+  <Disclosure.Body>
+    <p>
+      Population counts by suburb from the 2021 census, updated every five
+      years.
+    </p>
+    <Button size="sm">Add to the map</Button>
+  </Disclosure.Body>
 );
 
-// The design's look: a tertiary Button as the trigger, the content on a
-// Surface
+// The design's look: a tertiary Button as the trigger, the content in a
+// Body
 const layerDetails = (props: DisclosureProps): React.ReactElement => (
   <Disclosure {...props}>
     <Disclosure.Heading>
@@ -70,15 +67,15 @@ const layerDetails = (props: DisclosureProps): React.ReactElement => (
 );
 
 /** The design's look: a tertiary Button with slot="trigger" in the heading
- * shows and hides the content, on a Surface. The heading is level 3 unless
+ * shows and hides the content, in a Body. The heading is level 3 unless
  * Disclosure.Heading's level says otherwise */
 export const Default: Story = {
   render: (args) => layerDetails(args)
 };
 
 /** Disclosure.Trigger on its own is a plain button the width of the heading,
- * in the heading's text: here tds-h6 sizes it. Without a Surface the content
- * needs no Body; it sits under the title as it is */
+ * in the heading's text: here tds-h6 sizes it. Content without a Body sits
+ * under the title as it is, with no surface */
 export const PlainTrigger: Story = {
   args: { defaultExpanded: true },
   render: (args) => (

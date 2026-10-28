@@ -154,12 +154,20 @@
     }
   }
 
-  /* Padding for content on a Surface. It lives here, not on the panel, so a
-     collapsed panel takes no space; content without a Surface can skip it */
+  /* The content's own tinted surface, padded. It lives here, not on the
+     panel, so a collapsed panel takes no space */
   [data-tds="disclosure-body"] {
     display: flex;
     flex-direction: column;
     gap: var(--terria-ds-space-lg);
     padding: var(--terria-ds-space-lg) var(--terria-ds-space-xl);
+    border-radius: var(--terria-ds-radius-sm);
+    background-color: var(--terria-ds-surface-tint);
+
+    /* In a group, an accordion, the content sits open under its trigger */
+    [data-tds="disclosure-group"] & {
+      border-radius: 0;
+      background-color: transparent;
+    }
   }
 }
