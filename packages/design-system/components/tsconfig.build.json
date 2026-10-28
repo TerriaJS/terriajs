@@ -16,6 +16,7 @@
     "**/*.spec.ts",
     "**/*.spec.tsx",
     "src/**/*.stories.tsx",
-    "src/figma.ts"
+    "src/figma.ts",
+    "src/test-setup.ts"
   ]
 }
