@@ -61,6 +61,7 @@ const FIGMA_PAGES = {
   TagGroup: "14288-4550",
   TextArea: "17293-35712",
   TextField: "5375-69732",
+  Toast: "5375-72573",
   ToggleButton: "15237-23433",
   ToggleButtonGroup: "15251-25651",
   TimeField: "17293-42243",

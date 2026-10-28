@@ -1,0 +1,346 @@
+/**
+ * Toast Component Styles
+ *
+ * Toasts stack at the region's edge: collapsed, those behind the front one
+ * peek out a gap apart, scaled down and clipped to its height; expanded, they
+ * lay out in full. Each toast's place comes from custom properties the
+ * component sets: --terria-ds-toast-offset-collapsed and -expanded,
+ * --terria-ds-toast-scale-collapsed, --terria-ds-toast-height and
+ * --terria-ds-toast-front-height.
+ */
+
+@layer terria-ds.components {
+  [data-tds="toast-region"] {
+    position: fixed;
+    display: block;
+    inline-size: calc(100vi - 2rem);
+    outline: none;
+    pointer-events: none;
+
+    @media (width >= 768px) {
+      /* --terria-ds-dimensions-screens-sm */
+      inline-size: auto;
+      /* stylelint-disable-next-line csstools/value-no-unknown-custom-properties -- Set on the region by the component */
+      min-inline-size: var(--terria-ds-toast-width);
+    }
+
+    &:focus-visible {
+      outline: var(--terria-ds-focus-ring-width) solid
+        var(--terria-ds-focus-ring);
+      outline-offset: var(--terria-ds-focus-ring-offset);
+    }
+
+    /* Centred placements centre the same way left to right and right to
+       left */
+    &:is([data-tds-placement="bottom"], [data-tds-placement="top"]) {
+      /* eslint-disable-next-line css/prefer-logical-properties -- Physical, as it centres the same way in both directions; logical, it would sit off centre right to left */
+      left: 50%;
+      translate: -50% 0;
+    }
+
+    &:is(
+      [data-tds-placement="bottom"],
+      [data-tds-placement="bottom-start"],
+      [data-tds-placement="bottom-end"]
+    ) {
+      inset-block-end: var(--terria-ds-space-lg);
+    }
+
+    &:is(
+      [data-tds-placement="top"],
+      [data-tds-placement="top-start"],
+      [data-tds-placement="top-end"]
+    ) {
+      inset-block-start: var(--terria-ds-space-lg);
+    }
+
+    &:is(
+      [data-tds-placement="bottom-start"],
+      [data-tds-placement="top-start"]
+    ) {
+      inset-inline-start: var(--terria-ds-space-lg);
+    }
+
+    &:is([data-tds-placement="bottom-end"], [data-tds-placement="top-end"]) {
+      inset-inline-end: var(--terria-ds-space-lg);
+    }
+  }
+
+  [data-tds="toast"] {
+    --_toast-ease: cubic-bezier(0.22, 1, 0.36, 1);
+    --_toast-enter-duration: 350ms;
+    --_toast-exit-duration: 250ms;
+    --_toast-translate-duration: var(--_toast-enter-duration);
+    --_toast-opacity-duration: 150ms;
+
+    /* Where it is: collapsed by default; entering from outside the edge */
+    --_toast-y: var(--terria-ds-toast-offset-collapsed, 0px);
+    --_toast-enter: 0%;
+    --_toast-scale: var(--terria-ds-toast-scale-collapsed, 1);
+    --_toast-title: var(--terria-ds-text-foreground);
+    --_toast-indicator: var(--terria-ds-text-foreground);
+
+    position: absolute;
+    inset-inline: 0;
+    display: flex;
+    gap: var(--terria-ds-space-sm);
+    align-items: flex-start;
+    box-sizing: border-box;
+    block-size: var(--terria-ds-toast-height, auto);
+    padding: var(--terria-ds-space-md) var(--terria-ds-space-lg);
+    border-radius: var(--terria-ds-radius-lg);
+    outline: none;
+    background-color: var(--terria-ds-surface-overlay);
+    box-shadow: var(--terria-ds-shadow-overlay);
+    pointer-events: auto;
+    transform: translateY(
+        calc(var(--_toast-dir) * (var(--_toast-y) + var(--_toast-enter)))
+      )
+      scale(var(--_toast-scale));
+    transition:
+      transform var(--_toast-translate-duration) var(--_toast-ease),
+      block-size var(--_toast-enter-duration) var(--_toast-ease),
+      opacity var(--_toast-opacity-duration) var(--_toast-ease);
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
+
+    &:focus-visible {
+      outline: var(--terria-ds-focus-ring-width) solid
+        var(--terria-ds-focus-ring);
+      outline-offset: var(--terria-ds-focus-ring-offset);
+    }
+
+    /* Its content fades as the stack opens and closes */
+    & > :not([data-tds-toast-close]) {
+      transition: opacity 200ms var(--_toast-ease);
+
+      @media (prefers-reduced-motion: reduce) {
+        transition: none;
+      }
+    }
+
+    /* Open, a hit area covers the gap to its neighbour, so moving between
+       toasts never leaves the stack */
+    &[data-expanded]::after {
+      position: absolute;
+
+      /* Behind the toast's content, so it doesn't cover the close button.
+         Layers have no token; this only orders it within the toast */
+      /* stylelint-disable-next-line scale-unlimited/declaration-strict-value */
+      z-index: -1;
+      inset-inline: 0;
+      content: "";
+    }
+  }
+
+  /* Stacking from the bottom edge, upwards; or from the top, downwards */
+  [data-tds="toast"]:is(
+    [data-tds-placement="bottom"],
+    [data-tds-placement="bottom-start"],
+    [data-tds-placement="bottom-end"]
+  ) {
+    --_toast-dir: -1;
+
+    inset-block-end: 0;
+    transform-origin: bottom center;
+
+    &[data-expanded]::after {
+      inset-block: calc(-1 * var(--terria-ds-toast-gap, 12px) - 1px) 0;
+    }
+  }
+
+  [data-tds="toast"]:is(
+    [data-tds-placement="top"],
+    [data-tds-placement="top-start"],
+    [data-tds-placement="top-end"]
+  ) {
+    --_toast-dir: 1;
+
+    inset-block-start: 0;
+    transform-origin: top center;
+
+    &[data-expanded]::after {
+      inset-block: 0 calc(-1 * var(--terria-ds-toast-gap, 12px) - 1px);
+    }
+  }
+
+  [data-tds="toast"][data-entering] {
+    --_toast-enter: -100%;
+  }
+
+  /* Collapsed behind the front one: as tall as it, its content hidden */
+  [data-tds="toast"]:not([data-frontmost], [data-expanded]) {
+    block-size: var(--terria-ds-toast-front-height, 0);
+    overflow: hidden;
+
+    & > :not([data-tds-toast-close]) {
+      opacity: 0;
+    }
+  }
+
+  [data-tds="toast"][data-expanded] {
+    --_toast-y: var(--terria-ds-toast-offset-expanded, 0px);
+    --_toast-scale: 1;
+  }
+
+  /* Leaving: the front one slides back out; others shrink as they fade */
+  [data-tds="toast"][data-exiting] {
+    opacity: 0;
+
+    &[data-frontmost] {
+      --_toast-translate-duration: var(--_toast-exit-duration);
+      --_toast-enter: -100%;
+      --_toast-scale: 1;
+    }
+
+    &:not([data-frontmost]) {
+      --_toast-translate-duration: 200ms;
+      --_toast-scale: calc(var(--terria-ds-toast-scale-collapsed, 1) * 0.96);
+    }
+
+    &[data-expanded]:not([data-frontmost]) {
+      --_toast-scale: 0.96;
+    }
+  }
+
+  /* Beyond the visible few: out of sight until others go */
+  [data-tds="toast"][data-hidden] {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  /* --------------------------------------------------------------------
+     Parts
+     -------------------------------------------------------------------- */
+
+  [data-tds="toast-content"] {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    align-items: flex-start;
+    align-self: center;
+    min-inline-size: 0;
+  }
+
+  [data-tds="toast-indicator"] {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    padding: var(--terria-ds-dimensions-spacing-0-5);
+    color: var(--_toast-indicator);
+    user-select: none;
+
+    & svg {
+      inline-size: var(--terria-ds-dimensions-icon-size-sm);
+      block-size: var(--terria-ds-dimensions-icon-size-sm);
+    }
+
+    /* A promise's outcome replacing its spinner fades and grows in */
+    &[data-swapped] > :not([data-tds="spinner"]) {
+      animation:
+        terria-ds-toast-indicator-fade 150ms var(--_toast-ease),
+        terria-ds-toast-indicator-scale 200ms var(--_toast-ease);
+
+      @media (prefers-reduced-motion: reduce) {
+        animation: none;
+      }
+    }
+  }
+
+  [data-tds="toast-title"] {
+    color: var(--_toast-title);
+    font-size: var(--terria-ds-text-size-body);
+    font-weight: var(--terria-ds-font-medium);
+    line-height: var(--terria-ds-line-height-body);
+  }
+
+  [data-tds="toast-description"] {
+    color: var(--terria-ds-text-muted);
+    font-size: var(--terria-ds-text-size-body);
+    line-height: var(--terria-ds-line-height-body);
+  }
+
+  /* Shown at the corner while the pointer is over the toast */
+  [data-tds="toast"] > [data-tds-toast-close] {
+    position: absolute;
+    inset-block-start: calc(-1 * var(--terria-ds-space-xs));
+    inset-inline-end: calc(-1 * var(--terria-ds-space-xs));
+    inline-size: var(--terria-ds-dimensions-spacing-5);
+    block-size: var(--terria-ds-dimensions-spacing-5);
+    padding: var(--terria-ds-dimensions-spacing-0-5);
+    border: var(--terria-ds-border-width-default) solid
+      var(--terria-ds-border-color-subtle);
+    background-color: var(--terria-ds-surface-overlay);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 150ms ease-out;
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
+
+    & > svg {
+      inline-size: var(--terria-ds-dimensions-spacing-3);
+      block-size: var(--terria-ds-dimensions-spacing-3);
+    }
+  }
+
+  /* Never while leaving */
+  [data-tds="toast"]:is([data-frontmost], [data-expanded]):not(
+      [data-exiting]
+    ):is(:hover, :focus-within)
+    > [data-tds-toast-close] {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  /* Under the text on narrow screens, beside it on wider ones */
+  [data-tds="toast"] [data-tds-toast-action] {
+    flex-shrink: 0;
+    margin-block-start: var(--terria-ds-space-sm);
+
+    @media (width >= 768px) {
+      /* --terria-ds-dimensions-screens-sm */
+      margin-block-start: 0;
+    }
+  }
+
+  /* ============================================================
+     VARIANTS
+     ============================================================ */
+
+  [data-tds="toast"][data-tds-variant="accent"] {
+    --_toast-title: var(--terria-ds-primary-soft-foreground);
+    --_toast-indicator: var(--terria-ds-primary-soft-foreground);
+  }
+
+  [data-tds="toast"][data-tds-variant="success"] {
+    --_toast-title: var(--terria-ds-success-soft-foreground);
+    --_toast-indicator: var(--terria-ds-success-soft-foreground);
+  }
+
+  [data-tds="toast"][data-tds-variant="warning"] {
+    --_toast-title: var(--terria-ds-warning-soft-foreground);
+    --_toast-indicator: var(--terria-ds-warning-soft-foreground);
+  }
+
+  [data-tds="toast"][data-tds-variant="danger"] {
+    --_toast-title: var(--terria-ds-danger-soft-foreground);
+    --_toast-indicator: var(--terria-ds-danger-soft-foreground);
+  }
+
+  @keyframes terria-ds-toast-indicator-fade {
+    from {
+      opacity: 0;
+    }
+  }
+
+  @keyframes terria-ds-toast-indicator-scale {
+    from {
+      scale: 0.92;
+    }
+  }
+}
