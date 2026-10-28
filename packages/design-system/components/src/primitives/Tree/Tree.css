@@ -61,6 +61,12 @@
     }
   }
 
+  /* Virtualized, the rows sit in a box sized to all of them, which mustn't
+     shrink to the tree's height, or the tree can't scroll through them */
+  [data-tds="tree"] > [role="presentation"] {
+    flex-shrink: 0;
+  }
+
   [data-tds="tree-item"],
   [data-tds="tree-load-more-item"] {
     /* stylelint-disable-next-line custom-property-pattern -- The value is defined by react-aria */

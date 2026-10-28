@@ -9,6 +9,7 @@ import {
 import { useMemo, useState } from "react";
 import type { Key, Selection } from "react-aria-components";
 import { Collection } from "react-aria-components/Collection";
+import { ListLayout, Virtualizer } from "react-aria-components/Virtualizer";
 import { useTreeData } from "react-stately";
 import {
   Tree,
@@ -510,6 +511,94 @@ export const LazyChildren: Story = {
           </Tree.Item>
         ))}
       </Tree>
+    );
+  }
+};
+
+// 40 regions of 25 areas of 10 datasets: 10,000 datasets
+const LARGE_CATALOG: CatalogNode[] = Array.from({ length: 40 }, (_, r) => ({
+  id: `region-${String(r)}`,
+  name: `Region ${String(r + 1)}`,
+  children: Array.from({ length: 25 }, (_, a) => ({
+    id: `area-${String(r)}-${String(a)}`,
+    name: `Area ${String(r + 1)}.${String(a + 1)}`,
+    children: Array.from({ length: 10 }, (_, d) => ({
+      id: `dataset-${String(r)}-${String(a)}-${String(d)}`,
+      name: `Dataset ${String(r + 1)}.${String(a + 1)}.${String(d + 1)}`
+    }))
+  }))
+}));
+
+const ROW_HEIGHT = { sm: 32, md: 36, lg: 40 };
+
+/** Only the rows in view are rendered, inside a Virtualizer whose row height
+ * matches the size's. Expanding all shows 11,000 rows. Groups open and shut
+ * without animating. Accessibility checks run from the panel's button: run on
+ * each scroll, they stall it. The code shown is the story's own: written out
+ * from the render, it would list every row */
+export const Virtualized: Story = {
+  args: { defaultExpandedKeys: ["region-0", "area-0-0"] },
+  globals: { a11y: { manual: true } },
+  parameters: { docs: { source: { type: "code" } } },
+  render: function Render(args) {
+    const { expandableKeys } = useTreeItems({ items: LARGE_CATALOG });
+    const [expanded, setExpanded] = useState<Set<Key>>(
+      () => new Set(["region-0", "area-0-0"])
+    );
+    return (
+      <div className="tree-stories-stack">
+        <div className="tree-stories-buttons">
+          <Button
+            size="sm"
+            variant="secondary"
+            onPress={() => {
+              setExpanded(new Set(expandableKeys));
+            }}
+          >
+            Expand all
+          </Button>
+          <Button
+            size="sm"
+            variant="secondary"
+            onPress={() => {
+              setExpanded(new Set());
+            }}
+          >
+            Collapse all
+          </Button>
+        </div>
+        <Virtualizer
+          layout={ListLayout}
+          layoutOptions={{ rowHeight: ROW_HEIGHT[args.size ?? "md"], gap: 2 }}
+        >
+          <Tree
+            {...args}
+            className="tree-stories-scroll"
+            items={LARGE_CATALOG}
+            expandedKeys={expanded}
+            onExpandedChange={setExpanded}
+          >
+            {function renderNode(node) {
+              return (
+                <Tree.Item id={node.id} textValue={node.name}>
+                  <Tree.ItemContent>
+                    <Tree.Indicator />
+                    {node.children ? (
+                      <StackFrontIcon aria-hidden size={16} />
+                    ) : (
+                      <MapIcon aria-hidden size={16} />
+                    )}
+                    <Tree.ItemLabel>{node.name}</Tree.ItemLabel>
+                  </Tree.ItemContent>
+                  <Collection items={node.children ?? []}>
+                    {renderNode}
+                  </Collection>
+                </Tree.Item>
+              );
+            }}
+          </Tree>
+        </Virtualizer>
+      </div>
     );
   }
 };

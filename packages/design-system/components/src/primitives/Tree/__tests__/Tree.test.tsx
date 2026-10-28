@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 import { render } from "vitest-browser-react";
 import type { Key, Selection } from "react-aria-components";
+import { ListLayout, Virtualizer } from "react-aria-components/Virtualizer";
 import { userEvent } from "vitest/browser";
 import { Button } from "../../Button";
 import { CheckboxPrimitive } from "../../Checkbox";
@@ -270,6 +271,33 @@ describe("Tree", () => {
     await expect
       .element(screen.getByRole("progressbar", { name: "Loading…" }))
       .toBeVisible();
+  });
+
+  it("scrolls through all its rows when virtualized", async () => {
+    const datasets = Array.from({ length: 50 }, (_, index) => ({
+      id: `dataset-${String(index)}`,
+      name: `Dataset ${String(index + 1)}`
+    }));
+    const screen = await render(
+      <Virtualizer layout={ListLayout} layoutOptions={{ rowHeight: 36 }}>
+        <Tree
+          aria-label="Catalog"
+          items={datasets}
+          style={{ blockSize: 200, overflow: "auto" }}
+        >
+          {(dataset) => (
+            <Tree.Item id={dataset.id} textValue={dataset.name}>
+              <Tree.ItemContent>
+                <Tree.ItemLabel>{dataset.name}</Tree.ItemLabel>
+              </Tree.ItemContent>
+            </Tree.Item>
+          )}
+        </Tree>
+      </Virtualizer>
+    );
+
+    const tree = screen.getByRole("treegrid").element();
+    expect(tree.scrollHeight).toBeGreaterThanOrEqual(50 * 36);
   });
 
   it("removes a collapsing group's rows as their animation ends, before the browser can draw them again", async () => {

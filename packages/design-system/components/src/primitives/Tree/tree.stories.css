@@ -40,4 +40,9 @@
     color: var(--terria-ds-text-muted);
     font-size: var(--terria-ds-text-size-caption);
   }
+
+  .tree-stories-scroll {
+    block-size: 25rem;
+    overflow: auto;
+  }
 }
