@@ -45,7 +45,9 @@ export type {
   ListData,
   ListOptions,
   OverlayTriggerProps,
-  OverlayTriggerState
+  OverlayTriggerState,
+  TreeData,
+  TreeOptions
 } from "react-stately";
 
 // Not exported by the React Aria packages we depend on, so taken from where

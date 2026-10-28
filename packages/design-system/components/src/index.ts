@@ -701,6 +701,26 @@ export type {
 } from "./primitives/Tooltip";
 
 export {
+  Tree,
+  TreeIndicator,
+  TreeItem,
+  TreeItemContent,
+  TreeItemLabel,
+  TreeLoadMoreItem,
+  TreeRoot
+} from "./primitives/Tree";
+export type {
+  TreeIndicatorProps,
+  TreeItemContentProps,
+  TreeItemLabelProps,
+  TreeItemProps,
+  TreeLoadMoreItemProps,
+  TreeProps,
+  TreeSize,
+  TreeVariant
+} from "./primitives/Tree";
+
+export {
   Slider,
   SliderFill,
   SliderMarks,

@@ -13,5 +13,6 @@ export {
 export {
   useAsyncList,
   useListData,
-  useOverlayTriggerState
+  useOverlayTriggerState,
+  useTreeData
 } from "react-stately";
