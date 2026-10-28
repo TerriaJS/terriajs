@@ -1,4 +1,6 @@
 import { Collection } from "react-aria-components/Collection";
+import { useEffect } from "react";
+import type { DragAndDropHooks } from "react-aria-components/useDragAndDrop";
 import { useTreeData } from "react-stately";
 import { describe, expect, it } from "vitest";
 import { render } from "vitest-browser-react";
@@ -107,5 +109,42 @@ describe("useTreeDragAndDrop", () => {
     expect(document.activeElement?.getAttribute("aria-label")).toBe(
       "Insert between Roads and Rivers"
     );
+  });
+
+  it("previews a drag of several rows with the first's name and a count", async () => {
+    let hooks: DragAndDropHooks | undefined;
+    const Captured = ({
+      onHooks
+    }: {
+      onHooks: (hooks: DragAndDropHooks) => void;
+    }): null => {
+      const tree = useTreeData({ initialItems: LAYERS });
+      const { dragAndDropHooks } = useTreeDragAndDrop({ tree });
+      useEffect(() => {
+        onHooks(dragAndDropHooks);
+      }, [dragAndDropHooks, onHooks]);
+      return null;
+    };
+    await render(
+      <Captured
+        onHooks={(captured) => {
+          hooks = captured;
+        }}
+      />
+    );
+
+    const screen = await render(
+      <>
+        {hooks?.renderDragPreview?.([
+          { "text/plain": "Suburbs" },
+          { "text/plain": "Roads" },
+          { "text/plain": "Rivers" }
+        ])}
+      </>
+    );
+
+    await expect.element(screen.getByText("Suburbs")).toBeVisible();
+    await expect.element(screen.getByText("3")).toBeVisible();
+    expect(screen.container.textContent).not.toContain("Roads");
   });
 });

@@ -346,4 +346,61 @@
     box-shadow: inset 0 0 0 var(--terria-ds-border-width-default)
       var(--terria-ds-primary);
   }
+
+  /* What follows the pointer in a drag: a card with the first row's name,
+     and another behind it when several rows go. The browser pictures only
+     the preview's box, so the card behind sits inside it, in room left at
+     its end and bottom, and borders stand in for shadows */
+  [data-tds="tree-drag-preview"] {
+    --_tree-preview-offset: var(--terria-ds-dimensions-spacing-1-5);
+
+    /* The card behind, under the front one */
+    --_tree-preview-back-layer: -1;
+    --_tree-preview-edge: inset 0 0 0 var(--terria-ds-border-width-default)
+      var(--terria-ds-border-color-strong);
+
+    position: relative;
+    display: inline-flex;
+    box-sizing: border-box;
+    isolation: isolate;
+
+    &[data-tds-stacked] {
+      padding-block-end: var(--_tree-preview-offset);
+      padding-inline-end: var(--_tree-preview-offset);
+    }
+
+    &[data-tds-stacked]::before {
+      position: absolute;
+      z-index: var(--_tree-preview-back-layer);
+      inset-block: var(--_tree-preview-offset) 0;
+      inset-inline: var(--_tree-preview-offset) 0;
+      border-radius: var(--terria-ds-radius-lg);
+      background-color: var(--terria-ds-surface-overlay);
+      box-shadow: var(--_tree-preview-edge);
+      content: "";
+    }
+  }
+
+  [data-tds="tree-drag-preview-card"] {
+    display: inline-flex;
+    gap: var(--terria-ds-space-sm);
+    align-items: center;
+    box-sizing: border-box;
+    max-inline-size: 20rem;
+    min-block-size: var(--terria-ds-dimensions-spacing-9);
+    padding-inline: var(--terria-ds-space-md);
+    border-radius: var(--terria-ds-radius-lg);
+    background-color: var(--terria-ds-surface-overlay);
+    box-shadow: var(--_tree-preview-edge);
+    color: var(--terria-ds-text-foreground);
+    font-size: var(--terria-ds-text-size-body);
+    line-height: var(--terria-ds-line-height-body);
+  }
+
+  [data-tds="tree-drag-preview-label"] {
+    min-inline-size: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
 }

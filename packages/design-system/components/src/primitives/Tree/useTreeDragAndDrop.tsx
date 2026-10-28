@@ -7,6 +7,9 @@ import {
   type DragAndDropOptions
 } from "react-aria-components/useDragAndDrop";
 import type { TreeData } from "react-stately";
+import { Chip } from "../Chip";
+import { dataAttr } from "../../utils/dataAttr";
+import "./Tree.css";
 
 type TreeDropTarget = Extract<DropTarget, { type: "item" }>;
 
@@ -18,14 +21,57 @@ type UseTreeDragAndDropOptions<T extends object> = Omit<
 > & {
   /** The tree's data, from useTreeData, which the rows are moved in */
   tree: TreeData<T>;
-  /** What a drag carries out of the tree. By default each key, as text */
+  /** What a drag carries out of the tree. By default each row's name, as
+   * text */
   getItems?: (keys: Set<Key>) => DragItem[];
   /** Called once rows have moved */
   onMove?: (keys: Set<Key>, target: TreeDropTarget) => void;
 };
 
-const keysAsText = (keys: Set<Key>): DragItem[] =>
-  [...keys].map((key) => ({ "text/plain": String(key) }));
+// A row's name, as screen readers read it, from the tree being dragged from:
+// the one holding focus, which pressing or the keyboard put on a row. A row
+// out of view in a virtualized tree isn't rendered, so its key stands in
+const rowName = (key: Key): string => {
+  const tree = document.activeElement?.closest('[role="treegrid"]') ?? document;
+  return (
+    tree
+      .querySelector(`[role="row"][data-key="${CSS.escape(String(key))}"]`)
+      ?.getAttribute("aria-label") ?? String(key)
+  );
+};
+
+// The row grabbed comes first, as the preview names it; the rest follow in
+// selection order
+const rowNames = (keys: Set<Key>): DragItem[] => {
+  const grabbed = document.activeElement
+    ?.closest('[role="row"]')
+    ?.getAttribute("data-key");
+  return [...keys]
+    .sort(
+      (a, b) => Number(String(b) === grabbed) - Number(String(a) === grabbed)
+    )
+    .map((key) => ({ "text/plain": rowName(key) }));
+};
+
+// What follows the pointer: the first row's name, and how many rows go with
+// it, on a card stacked behind it. React Aria otherwise shows only the row
+// pressed. The browser pictures only the preview's own box, so the stack is
+// drawn inside it, not with shadows around it
+const renderRowsPreview = (items: DragItem[]): React.ReactElement => (
+  <div
+    data-tds="tree-drag-preview"
+    data-tds-stacked={dataAttr(items.length > 1)}
+  >
+    <div data-tds="tree-drag-preview-card">
+      <span data-tds="tree-drag-preview-label">{items[0]?.["text/plain"]}</span>
+      {items.length > 1 && (
+        <Chip size="sm" variant="primary" color="accent">
+          {items.length}
+        </Chip>
+      )}
+    </div>
+  </div>
+);
 
 // Rows dragged within the tree move before, after or into others, with a
 // line showing where they'll land. Pass the result to a Tree, whose rows
@@ -34,13 +80,15 @@ const keysAsText = (keys: Set<Key>): DragItem[] =>
 // shouldAcceptItemDrop (into a row) or getDropOperation (any target)
 const useTreeDragAndDrop = <T extends object>({
   tree,
-  getItems = keysAsText,
+  getItems = rowNames,
+  renderDragPreview = renderRowsPreview,
   onMove,
   ...options
 }: UseTreeDragAndDropOptions<T>): { dragAndDropHooks: DragAndDropHooks } =>
   useDragAndDrop({
     ...options,
     getItems,
+    renderDragPreview,
     onMove: ({ keys, target }) => {
       if (target.dropPosition === "before") {
         tree.moveBefore(target.key, keys);
