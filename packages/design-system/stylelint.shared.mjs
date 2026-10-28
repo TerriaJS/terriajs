@@ -10,6 +10,7 @@ export default {
   ignoreFiles: [
     "**/dist/**",
     "**/node_modules/**",
+    "**/storybook-static/**",
     // Generated; absolute, as each package reads ignoreFiles from its own folder
     fileURLToPath(new URL("components/src/css/tokens.css", import.meta.url))
   ],
