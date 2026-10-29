@@ -49,7 +49,19 @@ const preview: Preview = {
       // 'todo' - show a11y violations in the test UI only
       // 'error' - fail CI on a11y violations
       // 'off' - skip a11y checks entirely
-      test: "todo"
+      test: "error",
+      config: {
+        rules: [
+          // Items named by their label slot and described by their
+          // description slot, as React Aria wires them, read to axe as text
+          // left out of the name
+          { id: "label-content-name-mismatch", enabled: false }
+        ]
+      },
+      // Full detail only for what needs fixing: every element that passed,
+      // in every story, made the test results too big for Storybook to send
+      // to its UI
+      options: { resultTypes: ["violations", "incomplete"] }
     },
     darkMode: {
       current: "light",
