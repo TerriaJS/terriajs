@@ -143,5 +143,10 @@ export const Invalid: Story = {
 };
 
 export const Disabled: Story = {
+  parameters: {
+    // Text in a disabled field has no contrast requirement (WCAG 1.4.3);
+    // axe only knows that for labels, not descriptions or values
+    a11y: { config: { rules: [{ id: "color-contrast", enabled: false }] } }
+  },
   args: { isDisabled: true, defaultValue: parseDate("2025-12-16") }
 };

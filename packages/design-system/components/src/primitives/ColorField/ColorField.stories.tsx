@@ -79,7 +79,14 @@ export const Empty: Story = { args: { defaultValue: undefined } };
 
 export const Invalid: Story = { args: { isInvalid: true } };
 
-export const Disabled: Story = { args: { isDisabled: true } };
+export const Disabled: Story = {
+  parameters: {
+    // Text in a disabled field has no contrast requirement (WCAG 1.4.3);
+    // axe only knows that for labels, not descriptions or values
+    a11y: { config: { rules: [{ id: "color-contrast", enabled: false }] } }
+  },
+  args: { isDisabled: true }
+};
 
 /** In a ColorPicker, the field changes the picker's colour. Its swatch, in
  * ColorPicker.Trigger, opens the picker below the whole field, its group
