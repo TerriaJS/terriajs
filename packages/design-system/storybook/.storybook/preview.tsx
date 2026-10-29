@@ -25,6 +25,19 @@ const withDesignSystemTheme: Decorator = (Story, { globals }) => (
 const preview: Preview = {
   parameters: {
     layout: "centered",
+    options: {
+      // Folders and components by name; a component's stories keep the order
+      // they're written in, Docs first. Storybook reads this out of the file
+      // and runs it as plain JavaScript, so it has no types and can't use
+      // anything from outside it
+      /* eslint-disable @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call -- untyped, as above */
+      // @ts-expect-error: no types
+      storySort: (a, b) =>
+        a.title === b.title
+          ? 0
+          : a.title.localeCompare(b.title, undefined, { numeric: true })
+      /* eslint-enable @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call */
+    },
     controls: {
       matchers: {
         color: /(background|color)$/i
