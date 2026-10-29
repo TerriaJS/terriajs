@@ -1,0 +1,81 @@
+name: Design system CI
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "packages/design-system/**"
+      - ".github/workflows/design-system-*.yml"
+      - ".github/scripts/design-system/**"
+      - "pnpm-lock.yaml"
+      - "pnpm-workspace.yaml"
+      - "package.json"
+      - "knip.json"
+  pull_request:
+    paths:
+      - "packages/design-system/**"
+      - ".github/workflows/design-system-*.yml"
+      - ".github/scripts/design-system/**"
+      - "pnpm-lock.yaml"
+      - "pnpm-workspace.yaml"
+      - "package.json"
+      - "knip.json"
+
+permissions:
+  contents: read
+  # GitHub Packages, which pnpm checks the lockfile against
+  packages: read
+
+# A newer push to the same branch or PR replaces a run that's still going
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      # Actions pinned to release commits
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      # Reads pnpm from packageManager in package.json
+      - uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: ".nvmrc"
+          registry-url: "https://npm.pkg.github.com"
+          scope: "@terriajs"
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile --filter . --filter "@terria/design-system*..."
+
+      # Generates the icons that lint, knip and the type-check resolve
+      - name: Build
+        run: pnpm --filter "@terria/design-system*" -r build
+
+      - name: Check formatting
+        run: pnpm exec oxfmt --check packages/design-system
+
+      - name: Lint
+        run: pnpm --filter "@terria/design-system*" -r lint
+
+      - name: Find unused files, exports and dependencies
+        run: pnpm knip
+
+      - name: Type-check
+        run: pnpm --filter "@terria/design-system*" -r typecheck
+
+      - name: Install Playwright Chromium
+        run: pnpm --filter @terria/design-system exec playwright install --with-deps chromium
+
+      - name: Test
+        run: pnpm --filter "@terria/design-system*" -r test
+
+      - name: Build Storybook
+        run: pnpm build-storybook
