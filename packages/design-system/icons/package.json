@@ -51,13 +51,12 @@
   "files": [
     "dist"
   ],
-  "main": "./dist/index.cjs",
+  "main": "./dist/index.js",
   "module": "./dist/index.js",
   "peerDependencies": {
     "react": "^18.2.0 || ^19.0.0",
     "react-dom": "^18.2.0 || ^19.0.0"
   },
-  "private": true,
   "scripts": {
     "build": "node scripts/generate-icons.ts && rollup -c && cp src/sprite/sprite.svg dist/sprite/",
     "clean": "rm -rf dist *.tsbuildinfo",
