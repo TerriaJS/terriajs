@@ -3,6 +3,7 @@
 ### next release
 
 - Migrate to pnpm
+- Strip the `Origin` header from proxied requests. Upstream servers with an origin allowlist rejected requests carrying the browser's origin, even though the proxy makes the request server-to-server.
 
 ### 5.0.0 - 2026-08-27
 

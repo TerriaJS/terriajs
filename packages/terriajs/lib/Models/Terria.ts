@@ -1650,10 +1650,12 @@ export default class Terria {
       })
     );
 
+    const initSourcesToApply = withoutSupersededState(loadedInitSources);
+
     let baseMapPromise: Promise<void> | undefined;
     // Sequentially apply all InitSources
-    for (let i = 0; i < loadedInitSources.length; i++) {
-      const initSource = loadedInitSources[i];
+    for (let i = 0; i < initSourcesToApply.length; i++) {
+      const initSource = initSourcesToApply[i];
       if (!isDefined(initSource?.data)) continue;
       try {
         const result = await this._applyInitData({
@@ -2727,6 +2729,39 @@ async function interpretStartData(
       });
     }
   }
+}
+
+/**
+ * Removes state that a later init source replaces anyway, so that e.g. a share
+ * in the URL doesn't first show the config's default workbench and story.
+ * Every init source replaces the workbench (and timeline), while stories and
+ * initial camera are only replaced by a source that sets them.
+ */
+function withoutSupersededState(
+  initSources: (InitSourceFromData | undefined)[]
+): (InitSourceFromData | undefined)[] {
+  let workbenchReplaced = false;
+  let storiesReplaced = false;
+  let initialCameraReplaced = false;
+  return initSources
+    .slice()
+    .reverse()
+    .map((initSource) => {
+      if (!isDefined(initSource?.data)) return initSource;
+      const data = { ...initSource.data };
+      if (workbenchReplaced) {
+        delete data.workbench;
+        delete data.timeline;
+      }
+      if (storiesReplaced) delete data.stories;
+      if (initialCameraReplaced) delete data.initialCamera;
+
+      workbenchReplaced = true;
+      storiesReplaced ||= Array.isArray(initSource.data.stories);
+      initialCameraReplaced ||= isJsonObject(initSource.data.initialCamera);
+      return { ...initSource, data };
+    })
+    .reverse();
 }
 
 function setCustomRequestSchedulerDomainLimits(

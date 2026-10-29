@@ -29,7 +29,7 @@
     "@turf/bbox": "^7.2.0",
     "@turf/boolean-intersects": "^7.2.0",
     "@turf/circle": "^7.2.0",
-    "@turf/helpers": "^7.2.0",
+    "@turf/helpers": "catalog:runtime",
     "@tweenjs/tween.js": "^25.0.0",
     "@types/arcgis-rest-api": "catalog:types",
     "@types/create-react-class": "catalog:types",

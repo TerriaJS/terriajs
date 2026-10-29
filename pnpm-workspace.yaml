@@ -142,6 +142,7 @@ catalogs:
 
   runtime:
     "@aws-sdk/client-s3": ^3.1082.0
+    "@turf/helpers": ^7.2.0
     bottleneck: ^2.19.5
     classnames: ^2.5.1
     core-js: ^3.50.0

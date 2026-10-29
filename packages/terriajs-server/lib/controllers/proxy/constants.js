@@ -1,7 +1,7 @@
 const DURATION_REGEX = /^(\d+|\d+\.\d+)(ms|s|m|h|d|w|y)$/;
 const PROTOCOL_REGEX = /^\w+:\//;
 const DO_NOT_PROXY_REGEX =
-  /^(?:Host|X-Forwarded-Host|Proxy-Connection|Connection|Keep-Alive|Transfer-Encoding|TE|Trailer|Proxy-Authorization|Proxy-Authenticate|Upgrade|Expires|pragma|Strict-Transport-Security|Cookie|Set-Cookie)$/i;
+  /^(?:Host|X-Forwarded-Host|Proxy-Connection|Connection|Keep-Alive|Transfer-Encoding|TE|Trailer|Proxy-Authorization|Proxy-Authenticate|Upgrade|Expires|pragma|Strict-Transport-Security|Cookie|Set-Cookie|Origin)$/i;
 const AUTH_STATUS_CODES = [401, 403, 407, 511];
 const MAX_REDIRECTS = 5;
 

@@ -12,6 +12,17 @@ describe("proxy filterHeaders", () => {
     expect(filteredHeaders.unfilteredheader).toBe(headers.unfilteredheader);
   });
 
+  it("does not forward the browser's origin to the upstream server", () => {
+    const headers = {
+      origin: "https://map.example.com",
+      referer: "https://map.example.com/"
+    };
+
+    const filteredHeaders = filterHeaders(headers);
+    expect(filteredHeaders.origin).toBeUndefined();
+    expect(filteredHeaders.referer).toBe(headers.referer);
+  });
+
   it("properly filters when socket defined", () => {
     const headers = {
       "Proxy-Connection": "delete me!",

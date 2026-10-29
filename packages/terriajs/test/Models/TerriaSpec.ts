@@ -164,6 +164,108 @@ describe("TerriaSpec", function () {
       expect(terria.workbench.items[0].uniqueId).toBe("test-2");
     });
 
+    it("doesn't load workbench or stories that a later initSource replaces", async function () {
+      let defaultWorkbenchItemRequested = false;
+      worker.use(
+        http.get("*/config.json", () =>
+          HttpResponse.json({
+            initializationUrls: ["something"]
+          })
+        ),
+        http.get("*/init/something.json", () =>
+          HttpResponse.json({
+            workbench: ["test"],
+            catalog: [
+              { id: "test", type: "czml", url: "test.czml" },
+              { id: "test-2", type: "czml", url: "test-2.czml" }
+            ],
+            stories: [
+              {
+                id: "default-story",
+                title: "Default",
+                text: "",
+                shareData: { version: "8.0.0", initSources: [] }
+              }
+            ]
+          })
+        ),
+        http.get("*/test.czml", () => {
+          defaultWorkbenchItemRequested = true;
+          return HttpResponse.json([{ id: "document", version: "1.0" }]);
+        }),
+        http.get("*/test-2.czml", () =>
+          HttpResponse.json([{ id: "document", version: "1.0" }])
+        )
+      );
+      const storiesApplied: string[][] = [];
+      const applyInitData = terria._applyInitData.bind(terria);
+      spyOn(terria, "_applyInitData").and.callFake((params) => {
+        if (params.initData.stories) {
+          storiesApplied.push(params.initData.stories.map((story) => story.id));
+        }
+        return applyInitData(params);
+      });
+
+      const share = {
+        version: "8.0.0",
+        initSources: [
+          {
+            workbench: ["test-2"],
+            stories: [
+              {
+                id: "shared-story",
+                title: "Shared",
+                text: "",
+                shareData: { version: "8.0.0", initSources: [] }
+              }
+            ]
+          }
+        ]
+      };
+      await terria.start({
+        configUrl: `config.json`,
+        applicationUrl: {
+          href: `https://application.url/#start=${encodeURIComponent(
+            JSON.stringify(share)
+          )}`
+        } as Location,
+        i18nOptions
+      });
+
+      expect(defaultWorkbenchItemRequested).toBe(false);
+      expect(storiesApplied).toEqual([["shared-story"]]);
+      expect(terria.workbench.items.map((item) => item.uniqueId)).toEqual([
+        "test-2"
+      ]);
+      expect(terria.stories.map((story) => story.id)).toEqual(["shared-story"]);
+    });
+
+    it("keeps stories from an earlier initSource when no later one sets them", async function () {
+      terria.initSources.push(
+        {
+          name: "default",
+          data: {
+            workbench: [],
+            stories: [
+              {
+                id: "default-story",
+                title: "Default",
+                text: "",
+                shareData: { version: "8.0.0", initSources: [] }
+              }
+            ]
+          }
+        },
+        { name: "share", data: { workbench: [] } }
+      );
+
+      (await terria.loadInitSources()).throwIfError();
+
+      expect(terria.stories.map((story) => story.id)).toEqual([
+        "default-story"
+      ]);
+    });
+
     it("works with initializationUrls and initFragmentPaths", async function () {
       expect(terria.initSources.length).toEqual(0);
 
