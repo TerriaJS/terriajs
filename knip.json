@@ -13,9 +13,17 @@
     },
     "packages/design-system/*": {
       "project": ["src/**/*.{ts,tsx}"]
+    },
+    "packages/design-system/icons": {
+      "project": ["src/**/*.{ts,tsx}", "scripts/**/*.ts"]
     }
   },
-  "ignoreDependencies": ["react", "@types/react", "@terria/*"],
+  "ignoreDependencies": [
+    "react",
+    "@types/react",
+    "@terria/*",
+    "@fontsource-variable/inter"
+  ],
   "exclude": ["catalog"],
   "ignoreWorkspaces": ["apps/*", "packages/!(design-system)"]
 }
