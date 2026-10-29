@@ -47,14 +47,21 @@ const open = async (
   return dialog.element() as HTMLElement;
 };
 
-// A pointer pressed on `target`, moved `distance` px down (or right), and
-// let go
-const drag = (
+// A pointer pressed on `target`, moved `distance` px down (or right) a frame
+// at a time, and let go. Moves all at once would make the speed between two
+// of them depend on whether a millisecond ticked over, and a fast one is a
+// flick that closes the drawer. `back` ends it with a flick back to that
+// offset; `end` is how the pointer goes
+const drag = async (
   target: Element,
   dialog: Element,
   distance: number,
-  axis: "x" | "y" = "y"
-): void => {
+  axis: "x" | "y" = "y",
+  {
+    back,
+    end = "pointerup"
+  }: { back?: number; end?: "pointerup" | "pointercancel" } = {}
+): Promise<void> => {
   const { left, top } = target.getBoundingClientRect();
   const at = (offset: number): PointerEventInit => ({
     bubbles: true,
@@ -66,12 +73,21 @@ const drag = (
 
   target.dispatchEvent(new PointerEvent("pointerdown", at(0)));
   for (let step = 1; step <= 10; step++) {
+    await new Promise((resolve) => setTimeout(resolve, 16));
     dialog.dispatchEvent(
       new PointerEvent("pointermove", at((distance * step) / 10))
     );
   }
-  dialog.dispatchEvent(new PointerEvent("pointerup", at(distance)));
+  if (back !== undefined) {
+    await new Promise((resolve) => setTimeout(resolve, 16));
+    dialog.dispatchEvent(new PointerEvent("pointermove", at(back)));
+  }
+  dialog.dispatchEvent(new PointerEvent(end, at(back ?? distance)));
 };
+
+// Long enough for a closing drawer to have gone
+const settle = (): Promise<void> =>
+  new Promise((resolve) => setTimeout(resolve, 400));
 
 describe("Drawer", () => {
   it("opens as a dialog named by its heading", async () => {
@@ -196,7 +212,7 @@ describe("Drawer", () => {
       const header = dialog.querySelector('[data-tds="drawer-header"]');
       if (!header) throw new Error("No header");
 
-      drag(header, dialog, dialog.offsetHeight * 0.5);
+      await drag(header, dialog, dialog.offsetHeight * 0.5);
 
       await expect.element(screen.getByRole("dialog")).not.toBeInTheDocument();
     });
@@ -207,11 +223,10 @@ describe("Drawer", () => {
       const header = dialog.querySelector('[data-tds="drawer-header"]');
       if (!header) throw new Error("No header");
 
-      drag(header, dialog, 20);
-      await new Promise((resolve) => setTimeout(resolve, 400));
+      await drag(header, dialog, 20);
 
       await expect.element(screen.getByRole("dialog")).toBeVisible();
-      expect(dialog.style.transform).toBe("");
+      await expect.poll(() => dialog.style.transform).toBe("");
     });
 
     it("isn't dragged from its body, which scrolls", async () => {
@@ -220,7 +235,7 @@ describe("Drawer", () => {
       const body = dialog.querySelector('[data-tds="drawer-body"]');
       if (!body) throw new Error("No body");
 
-      drag(body, dialog, dialog.offsetHeight);
+      await drag(body, dialog, dialog.offsetHeight);
       await new Promise((resolve) => setTimeout(resolve, 100));
 
       await expect.element(screen.getByRole("dialog")).toBeVisible();
@@ -232,10 +247,37 @@ describe("Drawer", () => {
       const header = dialog.querySelector('[data-tds="drawer-header"]');
       if (!header) throw new Error("No header");
 
-      drag(header, dialog, -dialog.offsetWidth, "x");
-      await new Promise((resolve) => setTimeout(resolve, 100));
+      await drag(header, dialog, -dialog.offsetWidth, "x");
+      await settle();
 
       await expect.element(screen.getByRole("dialog")).toBeVisible();
+    });
+
+    it("stays open when flicked back the way it came", async () => {
+      const screen = await render(drawer());
+      const dialog = await open(screen);
+      const header = dialog.querySelector('[data-tds="drawer-header"]');
+      if (!header) throw new Error("No header");
+
+      await drag(header, dialog, 60, "y", { back: 10 });
+      await settle();
+
+      await expect.element(screen.getByRole("dialog")).toBeVisible();
+    });
+
+    it("springs back when the browser takes the pointer", async () => {
+      const screen = await render(drawer());
+      const dialog = await open(screen);
+      const header = dialog.querySelector('[data-tds="drawer-header"]');
+      if (!header) throw new Error("No header");
+
+      await drag(header, dialog, dialog.offsetHeight * 0.5, "y", {
+        end: "pointercancel"
+      });
+      await settle();
+
+      await expect.element(screen.getByRole("dialog")).toBeVisible();
+      await expect.poll(() => dialog.style.transform).toBe("");
     });
 
     it("isn't dragged away when not dismissable", async () => {
@@ -246,7 +288,7 @@ describe("Drawer", () => {
       const header = dialog.querySelector('[data-tds="drawer-header"]');
       if (!header) throw new Error("No header");
 
-      drag(header, dialog, dialog.offsetHeight);
+      await drag(header, dialog, dialog.offsetHeight);
       await new Promise((resolve) => setTimeout(resolve, 100));
 
       await expect.element(screen.getByRole("dialog")).toBeVisible();
