@@ -1,6 +1,6 @@
 {
   "extends": "../tsconfig.json",
   "files": [],
-  "include": [".storybook/**/*", "src/**/*"],
+  "include": [".storybook/**/*", "src/**/*", "visual.setup.ts"],
   "references": []
 }
