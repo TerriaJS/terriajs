@@ -1,0 +1,14 @@
+/* Layout for the Separator visual tests */
+
+@layer storybook {
+  .separator-visual-column {
+    inline-size: 20rem;
+  }
+
+  /* A vertical separator stands in a row */
+  .separator-visual-row {
+    display: flex;
+    align-items: center;
+    block-size: var(--terria-ds-dimensions-spacing-6);
+  }
+}

@@ -91,6 +91,7 @@
     "dev:types": "tsc --build tsconfig.build.json --watch",
     "test": "vitest run",
     "test:watch": "vitest",
+    "test:visual": "vitest run -c vitest.visual.config.ts",
     "typecheck": "tsc",
     "lint": "eslint . && stylelint \"**/*.css\" --allow-empty-input"
   },

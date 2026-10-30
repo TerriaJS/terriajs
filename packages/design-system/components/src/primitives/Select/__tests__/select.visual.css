@@ -1,0 +1,14 @@
+/* Layout around the component in its visual tests, as in its stories */
+
+@layer storybook {
+  /* As wide as a form field */
+  .select-visual-field {
+    inline-size: 256px;
+  }
+
+  /* An item's title above its description */
+  .select-visual-text {
+    display: flex;
+    flex-direction: column;
+  }
+}
