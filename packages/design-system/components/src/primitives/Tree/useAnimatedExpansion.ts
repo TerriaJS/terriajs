@@ -7,12 +7,14 @@ import { useControlledState } from "react-stately/useControlledState";
 const DURATION = 200;
 const EASING = "ease-out";
 
+// A group's own row
+const rowFor = (tree: HTMLElement, key: Key): HTMLElement | null =>
+  tree.querySelector(`[role="row"][data-key="${CSS.escape(String(key))}"]`);
+
 // The rows a group's expansion shows. Rows are flat siblings, so they're the
 // ones after it at a deeper level
 const descendantRows = (tree: HTMLElement, key: Key): HTMLElement[] => {
-  const row = tree.querySelector(
-    `[role="row"][data-key="${CSS.escape(String(key))}"]`
-  );
+  const row = rowFor(tree, key);
   const level = Number(row?.getAttribute("aria-level"));
   const rows: HTMLElement[] = [];
   for (
@@ -96,6 +98,8 @@ const useAnimatedExpansion = (
   const [collapsingKeys, setCollapsingKeys] = useState(NONE);
   const openingRef = useRef<Key[]>([]);
   const closingRef = useRef<Animation[]>([]);
+  // Rows given aria-expanded="false" while their group collapses
+  const announcedRef = useRef<ReadonlySet<Key>>(NONE);
 
   const change = (next: Set<Key>): void => {
     for (const animation of closingRef.current) animation.cancel();
@@ -151,6 +155,25 @@ const useAnimatedExpansion = (
       "open"
     );
   }, [keys, treeRef]);
+
+  // A collapsing group stays expanded to react-aria until its rows have
+  // animated away, so its row tells screen readers it's collapsed meanwhile:
+  // they hear the change when it's asked for, not when the animation ends.
+  // react-aria's own aria-expanded, unchanged until then, isn't rewritten
+  // over it; a group opened again before its rows are gone is put back
+  useLayoutEffect(() => {
+    const tree = treeRef.current;
+    if (!tree) return;
+    for (const key of announcedRef.current) {
+      if (!collapsingKeys.has(key) && keys.has(key)) {
+        rowFor(tree, key)?.setAttribute("aria-expanded", "true");
+      }
+    }
+    for (const key of collapsingKeys) {
+      rowFor(tree, key)?.setAttribute("aria-expanded", "false");
+    }
+    announcedRef.current = collapsingKeys;
+  }, [collapsingKeys, keys, treeRef]);
 
   return { expandedKeys: keys, setExpandedKeys: change, collapsingKeys };
 };
