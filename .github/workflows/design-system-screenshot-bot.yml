@@ -27,3 +27,24 @@ jobs:
       - uses: taiga-family/argus@f28f0914e28530403f61aab7080d3de1fd0c9284 # main
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # Argus links its images through raw.githubusercontent.com, which only
+      # serves public repositories; github.com/…/blob/…?raw=true serves
+      # anyone who can see the repository, private or not
+      - name: Link the images so a private repository shows them
+        if: github.event_name == 'workflow_run' && github.event.repository.private
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          PR: ${{ github.event.workflow_run.pull_requests[0].number }}
+        run: |
+          [ -n "$PR" ] || exit 0
+          raw="https://raw.githubusercontent.com/$REPO/screenshot-bot-storage/"
+          blob="https://github.com/$REPO/blob/screenshot-bot-storage/"
+          gh api "repos/$REPO/issues/$PR/comments" --paginate \
+            --jq '.[] | select(.body | contains("screenshot-bot-id: test-report")) | .id' |
+            while read -r id; do
+              gh api "repos/$REPO/issues/comments/$id" --jq .body |
+                sed -E "s#${raw}([^\"]+)#${blob}\1?raw=true#g" > report.md
+              gh api -X PATCH "repos/$REPO/issues/comments/$id" -F body=@report.md > /dev/null
+            done
