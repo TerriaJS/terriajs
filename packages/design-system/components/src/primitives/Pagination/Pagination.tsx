@@ -1,5 +1,12 @@
 import { ChevronLeftIcon, ChevronRightIcon } from "@terria/design-system-icons";
-import { forwardRef, type ComponentPropsWithoutRef } from "react";
+import { announce } from "@react-aria/live-announcer";
+import { useObjectRef } from "@react-aria/utils";
+import {
+  forwardRef,
+  useEffect,
+  useRef,
+  type ComponentPropsWithoutRef
+} from "react";
 import {
   Button as AriaButton,
   type ButtonProps as AriaButtonProps
@@ -71,8 +78,24 @@ type PaginationLinkProps = AriaButtonProps & {
   isActive?: boolean;
 };
 
+// Becoming the current page is announced: screen readers don't say it of the
+// button pressed, nor of a page moved to with Previous or Next
 const PaginationLink = forwardRef<HTMLButtonElement, PaginationLinkProps>(
-  ({ isActive, ...props }, ref) => {
+  ({ isActive, ...props }, forwardedRef) => {
+    const ref = useObjectRef(forwardedRef);
+    const wasActiveRef = useRef(isActive);
+
+    useEffect(() => {
+      const link = ref.current;
+      if (isActive && !wasActiveRef.current && link) {
+        announce(
+          link.getAttribute("aria-label") ?? `Page ${link.textContent}`,
+          "polite"
+        );
+      }
+      wasActiveRef.current = isActive;
+    }, [isActive, ref]);
+
     return (
       <AriaButton
         aria-current={isActive ? "page" : undefined}

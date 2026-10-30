@@ -3,11 +3,15 @@ import { render } from "vitest-browser-react";
 import { page, userEvent } from "vitest/browser";
 import { Pagination, type PaginationProps } from "..";
 
-// The usual composition: previous, three pages with the first current, a gap,
-// the last page, and next
+// The usual composition: previous, three pages with one current (the first
+// unless told), a gap, the last page, and next
 const pagination = (
   props: Partial<PaginationProps> = {},
-  { onPage = vi.fn<(page: number | string) => void>(), isFirst = true } = {}
+  {
+    onPage = vi.fn<(page: number | string) => void>(),
+    isFirst = true,
+    current = 1
+  } = {}
 ): React.ReactElement => (
   <Pagination {...props}>
     <Pagination.Summary>1 to 5 of 50 layers</Pagination.Summary>
@@ -26,7 +30,7 @@ const pagination = (
       {[1, 2, 3].map((page) => (
         <Pagination.Item key={page}>
           <Pagination.Link
-            isActive={page === 1}
+            isActive={page === current}
             onPress={() => {
               onPage(page);
             }}
@@ -72,6 +76,16 @@ describe("Pagination", () => {
     await expect
       .element(screen.getByRole("navigation", { name: "Layer pages" }))
       .toBeVisible();
+  });
+
+  // Screen readers don't say a page became current, so it's announced
+  it("announces the page it moves to", async () => {
+    const screen = await render(pagination());
+    await screen.rerender(pagination({}, { current: 2 }));
+
+    await expect
+      .poll(() => document.querySelector("[aria-live='polite']")?.textContent)
+      .toBe("Page 2");
   });
 
   it("lists its pages, marking the current one", async () => {
