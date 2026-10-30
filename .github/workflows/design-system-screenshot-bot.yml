@@ -1,0 +1,29 @@
+name: Design system screenshot report
+
+# Taiga UI's Argus bot: when "Visual tests" runs on a PR it marks its comment
+# as loading, then pins the differences that run uploaded to the comment, and
+# removes them when the PR closes. GitHub only runs workflow_run workflows from
+# the default branch, so this one works once it's on main.
+# Settings: .github/screenshot-bot.config.yml
+on:
+  workflow_run:
+    workflows: [Design system visual tests]
+    types: [requested, completed]
+  pull_request:
+    types: [closed]
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    permissions:
+      # The run's artifacts
+      actions: read
+      # The images live on a screenshot-bot-storage branch
+      contents: write
+      # The PR comment
+      pull-requests: write
+    steps:
+      # Pinned to the commit Taiga UI runs
+      - uses: taiga-family/argus@f28f0914e28530403f61aab7080d3de1fd0c9284 # main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

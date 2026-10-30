@@ -18,6 +18,7 @@
   "devDependencies": {
     "@storybook/addon-docs": "catalog:storybook",
     "@storybook/react-vite": "catalog:storybook",
+    "@types/pngjs": "catalog:types",
     "@types/react": "catalog:types",
     "@types/react-dom": "catalog:types",
     "@typescript/native": "catalog:build",
@@ -26,6 +27,7 @@
     "autoprefixer": "catalog:runtime",
     "glob": "^13.0.6",
     "playwright": "catalog:runtime",
+    "pngjs": "7.0.0",
     "postcss": "catalog:runtime",
     "react": "catalog:runtime",
     "react-dom": "catalog:runtime",
@@ -36,6 +38,7 @@
     "vite": "catalog:runtime",
     "vitest": "^5.0.5",
     "vitest-browser-react": "catalog:runtime",
+    "@types/node": "catalog:types",
     "@eslint-react/eslint-plugin": "catalog:build",
     "@eslint/css": "catalog:lint",
     "@eslint/js": "catalog:lint",

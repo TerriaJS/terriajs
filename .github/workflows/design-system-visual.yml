@@ -1,0 +1,98 @@
+name: Design system visual tests
+
+# Compares a PR's components with its base branch's, as Taiga UI compares its
+# demo: the PR's own screenshots are taken as the references, then the base
+# branch's code runs the same visual tests against them. What differs fails
+# the run, and design-system-screenshot-bot.yml posts the differences on the PR
+on:
+  pull_request:
+
+permissions:
+  contents: read
+  # GitHub Packages, which pnpm checks the lockfile against
+  packages: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+jobs:
+  visual:
+    runs-on: ubuntu-latest
+    steps:
+      # Actions pinned to release commits
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          # The base branch is checked out beside it
+          fetch-depth: 0
+          persist-credentials: false
+
+      # Reads pnpm from packageManager in package.json
+      - uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: ".nvmrc"
+          registry-url: "https://npm.pkg.github.com"
+          scope: "@terriajs"
+          cache: pnpm
+
+      - name: Set where the screenshots go
+        run: echo "VISUAL_SCREENSHOTS=$RUNNER_TEMP/visual" >> "$GITHUB_ENV"
+
+      - run: pnpm install --frozen-lockfile --filter . --filter "@terria/design-system*..."
+
+      - name: Install Playwright Chromium
+        run: pnpm --filter @terria/design-system exec playwright install --with-deps chromium
+
+      # The components import the icons from their build
+      - run: pnpm --filter @terria/design-system-icons build
+
+      - name: Take this change's screenshots as the references
+        run: pnpm --filter @terria/design-system test:visual -u
+
+      # The base branch's components, with this change's visual tests: a test
+      # the base doesn't have yet, or a component it lacks, fails without a
+      # screenshot to compare
+      - name: Check out the base branch with this change's visual tests
+        env:
+          BASE_REF: ${{ github.base_ref }}
+        run: |
+          git worktree add "$RUNNER_TEMP/base" "origin/$BASE_REF"
+          git ls-files \
+            'packages/design-system/components/vitest.visual.config.ts' \
+            'packages/design-system/components/src/visual.ts' \
+            'packages/design-system/components/src/visual-setup.ts' \
+            '*.visual.tsx' '*.visual.css' '*.stories.css' |
+            rsync -a --files-from=- . "$RUNNER_TEMP/base/"
+          cd "$RUNNER_TEMP/base"
+          pnpm install --frozen-lockfile --filter . --filter "@terria/design-system*..."
+          pnpm --filter @terria/design-system-icons build
+
+      # The base branch may not have the test:visual script yet
+      - name: Compare the base branch with the references
+        id: compare
+        continue-on-error: true
+        working-directory: ${{ runner.temp }}/base
+        run: pnpm --filter @terria/design-system exec vitest run -c vitest.visual.config.ts
+
+      - name: Put each difference's before, diff and after side by side
+        if: steps.compare.outcome == 'failure'
+        run: node packages/design-system/components/scripts/combine-visual-diffs.ts
+
+      # design-system-screenshot-bot.yml finds the images by their .visual.tsx folders
+      - name: Upload the differences
+        if: steps.compare.outcome == 'failure'
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: visual-differences
+          path: ${{ env.VISUAL_SCREENSHOTS }}/__report__
+          if-no-files-found: ignore
+          retention-days: 7
+
+      - name: Fail when the base branch looks different
+        if: steps.compare.outcome == 'failure'
+        run: exit 1

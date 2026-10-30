@@ -16,6 +16,10 @@
     },
     "packages/design-system/icons": {
       "project": ["src/**/*.{ts,tsx}", "scripts/**/*.ts"]
+    },
+    "packages/design-system/components": {
+      "project": ["src/**/*.{ts,tsx}"],
+      "entry": ["scripts/*.ts"]
     }
   },
   "ignoreDependencies": [

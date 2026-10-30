@@ -1,0 +1,7 @@
+# Taiga UI's Argus bot, run by workflows/design-system-screenshot-bot.yml
+
+# The combined before | diff | after images visual.yml uploads, in folders
+# named after their .visual.tsx files
+diff-paths: ['.*\.visual\.tsx/.*\.png']
+
+failed-report-description: '<h3 align="center">Before (base branch) ← Diff → After (this PR)</h3>'
