@@ -23,6 +23,9 @@ on:
 
 permissions:
   contents: read
+  # The "Visual tests" status, below, and the PR's files it's decided by
+  statuses: write
+  pull-requests: read
   # GitHub Packages, which pnpm checks the lockfile against
   packages: read
 
@@ -43,6 +46,28 @@ jobs:
       # their time waiting on Chromium, so 4 at once runs them 2.5x as fast
       VITEST_MAX_WORKERS: 4
     steps:
+      # The visual tests run when a maintainer asks (design-system-visual-command.yml);
+      # until then each commit of a PR that could change how components look
+      # shows them as not run. Other PRs show nothing, and can still be run.
+      # Pending is the nearest a status comes to "not run", and doesn't block
+      # merging unless branch protection requires it. A fork's PR can't set
+      # statuses, and can't run the visual tests either
+      - name: Show the visual tests as not run
+        if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
+        # Only reports; CI doesn't fail over it
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          SHA: ${{ github.event.pull_request.head.sha }}
+          FILES: repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/files
+        run: |
+          visual='^(packages/design-system/(components|icons)/|pnpm-lock\.yaml$|pnpm-workspace\.yaml$|\.github/workflows/design-system-visual)'
+          files=$(gh api "$FILES" --paginate --jq '.[].filename')
+          grep -qE "$visual" <<< "$files" || exit 0
+          gh api "repos/$REPO/statuses/$SHA" -f context="Visual tests" -f state=pending \
+            -f description="Not run: comment (maintainers): /terria-bot visual-test" > /dev/null
+
       # Actions pinned to release commits
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:

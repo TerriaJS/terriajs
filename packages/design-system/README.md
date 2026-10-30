@@ -56,6 +56,15 @@ Watch mode for tests:
 pnpm test:watch
 ```
 
+Visual tests (`*.visual.tsx`) screenshot each component in each of its states, in both themes. Take the references, then compare against them:
+
+```bash
+pnpm --filter @terria/design-system test:visual -u
+pnpm --filter @terria/design-system test:visual
+```
+
+On a PR, a maintainer comments `/terria-bot visual-test` to compare its components with the base branch's; the differences are posted on the PR. Comment again to run them again after new commits.
+
 ### Type Checking
 
 ```bash

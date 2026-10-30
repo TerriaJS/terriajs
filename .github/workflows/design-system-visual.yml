@@ -3,12 +3,28 @@ name: Design system visual tests
 # Compares a PR's components with its base branch's, as Taiga UI compares its
 # demo: the PR's own screenshots are taken as the references, then the base
 # branch's code runs the same visual tests against them. What differs fails
-# the run, and design-system-screenshot-bot.yml posts the differences on the PR
+# the run, and is posted on the PR (.github/scripts/design-system/report-visual-differences.sh).
+# Run on request: a maintainer comments /terria-bot visual-test on the PR
+# (design-system-visual-command.yml), which runs this on the PR's branch
 on:
-  pull_request:
+  workflow_dispatch:
+    inputs:
+      base:
+        description: Branch to compare with, the PR's base
+        required: true
+        default: main
+      pr:
+        description: PR to post the differences on, if any
+        required: false
 
 permissions:
-  contents: read
+  # The differences' images, on the visual-tests-storage branch
+  contents: write
+  # The "Visual tests" status on the PR's commit
+  statuses: write
+  # The report comment
+  issues: write
+  pull-requests: write
   # GitHub Packages, which pnpm checks the lockfile against
   packages: read
 
@@ -27,13 +43,40 @@ jobs:
       # 2-core runners is one test file at a time. Browser tests spend much of
       # their time waiting on Chromium, so 4 at once runs them 2.5x as fast
       VITEST_MAX_WORKERS: 4
+      # A run started by the command isn't listed among the PR's checks, so it
+      # reports a "Visual tests" status on the PR's commit, which is
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      REPO: ${{ github.repository }}
+      SHA: ${{ github.sha }}
+      RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
     steps:
+      # A status has no "running" state, only pending, as CI's "not run" is,
+      # so the description says it
+      - name: Show the visual tests as running
+        env:
+          BASE: ${{ inputs.base }}
+        run: |
+          gh api "repos/$REPO/statuses/$SHA" -f context="Visual tests" -f state=pending \
+            -f description="⏳ Running: comparing with $BASE…" -f target_url="$RUN_URL" > /dev/null
+
       # Actions pinned to release commits
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           # The base branch is checked out beside it
           fetch-depth: 0
           persist-credentials: false
+
+      - name: Mark the PR's report as running again
+        if: inputs.pr != ''
+        continue-on-error: true
+        env:
+          STAGE: running
+          PR: ${{ inputs.pr }}
+          RUN_ID: ${{ github.run_id }}
+          BASE: ${{ inputs.base }}
+          OUTCOME: ""
+          VISUAL_SCREENSHOTS: ${{ runner.temp }}/visual
+        run: .github/scripts/design-system/report-visual-differences.sh
 
       # Reads pnpm from packageManager in package.json
       - uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
@@ -64,7 +107,7 @@ jobs:
       # screenshot to compare
       - name: Check out the base branch with this change's visual tests
         env:
-          BASE_REF: ${{ github.base_ref }}
+          BASE_REF: ${{ inputs.base }}
         run: |
           git worktree add "$RUNNER_TEMP/base" "origin/$BASE_REF"
           git ls-files \
@@ -88,7 +131,6 @@ jobs:
         if: steps.compare.outcome == 'failure'
         run: node packages/design-system/components/scripts/combine-visual-diffs.ts
 
-      # design-system-screenshot-bot.yml finds the images by their .visual.tsx folders
       - name: Upload the differences
         if: steps.compare.outcome == 'failure'
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
@@ -98,6 +140,35 @@ jobs:
           if-no-files-found: ignore
           retention-days: 7
 
+      - name: Post the differences on the PR
+        if: always() && inputs.pr != '' && (steps.compare.outcome == 'success' || steps.compare.outcome == 'failure')
+        env:
+          PR: ${{ inputs.pr }}
+          RUN_ID: ${{ github.run_id }}
+          BASE: ${{ inputs.base }}
+          OUTCOME: ${{ steps.compare.outcome }}
+        run: .github/scripts/design-system/report-visual-differences.sh
+
       - name: Fail when the base branch looks different
         if: steps.compare.outcome == 'failure'
         run: exit 1
+
+      - name: Show how the visual tests went
+        if: always()
+        env:
+          COMPARED: ${{ steps.compare.outcome }}
+        run: |
+          case "$COMPARED" in
+            success) state=success; description="No visual differences" ;;
+            failure)
+              count=$(find "$VISUAL_SCREENSHOTS/__report__" -name '*.png' 2> /dev/null | wc -l | tr -d ' ')
+              state=failure
+              if [ "$count" -gt 0 ]; then
+                description="$count visual differences: see the report on the PR"
+              else
+                description="Failed without screenshots to compare: see the run"
+              fi ;;
+            *) state=error; description="Didn't get as far as comparing: see the run" ;;
+          esac
+          gh api "repos/$REPO/statuses/$SHA" -f context="Visual tests" -f state="$state" \
+            -f description="$description" -f target_url="$RUN_URL" > /dev/null
