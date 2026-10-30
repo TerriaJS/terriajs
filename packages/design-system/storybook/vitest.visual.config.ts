@@ -1,6 +1,6 @@
 import { join } from "node:path";
 import { defineConfig, mergeConfig } from "vitest/config";
-import stories from "./vitest.config.ts";
+import stories from "./vitest.config";
 
 // Screenshots of every story, compared as Taiga UI compares its demo: run
 // with -u on a change's own code to take the references, then without it on

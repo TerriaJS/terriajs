@@ -2,7 +2,7 @@ import { join } from "node:path";
 import { playwright } from "@vitest/browser-playwright";
 import { defineConfig, mergeConfig } from "vitest/config";
 import type { BrowserCommand } from "vitest/node";
-import tests from "./vitest.config.ts";
+import tests from "./vitest.config";
 
 // Visual tests (*.visual.tsx): each component in each state it shows,
 // screenshotted in both themes. Compared as Taiga UI compares its demo: run
