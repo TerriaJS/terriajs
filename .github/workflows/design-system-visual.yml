@@ -22,6 +22,11 @@ env:
 jobs:
   visual:
     runs-on: ubuntu-latest
+    env:
+      # Vitest defaults to one worker fewer than the cores, which on GitHub's
+      # 2-core runners is one test file at a time. Browser tests spend much of
+      # their time waiting on Chromium, so 4 at once runs them 2.5x as fast
+      VITEST_MAX_WORKERS: 4
     steps:
       # Actions pinned to release commits
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
