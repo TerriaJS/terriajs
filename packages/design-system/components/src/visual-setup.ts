@@ -10,6 +10,7 @@ declare module "vitest/browser" {
     mouseDown: () => Promise<void>;
     mouseUp: () => Promise<void>;
     mouseAway: () => Promise<void>;
+    hideErrorOverlay: () => Promise<void>;
   }
 }
 
@@ -37,6 +38,7 @@ body > div:not([data-react-aria-top-layer], [data-live-announcer]) {
 document.head.append(still);
 
 beforeEach(async () => {
+  await commands.hideErrorOverlay();
   // Only Date: timers stay real, so components still settle
   vi.useFakeTimers({ toFake: ["Date"] });
   vi.setSystemTime(new Date("2026-01-15T09:30:00Z"));

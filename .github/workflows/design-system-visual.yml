@@ -103,8 +103,10 @@ jobs:
         run: pnpm --filter @terria/design-system test:visual -u
 
       # The base branch's components, with this change's visual tests: a test
-      # the base doesn't have yet, or a component it lacks, fails without a
-      # screenshot to compare
+      # the base doesn't have yet fails without a screenshot to compare. A
+      # component the base lacks is left out, as its tests couldn't import it,
+      # and its tests are listed to show their screenshots instead. The lists
+      # are made before copying, which would make the components' folders
       - name: Check out the base branch with this change's visual tests
         env:
           BASE_REF: ${{ inputs.base }}
@@ -115,7 +117,15 @@ jobs:
             'packages/design-system/components/src/visual.ts' \
             'packages/design-system/components/src/visual-setup.ts' \
             '*.visual.tsx' '*.visual.css' '*.stories.css' |
-            rsync -a --files-from=- . "$RUNNER_TEMP/base/"
+            while read -r file; do
+              component=$(dirname "${file/\/__tests__\//\/}")
+              if [ -d "$RUNNER_TEMP/base/$component" ]; then
+                echo "$file"
+              elif [[ "$file" == *.visual.tsx ]]; then
+                basename "$file" >> "$RUNNER_TEMP/new-visual-tests"
+              fi
+            done > "$RUNNER_TEMP/visual-files"
+          rsync -a --files-from="$RUNNER_TEMP/visual-files" . "$RUNNER_TEMP/base/"
           cd "$RUNNER_TEMP/base"
           pnpm install --frozen-lockfile --filter . --filter "@terria/design-system*..."
           pnpm --filter @terria/design-system-icons build
@@ -130,6 +140,17 @@ jobs:
       - name: Put each difference's before, diff and after side by side
         if: steps.compare.outcome == 'failure'
         run: node packages/design-system/components/scripts/combine-visual-diffs.ts
+
+      # Vitest keeps each test file's references in a folder named after it
+      - name: Add the new components' screenshots to the report
+        if: steps.compare.outcome == 'success' || steps.compare.outcome == 'failure'
+        run: |
+          [ -f "$RUNNER_TEMP/new-visual-tests" ] || exit 0
+          while read -r test; do
+            [ -d "$VISUAL_SCREENSHOTS/$test" ] || continue
+            mkdir -p "$VISUAL_SCREENSHOTS/__report__/__new__"
+            cp -R "$VISUAL_SCREENSHOTS/$test" "$VISUAL_SCREENSHOTS/__report__/__new__/"
+          done < "$RUNNER_TEMP/new-visual-tests"
 
       - name: Upload the differences
         if: steps.compare.outcome == 'failure'
@@ -161,7 +182,7 @@ jobs:
           case "$COMPARED" in
             success) state=success; description="No visual differences" ;;
             failure)
-              count=$(find "$VISUAL_SCREENSHOTS/__report__" -name '*.png' 2> /dev/null | wc -l | tr -d ' ')
+              count=$(find "$VISUAL_SCREENSHOTS/__report__" -path '*/__new__' -prune -o -name '*.png' -print 2> /dev/null | wc -l | tr -d ' ')
               state=failure
               if [ "$count" -gt 0 ]; then
                 description="$count visual differences: see the report on the PR"

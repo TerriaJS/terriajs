@@ -27,6 +27,22 @@ const mouseUp: BrowserCommand<[]> = async ({ page }) => {
 const mouseAway: BrowserCommand<[]> = async ({ page }) => {
   await page.mouse.move(0, 0);
 };
+// A test file that fails to build has its error reported, but Vite also
+// draws it over Vitest's page and the tests' frames: every screenshot after
+// would have it in
+const hideErrorOverlay: BrowserCommand<[]> = async ({ page }) => {
+  await Promise.all(
+    page.frames().map((frame) =>
+      frame.evaluate(() => {
+        if (document.getElementById("hide-error-overlay")) return;
+        const style = document.createElement("style");
+        style.id = "hide-error-overlay";
+        style.textContent = "vite-error-overlay { display: none !important; }";
+        document.head.append(style);
+      })
+    )
+  );
+};
 
 export default mergeConfig(
   tests,
@@ -46,7 +62,7 @@ export default mergeConfig(
           launchOptions: { args: ["--disable-lcd-text"] }
         }),
         viewport: { width: 640, height: 480 },
-        commands: { mouseDown, mouseUp, mouseAway },
+        commands: { mouseDown, mouseUp, mouseAway, hideErrorOverlay },
         expect: {
           toMatchScreenshot: {
             // A shade of antialiasing at an icon's edge can vary from run to

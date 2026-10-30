@@ -1,15 +1,17 @@
 #!/usr/bin/env bash
 # Posts a visual tests run's outcome on its PR, in one comment it keeps up to
-# date: each difference's before | diff | after image, stored on a branch so
-# the comment can show it. With no differences it only updates a comment the
-# PR already has, so a clean run doesn't notify anyone.
+# date: each difference's before | diff | after image, and each new
+# component's screenshots, stored on a branch so the comment can show them.
+# With neither it only updates a comment the PR already has, so a clean run
+# doesn't notify anyone.
 #
 # With STAGE=running, as a run starts, it marks a comment the PR already has as
 # running again, and collapses its results as the previous ones.
 #
 # Takes from the environment: GH_TOKEN, REPO, PR, RUN_ID, RUN_URL, SHA, BASE,
 # OUTCOME (the comparison step's: success or failure) and VISUAL_SCREENSHOTS,
-# whose __report__ folder holds the combined images
+# whose __report__ folder holds the combined images, and under __new__ the
+# screenshots of components the base branch doesn't have
 set -euo pipefail
 
 # It names folders on the storage branch
@@ -23,10 +25,14 @@ report="$VISUAL_SCREENSHOTS/__report__"
 body=$(mktemp)
 
 images=()
+added=()
 if [ -d "$report" ]; then
-  while IFS= read -r image; do images+=("$image"); done < <(
-    cd "$report" && find . -name '*.png' | sed 's|^\./||' | sort
-  )
+  while IFS= read -r image; do
+    case "$image" in
+      __new__/*) added+=("$image") ;;
+      *) images+=("$image") ;;
+    esac
+  done < <(cd "$report" && find . -name '*.png' | sed 's|^\./||' | sort)
 fi
 count=${#images[@]}
 
@@ -81,25 +87,62 @@ if [ "${STAGE:-}" = "running" ]; then
   exit 0
 fi
 
-if [ "$count" -gt 0 ]; then
+image_url() {
+  # Unlike raw.githubusercontent.com, this serves a private repository's
+  # files to anyone who can see the repository
+  echo "https://github.com/$REPO/blob/$branch/pr-$PR/$RUN_ID/$1?raw=true"
+}
+
+# The new components' screenshots, one collapsed list per test file, within
+# what's left of the limit
+new_components() {
+  [ "${#added[@]}" -gt 0 ] || return 0
+  local shown=$1 test="" image this
+  echo
+  echo "### New components"
+  echo
+  echo "The base branch doesn't have these, so there's nothing to compare them with: their screenshots, to check by eye."
+  for image in "${added[@]}"; do
+    if [ "$shown" -ge "$limit" ]; then
+      [ -z "$test" ] || printf '\n</details>\n'
+      printf '\nSome aren'"'"'t shown: the comment is full.\n'
+      return 0
+    fi
+    this=$(dirname "${image#__new__/}")
+    if [ "$this" != "$test" ]; then
+      [ -z "$test" ] || printf '\n</details>\n'
+      test=$this
+      printf '\n<details><summary><strong>%s</strong></summary>\n\n' "$test"
+    fi
+    echo "<img src=\"$(image_url "$image")\" alt=\"${image##*/}\" />"
+    shown=$((shown + 1))
+  done
+  printf '\n</details>\n'
+}
+
+if [ "$count" -gt 0 ] || [ "${#added[@]}" -gt 0 ]; then
   for attempt in 1 2 3; do
     (store) && break
     [ "$attempt" -lt 3 ] || exit 1
   done
   {
     echo "$marker"
-    echo "## Visual tests: $count differences"
-    echo
-    echo "$SHA compared with \`$BASE\`, each as before ← diff → after. [The run]($RUN_URL)"
+    if [ "$count" -gt 0 ]; then
+      echo "## Visual tests: $count differences"
+      echo
+      echo "$SHA compared with \`$BASE\`, each as before ← diff → after. [The run]($RUN_URL)"
+    else
+      echo "## Visual tests: no differences"
+      echo
+      echo "$SHA compared with \`$BASE\`. [The run]($RUN_URL)"
+    fi
     shown=0
     for image in "${images[@]}"; do
       [ "$shown" -lt "$limit" ] || break
       echo
       echo "<details open><summary><strong>$image</strong></summary>"
       echo
-      # Unlike raw.githubusercontent.com, this serves a private repository's
-      # files to anyone who can see the repository
-      echo "<img src=\"https://github.com/$REPO/blob/$branch/pr-$PR/$RUN_ID/$image?raw=true\" />"
+      echo "<img src=\"$(image_url "$image")\" />"
       echo
       echo "</details>"
       shown=$((shown + 1))
@@ -108,6 +151,7 @@ if [ "$count" -gt 0 ]; then
       echo
       echo "And $((count - limit)) more, in the run's visual-differences artifact."
     fi
+    new_components "$shown"
   } > "$body"
 elif [ "$OUTCOME" = "success" ]; then
   [ -n "$existing" ] || exit 0
@@ -116,7 +160,7 @@ elif [ "$OUTCOME" = "success" ]; then
     "$marker" "$SHA" "$BASE" "$RUN_URL" > "$body"
 else
   # shellcheck disable=SC2016 # The backticks are Markdown
-  printf '%s\n## Visual tests: failed without screenshots to compare\n\n%s compared with `%s`: a test the base branch lacks a component for, or an error. [The run](%s)\n' \
+  printf '%s\n## Visual tests: failed without screenshots to compare\n\n%s compared with `%s`: an error before any screenshot was compared. [The run](%s)\n' \
     "$marker" "$SHA" "$BASE" "$RUN_URL" > "$body"
 fi
 
