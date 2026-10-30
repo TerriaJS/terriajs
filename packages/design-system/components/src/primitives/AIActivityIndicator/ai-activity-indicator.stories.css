@@ -1,0 +1,15 @@
+@layer storybook {
+  /* The size the design shows it at */
+  .ai-activity-indicator-stories-large {
+    --_ai-indicator-size: 20rem;
+  }
+
+  /* The indicator beside its status text */
+  .ai-activity-indicator-stories-status {
+    display: flex;
+    gap: var(--terria-ds-space-sm);
+    align-items: center;
+    color: var(--terria-ds-text-muted);
+    font-size: var(--terria-ds-text-size-body);
+  }
+}

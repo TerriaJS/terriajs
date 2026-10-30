@@ -546,6 +546,13 @@ export type {
   SpinnerSize
 } from "./primitives/Spinner";
 
+export { AIActivityIndicator } from "./primitives/AIActivityIndicator";
+export type {
+  AIActivityIndicatorProps,
+  AIActivityIndicatorSize,
+  AIActivityIndicatorSparkles
+} from "./primitives/AIActivityIndicator";
+
 export {
   Autocomplete,
   AutocompleteClearButton,
