@@ -55,14 +55,14 @@ const LayerTable = ({
         >
           <Table.Header>
             <Table.Column>{selectBox("Select all")}</Table.Column>
-            <Table.Column id="name" isRowHeader allowsSorting>
+            <Table.Column id="name" isRowHeader allowsSorting textValue="Name">
               {({ sortDirection }) => (
                 <Table.SortableColumnHeader sortDirection={sortDirection}>
                   Name
                 </Table.SortableColumnHeader>
               )}
             </Table.Column>
-            <Table.Column id="source" allowsSorting>
+            <Table.Column id="source" allowsSorting textValue="Source">
               {({ sortDirection }) => (
                 <Table.SortableColumnHeader sortDirection={sortDirection}>
                   Source
@@ -132,6 +132,18 @@ describe("Table", () => {
         .element()
         .querySelector("[data-tds='table-sort-indicator']")
     ).toBeNull();
+  });
+
+  // A column drawn by a function is named by its textValue
+  it("announces a sort by the column's name", async () => {
+    const screen = await render(<LayerTable />);
+    await userEvent.click(screen.getByRole("columnheader", { name: "Name" }));
+
+    await expect
+      .poll(
+        () => document.querySelector("[aria-live='assertive']")?.textContent
+      )
+      .toContain("sorted by column Name in descending order");
   });
 
   it("selects rows with their checkboxes, or all from the header", async () => {

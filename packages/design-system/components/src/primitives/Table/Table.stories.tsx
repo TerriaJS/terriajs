@@ -209,28 +209,28 @@ const catalogue = (
           <Table.Column className="table-stories-check">
             {selectBox("Select all")}
           </Table.Column>
-          <Table.Column id="id" allowsSorting>
+          <Table.Column id="id" allowsSorting textValue="Dataset ID">
             {({ sortDirection }) => (
               <Table.SortableColumnHeader sortDirection={sortDirection}>
                 Dataset ID
               </Table.SortableColumnHeader>
             )}
           </Table.Column>
-          <Table.Column id="name" isRowHeader allowsSorting>
+          <Table.Column id="name" isRowHeader allowsSorting textValue="Name">
             {({ sortDirection }) => (
               <Table.SortableColumnHeader sortDirection={sortDirection}>
                 Name
               </Table.SortableColumnHeader>
             )}
           </Table.Column>
-          <Table.Column id="category" allowsSorting>
+          <Table.Column id="category" allowsSorting textValue="Category">
             {({ sortDirection }) => (
               <Table.SortableColumnHeader sortDirection={sortDirection}>
                 Category
               </Table.SortableColumnHeader>
             )}
           </Table.Column>
-          <Table.Column id="status" allowsSorting>
+          <Table.Column id="status" allowsSorting textValue="Status">
             {({ sortDirection }) => (
               <Table.SortableColumnHeader sortDirection={sortDirection}>
                 Status

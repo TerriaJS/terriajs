@@ -91,7 +91,18 @@ const TableHeader = <T extends object>(
 
 TableHeader.displayName = "Table.Header";
 
-type TableColumnProps = AriaColumnProps;
+type RenderColumn = (...args: never[]) => unknown;
+
+// A column drawn by a function has no text to name it by, so it's given one:
+// screen readers say it when the table is sorted by it
+type TableColumnProps =
+  | (AriaColumnProps & {
+      children?: Exclude<AriaColumnProps["children"], RenderColumn>;
+    })
+  | (AriaColumnProps & {
+      children: Extract<AriaColumnProps["children"], RenderColumn>;
+      textValue: string;
+    });
 
 const TableColumn = forwardRef<HTMLTableCellElement, TableColumnProps>(
   (props, ref) => {

@@ -61,14 +61,14 @@ const datasets = ({
           <Table.Column className="table-stories-check">
             {selectBox("Select all")}
           </Table.Column>
-          <Table.Column id="name" isRowHeader allowsSorting>
+          <Table.Column id="name" isRowHeader allowsSorting textValue="Name">
             {({ sortDirection }) => (
               <Table.SortableColumnHeader sortDirection={sortDirection}>
                 Name
               </Table.SortableColumnHeader>
             )}
           </Table.Column>
-          <Table.Column id="publisher" allowsSorting>
+          <Table.Column id="publisher" allowsSorting textValue="Publisher">
             {({ sortDirection }) => (
               <Table.SortableColumnHeader sortDirection={sortDirection}>
                 Publisher
