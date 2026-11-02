@@ -152,6 +152,35 @@ describe("Calendar", () => {
     expect(toCalendar(chosen, new GregorianCalendar()).year).toBe(1993);
   });
 
+  it("gives focus back to its heading when a year is chosen", async () => {
+    const screen = await render(calendar({ defaultValue: DECEMBER_16 }));
+    const trigger = screen.getByRole("button", { name: /year selector/ });
+
+    await userEvent.click(trigger);
+    await expect
+      .element(screen.getByRole("button", { name: "2025" }))
+      .toHaveFocus();
+    await userEvent.keyboard("{ArrowRight}{Enter}");
+
+    await expect
+      .element(screen.getByRole("grid"))
+      .toHaveAccessibleName(/December 2026/);
+    await expect.element(trigger).toHaveFocus();
+  });
+
+  it("gives focus back to its heading on Escape", async () => {
+    const screen = await render(calendar({ defaultValue: DECEMBER_16 }));
+    const trigger = screen.getByRole("button", { name: /year selector/ });
+
+    await userEvent.click(trigger);
+    await expect
+      .element(screen.getByRole("button", { name: "2025" }))
+      .toHaveFocus();
+    await userEvent.keyboard("{Escape}");
+
+    await expect.element(trigger).toHaveFocus();
+  });
+
   it("closes its year picker on Escape", async () => {
     const screen = await render(calendar({ defaultValue: DECEMBER_16 }));
     const trigger = screen.getByRole("button", { name: /year selector/ });

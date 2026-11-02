@@ -352,6 +352,16 @@ const CalendarYearPickerGrid = ({
     };
   }, [focusYearCell, focusedYear, isYearPickerOpen, yearKeys]);
 
+  // Closing with focus on a year, by choosing one or with Escape, gives it
+  // back to the heading that opened it: the hidden grid can't keep it
+  useEffect(() => {
+    if (isYearPickerOpen) return;
+    if (!gridRef.current?.contains(document.activeElement)) return;
+    calendarRef.current
+      ?.querySelector<HTMLElement>('[data-tds="calendar-year-picker-trigger"]')
+      ?.focus();
+  }, [calendarRef, isYearPickerOpen]);
+
   const handleYearSelect = useCallback(
     (date: CalendarDate) => {
       const item = itemByYear.get(yearKey(date));
