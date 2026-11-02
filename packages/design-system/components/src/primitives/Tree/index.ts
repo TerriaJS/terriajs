@@ -49,6 +49,7 @@ export type {
   UseTreeItemsOptions
 } from "./useTreeItems";
 export type {
+  TreeDataNode,
   TreeDropTarget,
   UseTreeDragAndDropOptions
 } from "./useTreeDragAndDrop";

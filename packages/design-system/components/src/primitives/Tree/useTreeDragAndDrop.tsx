@@ -13,31 +13,40 @@ import "./Tree.css";
 
 type TreeDropTarget = Extract<DropTarget, { type: "item" }>;
 
+// A row's node in the tree's data, as the Tree renders it: its key, value
+// and children
+type TreeDataNode<T extends object> = TreeData<T>["items"][number];
+
 // React Aria's options, such as shouldAcceptItemDrop, getDropOperation and
 // acceptedDragTypes to limit where rows can go, apart from those this sets
 type UseTreeDragAndDropOptions<T extends object> = Omit<
-  DragAndDropOptions<T>,
+  DragAndDropOptions<TreeDataNode<T>>,
   "getItems" | "onMove" | "renderDropIndicator"
 > & {
   /** The tree's data, from useTreeData, which the rows are moved in */
   tree: TreeData<T>;
-  /** What a drag carries out of the tree. By default each row's name, as
-   * text */
-  getItems?: (keys: Set<Key>) => DragItem[];
+  /**
+   * What a drag carries out of the tree, from the dragged rows' keys and
+   * nodes. By default each row's name as screen readers read it, taken from
+   * the page: a row out of view in a virtualized tree isn't there, so its key
+   * stands in. Name rows from their data here to cover those too
+   */
+  getItems?: (keys: Set<Key>, items: TreeDataNode<T>[]) => DragItem[];
   /** Called once rows have moved */
   onMove?: (keys: Set<Key>, target: TreeDropTarget) => void;
 };
 
 // A row's name, as screen readers read it, from the tree being dragged from:
-// the one holding focus, which pressing or the keyboard put on a row. A row
-// out of view in a virtualized tree isn't rendered, so its key stands in
+// the one holding focus, which pressing or the keyboard put on a row, else
+// any on the page. A row out of view in a virtualized tree isn't rendered,
+// so its key stands in
 const rowName = (key: Key): string => {
-  const tree = document.activeElement?.closest('[role="treegrid"]') ?? document;
-  return (
-    tree
-      .querySelector(`[role="row"][data-key="${CSS.escape(String(key))}"]`)
-      ?.getAttribute("aria-label") ?? String(key)
-  );
+  const selector = `[role="row"][data-key="${CSS.escape(String(key))}"]`;
+  const row =
+    document.activeElement
+      ?.closest('[role="treegrid"]')
+      ?.querySelector(selector) ?? document.querySelector(selector);
+  return row?.getAttribute("aria-label") ?? String(key);
 };
 
 // The row grabbed comes first, as the preview names it; the rest follow in
@@ -85,7 +94,7 @@ const useTreeDragAndDrop = <T extends object>({
   onMove,
   ...options
 }: UseTreeDragAndDropOptions<T>): { dragAndDropHooks: DragAndDropHooks } =>
-  useDragAndDrop({
+  useDragAndDrop<TreeDataNode<T>>({
     ...options,
     getItems,
     renderDragPreview,
@@ -110,4 +119,4 @@ const useTreeDragAndDrop = <T extends object>({
   });
 
 export { useTreeDragAndDrop };
-export type { TreeDropTarget, UseTreeDragAndDropOptions };
+export type { TreeDataNode, TreeDropTarget, UseTreeDragAndDropOptions };

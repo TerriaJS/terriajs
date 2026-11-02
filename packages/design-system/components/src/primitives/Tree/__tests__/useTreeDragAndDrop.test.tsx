@@ -2,11 +2,17 @@ import { Collection } from "react-aria-components/Collection";
 import { useEffect } from "react";
 import type { DragAndDropHooks } from "react-aria-components/useDragAndDrop";
 import { useTreeData } from "react-stately";
-import { describe, expect, it } from "vitest";
+import type { DragItem } from "react-aria";
+import type { Key } from "react-aria-components";
+import { describe, expect, it, vi } from "vitest";
 import { render } from "vitest-browser-react";
 import { userEvent } from "vitest/browser";
 import { Tree } from "..";
-import { useTreeDragAndDrop } from "../useTreeDragAndDrop";
+import {
+  useTreeDragAndDrop,
+  type TreeDataNode,
+  type UseTreeDragAndDropOptions
+} from "../useTreeDragAndDrop";
 
 type Layer = { id: string; name: string; children?: Layer[] };
 
@@ -19,9 +25,11 @@ const LAYERS: Layer[] = [
 // A workbench whose layers are reordered by dragging; layers can be kept
 // from taking others into them
 const Workbench = ({
-  layersTakeLayers = true
+  layersTakeLayers = true,
+  getItems
 }: {
   layersTakeLayers?: boolean;
+  getItems?: UseTreeDragAndDropOptions<Layer>["getItems"];
 }): React.ReactElement => {
   const tree = useTreeData({
     initialItems: LAYERS,
@@ -30,6 +38,7 @@ const Workbench = ({
   });
   const { dragAndDropHooks } = useTreeDragAndDrop({
     tree,
+    getItems,
     shouldAcceptItemDrop: () => layersTakeLayers
   });
   return (
@@ -79,6 +88,28 @@ describe("useTreeDragAndDrop", () => {
     await expect
       .poll(() => rowNames(screen))
       .toEqual(["Roads", "Suburbs", "Rivers"]);
+  });
+
+  // A drag's items come from the app's own data, as React Aria hands them
+  // over: the rows' names are there even for rows out of view
+  it("gives getItems the dragged rows' data", async () => {
+    const getItems = vi.fn(
+      (_keys: Set<Key>, items: TreeDataNode<Layer>[]): DragItem[] =>
+        items.map((item) => ({ "text/plain": item.value.name }))
+    );
+    const screen = await render(<Workbench getItems={getItems} />);
+
+    await userEvent.tab();
+    await userEvent.tab();
+    await expect
+      .element(screen.getByRole("button", { name: /^Drag Suburbs/ }))
+      .toHaveFocus();
+    await userEvent.keyboard("{Enter}");
+
+    expect(getItems).toHaveBeenCalled();
+    const items = getItems.mock.lastCall?.[1] ?? [];
+    expect(items.map((item) => item.value.name)).toEqual(["Suburbs"]);
+    await userEvent.keyboard("{Escape}");
   });
 
   it("moves a row into the row it's dropped on", async () => {

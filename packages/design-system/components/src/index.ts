@@ -723,6 +723,7 @@ export {
   useTreeItems
 } from "./primitives/Tree";
 export type {
+  TreeDataNode,
   TreeDragHandleProps,
   TreeDropTarget,
   TreeIndicatorProps,
