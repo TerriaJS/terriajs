@@ -1,4 +1,9 @@
-import { CalendarDate, parseDate } from "@internationalized/date";
+import {
+  CalendarDate,
+  GregorianCalendar,
+  parseDate,
+  toCalendar
+} from "@internationalized/date";
 import { describe, expect, it, vi } from "vitest";
 import { I18nProvider } from "react-aria-components/I18nProvider";
 import { render } from "vitest-browser-react";
@@ -27,7 +32,7 @@ const calendar = (props: Partial<CalendarProps> = {}): React.ReactElement => (
     </Calendar.Grid>
     <Calendar.YearPickerGrid>
       <Calendar.YearPickerGridBody>
-        {({ year }) => <Calendar.YearPickerCell year={year} />}
+        {({ date }) => <Calendar.YearPickerCell date={date} />}
       </Calendar.YearPickerGridBody>
     </Calendar.YearPickerGrid>
   </Calendar>
@@ -118,6 +123,33 @@ describe("Calendar", () => {
     await expect
       .element(screen.getByRole("grid"))
       .toHaveAccessibleName(/December 2030/);
+  });
+
+  it("tells apart years of different eras with the same number", async () => {
+    const onFocusChange = vi.fn();
+    const screen = await render(
+      <I18nProvider locale="ja-JP-u-ca-japanese">
+        {calendar({
+          defaultFocusedValue: new CalendarDate(2023, 6, 15),
+          onFocusChange
+        })}
+      </I18nProvider>
+    );
+
+    await userEvent.click(
+      screen.getByRole("button", { name: /year selector/ })
+    );
+
+    // Reiwa 5 alone, not Taisho, Showa and Heisei 5 with it
+    const cells = screen.container.querySelectorAll(
+      '[data-tds="calendar-year-picker-cell"][data-selected]'
+    );
+    expect(cells).toHaveLength(1);
+
+    await userEvent.click(screen.getByRole("button", { name: /^平成5年$/ }));
+
+    const chosen = onFocusChange.mock.lastCall?.[0] as CalendarDate;
+    expect(toCalendar(chosen, new GregorianCalendar()).year).toBe(1993);
   });
 
   it("closes its year picker on Escape", async () => {

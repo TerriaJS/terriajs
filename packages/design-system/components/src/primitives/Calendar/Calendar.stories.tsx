@@ -50,7 +50,7 @@ const calendar = <M extends CalendarSelectionMode>(
     </Calendar.Grid>
     <Calendar.YearPickerGrid>
       <Calendar.YearPickerGridBody>
-        {({ year }) => <Calendar.YearPickerCell year={year} />}
+        {({ date }) => <Calendar.YearPickerCell date={date} />}
       </Calendar.YearPickerGridBody>
     </Calendar.YearPickerGrid>
   </Calendar>

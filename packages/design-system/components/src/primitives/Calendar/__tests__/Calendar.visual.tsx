@@ -44,7 +44,7 @@ const calendar = (props: Partial<CalendarProps> = {}): React.ReactElement => (
     </Calendar.Grid>
     <Calendar.YearPickerGrid>
       <Calendar.YearPickerGridBody>
-        {({ year }) => <Calendar.YearPickerCell year={year} />}
+        {({ date }) => <Calendar.YearPickerCell date={date} />}
       </Calendar.YearPickerGridBody>
     </Calendar.YearPickerGrid>
   </Calendar>

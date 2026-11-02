@@ -1,3 +1,4 @@
+import type { CalendarDate } from "@internationalized/date";
 import { ChevronRightIcon } from "@terria/design-system-icons";
 import {
   createContext,
@@ -195,6 +196,9 @@ CalendarYearPickerTriggerIndicator.displayName =
  * ---------------------------------------------------------------------- */
 
 type CalendarYearPickerCellRenderProps = {
+  // The year's first day: with its era, it tells apart years that share a
+  // number, as the Japanese calendar's eras do
+  date: CalendarDate;
   year: number;
   formattedYear: string;
   isSelected: boolean;
@@ -203,15 +207,19 @@ type CalendarYearPickerCellRenderProps = {
   selectYear: () => void;
 };
 
+// A year by its era and number, which alone repeat across eras
+const yearKey = (date: CalendarDate): string =>
+  `${date.era}:${String(date.year)}`;
+
 type GridContextValue = {
   isYearPickerOpen: boolean;
-  activeYear: number;
+  activeYear: string;
   currentYear: number;
-  focusedYear: number;
-  years: number[];
-  getFormattedYear: (year: number) => string;
-  selectYear: (year: number) => void;
-  setActiveYear: (year: number) => void;
+  focusedYear: string;
+  years: CalendarDate[];
+  getFormattedYear: (date: CalendarDate) => string;
+  selectYear: (date: CalendarDate) => void;
+  setActiveYear: (date: CalendarDate) => void;
 };
 
 const GridContext = createContext<GridContextValue | null>(null);
@@ -269,32 +277,34 @@ const CalendarYearPickerGrid = ({
   // the selected year. Labels have their own key, as they follow the locale
   // and `format`, which the years don't
   const itemsKey = items
-    .map((item) => `${String(item.id)}:${String(item.date.year)}`)
+    .map((item) => `${String(item.id)}:${yearKey(item.date)}`)
     .join("|");
   const labelsKey = items.map((item) => item.formatted).join("|");
 
   // eslint-disable-next-line react-hooks/exhaustive-deps, @eslint-react/exhaustive-deps -- Keyed on the years, not the array that holds them
-  const years = useMemo(() => items.map((item) => item.date.year), [itemsKey]);
+  const years = useMemo(() => items.map((item) => item.date), [itemsKey]);
+  const yearKeys = useMemo(() => years.map(yearKey), [years]);
   const itemByYear = useMemo(
-    () => new Map(items.map((item) => [item.date.year, item])),
+    () => new Map(items.map((item) => [yearKey(item.date), item])),
     // eslint-disable-next-line react-hooks/exhaustive-deps, @eslint-react/exhaustive-deps -- Keyed on the years and labels, not the array
     [itemsKey, labelsKey]
   );
-  const focusedYear =
-    items.find((item) => item.id === focusedItemId)?.date.year ??
-    state.focusedDate.year;
+  const focusedYear = yearKey(
+    items.find((item) => item.id === focusedItemId)?.date ?? state.focusedDate
+  );
 
   const getFormattedYear = useCallback(
-    (year: number) => itemByYear.get(year)?.formatted ?? String(year),
+    (date: CalendarDate) =>
+      itemByYear.get(yearKey(date))?.formatted ?? String(date.year),
     [itemByYear]
   );
 
   const [chosenActiveYear, setChosenActiveYear] = useState(focusedYear);
   // Back to the first year when the years change past the active one;
   // derived, not reset in an effect, which would render twice
-  const activeYear = years.includes(chosenActiveYear)
+  const activeYear = yearKeys.includes(chosenActiveYear)
     ? chosenActiveYear
-    : (years[0] ?? chosenActiveYear);
+    : (yearKeys[0] ?? chosenActiveYear);
   const wasYearPickerOpenRef = useRef(false);
 
   // Lie over the day grid: its top and height
@@ -310,9 +320,9 @@ const CalendarYearPickerGrid = ({
     yearGrid.style.height = `${String(calendarGrid.offsetHeight)}px`;
   }, [calendarGridSlot, calendarRef, state.focusedDate]);
 
-  const focusYearCell = useCallback((year: number) => {
+  const focusYearCell = useCallback((key: string) => {
     gridRef.current
-      ?.querySelector<HTMLElement>(`[data-year='${String(year)}']`)
+      ?.querySelector<HTMLElement>(`[data-year='${key}']`)
       ?.focus();
   }, []);
 
@@ -323,11 +333,11 @@ const CalendarYearPickerGrid = ({
 
     wasYearPickerOpenRef.current = isYearPickerOpen;
 
-    const [firstYear] = years;
+    const [firstYear] = yearKeys;
 
     if (!justOpened || firstYear == null) return;
 
-    const nextActiveYear = years.includes(focusedYear)
+    const nextActiveYear = yearKeys.includes(focusedYear)
       ? focusedYear
       : firstYear;
 
@@ -340,11 +350,11 @@ const CalendarYearPickerGrid = ({
     return () => {
       cancelAnimationFrame(rafId);
     };
-  }, [focusYearCell, focusedYear, isYearPickerOpen, years]);
+  }, [focusYearCell, focusedYear, isYearPickerOpen, yearKeys]);
 
   const handleYearSelect = useCallback(
-    (year: number) => {
-      const item = itemByYear.get(year);
+    (date: CalendarDate) => {
+      const item = itemByYear.get(yearKey(date));
 
       if (item == null) return;
 
@@ -365,7 +375,7 @@ const CalendarYearPickerGrid = ({
       return;
     }
 
-    const currentIndex = years.indexOf(activeYear);
+    const currentIndex = yearKeys.indexOf(activeYear);
 
     if (!isYearPickerOpen || currentIndex === -1) return;
 
@@ -375,7 +385,7 @@ const CalendarYearPickerGrid = ({
       ArrowDown: 3,
       ArrowUp: -3,
       Home: -currentIndex,
-      End: years.length - 1 - currentIndex
+      End: yearKeys.length - 1 - currentIndex
     };
     const step = steps[event.key];
 
@@ -383,9 +393,9 @@ const CalendarYearPickerGrid = ({
 
     const nextIndex = Math.min(
       Math.max(currentIndex + step, 0),
-      years.length - 1
+      yearKeys.length - 1
     );
-    const nextYear = years[nextIndex];
+    const nextYear = yearKeys[nextIndex];
 
     if (nextIndex !== currentIndex && nextYear != null) {
       event.preventDefault();
@@ -407,7 +417,9 @@ const CalendarYearPickerGrid = ({
       getFormattedYear,
       isYearPickerOpen,
       selectYear: handleYearSelect,
-      setActiveYear: setChosenActiveYear,
+      setActiveYear: (date: CalendarDate) => {
+        setChosenActiveYear(yearKey(date));
+      },
       years
     }),
     [
@@ -466,21 +478,22 @@ const CalendarYearPickerGridBody = ({
 
   return (
     <>
-      {years.map((year) => (
-        <Fragment key={year}>
+      {years.map((date) => (
+        <Fragment key={yearKey(date)}>
           {children ? (
             children({
-              formattedYear: getFormattedYear(year),
-              isCurrentYear: year === currentYear,
+              date,
+              formattedYear: getFormattedYear(date),
+              isCurrentYear: date.year === currentYear,
               isOpen: isYearPickerOpen,
-              isSelected: year === focusedYear,
+              isSelected: yearKey(date) === focusedYear,
               selectYear: () => {
-                selectYear(year);
+                selectYear(date);
               },
-              year
+              year: date.year
             })
           ) : (
-            <CalendarYearPickerCell year={year} />
+            <CalendarYearPickerCell date={date} />
           )}
         </Fragment>
       ))}
@@ -491,7 +504,7 @@ const CalendarYearPickerGridBody = ({
 CalendarYearPickerGridBody.displayName = "Calendar.YearPickerGridBody";
 
 type CalendarYearPickerCellProps = Omit<AriaButtonProps, "children"> & {
-  year: number;
+  date: CalendarDate;
   children?:
     | ReactNode
     | ((values: CalendarYearPickerCellRenderProps) => ReactNode);
@@ -502,7 +515,7 @@ const CalendarYearPickerCell = forwardRef<
   CalendarYearPickerCellProps
 >(
   (
-    { children, excludeFromTabOrder, onFocus, onPress, year, ...props },
+    { children, date, excludeFromTabOrder, onFocus, onPress, ...props },
     ref
   ) => {
     const {
@@ -514,17 +527,19 @@ const CalendarYearPickerCell = forwardRef<
       selectYear,
       setActiveYear
     } = useGridContext();
-    const isSelected = year === focusedYear;
-    const formattedYear = getFormattedYear(year);
+    const key = yearKey(date);
+    const isSelected = key === focusedYear;
+    const formattedYear = getFormattedYear(date);
     const values: CalendarYearPickerCellRenderProps = {
+      date,
       formattedYear,
-      isCurrentYear: year === currentYear,
+      isCurrentYear: date.year === currentYear,
       isOpen: isYearPickerOpen,
       isSelected,
       selectYear: () => {
-        selectYear(year);
+        selectYear(date);
       },
-      year
+      year: date.year
     };
 
     return (
@@ -535,18 +550,18 @@ const CalendarYearPickerCell = forwardRef<
         aria-current={isSelected || undefined}
         data-selected={dataAttr(isSelected)}
         data-tds="calendar-year-picker-cell"
-        data-year={year}
+        data-year={key}
         excludeFromTabOrder={
-          excludeFromTabOrder ?? !(isYearPickerOpen && year === activeYear)
+          excludeFromTabOrder ?? !(isYearPickerOpen && key === activeYear)
         }
         slot={null}
         onFocus={(event) => {
           onFocus?.(event);
-          setActiveYear(year);
+          setActiveYear(date);
         }}
         onPress={(event) => {
           onPress?.(event);
-          selectYear(year);
+          selectYear(date);
         }}
         {...props}
       >
