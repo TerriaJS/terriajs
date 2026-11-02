@@ -24,6 +24,7 @@ import {
 } from "react-aria-components/Button";
 import {
   Calendar as AriaCalendar,
+  CalendarContext as AriaCalendarContext,
   CalendarCell as AriaCalendarCell,
   CalendarGrid as AriaCalendarGrid,
   CalendarGridBody as AriaCalendarGridBody,
@@ -40,6 +41,7 @@ import {
   type CalendarSelectionMode
 } from "react-aria-components/Calendar";
 import { useLocale } from "react-aria-components/I18nProvider";
+import { useSlottedContext } from "react-aria-components/slots";
 import { useControlledState } from "react-stately/useControlledState";
 import {
   getDayViewGridRows,
@@ -110,6 +112,11 @@ const CalendarRoot = <
 
     return createCalendar(identifier);
   }, [locale]);
+  // A DatePicker passes its own bounds down through the context; a bound
+  // passed here would override them, so the defaults only apply without one
+  const context = useSlottedContext(AriaCalendarContext);
+  const contextMin = context?.minValue as T | null | undefined;
+  const contextMax = context?.maxValue as T | null | undefined;
   // React Aria memoizes its state on these bounds' identity, so they stay
   // stable across renders. Converted into the locale's calendar, not offset
   // by a number of years: eras and lunar years don't shift by a constant. A
@@ -118,14 +125,16 @@ const CalendarRoot = <
   const minValue = useMemo(
     () =>
       minValueProp ??
+      contextMin ??
       (toCalendar(new CalendarDate(1900, 1, 1), calendar) as unknown as T),
-    [minValueProp, calendar]
+    [minValueProp, contextMin, calendar]
   );
   const maxValue = useMemo(
     () =>
       maxValueProp ??
+      contextMax ??
       (toCalendar(new CalendarDate(2099, 12, 31), calendar) as unknown as T),
-    [maxValueProp, calendar]
+    [maxValueProp, contextMax, calendar]
   );
   const yearPickerContext = useMemo(
     () => ({

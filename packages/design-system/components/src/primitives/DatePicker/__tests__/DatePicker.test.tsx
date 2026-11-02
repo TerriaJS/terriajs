@@ -119,6 +119,40 @@ describe("DatePicker", () => {
     expect(indicator?.querySelector("svg")).not.toBeNull();
   });
 
+  it("holds its calendar to its own range", async () => {
+    const screen = await render(
+      datePicker({
+        defaultValue: parseDate("2025-12-16"),
+        minValue: parseDate("2025-12-05"),
+        maxValue: parseDate("2025-12-20")
+      })
+    );
+
+    await userEvent.click(screen.getByRole("button", { name: /Calendar/ }));
+
+    await expect
+      .element(screen.getByRole("button", { name: /December 4,/ }))
+      .toHaveAttribute("data-disabled");
+    await expect
+      .element(screen.getByRole("button", { name: /December 21,/ }))
+      .toHaveAttribute("data-disabled");
+  });
+
+  it("lets its calendar reach a range before 1900", async () => {
+    const screen = await render(
+      datePicker({
+        defaultValue: parseDate("1850-06-15"),
+        minValue: parseDate("1800-01-01")
+      })
+    );
+
+    await userEvent.click(screen.getByRole("button", { name: /Calendar/ }));
+
+    await expect
+      .element(screen.getByRole("button", { name: /June 15, 1850/ }))
+      .not.toHaveAttribute("data-disabled");
+  });
+
   it("shows its error while invalid", async () => {
     const screen = await render(datePicker({ isInvalid: true }));
 
