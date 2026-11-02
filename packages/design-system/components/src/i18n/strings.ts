@@ -7,7 +7,6 @@ type LocalizedString =
 
 const EN_US = {
   "autocomplete.clear": "Clear selection",
-  "breadcrumbs.label": "Breadcrumbs",
   "calendar.yearPicker": (values) =>
     `${String(values["monthYear"])}, year selector`,
   "closeButton.label": "Close",

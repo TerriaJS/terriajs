@@ -64,5 +64,10 @@
   [data-tds="breadcrumbs-separator"] {
     display: inline-flex;
     color: var(--terria-ds-text-muted);
+
+    /* Pointing the way the trail reads */
+    &:dir(rtl) {
+      rotate: 180deg;
+    }
   }
 }

@@ -1,5 +1,11 @@
 import { ChevronRightIcon } from "@terria/design-system-icons";
-import { createContext, forwardRef, useContext, type ReactNode } from "react";
+import {
+  createContext,
+  forwardRef,
+  useContext,
+  useId,
+  type ReactNode
+} from "react";
 import {
   Breadcrumb as AriaBreadcrumb,
   Breadcrumbs as AriaBreadcrumbs,
@@ -11,7 +17,6 @@ import {
   type LinkProps as AriaLinkProps
 } from "react-aria-components/Link";
 import "./Breadcrumbs.css";
-import { useLocalizedStrings } from "../../i18n/useLocalizedStrings";
 
 const SeparatorContext = createContext<ReactNode>(null);
 
@@ -21,16 +26,24 @@ type BreadcrumbsProps = Omit<AriaBreadcrumbsProps<object>, "children"> & {
   separator?: ReactNode;
 };
 
-// A navigation landmark, named "Breadcrumbs" (localized) unless given an aria-label, around
-// the list of items. The last item is the current page
+// A navigation landmark around the list of items; the last item is the
+// current page. React Aria names the list: its aria-label, or "Breadcrumbs"
+// in the app's language. The landmark reads that same name, not one of its
+// own, or what it's labelled by: a name is only followed one step
 const BreadcrumbsRoot = forwardRef<HTMLOListElement, BreadcrumbsProps>(
-  ({ "aria-label": ariaLabel, separator, ...props }, ref) => {
-    const strings = useLocalizedStrings();
+  ({ separator, ...props }, ref) => {
+    const generatedId = useId();
+    const listId = props.id ?? generatedId;
 
     return (
-      <nav aria-label={ariaLabel ?? strings.format("breadcrumbs.label")}>
+      <nav aria-labelledby={props["aria-labelledby"] ?? listId}>
         <SeparatorContext.Provider value={separator}>
-          <AriaBreadcrumbs {...props} ref={ref} data-tds="breadcrumbs" />
+          <AriaBreadcrumbs
+            {...props}
+            id={listId}
+            ref={ref}
+            data-tds="breadcrumbs"
+          />
         </SeparatorContext.Provider>
       </nav>
     );

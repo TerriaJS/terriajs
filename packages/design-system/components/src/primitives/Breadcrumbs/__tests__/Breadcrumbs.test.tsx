@@ -1,3 +1,4 @@
+import { I18nProvider } from "react-aria-components/I18nProvider";
 import { describe, expect, it, vi } from "vitest";
 import { render, type RenderResult } from "vitest-browser-react";
 import { userEvent } from "vitest/browser";
@@ -29,6 +30,57 @@ describe("Breadcrumbs", () => {
     await expect
       .element(named.getByRole("navigation", { name: "Catalogue path" }))
       .toBeInTheDocument();
+  });
+
+  // React Aria names the list, in the app's language; the landmark reads the
+  // same, not a second name of its own
+  it("names its landmark as its list, in the app's language", async () => {
+    const screen = await render(
+      <I18nProvider locale="fr-FR">
+        <Breadcrumbs>
+          <Breadcrumbs.Item href="#home">Accueil</Breadcrumbs.Item>
+        </Breadcrumbs>
+      </I18nProvider>
+    );
+    const listName = screen
+      .getByRole("list")
+      .element()
+      .getAttribute("aria-label");
+
+    expect(listName).not.toBe("Breadcrumbs");
+    await expect
+      .element(screen.getByRole("navigation"))
+      .toHaveAccessibleName(listName ?? "");
+  });
+
+  it("is named by what it's labelled by", async () => {
+    const screen = await render(
+      <>
+        <h2 id="trail-heading">Folder path</h2>
+        <Breadcrumbs aria-labelledby="trail-heading">
+          <Breadcrumbs.Item href="#home">Home</Breadcrumbs.Item>
+        </Breadcrumbs>
+      </>
+    );
+
+    await expect
+      .element(screen.getByRole("navigation", { name: "Folder path" }))
+      .toBeInTheDocument();
+  });
+
+  it("turns its separators to point the way it reads, right to left too", async () => {
+    const screen = await render(
+      <div dir="rtl">
+        <Breadcrumbs>
+          <Breadcrumbs.Item href="#home">Home</Breadcrumbs.Item>
+          <Breadcrumbs.Item href="#catalogue">Catalogue</Breadcrumbs.Item>
+        </Breadcrumbs>
+      </div>
+    );
+    const [separator] = separators(screen.container);
+    if (!separator) throw new Error("No separator");
+
+    expect(getComputedStyle(separator).rotate).toBe("180deg");
   });
 
   it("links every item but the last, which is the current page", async () => {

@@ -2,9 +2,9 @@ import { CalendarDate } from "@internationalized/date";
 import { I18nProvider } from "react-aria-components/I18nProvider";
 import { describe, expect, it } from "vitest";
 import { render } from "vitest-browser-react";
-import { Breadcrumbs } from "../../primitives/Breadcrumbs";
 import { Calendar } from "../../primitives/Calendar";
 import { CloseButton } from "../../primitives/CloseButton";
+import { Kbd } from "../../primitives/Kbd";
 import { LocalizedStringsProvider, type LocalizedStrings } from "..";
 
 const FRENCH: LocalizedStrings = { fr: { "closeButton.label": "Fermer" } };
@@ -28,16 +28,14 @@ describe("LocalizedStringsProvider", () => {
     const screen = await render(
       <I18nProvider locale="fr-FR">
         <LocalizedStringsProvider value={FRENCH}>
-          <Breadcrumbs>
-            <Breadcrumbs.Item>Home</Breadcrumbs.Item>
-          </Breadcrumbs>
+          <Kbd.Abbr keyValue="command" />
         </LocalizedStringsProvider>
       </I18nProvider>
     );
 
     await expect
-      .element(screen.getByRole("navigation", { name: "Breadcrumbs" }))
-      .toBeVisible();
+      .element(screen.getByText("⌘"))
+      .toHaveAttribute("title", "Command");
   });
 
   it("is English in a locale the app has no strings for", async () => {
