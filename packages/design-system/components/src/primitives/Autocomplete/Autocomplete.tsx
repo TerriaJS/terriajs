@@ -129,6 +129,14 @@ const AutocompleteTrigger = forwardRef<
         onClick?.(event);
         // The select's toggle opens it even when disabled
         if (isDisabled ?? rootDisabled) return;
+        // The field itself can't take focus, so a click on it leaves focus on
+        // the page, which is where React Aria gives it back when the list
+        // closes. Its button takes it, as when it's pressed itself
+        if (!event.currentTarget.contains(document.activeElement)) {
+          event.currentTarget
+            .querySelector<HTMLElement>('[data-tds="autocomplete-indicator"]')
+            ?.focus();
+        }
         state?.toggle();
       }}
     />

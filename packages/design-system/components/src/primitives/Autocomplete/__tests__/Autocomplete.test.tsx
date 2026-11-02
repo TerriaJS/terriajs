@@ -159,6 +159,18 @@ describe("Autocomplete", () => {
     await expect.element(screen.getByRole("listbox")).toBeVisible();
   });
 
+  // Opened from its field, focus goes back to its button when the list
+  // closes, as when opened from the button itself
+  it("gives focus back to its button when opened from its field", async () => {
+    const screen = await render(<LayerPicker />);
+
+    await userEvent.click(field(screen), { position: { x: 8, y: 8 } });
+    await userEvent.click(screen.getByRole("option", { name: "Schools" }));
+
+    await expect.element(screen.getByRole("listbox")).not.toBeInTheDocument();
+    await expect.element(trigger(screen)).toHaveFocus();
+  });
+
   it("clears its choice, without opening", async () => {
     const onClear = vi.fn();
     const screen = await render(
