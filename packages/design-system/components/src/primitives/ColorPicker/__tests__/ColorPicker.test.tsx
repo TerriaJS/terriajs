@@ -41,6 +41,29 @@ describe("ColorPicker", () => {
     await expect.element(screen.getByRole("dialog")).not.toBeInTheDocument();
   });
 
+  // As React Aria's DialogTrigger wires it: the trigger points at the dialog
+  // it opened, which its own name names
+  it("names its dialog by its trigger, which points at it", async () => {
+    const screen = await render(
+      <ColorPicker defaultValue="#ef4444">
+        <ColorPicker.Trigger>
+          <ColorPicker.Indicator />
+          Layer colour
+        </ColorPicker.Trigger>
+        <ColorPicker.Popover>{swatches()}</ColorPicker.Popover>
+      </ColorPicker>
+    );
+    const trigger = screen.getByRole("button", { name: /Layer colour/ });
+
+    await userEvent.click(trigger);
+
+    const dialog = screen.getByRole("dialog");
+    await expect.element(dialog).toHaveAccessibleName(/Layer colour/);
+    await expect
+      .element(trigger)
+      .toHaveAttribute("aria-controls", dialog.element().id);
+  });
+
   it("changes its colour from its content, and shows it on its trigger", async () => {
     const onChange = vi.fn();
     const screen = await render(
