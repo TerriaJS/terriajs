@@ -23,6 +23,27 @@ const wait = (ms: number): Promise<void> =>
     setTimeout(resolve, ms);
   });
 
+// The page's (hover: none) rules, applied as if it matched. Emulating a touch
+// screen would do it too, but on Linux Chromium the page keeps (hover: none)
+// once that's turned off, and the next test files on the page with it
+const withoutHover = (): (() => void) => {
+  const rules: string[] = [];
+  const collect = (list: CSSRuleList): void => {
+    for (const rule of list) {
+      if (rule instanceof CSSMediaRule && rule.conditionText === "(hover: none)")
+        rules.push(...Array.from(rule.cssRules, (inner) => inner.cssText));
+      else if (rule instanceof CSSGroupingRule) collect(rule.cssRules);
+    }
+  };
+  for (const sheet of document.styleSheets) collect(sheet.cssRules);
+  const style = document.createElement("style");
+  style.textContent = rules.join("\n");
+  document.head.append(style);
+  return () => {
+    style.remove();
+  };
+};
+
 describe("Toast", () => {
   it("shows a toast in a notifications landmark", async () => {
     const queue = fresh();
@@ -87,6 +108,27 @@ describe("Toast", () => {
     expect(element).toHaveAttribute("data-exiting");
     expect(element).toHaveAttribute("aria-hidden", "true");
     await expect.element(screen.getByText("Saved")).not.toBeInTheDocument();
+  });
+
+  // Touch screens have no hover to show it under, and a toast that stays
+  // open would have no other way to close
+  it("shows its close button where there's no hover", async () => {
+    const restore = withoutHover();
+    try {
+      const queue = fresh();
+      const screen = await render(<Toast.Provider queue={queue} />);
+
+      queue.add({ title: "Saved" }, { timeout: 0 });
+      const item = screen.getByRole("alertdialog");
+      await expect.element(item).toBeVisible();
+      await userEvent.unhover(item);
+      const close = item.getByRole("button", { name: "Close" }).element();
+
+      await expect.poll(() => getComputedStyle(close).opacity).toBe("1");
+      expect(getComputedStyle(close).pointerEvents).toBe("auto");
+    } finally {
+      restore();
+    }
   });
 
   // Open, each toast reaches into the gap to its neighbour, so the stack

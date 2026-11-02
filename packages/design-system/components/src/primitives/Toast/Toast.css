@@ -265,7 +265,8 @@
     line-height: var(--terria-ds-line-height-body);
   }
 
-  /* Shown at the corner while the pointer is over the toast */
+  /* Shown at the corner while the pointer is over the toast, or focus is in
+     it */
   [data-tds="toast"] > [data-tds-toast-close] {
     position: absolute;
     inset-block-start: calc(-1 * var(--terria-ds-space-xs));
@@ -298,6 +299,15 @@
     > [data-tds-toast-close] {
     opacity: 1;
     pointer-events: auto;
+  }
+
+  /* Always, where there's no hover to show it under, as on touch screens */
+  @media (hover: none) {
+    [data-tds="toast"]:is([data-frontmost], [data-expanded]):not([data-exiting])
+      > [data-tds-toast-close] {
+      opacity: 1;
+      pointer-events: auto;
+    }
   }
 
   /* Under the text on narrow screens, beside it on wider ones */
