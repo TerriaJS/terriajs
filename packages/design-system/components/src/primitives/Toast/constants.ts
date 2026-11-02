@@ -13,8 +13,9 @@ export const DEFAULT_SCALE_FACTOR = 0.05;
 // Toast width in pixels
 export const DEFAULT_TOAST_WIDTH = 460;
 
-// Auto-dismiss timeout in milliseconds
-export const DEFAULT_TOAST_TIMEOUT = 4000;
+// Auto-dismiss timeout in milliseconds: the least React Aria gives for
+// reading a toast
+export const DEFAULT_TOAST_TIMEOUT = 5000;
 
 // How long a closing toast stays mounted for its exit animation, in
 // milliseconds: at least the frontmost toast's exit transition (250ms), with

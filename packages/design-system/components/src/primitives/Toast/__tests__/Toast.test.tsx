@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { render } from "vitest-browser-react";
 import { page, userEvent } from "vitest/browser";
-import { Toast, ToastQueue, toast } from "..";
+import { Toast, ToastQueue, toast, toastQueue } from "..";
 
 const queues: ToastQueue[] = [];
 
@@ -112,6 +112,43 @@ describe("Toast", () => {
     expect(document.elementFromPoint(x + width / 2, y + height / 2)).toBe(
       close
     );
+  });
+
+  // The 5 seconds React Aria gives as the least for reading one; with an
+  // action, until the user closes it, as the action would go with it
+  it("stays at least 5 seconds, and with an action until closed", () => {
+    const queue = fresh();
+
+    queue.add({ title: "Saved" });
+    queue.add({ title: "Layer removed", actionProps: { children: "Undo" } });
+    queue.add({ title: "Brief" }, { timeout: 2000 });
+
+    expect(
+      queue.visibleToasts.map(({ content, timeout }) => [
+        content.title,
+        timeout
+      ])
+    ).toEqual([
+      ["Brief", 2000],
+      ["Layer removed", 0],
+      ["Saved", 5000]
+    ]);
+  });
+
+  it("gives toast() the same defaults", () => {
+    toast("Saved");
+    toast("Layer removed", { actionProps: { children: "Undo" } });
+
+    expect(
+      toastQueue.visibleToasts.map(({ content, timeout }) => [
+        content.title,
+        timeout
+      ])
+    ).toEqual([
+      ["Layer removed", 0],
+      ["Saved", 5000]
+    ]);
+    toast.clear();
   });
 
   it("offers an action", async () => {

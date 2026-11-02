@@ -353,7 +353,7 @@ export const LoadingState: Story = {
           setTimeout(() => {
             toast.update(id, "View saved", {
               variant: "success",
-              timeout: 4000
+              timeout: 5000
             });
           }, 2000);
         }}

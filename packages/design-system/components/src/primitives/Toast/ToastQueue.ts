@@ -357,6 +357,12 @@ const isExitAwareToastQueue = <T extends object>(
 ): queue is ExitAwareToastQueue<T> => queue instanceof ExitAwareToastQueue;
 
 // Manages toast state outside React so toasts can be triggered from anywhere.
+// A toast with an action stays until it's closed: the action would go with it
+const defaultTimeout = (content: object): number =>
+  "actionProps" in content && content.actionProps != null
+    ? 0
+    : DEFAULT_TOAST_TIMEOUT;
+
 class ToastQueue<T extends object = ToastContentValue> {
   private queue: ExitAwareToastQueue<T>;
   readonly maxVisibleToasts?: number;
@@ -378,7 +384,7 @@ class ToastQueue<T extends object = ToastContentValue> {
   add(content: T, options?: RACToastOptions): string {
     return this.queue.add(content, {
       ...options,
-      timeout: options?.timeout ?? DEFAULT_TOAST_TIMEOUT
+      timeout: options?.timeout ?? defaultTimeout(content)
     });
   }
 
@@ -453,7 +459,7 @@ type ToastShowOptions = {
   isLoading?: boolean;
   /**
    * Auto-dismiss timeout in milliseconds; 0 keeps the toast open.
-   * @default 4000
+   * @default 5000, or 0 with an action
    */
   timeout?: number;
   // Called when the toast is dismissed; the exit animation may still be playing.
@@ -507,7 +513,7 @@ function createToastFunction(queue: ToastQueue): ToastFunction {
   const createAddOptions = (
     options?: ToastShowOptions
   ): { timeout: number; onClose?: () => void } => ({
-    timeout: options?.timeout ?? DEFAULT_TOAST_TIMEOUT,
+    timeout: options?.timeout ?? defaultTimeout(options ?? {}),
     onClose: options?.onClose
   });
 
