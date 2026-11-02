@@ -1,5 +1,5 @@
 import { createRef } from "react";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, onTestFinished, vi } from "vitest";
 import { render } from "vitest-browser-react";
 import { AIActivityIndicator } from "..";
 
@@ -66,6 +66,42 @@ describe("AIActivityIndicator", () => {
 
     const indicator = screen.getByTestId("indicator");
     await expect.element(indicator).toHaveAttribute("id", "generating");
+    await expect.element(indicator).toHaveStyle({ color: "rgb(255, 0, 0)" });
+  });
+
+  // In a line of text, as decoration often is: a <div> can't go in a <p>
+  it("sits in a paragraph when hidden", async () => {
+    const error = vi
+      .spyOn(console, "error")
+      .mockImplementation(() => undefined);
+    onTestFinished(() => {
+      error.mockRestore();
+    });
+
+    await render(
+      <p>
+        <AIActivityIndicator aria-hidden /> Generating
+      </p>
+    );
+
+    expect(error).not.toHaveBeenCalled();
+  });
+
+  // As the progressbar would call them: indeterminate, with no value
+  it("calls a function className and style when hidden", async () => {
+    const screen = await render(
+      <AIActivityIndicator
+        aria-hidden
+        data-testid="indicator"
+        className={({ isIndeterminate }) => (isIndeterminate ? "busy" : "idle")}
+        style={({ isIndeterminate }) =>
+          isIndeterminate ? { color: "rgb(255, 0, 0)" } : {}
+        }
+      />
+    );
+
+    const indicator = screen.getByTestId("indicator");
+    await expect.element(indicator).toHaveClass("busy");
     await expect.element(indicator).toHaveStyle({ color: "rgb(255, 0, 0)" });
   });
 

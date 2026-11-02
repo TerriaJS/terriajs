@@ -76,65 +76,82 @@ const LAYOUTS: Record<
 // another. An indeterminate progressbar, as Spinner is, so it needs an
 // aria-label; or, beside text that says what's happening, only decoration,
 // with aria-hidden
-const AIActivityIndicator = forwardRef<
-  HTMLDivElement,
-  AIActivityIndicatorProps
->(({ size = "md", sparkles = 6, "aria-hidden": hidden, ...props }, ref) => {
-  const { viewBox, sparkles: layout } = LAYOUTS[sparkles];
-  const drawing = (
-    <svg viewBox={viewBox} aria-hidden="true" focusable="false">
-      {layout.map(({ x, y, scale }, index) => (
-        <g
-          key={x}
-          transform={`translate(${String(x)} ${String(y)}) scale(${String(scale)})`}
-          // How far into the cycle this one starts, so the pulse travels
-          // along the wave; a custom property isn't one of CSSProperties' keys
-          style={
-            {
-              "--_ai-indicator-offset": index / layout.length - 1
-            } as CSSProperties
-          }
-        >
-          <path d={SPARKLE} />
-        </g>
-      ))}
-    </svg>
-  );
+const AIActivityIndicator = forwardRef<HTMLElement, AIActivityIndicatorProps>(
+  ({ size = "md", sparkles = 6, "aria-hidden": hidden, ...props }, ref) => {
+    const { viewBox, sparkles: layout } = LAYOUTS[sparkles];
+    const drawing = (
+      <svg viewBox={viewBox} aria-hidden="true" focusable="false">
+        {layout.map(({ x, y, scale }, index) => (
+          <g
+            key={x}
+            transform={`translate(${String(x)} ${String(y)}) scale(${String(scale)})`}
+            // How far into the cycle this one starts, so the pulse travels
+            // along the wave; a custom property isn't one of CSSProperties' keys
+            style={
+              {
+                "--_ai-indicator-offset": index / layout.length - 1
+              } as CSSProperties
+            }
+          >
+            <path d={SPARKLE} />
+          </g>
+        ))}
+      </svg>
+    );
 
-  // React Aria's progressbar drops aria-hidden, so hidden it's a plain
-  // element: decoration, not a second announcement of the text beside it
-  if (hidden === true || hidden === "true") {
-    // The progressbar's own props it would put on its element: an id, data
-    // attributes, events. Style and className as the values they'd take;
-    // there are no render props to call a function with
-    const { className, style } = props;
+    // React Aria's progressbar drops aria-hidden, so hidden it's a plain
+    // element: decoration, not a second announcement of the text beside it.
+    // A span, so it can sit in a line of text, in a <p>
+    if (hidden === true || hidden === "true") {
+      // The progressbar's own props it would put on its element: an id, data
+      // attributes, events. A function className or style is called as the
+      // progressbar would: indeterminate, with no value
+      const { className, style } = props;
+      const values = {
+        isIndeterminate: true,
+        percentage: undefined,
+        valueText: undefined
+      };
+      return (
+        <span
+          {...filterDOMProps(props, { global: true, events: true })}
+          ref={ref}
+          aria-hidden="true"
+          className={
+            typeof className === "function"
+              ? className({ ...values, defaultClassName: undefined })
+              : className
+          }
+          style={
+            typeof style === "function"
+              ? style({ ...values, defaultStyle: {} })
+              : style
+          }
+          data-tds="ai-activity-indicator"
+          data-tds-size={size}
+        >
+          {drawing}
+        </span>
+      );
+    }
+
     return (
-      <div
-        {...filterDOMProps(props, { global: true, events: true })}
-        ref={ref}
-        aria-hidden="true"
-        className={typeof className === "string" ? className : undefined}
-        style={typeof style === "function" ? undefined : style}
+      <AriaProgressBar
+        {...props}
+        // React Aria's progressbar is a div, which the element ref takes
+        ref={(node) => {
+          if (typeof ref === "function") ref(node);
+          else if (ref) ref.current = node;
+        }}
+        isIndeterminate
         data-tds="ai-activity-indicator"
         data-tds-size={size}
       >
         {drawing}
-      </div>
+      </AriaProgressBar>
     );
   }
-
-  return (
-    <AriaProgressBar
-      {...props}
-      ref={ref}
-      isIndeterminate
-      data-tds="ai-activity-indicator"
-      data-tds-size={size}
-    >
-      {drawing}
-    </AriaProgressBar>
-  );
-});
+);
 
 AIActivityIndicator.displayName = "AIActivityIndicator";
 
