@@ -1,3 +1,4 @@
+import { I18nProvider } from "react-aria-components/I18nProvider";
 import { describe, expect, it, vi } from "vitest";
 import { render } from "vitest-browser-react";
 import { userEvent } from "vitest/browser";
@@ -98,6 +99,56 @@ describe("DateTimeSelector", () => {
     await expect
       .element(screen.getByRole("listbox").getByRole("option").nth(2))
       .toHaveAttribute("aria-selected", "true");
+  });
+
+  // Its dates are Gregorian: a locale with a calendar of its own keeps its
+  // language, not its calendar, or days and months would be other ones
+  describe("in a locale with another calendar", () => {
+    it("offers the Gregorian days that have data", async () => {
+      const screen = await render(
+        <I18nProvider locale="fa-IR">
+          <DateTimeSelector dates={dates("2025-12-15T00:00", 96, 0.5)} />
+        </I18nProvider>
+      );
+      const december = new Intl.DateTimeFormat("fa-IR-u-ca-gregory", {
+        month: "long"
+      }).format(new Date(2025, 11, 1));
+      const figure = new Intl.NumberFormat("fa-IR");
+
+      await expect.element(screen.getByRole("grid")).toBeInTheDocument();
+      const available = [
+        ...screen.container.querySelectorAll(
+          '[data-tds="calendar-cell"]:not([data-unavailable]):not([data-disabled]):not([data-outside-month])'
+        )
+      ];
+      expect(available.map((cell) => cell.textContent)).toEqual([
+        figure.format(15),
+        figure.format(16)
+      ]);
+      for (const cell of available) {
+        expect(cell.getAttribute("aria-label")).toContain(december);
+      }
+    });
+
+    it("names the Gregorian months, in its language", async () => {
+      const screen = await render(
+        <I18nProvider locale="fa-IR">
+          <DateTimeSelector
+            dates={[
+              ...dates("2025-03-01T00:00", 7, 24),
+              ...dates("2025-04-01T00:00", 7, 24)
+            ]}
+          />
+        </I18nProvider>
+      );
+      const march = new Intl.DateTimeFormat("fa-IR-u-ca-gregory", {
+        month: "long"
+      }).format(new Date(2025, 2, 1));
+
+      await expect
+        .element(screen.getByRole("option", { name: new RegExp(`^${march}`) }))
+        .not.toHaveAttribute("aria-disabled");
+    });
   });
 
   it("disables months with no data", async () => {

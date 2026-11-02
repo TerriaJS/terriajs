@@ -7,7 +7,7 @@ import {
   type ComponentPropsWithoutRef,
   type ReactNode
 } from "react";
-import { useLocale } from "react-aria-components/I18nProvider";
+import { I18nProvider, useLocale } from "react-aria-components/I18nProvider";
 import {
   ListBox as AriaListBox,
   ListBoxItem as AriaListBoxItem
@@ -50,7 +50,14 @@ const pad = (value: number): string => String(value).padStart(2, "0");
 // show which months and days have data. Levels with one option are skipped
 const DateTimeSelector = forwardRef<HTMLDivElement, DateTimeSelectorProps>(
   ({ dates, value, onChange, formatTime, ...props }, ref) => {
-    const { locale } = useLocale();
+    // Its dates are Gregorian, as its centuries, years and months are, so it
+    // keeps the locale's language, not its calendar: a Persian or Japanese
+    // calendar would show other months and days
+    const { locale: appLocale } = useLocale();
+    const locale = useMemo(
+      () => new Intl.Locale(appLocale, { calendar: "gregory" }).toString(),
+      [appLocale]
+    );
     const strings = useLocalizedStrings();
     const start = useMemo(() => defaultPath(dates), [dates]);
     const [path, setPath] = useState<DateTimePath>(start);
@@ -265,37 +272,39 @@ const DateTimeSelector = forwardRef<HTMLDivElement, DateTimeSelectorProps>(
           })}
 
         {view.view === "day" && (
-          <Calendar
-            aria-label={strings.format("dateTimeSelector.days")}
-            // eslint-disable-next-line jsx-a11y/no-autofocus -- Only after the user's own choice or Back, as the lists
-            autoFocus={hasMoved}
-            focusedValue={new CalendarDate(view.year, view.month + 1, 1)}
-            minValue={new CalendarDate(view.year, view.month + 1, 1)}
-            maxValue={
-              new CalendarDate(
-                view.year,
-                view.month + 1,
-                daysInMonth(view.year, view.month)
-              )
-            }
-            isDateUnavailable={(date) => !view.days.includes(date.day)}
-            onChange={(date) => {
-              go({ day: date.day });
-            }}
-          >
-            <Calendar.Header data-tds-date-time-selector="">
-              {back}
-              <Calendar.Heading />
-            </Calendar.Header>
-            <Calendar.Grid>
-              <Calendar.GridHeader>
-                {(day) => <Calendar.HeaderCell>{day}</Calendar.HeaderCell>}
-              </Calendar.GridHeader>
-              <Calendar.GridBody>
-                {(date) => <Calendar.Cell date={date} />}
-              </Calendar.GridBody>
-            </Calendar.Grid>
-          </Calendar>
+          <I18nProvider locale={locale}>
+            <Calendar
+              aria-label={strings.format("dateTimeSelector.days")}
+              // eslint-disable-next-line jsx-a11y/no-autofocus -- Only after the user's own choice or Back, as the lists
+              autoFocus={hasMoved}
+              focusedValue={new CalendarDate(view.year, view.month + 1, 1)}
+              minValue={new CalendarDate(view.year, view.month + 1, 1)}
+              maxValue={
+                new CalendarDate(
+                  view.year,
+                  view.month + 1,
+                  daysInMonth(view.year, view.month)
+                )
+              }
+              isDateUnavailable={(date) => !view.days.includes(date.day)}
+              onChange={(date) => {
+                go({ day: date.day });
+              }}
+            >
+              <Calendar.Header data-tds-date-time-selector="">
+                {back}
+                <Calendar.Heading />
+              </Calendar.Header>
+              <Calendar.Grid>
+                <Calendar.GridHeader>
+                  {(day) => <Calendar.HeaderCell>{day}</Calendar.HeaderCell>}
+                </Calendar.GridHeader>
+                <Calendar.GridBody>
+                  {(date) => <Calendar.Cell date={date} />}
+                </Calendar.GridBody>
+              </Calendar.Grid>
+            </Calendar>
+          </I18nProvider>
         )}
 
         {view.view === "hour" &&
