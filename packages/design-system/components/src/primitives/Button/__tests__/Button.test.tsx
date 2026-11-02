@@ -91,6 +91,17 @@ describe("Button", () => {
     }
   );
 
+  it("doesn't look pressable under the pointer while pending", async () => {
+    const screen = await render(<Button isPending>Save</Button>);
+    const button = screen.getByRole("button");
+    const atRest = getComputedStyle(button.element()).backgroundColor;
+
+    await userEvent.hover(button);
+
+    expect(button.element()).not.toHaveAttribute("data-hovered");
+    expect(getComputedStyle(button.element()).backgroundColor).toBe(atRest);
+  });
+
   // A nested backdrop-filter only sees the surface it's in, so the button
   // would go dark: surfaces that blur already turn the buttons' blur off
   it("doesn't blur inside a surface that blurs already, at rest or on hover", async () => {

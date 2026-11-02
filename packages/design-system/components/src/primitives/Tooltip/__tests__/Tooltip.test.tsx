@@ -41,6 +41,23 @@ describe("TooltipPrimitive", () => {
       .toHaveTextContent("Zoom in one level");
   });
 
+  // React Aria keeps a pending button's hover for this
+  it("opens on hover over a pending button", async () => {
+    const screen = await render(
+      <TooltipPrimitive delay={0}>
+        <Button isPending>Save view</Button>
+        <TooltipPrimitive.Content>Saving the view</TooltipPrimitive.Content>
+      </TooltipPrimitive>
+    );
+
+    await userEvent.click(document.body);
+    await screen.getByRole("button").hover();
+
+    await expect
+      .element(screen.getByRole("tooltip"))
+      .toHaveTextContent("Saving the view");
+  });
+
   it("waits the page's --terria-ds-tooltip-delay before opening", async () => {
     document.documentElement.style.setProperty(
       "--terria-ds-tooltip-delay",

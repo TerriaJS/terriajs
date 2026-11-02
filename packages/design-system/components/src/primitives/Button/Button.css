@@ -108,9 +108,9 @@
       pointer-events: none;
     }
 
+    /* It still takes the pointer, for a tooltip: React Aria keeps its hover
+       events but neither presses nor shows it hovered */
     &[data-pending] {
-      pointer-events: none;
-
       & > [data-tds="button-label"] {
         opacity: 0;
       }
