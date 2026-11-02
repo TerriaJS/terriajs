@@ -11,6 +11,7 @@ import {
   type LinkProps as AriaLinkProps
 } from "react-aria-components/Link";
 import "./Breadcrumbs.css";
+import { useLocalizedStrings } from "../../i18n/useLocalizedStrings";
 
 const SeparatorContext = createContext<ReactNode>(null);
 
@@ -20,12 +21,14 @@ type BreadcrumbsProps = Omit<AriaBreadcrumbsProps<object>, "children"> & {
   separator?: ReactNode;
 };
 
-// A navigation landmark, named "Breadcrumbs" unless given an aria-label, around
+// A navigation landmark, named "Breadcrumbs" (localized) unless given an aria-label, around
 // the list of items. The last item is the current page
 const BreadcrumbsRoot = forwardRef<HTMLOListElement, BreadcrumbsProps>(
-  ({ "aria-label": ariaLabel = "Breadcrumbs", separator, ...props }, ref) => {
+  ({ "aria-label": ariaLabel, separator, ...props }, ref) => {
+    const strings = useLocalizedStrings();
+
     return (
-      <nav aria-label={ariaLabel}>
+      <nav aria-label={ariaLabel ?? strings.format("breadcrumbs.label")}>
         <SeparatorContext.Provider value={separator}>
           <AriaBreadcrumbs {...props} ref={ref} data-tds="breadcrumbs" />
         </SeparatorContext.Provider>

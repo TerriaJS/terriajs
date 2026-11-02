@@ -66,10 +66,10 @@ const pagination = (
 );
 
 describe("Pagination", () => {
-  it("is a navigation landmark, named pagination unless told otherwise", async () => {
+  it("is a navigation landmark, named Pagination unless told otherwise", async () => {
     const screen = await render(pagination());
     await expect
-      .element(screen.getByRole("navigation", { name: "pagination" }))
+      .element(screen.getByRole("navigation", { name: "Pagination" }))
       .toBeVisible();
 
     await screen.rerender(pagination({ "aria-label": "Layer pages" }));

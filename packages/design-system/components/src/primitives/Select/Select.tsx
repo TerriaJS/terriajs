@@ -22,6 +22,7 @@ import { PopoverContent, type PopoverContentProps } from "../Popover";
 import { dataAttr } from "../../utils/dataAttr";
 import "../Input/Input.css";
 import "./Select.css";
+import { useLocalizedStrings } from "../../i18n/useLocalizedStrings";
 
 type SelectProps<
   T extends object,
@@ -148,6 +149,7 @@ type SelectClearButtonProps = ComponentPropsWithoutRef<"span">;
 // A span, not a button: buttons can't nest inside the trigger button
 const SelectClearButton = forwardRef<HTMLSpanElement, SelectClearButtonProps>(
   ({ children, onClick, onPointerDown, ...props }, ref) => {
+    const strings = useLocalizedStrings();
     const state = useContext(SelectStateContext);
     const clear = useClear();
     const isEmpty = (state?.selectionManager.selectedKeys.size ?? 0) === 0;
@@ -155,8 +157,8 @@ const SelectClearButton = forwardRef<HTMLSpanElement, SelectClearButtonProps>(
     return (
       <span
         aria-hidden="true"
-        aria-label="Clear selection"
-        aria-description="Press backspace or delete to clear value"
+        aria-label={strings.format("select.clear")}
+        aria-description={strings.format("select.clearHint")}
         {...props}
         ref={ref}
         data-tds="select-clear-button"

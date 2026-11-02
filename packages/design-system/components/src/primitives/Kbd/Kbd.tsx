@@ -2,6 +2,7 @@ import { forwardRef, type ComponentPropsWithoutRef } from "react";
 import { Keyboard } from "react-aria-components/Keyboard";
 import { KBD_KEYS, type KbdKey } from "./keys";
 import "./Kbd.css";
+import { useLocalizedStrings } from "../../i18n/useLocalizedStrings";
 
 type KbdVariant = "default" | "light";
 
@@ -38,10 +39,16 @@ type KbdAbbrProps = Omit<
 // Enter or an arrow
 const KbdAbbr = forwardRef<HTMLElement, KbdAbbrProps>(
   ({ keyValue, ...props }, ref) => {
-    const { symbol, title } = KBD_KEYS[keyValue];
+    const strings = useLocalizedStrings();
+    const { symbol } = KBD_KEYS[keyValue];
 
     return (
-      <abbr {...props} ref={ref} title={title} data-tds="kbd-abbr">
+      <abbr
+        {...props}
+        ref={ref}
+        title={strings.format(`kbd.${keyValue}`)}
+        data-tds="kbd-abbr"
+      >
         {symbol}
       </abbr>
     );

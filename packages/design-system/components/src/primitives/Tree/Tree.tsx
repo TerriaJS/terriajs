@@ -28,6 +28,7 @@ import { Spinner } from "../Spinner";
 import { dataAttr } from "../../utils/dataAttr";
 import { useAnimatedExpansion } from "./useAnimatedExpansion";
 import "./Tree.css";
+import { useLocalizedStrings } from "../../i18n/useLocalizedStrings";
 
 // Groups whose rows are animating shut, which their indicators already show
 // as collapsed
@@ -200,6 +201,8 @@ const TreeLoadMoreItem = ({
   style,
   ...props
 }: TreeLoadMoreItemProps): React.ReactElement => {
+  const strings = useLocalizedStrings();
+
   return (
     <AriaTreeLoadMoreItem
       {...props}
@@ -212,7 +215,9 @@ const TreeLoadMoreItem = ({
       }
       data-tds="tree-load-more-item"
     >
-      {children ?? <Spinner size="sm" aria-label="Loading…" />}
+      {children ?? (
+        <Spinner size="sm" aria-label={strings.format("tree.loading")} />
+      )}
     </AriaTreeLoadMoreItem>
   );
 };

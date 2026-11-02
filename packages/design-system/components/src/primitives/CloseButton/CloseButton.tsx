@@ -5,20 +5,25 @@ import {
   type ButtonProps as AriaButtonProps
 } from "react-aria-components/Button";
 import "./CloseButton.css";
+import { useLocalizedStrings } from "../../i18n/useLocalizedStrings";
 
 type CloseButtonProps = AriaButtonProps;
 
 const CloseButton = forwardRef<HTMLButtonElement, CloseButtonProps>(
-  ({ "aria-label": ariaLabel = "Close", children, ...props }, ref) => (
-    <AriaButton
-      ref={ref}
-      {...props}
-      aria-label={ariaLabel}
-      data-tds="close-button"
-    >
-      {children ?? <XIcon aria-hidden />}
-    </AriaButton>
-  )
+  ({ "aria-label": ariaLabel, children, ...props }, ref) => {
+    const strings = useLocalizedStrings();
+
+    return (
+      <AriaButton
+        ref={ref}
+        {...props}
+        aria-label={ariaLabel ?? strings.format("closeButton.label")}
+        data-tds="close-button"
+      >
+        {children ?? <XIcon aria-hidden />}
+      </AriaButton>
+    );
+  }
 );
 
 CloseButton.displayName = "CloseButton";

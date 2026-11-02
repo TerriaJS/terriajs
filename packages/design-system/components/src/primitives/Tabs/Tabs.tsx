@@ -34,6 +34,7 @@ import {
 import { ScrollShadow, type ScrollShadowVisibility } from "../ScrollShadow";
 import { dataAttr } from "../../utils/dataAttr";
 import "./Tabs.css";
+import { useLocalizedStrings } from "../../i18n/useLocalizedStrings";
 
 type TabsVariant = "primary" | "secondary";
 
@@ -102,6 +103,7 @@ const TabsList = <T extends object>(
     });
   };
 
+  const strings = useLocalizedStrings();
   const Previous = vertical ? ChevronUpIcon : ChevronLeftIcon;
   const Next = vertical ? ChevronDownIcon : ChevronRightIcon;
 
@@ -125,7 +127,7 @@ const TabsList = <T extends object>(
       <button
         type="button"
         tabIndex={-1}
-        aria-label="Scroll to previous tabs"
+        aria-label={strings.format("tabs.scrollPrevious")}
         hidden={!edges.start}
         data-tds="tabs-scroll"
         data-tds-direction="start"
@@ -138,7 +140,7 @@ const TabsList = <T extends object>(
       <button
         type="button"
         tabIndex={-1}
-        aria-label="Scroll to next tabs"
+        aria-label={strings.format("tabs.scrollNext")}
         hidden={!edges.end}
         data-tds="tabs-scroll"
         data-tds-direction="end"

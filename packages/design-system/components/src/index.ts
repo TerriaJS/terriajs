@@ -4,6 +4,9 @@
  * A collection of accessible, customizable React components built with React Aria Components.
  * All components use CSS @layer for predictable styling and can be easily themed.
  */
+export { LocalizedStringsProvider } from "./i18n";
+export type { LocalizedStringKey, LocalizedStrings } from "./i18n";
+
 // Export components
 export { Button } from "./primitives/Button";
 export type {

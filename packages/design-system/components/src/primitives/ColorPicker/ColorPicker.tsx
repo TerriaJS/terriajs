@@ -24,6 +24,7 @@ import { ColorSwatch } from "../ColorSwatch";
 import { Popover, type PopoverContentProps } from "../Popover";
 import { dataAttr } from "../../utils/dataAttr";
 import "./ColorPicker.css";
+import { useLocalizedStrings } from "../../i18n/useLocalizedStrings";
 
 type ColorPickerProps = Omit<AriaColorPickerProps, "children"> & {
   /** A trigger, any button with slot="trigger", and ColorPicker.Popover with
@@ -145,10 +146,11 @@ type ColorPickerPopoverProps = Omit<PopoverContentProps, "children"> & {
 const ColorPickerPopover = ({
   children,
   placement = "bottom start",
-  "aria-label": ariaLabel = "Color picker",
+  "aria-label": ariaLabel,
   ...props
 }: ColorPickerPopoverProps): React.ReactElement => {
   const state = useContext(PopoverStateContext);
+  const strings = useLocalizedStrings();
 
   return (
     <Popover.Content
@@ -158,7 +160,9 @@ const ColorPickerPopover = ({
       {...props}
       placement={placement}
     >
-      <Popover.Dialog aria-label={ariaLabel}>
+      <Popover.Dialog
+        aria-label={ariaLabel ?? strings.format("colorPicker.label")}
+      >
         <div data-tds="color-picker-content">{children}</div>
       </Popover.Dialog>
     </Popover.Content>

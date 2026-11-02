@@ -1,28 +1,29 @@
-// Every key Kbd.Abbr draws: its symbol, and its name for the title. The
-// modifiers' symbols follow the design; the rest are the usual ones
+// Every key Kbd.Abbr draws, by its symbol; its name, the title, is the
+// localized kbd.<key> string. The modifiers' symbols follow the design; the
+// rest are the usual ones
 const KBD_KEYS = {
-  command: { symbol: "⌘", title: "Command" },
-  ctrl: { symbol: "⌃", title: "Control" },
-  option: { symbol: "⌥", title: "Option" },
-  alt: { symbol: "⌥", title: "Alt" },
-  shift: { symbol: "⇧", title: "Shift" },
-  windows: { symbol: "Win +", title: "Windows" },
-  fn: { symbol: "Fn", title: "Function" },
-  enter: { symbol: "↵", title: "Enter" },
-  delete: { symbol: "⌫", title: "Delete" },
-  escape: { symbol: "⎋", title: "Escape" },
-  tab: { symbol: "⇥", title: "Tab" },
-  capslock: { symbol: "⇪", title: "Caps Lock" },
-  space: { symbol: "␣", title: "Space" },
-  up: { symbol: "↑", title: "Up" },
-  down: { symbol: "↓", title: "Down" },
-  left: { symbol: "←", title: "Left" },
-  right: { symbol: "→", title: "Right" },
-  pageup: { symbol: "⇞", title: "Page Up" },
-  pagedown: { symbol: "⇟", title: "Page Down" },
-  home: { symbol: "↖", title: "Home" },
-  end: { symbol: "↘", title: "End" },
-  help: { symbol: "?", title: "Help" }
+  command: { symbol: "⌘" },
+  ctrl: { symbol: "⌃" },
+  option: { symbol: "⌥" },
+  alt: { symbol: "⌥" },
+  shift: { symbol: "⇧" },
+  windows: { symbol: "Win +" },
+  fn: { symbol: "Fn" },
+  enter: { symbol: "↵" },
+  delete: { symbol: "⌫" },
+  escape: { symbol: "⎋" },
+  tab: { symbol: "⇥" },
+  capslock: { symbol: "⇪" },
+  space: { symbol: "␣" },
+  up: { symbol: "↑" },
+  down: { symbol: "↓" },
+  left: { symbol: "←" },
+  right: { symbol: "→" },
+  pageup: { symbol: "⇞" },
+  pagedown: { symbol: "⇟" },
+  home: { symbol: "↖" },
+  end: { symbol: "↘" },
+  help: { symbol: "?" }
 } as const;
 
 type KbdKey = keyof typeof KBD_KEYS;

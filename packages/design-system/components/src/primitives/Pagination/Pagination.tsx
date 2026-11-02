@@ -13,6 +13,7 @@ import {
 } from "react-aria-components/Button";
 import { dataAttr } from "../../utils/dataAttr";
 import "./Pagination.css";
+import { useLocalizedStrings } from "../../i18n/useLocalizedStrings";
 
 type PaginationSize = "sm" | "md" | "lg";
 
@@ -25,9 +26,11 @@ type PaginationProps = ComponentPropsWithoutRef<"nav"> & {
 // the current one and decides which to list
 const PaginationRoot = forwardRef<HTMLElement, PaginationProps>(
   ({ size = "md", ...props }, ref) => {
+    const strings = useLocalizedStrings();
+
     return (
       <nav
-        aria-label="pagination"
+        aria-label={strings.format("pagination.label")}
         {...props}
         ref={ref}
         data-tds="pagination"
@@ -84,17 +87,19 @@ const PaginationLink = forwardRef<HTMLButtonElement, PaginationLinkProps>(
   ({ isActive, ...props }, forwardedRef) => {
     const ref = useObjectRef(forwardedRef);
     const wasActiveRef = useRef(isActive);
+    const strings = useLocalizedStrings();
 
     useEffect(() => {
       const link = ref.current;
       if (isActive && !wasActiveRef.current && link) {
         announce(
-          link.getAttribute("aria-label") ?? `Page ${link.textContent}`,
+          link.getAttribute("aria-label") ??
+            strings.format("pagination.page", { page: link.textContent }),
           "polite"
         );
       }
       wasActiveRef.current = isActive;
-    }, [isActive, ref]);
+    }, [isActive, ref, strings]);
 
     return (
       <AriaButton

@@ -34,6 +34,7 @@ import { SelectValue } from "../Select";
 import { dataAttr } from "../../utils/dataAttr";
 import "../Input/Input.css";
 import "./Autocomplete.css";
+import { useLocalizedStrings } from "../../i18n/useLocalizedStrings";
 
 type AutocompleteContextValue = {
   onClear?: () => void;
@@ -184,12 +185,13 @@ const AutocompleteClearButton = forwardRef<
     [contextRef, ref]
   );
   const isEmpty = (state?.selectionManager.selectedKeys.size ?? 0) === 0;
+  const strings = useLocalizedStrings();
 
   return (
     <button
       type="button"
       tabIndex={-1}
-      aria-label="Clear selection"
+      aria-label={strings.format("autocomplete.clear")}
       aria-hidden={isEmpty || undefined}
       disabled={isDisabled}
       {...props}

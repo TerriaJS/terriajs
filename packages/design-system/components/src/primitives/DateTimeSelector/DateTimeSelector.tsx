@@ -23,6 +23,7 @@ import {
 } from "./dateTimeSelectorModel";
 import { dataAttr } from "../../utils/dataAttr";
 import "./DateTimeSelector.css";
+import { useLocalizedStrings } from "../../i18n/useLocalizedStrings";
 
 type DateTimeSelectorProps = Omit<
   ComponentPropsWithoutRef<"div">,
@@ -50,6 +51,7 @@ const pad = (value: number): string => String(value).padStart(2, "0");
 const DateTimeSelector = forwardRef<HTMLDivElement, DateTimeSelectorProps>(
   ({ dates, value, onChange, formatTime, ...props }, ref) => {
     const { locale } = useLocale();
+    const strings = useLocalizedStrings();
     const start = useMemo(() => defaultPath(dates), [dates]);
     const [path, setPath] = useState<DateTimePath>(start);
     // New dates start over: the old path may lead to levels they don't have
@@ -85,23 +87,23 @@ const DateTimeSelector = forwardRef<HTMLDivElement, DateTimeSelectorProps>(
     };
 
     const heading = {
-      century: "Select a century",
-      year: "Select a year",
+      century: strings.format("dateTimeSelector.selectCentury"),
+      year: strings.format("dateTimeSelector.selectYear"),
       month: view.view === "month" ? String(view.year) : "",
       day: "",
       hour:
         view.view === "hour"
-          ? `Select an hour on ${formats.day.format(
-              new Date(view.year, view.month, view.day)
-            )}`
+          ? strings.format("dateTimeSelector.selectHour", {
+              day: formats.day.format(new Date(view.year, view.month, view.day))
+            })
           : "",
-      time: "Select a time"
+      time: strings.format("dateTimeSelector.selectTime")
     }[view.view];
 
     const back = (
       <button
         type="button"
-        aria-label="Back"
+        aria-label={strings.format("dateTimeSelector.back")}
         disabled={!canGoBack(path, start)}
         data-tds="date-time-selector-back"
         onClick={() => {
@@ -206,7 +208,7 @@ const DateTimeSelector = forwardRef<HTMLDivElement, DateTimeSelectorProps>(
 
         {view.view === "century" &&
           level({
-            label: "Centuries",
+            label: strings.format("dateTimeSelector.centuries"),
             isGrid: true,
             onAction: (century) => {
               go({ century });
@@ -225,7 +227,7 @@ const DateTimeSelector = forwardRef<HTMLDivElement, DateTimeSelectorProps>(
 
         {view.view === "year" &&
           level({
-            label: "Years",
+            label: strings.format("dateTimeSelector.years"),
             onAction: (year) => {
               go({ year });
             },
@@ -236,7 +238,7 @@ const DateTimeSelector = forwardRef<HTMLDivElement, DateTimeSelectorProps>(
 
         {view.view === "month" &&
           level({
-            label: "Months",
+            label: strings.format("dateTimeSelector.months"),
             disabledKeys: Array.from(
               { length: 12 },
               (_, month) => month
@@ -264,7 +266,7 @@ const DateTimeSelector = forwardRef<HTMLDivElement, DateTimeSelectorProps>(
 
         {view.view === "day" && (
           <Calendar
-            aria-label="Select a day"
+            aria-label={strings.format("dateTimeSelector.days")}
             // eslint-disable-next-line jsx-a11y/no-autofocus -- Only after the user's own choice or Back, as the lists
             autoFocus={hasMoved}
             focusedValue={new CalendarDate(view.year, view.month + 1, 1)}
@@ -298,13 +300,15 @@ const DateTimeSelector = forwardRef<HTMLDivElement, DateTimeSelectorProps>(
 
         {view.view === "hour" &&
           level({
-            label: "Hours",
+            label: strings.format("dateTimeSelector.hours"),
             onAction: (hour) => {
               go({ hour });
             },
             children: view.hours.map(({ hour, count }) => {
               const range = `${pad(hour)}:00 – ${pad(hour + 1)}:00`;
-              const options = `(${String(count)} ${count === 1 ? "option" : "options"})`;
+              const options = strings.format("dateTimeSelector.options", {
+                count
+              });
 
               return (
                 <AriaListBoxItem
@@ -326,7 +330,7 @@ const DateTimeSelector = forwardRef<HTMLDivElement, DateTimeSelectorProps>(
 
         {view.view === "time" &&
           level({
-            label: "Times",
+            label: strings.format("dateTimeSelector.times"),
             selectedKeys: value ? [value.getTime()] : [],
             onAction: (time) => {
               const date = view.dates.find((entry) => entry.getTime() === time);
