@@ -82,11 +82,11 @@
   /* The indicator and content set their own timing, so they animate in an
      Accordion item too */
   [data-tds="disclosure-indicator"] {
-    --_disclosure-duration: 250ms;
+    --_disclosure-duration: var(--terria-ds-duration-250);
 
     display: inline-flex;
     flex-shrink: 0;
-    transition: rotate var(--_disclosure-duration) ease-out;
+    transition: rotate var(--_disclosure-duration) var(--terria-ds-ease-in-out);
 
     @media (prefers-reduced-motion: reduce) {
       transition: none;
@@ -106,7 +106,7 @@
      it moves, and stops clipping once open, so focus rings, shadows and
      popovers inside show */
   [data-tds="disclosure-content"] {
-    --_disclosure-duration: 250ms;
+    --_disclosure-duration: var(--terria-ds-duration-200);
 
     /* Holds the first child's top margin, the gap: clip alone lets it pass
        through, so it would appear at once and only then the height grow */
@@ -117,16 +117,16 @@
     overflow: clip;
     opacity: 0;
     transition:
-      block-size var(--_disclosure-duration) ease-in-out,
-      opacity var(--_disclosure-duration) ease-out,
+      block-size var(--_disclosure-duration) var(--terria-ds-ease-out-quad),
+      opacity var(--_disclosure-duration) var(--terria-ds-ease-out),
       overflow 0s allow-discrete;
 
     [data-expanded] > & {
       overflow: visible;
       opacity: 1;
       transition:
-        block-size var(--_disclosure-duration) ease-in-out,
-        opacity var(--_disclosure-duration) ease-out,
+        block-size var(--_disclosure-duration) var(--terria-ds-ease-out-quad),
+        opacity var(--_disclosure-duration) var(--terria-ds-ease-out),
         overflow 0s var(--_disclosure-duration) allow-discrete;
 
       @starting-style {

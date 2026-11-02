@@ -176,7 +176,7 @@
     flex-shrink: 0;
     inline-size: var(--terria-ds-dimensions-spacing-2-5);
     block-size: var(--terria-ds-dimensions-spacing-2-5);
-    transition: rotate 100ms ease-out;
+    transition: rotate var(--terria-ds-duration-100) var(--terria-ds-ease-out);
 
     @media (prefers-reduced-motion: reduce) {
       transition: none;

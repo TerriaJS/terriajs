@@ -29,7 +29,8 @@
     background: none;
     color: var(--terria-ds-field-placeholder);
     cursor: pointer;
-    transition: box-shadow 150ms ease-out;
+    transition: box-shadow var(--terria-ds-duration-150)
+      var(--terria-ds-ease-out);
     -webkit-tap-highlight-color: transparent;
 
     @media (prefers-reduced-motion: reduce) {

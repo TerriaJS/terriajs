@@ -62,7 +62,8 @@
     & > svg {
       inline-size: var(--terria-ds-dimensions-icon-size-sm);
       block-size: var(--terria-ds-dimensions-icon-size-sm);
-      transition: rotate 150ms ease-out;
+      transition: rotate var(--terria-ds-duration-150)
+        var(--terria-ds-ease-in-out);
 
       @media (prefers-reduced-motion: reduce) {
         transition: none;
@@ -91,8 +92,8 @@
     color: var(--terria-ds-field-placeholder);
     cursor: pointer;
     transition:
-      opacity 150ms ease-out,
-      scale 150ms ease-out;
+      opacity var(--terria-ds-duration-150) var(--terria-ds-ease-smooth),
+      scale var(--terria-ds-duration-150) var(--terria-ds-ease-out);
 
     @media (prefers-reduced-motion: reduce) {
       transition: none;

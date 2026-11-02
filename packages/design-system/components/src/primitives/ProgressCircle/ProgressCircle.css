@@ -25,7 +25,8 @@
 
     [data-tds="progress-circle-fill-circle"] {
       stroke: var(--_progress-circle-stroke);
-      transition: stroke-dashoffset 300ms ease-out;
+      transition: stroke-dashoffset var(--terria-ds-duration-300)
+        var(--terria-ds-ease-out);
 
       @media (prefers-reduced-motion: reduce) {
         transition: none;

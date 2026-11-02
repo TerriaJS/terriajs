@@ -108,9 +108,9 @@
     background-color: var(--_radio-bg);
     color: var(--_radio-dot);
     transition:
-      background-color 200ms ease-out,
-      border-color 200ms ease-out,
-      box-shadow 150ms ease-out;
+      background-color var(--terria-ds-duration-200) var(--terria-ds-ease-out),
+      border-color var(--terria-ds-duration-200) var(--terria-ds-ease-out),
+      box-shadow var(--terria-ds-duration-150) var(--terria-ds-ease-out);
 
     @media (prefers-reduced-motion: reduce) {
       transition: none;
@@ -146,7 +146,7 @@
     background-color: currentcolor;
     box-shadow: 0 1px 1px 0 oklch(0% 0 0deg / 5%);
     scale: 0;
-    transition: scale 200ms ease-out;
+    transition: scale var(--terria-ds-duration-200) var(--terria-ds-ease-out);
   }
 
   [data-selected] [data-tds="radio-indicator"]:empty::before {

@@ -184,7 +184,8 @@
           var(--terria-ds-effects-shadow-scroll-blur)
         );
         opacity: 0;
-        transition: opacity 150ms ease-out;
+        transition: opacity var(--terria-ds-duration-150)
+          var(--terria-ds-ease-out);
         backdrop-filter: var(--terria-ds-backdrop-blur);
 
         @media (prefers-reduced-motion: reduce) {

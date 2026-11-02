@@ -76,7 +76,8 @@
     background: none;
     color: var(--terria-ds-field-placeholder);
     cursor: pointer;
-    transition: rotate 150ms ease-out;
+    transition: rotate var(--terria-ds-duration-150)
+      var(--terria-ds-ease-in-out);
 
     @media (prefers-reduced-motion: reduce) {
       transition: none;
@@ -113,8 +114,8 @@
     /* Transitions only while there's something to clear, so it goes at once */
     &:not([data-empty]) {
       transition:
-        opacity 150ms ease-out,
-        scale 150ms ease-out;
+        opacity var(--terria-ds-duration-150) var(--terria-ds-ease-smooth),
+        scale var(--terria-ds-duration-150) var(--terria-ds-ease-out);
 
       @media (prefers-reduced-motion: reduce) {
         transition: none;
@@ -134,7 +135,8 @@
       background-color: var(--terria-ds-neutral);
       opacity: 0;
       content: "";
-      transition: opacity 150ms ease-out;
+      transition: opacity var(--terria-ds-duration-150)
+        var(--terria-ds-ease-out);
 
       @media (prefers-reduced-motion: reduce) {
         transition: none;

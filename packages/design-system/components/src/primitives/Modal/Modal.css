@@ -16,8 +16,6 @@
     [data-tds="alert-dialog-backdrop"],
     [data-tds="drawer-backdrop"]
   ) {
-    --_modal-ease: cubic-bezier(0.4, 0, 0.2, 1);
-
     position: fixed;
     inset: 0;
     display: flex;
@@ -46,7 +44,8 @@
     }
 
     &[data-entering] {
-      animation: terria-ds-modal-fade 200ms var(--_modal-ease);
+      animation: terria-ds-modal-fade var(--terria-ds-duration-150)
+        var(--terria-ds-ease-out);
 
       @media (prefers-reduced-motion: reduce) {
         animation: none;
@@ -54,7 +53,8 @@
     }
 
     &[data-exiting] {
-      animation: terria-ds-modal-fade 150ms var(--_modal-ease) reverse forwards;
+      animation: terria-ds-modal-fade var(--terria-ds-duration-100)
+        var(--terria-ds-ease-out) reverse forwards;
 
       @media (prefers-reduced-motion: reduce) {
         animation: none;
@@ -150,7 +150,8 @@
     }
 
     [data-entering] > & {
-      animation: terria-ds-modal-enter 200ms var(--_modal-ease);
+      animation: terria-ds-modal-enter var(--terria-ds-duration-250)
+        var(--terria-ds-ease-out-quad);
 
       @media (prefers-reduced-motion: reduce) {
         animation: none;
@@ -158,7 +159,8 @@
     }
 
     [data-exiting] > & {
-      animation: terria-ds-modal-enter 150ms var(--_modal-ease) reverse forwards;
+      animation: terria-ds-modal-enter var(--terria-ds-duration-100)
+        var(--terria-ds-ease-out-quad) reverse forwards;
 
       @media (prefers-reduced-motion: reduce) {
         animation: none;

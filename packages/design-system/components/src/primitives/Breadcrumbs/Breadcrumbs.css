@@ -31,7 +31,7 @@
     color: var(--terria-ds-text-muted);
     text-decoration: none;
     cursor: pointer;
-    transition: color 150ms ease-out;
+    transition: color var(--terria-ds-duration-150) var(--terria-ds-ease-out);
 
     @media (prefers-reduced-motion: reduce) {
       transition: none;

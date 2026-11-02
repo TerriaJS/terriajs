@@ -67,11 +67,11 @@
   }
 
   [data-tds="toast"] {
-    --_toast-ease: cubic-bezier(0.22, 1, 0.36, 1);
-    --_toast-enter-duration: 350ms;
-    --_toast-exit-duration: 250ms;
+    --_toast-ease: var(--terria-ds-ease-out-fluid);
+    --_toast-enter-duration: var(--terria-ds-duration-350);
+    --_toast-exit-duration: var(--terria-ds-duration-250);
     --_toast-translate-duration: var(--_toast-enter-duration);
-    --_toast-opacity-duration: 150ms;
+    --_toast-opacity-duration: var(--terria-ds-duration-150);
 
     /* Where it is: collapsed by default; entering from outside the edge */
     --_toast-y: var(--terria-ds-toast-offset-collapsed, 0px);
@@ -114,7 +114,7 @@
 
     /* Its content fades as the stack opens and closes */
     & > :not([data-tds-toast-close]) {
-      transition: opacity 200ms var(--_toast-ease);
+      transition: opacity var(--terria-ds-duration-200) var(--_toast-ease);
 
       @media (prefers-reduced-motion: reduce) {
         transition: none;
@@ -196,7 +196,7 @@
     }
 
     &:not([data-frontmost]) {
-      --_toast-translate-duration: 200ms;
+      --_toast-translate-duration: var(--terria-ds-duration-200);
       --_toast-scale: calc(var(--terria-ds-toast-scale-collapsed, 1) * 0.96);
     }
 
@@ -241,8 +241,10 @@
     /* A promise's outcome replacing its spinner fades and grows in */
     &[data-swapped] > :not([data-tds="spinner"]) {
       animation:
-        terria-ds-toast-indicator-fade 150ms var(--_toast-ease),
-        terria-ds-toast-indicator-scale 200ms var(--_toast-ease);
+        terria-ds-toast-indicator-fade var(--terria-ds-duration-150)
+          var(--_toast-ease),
+        terria-ds-toast-indicator-scale var(--terria-ds-duration-200)
+          var(--_toast-ease);
 
       @media (prefers-reduced-motion: reduce) {
         animation: none;
@@ -276,7 +278,8 @@
     background-color: var(--terria-ds-surface-overlay);
     opacity: 0;
     pointer-events: none;
-    transition: opacity 150ms ease-out;
+    transition: opacity var(--terria-ds-duration-150)
+      var(--terria-ds-ease-smooth);
 
     @media (prefers-reduced-motion: reduce) {
       transition: none;

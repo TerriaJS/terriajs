@@ -10,7 +10,8 @@
      the stylesheets load in */
   [data-tds="input-group"] > [data-tds="number-field-button"] {
     color: var(--terria-ds-field-foreground);
-    transition: background-color 150ms ease-out;
+    transition: background-color var(--terria-ds-duration-150)
+      var(--terria-ds-ease-smooth);
 
     @media (prefers-reduced-motion: reduce) {
       transition: none;

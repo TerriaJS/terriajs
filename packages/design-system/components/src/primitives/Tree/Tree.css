@@ -90,8 +90,8 @@
     outline: none;
     -webkit-tap-highlight-color: transparent;
     transition:
-      background-color 150ms ease-out,
-      box-shadow 150ms ease-out;
+      background-color var(--terria-ds-duration-150) var(--terria-ds-ease-out),
+      box-shadow var(--terria-ds-duration-150) var(--terria-ds-ease-out);
 
     @media (prefers-reduced-motion: reduce) {
       transition: none;
@@ -170,7 +170,7 @@
     );
     content: "";
     pointer-events: none;
-    transition: opacity 150ms ease-out;
+    transition: opacity var(--terria-ds-duration-150) var(--terria-ds-ease-out);
 
     @media (prefers-reduced-motion: reduce) {
       transition: none;
@@ -218,8 +218,8 @@
     background: none;
     color: var(--terria-ds-text-muted);
     transition:
-      background-color 150ms ease-out,
-      color 150ms ease-out;
+      background-color var(--terria-ds-duration-150) var(--terria-ds-ease-out),
+      color var(--terria-ds-duration-150) var(--terria-ds-ease-out);
 
     @media (prefers-reduced-motion: reduce) {
       transition: none;
@@ -258,7 +258,7 @@
   /* The icon turns, not the button, so its background stays put */
   [data-tds="tree-indicator-icon"] {
     display: inline-flex;
-    transition: rotate 200ms ease-out;
+    transition: rotate var(--terria-ds-duration-200) var(--terria-ds-ease-out);
 
     @media (prefers-reduced-motion: reduce) {
       transition: none;
@@ -293,7 +293,7 @@
     background: none;
     color: var(--terria-ds-text-muted);
     cursor: grab;
-    transition: opacity 150ms ease-out;
+    transition: opacity var(--terria-ds-duration-150) var(--terria-ds-ease-out);
 
     @media (prefers-reduced-motion: reduce) {
       transition: none;

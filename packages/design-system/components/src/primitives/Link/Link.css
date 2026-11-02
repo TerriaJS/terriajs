@@ -20,7 +20,7 @@
     text-decoration-thickness: 10%;
     text-underline-offset: 0.15em;
     cursor: pointer;
-    transition: opacity 100ms ease-out;
+    transition: opacity var(--terria-ds-duration-100) var(--terria-ds-ease-out);
 
     @media (prefers-reduced-motion: reduce) {
       transition: none;

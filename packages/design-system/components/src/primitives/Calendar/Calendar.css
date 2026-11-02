@@ -58,10 +58,10 @@
     color: var(--terria-ds-primary-soft-foreground);
     cursor: pointer;
     transition:
-      transform 250ms ease-out,
-      background-color 100ms ease-out,
-      box-shadow 100ms ease-out,
-      opacity 150ms ease-out;
+      transform var(--terria-ds-duration-250) var(--terria-ds-ease-out),
+      background-color var(--terria-ds-duration-100) var(--terria-ds-ease-out),
+      box-shadow var(--terria-ds-duration-100) var(--terria-ds-ease-out),
+      opacity var(--terria-ds-duration-150) var(--terria-ds-ease-out);
 
     @media (prefers-reduced-motion: reduce) {
       transition: none;
@@ -167,8 +167,8 @@
     text-align: center;
     cursor: pointer;
     transition:
-      transform 250ms ease-out,
-      box-shadow 100ms ease-out;
+      transform var(--terria-ds-duration-250) var(--terria-ds-ease-out),
+      box-shadow var(--terria-ds-duration-100) var(--terria-ds-ease-out);
     -webkit-tap-highlight-color: transparent;
 
     @media (prefers-reduced-motion: reduce) {
@@ -264,7 +264,7 @@
   [data-tds="calendar"]:has([data-tds="calendar-year-picker-grid"])
     > [data-tds="calendar-grid"] {
     transition:
-      opacity 150ms ease-out,
+      opacity var(--terria-ds-duration-150) var(--terria-ds-ease-out),
       visibility 0ms linear;
 
     @media (prefers-reduced-motion: reduce) {
@@ -278,8 +278,8 @@
     opacity: 0;
     pointer-events: none;
     transition:
-      opacity 150ms ease-out,
-      visibility 0ms linear 150ms;
+      opacity var(--terria-ds-duration-150) var(--terria-ds-ease-out),
+      visibility 0ms linear var(--terria-ds-duration-150);
   }
 
   [data-tds="calendar-year-picker-trigger"] {
@@ -307,7 +307,7 @@
   [data-tds="calendar-year-picker-trigger-heading"] {
     font-size: var(--terria-ds-text-size-body);
     font-weight: var(--terria-ds-font-medium);
-    transition: color 150ms ease-out;
+    transition: color var(--terria-ds-duration-150) var(--terria-ds-ease-out);
 
     [data-open] > & {
       color: var(--terria-ds-primary-soft-foreground);
@@ -317,7 +317,8 @@
   [data-tds="calendar-year-picker-trigger-indicator"] {
     display: inline-flex;
     color: var(--terria-ds-primary-soft-foreground);
-    transition: transform 150ms ease-out;
+    transition: transform var(--terria-ds-duration-150)
+      var(--terria-ds-ease-out);
 
     & > svg {
       inline-size: var(--terria-ds-dimensions-spacing-3);
@@ -363,7 +364,8 @@
       pointer-events: auto;
 
       /* A little after the day grid starts fading out */
-      transition: opacity 200ms ease-out 50ms;
+      transition: opacity var(--terria-ds-duration-200)
+        var(--terria-ds-ease-out) var(--terria-ds-duration-50);
 
       @media (prefers-reduced-motion: reduce) {
         transition: none;
@@ -388,9 +390,9 @@
     user-select: none;
     touch-action: manipulation;
     transition:
-      background-color 100ms ease-out,
-      color 100ms ease-out,
-      box-shadow 100ms ease-out;
+      background-color var(--terria-ds-duration-100) var(--terria-ds-ease-out),
+      color var(--terria-ds-duration-100) var(--terria-ds-ease-out),
+      box-shadow var(--terria-ds-duration-100) var(--terria-ds-ease-out);
 
     @media (prefers-reduced-motion: reduce) {
       transition: none;

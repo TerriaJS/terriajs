@@ -54,10 +54,10 @@
     user-select: none;
     transform-origin: center;
     transition:
-      transform 250ms ease-out,
-      background-color 100ms ease-out,
-      backdrop-filter 100ms ease-out,
-      box-shadow 100ms ease-out;
+      transform var(--terria-ds-duration-250) var(--terria-ds-ease-smooth),
+      background-color var(--terria-ds-duration-100) var(--terria-ds-ease-out),
+      backdrop-filter var(--terria-ds-duration-100) var(--terria-ds-ease-out),
+      box-shadow var(--terria-ds-duration-100) var(--terria-ds-ease-out);
 
     @media (prefers-reduced-motion: reduce) {
       transition: none;

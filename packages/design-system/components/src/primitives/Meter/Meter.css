@@ -39,7 +39,8 @@
     block-size: 100%;
     border-radius: var(--terria-ds-dimensions-radius-rounded-xl);
     background-color: var(--_meter-fill);
-    transition: inline-size 300ms ease-out;
+    transition: inline-size var(--terria-ds-duration-300)
+      var(--terria-ds-ease-out);
 
     @media (prefers-reduced-motion: reduce) {
       transition: none;

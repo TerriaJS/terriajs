@@ -13,8 +13,8 @@
     color: var(--terria-ds-text-muted);
     text-align: center;
     transition:
-      border-color 150ms ease-out,
-      background-color 150ms ease-out;
+      border-color var(--terria-ds-duration-150) var(--terria-ds-ease-out),
+      background-color var(--terria-ds-duration-150) var(--terria-ds-ease-out);
 
     /* Something is dragged over it */
     &[data-drop-target] {

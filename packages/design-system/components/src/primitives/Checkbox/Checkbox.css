@@ -104,9 +104,9 @@
     background-color: var(--_checkbox-bg);
     color: var(--terria-ds-primary-foreground);
     transition:
-      background-color 200ms ease-out,
-      border-color 200ms ease-out,
-      box-shadow 150ms ease-out;
+      background-color var(--terria-ds-duration-200) var(--terria-ds-ease-out),
+      border-color var(--terria-ds-duration-200) var(--terria-ds-ease-out),
+      box-shadow var(--terria-ds-duration-150) var(--terria-ds-ease-out);
 
     @media (prefers-reduced-motion: reduce) {
       transition: none;
@@ -141,7 +141,7 @@
 
     /* Draws the checkmark in when ticked */
     [data-selected] & {
-      transition: stroke-dashoffset 150ms linear 15ms;
+      transition: stroke-dashoffset var(--terria-ds-duration-150) linear;
 
       @media (prefers-reduced-motion: reduce) {
         transition: none;

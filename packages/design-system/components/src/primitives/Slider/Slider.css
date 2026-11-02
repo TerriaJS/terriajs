@@ -129,7 +129,8 @@
     border-radius: var(--terria-ds-radius-full);
     background-color: var(--_slider-fill);
     cursor: grab;
-    transition: box-shadow 150ms ease-out;
+    transition: box-shadow var(--terria-ds-duration-150)
+      var(--terria-ds-ease-out);
     -webkit-tap-highlight-color: transparent;
 
     @media (prefers-reduced-motion: reduce) {
@@ -141,7 +142,8 @@
       content: "";
       border-radius: var(--terria-ds-dimensions-radius-rounded-lg);
       background-color: var(--terria-ds-primary-foreground);
-      transition: scale 150ms ease-out;
+      transition: scale var(--terria-ds-duration-150)
+        var(--terria-ds-ease-in-out);
 
       @media (prefers-reduced-motion: reduce) {
         transition: none;

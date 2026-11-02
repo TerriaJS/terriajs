@@ -7,7 +7,7 @@
     --_tooltip-bg: var(--terria-ds-surface-overlay);
     --_tooltip-fg: var(--terria-ds-text-foreground);
     --_tooltip-slide: 0.25rem;
-    --_tooltip-ease: cubic-bezier(0.4, 0, 0.2, 1);
+    --_tooltip-ease: var(--terria-ds-ease-smooth);
     --_tooltip-arrow-layer: -1;
 
     box-sizing: border-box;
@@ -57,11 +57,13 @@
     }
 
     &[data-entering] {
-      animation: terria-ds-tooltip-enter 150ms var(--_tooltip-ease);
+      animation: terria-ds-tooltip-enter var(--terria-ds-duration-150)
+        var(--_tooltip-ease);
     }
 
     &[data-exiting] {
-      animation: terria-ds-tooltip-exit 100ms var(--_tooltip-ease) forwards;
+      animation: terria-ds-tooltip-exit var(--terria-ds-duration-100)
+        var(--_tooltip-ease) forwards;
 
       /* Stays non-interactive while closing, even if the animation is interrupted */
       pointer-events: none;
@@ -129,7 +131,8 @@
     display: inline-block;
     border-radius: var(--terria-ds-radius-sm);
     outline: none;
-    transition: box-shadow 150ms ease-out;
+    transition: box-shadow var(--terria-ds-duration-150)
+      var(--terria-ds-ease-out);
 
     @media (prefers-reduced-motion: reduce) {
       transition: none;

@@ -171,7 +171,7 @@ export const useDrawerDrag = (
         overlayState.close();
       } else {
         dialog.style.transition =
-          "transform 300ms cubic-bezier(0.32, 0.72, 0, 1)";
+          "transform var(--terria-ds-duration-300) var(--terria-ds-ease-out-fluid)";
         dialog.style.transform = "";
         dialog.addEventListener(
           "transitionend",

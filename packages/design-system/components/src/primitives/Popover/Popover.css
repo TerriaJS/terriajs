@@ -9,7 +9,7 @@
     --_popover-radius: var(--terria-ds-radius-md);
     --_popover-shadow: var(--terria-ds-shadow-overlay);
     --_popover-slide: 0.25rem;
-    --_popover-ease: cubic-bezier(0.4, 0, 0.2, 1);
+    --_popover-ease: var(--terria-ds-ease-smooth);
 
     box-sizing: border-box;
     border-radius: var(--_popover-radius);
@@ -40,11 +40,13 @@
     }
 
     &[data-entering] {
-      animation: terria-ds-popover-enter 150ms var(--_popover-ease);
+      animation: terria-ds-popover-enter var(--terria-ds-duration-150)
+        var(--_popover-ease);
     }
 
     &[data-exiting] {
-      animation: terria-ds-popover-exit 100ms var(--_popover-ease) forwards;
+      animation: terria-ds-popover-exit var(--terria-ds-duration-100)
+        var(--_popover-ease) forwards;
 
       /* Stays non-interactive while closing, even if the animation is interrupted */
       pointer-events: none;
@@ -112,7 +114,8 @@
     border-radius: var(--terria-ds-radius-sm);
     outline: none;
     cursor: pointer;
-    transition: box-shadow 150ms ease-out;
+    transition: box-shadow var(--terria-ds-duration-150)
+      var(--terria-ds-ease-out);
 
     @media (prefers-reduced-motion: reduce) {
       transition: none;

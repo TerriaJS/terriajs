@@ -24,7 +24,7 @@
     --_tabs-indicator-bg: var(--terria-ds-segment);
     --_tabs-indicator-radius: var(--terria-ds-radius-full);
     --_tabs-indicator-shadow: var(--terria-ds-shadow-tab);
-    --_tabs-ease: cubic-bezier(0.25, 1, 0.5, 1);
+    --_tabs-ease: var(--terria-ds-ease-out-fluid);
     --_tabs-fade: var(--terria-ds-dimensions-spacing-11);
 
     position: relative;
@@ -137,7 +137,8 @@
     align-items: center;
     justify-content: center;
     color: var(--terria-ds-text-foreground);
-    transition: opacity 150ms ease-out;
+    transition: opacity var(--terria-ds-duration-150)
+      var(--terria-ds-ease-smooth);
 
     @media (prefers-reduced-motion: reduce) {
       transition: none;
@@ -221,8 +222,9 @@
     /* Its own layer, so the indicator's -1 sits above the list's background */
     isolation: isolate;
     transition:
-      background-color 150ms ease-out,
-      color 150ms ease-out;
+      background-color var(--terria-ds-duration-150)
+        var(--terria-ds-ease-smooth),
+      color var(--terria-ds-duration-150) var(--terria-ds-ease-smooth);
     -webkit-tap-highlight-color: transparent;
 
     @media (prefers-reduced-motion: reduce) {
@@ -295,7 +297,7 @@
     background-color: var(--_tabs-indicator-bg);
     box-shadow: var(--_tabs-indicator-shadow);
     transition-timing-function: var(--_tabs-ease);
-    transition-duration: 250ms;
+    transition-duration: var(--terria-ds-duration-250);
     transition-property: translate, width, height;
 
     @media (prefers-reduced-motion: reduce) {
@@ -333,7 +335,8 @@
     background-color: var(--terria-ds-text-muted);
     opacity: 0.25;
     pointer-events: none;
-    transition: opacity 150ms ease-out;
+    transition: opacity var(--terria-ds-duration-150)
+      var(--terria-ds-ease-smooth);
 
     /* Hidden on underlines, and on the selected tab and the one after it */
     [data-tds-variant="secondary"] &,

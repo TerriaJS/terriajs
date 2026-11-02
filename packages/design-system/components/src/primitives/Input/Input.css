@@ -36,9 +36,10 @@
     font-size: var(--terria-ds-text-size-body);
     line-height: var(--terria-ds-line-height-body);
     transition:
-      background-color 150ms ease-out,
-      border-color 150ms ease-out,
-      box-shadow 150ms ease-out;
+      background-color var(--terria-ds-duration-150)
+        var(--terria-ds-ease-smooth),
+      border-color var(--terria-ds-duration-150) var(--terria-ds-ease-smooth),
+      box-shadow var(--terria-ds-duration-150) var(--terria-ds-ease-out);
 
     @media (prefers-reduced-motion: reduce) {
       transition: none;

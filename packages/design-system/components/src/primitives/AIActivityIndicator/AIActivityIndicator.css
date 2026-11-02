@@ -9,7 +9,7 @@
 @layer terria-ds.components {
   [data-tds="ai-activity-indicator"] {
     --_ai-indicator-size: var(--terria-ds-dimensions-spacing-8);
-    --_ai-indicator-duration: 2.4s;
+    --_ai-indicator-loop: 2.4s;
 
     /* How far into the cycle a sparkle starts, from -1 to 0; each sparkle's
        group sets its own */
@@ -31,13 +31,12 @@
     & path {
       transform-box: fill-box;
       transform-origin: center;
-      animation: terria-ds-ai-sparkle var(--_ai-indicator-duration) linear
-        infinite;
+      animation: terria-ds-ai-sparkle var(--_ai-indicator-loop) linear infinite;
 
       /* Each starts a step of the cycle after the last, so the pulse travels
          along the wave */
       animation-delay: calc(
-        var(--_ai-indicator-duration) * var(--_ai-indicator-offset)
+        var(--_ai-indicator-loop) * var(--_ai-indicator-offset)
       );
 
       /* Still, at full size: with no pulse, it reads as a mark, not a lull */
@@ -51,13 +50,13 @@
     0% {
       opacity: 0.15;
       transform: scale(0.6) rotate(0deg);
-      animation-timing-function: ease-in-out;
+      animation-timing-function: var(--terria-ds-ease-in-out);
     }
 
     35% {
       opacity: 1;
       transform: scale(1) rotate(45deg);
-      animation-timing-function: ease-in-out;
+      animation-timing-function: var(--terria-ds-ease-in-out);
     }
 
     70%,

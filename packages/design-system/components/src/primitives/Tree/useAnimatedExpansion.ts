@@ -5,7 +5,8 @@ import type { Key } from "react-aria-components";
 import { useControlledState } from "react-stately/useControlledState";
 
 const DURATION = 200;
-const EASING = "ease-out";
+// --terria-ds-ease-out
+const EASING = "cubic-bezier(0, 0, 0.2, 1)";
 
 // A group's own row
 const rowFor = (tree: HTMLElement, key: Key): HTMLElement | null =>

@@ -56,7 +56,8 @@
     font-weight: var(--terria-ds-font-medium);
     line-height: var(--terria-ds-dimensions-leading-text-base);
     text-align: start;
-    transition: background-color 150ms ease-out;
+    transition: background-color var(--terria-ds-duration-150)
+      var(--terria-ds-ease-out);
 
     @media (prefers-reduced-motion: reduce) {
       transition: none;
@@ -102,7 +103,8 @@
   [data-tds="accordion-indicator"] {
     display: inline-flex;
     flex-shrink: 0;
-    transition: rotate 250ms ease-out;
+    transition: rotate var(--terria-ds-duration-250)
+      var(--terria-ds-ease-in-out);
 
     @media (prefers-reduced-motion: reduce) {
       transition: none;
@@ -133,17 +135,17 @@
     opacity: 0;
     clip-path: var(--_accordion-panel-clip);
     transition:
-      block-size 250ms ease-in-out,
-      opacity 250ms ease-out,
+      block-size var(--terria-ds-duration-200) var(--terria-ds-ease-out-quad),
+      opacity var(--terria-ds-duration-200) var(--terria-ds-ease-out),
       clip-path 0s allow-discrete;
 
     [data-expanded] > & {
       opacity: 1;
       clip-path: none;
       transition:
-        block-size 250ms ease-in-out,
-        opacity 250ms ease-out,
-        clip-path 0s 250ms allow-discrete;
+        block-size var(--terria-ds-duration-200) var(--terria-ds-ease-out-quad),
+        opacity var(--terria-ds-duration-200) var(--terria-ds-ease-out),
+        clip-path 0s var(--terria-ds-duration-200) allow-discrete;
 
       @starting-style {
         clip-path: var(--_accordion-panel-clip);

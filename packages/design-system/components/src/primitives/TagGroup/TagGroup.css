@@ -48,9 +48,10 @@
     user-select: none;
     -webkit-tap-highlight-color: transparent;
     transition:
-      color 100ms ease-out,
-      background-color 100ms ease-out,
-      box-shadow 100ms ease-out;
+      color var(--terria-ds-duration-100) var(--terria-ds-ease-smooth),
+      background-color var(--terria-ds-duration-100)
+        var(--terria-ds-ease-smooth),
+      box-shadow var(--terria-ds-duration-100) var(--terria-ds-ease-out);
 
     @media (prefers-reduced-motion: reduce) {
       transition: none;

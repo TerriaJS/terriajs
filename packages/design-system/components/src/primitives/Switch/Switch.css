@@ -84,8 +84,9 @@
     border-radius: var(--terria-ds-radius-full);
     background-color: var(--terria-ds-neutral);
     transition:
-      background-color 250ms ease-out,
-      box-shadow 150ms ease-out;
+      background-color var(--terria-ds-duration-250)
+        var(--terria-ds-ease-smooth),
+      box-shadow var(--terria-ds-duration-150) var(--terria-ds-ease-out);
 
     @media (prefers-reduced-motion: reduce) {
       transition: none;
@@ -113,8 +114,9 @@
     background-color: var(--terria-ds-colors-white);
     color: var(--terria-ds-neutral-foreground);
     transition:
-      margin-inline-start 300ms ease-out,
-      background-color 200ms ease-out;
+      margin-inline-start var(--terria-ds-duration-300)
+        var(--terria-ds-ease-out-fluid),
+      background-color var(--terria-ds-duration-200) var(--terria-ds-ease-out);
 
     @media (prefers-reduced-motion: reduce) {
       transition: none;

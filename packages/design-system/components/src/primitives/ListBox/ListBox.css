@@ -34,8 +34,8 @@
     line-height: var(--terria-ds-line-height-body-lg);
     -webkit-tap-highlight-color: transparent;
     transition:
-      background-color 150ms ease-out,
-      box-shadow 150ms ease-out;
+      background-color var(--terria-ds-duration-150) var(--terria-ds-ease-out),
+      box-shadow var(--terria-ds-duration-150) var(--terria-ds-ease-out);
 
     @media (prefers-reduced-motion: reduce) {
       transition: none;
@@ -114,7 +114,7 @@
     border-radius: var(--terria-ds-radius-full);
     background-color: currentcolor;
     scale: 0;
-    transition: scale 150ms ease-out;
+    transition: scale var(--terria-ds-duration-250) var(--terria-ds-ease-in-out);
 
     @media (prefers-reduced-motion: reduce) {
       transition: none;
@@ -129,7 +129,7 @@
     inline-size: var(--terria-ds-dimensions-spacing-2-5);
     block-size: var(--terria-ds-dimensions-spacing-2-5);
 
-    transition: stroke-dashoffset 250ms linear;
+    transition: stroke-dashoffset var(--terria-ds-duration-250) linear;
 
     @media (prefers-reduced-motion: reduce) {
       transition: none;

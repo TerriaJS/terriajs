@@ -727,3 +727,29 @@
     --terria-ds-backdrop-blur: blur(calc(var(--terria-ds-effects-blur) / 2));
   }
 }
+
+/**
+ * Motion tokens: durations and easing curves. The Figma file has none, so
+ * these follow the motion the components were ported with. Authored here,
+ * appended to tokens.css by config.js.
+ */
+
+@layer terria-ds.tokens {
+  :root {
+    --terria-ds-duration-50: 50ms;
+    --terria-ds-duration-100: 100ms;
+    --terria-ds-duration-150: 150ms;
+    --terria-ds-duration-200: 200ms;
+    --terria-ds-duration-250: 250ms;
+    --terria-ds-duration-300: 300ms;
+    --terria-ds-duration-350: 350ms;
+
+    --terria-ds-ease-smooth: ease;
+    --terria-ds-ease-out: cubic-bezier(0, 0, 0.2, 1);
+    --terria-ds-ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+    --terria-ds-ease-out-quad: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+    /* Fast start, long soft stop: for things that slide */
+    --terria-ds-ease-out-fluid: cubic-bezier(0.32, 0.72, 0, 1);
+  }
+}

@@ -59,8 +59,8 @@
     cursor: pointer;
     -webkit-tap-highlight-color: transparent;
     transition:
-      background-color 100ms ease-out,
-      box-shadow 100ms ease-out;
+      background-color var(--terria-ds-duration-100) var(--terria-ds-ease-out),
+      box-shadow var(--terria-ds-duration-100) var(--terria-ds-ease-out);
 
     @media (prefers-reduced-motion: reduce) {
       transition: none;

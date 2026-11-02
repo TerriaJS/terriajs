@@ -39,7 +39,8 @@
     block-size: 100%;
     border-radius: var(--terria-ds-dimensions-radius-rounded-xl);
     background-color: var(--_progress-bar-fill);
-    transition: inline-size 300ms ease-out;
+    transition: inline-size var(--terria-ds-duration-300)
+      var(--terria-ds-ease-out);
 
     @media (prefers-reduced-motion: reduce) {
       transition: none;
@@ -50,7 +51,8 @@
       position: absolute;
       inset-block: 0;
       inline-size: 40%;
-      animation: terria-ds-progress-bar-slide 1.5s ease-in-out infinite;
+      animation: terria-ds-progress-bar-slide 1.5s
+        cubic-bezier(0.65, 0, 0.35, 1) infinite;
 
       @media (prefers-reduced-motion: reduce) {
         inset-inline-start: 30%;

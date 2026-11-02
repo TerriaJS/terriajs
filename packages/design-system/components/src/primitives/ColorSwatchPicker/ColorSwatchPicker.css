@@ -16,7 +16,7 @@
 
     /* How long picking takes to show: the swatch shrinking, the ring and
        the check appearing */
-    --_color-swatch-picker-duration: 200ms;
+    --_color-swatch-picker-duration: var(--terria-ds-duration-200);
 
     display: flex;
     flex-wrap: wrap;
@@ -94,8 +94,8 @@
       opacity: 0;
       scale: var(--_color-swatch-picker-picked);
       transition:
-        opacity var(--_color-swatch-picker-duration) ease-out,
-        scale var(--_color-swatch-picker-duration) ease-out;
+        opacity var(--_color-swatch-picker-duration) var(--terria-ds-ease-out),
+        scale var(--_color-swatch-picker-duration) var(--terria-ds-ease-out);
       pointer-events: none;
     }
 
@@ -115,7 +115,8 @@
     display: flex;
 
     & > [data-tds="color-swatch"] {
-      transition: scale var(--_color-swatch-picker-duration) ease-out;
+      transition: scale var(--_color-swatch-picker-duration)
+        var(--terria-ds-ease-out);
     }
 
     /* Picked, the swatch shrinks, leaving a gap inside the ring */
@@ -137,8 +138,8 @@
     visibility: hidden;
     scale: 0.5;
     transition:
-      opacity var(--_color-swatch-picker-duration) ease-out,
-      scale var(--_color-swatch-picker-duration) ease-out,
+      opacity var(--_color-swatch-picker-duration) var(--terria-ds-ease-out),
+      scale var(--_color-swatch-picker-duration) var(--terria-ds-ease-out),
       visibility var(--_color-swatch-picker-duration);
 
     [data-selected] > * > & {

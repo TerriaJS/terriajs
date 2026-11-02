@@ -12,8 +12,10 @@
      neither finishes first. In, it eases out to a stop; out, it eases in
      and away */
   [data-tds="drawer-backdrop"] {
-    --_drawer-enter: 300ms cubic-bezier(0, 0, 0.2, 1);
-    --_drawer-exit: 200ms cubic-bezier(0.4, 0, 1, 1);
+    --_drawer-enter: var(--terria-ds-duration-250)
+      var(--terria-ds-ease-out-fluid);
+    --_drawer-exit: var(--terria-ds-duration-200)
+      var(--terria-ds-ease-out-fluid);
 
     &[data-entering] {
       animation: terria-ds-modal-fade var(--_drawer-enter);
