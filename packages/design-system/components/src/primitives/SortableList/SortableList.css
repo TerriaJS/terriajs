@@ -57,6 +57,9 @@
     &:has(> [data-focus-visible]) {
       box-shadow: 0 0 0 var(--terria-ds-focus-ring-width)
         var(--terria-ds-focus-ring-halo);
+
+      /* Shadows are dropped in forced-colors mode; this outline shows there instead */
+      outline: var(--terria-ds-focus-ring-width) solid transparent;
     }
   }
 

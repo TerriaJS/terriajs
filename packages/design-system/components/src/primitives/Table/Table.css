@@ -120,6 +120,10 @@
     &[data-focus-visible] {
       border-radius: var(--terria-ds-radius-md);
       box-shadow: var(--_table-focus);
+
+      /* Shadows are dropped in forced-colors mode; this outline shows there instead */
+      outline: var(--terria-ds-focus-ring-width) solid transparent;
+      outline-offset: calc(var(--terria-ds-focus-ring-width) * -1);
     }
 
     [data-tds="table"][data-tds-variant="secondary"] & {
@@ -289,6 +293,10 @@
     &[data-focus-visible] {
       border-radius: var(--terria-ds-radius-md);
       box-shadow: var(--_table-focus);
+
+      /* Shadows are dropped in forced-colors mode; this outline shows there instead */
+      outline: var(--terria-ds-focus-ring-width) solid transparent;
+      outline-offset: calc(var(--terria-ds-focus-ring-width) * -1);
     }
 
     /* Tree rows indent by their level, which React Aria sets on the row */
@@ -296,6 +304,13 @@
       /* stylelint-disable-next-line custom-property-pattern -- The value is defined by react-aria */
       padding-inline-start: calc(1rem * var(--table-row-level, 1));
     }
+  }
+
+  /* Shadows are dropped in forced-colors mode; this outline, round the whole
+     row, shows there instead */
+  [data-tds="table-row"][data-focus-visible] {
+    outline: var(--terria-ds-focus-ring-width) solid transparent;
+    outline-offset: calc(var(--terria-ds-focus-ring-width) * -1);
   }
 
   /* A focused row: one ring around all its cells, each cell drawing its
