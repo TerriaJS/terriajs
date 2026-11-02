@@ -26,13 +26,20 @@
     line-height: var(--terria-ds-line-height-body-lg);
   }
 
+  /* Forced-colors mode turns backgrounds the page's colour, unless they're a
+     system colour, so the track and fill take those there, as React Aria's
+     own do: a border's, and the highlight */
   [data-tds="meter-track"] {
     position: relative;
     grid-column: 1 / -1;
     block-size: var(--_meter-height);
     overflow: hidden;
     border-radius: var(--terria-ds-radius-md);
-    background-color: var(--terria-ds-neutral);
+    background-color: var(--_meter-track, var(--terria-ds-neutral));
+
+    @media (forced-colors: active) {
+      --_meter-track: ButtonBorder;
+    }
   }
 
   [data-tds="meter-fill"] {
@@ -44,6 +51,10 @@
 
     @media (prefers-reduced-motion: reduce) {
       transition: none;
+    }
+
+    @media (forced-colors: active) {
+      --_meter-fill: Highlight;
     }
   }
 

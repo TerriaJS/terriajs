@@ -1,4 +1,7 @@
-import { describe, expect, it } from "vitest";
+// cdp() is typed by the Playwright provider the tests run in
+/// <reference types="@vitest/browser-playwright" />
+import { describe, expect, it, onTestFinished } from "vitest";
+import { cdp } from "vitest/browser";
 import { render } from "vitest-browser-react";
 import { Label } from "../../Field";
 import { Meter, type MeterProps } from "..";
@@ -14,7 +17,31 @@ const storage = (props: Partial<MeterProps> = {}): ReturnType<typeof render> =>
     </Meter>
   );
 
+// Forced-colors mode (Windows High Contrast) replaces background colours with
+// the page's, which would leave nothing to see
+const inForcedColors = async (): Promise<void> => {
+  const session = cdp();
+  await session.send("Emulation.setEmulatedMedia", {
+    features: [{ name: "forced-colors", value: "active" }]
+  });
+  onTestFinished(async () => {
+    await session.send("Emulation.setEmulatedMedia", { features: [] });
+  });
+};
+
+const background = (element: Element | null): string =>
+  element ? getComputedStyle(element).backgroundColor : "";
+
 describe("Meter", () => {
+  it("shows its fill against its track in forced-colors mode", async () => {
+    await inForcedColors();
+    const screen = await storage();
+    const track = screen.container.querySelector('[data-tds="meter-track"]');
+    const fill = screen.container.querySelector('[data-tds="meter-fill"]');
+
+    await expect.poll(() => background(fill)).not.toBe(background(track));
+  });
+
   it("is a meter named by its label, showing its value", async () => {
     const screen = await storage();
     const meter = screen.getByRole("meter", { name: "Storage" });

@@ -26,13 +26,20 @@
     line-height: var(--terria-ds-line-height-body-lg);
   }
 
+  /* Forced-colors mode turns backgrounds the page's colour, unless they're a
+     system colour, so the track and fill take those there, as React Aria's
+     own do: a border's, and the highlight */
   [data-tds="progress-bar-track"] {
     position: relative;
     grid-column: 1 / -1;
     block-size: var(--_progress-bar-height);
     overflow: hidden;
     border-radius: var(--terria-ds-radius-md);
-    background-color: var(--terria-ds-neutral);
+    background-color: var(--_progress-bar-track, var(--terria-ds-neutral));
+
+    @media (forced-colors: active) {
+      --_progress-bar-track: ButtonBorder;
+    }
   }
 
   [data-tds="progress-bar-fill"] {
@@ -44,6 +51,10 @@
 
     @media (prefers-reduced-motion: reduce) {
       transition: none;
+    }
+
+    @media (forced-colors: active) {
+      --_progress-bar-fill: Highlight;
     }
 
     /* Indeterminate: no aria-valuenow, a part of the track slides along it */
