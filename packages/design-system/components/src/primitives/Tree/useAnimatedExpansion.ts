@@ -1,5 +1,5 @@
 import { useLayoutEffect } from "@react-aria/utils";
-import { useRef, useState, type RefObject } from "react";
+import { useEffect, useRef, useState, type RefObject } from "react";
 import { flushSync } from "react-dom";
 import type { Key } from "react-aria-components";
 import { useControlledState } from "react-stately/useControlledState";
@@ -101,10 +101,13 @@ const useAnimatedExpansion = (
   const closingRef = useRef<Animation[]>([]);
   // Rows given aria-expanded="false" while their group collapses
   const announcedRef = useRef<ReadonlySet<Key>>(NONE);
+  // The keys a collapse in progress ends on
+  const pendingRef = useRef<Set<Key> | null>(null);
 
   const change = (next: Set<Key>): void => {
     for (const animation of closingRef.current) animation.cancel();
     closingRef.current = [];
+    pendingRef.current = null;
     setCollapsingKeys(NONE);
 
     const tree = treeRef.current;
@@ -126,10 +129,12 @@ const useAnimatedExpansion = (
 
     const animations = animateRows(rows, "close");
     closingRef.current = animations;
+    pendingRef.current = next;
     setCollapsingKeys(new Set(closed));
     Promise.all(animations.map((animation) => animation.finished)).then(
       () => {
         closingRef.current = [];
+        pendingRef.current = null;
         // Rendered at once, so the rows are gone before their animations
         // end: left to React's schedule, a busy page can draw a frame first,
         // showing them again at full size
@@ -145,6 +150,34 @@ const useAnimatedExpansion = (
       () => undefined
     );
   };
+
+  // A collapsing group reads as collapsed, but stays expanded to react-aria
+  // until its rows have gone, so react-aria would take a key or a press on
+  // the tree meanwhile for one on an expanded group: the chevron or the right
+  // arrow would collapse it again, not open it. The collapse ends at once
+  // instead, before react-aria handles the event
+  useEffect(() => {
+    const tree = treeRef.current;
+    if (!tree) return;
+    const finishCollapse = (): void => {
+      const next = pendingRef.current;
+      if (!next) return;
+      pendingRef.current = null;
+      for (const animation of closingRef.current) animation.cancel();
+      closingRef.current = [];
+      // eslint-disable-next-line @eslint-react/dom-no-flush-sync -- react-aria reads the expanded keys as it handles this same event
+      flushSync(() => {
+        setCollapsingKeys(NONE);
+        setKeys(next);
+      });
+    };
+    tree.addEventListener("keydown", finishCollapse, true);
+    tree.addEventListener("pointerdown", finishCollapse, true);
+    return () => {
+      tree.removeEventListener("keydown", finishCollapse, true);
+      tree.removeEventListener("pointerdown", finishCollapse, true);
+    };
+  }, [setKeys, treeRef]);
 
   useLayoutEffect(() => {
     const tree = treeRef.current;

@@ -125,6 +125,59 @@ describe("Tree", () => {
     expect(indicator.element()).not.toHaveAttribute("data-expanded");
   });
 
+  // A collapsing group already reads as collapsed, so it opens again from
+  // there, before its rows have animated away
+  describe("while a group collapses", () => {
+    const catalog = (): React.ReactElement => (
+      <Tree aria-label="Catalog" defaultExpandedKeys={["boundaries"]}>
+        <Tree.Item id="boundaries" textValue="Boundaries">
+          <Tree.ItemContent>
+            <Tree.Indicator />
+            <Tree.ItemLabel>Boundaries</Tree.ItemLabel>
+          </Tree.ItemContent>
+          <Tree.Item id="suburbs" textValue="Suburbs">
+            <Tree.ItemContent>
+              <Tree.ItemLabel>Suburbs</Tree.ItemLabel>
+            </Tree.ItemContent>
+          </Tree.Item>
+        </Tree.Item>
+      </Tree>
+    );
+
+    it("opens it again from its indicator", async () => {
+      const screen = await render(catalog());
+      const indicator = screen
+        .getByRole("button", { name: "Collapse Boundaries" })
+        .element();
+
+      await userEvent.click(indicator);
+      await userEvent.click(indicator);
+
+      await expect
+        .element(screen.getByRole("row", { name: "Boundaries" }))
+        .toHaveAttribute("aria-expanded", "true");
+      await new Promise((resolve) => setTimeout(resolve, 400));
+      await expect
+        .element(screen.getByRole("row", { name: "Suburbs" }))
+        .toBeVisible();
+    });
+
+    it("opens it again with the right arrow", async () => {
+      const screen = await render(catalog());
+      const group = screen.getByRole("row", { name: "Boundaries" });
+
+      await userEvent.click(group);
+      await userEvent.keyboard("{ArrowLeft}");
+      await userEvent.keyboard("{ArrowRight}");
+
+      await expect.element(group).toHaveAttribute("aria-expanded", "true");
+      await new Promise((resolve) => setTimeout(resolve, 400));
+      await expect
+        .element(screen.getByRole("row", { name: "Suburbs" }))
+        .toBeVisible();
+    });
+  });
+
   it("keeps a leaf's indicator space without an expand button", async () => {
     const screen = await render(
       <Tree aria-label="Catalog">
