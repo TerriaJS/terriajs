@@ -75,6 +75,8 @@ type ToastContextValue = {
   isExpanded?: boolean;
   onToastHeightChange?: (key: string, height: number) => void;
   onToastHeightRemove?: (key: string) => void;
+  // Focus back to where it was before it came into the region
+  restoreFocus?: (preventScroll: boolean) => void;
 };
 
 const ToastContext = createContext<ToastContextValue>({});
@@ -87,16 +89,22 @@ const EMPTY_EXITING_KEYS: ReadonlySet<string> = new Set();
 const NO_TOASTS: readonly QueuedToast<never>[] = [];
 const getEmptyExitingKeys = (): ReadonlySet<string> => EMPTY_EXITING_KEYS;
 const subscribeToNothing = (): (() => void) => () => undefined;
+const blurActiveElement = (): void => {
+  (document.activeElement as HTMLElement | null)?.blur();
+};
 
-// When a focused toast goes: pointer focus leaves the region, so hover
-// collapse and timers stay live; keyboard focus moves to the nearest
-// remaining toast, newer first, as React Aria does
+// When a focused toast goes, as React Aria does: keyboard focus moves to the
+// nearest remaining toast, newer first; with none left, or for the pointer,
+// it goes back to where it was before the region. It can't wait for React
+// Aria to do it: the toast stays for its exit animation, hidden, and focus
+// can't stay inside what's hidden
 const moveFocusFromToast = (
   toastEl: HTMLElement,
-  isKeyboardFocus: boolean
+  isKeyboardFocus: boolean,
+  restoreFocus: (preventScroll: boolean) => void
 ): void => {
   if (!isKeyboardFocus) {
-    (document.activeElement as HTMLElement | null)?.blur();
+    restoreFocus(true);
     return;
   }
 
@@ -125,7 +133,7 @@ const moveFocusFromToast = (
   if (target) {
     target.focus();
   } else {
-    (document.activeElement as HTMLElement | null)?.blur();
+    restoreFocus(false);
   }
 };
 
@@ -160,6 +168,7 @@ const ToastInner = <T extends object = ToastContentValue>(
     onToastHeightChange,
     onToastHeightRemove,
     placement: contextPlacement,
+    restoreFocus = blurActiveElement,
     scaleFactor: contextScaleFactor
   } = useContext(ToastContext);
 
@@ -232,7 +241,7 @@ const ToastInner = <T extends object = ToastContentValue>(
     if (isHidden || isExiting) {
       // Browsers block aria-hidden around focus, so focus moves out first
       if (el.contains(document.activeElement)) {
-        moveFocusFromToast(el, isFocusVisible);
+        moveFocusFromToast(el, isFocusVisible, restoreFocus);
       }
       el.setAttribute("aria-hidden", "true");
 
@@ -250,7 +259,14 @@ const ToastInner = <T extends object = ToastContentValue>(
       el.removeAttribute("aria-hidden");
       el.removeAttribute("inert");
     }
-  }, [isFrontmost, isExpanded, isHidden, isExiting, isFocusVisible]);
+  }, [
+    isFrontmost,
+    isExpanded,
+    isHidden,
+    isExiting,
+    isFocusVisible,
+    restoreFocus
+  ]);
 
   const stackingStyle = useMemo<CSSProperties>(() => {
     const frontToastKey = layoutToasts[0]?.key;
@@ -515,6 +531,17 @@ const ToastProviderInner = <T extends object = ToastContentValue>(
 
   const [isPointerOrFocusWithin, setIsPointerOrFocusWithin] = useState(false);
   const pointerWithinRef = useRef(false);
+  // Where focus was before it came into the region, to go back to
+  const focusOriginRef = useRef<HTMLElement | null>(null);
+  const restoreFocus = useCallback((preventScroll: boolean) => {
+    const origin = focusOriginRef.current;
+    focusOriginRef.current = null;
+    if (origin?.isConnected) {
+      origin.focus({ preventScroll });
+    } else {
+      blurActiveElement();
+    }
+  }, []);
 
   // Expansion listens on the region itself: React Aria gives its children
   // neither the region's hover nor focus within. Touch is ignored, so the
@@ -556,7 +583,13 @@ const ToastProviderInner = <T extends object = ToastContentValue>(
         collapseIfOutside();
       };
 
-      const handleFocusIn = (): void => {
+      const handleFocusIn = (event: FocusEvent): void => {
+        if (
+          event.relatedTarget instanceof HTMLElement &&
+          !node.contains(event.relatedTarget)
+        ) {
+          focusOriginRef.current = event.relatedTarget;
+        }
         setIsPointerOrFocusWithin(true);
       };
 
@@ -584,12 +617,12 @@ const ToastProviderInner = <T extends object = ToastContentValue>(
         collapseIfOutside();
       };
 
-      // Escape closes the expanded stack, letting go of focus so the focus
-      // check doesn't open it again
+      // Escape closes the expanded stack, giving focus back to where it was
+      // so the focus check doesn't open it again
       const handleRegionKeyDown = (event: KeyboardEvent): void => {
         if (event.key !== "Escape") return;
         if (node.contains(document.activeElement)) {
-          (document.activeElement as HTMLElement).blur();
+          restoreFocus(false);
         }
         pointerWithinRef.current = false;
         setIsPointerOrFocusWithin(false);
@@ -651,7 +684,7 @@ const ToastProviderInner = <T extends object = ToastContentValue>(
         forwardRegionRef(null);
       };
     },
-    [refProp]
+    [refProp, restoreFocus]
   );
 
   // Hovering or focusing the stack holds every timer: React Aria's own hover
@@ -759,6 +792,7 @@ const ToastProviderInner = <T extends object = ToastContentValue>(
       onToastHeightChange: handleToastHeightChange,
       onToastHeightRemove: handleToastHeightRemove,
       placement,
+      restoreFocus,
       scaleFactor
     }),
     [
@@ -769,6 +803,7 @@ const ToastProviderInner = <T extends object = ToastContentValue>(
       isExpanded,
       placement,
       resolvedMaxVisibleToasts,
+      restoreFocus,
       scaleFactor,
       toastHeights
     ]

@@ -228,4 +228,48 @@ describe("Toast", () => {
 
     await expect.element(screen.getByRole("region")).toHaveFocus();
   });
+
+  it("gives focus back to where it was when its last toast is closed", async () => {
+    const queue = fresh();
+    const screen = await render(
+      <>
+        <input aria-label="Search" />
+        <Toast.Provider queue={queue} />
+      </>
+    );
+    const search = screen.getByRole("textbox", { name: "Search" });
+
+    queue.add({ title: "Saved" }, { timeout: 0 });
+    await expect.element(screen.getByText("Saved")).toBeVisible();
+    await userEvent.click(search);
+    await userEvent.keyboard("{Alt>}t{/Alt}");
+    const close = screen.getByRole("button", { name: "Close" });
+    while (document.activeElement !== close.element()) {
+      await userEvent.tab();
+    }
+    await userEvent.keyboard("{Enter}");
+
+    await expect.element(screen.getByText("Saved")).not.toBeInTheDocument();
+    await expect.element(search).toHaveFocus();
+  });
+
+  it("gives focus back to where it was on Escape", async () => {
+    const queue = fresh();
+    const screen = await render(
+      <>
+        <input aria-label="Search" />
+        <Toast.Provider queue={queue} />
+      </>
+    );
+    const search = screen.getByRole("textbox", { name: "Search" });
+
+    queue.add({ title: "Saved" }, { timeout: 0 });
+    await expect.element(screen.getByText("Saved")).toBeVisible();
+    await userEvent.click(search);
+    await userEvent.keyboard("{Alt>}t{/Alt}");
+    await expect.element(screen.getByRole("region")).toHaveFocus();
+    await userEvent.keyboard("{Escape}");
+
+    await expect.element(search).toHaveFocus();
+  });
 });
