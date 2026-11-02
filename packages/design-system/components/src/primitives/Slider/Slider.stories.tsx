@@ -22,8 +22,13 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {};
 
+// Each thumb named, so a screen reader tells the ends apart
 export const Range: Story = {
-  args: { label: "Price", defaultValue: [20, 60, 90] }
+  args: {
+    label: "Price",
+    defaultValue: [20, 60, 90],
+    thumbLabels: ["Low", "Middle", "High"]
+  }
 };
 
 export const Disabled: Story = {
@@ -32,7 +37,12 @@ export const Disabled: Story = {
     // axe only knows that for labels, not descriptions or values
     a11y: { config: { rules: [{ id: "color-contrast", enabled: false }] } }
   },
-  args: { label: "Price", defaultValue: [20, 60], isDisabled: true }
+  args: {
+    label: "Price",
+    defaultValue: [20, 60],
+    thumbLabels: ["Minimum", "Maximum"],
+    isDisabled: true
+  }
 };
 
 export const WithoutValue: Story = { args: { showValue: false } };
@@ -49,7 +59,13 @@ export const Percent: Story = {
 
 // As in the design: a tick for each step, lighter under the fill
 export const Ticks: Story = {
-  args: { label: "Price", defaultValue: [20, 60], step: 10, showSteps: true }
+  args: {
+    label: "Price",
+    defaultValue: [20, 60],
+    thumbLabels: ["Minimum", "Maximum"],
+    step: 10,
+    showSteps: true
+  }
 };
 
 // As in the design: values labelled under the track, in the slider's format
@@ -84,6 +100,7 @@ export const WithTooltip: Story = {
   args: {
     label: "Price",
     defaultValue: [20, 60],
+    thumbLabels: ["Minimum", "Maximum"],
     step: 10,
     showSteps: true,
     showTooltip: true,
@@ -122,7 +139,12 @@ export const Extremes: Story = {
     <div style={{ display: "grid", gap: 16 }}>
       <Slider {...args} label="Minimum" defaultValue={0} />
       <Slider {...args} label="Maximum" defaultValue={100} />
-      <Slider {...args} label="Full range" defaultValue={[0, 100]} />
+      <Slider
+        {...args}
+        label="Full range"
+        defaultValue={[0, 100]}
+        thumbLabels={["Minimum", "Maximum"]}
+      />
     </div>
   )
 };

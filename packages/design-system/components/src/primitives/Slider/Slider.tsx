@@ -225,6 +225,11 @@ type SliderProps = Omit<SliderRootProps, "children"> & {
    * its formatted value, or what a function returns for it
    */
   showTooltip?: boolean | SliderTooltipContent;
+  /**
+   * A name for each thumb, in order, read with the slider's label: a range
+   * needs them, so each end is told apart, as "From Year" and "To Year"
+   */
+  thumbLabels?: readonly string[];
 };
 
 // A thumb, with a tooltip when asked: its formatted value, or the content a
@@ -234,16 +239,20 @@ type SliderProps = Omit<SliderRootProps, "children"> & {
 // part still reads the context and fails without it
 const Thumb = ({
   index,
+  label,
   tooltip
 }: {
   index: number;
+  label: string | undefined;
   tooltip: true | SliderTooltipContent | undefined;
 }): React.ReactElement => {
   const ref = useRef<HTMLDivElement>(null);
-  if (tooltip === undefined) return <SliderThumb index={index} />;
+  if (tooltip === undefined) {
+    return <SliderThumb index={index} aria-label={label} />;
+  }
 
   return (
-    <SliderThumb index={index} ref={ref}>
+    <SliderThumb index={index} aria-label={label} ref={ref}>
       {({ isDragging, isHovered, isFocusVisible, state }) => (
         <TooltipTriggerStateContext.Provider
           value={{
@@ -272,6 +281,7 @@ const Slider = ({
   showSteps = false,
   marks,
   showTooltip = false,
+  thumbLabels,
   ...props
 }: SliderProps): React.ReactElement => {
   return (
@@ -288,6 +298,7 @@ const Slider = ({
                 // eslint-disable-next-line @eslint-react/no-array-index-key -- a thumb is its position in the values
                 key={index}
                 index={index}
+                label={thumbLabels?.[index]}
                 tooltip={showTooltip === false ? undefined : showTooltip}
               />
             ))}

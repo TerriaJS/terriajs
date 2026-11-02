@@ -38,6 +38,23 @@ describe("Slider", () => {
       .toHaveTextContent("20 – 80");
   });
 
+  it("names each thumb of a range, with the slider's label", async () => {
+    const screen = await render(
+      <Slider
+        label="Year"
+        defaultValue={[20, 80]}
+        thumbLabels={["From", "To"]}
+      />
+    );
+
+    await expect
+      .element(screen.getByRole("slider", { name: "From Year" }))
+      .toHaveValue("20");
+    await expect
+      .element(screen.getByRole("slider", { name: "To Year" }))
+      .toHaveValue("80");
+  });
+
   it("fills the track between a range's thumbs", async () => {
     const screen = await render(
       <Slider label="Year" defaultValue={[20, 80]} />
