@@ -1,3 +1,4 @@
+import { I18nProvider } from "react-aria-components/I18nProvider";
 import { describe, expect, it, vi } from "vitest";
 import { render } from "vitest-browser-react";
 import { userEvent } from "vitest/browser";
@@ -175,6 +176,32 @@ describe("Slider", () => {
         marks={[30]}
         showValue={false}
       />
+    );
+    const centre = (element: Element | null | undefined): number => {
+      const rect = element?.getBoundingClientRect();
+      return (rect?.left ?? 0) + (rect?.width ?? 0) / 2;
+    };
+    const thumb = screen
+      .getByRole("slider")
+      .element()
+      .closest("[data-tds='slider-thumb']");
+    const mark = screen.getByText("30", { exact: true }).element();
+
+    expect(Math.abs(centre(mark) - centre(thumb))).toBeLessThan(1);
+  });
+
+  // React Aria places thumbs by the locale's direction, so the marks follow
+  // it too, even where the page sets no dir
+  it("keeps a mark under its thumb in a right-to-left locale", async () => {
+    const screen = await render(
+      <I18nProvider locale="he-IL">
+        <Slider
+          label="Opacity"
+          defaultValue={30}
+          marks={[30]}
+          showValue={false}
+        />
+      </I18nProvider>
     );
     const centre = (element: Element | null | undefined): number => {
       const rect = element?.getBoundingClientRect();

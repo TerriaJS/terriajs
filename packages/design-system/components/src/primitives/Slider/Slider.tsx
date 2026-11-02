@@ -12,6 +12,7 @@ import {
   type SliderThumbProps as AriaSliderThumbProps,
   type SliderTrackProps as AriaSliderTrackProps
 } from "react-aria-components/Slider";
+import { useLocale } from "react-aria-components/I18nProvider";
 import { TooltipTriggerStateContext } from "react-aria-components/Tooltip";
 import { Label } from "../Field";
 import { TooltipArrow, TooltipContent } from "../Tooltip";
@@ -21,11 +22,22 @@ import "./Slider.css";
 // Lays out a Label, Slider.Output and Slider.Track
 type SliderRootProps = AriaSliderProps;
 
+// Laid out in the locale's direction: React Aria places the thumbs by it,
+// so the ticks, marks and fill, which follow the element's, agree with them
+// even where the page sets no dir
 const SliderRoot = ({
   orientation = "horizontal",
   ...props
 }: SliderRootProps): React.ReactElement => {
-  return <AriaSlider {...props} orientation={orientation} data-tds="slider" />;
+  const { direction } = useLocale();
+  return (
+    <AriaSlider
+      dir={direction}
+      {...props}
+      orientation={orientation}
+      data-tds="slider"
+    />
+  );
 };
 
 SliderRoot.displayName = "Slider";
