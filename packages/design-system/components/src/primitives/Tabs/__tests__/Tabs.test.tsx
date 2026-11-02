@@ -252,6 +252,36 @@ describe("Tabs scroll arrows", () => {
     await expect.poll(() => list.scrollLeft).toBeLessThan(0);
   });
 
+  it("sit centred across vertical tabs, right-to-left too", async () => {
+    const screen = await render(
+      <div dir="rtl" style={{ blockSize: 160, display: "flex" }}>
+        <Tabs orientation="vertical">
+          <Tabs.List aria-label="Map tools">
+            {MANY.map((name) => (
+              <Tabs.Tab key={name} id={name}>
+                {name}
+                <Tabs.Indicator />
+              </Tabs.Tab>
+            ))}
+          </Tabs.List>
+        </Tabs>
+      </div>
+    );
+    const next = screen.getByRole("button", { name: "Scroll to next tabs" });
+    await expect.element(next).toBeVisible();
+    const centre = (element: Element | null): number => {
+      const rect = element?.getBoundingClientRect();
+      return (rect?.left ?? 0) + (rect?.width ?? 0) / 2;
+    };
+    const container = next
+      .element()
+      .closest('[data-tds="tabs-list-container"]');
+
+    expect(Math.abs(centre(next.element()) - centre(container))).toBeLessThan(
+      1
+    );
+  });
+
   it("aren't tab stops: the arrow keys move between tabs", async () => {
     const screen = await renderMany();
 

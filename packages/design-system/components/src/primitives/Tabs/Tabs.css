@@ -170,9 +170,11 @@
       }
     }
 
+    /* Centred by its margins, the same either way the page reads */
     [data-orientation="vertical"] > [data-tds="tabs-list-container"] > & {
-      inset-inline-start: 50%;
-      translate: -50% 0;
+      inset-inline: 0;
+      inline-size: fit-content;
+      margin-inline: auto;
     }
 
     [data-orientation="horizontal"]
