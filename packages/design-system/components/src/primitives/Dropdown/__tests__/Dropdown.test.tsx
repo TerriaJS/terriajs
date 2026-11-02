@@ -31,6 +31,29 @@ describe("Dropdown", () => {
     await expect.element(screen.getByRole("menu")).not.toBeInTheDocument();
   });
 
+  // JSX splits text with a value in it into several children; they're one
+  // label, not the first of them
+  it("names an item by all its text, values in it too", async () => {
+    const count = 3;
+    const screen = await render(
+      <Dropdown defaultOpen>
+        <Button>Actions</Button>
+        <Dropdown.Popover>
+          <Dropdown.Menu>
+            <Dropdown.Item id="copy">Copy link</Dropdown.Item>
+            <Dropdown.Item id="delete">Delete {count} files</Dropdown.Item>
+          </Dropdown.Menu>
+        </Dropdown.Popover>
+      </Dropdown>
+    );
+    const item = screen.getByRole("menuitem", { name: "Delete 3 files" });
+    await expect.element(item).toBeInTheDocument();
+
+    // Typeahead finds it by the same text
+    await userEvent.keyboard("del");
+    await expect.element(item).toHaveFocus();
+  });
+
   it("describes an item with its description", async () => {
     const screen = await render(
       <Dropdown defaultOpen>

@@ -58,17 +58,43 @@ type DropdownItemProps<T extends object> = AriaMenuItemProps<T> & {
   variant?: ListBoxItemVariant;
 };
 
+const isText = (child: unknown): child is string | number =>
+  typeof child === "string" || typeof child === "number";
+
 // Plain text is the item's label, so the item is named by it alone and not
-// by its shortcut or indicator too
-const labelPlainText = (children: ReactNode): ReactNode =>
-  // eslint-disable-next-line @eslint-react/no-children-map -- Only plain-text children are wrapped; elements, like icons and indicators, pass through untouched
-  Children.map(children, (child) =>
-    typeof child === "string" || typeof child === "number" ? (
-      <Text slot="label">{child}</Text>
-    ) : (
-      child
-    )
-  );
+// by its shortcut or indicator too. A run of text is one label: JSX splits
+// "Delete {count} files" into three children, and React Aria names the item
+// by the first label only
+const labelPlainText = (children: ReactNode): ReactNode[] => {
+  const labelled: ReactNode[] = [];
+  let run: (string | number)[] = [];
+  const endRun = (): void => {
+    if (run.length === 0) return;
+    labelled.push(
+      <Text key={`label-${String(labelled.length)}`} slot="label">
+        {run.join("")}
+      </Text>
+    );
+    run = [];
+  };
+  // eslint-disable-next-line @eslint-react/no-children-to-array -- Only runs of plain text are joined; elements, like icons and indicators, pass through untouched
+  for (const child of Children.toArray(children)) {
+    if (isText(child)) {
+      run.push(child);
+    } else {
+      endRun();
+      labelled.push(child);
+    }
+  }
+  endRun();
+  return labelled;
+};
+
+// The item's text for typeahead, when its children are text alone
+const plainText = (children: unknown): string | undefined => {
+  const parts: unknown[] = Array.isArray(children) ? children : [children];
+  return parts.every(isText) ? parts.join("") : undefined;
+};
 
 // Styled as a ListBox item, so a menu and a list look alike
 const DropdownItem = <T extends object>({
@@ -81,9 +107,7 @@ const DropdownItem = <T extends object>({
     <AriaMenuItem
       // The children are wrapped below, so react-aria can't read plain text
       // children as the item's text for typeahead
-      textValue={
-        textValue ?? (typeof children === "string" ? children : undefined)
-      }
+      textValue={textValue ?? plainText(children)}
       {...props}
       data-tds="list-box-item"
       data-tds-variant={variant}
