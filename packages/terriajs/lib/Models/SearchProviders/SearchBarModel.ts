@@ -1,46 +1,73 @@
 import { keyFromSelector } from "i18next";
-import {
-  action,
-  computed,
-  isObservableArray,
-  makeObservable,
-  observable
-} from "mobx";
+import { action, computed, makeObservable, observable } from "mobx";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import RuntimeError from "terriajs-cesium/Source/Core/RuntimeError";
-import { JsonObject } from "../../Core/Json";
+import * as z from "zod";
 import Result from "../../Core/Result";
 import TerriaError from "../../Core/TerriaError";
 import LocationSearchProviderMixin from "../../ModelMixins/SearchProviders/LocationSearchProviderMixin";
-import { SearchBarTraits } from "../../Traits/SearchProviders/SearchBarTraits";
 import SearchProviderTraits from "../../Traits/SearchProviders/SearchProviderTraits";
 import CommonStrata from "../Definition/CommonStrata";
-import CreateModel from "../Definition/CreateModel";
 import { BaseModel } from "../Definition/Model";
 import ModelPropertiesFromTraits from "../Definition/ModelPropertiesFromTraits";
-import updateModelFromJson from "../Definition/updateModelFromJson";
 import Terria from "../Terria";
 import SearchProviderFactory from "./SearchProviderFactory";
 import upsertSearchProviderFromJson from "./upsertSearchProviderFromJson";
 
-export class SearchBarModel extends CreateModel(SearchBarTraits) {
+// Validation only — no `.default()` calls. Defaults live in
+// `DEFAULT_SEARCH_BAR_CONFIG` and are loaded into the `defaults` stratum via
+// `CONFIG_DEFAULTS`, so a partial write to a higher stratum stores only the
+// fields it sets and the rest resolve from the defaults stratum on read.
+export const SearchBarConfigSchema = z.strictObject({
+  placeholder: z.string().meta({
+    description:
+      "Input text field placeholder shown when no input has been given yet. The string is translateable."
+  }),
+  recommendedListLength: z
+    .number()
+    .meta({ description: "Maximum amount of entries in the suggestion list." }),
+  flightDurationSeconds: z.number().meta({
+    description:
+      "The duration of the camera flight to an entered location, in seconds."
+  }),
+  minCharacters: z.number().meta({
+    description: "Minimum number of characters required for search to start"
+  }),
+  showSearchInCatalog: z.boolean().meta({
+    description: "Whether to show 'Search In Catalog' in search results"
+  }),
+  boundingBoxLimit: z
+    .object({
+      west: z.number(),
+      south: z.number(),
+      east: z.number(),
+      north: z.number()
+    })
+    .optional()
+    .meta({
+      description:
+        "Bounding box limits for the search results {west, south, east, north}"
+    })
+});
+
+export const DEFAULT_SEARCH_BAR_CONFIG: z.output<typeof SearchBarConfigSchema> =
+  {
+    placeholder: "translate#search.placeholder",
+    recommendedListLength: 5,
+    flightDurationSeconds: 1.5,
+    minCharacters: 3,
+    showSearchInCatalog: true
+  };
+
+export class SearchBarModel {
   private locationSearchProviders = observable.map<string, BaseModel>();
 
   constructor(readonly terria: Terria) {
-    super("search-bar-model", terria);
-
     makeObservable(this);
   }
 
-  updateModelConfig(config?: ModelPropertiesFromTraits<SearchBarTraits>) {
-    if (config) {
-      updateModelFromJson(
-        this,
-        CommonStrata.definition,
-        config as never as JsonObject
-      );
-    }
-    return this;
+  get config(): Readonly<z.output<typeof SearchBarConfigSchema>> {
+    return this.terria.configParameters.searchBarConfig;
   }
 
   initializeSearchProviders(
@@ -48,7 +75,7 @@ export class SearchBarModel extends CreateModel(SearchBarTraits) {
   ) {
     const errors: TerriaError[] = [];
 
-    if (!isObservableArray(searchProviders)) {
+    if (!Array.isArray(searchProviders)) {
       errors.push(
         new TerriaError({
           sender: SearchProviderFactory,

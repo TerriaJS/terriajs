@@ -1,6 +1,7 @@
 import { screen } from "@testing-library/dom";
 import { runInAction } from "mobx";
 import Terria from "../../../lib/Models/Terria";
+import { ConfigStrata } from "../../../lib/Models/Config/ConfigStrata";
 import ViewState from "../../../lib/ReactViewModels/ViewState";
 import StoryBuilder from "../../../lib/ReactViews/Story/StoryBuilder";
 import { renderWithContexts } from "../withContext";
@@ -38,7 +39,11 @@ describe("StoryBuilder", function () {
 
   it("does not show save instructions when showStorySaveInstructions is false", function () {
     runInAction(() => {
-      terria.configParameters.showStorySaveInstructions = false;
+      terria.configParameters.setValue(
+        ConfigStrata.definition,
+        "showStorySaveInstructions",
+        false
+      );
     });
     renderWithContexts(<StoryBuilder />, viewState);
     expect(
@@ -48,7 +53,11 @@ describe("StoryBuilder", function () {
 
   it("shows save instructions when showStorySaveInstructions is true", function () {
     runInAction(() => {
-      terria.configParameters.showStorySaveInstructions = true;
+      terria.configParameters.setValue(
+        ConfigStrata.definition,
+        "showStorySaveInstructions",
+        true
+      );
     });
     renderWithContexts(<StoryBuilder />, viewState);
     expect(screen.getByText("story.saveInstructions")).toBeInTheDocument();

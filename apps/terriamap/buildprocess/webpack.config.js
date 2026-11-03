@@ -33,7 +33,7 @@ module.exports = function ({ devMode, baseHref = "/" }) {
         {
           test: /\.(ts|js)x?$/,
           include: [
-            path.resolve(__dirname, "..", "index.js"),
+            path.resolve(__dirname, "..", "index.ts"),
             path.resolve(__dirname, "..", "entry.js"),
             path.resolve(__dirname, "..", "plugins.ts"),
             path.resolve(__dirname, "..", "lib")

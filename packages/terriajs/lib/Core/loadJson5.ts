@@ -9,10 +9,10 @@ const defaultHeaders = {
 /*
  * A modified version of Cesium's loadJson function, supporting the more flexible JSON5 specification.
  */
-export default function loadJson5(
+export default function loadJson5<TValue = JsonValue>(
   urlOrResource: string | Resource,
   headers?: { [key: string]: string }
-): Promise<JsonValue> {
+): Promise<TValue> {
   let resource: Resource;
   if (urlOrResource instanceof Resource) {
     resource = urlOrResource;

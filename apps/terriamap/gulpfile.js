@@ -186,7 +186,7 @@ gulp.task("lint", function (done) {
   runExternalModule(eslintExecutable, [
     "--max-warnings",
     "0",
-    "index.js",
+    "index.ts",
     "lib"
   ]);
   done();

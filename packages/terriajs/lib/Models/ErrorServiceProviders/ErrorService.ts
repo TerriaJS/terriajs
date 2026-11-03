@@ -1,5 +1,5 @@
 import TerriaError from "../../Core/TerriaError";
-import { ConfigParameters } from "../Terria";
+import { ConfigParameters } from "../Config/TerriaConfig";
 export interface ErrorServiceOptions {
   provider?: string;
   configuration: any;

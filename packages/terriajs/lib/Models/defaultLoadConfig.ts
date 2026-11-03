@@ -1,9 +1,10 @@
 import { keyFromSelector } from "i18next";
 import queryToObject from "terriajs-cesium/Source/Core/queryToObject";
 import URI from "urijs";
-import { JsonObject, isJsonObject } from "../Core/Json";
+import * as z from "zod";
 import TerriaError from "../Core/TerriaError";
 import loadJson5 from "../Core/loadJson5";
+import { ConfigFileSchema, LoadConfigResponse } from "./loadConfig";
 
 const IS_DEVELOPMENT = process.env.NODE_ENV === "development";
 
@@ -16,7 +17,7 @@ const IS_DEVELOPMENT = process.env.NODE_ENV === "development";
 export const defaultLoadConfig = async (
   configUrl: string,
   configUrlHeaders?: { [key: string]: string }
-): Promise<{ config: JsonObject; baseUri: URI; configUrl: string }> => {
+): Promise<LoadConfigResponse> => {
   const hashProperties =
     typeof window !== "undefined"
       ? queryToObject(new URI(window.location).fragment())
@@ -30,19 +31,26 @@ export const defaultLoadConfig = async (
 
   const baseUri = new URI(configUrl).filename("");
 
-  const config = await loadJson5(configUrl, configUrlHeaders);
-  if (!isJsonObject(config, false)) {
+  const raw = await loadJson5(configUrl, configUrlHeaders);
+
+  const result = ConfigFileSchema.partial().safeParse(raw);
+  if (!result.success) {
     throw new TerriaError({
       title: {
         key: keyFromSelector(($) => $.models.terria.loadConfigErrorTitle)
       },
-      message: `Expected the config at ${configUrl} to be a JSON object`
+      message: z.prettifyError(result.error)
     });
   }
 
+  const config = result.data;
+
   return {
-    config,
-    baseUri,
-    configUrl
+    config: {
+      parameters: config.parameters ?? {},
+      initializationUrls: config.initializationUrls,
+      v7initializationUrls: config.v7initializationUrls
+    },
+    baseUri
   };
 };

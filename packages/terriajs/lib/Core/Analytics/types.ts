@@ -1,11 +1,9 @@
-export interface Analytics {
-  start: (
-    configParameters: Partial<{
-      enableConsoleAnalytics: boolean;
-      googleAnalyticsKey: any;
-      googleAnalyticsOptions: any;
-    }>
-  ) => void;
+import { ConfigParameters } from "../../Models/Config/TerriaConfig";
+
+export interface Analytics<
+  TConfigParams extends ConfigParameters = ConfigParameters
+> {
+  start: (configParameters: TConfigParams) => void;
   logEvent: (
     category: string,
     action: string,

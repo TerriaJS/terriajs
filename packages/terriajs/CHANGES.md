@@ -62,6 +62,13 @@
 - A failed share link now also raises an error notification, not just an inline message.
 - **Breaking:** `updateApplicationOnMessageFromParentWindow` now validates the `window.postMessage` sender's `event.origin` against an allowlist instead of trusting `window.parent`/`window.opener`. The application's own origin is always allowed; cross-origin pages that embed or open the app must be listed in the new `parentMessageAllowedOrigins` config parameter (empty by default) to send start data. The `event.data.allowOrigin` mechanism has been removed, and the `"ready"` message is now posted only to allowed origins rather than `"*"`. This prevents any page that frames or opens TerriaJS from injecting start data.
 
+- **Breaking:** Replace the mutable `Terria.configParameters` object with a Zod-validated, stratified configuration store.
+  - Configuration is resolved by priority from the `defaults`, `underride`, `definition`, `persistedStorage`, `override`, `url`, and `user` strata. Use `configParameters.update(stratum, values)` or `configParameters.setValue(stratum, key, value)` instead of assigning properties directly. Both accept partial values at every depth — a nested object stores only the fields it sets, and the rest resolve from the strata below on read (matching the trait/catalog layer's `objectTrait`).
+  - `config.json` parameters are validated before being applied. Every value that validates is applied; each unknown or invalid value is rejected individually - a bad leaf inside a nested object does not discard its siblings or the rest of the file - and the validation error is shown to the user.
+  - Applications can extend `ConfigParametersSchema` with application-specific options and pass a config created with `createTerriaConfig(extendedSchema)` through `TerriaOptions.config`.
+  - Built-in defaults now live in `CONFIG_DEFAULTS`, separately from the validation schema, so partial higher-priority strata do not inject defaults.
+  - Replace the trait-based `SearchBarTraits` configuration with `SearchBarConfigSchema`, and validate language configuration with `LanguageConfigurationSchema`.
+
 - Harden the custom markdown/HTML sanitizer: replaced the blanket `ALLOW_UNKNOWN_PROTOCOLS` DOMPurify option (which preserved OS/app-handler schemes such as `vscode:`, `ms-its:` and `slack:` on links and images) with a scoped `uponSanitizeAttribute` hook. The hook keeps custom components' free-text attributes verbatim (so values may contain `:`, e.g. a chart's `column-titles`) while scheme-validating their URL attributes per URL, closing a gap where a dangerous scheme could hide in a comma-separated `sources`/`downloads` list.
 - Upgrade terriajs-server to 5.0.0-alpha.4
 - Document security best practices for production deployment of terriajs

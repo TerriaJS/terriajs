@@ -6,6 +6,7 @@ import CustomComponent from "../../../lib/ReactViews/Custom/CustomComponent";
 import parseCustomMarkdownToReact from "../../../lib/ReactViews/Custom/parseCustomMarkdownToReact";
 import registerCustomComponentTypes from "../../../lib/ReactViews/Custom/registerCustomComponentTypes";
 import { renderWithContexts } from "../withContext";
+import { ConfigStrata } from "../../../lib/Models/Config/ConfigStrata";
 
 const supportEmail = "support@example.com";
 
@@ -16,7 +17,11 @@ describe("FeedbackLinkCustomComponent", function () {
     viewState = new ViewState({
       terria: new Terria()
     });
-    viewState.terria.updateParameters({ supportEmail });
+    viewState.terria.configParameters.setValue(
+      ConfigStrata.override,
+      "supportEmail",
+      supportEmail
+    );
 
     registerCustomComponentTypes(viewState.terria);
   });
@@ -71,7 +76,11 @@ describe("FeedbackLinkCustomComponent", function () {
 
   describe("when feedbackUrl is configured", function () {
     beforeEach(function () {
-      viewState.terria.updateParameters({ feedbackUrl: "feedback" });
+      viewState.terria.configParameters.setValue(
+        ConfigStrata.override,
+        "feedbackUrl",
+        "feedback"
+      );
     });
 
     it("shows the feedback message instead of the email address", function () {

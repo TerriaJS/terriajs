@@ -1,9 +1,13 @@
-export interface RelatedMap {
-  imageUrl: string;
-  url: string;
-  title: string;
-  description: string;
-}
+import * as z from "zod";
+
+export const RelatedMapSchema = z.strictObject({
+  imageUrl: z.string(),
+  url: z.string(),
+  title: z.string(),
+  description: z.string()
+});
+
+export type RelatedMap = z.infer<typeof RelatedMapSchema>;
 
 export const defaultRelatedMaps: RelatedMap[] = [
   {

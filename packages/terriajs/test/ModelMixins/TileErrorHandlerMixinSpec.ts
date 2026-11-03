@@ -16,6 +16,7 @@ import MappableTraits from "../../lib/Traits/TraitsClasses/MappableTraits";
 import mixTraits from "../../lib/Traits/mixTraits";
 import ImageryProviderTraits from "../../lib/Traits/TraitsClasses/ImageryProviderTraits";
 import UrlTraits from "../../lib/Traits/TraitsClasses/UrlTraits";
+import { ConfigStrata } from "../../lib/Models/Config/ConfigStrata";
 
 class TestCatalogItem extends TileErrorHandlerMixin(
   MappableMixin(
@@ -402,9 +403,11 @@ describe("TileErrorHandlerMixin", function () {
       });
 
       it("disables the item for 4xx failures when keepLayersOnMissingTiles is false", async function () {
-        item.terria.configParameters.nextExperimentalFeatures = {
-          keepLayersOnMissingTiles: false
-        };
+        item.terria.configParameters.update(ConfigStrata.definition, {
+          nextExperimentalFeatures: {
+            keepLayersOnMissingTiles: false
+          }
+        });
         try {
           await onTileLoadError(item, newError(403));
         } catch {}

@@ -28,7 +28,9 @@ function SearchProviderMixin<
 
     @override
     get minCharacters() {
-      return super.minCharacters ?? this.terria.searchBarModel.minCharacters;
+      return (
+        super.minCharacters ?? this.terria.searchBarModel.config.minCharacters
+      );
     }
 
     @observable

@@ -21,7 +21,7 @@ class TerriaStore {
   async init() {
     await import("terriajs/lib/Core/prerequisites");
 
-    const { terria, viewState } = await import("../../index.js").then(
+    const { terria, viewState } = await import("../../index").then(
       (module) => module.default
     );
 

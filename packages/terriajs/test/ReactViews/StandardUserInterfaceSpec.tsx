@@ -5,6 +5,7 @@ import Terria from "../../lib/Models/Terria";
 import ViewState from "../../lib/ReactViewModels/ViewState";
 import { StandardUserInterface } from "../../lib/ReactViews/StandardUserInterface/StandardUserInterface";
 import { StoryData } from "../../lib/Models/InitSource";
+import { ConfigStrata } from "../../lib/Models/Config/ConfigStrata";
 
 describe("StandardUserInterface", function () {
   let terria: Terria;
@@ -121,9 +122,11 @@ describe("StandardUserInterface", function () {
     });
 
     it("starts the story without prompting when `storyAutoStart` is true", function () {
-      runInAction(() => {
-        terria.updateParameters({ storyAutoStart: true });
-      });
+      terria.configParameters.setValue(
+        ConfigStrata.user,
+        "storyAutoStart",
+        true
+      );
 
       render(
         <StandardUserInterface
@@ -138,9 +141,11 @@ describe("StandardUserInterface", function () {
     });
 
     it("starts the story when a share asks it to", function () {
-      runInAction(() => {
-        terria.updateParameters({ storyAutoStart: false });
-      });
+      terria.configParameters.setValue(
+        ConfigStrata.user,
+        "storyAutoStart",
+        false
+      );
 
       return terria
         .applyInitData({ initData: { settings: { storyAutoStart: true } } })

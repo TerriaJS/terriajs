@@ -42,6 +42,7 @@ import MapInteractionMode, {
 } from "../../lib/Models/MapInteractionMode";
 import Terria from "../../lib/Models/Terria";
 import CatalogMemberTraits from "../../lib/Traits/TraitsClasses/CatalogMemberTraits";
+import { ConfigStrata } from "../../lib/Models/Config/ConfigStrata";
 import MappableTraits, {
   RectangleTraits
 } from "../../lib/Traits/TraitsClasses/MappableTraits";
@@ -377,9 +378,11 @@ describeIfSupported("Cesium Model", function () {
 
       describe("with the imageryLayerGuard experimental feature enabled", function () {
         beforeEach(function () {
-          terria.configParameters.nextExperimentalFeatures = {
-            imageryLayerGuard: true
-          };
+          terria.configParameters.update(ConfigStrata.definition, {
+            nextExperimentalFeatures: {
+              imageryLayerGuard: true
+            }
+          });
         });
 
         it("must not destroy draped imagery layers when the tileset is removed from the viewer", async function () {
@@ -428,10 +431,11 @@ describeIfSupported("Cesium Model", function () {
         cesium = new Cesium(terria.mainViewer, container);
         scene = cesium.scene;
         cesium.terriaViewer.viewerOptions.useTerrain = true;
-        terria.configParameters.cesiumTerrainAssetId = 123;
-        terria.configParameters.cesiumTerrainUrl =
-          "https://cesium-terrain.example.com/";
-        terria.configParameters.useCesiumIonTerrain = true;
+        terria.configParameters.update(ConfigStrata.definition, {
+          cesiumTerrainAssetId: 123,
+          cesiumTerrainUrl: "https://cesium-terrain.example.com/",
+          useCesiumIonTerrain: true
+        });
 
         workbenchTerrainItem = upsertModelFromJson(
           CatalogMemberFactory,
@@ -502,7 +506,11 @@ describeIfSupported("Cesium Model", function () {
       runInAction(() => {
         cesium.terriaViewer.viewerOptions.useTerrain = true;
         terria.workbench.removeAll();
-        terria.configParameters.cesiumTerrainAssetId = undefined;
+        terria.configParameters.setValue(
+          ConfigStrata.definition,
+          "cesiumTerrainAssetId",
+          undefined
+        );
       });
 
       await terrainLoadPromise(cesium);
@@ -519,8 +527,16 @@ describeIfSupported("Cesium Model", function () {
       runInAction(() => {
         cesium.terriaViewer.viewerOptions.useTerrain = true;
         terria.workbench.removeAll();
-        terria.configParameters.cesiumTerrainAssetId = undefined;
-        terria.configParameters.cesiumTerrainUrl = undefined;
+        terria.configParameters.setValue(
+          ConfigStrata.definition,
+          "cesiumTerrainAssetId",
+          undefined
+        );
+        terria.configParameters.setValue(
+          ConfigStrata.definition,
+          "cesiumTerrainUrl",
+          undefined
+        );
       });
 
       await terrainLoadPromise(cesium);
@@ -533,9 +549,21 @@ describeIfSupported("Cesium Model", function () {
       runInAction(() => {
         cesium.terriaViewer.viewerOptions.useTerrain = true;
         terria.workbench.removeAll();
-        terria.configParameters.cesiumTerrainAssetId = undefined;
-        terria.configParameters.cesiumTerrainUrl = undefined;
-        terria.configParameters.useCesiumIonTerrain = false;
+        terria.configParameters.setValue(
+          ConfigStrata.definition,
+          "cesiumTerrainAssetId",
+          undefined
+        );
+        terria.configParameters.setValue(
+          ConfigStrata.definition,
+          "cesiumTerrainUrl",
+          undefined
+        );
+        terria.configParameters.setValue(
+          ConfigStrata.definition,
+          "useCesiumIonTerrain",
+          false
+        );
       });
 
       await terrainLoadPromise(cesium);
@@ -573,7 +601,11 @@ describeIfSupported("Cesium Model", function () {
     it("should throw a warning when cesiumIonAccessToken is invalid", async function () {
       runInAction(() => {
         // Set an invalid token for the test
-        terria2.configParameters.cesiumIonAccessToken = "expired_token";
+        terria2.configParameters.setValue(
+          ConfigStrata.definition,
+          "cesiumIonAccessToken",
+          "expired_token"
+        );
       });
       // Instantiate Cesium object with the invalid token
       cesium2 = new Cesium(terriaViewer2, container2);
@@ -595,7 +627,11 @@ describeIfSupported("Cesium Model", function () {
       expect(terriaViewer2.viewerOptions.useTerrain).toBe(true, "1");
       runInAction(() => {
         // Set an invalid token for the test
-        terria2.configParameters.cesiumIonAccessToken = "expired_token";
+        terria2.configParameters.setValue(
+          ConfigStrata.definition,
+          "cesiumIonAccessToken",
+          "expired_token"
+        );
       });
 
       // Instantiate Cesium object with the invalid token
@@ -612,9 +648,17 @@ describeIfSupported("Cesium Model", function () {
     it("should throw a warning when `cesiumIonAccessToken` is invalid and `cesiumTerrainAssetId` is present", async function () {
       runInAction(() => {
         // Set an invalid token for the test
-        terria2.configParameters.cesiumIonAccessToken = "expired_token";
+        terria2.configParameters.setValue(
+          ConfigStrata.definition,
+          "cesiumIonAccessToken",
+          "expired_token"
+        );
         // Set a valid asset id
-        terria2.configParameters.cesiumTerrainAssetId = 480278;
+        terria2.configParameters.setValue(
+          ConfigStrata.definition,
+          "cesiumTerrainAssetId",
+          480278
+        );
       });
       // Instantiate Cesium object with the invalid token and valid asset id
       cesium2 = new Cesium(terriaViewer2, container2);
@@ -641,8 +685,11 @@ describeIfSupported("Cesium Model", function () {
       );
 
       runInAction(() => {
-        terria2.configParameters.cesiumTerrainUrl =
-          "https://storage.googleapis.com/vic-datasets-public/xxxxxxx-xxxx-xxxx-xxxx-xxxxxxx/v1"; // An invalid url
+        terria2.configParameters.setValue(
+          ConfigStrata.definition,
+          "cesiumTerrainUrl",
+          "https://storage.googleapis.com/vic-datasets-public/xxxxxxx-xxxx-xxxx-xxxx-xxxxxxx/v1" // An invalid url
+        );
       });
       // Instantiate Cesium object with the invalid terrain url
       cesium2 = new Cesium(terriaViewer2, container2);
