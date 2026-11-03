@@ -30,7 +30,10 @@ const withoutHover = (): (() => void) => {
   const rules: string[] = [];
   const collect = (list: CSSRuleList): void => {
     for (const rule of list) {
-      if (rule instanceof CSSMediaRule && rule.conditionText === "(hover: none)")
+      if (
+        rule instanceof CSSMediaRule &&
+        rule.conditionText === "(hover: none)"
+      )
         rules.push(...Array.from(rule.cssRules, (inner) => inner.cssText));
       else if (rule instanceof CSSGroupingRule) collect(rule.cssRules);
     }
