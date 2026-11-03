@@ -143,7 +143,7 @@ const DrawerDialog = forwardRef<HTMLElement, DrawerDialogProps>(
     const { isDismissable = true, placement } = useContext(DrawerContext);
     const { dialogRef, dragHandlers } = useDrawerDrag(placement, isDismissable);
     const mergedRef = useMemo(
-      () => mergeRefs(dialogRef, ref),
+      () => mergeRefs<HTMLElement>(dialogRef, ref),
       [dialogRef, ref]
     );
 

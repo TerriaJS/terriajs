@@ -1,10 +1,4 @@
-import {
-  useCallback,
-  useContext,
-  useRef,
-  type PointerEvent,
-  type RefObject
-} from "react";
+import { useCallback, useContext, useRef, type PointerEvent } from "react";
 import { OverlayTriggerStateContext } from "react-aria-components/Dialog";
 
 type DrawerPlacement = "top" | "bottom" | "left" | "right";
@@ -25,7 +19,9 @@ const startsDrag = (target: HTMLElement, dialog: HTMLElement): boolean =>
   );
 
 type DrawerDrag = {
-  dialogRef: RefObject<HTMLDivElement | null>;
+  // React 18's RefObject<T> already allows null; adding it again won't fit
+  // an element's ref there
+  dialogRef: { readonly current: HTMLDivElement | null };
   dragHandlers: {
     onPointerDown?: (event: PointerEvent) => void;
     onPointerMove?: (event: PointerEvent) => void;

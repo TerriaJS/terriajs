@@ -10,8 +10,7 @@ import {
   useRef,
   useState,
   type ComponentPropsWithoutRef,
-  type ReactNode,
-  type RefObject
+  type ReactNode
 } from "react";
 import type { DOMRenderProps } from "react-aria-components";
 import {
@@ -29,7 +28,8 @@ import "../Field/Field.css";
 import "./DatePicker.css";
 
 type DatePickerContextValue = {
-  triggerRef: RefObject<HTMLButtonElement | null>;
+  // Assigned to by the trigger: React 18's RefObject is read-only
+  triggerRef: { current: HTMLButtonElement | null };
 };
 
 const DatePickerContext = createContext<DatePickerContextValue>({
@@ -108,7 +108,7 @@ const DatePickerTrigger = forwardRef<HTMLButtonElement, DatePickerTriggerProps>(
       [triggerRef]
     );
     const mergedRef = useMemo(
-      () => mergeRefs(contextRef, ref),
+      () => mergeRefs<HTMLButtonElement>(contextRef, ref),
       [contextRef, ref]
     );
 

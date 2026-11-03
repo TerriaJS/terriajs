@@ -8,8 +8,7 @@ import {
   useMemo,
   useRef,
   type ComponentPropsWithoutRef,
-  type MouseEvent,
-  type RefObject
+  type MouseEvent
 } from "react";
 import {
   Autocomplete as AriaAutocomplete,
@@ -39,8 +38,10 @@ import { useLocalizedStrings } from "../../i18n/useLocalizedStrings";
 type AutocompleteContextValue = {
   onClear?: () => void;
   isDisabled?: boolean;
-  triggerRef: RefObject<HTMLDivElement | null>;
-  clearButtonRef: RefObject<HTMLButtonElement | null>;
+  // Assigned to by the trigger and clear button: React 18's RefObject is
+  // read-only
+  triggerRef: { current: HTMLDivElement | null };
+  clearButtonRef: { current: HTMLButtonElement | null };
 };
 
 const AutocompleteContext = createContext<AutocompleteContextValue>({
@@ -114,7 +115,7 @@ const AutocompleteTrigger = forwardRef<
     [triggerRef]
   );
   const mergedRef = useMemo(
-    () => mergeRefs(contextRef, ref),
+    () => mergeRefs<HTMLDivElement>(contextRef, ref),
     [contextRef, ref]
   );
 
@@ -189,7 +190,7 @@ const AutocompleteClearButton = forwardRef<
     [clearButtonRef]
   );
   const mergedRef = useMemo(
-    () => mergeRefs(contextRef, ref),
+    () => mergeRefs<HTMLButtonElement>(contextRef, ref),
     [contextRef, ref]
   );
   const isEmpty = (state?.selectionManager.selectedKeys.size ?? 0) === 0;

@@ -196,7 +196,10 @@ const ToastInner = <T extends object = ToastContentValue>(
   const isFrontmost = index <= 0;
   const isHidden = !isExiting && index >= maxVisibleToasts;
   const toastRef = useRef<HTMLDivElement | null>(null);
-  const mergedRef = useMemo(() => mergeRefs(toastRef, ref), [ref]);
+  const mergedRef = useMemo(
+    () => mergeRefs<HTMLDivElement>(toastRef, ref),
+    [ref]
+  );
   const { height: toastHeight } = useMeasuredHeight(toastRef);
   const { isFocusVisible } = useFocusVisible();
   const [isEntering, setIsEntering] = useState(true);
