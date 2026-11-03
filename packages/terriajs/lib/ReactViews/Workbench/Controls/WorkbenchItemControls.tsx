@@ -71,9 +71,15 @@ const WorkbenchItemControls: FC<WorkbenchItemControlsProps> = observer(
       error.log();
     }
 
+    // The menu removes and exports layers. An application that embeds the map
+    // inside a flow of its own may not want either done from the workbench,
+    // so it can hide the menu the same way it hides any other map control.
+    const viewingControlsHidden =
+      viewState.terria.elements.get("workbench-item-menu")?.visible === false;
+
     return (
       <>
-        {disableViewingControlsMenu ? null : (
+        {disableViewingControlsMenu || viewingControlsHidden ? null : (
           <ViewingControls
             item={item}
             viewState={viewState}
