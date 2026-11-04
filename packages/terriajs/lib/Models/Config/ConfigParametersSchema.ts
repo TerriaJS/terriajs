@@ -30,7 +30,14 @@ const NextExperimentalFeaturesSchema = z.object({
    * - the bare globe is a muted ocean colour instead of blue
    * Applications can also use it to show their UI before restoring app state.
    */
-  progressiveLoading: z.boolean()
+  progressiveLoading: z.boolean(),
+
+  /**
+   * Load Leaflet (2D) imagery tiles through Cesium Resource instead of `img`
+   * tags, so request headers (e.g. authentication) apply in 2D as they do in
+   * 3D. Requires tile servers to support CORS. Defaults to false.
+   */
+  loadLeafletTilesWithResource: z.boolean()
 });
 
 /**
