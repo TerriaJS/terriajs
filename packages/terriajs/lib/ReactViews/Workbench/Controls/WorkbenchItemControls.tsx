@@ -74,9 +74,6 @@ const WorkbenchItemControls: FC<WorkbenchItemControlsProps> = observer(
     return (
       <>
         {disableViewingControlsMenu ? null : (
-          // The menu removes and exports layers. An application embedding the
-          // map in a flow of its own may not want either done from the
-          // workbench, so the menu hides like any other map control.
           <ViewingControls
             item={item}
             viewState={viewState}
