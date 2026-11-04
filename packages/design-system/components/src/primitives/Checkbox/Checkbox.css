@@ -139,13 +139,11 @@
   [data-tds="checkbox-checkmark"] {
     stroke-width: 2.5px;
 
-    /* Draws the checkmark in when ticked */
-    [data-selected] & {
-      transition: stroke-dashoffset var(--terria-ds-duration-150) linear;
+    /* Draws the checkmark in when ticked and out when unticked */
+    transition: stroke-dashoffset var(--terria-ds-duration-150) linear;
 
-      @media (prefers-reduced-motion: reduce) {
-        transition: none;
-      }
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
     }
   }
 }

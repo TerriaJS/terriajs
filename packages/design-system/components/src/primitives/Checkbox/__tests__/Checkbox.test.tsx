@@ -40,6 +40,17 @@ describe("CheckboxPrimitive", () => {
     await expect.element(checkbox).not.toBeChecked();
   });
 
+  it("animates the checkmark out when unchecked", async () => {
+    const screen = await renderCheckbox({ defaultSelected: true });
+    const checkmark = screen.container.querySelector(
+      '[data-tds="checkbox-checkmark"]'
+    );
+
+    await screen.getByText("Show suburbs").click();
+
+    expect(checkmark?.getAnimations()).not.toHaveLength(0);
+  });
+
   it("is mixed while indeterminate", async () => {
     const screen = await renderCheckbox({ isIndeterminate: true });
 
