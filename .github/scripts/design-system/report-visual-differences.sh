@@ -65,8 +65,10 @@ store() {
 state=$(gh api "repos/$REPO/pulls/$PR" --jq .state)
 [ "$state" = "open" ] || exit 0
 
+# The bot's own only: on a public repo anyone can comment, and would have their
+# comment taken for the report, edited into it and repeated by every re-run
 existing=$(gh api "repos/$REPO/issues/$PR/comments" --paginate \
-  --jq ".[] | select(.body | startswith(\"$marker\")) | .id" | head -n 1)
+  --jq ".[] | select(.user.login == \"github-actions[bot]\" and (.body | startswith(\"$marker\"))) | .id" | head -n 1)
 
 if [ "${STAGE:-}" = "running" ]; then
   [ -n "$existing" ] || exit 0
