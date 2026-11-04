@@ -22,6 +22,23 @@ describe("ColorArea", () => {
       );
   });
 
+  it("takes another colour space's own channels", async () => {
+    const screen = await render(
+      <ColorArea
+        aria-label="Layer colour"
+        colorSpace="hsl"
+        defaultValue="hsl(220, 70%, 50%)"
+      />
+    );
+
+    await expect
+      .element(screen.getByRole("slider"))
+      .toHaveAttribute(
+        "aria-valuetext",
+        expect.stringMatching(/Hue: 220.*Saturation: 70%/)
+      );
+  });
+
   it("changes saturation with the left and right arrows, brightness with up and down", async () => {
     const onChange = vi.fn();
     const screen = await render(

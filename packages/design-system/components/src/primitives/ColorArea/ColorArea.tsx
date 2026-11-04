@@ -17,26 +17,22 @@ type ColorAreaProps = Omit<AriaColorAreaProps, "children"> & {
 
 // Picks two channels of a colour at once by dragging its thumb, or from the
 // keyboard: saturation across and brightness up, as beside a hue slider,
-// unless colorSpace, xChannel and yChannel say otherwise. Screen readers hear
+// unless colorSpace, xChannel and yChannel say otherwise. Another colour
+// space has channels of its own, which React Aria picks. Screen readers hear
 // one 2D slider describing both
 const ColorAreaRoot = forwardRef<HTMLDivElement, ColorAreaProps>(
   (
-    {
-      showDots,
-      children,
-      colorSpace = "hsb",
-      xChannel = "saturation",
-      yChannel = "brightness",
-      ...props
-    },
+    { showDots, children, colorSpace = "hsb", xChannel, yChannel, ...props },
     ref
   ) => {
+    const isHsb = colorSpace === "hsb";
+
     return (
       <AriaColorArea
         {...props}
         colorSpace={colorSpace}
-        xChannel={xChannel}
-        yChannel={yChannel}
+        xChannel={xChannel ?? (isHsb ? "saturation" : undefined)}
+        yChannel={yChannel ?? (isHsb ? "brightness" : undefined)}
         ref={ref}
         data-tds="color-area"
         data-tds-dots={dataAttr(showDots)}
