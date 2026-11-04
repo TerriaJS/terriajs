@@ -32,6 +32,7 @@ import hasTraits from "../../../Models/Definition/hasTraits";
 import { ViewingControl } from "../../../Models/ViewingControls";
 import getAncestors from "../../../Models/getAncestors";
 import ViewState from "../../../ReactViewModels/ViewState";
+import withControlledVisibility from "../../HOCs/withControlledVisibility";
 import AnimatedSpinnerIcon from "../../../Styled/AnimatedSpinnerIcon";
 import Box from "../../../Styled/Box";
 import { RawButton } from "../../../Styled/Button";
@@ -486,4 +487,4 @@ const ViewingControls: React.FC<PropsType> = observer((props) => {
 
 ViewingControls.displayName = "ViewingControls";
 
-export default ViewingControls;
+export default withControlledVisibility(ViewingControls);
