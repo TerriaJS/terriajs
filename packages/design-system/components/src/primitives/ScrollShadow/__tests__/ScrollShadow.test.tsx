@@ -289,6 +289,33 @@ describe("ScrollShadow without detection", () => {
     expect(shadows(scroll)).toBe("none");
     expect(scroll).toHaveAttribute("data-scroll-shadow-mode", "manual");
   });
+
+  it("clears the shadows it showed when isEnabled turns false", async () => {
+    const layers = LAYERS.map((layer) => (
+      <div key={layer} style={{ blockSize: 20, overflow: "hidden" }}>
+        {layer}
+      </div>
+    ));
+    const screen = await render(
+      <ScrollShadow data-testid="scroll" style={{ blockSize: 100 }}>
+        {layers}
+      </ScrollShadow>
+    );
+    const scroll = screen.getByTestId("scroll").element() as HTMLElement;
+    await expect.poll(() => shadows(scroll)).toBe("bottom");
+
+    await screen.rerender(
+      <ScrollShadow
+        data-testid="scroll"
+        style={{ blockSize: 100 }}
+        isEnabled={false}
+      >
+        {layers}
+      </ScrollShadow>
+    );
+
+    expect(shadows(scroll)).toBe("none");
+  });
 });
 
 describe("ScrollShadow controlled visibility", () => {

@@ -89,11 +89,12 @@ const ScrollShadowRoot = forwardRef<HTMLDivElement, ScrollShadowRootProps>(
       visibility
     });
 
-    // Handle controlled visibility mode
+    // Handle controlled visibility mode, and detection turned off, which
+    // would otherwise leave the last ends it found shadowed
     useLayoutEffect(() => {
       const el = internalRef.current;
 
-      if (!el || visibility === "auto") return;
+      if (!el || (visibility === "auto" && isEnabled)) return;
 
       // Clear all data attributes
       delete el.dataset["topScroll"];
@@ -108,10 +109,10 @@ const ScrollShadowRoot = forwardRef<HTMLDivElement, ScrollShadowRootProps>(
         el.dataset[
           orientation === "vertical" ? "topBottomScroll" : "leftRightScroll"
         ] = "true";
-      } else if (visibility !== "none") {
+      } else if (visibility !== "none" && visibility !== "auto") {
         el.dataset[`${visibility}Scroll`] = "true";
       }
-    }, [internalRef, visibility, orientation]);
+    }, [internalRef, isEnabled, visibility, orientation]);
 
     // Not in HeroUI, which assumes a 10px scrollbar: the fade leaves the
     // scrollbar's strip solid, so it's measured. Scrollbars that overlay the
