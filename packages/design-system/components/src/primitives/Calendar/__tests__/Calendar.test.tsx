@@ -181,6 +181,24 @@ describe("Calendar", () => {
     await expect.element(trigger).toHaveFocus();
   });
 
+  it("keeps the month and day it was on when a year is picked", async () => {
+    const screen = await render(
+      calendar({ defaultValue: parseDate("2025-06-16") })
+    );
+
+    await userEvent.click(
+      screen.getByRole("button", { name: /year selector/ })
+    );
+    await userEvent.click(screen.getByRole("button", { name: "2030" }));
+
+    await expect
+      .element(screen.getByRole("grid"))
+      .toHaveAccessibleName(/June 2030/);
+    await expect
+      .element(screen.getByRole("button", { name: /June 16, 2030/ }))
+      .toHaveAttribute("tabindex", "0");
+  });
+
   it("closes its year picker on Escape", async () => {
     const screen = await render(calendar({ defaultValue: DECEMBER_16 }));
     const trigger = screen.getByRole("button", { name: /year selector/ });

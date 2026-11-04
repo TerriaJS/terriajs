@@ -268,7 +268,6 @@ const CalendarYearPickerGrid = ({
   const {
     "aria-label": yearGridAriaLabel,
     items,
-    onChange,
     value: focusedItemId
   } = useCalendarYearPicker({ format, visibleYears }, state);
 
@@ -362,6 +361,9 @@ const CalendarYearPickerGrid = ({
       ?.focus();
   }, [calendarRef, isYearPickerOpen]);
 
+  // Into the year at the month and day it was on. React Aria's onChange goes
+  // to its item's date, which over a range ending at maxValue is that day of
+  // every year: 31 December for the default 1900 to 2099
   const handleYearSelect = useCallback(
     (date: CalendarDate) => {
       const item = itemByYear.get(yearKey(date));
@@ -369,9 +371,14 @@ const CalendarYearPickerGrid = ({
       if (item == null) return;
 
       setIsYearPickerOpen(false);
-      onChange(item.id);
+      state.setFocusedDate(
+        item.date.set({
+          month: state.focusedDate.month,
+          day: state.focusedDate.day
+        })
+      );
     },
-    [itemByYear, onChange, setIsYearPickerOpen]
+    [itemByYear, setIsYearPickerOpen, state]
   );
 
   const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>): void => {
