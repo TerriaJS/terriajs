@@ -4,6 +4,7 @@ import {
   forwardRef,
   useContext,
   useEffect,
+  useMemo,
   useRef,
   useState,
   type ReactNode
@@ -171,8 +172,9 @@ const SortableList = <T extends { id: Key }>({
   // With the item indicator, where the dragged item has been moved to
   const [movedTo, setMovedTo] = useState<ItemDropTarget | null>(null);
 
-  // Read once, as an iterable may only be read once
-  const list = [...items];
+  // Read once for each iterable given, as one such as a generator can only
+  // be read once, and the list draws again as a drag goes
+  const list = useMemo(() => [...items], [items]);
   const byKey = new Map(list.map((item) => [item.id, item]));
   const itemsOf = (keys: Iterable<Key>): T[] =>
     [...keys].flatMap((key) => {

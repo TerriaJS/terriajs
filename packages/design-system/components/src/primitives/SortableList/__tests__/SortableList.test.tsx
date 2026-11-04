@@ -13,25 +13,28 @@ const LAYERS: Layer[] = [
   { id: "suburbs", name: "Suburbs" }
 ];
 
+const layerList = (
+  props: Partial<SortableListProps<Layer>> = {}
+): React.ReactElement => (
+  <SortableList
+    aria-label="Layers"
+    items={LAYERS}
+    getItemText={(layer) => layer.name}
+    onReorder={vi.fn()}
+    {...props}
+  >
+    {(layer, { isDragging }) => (
+      <div data-testid={layer.id} data-dragging={isDragging || undefined}>
+        <SortableList.DragHandle />
+        {layer.name}
+      </div>
+    )}
+  </SortableList>
+);
+
 const renderList = (
   props: Partial<SortableListProps<Layer>> = {}
-): Promise<RenderResult> =>
-  render(
-    <SortableList
-      aria-label="Layers"
-      items={LAYERS}
-      getItemText={(layer) => layer.name}
-      onReorder={vi.fn()}
-      {...props}
-    >
-      {(layer, { isDragging }) => (
-        <div data-testid={layer.id} data-dragging={isDragging || undefined}>
-          <SortableList.DragHandle />
-          {layer.name}
-        </div>
-      )}
-    </SortableList>
-  );
+): Promise<RenderResult> => render(layerList(props));
 
 // The items' keys in the order the rows are drawn
 const rowOrder = (screen: RenderResult): (string | null)[] =>
@@ -85,6 +88,19 @@ describe("SortableList", () => {
     await expect
       .element(screen.getByRole("row", { name: "Suburbs" }))
       .toBeVisible();
+  });
+
+  // A drag starting draws it again too
+  it("keeps an iterable's items as it draws again", async () => {
+    function* layers(): Generator<Layer> {
+      yield* LAYERS;
+    }
+    const items = layers();
+    const screen = await render(layerList({ items }));
+
+    await screen.rerender(layerList({ items }));
+
+    expect(rowOrder(screen)).toEqual(["roads", "rivers", "suburbs"]);
   });
 
   it("doesn't draw the items again as a pointer drag moves", async () => {
