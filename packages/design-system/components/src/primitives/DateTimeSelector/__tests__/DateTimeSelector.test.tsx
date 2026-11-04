@@ -233,6 +233,21 @@ describe("DateTimeSelector", () => {
     expect(screen.getByRole("option").elements()).toHaveLength(3);
   });
 
+  it("keeps its place when given the same dates in a new array", async () => {
+    const series = [
+      ...dates("2024-03-01T00:00", 7, 24),
+      ...dates("2025-11-01T00:00", 13, 24)
+    ];
+    const screen = await render(<DateTimeSelector dates={[...series]} />);
+    await userEvent.click(screen.getByRole("option", { name: /^2025/ }));
+
+    await screen.rerender(<DateTimeSelector dates={[...series]} />);
+
+    await expect
+      .element(screen.getByRole("option", { name: /^November/ }))
+      .toBeVisible();
+  });
+
   it("sets its numbers in figures of equal width", async () => {
     const screen = await render(
       <DateTimeSelector dates={dates("2025-01-01T10:00", 3, 24 * 40)} />

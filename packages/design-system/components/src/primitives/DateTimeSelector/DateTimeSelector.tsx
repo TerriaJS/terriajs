@@ -63,10 +63,12 @@ const DateTimeSelector = forwardRef<HTMLDivElement, DateTimeSelectorProps>(
     const strings = useLocalizedStrings();
     const start = useMemo(() => defaultPath(dates), [dates]);
     const [path, setPath] = useState<DateTimePath>(start);
-    // New dates start over: the old path may lead to levels they don't have
-    const [pathStart, setPathStart] = useState(start);
-    if (pathStart !== start) {
-      setPathStart(start);
+    // New dates start over: the old path may lead to levels they don't have.
+    // Compared by their times, so the same dates in a new array keep it
+    const datesKey = dates.map((date) => date.getTime()).join();
+    const [pathDates, setPathDates] = useState(datesKey);
+    if (pathDates !== datesKey) {
+      setPathDates(datesKey);
       setPath(start);
     }
     // Focus follows into the next level after a choice or going back, not on
