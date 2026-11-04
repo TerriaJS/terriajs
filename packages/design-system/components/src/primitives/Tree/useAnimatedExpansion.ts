@@ -84,6 +84,9 @@ type AnimatedExpansion = {
 
 const NONE: ReadonlySet<Key> = new Set();
 
+const sameKeys = (a: ReadonlySet<Key>, b: ReadonlySet<Key>): boolean =>
+  a.size === b.size && [...a].every((key) => b.has(key));
+
 // The tree's expanded keys, controlled or not. A collapsing group's rows
 // animate shut before it collapses, as react-aria removes them at once; an
 // expanding group's rows animate open once they're rendered
@@ -103,12 +106,18 @@ const useAnimatedExpansion = (
   const announcedRef = useRef<ReadonlySet<Key>>(NONE);
   // The keys a collapse in progress ends on
   const pendingRef = useRef<Set<Key> | null>(null);
+  // And the keys it started from
+  const fromRef = useRef<Set<Key>>(keys);
 
-  const change = (next: Set<Key>): void => {
+  const cancelCollapse = (): void => {
     for (const animation of closingRef.current) animation.cancel();
     closingRef.current = [];
     pendingRef.current = null;
     setCollapsingKeys(NONE);
+  };
+
+  const change = (next: Set<Key>): void => {
+    cancelCollapse();
 
     const tree = treeRef.current;
     if (
@@ -130,6 +139,7 @@ const useAnimatedExpansion = (
     const animations = animateRows(rows, "close");
     closingRef.current = animations;
     pendingRef.current = next;
+    fromRef.current = keys;
     setCollapsingKeys(new Set(closed));
     Promise.all(animations.map((animation) => animation.finished)).then(
       () => {
@@ -178,6 +188,13 @@ const useAnimatedExpansion = (
       tree.removeEventListener("pointerdown", finishCollapse, true);
     };
   }, [setKeys, treeRef]);
+
+  // A controlled tree given other keys while a group collapses: the keys the
+  // collapse ends on are older than them, and would undo them
+  useLayoutEffect(() => {
+    if (!pendingRef.current || sameKeys(keys, fromRef.current)) return;
+    cancelCollapse();
+  }, [keys]);
 
   useLayoutEffect(() => {
     const tree = treeRef.current;

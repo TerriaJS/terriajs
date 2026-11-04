@@ -353,6 +353,53 @@ describe("Tree", () => {
     expect(tree.scrollHeight).toBeGreaterThanOrEqual(50 * 36);
   });
 
+  it("keeps the keys a controlled tree is given while a group collapses", async () => {
+    const onExpandedChange = vi.fn<(keys: Set<Key>) => void>();
+    const catalog = (expandedKeys: Key[]): React.ReactElement => (
+      <Tree
+        aria-label="Catalog"
+        expandedKeys={expandedKeys}
+        onExpandedChange={onExpandedChange}
+      >
+        {[
+          { id: "boundaries", name: "Boundaries", child: "Suburbs" },
+          { id: "transport", name: "Transport", child: "Rail" }
+        ].map(({ id, name, child }) => (
+          <Tree.Item key={id} id={id} textValue={name}>
+            <Tree.ItemContent>
+              <Tree.Indicator />
+              <Tree.ItemLabel>{name}</Tree.ItemLabel>
+            </Tree.ItemContent>
+            <Tree.Item id={child} textValue={child}>
+              <Tree.ItemContent>
+                <Tree.ItemLabel>{child}</Tree.ItemLabel>
+              </Tree.ItemContent>
+            </Tree.Item>
+          </Tree.Item>
+        ))}
+      </Tree>
+    );
+    const screen = await render(catalog(["boundaries"]));
+    const suburbs = screen.getByRole("row", { name: "Suburbs" }).element();
+
+    await screen.getByRole("button", { name: "Collapse Boundaries" }).click();
+    const [animation] = suburbs.getAnimations();
+    // Taken now: cancelling an animation gives it a new finished promise, one
+    // that never settles
+    const finished = animation?.finished;
+    await screen.rerender(catalog(["boundaries", "transport"]));
+    // Cancelled, if the newer keys win; finished, if the collapse still ends
+    await finished?.catch(() => undefined);
+    for (let tick = 0; tick < 10; tick++) await Promise.resolve();
+
+    expect(animation).toBeDefined();
+    expect(onExpandedChange).not.toHaveBeenCalled();
+    expect(suburbs.isConnected).toBe(true);
+    await expect
+      .element(screen.getByRole("row", { name: "Rail" }))
+      .toBeVisible();
+  });
+
   it("removes a collapsing group's rows as their animation ends, before the browser can draw them again", async () => {
     const screen = await render(
       <Tree aria-label="Catalog" defaultExpandedKeys={["boundaries"]}>
