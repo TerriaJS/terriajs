@@ -1393,7 +1393,8 @@
       "parsingStartDataErrorMessage": "Error en analitzar les dades d'inici JSON.",
       "loadingWorkbenchItemErrorTitle": "Error en carregar l'element al banc de treball: `{{name}}`",
       "disclaimer": "Exempció de responsabilitat",
-      "buttonTitleConfirm": "Hi estic d'acord"
+      "buttonTitleConfirm": "Hi estic d'acord",
+      "configParseErrorTitle": "No s'ha pogut aplicar la configuració de Terria Map"
     },
     "invokeAnalyticsService": {
       "invocationFailedTitle": "La invocació del servei ha fallat",
