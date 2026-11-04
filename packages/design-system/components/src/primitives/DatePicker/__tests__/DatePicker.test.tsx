@@ -97,6 +97,54 @@ describe("DatePicker", () => {
     await expect.element(trigger).toHaveFocus();
   });
 
+  it("closes only its calendar's year picker on Escape", async () => {
+    const screen = await render(
+      <DatePicker defaultValue={parseDate("2025-12-16")}>
+        <Label>Survey date</Label>
+        <DateField.Group>
+          <DateField.Input>
+            {(segment) => <DateField.Segment segment={segment} />}
+          </DateField.Input>
+          <DateField.Suffix>
+            <DatePicker.Trigger>
+              <DatePicker.TriggerIndicator />
+            </DatePicker.Trigger>
+          </DateField.Suffix>
+        </DateField.Group>
+        <DatePicker.Popover>
+          <Calendar aria-label="Survey date">
+            <Calendar.Header>
+              <Calendar.YearPickerTrigger>
+                <Calendar.YearPickerTriggerHeading />
+              </Calendar.YearPickerTrigger>
+            </Calendar.Header>
+            <Calendar.Grid>
+              <Calendar.GridBody>
+                {(date) => <Calendar.Cell date={date} />}
+              </Calendar.GridBody>
+            </Calendar.Grid>
+            <Calendar.YearPickerGrid>
+              <Calendar.YearPickerGridBody>
+                {({ date }) => <Calendar.YearPickerCell date={date} />}
+              </Calendar.YearPickerGridBody>
+            </Calendar.YearPickerGrid>
+          </Calendar>
+        </DatePicker.Popover>
+      </DatePicker>
+    );
+
+    await userEvent.click(screen.getByRole("button", { name: /Calendar/ }));
+    const yearTrigger = screen.getByRole("button", { name: /year selector/ });
+    await userEvent.click(yearTrigger);
+    await expect
+      .element(screen.getByRole("button", { name: "2025" }))
+      .toHaveFocus();
+    await userEvent.keyboard("{Escape}");
+
+    await expect.element(yearTrigger).toHaveAttribute("aria-expanded", "false");
+    await expect.element(screen.getByRole("dialog")).toBeVisible();
+  });
+
   it("calls onOpenChange as it opens and closes", async () => {
     const onOpenChange = vi.fn();
     const screen = await render(datePicker({ onOpenChange }));

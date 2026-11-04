@@ -381,6 +381,8 @@ const CalendarYearPickerGrid = ({
 
     if (event.key === "Escape" && isYearPickerOpen) {
       event.preventDefault();
+      // Or a popover holding the calendar would close too
+      event.stopPropagation();
       setIsYearPickerOpen(false);
       return;
     }
