@@ -14,6 +14,8 @@ const pickChildren = <T = ReactNode>(
 ): [T | undefined, T[] | undefined] => {
   const target: T[] = [];
 
+  // Children.map leaves out what it's given back as null, so the target's
+  // children go and the rest stay, a 0 among them
   // eslint-disable-next-line @eslint-react/no-children-map -- Only sorts the children, to take out the target's
   const withoutTargetChildren = Children.map(children, (item) => {
     if (!isValidElement(item)) return item;
@@ -22,7 +24,7 @@ const pickChildren = <T = ReactNode>(
       return null;
     }
     return item;
-  })?.filter(Boolean) as T;
+  }) as T;
 
   return [withoutTargetChildren, target.length > 0 ? target : undefined];
 };

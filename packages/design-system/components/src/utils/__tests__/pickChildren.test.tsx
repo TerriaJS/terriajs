@@ -25,6 +25,13 @@ describe("pickChildren", () => {
     ]);
   });
 
+  it("keeps a zero among the rest, as React draws it", () => {
+    const children = ["Results: ", 0, <Remove key="remove" />] as ReactNode;
+    const [rest] = pickChildren(children, Remove);
+
+    expect(rest).toEqual(["Results: ", 0]);
+  });
+
   it("gives nothing picked when none are that component", () => {
     const children = ["Suburbs", <Other key="other" />] as ReactNode;
     const [rest, picked] = pickChildren(children, Remove);
