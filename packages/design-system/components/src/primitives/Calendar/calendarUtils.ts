@@ -25,7 +25,10 @@ const getYearRange = (
 
   while (current.compare(end) <= 0) {
     years.push(current);
-    current = startOfYear(current.add({ years: 1 }));
+    const next = startOfYear(current.add({ years: 1 }));
+    // A year added to the calendar's last stays in it
+    if (next.compare(current) <= 0) break;
+    current = next;
   }
 
   return years;

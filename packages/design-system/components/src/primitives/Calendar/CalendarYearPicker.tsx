@@ -1,4 +1,10 @@
-import { toCalendar, today, type CalendarDate } from "@internationalized/date";
+import {
+  endOfYear,
+  isSameYear,
+  toCalendar,
+  today,
+  type CalendarDate
+} from "@internationalized/date";
 import { ChevronRightIcon } from "@terria/design-system-icons";
 import {
   createContext,
@@ -257,19 +263,29 @@ const CalendarYearPickerGrid = ({
   const state = useCalendarOrRangeState();
   const gridRef = useRef<HTMLDivElement>(null);
 
+  // React Aria's years never end once they reach the calendar's last, 9999:
+  // a year added there stays in it. So they stop a year short of it
+  const maxValue = useMemo(() => {
+    const max = state.maxValue;
+
+    if (!max || !isSameYear(max.add({ years: 1 }), max)) return max;
+
+    return endOfYear(max.subtract({ years: 1 }));
+  }, [state.maxValue]);
+
   const visibleYears = useMemo(() => {
     if (visibleYearsProp != null) {
       return visibleYearsProp;
     }
 
-    return getYearRange(state.minValue, state.maxValue).length || 20;
-  }, [state.maxValue, state.minValue, visibleYearsProp]);
+    return getYearRange(state.minValue, maxValue).length || 20;
+  }, [maxValue, state.minValue, visibleYearsProp]);
 
   const {
     "aria-label": yearGridAriaLabel,
     items,
     value: focusedItemId
-  } = useCalendarYearPicker({ format, visibleYears }, state);
+  } = useCalendarYearPicker({ format, visibleYears }, { ...state, maxValue });
 
   // useCalendarYearPicker returns a new `items` array every render; keys of
   // its content stay stable, so effects don't re-run and steal focus back to

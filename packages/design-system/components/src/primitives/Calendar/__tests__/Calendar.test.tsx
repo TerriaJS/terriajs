@@ -224,6 +224,28 @@ describe("Calendar", () => {
     await expect.element(years.last()).toHaveTextContent("2099");
   });
 
+  // Adding a year to one in 9999, the calendar's last, stays in it, so a loop
+  // stepping through the years to there would never end
+  it("opens its year picker when its range ends in the calendar's last year", async () => {
+    const screen = await render(
+      calendar({
+        defaultValue: parseDate("9999-06-01"),
+        minValue: parseDate("9990-01-01"),
+        maxValue: parseDate("9999-12-31")
+      })
+    );
+
+    await userEvent.click(
+      screen.getByRole("button", { name: /year selector/ })
+    );
+
+    const years = screen
+      .getByRole("group", { name: "year" })
+      .getByRole("button");
+    await expect.element(years.first()).toHaveTextContent("9990");
+    await expect.element(years.last()).toHaveTextContent("9998");
+  });
+
   it("offers the same years in the locale's own calendar", async () => {
     // Persian: 1900 AD falls in 1278 AP, and 2099 AD in 1478 AP
     const screen = await render(
