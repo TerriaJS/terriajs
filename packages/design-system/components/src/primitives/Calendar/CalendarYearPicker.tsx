@@ -27,6 +27,7 @@ import {
   type CalendarYearPickerProps
 } from "react-aria/useCalendar";
 import type { DOMRenderProps } from "react-aria-components";
+import { useLocale } from "react-aria-components/I18nProvider";
 import {
   Button as AriaButton,
   type ButtonProps as AriaButtonProps
@@ -261,6 +262,7 @@ const CalendarYearPickerGrid = ({
     setIsYearPickerOpen
   } = useYearPicker();
   const state = useCalendarOrRangeState();
+  const { direction } = useLocale();
   const gridRef = useRef<HTMLDivElement>(null);
 
   // React Aria's years never end once they reach the calendar's last, 9999:
@@ -414,9 +416,11 @@ const CalendarYearPickerGrid = ({
 
     if (!isYearPickerOpen || currentIndex === -1) return;
 
+    // The years run right to left in a right-to-left locale
+    const ahead = direction === "rtl" ? -1 : 1;
     const steps: Record<string, number> = {
-      ArrowRight: 1,
-      ArrowLeft: -1,
+      ArrowRight: ahead,
+      ArrowLeft: -ahead,
       ArrowDown: 3,
       ArrowUp: -3,
       Home: -currentIndex,

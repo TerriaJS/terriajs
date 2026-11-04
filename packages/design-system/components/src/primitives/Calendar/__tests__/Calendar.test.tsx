@@ -246,6 +246,27 @@ describe("Calendar", () => {
     await expect.element(years.last()).toHaveTextContent("9998");
   });
 
+  // Its rows run right to left there, so the right arrow goes back a year
+  it("moves between years the way they're laid out in a right-to-left locale", async () => {
+    const screen = await render(
+      <I18nProvider locale="ar-EG-u-nu-latn">
+        {calendar({ defaultValue: parseDate("2024-06-16") })}
+      </I18nProvider>
+    );
+
+    await userEvent.click(
+      screen.getByRole("button", { name: /year selector/ })
+    );
+    await expect
+      .element(screen.getByRole("button", { name: "2024" }))
+      .toHaveFocus();
+    await userEvent.keyboard("{ArrowRight}");
+
+    await expect
+      .element(screen.getByRole("button", { name: "2023" }))
+      .toHaveFocus();
+  });
+
   it("offers the same years in the locale's own calendar", async () => {
     // Persian: 1900 AD falls in 1278 AP, and 2099 AD in 1478 AP
     const screen = await render(
