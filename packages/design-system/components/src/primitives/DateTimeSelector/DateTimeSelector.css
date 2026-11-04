@@ -121,12 +121,18 @@
   /* Scrolls the longer lists */
   [data-tds="scroll-shadow"][data-tds-date-time-selector] {
     max-block-size: var(--terria-ds-dimensions-spacing-72);
+
+    /* Out by the list's padding, so its options still line up with the
+       header */
+    margin-inline: calc(-1 * var(--terria-ds-focus-ring-width));
   }
 
+  /* Padded by the focus ring, which the scrolling would otherwise clip */
   [data-tds="date-time-selector-listbox"] {
     display: flex;
     flex-direction: column;
     gap: var(--terria-ds-dimensions-spacing-0-5);
+    padding: var(--terria-ds-focus-ring-width);
     outline: none;
   }
 
