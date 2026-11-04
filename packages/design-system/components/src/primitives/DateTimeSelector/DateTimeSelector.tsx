@@ -152,8 +152,19 @@ const DateTimeSelector = forwardRef<HTMLDivElement, DateTimeSelectorProps>(
           data-tds={
             isGrid ? "date-time-selector-grid" : "date-time-selector-listbox"
           }
-          onAction={(key) => {
-            onAction(Number(key));
+          // A list marking a choice picks by selecting: once it holds one,
+          // React Aria takes a press as selecting, not as an action
+          onAction={
+            selectedKeys
+              ? undefined
+              : (key) => {
+                  onAction(Number(key));
+                }
+          }
+          onSelectionChange={(keys) => {
+            // Pressing the one it holds clears it: that one is picked again
+            const [key = selectedKeys?.[0]] = keys === "all" ? [] : keys;
+            if (key !== undefined) onAction(Number(key));
           }}
         >
           {children}

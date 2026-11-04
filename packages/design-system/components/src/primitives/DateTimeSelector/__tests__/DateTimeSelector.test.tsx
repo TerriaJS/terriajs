@@ -101,6 +101,35 @@ describe("DateTimeSelector", () => {
       .toHaveAttribute("aria-selected", "true");
   });
 
+  it("picks another time than the one it holds", async () => {
+    const onChange = vi.fn();
+    const series = dates("2025-01-01T10:00", 3, 24 * 40);
+    const screen = await render(
+      <DateTimeSelector dates={series} value={series[2]} onChange={onChange} />
+    );
+
+    await userEvent.click(
+      screen.getByRole("listbox").getByRole("option").nth(0)
+    );
+
+    expect(onChange).toHaveBeenCalledWith(series[0]);
+  });
+
+  // As TerriaJS closes it on a pick, so the time it holds closes it too
+  it("picks again the time it holds", async () => {
+    const onChange = vi.fn();
+    const series = dates("2025-01-01T10:00", 3, 24 * 40);
+    const screen = await render(
+      <DateTimeSelector dates={series} value={series[1]} onChange={onChange} />
+    );
+
+    await userEvent.click(
+      screen.getByRole("listbox").getByRole("option").nth(1)
+    );
+
+    expect(onChange).toHaveBeenCalledWith(series[1]);
+  });
+
   // Its dates are Gregorian: a locale with a calendar of its own keeps its
   // language, not its calendar, or days and months would be other ones
   describe("in a locale with another calendar", () => {
