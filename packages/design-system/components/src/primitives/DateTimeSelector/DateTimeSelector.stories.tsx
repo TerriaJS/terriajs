@@ -42,6 +42,21 @@ const meta = {
     }
   },
   args: { dates: DECADES },
+  // Holds the time picked, so it shows as marked
+  render: function Render(args) {
+    const [value, setValue] = useState(args.value);
+
+    return (
+      <DateTimeSelector
+        {...args}
+        value={value}
+        onChange={(date) => {
+          setValue(date);
+          args.onChange?.(date);
+        }}
+      />
+    );
+  },
   argTypes: {
     onChange: {
       action: "change",
