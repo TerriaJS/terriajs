@@ -13,6 +13,8 @@ import {
   ListBoxItem as AriaListBoxItem
 } from "react-aria-components/ListBox";
 import { Calendar } from "../Calendar";
+import { ListBoxItemIndicator } from "../ListBox";
+import { ListBoxItemContext } from "../ListBox/ListBoxItemContext";
 import { ScrollShadow } from "../ScrollShadow";
 import {
   canGoBack,
@@ -375,7 +377,12 @@ const DateTimeSelector = forwardRef<HTMLDivElement, DateTimeSelectorProps>(
                 textValue={labelTime(date)}
                 data-tds="date-time-selector-option"
               >
-                {labelTime(date)}
+                {(values) => (
+                  <ListBoxItemContext.Provider value={values}>
+                    {labelTime(date)}
+                    <ListBoxItemIndicator />
+                  </ListBoxItemContext.Provider>
+                )}
               </AriaListBoxItem>
             ))
           })}

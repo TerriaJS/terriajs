@@ -2,8 +2,8 @@
  * DateTimeSelector Component Styles
  *
  * TerriaJS's date picker as a selector, in the Calendar's look (Calendar.css): the back button
- * as its arrows, options as its year cells, and dots for the months and days
- * with data, filled in primary.
+ * as its arrows, centuries as its year cells, and dots for the months and days
+ * with data, filled in primary. The lists' items are ListBox's (ListBox.css).
  */
 
 @layer terria-ds.components {
@@ -151,10 +151,36 @@
     [data-tds="date-time-selector-listbox"] > & {
       justify-content: flex-start;
     }
+  }
+
+  /* A list's rows and options as ListBox's items (ListBox.css): the held
+     time marked by its indicator, and filled as the Calendar's selected date */
+  [data-tds="date-time-selector-listbox"]
+    > :is(
+      [data-tds="date-time-selector-option"],
+      [data-tds="date-time-selector-row"]
+    ) {
+    position: relative;
+    min-block-size: var(--terria-ds-dimensions-spacing-9);
+    padding: var(--terria-ds-dimensions-spacing-1-5) var(--terria-ds-space-md);
+    border-radius: var(--terria-ds-radius-lg);
+    font-weight: var(--terria-ds-font-regular);
+    transition-duration: var(--terria-ds-duration-150);
+
+    &[data-focus-visible] {
+      background-color: var(--terria-ds-neutral);
+      outline-offset: var(--terria-ds-focus-ring-offset);
+    }
 
     &[data-selected] {
-      background-color: var(--terria-ds-primary-soft);
-      color: var(--terria-ds-primary-soft-foreground);
+      background-color: var(--terria-ds-primary);
+      color: var(--terria-ds-primary-foreground);
+    }
+
+    &:has(> [data-tds="list-box-item-indicator"]) {
+      padding-inline-end: calc(
+        var(--terria-ds-space-md) * 2 + var(--terria-ds-dimensions-icon-size-sm)
+      );
     }
   }
 
