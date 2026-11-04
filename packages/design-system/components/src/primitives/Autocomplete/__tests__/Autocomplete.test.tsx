@@ -189,6 +189,25 @@ describe("Autocomplete", () => {
     await expect.element(clear).toHaveAttribute("data-empty");
   });
 
+  // Its clear button isn't a tab stop, so the keyboard clears from its button
+  it.each(["Backspace", "Delete"])(
+    "clears its choice with %s, without opening",
+    async (key) => {
+      const onClear = vi.fn();
+      const screen = await render(
+        <LayerPicker defaultValue="parks" onClear={onClear} />
+      );
+
+      await userEvent.tab();
+      await expect.element(trigger(screen)).toHaveFocus();
+      await userEvent.keyboard(`{${key}}`);
+
+      expect(onClear).toHaveBeenCalled();
+      await expect.element(field(screen)).toHaveTextContent("Choose a layer");
+      await expect.element(screen.getByRole("listbox")).not.toBeInTheDocument();
+    }
+  );
+
   it("can hold several choices, staying open as they're made", async () => {
     const onChange = vi.fn();
     const screen = await render(

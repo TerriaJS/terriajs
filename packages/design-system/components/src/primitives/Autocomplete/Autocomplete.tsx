@@ -94,6 +94,19 @@ const AutocompleteRoot = <
 
 AutocompleteRoot.displayName = "Autocomplete";
 
+// A single select won't take an empty selection, so its value is reset
+// instead
+const useClear = (): (() => void) => {
+  const state = useContext(SelectStateContext);
+  const { onClear } = useContext(AutocompleteContext);
+  return () => {
+    state?.setValue(
+      state.selectionManager.selectionMode === "multiple" ? [] : null
+    );
+    onClear?.();
+  };
+};
+
 type AutocompleteTriggerProps = AriaGroupProps;
 
 // The field: pressing anywhere on it opens the list, but for the clear
@@ -155,8 +168,10 @@ type AutocompleteIndicatorProps = Omit<AriaButtonProps, "children"> & {
 const AutocompleteIndicator = forwardRef<
   HTMLButtonElement,
   AutocompleteIndicatorProps
->(({ children, ...props }, ref) => {
+>(({ children, onKeyDown, ...props }, ref) => {
   const state = useContext(SelectStateContext);
+  const { clearButtonRef } = useContext(AutocompleteContext);
+  const clear = useClear();
 
   return (
     <AriaButton
@@ -164,6 +179,24 @@ const AutocompleteIndicator = forwardRef<
       ref={ref}
       data-tds="autocomplete-indicator"
       data-open={dataAttr(state?.isOpen)}
+      onKeyDown={(event) => {
+        onKeyDown?.(event);
+        // Keyboard users can't reach the clear button, so a clearable field
+        // also clears with Backspace or Delete, as a Select does
+        const isClearKey = event.key === "Backspace" || event.key === "Delete";
+        const isEmpty = (state?.selectionManager.selectedKeys.size ?? 0) === 0;
+        if (
+          isClearKey &&
+          clearButtonRef.current &&
+          !isEmpty &&
+          !state?.isOpen
+        ) {
+          clear();
+          return;
+        }
+        // react-aria stops keydown propagation unless a handler opts back in
+        event.continuePropagation();
+      }}
     >
       {children ?? <ChevronDownIcon aria-hidden />}
     </AriaButton>
@@ -175,14 +208,15 @@ AutocompleteIndicator.displayName = "Autocomplete.Indicator";
 type AutocompleteClearButtonProps = ComponentPropsWithoutRef<"button">;
 
 // Clears the choice, without opening the list; hidden while there's none.
-// Not a tab stop, as a select's isn't
+// Not a tab stop, as a select's isn't: from the keyboard, Backspace or Delete
+// on the Indicator clears instead
 const AutocompleteClearButton = forwardRef<
   HTMLButtonElement,
   AutocompleteClearButtonProps
 >(({ children, onClick, ...props }, ref) => {
-  const { clearButtonRef, isDisabled, onClear } =
-    useContext(AutocompleteContext);
+  const { clearButtonRef, isDisabled } = useContext(AutocompleteContext);
   const state = useContext(SelectStateContext);
+  const clear = useClear();
   const contextRef = useCallback(
     (node: HTMLButtonElement | null) => {
       clearButtonRef.current = node;
@@ -208,12 +242,7 @@ const AutocompleteClearButton = forwardRef<
       data-tds="autocomplete-clear-button"
       data-empty={dataAttr(isEmpty)}
       onClick={(event) => {
-        // A single select won't take an empty selection, so its value is
-        // reset instead
-        state?.setValue(
-          state.selectionManager.selectionMode === "multiple" ? [] : null
-        );
-        onClear?.();
+        clear();
         onClick?.(event);
       }}
     >
