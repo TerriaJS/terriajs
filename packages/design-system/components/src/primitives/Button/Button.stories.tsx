@@ -100,6 +100,14 @@ export const FullWidth: Story = {
 };
 
 export const Pending: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Give a pending button a `pendingLabel` saying what it's doing, such as \"Saving\": screen readers hear it in place of the button's label. Without one, its spinner is a progress bar with no name."
+      }
+    }
+  },
   render: (args) => {
     const [{ isPending, onPress }, updateArgs] = useArgs<ButtonProps>();
     useEffect(() => {
