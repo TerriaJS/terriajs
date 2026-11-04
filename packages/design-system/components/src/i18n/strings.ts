@@ -1,9 +1,26 @@
+// What a string built from values is given for its locale: plural picks the
+// form for a count by the locale's own plural categories ("one", "few",
+// "many"…), number writes a number as the locale does
+type StringFormatter = {
+  plural: (
+    count: number,
+    forms: Partial<Record<Intl.LDMLPluralRule, string>> & {
+      other: string;
+    }
+  ) => string;
+  number: (value: number) => string;
+};
+
 // Every string the components show or announce, in English. An app adds
 // other languages, or changes these, with LocalizedStringsProvider. A
-// function takes the values the string is built from
+// function takes the values the string is built from, and a formatter for
+// its locale
 type LocalizedString =
   | string
-  | ((values: Record<string, string | number>) => string);
+  | ((
+      values: Record<string, string | number>,
+      formatter: StringFormatter
+    ) => string);
 
 const EN_US = {
   "autocomplete.clear": "Clear selection",
@@ -16,8 +33,8 @@ const EN_US = {
   "dateTimeSelector.days": "Select a day",
   "dateTimeSelector.hours": "Hours",
   "dateTimeSelector.months": "Months",
-  "dateTimeSelector.options": (values) =>
-    `(${String(values["count"])} ${values["count"] === 1 ? "option" : "options"})`,
+  "dateTimeSelector.options": (values, formatter) =>
+    `(${String(values["count"])} ${formatter.plural(Number(values["count"]), { one: "option", other: "options" })})`,
   "dateTimeSelector.selectCentury": "Select a century",
   "dateTimeSelector.selectHour": (values) =>
     `Select an hour on ${String(values["day"])}`,
@@ -59,4 +76,4 @@ const EN_US = {
 type LocalizedStringKey = keyof typeof EN_US;
 
 export { EN_US };
-export type { LocalizedString, LocalizedStringKey };
+export type { LocalizedString, LocalizedStringKey, StringFormatter };

@@ -4,6 +4,7 @@ import { describe, expect, it } from "vitest";
 import { render } from "vitest-browser-react";
 import { Calendar } from "../../primitives/Calendar";
 import { CloseButton } from "../../primitives/CloseButton";
+import { DateTimeSelector } from "../../primitives/DateTimeSelector";
 import { Kbd } from "../../primitives/Kbd";
 import { LocalizedStringsProvider, type LocalizedStrings } from "..";
 
@@ -143,6 +144,38 @@ describe("LocalizedStringsProvider", () => {
         screen.getByRole("button", { name: "décembre 2025, choisir l'année" })
       )
       .toBeVisible();
+  });
+
+  // Serbian has a form for 2 to 4 as well as for 1 and the rest
+  it("gives a translated string its locale's plural forms", async () => {
+    const screen = await render(
+      <I18nProvider locale="sr-Latn-RS">
+        <LocalizedStringsProvider
+          value={{
+            "sr-Latn": {
+              "dateTimeSelector.options": ({ count }, formatter) =>
+                `(${String(count)} ${formatter.plural(Number(count), {
+                  one: "opcija",
+                  few: "opcije",
+                  other: "opcija"
+                })})`
+            }
+          }}
+        >
+          {/* Every half hour of one day: hours of two times each */}
+          <DateTimeSelector
+            dates={Array.from(
+              { length: 48 },
+              (_, i) => new Date(2025, 11, 16, 0, i * 30)
+            )}
+          />
+        </LocalizedStringsProvider>
+      </I18nProvider>
+    );
+
+    await expect
+      .element(screen.getByRole("option").first())
+      .toMatchTextContent("(2 opcije)");
   });
 
   it("gives way to a label passed in", async () => {

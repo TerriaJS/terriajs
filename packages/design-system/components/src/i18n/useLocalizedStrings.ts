@@ -3,7 +3,8 @@ import { useLocale } from "react-aria-components/I18nProvider";
 import {
   EN_US,
   type LocalizedString,
-  type LocalizedStringKey
+  type LocalizedStringKey,
+  type StringFormatter
 } from "./strings";
 
 // An app's strings, by locale or by language: "fr" serves fr-FR and fr-CA
@@ -70,11 +71,19 @@ const useLocalizedStrings = (): LocalizedStringFormatter => {
 
   return useMemo(() => {
     const candidates = stringsFor(strings, locale);
+    const pluralRules = new Intl.PluralRules(locale);
+    const numberFormat = new Intl.NumberFormat(locale);
+    const formatter: StringFormatter = {
+      plural: (count, forms) => forms[pluralRules.select(count)] ?? forms.other,
+      number: (value) => numberFormat.format(value)
+    };
     return {
       format: (key, values = {}) => {
         const string =
           candidates.find((own) => own[key] !== undefined)?.[key] ?? EN_US[key];
-        return typeof string === "function" ? string(values) : string;
+        return typeof string === "function"
+          ? string(values, formatter)
+          : string;
       }
     };
   }, [locale, strings]);

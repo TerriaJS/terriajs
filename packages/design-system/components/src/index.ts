@@ -5,7 +5,11 @@
  * All components use CSS @layer for predictable styling and can be easily themed.
  */
 export { LocalizedStringsProvider } from "./i18n";
-export type { LocalizedStringKey, LocalizedStrings } from "./i18n";
+export type {
+  LocalizedStringKey,
+  LocalizedStrings,
+  StringFormatter
+} from "./i18n";
 
 // Export components
 export { Button } from "./primitives/Button";
