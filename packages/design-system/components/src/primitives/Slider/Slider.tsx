@@ -1,4 +1,13 @@
-import { forwardRef, useContext, useRef, type ReactNode } from "react";
+import { useLayoutEffect } from "@react-aria/utils";
+import {
+  forwardRef,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+  type ReactNode,
+  type RefObject
+} from "react";
 import {
   Slider as AriaSlider,
   SliderFill as AriaSliderFill,
@@ -246,9 +255,7 @@ type SliderProps = Omit<SliderRootProps, "children"> & {
 
 // A thumb, with a tooltip when asked: its formatted value, or the content a
 // function returns. The thumb isn't a tooltip trigger, so the tooltip anchors
-// to it and opens from the thumb's own state. That state goes in through the
-// trigger context: React Aria's Tooltip takes isOpen on its own, but its inner
-// part still reads the context and fails without it
+// to it and opens from the thumb's own state
 const Thumb = ({
   index,
   label,
@@ -259,30 +266,113 @@ const Thumb = ({
   tooltip: true | SliderTooltipContent | undefined;
 }): React.ReactElement => {
   const ref = useRef<HTMLDivElement>(null);
+  // Escape hides the tooltip, as a tooltip should be dismissable, until the
+  // thumb is next focused, hovered, moved or dragged
+  const [isDismissed, setIsDismissed] = useState(false);
+  const [isUnderPointer, setIsUnderPointer] = useState(false);
+  // Whether the tooltip showed before a key: the key itself makes the thumb's
+  // focus visible, which would show it
+  const shownRef = useRef(false);
+
+  // A hovered thumb seldom has focus, so it hears Escape from the page, before
+  // a focused thumb whose tooltip showed can stop it there
+  useEffect(() => {
+    if (!isUnderPointer || isDismissed) return;
+    const dismiss = (event: globalThis.KeyboardEvent): void => {
+      if (event.key === "Escape") setIsDismissed(true);
+    };
+    document.addEventListener("keydown", dismiss, true);
+    return () => {
+      document.removeEventListener("keydown", dismiss, true);
+    };
+  }, [isUnderPointer, isDismissed]);
+
   if (tooltip === undefined) {
     return <SliderThumb index={index} aria-label={label} />;
   }
 
   return (
-    <SliderThumb index={index} aria-label={label} ref={ref}>
+    <SliderThumb
+      index={index}
+      aria-label={label}
+      ref={ref}
+      onFocus={() => {
+        setIsDismissed(false);
+      }}
+      onHoverStart={() => {
+        setIsUnderPointer(true);
+        setIsDismissed(false);
+      }}
+      onHoverEnd={() => {
+        setIsUnderPointer(false);
+      }}
+      onKeyDown={(event) => {
+        if (event.key !== "Escape") {
+          setIsDismissed(false);
+        } else {
+          // Escape never shows the tooltip, so it's dismissed either way
+          setIsDismissed(true);
+          // Closing a tooltip that showed is all it does; otherwise it goes
+          // on, to what holds the slider
+          if (shownRef.current) return;
+        }
+        // react-aria stops keydown propagation unless a handler opts back in
+        event.continuePropagation();
+      }}
+    >
       {({ isDragging, isHovered, isFocusVisible, state }) => (
-        <TooltipTriggerStateContext.Provider
-          value={{
-            isOpen: isDragging || isHovered || isFocusVisible,
-            open: () => undefined,
-            close: () => undefined,
-            shouldSkipAnimation: false
+        <ThumbTooltip
+          isOpen={isDragging || ((isHovered || isFocusVisible) && !isDismissed)}
+          shownRef={shownRef}
+          triggerRef={ref}
+          onClose={() => {
+            setIsDismissed(true);
           }}
         >
-          <TooltipContent triggerRef={ref} showArrow>
-            <TooltipArrow />
-            {tooltip === true
-              ? state.getThumbValueLabel(index)
-              : tooltip({ index, value: state.getThumbValue(index) })}
-          </TooltipContent>
-        </TooltipTriggerStateContext.Provider>
+          {tooltip === true
+            ? state.getThumbValueLabel(index)
+            : tooltip({ index, value: state.getThumbValue(index) })}
+        </ThumbTooltip>
       )}
     </SliderThumb>
+  );
+};
+
+// A thumb's tooltip, noting whether it last showed for the thumb's key
+// handler. The thumb's state goes in through the trigger context: React Aria's
+// Tooltip takes isOpen on its own, but its inner part still reads the context
+// and fails without it
+const ThumbTooltip = ({
+  isOpen,
+  shownRef,
+  triggerRef,
+  onClose,
+  children
+}: {
+  isOpen: boolean;
+  shownRef: { current: boolean };
+  triggerRef: RefObject<HTMLDivElement | null>;
+  onClose: () => void;
+  children: ReactNode;
+}): React.ReactElement => {
+  useLayoutEffect(() => {
+    shownRef.current = isOpen;
+  }, [isOpen, shownRef]);
+
+  return (
+    <TooltipTriggerStateContext.Provider
+      value={{
+        isOpen,
+        open: () => undefined,
+        close: onClose,
+        shouldSkipAnimation: false
+      }}
+    >
+      <TooltipContent triggerRef={triggerRef} showArrow>
+        <TooltipArrow />
+        {children}
+      </TooltipContent>
+    </TooltipTriggerStateContext.Provider>
   );
 };
 

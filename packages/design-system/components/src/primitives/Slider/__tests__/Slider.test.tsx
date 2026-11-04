@@ -234,6 +234,46 @@ describe("Slider", () => {
     await expect.element(screen.getByRole("tooltip")).toHaveTextContent("40");
   });
 
+  it("hides its tooltip on Escape, until the thumb is used again", async () => {
+    const screen = await render(
+      <Slider
+        label="Opacity"
+        defaultValue={30}
+        step={10}
+        showValue={false}
+        showTooltip
+      />
+    );
+
+    await userEvent.tab();
+    await expect.element(screen.getByRole("tooltip")).toBeVisible();
+    await userEvent.keyboard("{Escape}");
+    await expect.element(screen.getByRole("tooltip")).not.toBeInTheDocument();
+
+    await userEvent.keyboard("{ArrowRight}");
+    await expect.element(screen.getByRole("tooltip")).toHaveTextContent("40");
+  });
+
+  it("hides a hovered thumb's tooltip on Escape, without showing the focused one's", async () => {
+    const screen = await render(
+      <Slider label="Year" defaultValue={[20, 80]} showTooltip />
+    );
+    const [from, to] = screen.container.querySelectorAll<HTMLElement>(
+      '[data-tds="slider-thumb"]'
+    );
+    if (!from || !to) throw new Error("No thumbs");
+
+    // Focused by a press, which doesn't show its tooltip, then the other hovered
+    await userEvent.click(from);
+    await userEvent.hover(to);
+    await expect.element(screen.getByRole("tooltip")).toHaveTextContent("80");
+    await userEvent.keyboard("{Escape}");
+
+    await expect.element(screen.getByRole("tooltip")).not.toBeInTheDocument();
+    // The pointer stays put, and would hover the next test's thumb there
+    await userEvent.unhover(to);
+  });
+
   it("shows a tooltip for each thumb of a range", async () => {
     const screen = await render(
       <Slider label="Year" defaultValue={[20, 80]} showTooltip />
