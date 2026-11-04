@@ -87,22 +87,16 @@ describe("AIActivityIndicator", () => {
     expect(error).not.toHaveBeenCalled();
   });
 
-  // As the progressbar would call them: indeterminate, with no value
-  it("calls a function className and style when hidden", async () => {
+  it("keeps its className when hidden", async () => {
     const screen = await render(
       <AIActivityIndicator
         aria-hidden
         data-testid="indicator"
-        className={({ isIndeterminate }) => (isIndeterminate ? "busy" : "idle")}
-        style={({ isIndeterminate }) =>
-          isIndeterminate ? { color: "rgb(255, 0, 0)" } : {}
-        }
+        className="busy"
       />
     );
 
-    const indicator = screen.getByTestId("indicator");
-    await expect.element(indicator).toHaveClass("busy");
-    await expect.element(indicator).toHaveStyle({ color: "rgb(255, 0, 0)" });
+    await expect.element(screen.getByTestId("indicator")).toHaveClass("busy");
   });
 
   it("defaults to the medium size", async () => {

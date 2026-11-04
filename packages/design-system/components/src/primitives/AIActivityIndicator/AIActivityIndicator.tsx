@@ -18,6 +18,10 @@ type AIActivityIndicatorProps = {
   sparkles?: AIActivityIndicatorSparkles;
   /** Only decoration, beside text that says what's happening */
   "aria-hidden"?: boolean | "true" | "false";
+  // Plain, not React Aria's functions of its state: an indeterminate one's
+  // state never changes
+  className?: string;
+  style?: CSSProperties;
 } & Omit<
   AriaProgressBarProps,
   | "children"
@@ -27,6 +31,8 @@ type AIActivityIndicatorProps = {
   | "isIndeterminate"
   | "formatOptions"
   | "valueLabel"
+  | "className"
+  | "style"
 >;
 
 // A four-pointed sparkle, 20 units across, centred on its origin
@@ -99,34 +105,18 @@ const AIActivityIndicator = forwardRef<HTMLElement, AIActivityIndicatorProps>(
       </svg>
     );
 
-    // React Aria's progressbar drops aria-hidden, so hidden it's a plain
-    // element: decoration, not a second announcement of the text beside it.
-    // A span, so it can sit in a line of text, in a <p>
+    // Hidden, a span, so it can sit in a line of text, in a <p>
     if (hidden === true || hidden === "true") {
-      // The progressbar's own props it would put on its element: an id, data
-      // attributes, events. A function className or style is called as the
-      // progressbar would: indeterminate, with no value
-      const { className, style } = props;
-      const values = {
-        isIndeterminate: true,
-        percentage: undefined,
-        valueText: undefined
-      };
       return (
         <span
+          // React Aria's progressbar drops aria-hidden, so hidden it's a
+          // plain element: decoration, not a second announcement of the text
+          // beside it
           {...filterDOMProps(props, { global: true, events: true })}
           ref={ref}
           aria-hidden="true"
-          className={
-            typeof className === "function"
-              ? className({ ...values, defaultClassName: undefined })
-              : className
-          }
-          style={
-            typeof style === "function"
-              ? style({ ...values, defaultStyle: {} })
-              : style
-          }
+          className={props.className}
+          style={props.style}
           data-tds="ai-activity-indicator"
           data-tds-size={size}
         >

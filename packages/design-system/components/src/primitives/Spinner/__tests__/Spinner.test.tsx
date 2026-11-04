@@ -40,6 +40,20 @@ describe("Spinner", () => {
       .toHaveAttribute("data-tds-size", size);
   });
 
+  it("is only decoration when hidden, beside text that says what's loading", async () => {
+    const screen = await render(
+      <p>
+        <Spinner aria-hidden color="current" data-testid="spinner" />
+        Loading layers
+      </p>
+    );
+
+    expect(screen.getByRole("progressbar").query()).toBeNull();
+    const spinner = screen.getByTestId("spinner");
+    await expect.element(spinner).toHaveAttribute("aria-hidden", "true");
+    await expect.element(spinner).toHaveAttribute("data-tds-color", "current");
+  });
+
   it("merges a className and forwards its ref", async () => {
     const ref = createRef<HTMLDivElement>();
     const screen = await render(
