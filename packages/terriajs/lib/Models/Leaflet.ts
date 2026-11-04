@@ -32,6 +32,7 @@ import ProtomapsImageryProvider from "../Map/ImageryProvider/ProtomapsImageryPro
 import ImageryProviderLeafletGridLayer, {
   isImageryProviderGridLayer as supportsImageryProviderGridLayer
 } from "../Map/Leaflet/ImageryProviderLeafletGridLayer";
+import ImageryProviderLeafletResourceTileLayer from "../Map/Leaflet/ImageryProviderLeafletResourceTileLayer";
 import ImageryProviderLeafletTileLayer from "../Map/Leaflet/ImageryProviderLeafletTileLayer";
 import LeafletDataSourceDisplay from "../Map/Leaflet/LeafletDataSourceDisplay";
 import LeafletScene from "../Map/Leaflet/LeafletScene";
@@ -116,6 +117,15 @@ export default class Leaflet extends GlobeOrMap {
     // Tile layer is preferred. Grid layer mainly exists for custom Imagery Providers which aren't just a tile of image URLs
     if (supportsImageryProviderGridLayer(ip)) {
       return new ImageryProviderLeafletGridLayer(this, ip, layerOptions);
+    } else if (
+      this.terria.configParameters.nextExperimentalFeatures
+        ?.loadLeafletTilesWithResource
+    ) {
+      return new ImageryProviderLeafletResourceTileLayer(
+        this,
+        ip,
+        layerOptions
+      );
     } else {
       return new ImageryProviderLeafletTileLayer(this, ip, layerOptions);
     }

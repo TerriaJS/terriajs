@@ -127,9 +127,10 @@ Specifies various options for configuring TerriaJS:
 
 ### NextExperimentalFeatures
 
-| Name                | Required | Type        | Default | Description                                                                                                                                  |
-| ------------------- | -------- | ----------- | ------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
-| `imageryLayerGuard` | no       | **boolean** | `false` | Stop 3D tilesets with `drapeImagery` destroying the imagery layers draped on them, and recreate memoised imagery layers that were destroyed. |
+| Name                           | Required | Type        | Default | Description                                                                                                                                                                            |
+| ------------------------------ | -------- | ----------- | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `imageryLayerGuard`            | no       | **boolean** | `false` | Stop 3D tilesets with `drapeImagery` destroying the imagery layers draped on them, and recreate memoised imagery layers that were destroyed.                                           |
+| `loadLeafletTilesWithResource` | no       | **boolean** | `false` | Load 2D (Leaflet) imagery tiles through Cesium Resource instead of `img` tags, so request headers such as authentication apply in 2D as they do in 3D. Tile servers must support CORS. |
 
 ---
 

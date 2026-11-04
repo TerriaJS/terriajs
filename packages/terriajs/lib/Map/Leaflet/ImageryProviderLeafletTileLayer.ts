@@ -21,9 +21,7 @@ import SplitDirection from "terriajs-cesium/Source/Scene/SplitDirection";
 import isDefined from "../../Core/isDefined";
 import TerriaError from "../../Core/TerriaError";
 import Leaflet from "../../Models/Leaflet";
-import getUrlForImageryTile, {
-  getResourceForImageryTile
-} from "../ImageryProvider/getUrlForImageryTile";
+import getUrlForImageryTile from "../ImageryProvider/getUrlForImageryTile";
 import { ProviderCoords } from "../PickedFeatures/PickedFeatures";
 
 const swScratch = new Cartographic();
@@ -37,14 +35,6 @@ class Credit extends CesiumCredit {
 }
 
 export default class ImageryProviderLeafletTileLayer extends L.TileLayer {
-  /**
-   * Load tiles through Cesium Resource instead of setting the tile image's
-   * src, so that Resource request headers and overrides apply in 2D as they do
-   * in 3D. Requires tile servers to support CORS. Applies to tiles created
-   * after it is set.
-   */
-  static loadTilesWithResource = false;
-
   readonly tileSize = 256;
   readonly errorEvent = new CesiumEvent();
 
@@ -55,8 +45,6 @@ export default class ImageryProviderLeafletTileLayer extends L.TileLayer {
   private _requestImageError: TileProviderError | undefined;
   private _previousCredits: Credit[] = [];
   private _leafletUpdateInterval: number;
-  /** Cancels the in-flight Resource request of a tile loaded with loadTilesWithResource */
-  private _tileRequestCancellers = new WeakMap<HTMLElement, () => void>();
 
   @observable splitDirection = SplitDirection.NONE;
   @observable splitPosition: number = 0.5;
@@ -100,13 +88,6 @@ export default class ImageryProviderLeafletTileLayer extends L.TileLayer {
       event.tile.style.width = this.getTileSize().x + 0.5 + "px";
       event.tile.style.height = this.getTileSize().y + 0.5 + "px";
     });
-
-    const cancelTileRequest = (event: TileEvent) => {
-      this._tileRequestCancellers.get(event.tile)?.();
-      this._tileRequestCancellers.delete(event.tile);
-    };
-    this.on("tileabort", cancelTileRequest);
-    this.on("tileunload", cancelTileRequest);
   }
 
   _reactToSplitterChange() {
@@ -164,10 +145,6 @@ export default class ImageryProviderLeafletTileLayer extends L.TileLayer {
   }
 
   createTile(coords: L.Coords, done: L.DoneCallback) {
-    if (ImageryProviderLeafletTileLayer.loadTilesWithResource) {
-      return this._createTileWithResource(coords, done);
-    }
-
     // Create a tile (Image) as normal.
     const tile = super.createTile(coords, done) as HTMLImageElement;
 
@@ -207,83 +184,7 @@ export default class ImageryProviderLeafletTileLayer extends L.TileLayer {
     return tile;
   }
 
-  /**
-   * Load the tile through Cesium Resource, as the Cesium map does, and show it
-   * from a blob URL.
-   */
-  private _createTileWithResource(coords: L.Coords, done: L.DoneCallback) {
-    const tile = document.createElement("img");
-    tile.alt = "";
-    tile.setAttribute("role", "presentation");
-    L.DomEvent.on(
-      tile,
-      "load",
-      L.Util.bind((this as any)._tileOnLoad, this, done, tile)
-    );
-    // Errors decoding the image; request errors are reported below
-    L.DomEvent.on(tile, "error", (e) => this._reportTileError(coords, e));
-
-    const level = this._getLevelFromZ(coords);
-    const resource =
-      level >= 0
-        ? getResourceForImageryTile(
-            this.imageryProvider,
-            coords.x,
-            coords.y,
-            level
-          )
-        : undefined;
-    if (!resource || resource.isDataUri || resource.isBlobUri) {
-      tile.src = resource?.url ?? (this.options.errorTileUrl || "");
-      return tile;
-    }
-
-    let blobUrl: string | undefined;
-    const revokeBlobUrl = () => {
-      if (blobUrl) {
-        URL.revokeObjectURL(blobUrl);
-        blobUrl = undefined;
-      }
-    };
-    L.DomEvent.on(tile, "load error", revokeBlobUrl);
-
-    let aborted = false;
-    const tileResource = resource.clone();
-    this._tileRequestCancellers.set(tile, () => {
-      aborted = true;
-      revokeBlobUrl();
-      // Mark the request cancelled so RequestScheduler releases its per-server
-      // slot (an aborted XHR never settles, which would otherwise leak the slot
-      // and stall 3D imagery from the same server). RequestScheduler only
-      // processes this while a Cesium scene is rendering, so also abort the
-      // request directly.
-      const request = tileResource.request as any;
-      request.cancel();
-      request.cancelFunction?.();
-    });
-
-    const blobPromise: Promise<Blob | undefined> =
-      tileResource.fetchBlob() ??
-      Promise.reject(new Error("Tile request was throttled"));
-
-    blobPromise
-      .then((blob) => {
-        if (aborted || !blob) {
-          return;
-        }
-        blobUrl = URL.createObjectURL(blob);
-        tile.src = blobUrl;
-      })
-      .catch((e) => {
-        if (!aborted) {
-          this._reportTileError(coords, e);
-        }
-      });
-
-    return tile;
-  }
-
-  private _reportTileError(coords: L.Coords, e: unknown) {
+  protected _reportTileError(coords: L.Coords, e: unknown) {
     const level = this._getLevelFromZ(coords);
     const message = i18next.t(($) => $.map.cesium.failedToObtain, {
       x: coords.x,
