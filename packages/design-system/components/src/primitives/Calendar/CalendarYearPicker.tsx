@@ -1,4 +1,4 @@
-import type { CalendarDate } from "@internationalized/date";
+import { toCalendar, today, type CalendarDate } from "@internationalized/date";
 import { ChevronRightIcon } from "@terria/design-system-icons";
 import {
   createContext,
@@ -214,7 +214,7 @@ const yearKey = (date: CalendarDate): string =>
 type GridContextValue = {
   isYearPickerOpen: boolean;
   activeYear: string;
-  currentYear: number;
+  currentYear: string;
   focusedYear: string;
   years: CalendarDate[];
   getFormattedYear: (date: CalendarDate) => string;
@@ -423,10 +423,13 @@ const CalendarYearPickerGrid = ({
     }
   };
 
-  // Read per render, not memoized, so it stays right across midnight on
-  // Dec 31; it's a number, so the context below compares it by value
-  // eslint-disable-next-line @eslint-react/purity -- see above
-  const currentYear = new Date().getFullYear();
+  // Today as a year of the calendar's own, in its era and time zone: a
+  // Buddhist, Persian or Japanese year isn't the Gregorian one. Read per
+  // render, not memoized, so it stays right across midnight on the year's
+  // last day; it's a string, so the context below compares it by value
+  const currentYear = yearKey(
+    toCalendar(today(state.timeZone), state.focusedDate.calendar)
+  );
 
   const contextValue = useMemo(
     () => ({
@@ -503,7 +506,7 @@ const CalendarYearPickerGridBody = ({
             children({
               date,
               formattedYear: getFormattedYear(date),
-              isCurrentYear: date.year === currentYear,
+              isCurrentYear: yearKey(date) === currentYear,
               isOpen: isYearPickerOpen,
               isSelected: yearKey(date) === focusedYear,
               selectYear: () => {
@@ -552,7 +555,7 @@ const CalendarYearPickerCell = forwardRef<
     const values: CalendarYearPickerCellRenderProps = {
       date,
       formattedYear,
-      isCurrentYear: date.year === currentYear,
+      isCurrentYear: key === currentYear,
       isOpen: isYearPickerOpen,
       isSelected,
       selectYear: () => {

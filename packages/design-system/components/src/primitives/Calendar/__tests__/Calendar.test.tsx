@@ -241,6 +241,45 @@ describe("Calendar", () => {
     await expect.element(years.last()).toHaveTextContent("1478");
   });
 
+  it("marks the current year in the locale's own calendar", async () => {
+    const locale = "fa-IR-u-nu-latn";
+    const screen = await render(
+      <I18nProvider locale={locale}>
+        <Calendar
+          aria-label="Survey date"
+          defaultValue={DECEMBER_16}
+          isYearPickerOpen
+        >
+          <Calendar.Grid>
+            <Calendar.GridBody>
+              {(date) => <Calendar.Cell date={date} />}
+            </Calendar.GridBody>
+          </Calendar.Grid>
+          <Calendar.YearPickerGrid>
+            <Calendar.YearPickerGridBody>
+              {({ date, isCurrentYear }) => (
+                <Calendar.YearPickerCell
+                  date={date}
+                  data-current={isCurrentYear || undefined}
+                />
+              )}
+            </Calendar.YearPickerGridBody>
+          </Calendar.YearPickerGrid>
+        </Calendar>
+      </I18nProvider>
+    );
+
+    // Named in the locale's language, so found by its role alone
+    const current = screen
+      .getByRole("group")
+      .element()
+      .querySelectorAll("[data-current]");
+    expect(current).toHaveLength(1);
+    expect(current[0]).toHaveTextContent(
+      new Intl.DateTimeFormat(locale, { year: "numeric" }).format(new Date())
+    );
+  });
+
   it("can open its year picker controlled", async () => {
     const onYearPickerOpenChange = vi.fn();
     const screen = await render(
