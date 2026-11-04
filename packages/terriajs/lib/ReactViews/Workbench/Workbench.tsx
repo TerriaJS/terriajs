@@ -25,11 +25,6 @@ interface IProps extends WithTranslation {
   t: TFunction;
 }
 
-/**
- * Takes every layer off the workbench at once. Its own component so that an
- * application embedding the map in a flow of its own can hide it: clearing
- * the workbench is not always the user's to do.
- */
 const RemoveAllButton = withControlledVisibility(
   ({ onClick, label }: { onClick: () => void; label: string }) => (
     <RawButton
