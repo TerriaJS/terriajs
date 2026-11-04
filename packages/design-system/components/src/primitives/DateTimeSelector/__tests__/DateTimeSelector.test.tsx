@@ -301,6 +301,25 @@ describe("DateTimeSelector", () => {
         .toHaveFocus();
     });
 
+    it("moves between days with the arrow keys", async () => {
+      const screen = await render(
+        <DateTimeSelector dates={dates("2025-12-15T00:00", 96, 0.5)} />
+      );
+
+      await userEvent.click(
+        screen.getByRole("button", { name: /December 16,/ })
+      );
+      await userEvent.click(screen.getByRole("button", { name: "Back" }));
+      await expect
+        .element(screen.getByRole("button", { name: /December 1,/ }))
+        .toHaveFocus();
+
+      await userEvent.keyboard("{ArrowRight}");
+      await expect
+        .element(screen.getByRole("button", { name: /December 2,/ }))
+        .toHaveFocus();
+    });
+
     it("picks a time with Enter", async () => {
       const onChange = vi.fn();
       const series = dates("2025-01-01T10:00", 3, 24 * 40);

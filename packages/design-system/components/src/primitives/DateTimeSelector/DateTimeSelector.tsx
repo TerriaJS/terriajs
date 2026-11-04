@@ -288,7 +288,9 @@ const DateTimeSelector = forwardRef<HTMLDivElement, DateTimeSelectorProps>(
               aria-label={strings.format("dateTimeSelector.days")}
               // eslint-disable-next-line jsx-a11y/no-autofocus -- Only after the user's own choice or Back, as the lists
               autoFocus={hasMoved}
-              focusedValue={new CalendarDate(view.year, view.month + 1, 1)}
+              defaultFocusedValue={
+                new CalendarDate(view.year, view.month + 1, 1)
+              }
               minValue={new CalendarDate(view.year, view.month + 1, 1)}
               maxValue={
                 new CalendarDate(
