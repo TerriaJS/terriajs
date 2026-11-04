@@ -21,6 +21,7 @@ import { Text } from "react-aria-components/Text";
 import type { ListBoxItemVariant } from "../ListBox";
 import { ItemLabelSlot } from "../ListBox/ItemLabelSlot";
 import { ListBoxItemContext } from "../ListBox/ListBoxItemContext";
+import { isText, plainText } from "../../utils/plainText";
 import { PopoverContent, type PopoverContentProps } from "../Popover";
 import "../ListBox/ListBox.css";
 import "./Dropdown.css";
@@ -58,9 +59,6 @@ type DropdownItemProps<T extends object> = AriaMenuItemProps<T> & {
   variant?: ListBoxItemVariant;
 };
 
-const isText = (child: unknown): child is string | number =>
-  typeof child === "string" || typeof child === "number";
-
 // Plain text is the item's label, so the item is named by it alone and not
 // by its shortcut or indicator too. A run of text is one label: JSX splits
 // "Delete {count} files" into three children, and React Aria names the item
@@ -88,12 +86,6 @@ const labelPlainText = (children: ReactNode): ReactNode[] => {
   }
   endRun();
   return labelled;
-};
-
-// The item's text for typeahead, when its children are text alone
-const plainText = (children: unknown): string | undefined => {
-  const parts: unknown[] = Array.isArray(children) ? children : [children];
-  return parts.every(isText) ? parts.join("") : undefined;
 };
 
 // Styled as a ListBox item, so a menu and a list look alike

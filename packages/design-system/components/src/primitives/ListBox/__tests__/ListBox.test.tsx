@@ -1,6 +1,7 @@
 import { createRef } from "react";
 import { describe, expect, it } from "vitest";
 import { render } from "vitest-browser-react";
+import { userEvent } from "vitest/browser";
 import { Header } from "../../Header";
 import { Separator } from "../../Separator";
 import { ListBox } from "..";
@@ -33,6 +34,29 @@ describe("ListBox", () => {
         .element()
         .querySelector('[data-tds="list-box-item-indicator"]')
     ).not.toHaveAttribute("data-visible");
+  });
+
+  it("moves to an option typed, its text in several parts", async () => {
+    const layers = [
+      { name: "Roads", count: 2 },
+      { name: "Suburbs", count: 5 }
+    ];
+    const screen = await render(
+      <ListBox aria-label="Layers">
+        {layers.map(({ name, count }) => (
+          <ListBox.Item key={name} id={name}>
+            {name} ({count})
+          </ListBox.Item>
+        ))}
+      </ListBox>
+    );
+
+    await userEvent.tab();
+    await userEvent.keyboard("s");
+
+    await expect
+      .element(screen.getByRole("option", { name: "Suburbs (5)" }))
+      .toHaveFocus();
   });
 
   it("groups options in sections named by their header", async () => {

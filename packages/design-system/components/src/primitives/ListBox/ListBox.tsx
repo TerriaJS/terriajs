@@ -14,6 +14,7 @@ import {
 } from "react-aria-components/ListBox";
 import { ItemLabelSlot } from "./ItemLabelSlot";
 import { ListBoxItemContext } from "./ListBoxItemContext";
+import { plainText } from "../../utils/plainText";
 import { dataAttr } from "../../utils/dataAttr";
 import "./ListBox.css";
 
@@ -43,9 +44,7 @@ const ListBoxItem = <T extends object>({
     <AriaListBoxItem
       // The children are wrapped below, so react-aria can't read plain text
       // children as the item's text for typeahead or a Select's value
-      textValue={
-        textValue ?? (typeof children === "string" ? children : undefined)
-      }
+      textValue={textValue ?? plainText(children)}
       {...props}
       data-tds="list-box-item"
       data-tds-variant={variant}
