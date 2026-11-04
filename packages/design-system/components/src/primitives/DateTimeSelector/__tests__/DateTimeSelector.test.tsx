@@ -311,12 +311,28 @@ describe("DateTimeSelector", () => {
       );
       await userEvent.click(screen.getByRole("button", { name: "Back" }));
       await expect
-        .element(screen.getByRole("button", { name: /December 1,/ }))
+        .element(screen.getByRole("button", { name: /December 15,/ }))
         .toHaveFocus();
 
       await userEvent.keyboard("{ArrowRight}");
       await expect
-        .element(screen.getByRole("button", { name: /December 2,/ }))
+        .element(screen.getByRole("button", { name: /December 16,/ }))
+        .toHaveFocus();
+    });
+
+    it("starts the days at the one it holds", async () => {
+      const series = dates("2025-12-15T00:00", 96, 0.5);
+      const screen = await render(
+        <DateTimeSelector dates={series} value={new Date("2025-12-16T10:30")} />
+      );
+
+      await userEvent.click(
+        screen.getByRole("button", { name: /December 15,/ })
+      );
+      await userEvent.click(screen.getByRole("button", { name: "Back" }));
+
+      await expect
+        .element(screen.getByRole("button", { name: /December 16,/ }))
         .toHaveFocus();
     });
 

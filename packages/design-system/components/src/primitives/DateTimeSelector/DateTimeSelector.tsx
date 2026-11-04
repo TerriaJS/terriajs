@@ -88,6 +88,16 @@ const DateTimeSelector = forwardRef<HTMLDivElement, DateTimeSelectorProps>(
       [locale]
     );
     const labelTime = formatTime ?? ((date: Date) => formats.time.format(date));
+    // Days without data still take focus, so start on one that has some: the
+    // day it holds, or else the first
+    const focusDay = (month: {
+      year: number;
+      month: number;
+      days: number[];
+    }): number =>
+      value?.getFullYear() === month.year && value.getMonth() === month.month
+        ? value.getDate()
+        : Math.min(...month.days);
     const go = (step: DateTimePath): void => {
       setPath({ ...path, ...step });
       setHasMoved(true);
@@ -289,7 +299,7 @@ const DateTimeSelector = forwardRef<HTMLDivElement, DateTimeSelectorProps>(
               // eslint-disable-next-line jsx-a11y/no-autofocus -- Only after the user's own choice or Back, as the lists
               autoFocus={hasMoved}
               defaultFocusedValue={
-                new CalendarDate(view.year, view.month + 1, 1)
+                new CalendarDate(view.year, view.month + 1, focusDay(view))
               }
               minValue={new CalendarDate(view.year, view.month + 1, 1)}
               maxValue={
