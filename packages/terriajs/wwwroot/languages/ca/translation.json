@@ -1394,7 +1394,7 @@
       "loadingWorkbenchItemErrorTitle": "Error en carregar l'element al banc de treball: `{{name}}`",
       "disclaimer": "Exempció de responsabilitat",
       "buttonTitleConfirm": "Hi estic d'acord",
-      "configParseErrorTitle": "No s'ha pogut aplicar la configuració de Terria Map"
+      "configParseErrorTitle": "No s'ha pogut carregar la configuració del mapa de Terria"
     },
     "invokeAnalyticsService": {
       "invocationFailedTitle": "La invocació del servei ha fallat",
