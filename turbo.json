@@ -9,13 +9,15 @@
     },
     "dev": {
       "cache": false,
-      "persistent": true
+      "persistent": true,
+      "dependsOn": ["^build"]
     },
     "build-for-node": {
       "dependsOn": ["^build-for-node"],
       "outputs": ["build/**", "ts-out/**"]
     },
     "build-specs": {
+      "dependsOn": ["^build"],
       "outputs": ["wwwroot/build/**"]
     },
     "test": {
