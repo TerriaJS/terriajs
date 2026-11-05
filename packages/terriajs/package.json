@@ -17,10 +17,15 @@
     "@babel/preset-react": "catalog:build",
     "@babel/preset-typescript": "catalog:build",
     "@emotion/is-prop-valid": "^1.4.0",
+    "@internationalized/date": "catalog:runtime",
     "@mapbox/point-geometry": "^0.1.0",
     "@mapbox/togeojson": "^0.16.2",
     "@maplibre/maplibre-gl-style-spec": "^23.3.0",
     "@opendatasoft/api-client": "^0.1.0",
+    "@react-aria/live-announcer": "catalog:runtime",
+    "@react-aria/utils": "catalog:runtime",
+    "@terria/design-system": "workspace:*",
+    "@terria/design-system-icons": "workspace:*",
     "@testing-library/dom": "catalog:test",
     "@testing-library/jasmine-dom": "catalog:test",
     "@testing-library/react": "catalog:test",
@@ -137,6 +142,8 @@
     "rc-slider": "^9.7.2",
     "react": "catalog:runtime",
     "react-anything-sortable": "^1.5.2",
+    "react-aria": "catalog:runtime",
+    "react-aria-components": "catalog:runtime",
     "react-color": "^2.19.3",
     "react-datepicker": "7.6.0",
     "react-dom": "catalog:runtime",
@@ -144,6 +151,7 @@
     "react-i18next": "catalog:translation",
     "react-responsive": "^10.0.0",
     "react-select": "^5.10.0",
+    "react-stately": "catalog:runtime",
     "react-swipeable": "^7.0.2",
     "react-transition-group": "^4.3.0",
     "react-virtual": "^2.10.4",
@@ -199,6 +207,10 @@
     "typescript-eslint": "catalog:lint",
     "yaml": "^1.10.0"
   },
+  "bundleDependencies": [
+    "@terria/design-system",
+    "@terria/design-system-icons"
+  ],
   "scripts": {
     "prepublish": "gulp post-npm-install",
     "postpublish": "bash -c \"if [ -z \"$GITHUB_ACTION\" ]; then git tag -a ${npm_package_version} -m \"${npm_package_version}\" && git push origin ${npm_package_version}; fi \"",

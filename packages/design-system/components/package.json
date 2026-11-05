@@ -52,12 +52,12 @@
     "stylelint-declaration-strict-value": "catalog:lint",
     "stylelint-value-no-unknown-custom-properties": "catalog:lint",
     "typescript-eslint": "catalog:lint",
-    "@internationalized/date": "3.12.4",
-    "@react-aria/live-announcer": "3.5.1",
-    "@react-aria/utils": "3.34.1",
-    "react-aria": "3.53.1",
-    "react-aria-components": "1.22.1",
-    "react-stately": "3.51.0"
+    "@internationalized/date": "catalog:runtime",
+    "@react-aria/live-announcer": "catalog:runtime",
+    "@react-aria/utils": "catalog:runtime",
+    "react-aria": "catalog:runtime",
+    "react-aria-components": "catalog:runtime",
+    "react-stately": "catalog:runtime"
   },
   "exports": {
     ".": {
