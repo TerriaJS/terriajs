@@ -90,6 +90,7 @@
     "bottleneck": "catalog:runtime",
     "catalog-converter": "^0.0.9",
     "classnames": "catalog:runtime",
+    "clsx": "^2.1.1",
     "commander": "^14.0.3",
     "copy-webpack-plugin": "catalog:build",
     "core-js": "catalog:runtime",
@@ -183,6 +184,8 @@
     "@typescript-eslint/eslint-plugin": "catalog:lint",
     "@typescript-eslint/parser": "catalog:lint",
     "@typescript/native": "catalog:build",
+    "@vitejs/plugin-react": "^6.1.2",
+    "@vitest/browser-playwright": "5.0.5",
     "babel-plugin-styled-components": "^2.1.4",
     "eslint": "catalog:lint",
     "eslint-config-prettier": "catalog:lint",
@@ -200,11 +203,19 @@
     "minimist": "catalog:build",
     "msw": "catalog:test",
     "node-notifier": "catalog:build",
+    "playwright": "catalog:runtime",
     "plugin-error": "catalog:build",
     "sass": "catalog:build",
+    "stylelint": "catalog:lint",
+    "stylelint-config-standard": "catalog:lint",
+    "stylelint-declaration-strict-value": "catalog:lint",
+    "stylelint-value-no-unknown-custom-properties": "catalog:lint",
     "svg-sprite": "catalog:build",
     "terriajs-server": "workspace:*",
     "typescript-eslint": "catalog:lint",
+    "vite": "catalog:runtime",
+    "vitest": "5.0.5",
+    "vitest-browser-react": "catalog:runtime",
     "yaml": "^1.10.0"
   },
   "bundleDependencies": [
@@ -224,7 +235,9 @@
     "prepare": "pnpm build-for-node",
     "lint": "gulp lint",
     "build-specs": "gulp build",
-    "test": "gulp test"
+    "test": "gulp test",
+    "test:ui": "vitest run",
+    "lint:css": "stylelint \"lib/UI/**/*.css\" --allow-empty-input"
   },
   "msw": {
     "workerDirectory": [

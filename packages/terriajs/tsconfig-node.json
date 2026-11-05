@@ -6,5 +6,7 @@
     "outDir": "dist",
     "types": ["terriajs-cesium"]
   },
-  "include": ["./lib/**/*"]
+  "include": ["./lib/**/*"],
+  // The new UI's Vitest tests and their helpers aren't part of the build
+  "exclude": ["./lib/**/*.test.ts", "./lib/**/*.test.tsx", "./lib/UI/test/**"]
 }
