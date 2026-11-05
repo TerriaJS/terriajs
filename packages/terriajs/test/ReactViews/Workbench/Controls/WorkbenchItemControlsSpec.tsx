@@ -82,6 +82,21 @@ describe("WorkbenchItemControls", function () {
       expect(opacity).toBeVisible();
     });
 
+    // The element names the menu, and the menu alone. "Zoom to" and "About
+    // data" stand in the same row but neither removes nor exports anything,
+    // and a reviewer reading a layer still needs both.
+    it("when hidden, leaves zoom-to and about-data standing", function () {
+      viewState.terria.elements.set("workbench-item-menu", { visible: false });
+
+      renderWithContexts(
+        <WorkbenchItemControls item={item} viewState={viewState} />,
+        viewState
+      );
+
+      expect(screen.queryByTitle("workbench.zoomToTitle")).toBeVisible();
+      expect(screen.queryByTitle("workbench.previewItemTitle")).toBeVisible();
+    });
+
     it("when visible, renders the viewing controls menu", function () {
       viewState.terria.elements.set("workbench-item-menu", { visible: true });
 
