@@ -174,6 +174,7 @@
     "@types/svg-sprite": "catalog:types",
     "@typescript-eslint/eslint-plugin": "catalog:lint",
     "@typescript-eslint/parser": "catalog:lint",
+    "@typescript/native": "catalog:build",
     "babel-plugin-styled-components": "^2.1.4",
     "eslint": "catalog:lint",
     "eslint-config-prettier": "catalog:lint",

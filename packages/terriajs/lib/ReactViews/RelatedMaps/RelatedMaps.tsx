@@ -28,7 +28,6 @@ class RelatedMaps extends Component<PropTypes> {
     const smallScreen = this.props.viewState.useSmallScreenInterface;
 
     return (
-      //@ts-expect-error - not yet ready to tackle tsfying MenuPanel
       <MenuPanel
         theme={dropdownTheme}
         btnText={t(($) => $.relatedMaps.buttonText)}

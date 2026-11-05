@@ -1,5 +1,5 @@
 import { useTranslation, withTranslation } from "react-i18next";
-import defined from "terriajs-cesium/Source/Core/defined";
+import isDefined from "../../Core/isDefined";
 import CatalogMemberMixin from "../../ModelMixins/CatalogMemberMixin";
 import { BaseModel } from "../../Models/Definition/Model";
 import { useViewState } from "../Context";
@@ -41,7 +41,7 @@ export const DataCatalog = observer(
           )
         : items;
 
-    const filteredItems = (unfilteredItems || []).filter(defined);
+    const filteredItems = (unfilteredItems || []).filter(isDefined);
     return (
       <ul className={Styles.dataCatalog}>
         {isSearching && catalogSearchProvider && (

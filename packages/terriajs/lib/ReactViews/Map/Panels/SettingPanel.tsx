@@ -253,7 +253,6 @@ const SettingPanel: FC = observer(() => {
     getBaseMapStatusMessage(terria.mainViewer.baseMap, t);
 
   return (
-    //@ts-expect-error - not yet ready to tackle tsfying MenuPanel
     <MenuPanel
       theme={dropdownTheme}
       btnRef={settingButtonRef}

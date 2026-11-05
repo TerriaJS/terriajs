@@ -1,4 +1,5 @@
 import ModelTraits from "./ModelTraits";
+import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import TraitsConstructor from "./TraitsConstructor";
 import StratumFromTraits from "../Models/Definition/StratumFromTraits";
 import createStratumInstance from "../Models/Definition/createStratumInstance";
@@ -57,6 +58,17 @@ export default class NestedStrataMap<T extends ModelTraits> implements Map<
     }
     parentValue[this.parentProperty] = value;
     return this;
+  }
+  // Required by the ES2026 Map type but unused by terriajs. Not implemented:
+  // NestedStrataMap.has reports keys whose nested value get() returns as
+  // undefined, so spec upsert semantics can't be honoured across strata maps.
+  getOrInsert(): never {
+    throw new DeveloperError("getOrInsert is not supported on NestedStrataMap");
+  }
+  getOrInsertComputed(): never {
+    throw new DeveloperError(
+      "getOrInsertComputed is not supported on NestedStrataMap"
+    );
   }
   get size(): number {
     return this.parent.size;

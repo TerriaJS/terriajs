@@ -139,7 +139,6 @@ class SharePanel extends Component<PropTypes, SharePanelState> {
     }
 
     return !storyShare ? (
-      //@ts-expect-error - not yet ready to tackle tsfying MenuPanel
       <MenuPanel
         theme={dropdownTheme}
         btnText={catalogShareWithoutText ? null : btnText}
