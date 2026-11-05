@@ -394,10 +394,11 @@ const SortableList = <T extends { id: Key }>({
       ref={renderDragPreview ? undefined : showDraggedRows}
       aria-hidden
       data-tds="sortable-list-drag-overlay"
+      // Physical, as the viewport coordinates it's placed by are
       style={{
-        insetBlockStart: axisDrag.rect.top + pointer.y - axisDrag.start.y,
-        insetInlineStart: axisDrag.rect.left,
-        inlineSize: axisDrag.rect.width
+        top: axisDrag.rect.top + pointer.y - axisDrag.start.y,
+        left: axisDrag.rect.left,
+        width: axisDrag.rect.width
       }}
     >
       {renderDragPreview?.(draggedItems)}

@@ -351,50 +351,58 @@ describe("SortableList", () => {
     expect(onReorder).not.toHaveBeenCalled();
   });
 
-  it("keeps the dragged item's copy on its column with axis y", async () => {
-    const screen = await renderList({ axis: "y" });
-    const row = screen.getByRole("row", { name: "Roads" }).element();
-    const start = row.getBoundingClientRect();
+  // Narrower than the page, so a copy placed from the other side would miss it
+  it.each(["ltr", "rtl"])(
+    "keeps the dragged item's copy on its column with axis y, %s",
+    async (dir) => {
+      const screen = await render(
+        <div dir={dir} style={{ inlineSize: 320 }}>
+          {layerList({ axis: "y" })}
+        </div>
+      );
+      const row = screen.getByRole("row", { name: "Roads" }).element();
+      const start = row.getBoundingClientRect();
 
-    // A pointer drag, which a test can't make with the mouse
-    row.dispatchEvent(
-      new DragEvent("dragstart", {
-        bubbles: true,
-        clientX: start.left + 10,
-        clientY: start.top + 10,
-        dataTransfer: new DataTransfer()
-      })
-    );
-    await expect.element(row).toHaveAttribute("data-dragging");
-    // Over a row, which handles it and stops it there
-    screen
-      .getByRole("row", { name: "Rivers" })
-      .element()
-      .dispatchEvent(
-        new DragEvent("dragover", {
+      // A pointer drag, which a test can't make with the mouse
+      row.dispatchEvent(
+        new DragEvent("dragstart", {
           bubbles: true,
-          cancelable: true,
-          dataTransfer: new DataTransfer(),
-          clientX: start.left + 200,
-          clientY: start.top + 60
+          clientX: start.left + 10,
+          clientY: start.top + 10,
+          dataTransfer: new DataTransfer()
         })
       );
+      await expect.element(row).toHaveAttribute("data-dragging");
+      // Over a row, which handles it and stops it there
+      screen
+        .getByRole("row", { name: "Rivers" })
+        .element()
+        .dispatchEvent(
+          new DragEvent("dragover", {
+            bubbles: true,
+            cancelable: true,
+            dataTransfer: new DataTransfer(),
+            clientX: start.left + 200,
+            clientY: start.top + 60
+          })
+        );
 
-    const overlay = (): DOMRect | undefined =>
-      document
-        .querySelector('[data-tds="sortable-list-drag-overlay"]')
-        ?.getBoundingClientRect();
-    await expect.poll(() => overlay()?.top).toBe(start.top + 50);
-    expect(overlay()?.left).toBe(start.left);
+      const overlay = (): DOMRect | undefined =>
+        document
+          .querySelector('[data-tds="sortable-list-drag-overlay"]')
+          ?.getBoundingClientRect();
+      await expect.poll(() => overlay()?.top).toBe(start.top + 50);
+      expect(overlay()?.left).toBe(start.left);
 
-    row.dispatchEvent(
-      new DragEvent("dragend", {
-        bubbles: true,
-        dataTransfer: new DataTransfer()
-      })
-    );
-    await expect.poll(overlay).toBeUndefined();
-  });
+      row.dispatchEvent(
+        new DragEvent("dragend", {
+          bubbles: true,
+          dataTransfer: new DataTransfer()
+        })
+      );
+      await expect.poll(overlay).toBeUndefined();
+    }
+  );
 
   it("scrolls to where it would land when dragged from the keyboard", async () => {
     const screen = await renderList({
