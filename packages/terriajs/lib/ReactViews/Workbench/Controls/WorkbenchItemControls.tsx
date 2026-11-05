@@ -78,6 +78,9 @@ const WorkbenchItemControls: FC<WorkbenchItemControlsProps> = observer(
             item={item}
             viewState={viewState}
             controls={controls}
+            menuElementConfig={viewState.terria.elements.get(
+              "workbench-item-menu"
+            )}
           />
         )}
         {controls.opacity ? <OpacitySection item={item} /> : null}

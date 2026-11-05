@@ -32,6 +32,7 @@ import hasTraits from "../../../Models/Definition/hasTraits";
 import { ViewingControl } from "../../../Models/ViewingControls";
 import getAncestors from "../../../Models/getAncestors";
 import ViewState from "../../../ReactViewModels/ViewState";
+import IElementConfig from "../../../Models/IElementConfig";
 import AnimatedSpinnerIcon from "../../../Styled/AnimatedSpinnerIcon";
 import Box from "../../../Styled/Box";
 import { RawButton } from "../../../Styled/Button";
@@ -95,10 +96,20 @@ interface PropsType {
   viewState: ViewState;
   item: BaseModel;
   controls?: WorkbenchControls;
+  /**
+   * The `workbench-item-menu` element, which gates the "..." menu alone.
+   *
+   * It names the menu, not this row: "Zoom to" and "About data" sit beside
+   * the menu but are read-only, and an application that does not want layers
+   * removed or exported still wants a reviewer able to zoom to one and read
+   * what it is.
+   */
+  menuElementConfig?: IElementConfig;
 }
 
 const ViewingControls: React.FC<PropsType> = observer((props) => {
   const { viewState, item, controls = enableAllControls } = props;
+  const showMenu = props.menuElementConfig?.visible ?? true;
   const { t } = useTranslation();
   const [isMenuOpen, setIsOpen] = useState(false);
   const [isMapZoomingToCatalogItem, setIsMapZoomingToCatalogItem] =
@@ -444,22 +455,24 @@ const ViewingControls: React.FC<PropsType> = observer((props) => {
         >
           {previewButton.text}
         </WorkbenchButton>
-        <WorkbenchButton
-          css="flex-grow:0;"
-          onClick={(e) => {
-            e.stopPropagation();
-            if (isMenuOpen) {
-              setIsOpen(false);
-            } else {
-              setIsOpen(true);
-            }
-          }}
-          title={t(($) => $.workbench.showMoreActionsTitle)}
-          iconOnly
-          iconElement={() => <Icon glyph={Icon.GLYPHS.menuDotted} />}
-        />
+        {showMenu ? (
+          <WorkbenchButton
+            css="flex-grow:0;"
+            onClick={(e) => {
+              e.stopPropagation();
+              if (isMenuOpen) {
+                setIsOpen(false);
+              } else {
+                setIsOpen(true);
+              }
+            }}
+            title={t(($) => $.workbench.showMoreActionsTitle)}
+            iconOnly
+            iconElement={() => <Icon glyph={Icon.GLYPHS.menuDotted} />}
+          />
+        ) : null}
       </Ul>
-      {isMenuOpen && (
+      {showMenu && isMenuOpen && (
         <Box
           css={`
             position: absolute;

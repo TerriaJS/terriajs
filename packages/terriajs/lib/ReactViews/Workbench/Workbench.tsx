@@ -12,6 +12,7 @@ import { TextSpan } from "../../Styled/Text";
 import BadgeBar from "../BadgeBar";
 import Icon, { StyledIcon } from "../../Styled/Icon";
 import WorkbenchList from "./WorkbenchList";
+import withControlledVisibility from "../HOCs/withControlledVisibility";
 import {
   Category,
   DataSourceAction
@@ -23,6 +24,35 @@ interface IProps extends WithTranslation {
   viewState: ViewState;
   t: TFunction;
 }
+
+const RemoveAllButton = withControlledVisibility(
+  ({ onClick, label }: { onClick: () => void; label: string }) => (
+    <RawButton
+      onClick={onClick}
+      css={`
+        display: flex;
+        align-items: center;
+        padding: 0 5px;
+        min-width: 90px;
+        justify-content: space-evenly;
+        svg {
+          vertical-align: middle;
+          padding-right: 4px;
+        }
+      `}
+    >
+      <StyledIcon
+        glyph={Icon.GLYPHS.cancel}
+        light
+        styledWidth={"12px"}
+        displayInline
+      />
+      <TextSpan textLight small isLink>
+        {label}
+      </TextSpan>
+    </RawButton>
+  )
+);
 
 @observer
 class Workbench extends Component<IProps> {
@@ -170,30 +200,13 @@ class Workbench extends Component<IProps> {
               </TextSpan>
             </RawButton>
           )}
-          <RawButton
+          <RemoveAllButton
+            elementConfig={this.props.terria.elements.get(
+              "workbench-remove-all"
+            )}
             onClick={this.removeAll}
-            css={`
-              display: flex;
-              align-items: center;
-              padding: 0 5px;
-              min-width: 90px;
-              justify-content: space-evenly;
-              svg {
-                vertical-align: middle;
-                padding-right: 4px;
-              }
-            `}
-          >
-            <StyledIcon
-              glyph={Icon.GLYPHS.cancel}
-              light
-              styledWidth={"12px"}
-              displayInline
-            />
-            <TextSpan textLight small isLink>
-              {t(($) => $.workbench.removeAll)}
-            </TextSpan>
-          </RawButton>
+            label={t(($) => $.workbench.removeAll)}
+          />
         </BadgeBar>
         <WorkbenchList
           viewState={this.props.viewState}
