@@ -1,0 +1,6 @@
+@layer tjs.components {
+  .tjs-map-view {
+    position: absolute;
+    inset: 0;
+  }
+}
