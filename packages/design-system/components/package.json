@@ -85,6 +85,7 @@
     "react": "^18.2.0 || ^19.0.0",
     "react-dom": "^18.2.0 || ^19.0.0"
   },
+  "private": true,
   "scripts": {
     "build": "pnpm run build:js && pnpm run build:types",
     "build:js": "rollup -c",
