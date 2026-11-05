@@ -2,7 +2,8 @@ import { useLayoutEffect } from "@react-aria/utils";
 import { useCallback, useEffect, useState, type RefObject } from "react";
 
 // An element's natural height, measured with its own height released, kept
-// up to date as its content or width changes
+// up to date as its content or width changes. Its children must keep their
+// own heights, not stretch to its
 const useMeasuredHeight = (
   ref: RefObject<HTMLDivElement | null>
 ): { height: number | undefined } => {
@@ -37,7 +38,18 @@ const useMeasuredHeight = (
       });
     };
 
-    const mutationObserver = new MutationObserver(scheduleMeasure);
+    // Its children keep their natural size while its own height transitions,
+    // so their resizing is content changing, whatever changed it
+    const contentObserver = new ResizeObserver(scheduleMeasure);
+    const observeContent = (): void => {
+      for (const child of element.children) contentObserver.observe(child);
+    };
+    observeContent();
+
+    const mutationObserver = new MutationObserver(() => {
+      observeContent();
+      scheduleMeasure();
+    });
     mutationObserver.observe(element, {
       attributeFilter: ["class"],
       attributes: true,
@@ -60,6 +72,7 @@ const useMeasuredHeight = (
 
     return () => {
       mutationObserver.disconnect();
+      contentObserver.disconnect();
       resizeObserver.disconnect();
       cancelAnimationFrame(measureFrame);
     };

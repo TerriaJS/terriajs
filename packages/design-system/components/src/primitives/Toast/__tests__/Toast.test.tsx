@@ -278,6 +278,30 @@ describe("Toast", () => {
     expect(screen.getByRole("alertdialog").element()).toBe(before);
   });
 
+  it("grows with its content after it has settled", async () => {
+    const queue = fresh();
+    const screen = await render(
+      <Toast.Provider queue={queue}>
+        {({ toast: queued }) => (
+          <Toast toast={queued}>
+            <div data-testid="body" style={{ height: 40 }} />
+          </Toast>
+        )}
+      </Toast.Provider>
+    );
+    queue.add({ title: "Layer added" }, { timeout: 0 });
+    const toast = screen.getByRole("alertdialog");
+    await expect.element(toast).toBeVisible();
+    const shown = toast.element() as HTMLElement;
+    await expect.poll(() => shown.offsetHeight).toBe(shown.scrollHeight);
+    const padding = shown.offsetHeight - 40;
+
+    const body = screen.getByTestId("body").element() as HTMLElement;
+    body.style.height = "120px";
+
+    await expect.poll(() => shown.offsetHeight).toBe(120 + padding);
+  });
+
   it("shows a promise loading, then how it settled", async () => {
     const screen = await render(<Toast.Provider />);
     let resolve = (): void => undefined;
