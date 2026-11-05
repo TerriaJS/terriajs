@@ -2,26 +2,30 @@ name: Design system Chromatic
 
 # Snapshots the stories, in light and dark, for visual review. Settings are in
 # chromatic.config.json, shared with `pnpm chromatic`
+
+# Off until there's a Chromatic project and its CHROMATIC_PROJECT_TOKEN
+# secret: it runs only when started by hand. Uncomment the triggers to turn it on
 on:
-  push:
-    branches: [main]
-    paths:
-      - "packages/design-system/**"
-      - ".github/workflows/design-system-*.yml"
-      - ".github/scripts/design-system/**"
-      - "pnpm-lock.yaml"
-      - "pnpm-workspace.yaml"
-      - "package.json"
-      - "knip.json"
-  pull_request:
-    paths:
-      - "packages/design-system/**"
-      - ".github/workflows/design-system-*.yml"
-      - ".github/scripts/design-system/**"
-      - "pnpm-lock.yaml"
-      - "pnpm-workspace.yaml"
-      - "package.json"
-      - "knip.json"
+  workflow_dispatch:
+  # push:
+  #   branches: [main]
+  #   paths:
+  #     - "packages/design-system/**"
+  #     - ".github/workflows/design-system-*.yml"
+  #     - ".github/scripts/design-system/**"
+  #     - "pnpm-lock.yaml"
+  #     - "pnpm-workspace.yaml"
+  #     - "package.json"
+  #     - "knip.json"
+  # pull_request:
+  #   paths:
+  #     - "packages/design-system/**"
+  #     - ".github/workflows/design-system-*.yml"
+  #     - ".github/scripts/design-system/**"
+  #     - "pnpm-lock.yaml"
+  #     - "pnpm-workspace.yaml"
+  #     - "package.json"
+  #     - "knip.json"
 
 permissions:
   contents: read
