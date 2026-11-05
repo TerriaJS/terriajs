@@ -4,7 +4,14 @@
   "private": true,
   "description": "TerriaJS monorepo: terriajs, terriajs-server, and TerriaMap.",
   "license": "Apache-2.0",
-  "packageManager": "pnpm@12.3.4",
+  "packageManager": "pnpm@12.16.1",
+  "devEngines": {
+    "packageManager": {
+      "name": "pnpm",
+      "version": "12.16.1",
+      "onFail": "download"
+    }
+  },
   "engines": {
     "node": ">= 22"
   },
