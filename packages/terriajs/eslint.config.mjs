@@ -10,6 +10,69 @@ import globals from "globals";
 import tseslint from "typescript-eslint";
 import eslintPluginZod from "eslint-plugin-zod";
 
+// The new UI's rules (lib/UI), used by its blocks below
+const noLogic = "Logic belongs in a model or view model, not a UI component.";
+const newUiImports = {
+  paths: [
+    { name: "lodash", message: "Please use 'lodash-es' instead." },
+    ...[
+      "styled-components",
+      "create-react-class",
+      "classnames",
+      "hoist-non-react-statics",
+      "react-select",
+      "rc-slider",
+      "react-datepicker",
+      "react-color",
+      "react-anything-sortable",
+      "react-transition-group",
+      "react-virtual",
+      "react-swipeable",
+      "react-responsive",
+      "@visx/tooltip"
+    ].map((name) => ({
+      name,
+      message: "The new UI uses the design system, React Aria and clsx instead."
+    }))
+  ],
+  patterns: [
+    {
+      group: ["*.scss"],
+      message: "The new UI's CSS is plain .css in the tjs layers."
+    },
+    {
+      group: ["**/Styled/**", "**/ReactViews/**"],
+      message: "The new UI doesn't use the old UI's components."
+    }
+  ]
+};
+const mobxActions = {
+  name: "mobx",
+  importNames: ["runInAction", "action", "reaction", "autorun", "when", "flow"],
+  message: noLogic
+};
+const loadHelpers = {
+  group: ["**/Core/load*"],
+  message: "Loading belongs in a model or view model, not a UI component."
+};
+const newUiClasses = {
+  selector: "ClassDeclaration[superClass], ClassExpression[superClass]",
+  message: "The new UI is function components only."
+};
+const newUiLogic = [
+  {
+    selector:
+      "CallExpression[callee.name=/^(runInAction|action|reaction|autorun|when|flow|fetch)$/]",
+    message: noLogic
+  },
+  {
+    selector:
+      "CallExpression[callee.property.name=/^(setTrait|setTraitsFromJson|runInAction)$/]",
+    message: noLogic
+  },
+  { selector: "Identifier[name='CommonStrata']", message: noLogic }
+];
+
 export default defineConfig([
   globalIgnores(["**/*.scss.d.ts", "lib/ThirdParty", "dist", "wwwroot"]),
 
@@ -242,6 +305,41 @@ export default defineConfig([
     rules: {
       "no-restricted-syntax": "off",
       "react/no-danger": "off"
+    }
+  },
+  // The new UI (lib/UI): TypeScript function components on the design system,
+  // with no logic of their own. Its tests may set up model state
+  {
+    name: "terriajs/new-ui",
+    files: ["lib/UI/**/*.{ts,tsx}"],
+    rules: {
+      "no-restricted-imports": ["error", newUiImports],
+      "no-restricted-syntax": ["error", newUiClasses]
+    }
+  },
+  {
+    name: "terriajs/new-ui-no-logic",
+    files: ["lib/UI/**/*.{ts,tsx}"],
+    ignores: ["lib/UI/**/*.test.{ts,tsx}", "lib/UI/test/**"],
+    rules: {
+      "no-restricted-imports": [
+        "error",
+        {
+          paths: [...newUiImports.paths, mobxActions],
+          patterns: [...newUiImports.patterns, loadHelpers]
+        }
+      ],
+      "no-restricted-syntax": ["error", newUiClasses, ...newUiLogic]
+    }
+  },
+  {
+    name: "terriajs/new-ui-typescript-only",
+    files: ["lib/UI/**/*.{js,jsx}"],
+    rules: {
+      "no-restricted-syntax": [
+        "error",
+        { selector: "Program", message: "The new UI is TypeScript only." }
+      ]
     }
   },
   {
