@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useRef, type RefObject } from "react";
 import type { ScrollShadowVisibility } from "./ScrollShadow";
 
-// Ported from HeroUI v3's use-scroll-shadow.ts: it writes the scroll state to
-// the element's data attributes itself, batched to a frame, so scrolling
-// never renders React again
+// Ported from HeroUI v3's use-scroll-shadow.ts, Copyright 2025 NextUI Inc.,
+// Apache License 2.0, and modified (see THIRD_PARTY_NOTICES.md): it writes the
+// scroll state to the element's data attributes itself, batched to a frame,
+// so scrolling never renders React again
 
 type UseScrollShadowProps = {
   containerRef: RefObject<HTMLElement | null>;

@@ -1,10 +1,11 @@
 /**
  * ScrollShadow Component Styles
  *
- * Ported from HeroUI v3's scroll-shadow.css. Its public custom properties are
- * --terria-ds-scroll-shadow-size, -offset and -scrollbar-size here; the
- * component sets the first two from its size and offset props. The blur
- * variant at the end is ours, from the Figma file.
+ * Ported from HeroUI v3's scroll-shadow.css, Copyright 2025 NextUI Inc.,
+ * Apache License 2.0, and modified (see THIRD_PARTY_NOTICES.md). Its public
+ * custom properties are --terria-ds-scroll-shadow-size, -offset and
+ * -scrollbar-size here; the component sets the first two from its size and
+ * offset props. The blur variant at the end is ours, from the Figma file.
  */
 
 /* Fade sizes for the scroll-driven variant below. They stay at 0px whenever

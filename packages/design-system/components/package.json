@@ -1,6 +1,7 @@
 {
   "name": "@terria/design-system",
   "version": "0.0.0",
+  "license": "Apache-2.0",
   "browserslist": [
     ">0.2%",
     "not dead",
@@ -77,7 +78,8 @@
   },
   "files": [
     "dist",
-    "!dist/tsconfig.tsbuildinfo"
+    "!dist/tsconfig.tsbuildinfo",
+    "THIRD_PARTY_NOTICES.md"
   ],
   "main": "./dist/index.js",
   "module": "./dist/index.js",

@@ -8,8 +8,9 @@ import { useScrollShadow } from "./useScrollShadow";
 import { dataAttr } from "../../utils/dataAttr";
 import "./ScrollShadow.css";
 
-// Ported from HeroUI v3's scroll-shadow.tsx. The blur variant is ours, from
-// the Figma file; HeroUI has only fade
+// Ported from HeroUI v3's scroll-shadow.tsx, Copyright 2025 NextUI Inc.,
+// Apache License 2.0, and modified (see THIRD_PARTY_NOTICES.md). The blur
+// variant is ours, from the Figma file; HeroUI has only fade
 
 type ScrollShadowVisibility =
   | "auto"
