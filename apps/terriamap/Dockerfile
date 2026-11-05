@@ -24,6 +24,7 @@ ARG BASE_HREF=/
 ENV NODE_OPTIONS=--max_old_space_size=4096
 COPY . .
 RUN pnpm install --filter terriajs-map... --frozen-lockfile
+RUN pnpm exec turbo run build --filter="terriajs-map^..."
 RUN pnpm --filter terriajs-map exec gulp release --baseHref="$BASE_HREF"
 # Materialise a portable, real (non-symlinked) node_modules for the runtime stage.
 RUN pnpm --filter terriajs-map deploy --prod /prod/app

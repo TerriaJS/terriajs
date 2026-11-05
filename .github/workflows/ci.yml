@@ -34,6 +34,11 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
 
+      # The steps below run terriajs' tools directly, not through turbo, so the
+      # packages it depends on, such as the design system, are built here first
+      - name: Build TerriaJS dependencies
+        run: pnpm exec turbo run build --filter="terriajs^..."
+
       - name: Check formatting with oxfmt
         run: pnpm format:check
 
