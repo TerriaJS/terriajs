@@ -1,40 +1,40 @@
 import { observer } from "mobx-react";
-import PropTypes from "prop-types";
 import React, { Suspense } from "react";
 import { createRoot } from "react-dom/client";
-import Variables from "../Styles/variables.scss";
-import "./global.scss";
 import { Loader } from "./Loader";
 import { terriaStore } from "./terriaStore";
 
-// Lazy load the entire TerriaUserInterface component
+// Each user interface is loaded on its own, with its own styles, so the page
+// never has both: the current one, or the new one on the design system when
+// the config's experimentalNewUi is on
 const LazyTerriaUserInterface = React.lazy(() =>
   import("./UserInterface").then((module) => ({
     default: module.TerriaUserInterface
   }))
 );
+const LazyNewUserInterface = React.lazy(() =>
+  import("terriajs/lib/UI/UserInterface/UserInterface").then((module) => ({
+    default: module.UserInterface
+  }))
+);
 
-const Root = observer(({ themeOverrides }) => {
+const Root = observer(() => {
   const { terria, viewState, status } = terriaStore;
 
   if (status === "loading") {
     return <Loader />;
   }
 
+  const UserInterface = terria.configParameters.experimentalNewUi
+    ? LazyNewUserInterface
+    : LazyTerriaUserInterface;
+
   return (
     <Suspense fallback={<Loader />}>
-      <LazyTerriaUserInterface
-        terria={terria}
-        viewState={viewState}
-        themeOverrides={themeOverrides}
-      />
+      <UserInterface terria={terria} viewState={viewState} />
     </Suspense>
   );
 });
-
-Root.propTypes = {
-  themeOverrides: PropTypes.object
-};
 
 export const renderUi = () => {
   const container = document.getElementById("ui");
@@ -44,5 +44,5 @@ export const renderUi = () => {
   }
 
   const root = createRoot(container);
-  root.render(<Root themeOverrides={Variables} />);
+  root.render(<Root />);
 };
