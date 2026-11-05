@@ -702,7 +702,7 @@ const ToastProviderInner = <T extends object = ToastContentValue>(
   }, [exitAwareQueue, isPointerOrFocusWithin]);
 
   // Timers hold while the page is hidden, so toasts aren't missed in a
-  // background tab
+  // background tab, including one it mounts in
   useEffect(() => {
     if (!exitAwareQueue) return;
     const handleVisibilityChange = (): void => {
@@ -712,6 +712,7 @@ const ToastProviderInner = <T extends object = ToastContentValue>(
         exitAwareQueue.resumeTimers("visibility");
       }
     };
+    handleVisibilityChange();
     document.addEventListener("visibilitychange", handleVisibilityChange);
     return () => {
       document.removeEventListener("visibilitychange", handleVisibilityChange);

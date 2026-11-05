@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, onTestFinished, vi } from "vitest";
 import { render } from "vitest-browser-react";
 import { page, userEvent } from "vitest/browser";
 import { Toast, ToastQueue, toast, toastQueue } from "..";
@@ -161,6 +161,23 @@ describe("Toast", () => {
 
   // The 5 seconds React Aria gives as the least for reading one; with an
   // action, until the user closes it, as the action would go with it
+  it("holds its timers on a page that is hidden when it mounts", async () => {
+    Object.defineProperty(document, "hidden", {
+      configurable: true,
+      value: true
+    });
+    onTestFinished(() => {
+      Reflect.deleteProperty(document, "hidden");
+    });
+    const queue = fresh({ exitDuration: 0 });
+    const screen = await render(<Toast.Provider queue={queue} />);
+
+    queue.add({ title: "Brief" }, { timeout: 200 });
+    await wait(400);
+
+    await expect.element(screen.getByText("Brief")).toBeInTheDocument();
+  });
+
   it("stays at least 5 seconds, and with an action until closed", () => {
     const queue = fresh();
 
