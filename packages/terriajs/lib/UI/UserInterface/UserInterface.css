@@ -1,0 +1,39 @@
+/* The new UI's global CSS: the design system's base styles, and nothing else.
+   layers.css first: the first @layer a page meets fixes the order, and bundlers
+   put imported CSS before this file's own */
+@import url("@terria/design-system/layers.css");
+@import url("@terria/design-system/tokens.css");
+@import url("@terria/design-system/reset.css");
+@import url("@terria/design-system/base.css");
+@import url("@terria/design-system/typography.css");
+@import url("@terria/design-system/layout.css");
+@import url("@terria/design-system/fonts.css");
+
+/* The new UI's layers come after the design system's, so its component CSS
+   applies over the design system's, and a map's own CSS, outside any layer,
+   over both */
+@layer tjs.components, tjs.overrides;
+
+@layer tjs.components {
+  .tjs-user-interface {
+    display: grid;
+    grid-template:
+      "side map" 1fr
+      "side dock" auto
+      / auto 1fr;
+    block-size: 100dvh;
+  }
+
+  .tjs-user-interface__side-panel {
+    grid-area: side;
+  }
+
+  .tjs-user-interface__map {
+    position: relative;
+    grid-area: map;
+  }
+
+  .tjs-user-interface__bottom-dock {
+    grid-area: dock;
+  }
+}
