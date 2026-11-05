@@ -91,6 +91,16 @@ const copyFiles = () => ({
 // Find all index.ts files (main + all component indexes)
 const inputFiles = glob.sync("src/**/index.ts");
 
+// Everything the package declares stays an import, its subpaths too
+const pkg = JSON.parse(fs.readFileSync("package.json", "utf-8"));
+const declared = Object.keys({
+  ...pkg.dependencies,
+  ...pkg.peerDependencies
+});
+/** @param {string} id */
+const isDeclared = (id) =>
+  declared.some((name) => id === name || id.startsWith(`${name}/`));
+
 /** @type {import('rollup').RollupOptions} */
 const config = {
   input: [...inputFiles],
@@ -101,15 +111,15 @@ const config = {
     preserveModulesRoot: "src",
     sourcemap: true
   },
-  external: [
-    "react",
-    "react-dom",
-    "react/jsx-runtime",
-    /^react-aria-components(\/.*)?$/,
-    /^react-aria(\/.*)?$/,
-    "@react-aria/utils",
-    /^@terria\/design-system-icons(\/.*)?$/
-  ],
+  external: isDeclared,
+  // Rollup leaves any import it can't resolve as one; an undeclared package
+  // would then be missing for whoever installs this
+  onwarn(warning, warn) {
+    if (warning.code === "UNRESOLVED_IMPORT") {
+      throw new Error(`${warning.message}: declare it in package.json`);
+    }
+    warn(warning);
+  },
   plugins: [
     postcssPlugin(),
     esbuild({
