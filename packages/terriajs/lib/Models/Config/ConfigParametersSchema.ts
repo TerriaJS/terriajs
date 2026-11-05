@@ -190,6 +190,12 @@ export const ConfigParametersSchema = z.strictObject({
   tabbedCatalog: z.boolean(),
   experimentalFeatures: z.boolean().optional(),
   /**
+   * True to show the new user interface, built on the Terria design system,
+   * instead of the current one. Read once at startup. Experimental: the new
+   * interface is still being built.
+   */
+  experimentalNewUi: z.boolean(),
+  /**
    * Individually toggled experimental features.
    */
   nextExperimentalFeatures: NextExperimentalFeaturesSchema,
@@ -527,6 +533,7 @@ export const CONFIG_DEFAULTS: z.output<typeof ConfigParametersSchema> = {
   relatedMaps: [],
   searchProviders: [],
   searchBarConfig: DEFAULT_SEARCH_BAR_CONFIG,
+  experimentalNewUi: false,
   disableMobileInterface: false,
   disableSharePanel: false,
   disableShareEmbed: false,
