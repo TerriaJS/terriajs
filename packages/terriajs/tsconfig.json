@@ -25,5 +25,10 @@
     "resolveJsonModule": true,
     "types": ["terriajs-cesium"]
   },
-  "include": ["./lib/**/*", "./test/**/*", "./buildprocess/**/*"]
+  "include": [
+    "./lib/**/*",
+    "./test/**/*",
+    "./buildprocess/**/*",
+    "./vitest.config.mts"
+  ]
 }
