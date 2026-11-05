@@ -48,6 +48,16 @@ jobs:
       - name: Check README parity
         run: pnpm sync-readme && git diff --exit-code -- README.md
 
+      # The new UI (lib/UI): its CSS lint, and its Vitest tests in Chromium
+      - name: Lint the new UI's CSS
+        run: pnpm --filter terriajs lint:css
+
+      - name: Install the new UI tests' browser
+        run: pnpm --filter terriajs exec playwright install --with-deps chromium
+
+      - name: Test the new UI
+        run: pnpm --filter terriajs test:ui
+
       - name: Type-check TerriaMap
         run: pnpm --filter terriajs-map typecheck
 
