@@ -296,6 +296,44 @@ const SortableList = <T extends { id: Key }>({
     };
   }, [dragFrom, dragDelay]);
 
+  // A popover, menu or select opened from a control in a row gives focus
+  // back to the row when it closes, not to the control: React Aria restores
+  // it there, as the list's focused item. The list remembers the last such
+  // control pressed or focused in a row, and moves focus back to it when it
+  // reaches that row from nowhere, as when what it opened closes. A
+  // workaround for React Aria's GridList, which does so in its latest
+  // version too
+  useEffect(() => {
+    const list = listRef.current;
+    if (!list) return;
+    let trigger: HTMLElement | null = null;
+    const remember = (event: Event): void => {
+      if (!(event.target instanceof Element)) return;
+      const control = event.target.closest<HTMLElement>(
+        "[aria-expanded], [aria-haspopup]"
+      );
+      const row = control?.closest('[role="row"]');
+      if (control && row && control !== row) trigger = control;
+    };
+    const onFocusIn = (event: FocusEvent): void => {
+      remember(event);
+      const { target, relatedTarget } = event;
+      const returnsToRow =
+        relatedTarget === null &&
+        target instanceof Element &&
+        target.getAttribute("role") === "row" &&
+        trigger?.isConnected &&
+        target.contains(trigger);
+      if (returnsToRow && trigger) trigger.focus();
+    };
+    list.addEventListener("pointerdown", remember, true);
+    list.addEventListener("focusin", onFocusIn);
+    return () => {
+      list.removeEventListener("pointerdown", remember, true);
+      list.removeEventListener("focusin", onFocusIn);
+    };
+  }, []);
+
   const { dragAndDropHooks } = useDragAndDrop<T>({
     // A type only this list uses: as text, a drop on a text field or another
     // app would paste the item's text there
