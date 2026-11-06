@@ -176,12 +176,9 @@
 
   [data-tds="button"][data-tds-variant="ghost"],
   [data-tds="button"][data-tds-variant="outline"] {
+    /* No blur, at rest or on hover, as the design has them: in a panel that
+       blurs, a nested blur would only see the panel and draw a disc */
     --_btn-bg: transparent;
-
-    /* Blur fades in with the hover fill, from none at rest, so the fill reads
-       over busy content like a map */
-    --_btn-backdrop-filter: blur(0);
-    --_btn-backdrop-filter-hover: var(--_btn-blur);
     --_btn-bg-hover: var(--terria-ds-neutral);
     --_btn-fg: var(--terria-ds-neutral-foreground);
   }

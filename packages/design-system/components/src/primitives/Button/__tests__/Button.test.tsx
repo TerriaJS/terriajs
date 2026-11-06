@@ -75,19 +75,19 @@ describe("Button", () => {
     expect(onPress).not.toHaveBeenCalled();
   });
 
+  // As the design has them: a nested blur, in a panel that blurs already,
+  // would only see the panel and draw a disc behind the button
   it.each(["ghost", "outline"] as const)(
-    "blurs what's behind a %s button on hover, so its hover fill reads over busy content like a map",
+    "doesn't blur what's behind the %s button, at rest or on hover",
     async (variant) => {
       const screen = await render(<Button variant={variant}>Upload</Button>);
       const button = screen.getByRole("button", { name: "Upload" });
+      expect(getComputedStyle(button.element()).backdropFilter).toBe("none");
 
       await userEvent.hover(button);
 
       await expect.element(button).toHaveAttribute("data-hovered", "true");
-      // The blur fades in, so wait for the transition to end
-      await expect
-        .poll(() => getComputedStyle(button.element()).backdropFilter)
-        .toMatch(/^blur\([1-9]/);
+      expect(getComputedStyle(button.element()).backdropFilter).toBe("none");
     }
   );
 
@@ -108,16 +108,16 @@ describe("Button", () => {
     const screen = await render(
       <div style={{ "--terria-ds-button-backdrop": "none" } as CSSProperties}>
         <Button variant="secondary">Settings</Button>
-        <Button variant="ghost">Upload</Button>
+        <Button variant="tertiary">Upload</Button>
       </div>
     );
     const secondary = screen.getByRole("button", { name: "Settings" });
-    const ghost = screen.getByRole("button", { name: "Upload" });
+    const tertiary = screen.getByRole("button", { name: "Upload" });
 
     expect(getComputedStyle(secondary.element()).backdropFilter).toBe("none");
-    await userEvent.hover(ghost);
-    await expect.element(ghost).toHaveAttribute("data-hovered", "true");
-    expect(getComputedStyle(ghost.element()).backdropFilter).toBe("none");
+    await userEvent.hover(tertiary);
+    await expect.element(tertiary).toHaveAttribute("data-hovered", "true");
+    expect(getComputedStyle(tertiary.element()).backdropFilter).toBe("none");
   });
 
   it.each(["secondary", "ghost"] as const)(
