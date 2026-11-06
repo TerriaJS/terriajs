@@ -2,6 +2,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { render, type RenderResult } from "vitest-browser-react";
 import { userEvent } from "vitest/browser";
 import { SortableList, type SortableListProps } from "..";
+import { Button } from "../../Button";
 import { Disclosure } from "../../Disclosure";
 import { Slider } from "../../Slider";
 
@@ -164,6 +165,58 @@ describe("SortableList", () => {
     const list = screen.getByRole("grid", { name: "Layers" }).element();
     expect(document.activeElement).toBe(list);
     expect(getComputedStyle(list).outlineStyle).not.toBe("none");
+  });
+
+  // A handle can hold a whole header, buttons and all: their focus is their
+  // own, and only the handle's drag button rings the handle
+  it("rings the handle for its drag button's focus, not for a button inside it", async () => {
+    const screen = await render(
+      <SortableList
+        aria-label="Layers"
+        items={LAYERS}
+        getItemText={(layer) => layer.name}
+        dragFrom="handle"
+        onReorder={vi.fn()}
+      >
+        {(layer) => (
+          <SortableList.DragHandle>
+            {layer.name}
+            <Button>Settings for {layer.name}</Button>
+          </SortableList.DragHandle>
+        )}
+      </SortableList>
+    );
+    const handle = (name: string): Element => {
+      const found = screen
+        .getByRole("button", { name: new RegExp(`Drag ${name}`) })
+        .element()
+        .closest('[data-tds="sortable-list-drag-handle"]');
+      if (!found) throw new Error(`No drag handle for ${name}`);
+      return found;
+    };
+    await expect
+      .element(screen.getByRole("button", { name: "Settings for Roads" }))
+      .toBeInTheDocument();
+
+    await userEvent.keyboard("{Shift}");
+    (
+      screen
+        .getByRole("button", { name: "Settings for Roads" })
+        .element() as HTMLElement
+    ).focus();
+    await expect
+      .element(screen.getByRole("button", { name: "Settings for Roads" }))
+      .toHaveAttribute("data-focus-visible");
+    expect(getComputedStyle(handle("Roads")).boxShadow).toBe("none");
+
+    (
+      screen
+        .getByRole("button", { name: /Drag Roads/ })
+        .element() as HTMLElement
+    ).focus();
+    await expect
+      .poll(() => getComputedStyle(handle("Roads")).boxShadow)
+      .not.toBe("none");
   });
 
   it("keeps the handle working inside a component with buttons of its own, such as a Disclosure", async () => {
