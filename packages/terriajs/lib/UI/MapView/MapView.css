@@ -7,4 +7,13 @@
     position: absolute;
     inset: 0;
   }
+
+  /* The tile layer overlaps its tiles by half a pixel, against the gaps
+     between them at fractional zooms. Leaflet's stylesheet blends tiles with
+     plus-lighter against the same gaps, which would brighten that overlap
+     into light lines, so tiles are drawn normally, as they always were */
+  /* stylelint-disable-next-line selector-class-pattern -- Leaflet's own class */
+  .tjs-map-view img.leaflet-tile {
+    mix-blend-mode: normal;
+  }
 }
