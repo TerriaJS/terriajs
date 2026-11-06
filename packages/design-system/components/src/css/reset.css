@@ -6,12 +6,16 @@
  *
  * The lowest layer, so the host's own unlayered CSS and every design system
  * layer above it win over it.
+ *
+ * It stops at data-tds-no-reset: what's inside, like a map library's own
+ * DOM, keeps the browser's defaults its CSS was written against. The page,
+ * :target and reduced motion stay global.
  */
 
 @layer terria-ds.reset {
-  *,
-  *::before,
-  *::after {
+  *:where(:not([data-tds-no-reset] *)),
+  *:where(:not([data-tds-no-reset] *))::before,
+  *:where(:not([data-tds-no-reset] *))::after {
     box-sizing: border-box;
   }
 
@@ -32,55 +36,57 @@
   }
 
   /* Flow spacing comes from authored CSS, from the start of each element */
-  :where(h1, h2, h3, h4, h5, h6, p, figure, blockquote, dl, dd) {
+  :where(h1, h2, h3, h4, h5, h6, p, figure, blockquote, dl, dd):where(
+    :not([data-tds-no-reset] *)
+  ) {
     margin-block-end: 0;
   }
 
   /* role="list", not a class: Safari drops list semantics with list-style none */
-  :where(ol, ul)[role="list"] {
+  :where(ol, ul)[role="list"]:where(:not([data-tds-no-reset] *)) {
     padding-inline-start: 0;
     list-style: none;
   }
 
-  :where(h1, h2, h3, h4, h5, h6) {
+  :where(h1, h2, h3, h4, h5, h6):where(:not([data-tds-no-reset] *)) {
     text-wrap: balance;
   }
 
-  :where(p, h1, h2, h3, h4, h5, h6) {
+  :where(p, h1, h2, h3, h4, h5, h6):where(:not([data-tds-no-reset] *)) {
     overflow-wrap: break-word;
   }
 
-  :where(p) {
+  :where(p):where(:not([data-tds-no-reset] *)) {
     /* eslint-disable-next-line css/use-baseline -- ignored where unsupported */
     text-wrap: pretty;
   }
 
-  :where(img, picture, video, canvas) {
+  :where(img, picture, video, canvas):where(:not([data-tds-no-reset] *)) {
     display: block;
     max-inline-size: 100%;
     block-size: auto;
   }
 
   /* Form controls take the surrounding text's font, not the browser's */
-  :where(input, button, textarea, select) {
+  :where(input, button, textarea, select):where(:not([data-tds-no-reset] *)) {
     font: inherit;
     letter-spacing: inherit;
     color: inherit;
   }
 
   /* Buttons start bare; a component or Button gives them their look */
-  :where(button) {
+  :where(button):where(:not([data-tds-no-reset] *)) {
     padding: 0;
     border: 0;
     background: none;
     -webkit-tap-highlight-color: transparent;
   }
 
-  :where(button:enabled) {
+  :where(button:enabled):where(:not([data-tds-no-reset] *)) {
     cursor: pointer;
   }
 
-  :where(a:not([class])) {
+  :where(a:not([class])):where(:not([data-tds-no-reset] *)) {
     color: currentcolor;
     text-decoration-skip-ink: auto;
   }
