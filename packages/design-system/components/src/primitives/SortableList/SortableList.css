@@ -53,8 +53,9 @@
       color: var(--terria-ds-text-muted);
     }
 
-    /* The keyboard focuses the button over it */
-    &:has(> [data-focus-visible]) {
+    /* The keyboard focuses the drag button over it; a button of the item's
+       own inside it, as in a header, shows its own focus */
+    &:has(> [data-tds="sortable-list-drag-button"][data-focus-visible]) {
       box-shadow: 0 0 0 var(--terria-ds-focus-ring-width)
         var(--terria-ds-focus-ring-halo);
 
