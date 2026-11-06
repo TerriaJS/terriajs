@@ -126,14 +126,18 @@ const SliderFill = (props: SliderFillProps): React.ReactElement => {
 
 SliderFill.displayName = "Slider.Fill";
 
-// A dot at every step value, drawn lighter where the fill covers it
+// A dot at every step value, or at the values given, drawn lighter where the
+// fill covers it
 type SliderTicksProps = {
   /** The Fill's offset, so the ticks it covers are drawn lighter */
   fillOffset?: number;
+  /** The values to tick, such as a default among fine steps; every step if not given */
+  values?: readonly number[];
 };
 
 const SliderTicks = ({
-  fillOffset
+  fillOffset,
+  values
 }: SliderTicksProps): React.ReactElement | null => {
   const state = useContext(SliderStateContext);
   if (!state || state.values.length === 0) return null;
@@ -144,11 +148,13 @@ const SliderTicks = ({
   // The epsilon keeps max when floating-point steps fall just short of it
   const count = Math.floor((max - min) / state.step + 1e-9) + 1;
   const fill = getFillRange(state, fillOffset);
+  const ticked =
+    values ??
+    Array.from({ length: count }, (_, index) => min + index * state.step);
 
   return (
     <>
-      {Array.from({ length: count }, (_, index) => {
-        const value = min + index * state.step;
+      {ticked.map((value) => {
         return (
           <span
             key={value}
@@ -237,8 +243,11 @@ type SliderProps = Omit<SliderRootProps, "children"> & {
   label?: ReactNode;
   /** Shows the value opposite the label */
   showValue?: boolean;
-  /** Marks every step on the track; best for a few large steps */
-  showSteps?: boolean;
+  /**
+   * Ticks every step on the track, best for a few large steps, or only the
+   * values given, such as a default among fine steps
+   */
+  showSteps?: boolean | readonly number[];
   /** Values to label under the track */
   marks?: readonly SliderMark[];
   /**
@@ -394,7 +403,11 @@ const Slider = ({
         {({ state }) => (
           <>
             <SliderFill />
-            {showSteps && <SliderTicks />}
+            {showSteps !== false && (
+              <SliderTicks
+                values={Array.isArray(showSteps) ? showSteps : undefined}
+              />
+            )}
             {state.values.map((_, index) => (
               <Thumb
                 // eslint-disable-next-line @eslint-react/no-array-index-key -- a thumb is its position in the values

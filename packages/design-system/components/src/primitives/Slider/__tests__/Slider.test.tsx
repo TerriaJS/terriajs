@@ -115,6 +115,27 @@ describe("Slider", () => {
     ).toHaveLength(5);
   });
 
+  it("ticks only the values it's given, among finer steps", async () => {
+    const screen = await render(
+      <Slider
+        label="Quality"
+        minValue={1}
+        maxValue={3}
+        step={0.1}
+        defaultValue={2}
+        showSteps={[2]}
+      />
+    );
+
+    const ticks = [
+      ...screen.container.querySelectorAll<HTMLElement>(
+        "[data-tds='slider-tick']"
+      )
+    ];
+    expect(ticks).toHaveLength(1);
+    expect(ticks[0]?.style.insetInlineStart).toBe("50%");
+  });
+
   it("marks the ticks the fill covers", async () => {
     const screen = await render(
       <Slider label="Year" defaultValue={[25, 75]} step={25} showSteps />
