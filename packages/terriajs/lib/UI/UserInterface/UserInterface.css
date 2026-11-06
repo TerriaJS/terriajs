@@ -1,18 +1,11 @@
 /* The new UI's global CSS: the design system's base styles, and nothing else.
-   layers.css first: the first @layer a page meets fixes the order, and bundlers
-   put imported CSS before this file's own */
-@import url("@terria/design-system/layers.css");
+   The layers' order is set by layerOrder.ts, first in the page */
 @import url("@terria/design-system/tokens.css");
 @import url("@terria/design-system/reset.css");
 @import url("@terria/design-system/base.css");
 @import url("@terria/design-system/typography.css");
 @import url("@terria/design-system/layout.css");
 @import url("@terria/design-system/fonts.css");
-
-/* The new UI's layers come after the design system's, so its component CSS
-   applies over the design system's, and a map's own CSS, outside any layer,
-   over both */
-@layer tjs.components, tjs.overrides;
 
 @layer tjs.components {
   .tjs-user-interface {

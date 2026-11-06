@@ -1,4 +1,5 @@
-// First, so the layer order it declares comes before any component's CSS
+// First: the cascade layers' order, then the design system's base styles
+import "../layerOrder";
 import "./UserInterface.css";
 
 import { clsx } from "clsx";
