@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { render } from "vitest-browser-react";
-import { createTerria } from "../../test/terria";
+import { createTerria, waitForMap } from "../../test/terria";
 import { UserInterface } from "../UserInterface";
 
 describe("UserInterface", () => {
@@ -19,6 +19,18 @@ describe("UserInterface", () => {
 
     await screen.unmount();
     expect(terria.mainViewer.attached).toBe(false);
+  });
+
+  it("lays out the 2D map's layers on top of each other", async () => {
+    const { terria, viewState } = createTerria();
+    const screen = await render(
+      <UserInterface terria={terria} viewState={viewState} />
+    );
+
+    // Without Leaflet's stylesheet its panes stack down the page instead
+    await waitForMap(terria);
+    const pane = screen.container.querySelector(".leaflet-map-pane");
+    expect(pane && getComputedStyle(pane).position).toBe("absolute");
   });
 
   it("is styled by the design system", async () => {

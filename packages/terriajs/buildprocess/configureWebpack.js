@@ -129,7 +129,9 @@ function configureWebpack({
     test: /\.(png|jpg|svg|gif)$/,
     include: [
       path.resolve(terriaJSBasePath) + path.sep,
-      path.resolve(cesiumDir)
+      path.resolve(cesiumDir),
+      // The images Leaflet's stylesheet refers to, for the new UI's map
+      path.dirname(require.resolve("leaflet/package.json"))
     ],
     exclude: [path.resolve(terriaJSBasePath, "wwwroot", "images", "icons")],
     type: "asset" // inlines if file size < 8KB

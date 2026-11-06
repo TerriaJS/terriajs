@@ -1,3 +1,7 @@
+/* Leaflet's own stylesheet places the 2D map's panes and tiles. Above the
+   design system's reset, whose image rules would otherwise squash the tiles */
+@import url("leaflet/dist/leaflet.css") layer(tjs.components);
+
 @layer tjs.components {
   .tjs-map-view {
     position: absolute;
