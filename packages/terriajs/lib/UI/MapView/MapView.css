@@ -1,12 +1,26 @@
-/* Leaflet's own stylesheet places the 2D map's panes and tiles. Above the
-   design system's reset, whose image rules would otherwise squash the tiles */
+/* Leaflet's own stylesheet places the 2D map's panes and tiles */
 @import url("leaflet/dist/leaflet.css") layer(tjs.components);
 
 @layer tjs.components {
+  /* Its own stacking context: Leaflet's panes have z-indexes of 400 and up,
+     which would otherwise put the 2D map over whatever's laid over it */
   .tjs-map-view {
     position: absolute;
     inset: 0;
+    isolation: isolate;
   }
+
+  /* The 3D globe's widget and canvas fill the map: Cesium leaves their size
+     to the page, and a canvas is 300 by 150 pixels by default */
+  /* stylelint-disable selector-class-pattern -- Cesium's own class */
+  .tjs-map-view .cesium-widget,
+  .tjs-map-view .cesium-widget canvas {
+    position: absolute;
+    inline-size: 100%;
+    block-size: 100%;
+    touch-action: none;
+  }
+  /* stylelint-enable selector-class-pattern */
 
   /* The tile layer overlaps its tiles by half a pixel, against the gaps
      between them at fractional zooms. Leaflet's stylesheet blends tiles with

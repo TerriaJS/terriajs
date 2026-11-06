@@ -22,7 +22,16 @@ const MapView = ({ viewer, className }: MapViewProps): ReactElement => {
     };
   }, [viewer]);
 
-  return <div ref={ref} className={clsx("tjs-map-view", className)} />;
+  // Leaflet and Cesium build their own DOM and style it with their own CSS,
+  // written against the browser's defaults, so the design system's reset
+  // stays out of it
+  return (
+    <div
+      ref={ref}
+      data-tds-no-reset
+      className={clsx("tjs-map-view", className)}
+    />
+  );
 };
 
 export { MapView };
