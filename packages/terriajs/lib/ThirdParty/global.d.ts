@@ -11,3 +11,8 @@ declare module "*.geojson";
 declare module "*.pbf";
 declare module "*.czml";
 declare module "*.kml";
+// Vite (the new UI's tests) imports a file as text with ?raw
+declare module "*?raw" {
+  const content: string;
+  export default content;
+}
