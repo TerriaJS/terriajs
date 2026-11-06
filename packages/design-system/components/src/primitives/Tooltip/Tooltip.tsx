@@ -2,6 +2,8 @@ import { mergeProps, useObjectRef } from "@react-aria/utils";
 import {
   forwardRef,
   useContext,
+  useEffect,
+  useState,
   type ComponentPropsWithoutRef,
   type ReactNode
 } from "react";
@@ -20,9 +22,12 @@ import { useCSSVariable } from "../../hooks/useCSSVariable";
 import { dataAttr } from "../../utils/dataAttr";
 import "./Tooltip.css";
 
-// React Aria skips the enter and exit animations while one tooltip replaces
-// another. The fade is CSS-driven, so keep it on swaps too
-const AnimationScope = ({
+// Shows the tooltip only once it's been asked to open for a frame. Tab in a
+// toolbar-like group, such as a ToggleButtonGroup, focuses its last button and
+// then leaves it in the same moment, which would otherwise flash that
+// button's tooltip. React Aria skips the enter and exit animations while one
+// tooltip replaces another; the fade is CSS-driven, so it's kept on swaps too
+const TriggerStateScope = ({
   children,
   shouldSkipAnimation
 }: {
@@ -30,10 +35,28 @@ const AnimationScope = ({
   shouldSkipAnimation: boolean;
 }): ReactNode => {
   const state = useContext(TooltipTriggerStateContext);
-  if (!state || shouldSkipAnimation) return children;
+  const isOpen = state?.isOpen ?? false;
+  const [hasStayedOpen, setHasStayedOpen] = useState(false);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const frame = requestAnimationFrame(() => {
+      setHasStayedOpen(true);
+    });
+    return () => {
+      cancelAnimationFrame(frame);
+      setHasStayedOpen(false);
+    };
+  }, [isOpen]);
+
+  if (!state) return children;
   return (
     <TooltipTriggerStateContext.Provider
-      value={{ ...state, shouldSkipAnimation: false }}
+      value={{
+        ...state,
+        isOpen: isOpen && hasStayedOpen,
+        shouldSkipAnimation: shouldSkipAnimation && state.shouldSkipAnimation
+      }}
     >
       {children}
     </TooltipTriggerStateContext.Provider>
@@ -65,9 +88,9 @@ const TooltipRoot = ({
       closeDelay={closeDelay ?? parseCSSTime(cssCloseDelay)}
       delay={delay ?? parseCSSTime(cssDelay)}
     >
-      <AnimationScope shouldSkipAnimation={shouldSkipAnimation}>
+      <TriggerStateScope shouldSkipAnimation={shouldSkipAnimation}>
         {children}
-      </AnimationScope>
+      </TriggerStateScope>
     </AriaTooltipTrigger>
   );
 };
