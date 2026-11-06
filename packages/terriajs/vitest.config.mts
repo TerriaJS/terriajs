@@ -1,5 +1,6 @@
 import react from "@vitejs/plugin-react";
 import { playwright } from "@vitest/browser-playwright";
+import { createReadStream, existsSync } from "node:fs";
 import { createRequire } from "node:module";
 import path from "node:path";
 import { defineConfig, type Plugin } from "vitest/config";
@@ -43,10 +44,51 @@ const stubCurrentUi = (): Plugin => ({
   }
 });
 
+// Cesium's workers, assets and third-party files, where the build copies them
+// for the app (gulpfile.js, build/Cesium/build), served at /cesium/ for the
+// test Terria's cesiumBaseUrl. Without its workers the 3D globe draws nothing
+const CESIUM_ROOT = path.dirname(
+  require.resolve("terriajs-cesium/package.json")
+);
+const CESIUM_FOLDERS: Record<string, string> = {
+  Workers: "Build/Workers",
+  ThirdParty: "Source/ThirdParty",
+  Assets: "Source/Assets"
+};
+const CONTENT_TYPES: Record<string, string> = {
+  ".js": "text/javascript",
+  ".json": "application/json",
+  ".wasm": "application/wasm",
+  ".png": "image/png",
+  ".jpg": "image/jpeg",
+  ".xml": "application/xml"
+};
+const serveCesium = (): Plugin => ({
+  name: "terriajs-serve-cesium",
+  configureServer(server) {
+    server.middlewares.use("/cesium", (request, response, next) => {
+      const [folder, ...rest] = (request.url ?? "")
+        .split("?")[0]
+        .split("/")
+        .filter(Boolean);
+      const base = CESIUM_FOLDERS[folder];
+      if (!base) return next();
+      const root = path.join(CESIUM_ROOT, base);
+      const file = path.join(root, ...rest.map(decodeURIComponent));
+      if (!file.startsWith(root + path.sep) || !existsSync(file)) return next();
+      response.setHeader(
+        "Content-Type",
+        CONTENT_TYPES[path.extname(file)] ?? "application/octet-stream"
+      );
+      createReadStream(file).pipe(response);
+    });
+  }
+});
+
 // The new UI's tests (lib/UI). The rest of TerriaJS is tested with Jasmine
 // (gulp test) until it moves here too
 export default defineConfig({
-  plugins: [react(), inlineText(), stubCurrentUi()],
+  plugins: [react(), inlineText(), stubCurrentUi(), serveCesium()],
   assetsInclude: ["**/*.DAC"],
   resolve: {
     alias: {
@@ -63,6 +105,8 @@ export default defineConfig({
       enabled: true,
       provider: playwright(),
       headless: true,
+      // A desktop window: the new UI has no small-screen layout yet
+      viewport: { width: 1280, height: 800 },
       instances: [{ browser: "chromium" }]
     }
   }

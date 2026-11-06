@@ -1,20 +1,11 @@
 import { describe, expect, it } from "vitest";
 import { render } from "vitest-browser-react";
-import Terria from "../../../Models/Terria";
-import { setViewerMode } from "../../../Models/ViewerMode";
-import ViewState from "../../../ReactViewModels/ViewState";
+import { createTerria } from "../../test/terria";
 import { UserInterface } from "../UserInterface";
-
-// A real Terria and ViewState, with the 2D map: the 3D globe needs WebGL
-const app = (): { terria: Terria; viewState: ViewState } => {
-  const terria = new Terria({ baseUrl: "./" });
-  setViewerMode("2d", terria.mainViewer);
-  return { terria, viewState: new ViewState({ terria }) };
-};
 
 describe("UserInterface", () => {
   it("shows the map, in the shell's map region", async () => {
-    const { terria, viewState } = app();
+    const { terria, viewState } = createTerria();
     const screen = await render(
       <UserInterface terria={terria} viewState={viewState} />
     );
@@ -31,7 +22,7 @@ describe("UserInterface", () => {
   });
 
   it("is styled by the design system", async () => {
-    const { terria, viewState } = app();
+    const { terria, viewState } = createTerria();
     await render(<UserInterface terria={terria} viewState={viewState} />);
 
     // Its tokens are defined on the root
