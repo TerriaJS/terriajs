@@ -3,6 +3,7 @@
 #### next release
 
 - Migrate to pnpm
+- Show TerriaJS's experimental new user interface when the config's `experimentalNewUi` parameter is on. Each user interface loads with its own styles only.
 - Upgrade Cesium to 1.145
 - Removed `ckanext-cesiumpreview`, an unmaintained CKAN resource-view plugin from the original NationalMap repository. It was written for Python 2 and CKAN < 2.9, pointed at the retired `nationalmap.nicta.com.au`, and was not used by TerriaMap.
 
