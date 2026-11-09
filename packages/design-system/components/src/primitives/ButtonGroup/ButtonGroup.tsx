@@ -61,7 +61,7 @@ ButtonGroupRoot.displayName = "ButtonGroup";
 type ButtonGroupSeparatorProps = ComponentPropsWithoutRef<"span"> &
   DOMRenderProps<"span", undefined>;
 
-// A divider at the start of a button, between it and the one before
+// Placed between two buttons, a line dividing them
 const ButtonGroupSeparator = forwardRef<
   HTMLSpanElement,
   ButtonGroupSeparatorProps

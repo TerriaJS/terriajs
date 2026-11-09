@@ -46,19 +46,20 @@
       }
     }
 
+    /* The first and last buttons, among separators */
     &[data-tds-orientation="horizontal"] > [data-tds="button"] {
-      &:first-child {
+      &:not([data-tds="button"] ~ *) {
         border-start-start-radius: var(--_btn-group-radius);
         border-end-start-radius: var(--_btn-group-radius);
       }
 
-      &:last-child {
+      &:not(:has(~ [data-tds="button"])) {
         border-start-end-radius: var(--_btn-group-radius);
         border-end-end-radius: var(--_btn-group-radius);
       }
 
       /* Outline buttons share one border between neighbours */
-      &[data-tds-variant="outline"]:not(:first-child) {
+      &[data-tds-variant="outline"]:is([data-tds="button"] ~ *) {
         border-inline-start-width: 0;
       }
     }
@@ -68,51 +69,74 @@
          widest instead */
       inline-size: auto;
 
-      &:first-child {
+      &:not([data-tds="button"] ~ *) {
         border-start-start-radius: var(--_btn-group-radius);
         border-start-end-radius: var(--_btn-group-radius);
       }
 
-      &:last-child {
+      &:not(:has(~ [data-tds="button"])) {
         border-end-start-radius: var(--_btn-group-radius);
         border-end-end-radius: var(--_btn-group-radius);
       }
 
-      &[data-tds-variant="outline"]:not(:first-child) {
+      &[data-tds-variant="outline"]:is([data-tds="button"] ~ *) {
         border-block-start-width: 0;
       }
     }
   }
 
-  /* A faint line at the start edge of the button it sits in */
+  /* Placed between buttons, it marks where a line divides them; the button
+     after it draws the line at its start edge, in its own colour and size */
   [data-tds="button-group-separator"] {
+    display: none;
+  }
+
+  /* Only between two buttons: one at either end, as when a button is left
+     out, divides nothing, and several together draw one line */
+  [data-tds="button-group"]
+    > [data-tds="button"]
+    ~ [data-tds="button-group-separator"]
+    + [data-tds="button"]::before {
+    content: "";
     position: absolute;
     border-radius: var(--terria-ds-radius-sm);
     background-color: currentcolor;
     opacity: 0.15;
     pointer-events: none;
+  }
 
-    [data-tds-orientation="horizontal"] & {
-      inset-block-start: 50%;
-      inset-inline-start: -1px;
-      inline-size: 1px;
-      block-size: var(--terria-ds-dimensions-spacing-5);
-      translate: 0 -50%;
-    }
+  [data-tds-orientation="horizontal"]
+    > [data-tds="button"]
+    ~ [data-tds="button-group-separator"]
+    + [data-tds="button"]::before {
+    inset-block-start: 50%;
+    inset-inline-start: -1px;
+    inline-size: 1px;
+    block-size: var(--terria-ds-dimensions-spacing-5);
+    translate: 0 -50%;
+  }
 
-    [data-tds-orientation="vertical"] & {
-      inset-block-start: -1px;
-      inset-inline-start: 25%;
-      inline-size: 50%;
-      block-size: 1px;
-    }
+  [data-tds-orientation="horizontal"]
+    > [data-tds="button"]
+    ~ [data-tds="button-group-separator"]
+    + [data-tds="button"][data-tds-size="sm"]::before {
+    block-size: var(--terria-ds-dimensions-spacing-4);
+  }
 
-    [data-tds-orientation="horizontal"] [data-tds-size="sm"] & {
-      block-size: var(--terria-ds-dimensions-spacing-4);
-    }
+  [data-tds-orientation="horizontal"]
+    > [data-tds="button"]
+    ~ [data-tds="button-group-separator"]
+    + [data-tds="button"][data-tds-size="lg"]::before {
+    block-size: var(--terria-ds-dimensions-spacing-6);
+  }
 
-    [data-tds-orientation="horizontal"] [data-tds-size="lg"] & {
-      block-size: var(--terria-ds-dimensions-spacing-6);
-    }
+  [data-tds-orientation="vertical"]
+    > [data-tds="button"]
+    ~ [data-tds="button-group-separator"]
+    + [data-tds="button"]::before {
+    inset-block-start: -1px;
+    inset-inline-start: 25%;
+    inline-size: 50%;
+    block-size: 1px;
   }
 }

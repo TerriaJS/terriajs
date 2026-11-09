@@ -10,14 +10,10 @@ const alignments = (
 ): ReactElement => (
   <ToggleButtonGroup aria-label="Alignment" {...props}>
     <ToggleButton id="left">Left</ToggleButton>
-    <ToggleButton id="centre">
-      <ToggleButtonGroup.Separator />
-      Centre
-    </ToggleButton>
-    <ToggleButton id="right">
-      <ToggleButtonGroup.Separator />
-      Right
-    </ToggleButton>
+    <ToggleButtonGroup.Separator />
+    <ToggleButton id="centre">Centre</ToggleButton>
+    <ToggleButtonGroup.Separator />
+    <ToggleButton id="right">Right</ToggleButton>
   </ToggleButtonGroup>
 );
 
@@ -90,11 +86,10 @@ describe("ToggleButtonGroup", () => {
     const screen = await render(alignments());
 
     expect(rect(screen, "Centre").left).toBe(rect(screen, "Left").right);
+    // The button after a separator draws its line
     expect(
-      option(screen, "Centre")
-        .element()
-        .querySelector("[data-tds='button-group-separator']")
-    ).not.toBeNull();
+      getComputedStyle(option(screen, "Centre").element(), "::before").content
+    ).not.toBe("none");
   });
 
   it("spaces its buttons apart when detached, each fully rounded", async () => {
@@ -106,10 +101,7 @@ describe("ToggleButtonGroup", () => {
     ).toBeGreaterThan(0);
     expect(getComputedStyle(centre).borderTopLeftRadius).not.toBe("0px");
     // Separators belong to joined buttons only
-    const separator = centre.querySelector(
-      "[data-tds='button-group-separator']"
-    );
-    expect(separator && getComputedStyle(separator).display).toBe("none");
+    expect(getComputedStyle(centre, "::before").content).toBe("none");
   });
 
   it("stacks its buttons when vertical", async () => {
