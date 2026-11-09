@@ -28,8 +28,8 @@
       border-radius: var(--_btn-group-radius);
     }
 
-    & [data-tds="button-group-separator"] {
-      display: none;
+    & > [data-tds="button-group-separator"] + [data-tds="button"]::before {
+      content: none;
     }
   }
 }

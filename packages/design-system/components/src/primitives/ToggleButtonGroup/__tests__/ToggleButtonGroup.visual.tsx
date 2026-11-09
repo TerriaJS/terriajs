@@ -14,14 +14,10 @@ const views = (
     {...props}
   >
     <ToggleButton id="2d">2D</ToggleButton>
-    <ToggleButton id="3d">
-      <ToggleButtonGroup.Separator />
-      3D
-    </ToggleButton>
-    <ToggleButton id="3d-smooth">
-      <ToggleButtonGroup.Separator />
-      3D smooth
-    </ToggleButton>
+    <ToggleButtonGroup.Separator />
+    <ToggleButton id="3d">3D</ToggleButton>
+    <ToggleButtonGroup.Separator />
+    <ToggleButton id="3d-smooth">3D smooth</ToggleButton>
   </ToggleButtonGroup>
 );
 
@@ -89,12 +85,12 @@ describe("ToggleButtonGroup", () => {
         <ToggleButton id="line" isIconOnly aria-label="Line">
           <LineIcon />
         </ToggleButton>
+        <ToggleButtonGroup.Separator />
         <ToggleButton id="polygon" isIconOnly aria-label="Polygon">
-          <ToggleButtonGroup.Separator />
           <PolygonIcon />
         </ToggleButton>
+        <ToggleButtonGroup.Separator />
         <ToggleButton id="shape" isIconOnly aria-label="Shape">
-          <ToggleButtonGroup.Separator />
           <ShapeIcon />
         </ToggleButton>
       </ToggleButtonGroup>

@@ -26,14 +26,10 @@ const periods = (
 ): React.ReactElement => (
   <ButtonGroup aria-label="Period" variant="secondary" {...props}>
     <Button>Day</Button>
-    <Button>
-      <ButtonGroup.Separator />
-      Week
-    </Button>
-    <Button>
-      <ButtonGroup.Separator />
-      Month
-    </Button>
+    <ButtonGroup.Separator />
+    <Button>Week</Button>
+    <ButtonGroup.Separator />
+    <Button>Month</Button>
   </ButtonGroup>
 );
 
@@ -92,12 +88,12 @@ describe("ButtonGroup", () => {
         <Button isIconOnly aria-label="Draw a line">
           <LineIcon size={16} />
         </Button>
+        <ButtonGroup.Separator />
         <Button isIconOnly aria-label="Draw a polygon">
-          <ButtonGroup.Separator />
           <PolygonIcon size={16} />
         </Button>
+        <ButtonGroup.Separator />
         <Button isIconOnly aria-label="Draw a shape">
-          <ButtonGroup.Separator />
           <ShapeIcon size={16} />
         </Button>
       </ButtonGroup>
@@ -113,8 +109,8 @@ describe("ButtonGroup", () => {
           <Button isIconOnly aria-label="Zoom in">
             <PlusIcon size={16} />
           </Button>
+          <ButtonGroup.Separator />
           <Button isIconOnly aria-label="Zoom out">
-            <ButtonGroup.Separator />
             <MinusIcon size={16} />
           </Button>
         </ButtonGroup>

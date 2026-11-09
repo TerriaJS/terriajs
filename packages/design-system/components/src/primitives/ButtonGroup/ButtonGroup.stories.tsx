@@ -86,12 +86,12 @@ export const IconToolbar: Story = {
       <Button isIconOnly aria-label="Draw a line">
         <LineIcon size={16} />
       </Button>
+      <ButtonGroup.Separator />
       <Button isIconOnly aria-label="Draw a polygon">
-        <ButtonGroup.Separator />
         <PolygonIcon size={16} />
       </Button>
+      <ButtonGroup.Separator />
       <Button isIconOnly aria-label="Draw a shape">
-        <ButtonGroup.Separator />
         <ShapeIcon size={16} />
       </Button>
     </ButtonGroup>
@@ -105,8 +105,8 @@ export const Vertical: Story = {
       <Button isIconOnly aria-label="Zoom in">
         <PlusIcon size={16} />
       </Button>
+      <ButtonGroup.Separator />
       <Button isIconOnly aria-label="Zoom out">
-        <ButtonGroup.Separator />
         <MinusIcon size={16} />
       </Button>
     </ButtonGroup>
@@ -160,14 +160,10 @@ export const Sizes: Story = {
       {(["sm", "md", "lg"] as const).map((size) => (
         <ButtonGroup key={size} {...args} size={size}>
           <Button>Day</Button>
-          <Button>
-            <ButtonGroup.Separator />
-            Week
-          </Button>
-          <Button>
-            <ButtonGroup.Separator />
-            Month
-          </Button>
+          <ButtonGroup.Separator />
+          <Button>Week</Button>
+          <ButtonGroup.Separator />
+          <Button>Month</Button>
         </ButtonGroup>
       ))}
     </div>
