@@ -1,0 +1,46 @@
+/**
+ * ColorField Component Styles
+ *
+ * Field.css stacks it; this spaces the swatch, or the trigger around it,
+ * that leads its group, as an input group's prefix.
+ */
+
+@layer terria-ds.components {
+  [data-tds="color-field"] [data-tds="input-group"] {
+    --_color-field-before: calc(
+      var(--terria-ds-space-md) - var(--terria-ds-field-border-width)
+    );
+    --_color-field-after: var(--terria-ds-space-md);
+
+    /* The swatch alone keeps its size, centred, with the prefix's space
+       around it */
+    & > [data-tds="color-swatch"]:first-child {
+      align-self: center;
+      margin-inline: var(--_color-field-before) var(--_color-field-after);
+    }
+
+    /* Something around the swatch, such as a trigger, takes that space as
+       its own, so all of it can be pressed */
+    &
+      > :first-child:not(
+        [data-tds="color-swatch"],
+        [data-tds="input-group-input"]
+      ) {
+      display: flex;
+      flex-shrink: 0;
+      align-items: center;
+      padding-inline: var(--_color-field-before) var(--_color-field-after);
+    }
+
+    /* The group clips what's outside it, so a trigger's focus ring goes
+       inside */
+    & > [data-tds="color-picker-trigger"][data-focus-visible] {
+      box-shadow: inset 0 0 0 var(--terria-ds-focus-ring-width)
+        var(--terria-ds-focus-ring-halo);
+
+      /* Shadows are dropped in forced-colors mode; this outline shows there instead */
+      outline: var(--terria-ds-focus-ring-width) solid transparent;
+      outline-offset: calc(var(--terria-ds-focus-ring-width) * -1);
+    }
+  }
+}

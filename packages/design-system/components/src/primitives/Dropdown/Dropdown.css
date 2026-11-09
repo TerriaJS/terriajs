@@ -1,0 +1,114 @@
+/**
+ * Dropdown Component Styles
+ *
+ * Items are styled as ListBox items (see ListBox.css); this sets the menu's
+ * popover and what differs in a menu.
+ */
+
+@layer terria-ds.components {
+  /* The menu, and any submenu: at least 240px wide */
+  [data-tds="popover"]:is(
+    [data-trigger="MenuTrigger"],
+    [data-trigger="SubmenuTrigger"]
+  ) {
+    --_popover-radius: var(--terria-ds-radius-lg);
+
+    box-sizing: border-box;
+    min-inline-size: var(--terria-ds-dimensions-spacing-60);
+    padding: var(--terria-ds-space-xs);
+    overflow: auto;
+
+    /* Scrolling past the end of the menu doesn't scroll the page. Without
+       support the page just scrolls, as before */
+    /* eslint-disable-next-line css/use-baseline */
+    overscroll-behavior: contain;
+  }
+
+  /* Sits at the end of the row, like the list box's indicator */
+  [data-tds="dropdown-submenu-indicator"] {
+    display: flex;
+    flex-shrink: 0;
+    margin-inline-start: auto;
+    color: var(--terria-ds-text-muted);
+
+    & > svg {
+      inline-size: var(--terria-ds-dimensions-icon-size-sm);
+      block-size: var(--terria-ds-dimensions-icon-size-sm);
+    }
+
+    /* Points the other way in right-to-left */
+    &:dir(rtl) > svg {
+      scale: -1 1;
+    }
+  }
+
+  [data-tds="dropdown-menu"] {
+    display: flex;
+    flex-direction: column;
+    gap: var(--terria-ds-dimensions-spacing-0-5);
+    outline: none;
+
+    /* Titles in 20px lines, their descriptions in 14px ones */
+    [data-tds="list-box-item"] {
+      --_dropdown-icon-size: var(--terria-ds-dimensions-icon-size-sm);
+      --_dropdown-icon-offset: calc(
+        (var(--terria-ds-line-height-body) - var(--_dropdown-icon-size)) / 2
+      );
+
+      line-height: var(--terria-ds-line-height-body);
+
+      /* An item stays highlighted while its submenu is open, as it is
+         when hovered, so it's clear which item the submenu belongs to */
+      &[data-open] {
+        background-color: var(--terria-ds-neutral);
+      }
+
+      & > svg {
+        flex-shrink: 0;
+      }
+
+      /* Above a description, an icon lines up with the title, not the
+         whole item */
+      &:has([data-tds="description"]) > svg {
+        align-self: flex-start;
+        margin-block-start: var(--_dropdown-icon-offset);
+      }
+    }
+
+    /* A menu leads its items with the indicator, where a list box ends
+       them with it: the item keeps room at its start instead */
+    [data-tds="list-box-item"]:has(> [data-tds="list-box-item-indicator"]) {
+      padding-inline: calc(
+          var(--terria-ds-space-md) * 2 +
+            var(--terria-ds-dimensions-icon-size-sm)
+        )
+        var(--terria-ds-space-md);
+    }
+
+    [data-tds="list-box-item-indicator"] {
+      inset-inline: var(--terria-ds-space-md) auto;
+    }
+
+    [data-tds="label"] {
+      line-height: inherit;
+    }
+
+    /* A shortcut sits at the end of the row, in the item's lines */
+    [data-tds="kbd"] {
+      line-height: inherit;
+
+      &:not(:first-child) {
+        margin-inline-start: auto;
+      }
+    }
+
+    [data-tds="description"] {
+      line-height: var(--terria-ds-line-height-nano);
+    }
+
+    /* Lines up with the items' text, not the menu's edge */
+    & > [data-tds="separator"] {
+      margin-inline: var(--terria-ds-space-md);
+    }
+  }
+}

@@ -1,0 +1,102 @@
+/* A layer row for the SortableList stories; the design system leaves the
+   rows to usage */
+
+@layer storybook {
+  .sortable-list-story {
+    inline-size: 20rem;
+  }
+
+  .sortable-list-story-row {
+    display: flex;
+    gap: var(--terria-ds-space-sm);
+    align-items: start;
+    margin-block: var(--terria-ds-space-xs);
+    padding: var(--terria-ds-space-sm);
+    border-radius: var(--terria-ds-radius-sm);
+    background-color: var(--terria-ds-surface-default);
+    box-shadow: var(--terria-ds-shadow-surface);
+    transition: opacity var(--terria-ds-duration-150) var(--terria-ds-ease-out);
+
+    /* The row being dragged stays in place, faded */
+    &[data-dragging] {
+      opacity: 0.4;
+    }
+
+    /* With the item indicator, the dragged row shows where it would land */
+    [data-tds-drop-indicator="item"] &[data-dragging] {
+      opacity: 1;
+      outline: var(--terria-ds-dimensions-border-width-1) dashed
+        var(--terria-ds-border-color-primary);
+      box-shadow: none;
+    }
+  }
+
+  /* A workbench layer, as in the design: a card that opens to show its
+     actions and settings */
+  .sortable-list-story-layer {
+    margin-block: var(--terria-ds-space-xs);
+    padding: var(--terria-ds-space-sm);
+    border: var(--terria-ds-border-width-default) solid
+      var(--terria-ds-border-color-default);
+    border-radius: var(--terria-ds-radius-sm);
+    background-color: var(--terria-ds-surface-raised);
+
+    /* With the item indicator, the dragged layer shows where it would land */
+    [data-tds-drop-indicator="item"] &[data-dragging] {
+      border-style: dashed;
+      border-color: var(--terria-ds-border-color-primary);
+    }
+  }
+
+  /* The header, which is the handle: the switch named by the layer, then a
+     problem and the chevron at the end */
+  .sortable-list-story-layer-title {
+    display: flex;
+    gap: var(--terria-ds-space-md);
+    align-items: flex-start;
+    justify-content: flex-start;
+
+    & > [data-tds="switch"] {
+      flex: 1;
+      padding-block-start: var(--terria-ds-dimensions-spacing-1-5);
+    }
+  }
+
+  .sortable-list-story-layer-name {
+    font-size: var(--terria-ds-text-size-body);
+  }
+
+  .sortable-list-story-layer-problem {
+    color: var(--terria-ds-danger);
+  }
+
+  /* Below the title row, by the same gap as between its parts */
+  .sortable-list-story-layer-body {
+    padding-block-start: var(--terria-ds-space-md);
+  }
+
+  /* The menu sits at the end of the actions */
+  .sortable-list-story-layer-more {
+    margin-inline-start: auto;
+  }
+
+  .sortable-list-story-description {
+    display: block;
+    color: var(--terria-ds-text-muted);
+    font-size: var(--terria-ds-text-size-caption);
+  }
+
+  /* Scrolls, with room for the focus ring at its sides */
+  .sortable-list-story-scroll {
+    max-block-size: 18rem;
+    padding-inline: var(--terria-ds-space-xs);
+    overflow: auto;
+  }
+
+  .sortable-list-story-preview {
+    padding: var(--terria-ds-space-xs) var(--terria-ds-space-sm);
+    border-radius: var(--terria-ds-radius-sm);
+    background-color: var(--terria-ds-primary);
+    color: var(--terria-ds-primary-foreground);
+  }
+}

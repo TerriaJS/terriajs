@@ -1,0 +1,39 @@
+/* Layout for the ScrollShadow stories: the box sets its own size */
+
+@layer storybook {
+  .scroll-shadow-stories-list {
+    inline-size: 15rem;
+    max-block-size: 15rem;
+  }
+
+  .scroll-shadow-stories-item {
+    margin: 0;
+    padding: var(--terria-ds-space-sm) var(--terria-ds-space-md);
+    border-block-end: var(--terria-ds-border-width-default) solid
+      var(--terria-ds-border-color-subtle);
+    font-size: var(--terria-ds-text-size-body);
+  }
+
+  .scroll-shadow-stories-strip {
+    max-inline-size: 22rem;
+  }
+
+  .scroll-shadow-stories-row {
+    display: flex;
+    gap: var(--terria-ds-space-sm);
+    inline-size: max-content;
+    padding-block: var(--terria-ds-space-xs);
+  }
+
+  .scroll-shadow-stories-side-by-side {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--terria-ds-space-xl);
+    align-items: flex-start;
+  }
+
+  /* The list fills the surface, so the shadows reach its rounded edges */
+  .scroll-shadow-stories-surface > [data-tds="scroll-shadow"] {
+    border-radius: inherit;
+  }
+}

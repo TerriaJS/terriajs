@@ -1,0 +1,140 @@
+/**
+ * Chip Component Styles
+ *
+ * Colours, variants and sizes only set --_chip-* custom properties; the base
+ * rule consumes them.
+ */
+
+@layer terria-ds.components {
+  [data-tds="chip"] {
+    --_chip-bg: var(--terria-ds-neutral);
+    --_chip-fg: var(--terria-ds-neutral-soft-foreground);
+    --_chip-size: var(--terria-ds-dimensions-spacing-6);
+    --_chip-padding: var(--terria-ds-dimensions-spacing-2);
+    --_chip-font-size: var(--terria-ds-text-size-caption);
+    --_chip-line-height: var(--terria-ds-line-height-caption);
+    --_chip-icon: var(--terria-ds-dimensions-icon-size-xs);
+
+    display: inline-flex;
+    flex-shrink: 0;
+    gap: var(--terria-ds-dimensions-spacing-0-5);
+    align-items: center;
+    box-sizing: border-box;
+    inline-size: fit-content;
+    block-size: var(--_chip-size);
+    padding-inline: var(--_chip-padding);
+    border-radius: var(--terria-ds-radius-full);
+    background-color: var(--_chip-bg);
+    color: var(--_chip-fg);
+    font-size: var(--_chip-font-size);
+    font-weight: var(--terria-ds-font-medium);
+    line-height: var(--_chip-line-height);
+    white-space: nowrap;
+
+    /* Inline in text, raised from the text's baseline so it centres on its
+       capitals at body and heading sizes. A vertical-align length rather than
+       a translate: flex rows ignore it and centre the chip themselves */
+    vertical-align: 0.1em;
+
+    & > svg {
+      flex-shrink: 0;
+      inline-size: var(--_chip-icon);
+      block-size: var(--_chip-icon);
+    }
+  }
+
+  /* Sizes */
+  [data-tds="chip"][data-tds-size="sm"] {
+    --_chip-size: var(--terria-ds-dimensions-spacing-5);
+    --_chip-padding: var(--terria-ds-dimensions-spacing-1);
+  }
+
+  [data-tds="chip"][data-tds-size="lg"] {
+    --_chip-size: var(--terria-ds-dimensions-spacing-7);
+    --_chip-padding: var(--terria-ds-dimensions-spacing-3);
+    --_chip-font-size: var(--terria-ds-text-size-body);
+    --_chip-line-height: var(--terria-ds-line-height-body);
+    --_chip-icon: var(--terria-ds-dimensions-spacing-3-5);
+  }
+
+  /* Primary: the colour's solid fill */
+  [data-tds="chip"][data-tds-variant="primary"] {
+    &[data-tds-color="default"] {
+      --_chip-fg: var(--terria-ds-neutral-foreground);
+    }
+
+    &[data-tds-color="accent"] {
+      --_chip-bg: var(--terria-ds-primary);
+      --_chip-fg: var(--terria-ds-primary-foreground);
+    }
+
+    &[data-tds-color="success"] {
+      --_chip-bg: var(--terria-ds-success);
+      --_chip-fg: var(--terria-ds-success-foreground);
+    }
+
+    &[data-tds-color="warning"] {
+      --_chip-bg: var(--terria-ds-warning);
+      --_chip-fg: var(--terria-ds-warning-foreground);
+    }
+
+    &[data-tds-color="danger"] {
+      --_chip-bg: var(--terria-ds-danger);
+      --_chip-fg: var(--terria-ds-danger-foreground);
+    }
+  }
+
+  /* Secondary keeps the neutral fill; secondary and tertiary colour the text */
+  [data-tds="chip"]:is(
+    [data-tds-variant="secondary"],
+    [data-tds-variant="tertiary"]
+  ) {
+    &[data-tds-color="accent"] {
+      --_chip-fg: var(--terria-ds-primary-soft-foreground);
+    }
+
+    &[data-tds-color="success"] {
+      --_chip-fg: var(--terria-ds-success-soft-foreground);
+    }
+
+    &[data-tds-color="warning"] {
+      --_chip-fg: var(--terria-ds-warning-soft-foreground);
+    }
+
+    &[data-tds-color="danger"] {
+      --_chip-fg: var(--terria-ds-danger-soft-foreground);
+    }
+  }
+
+  /* Tertiary: no fill */
+  [data-tds="chip"][data-tds-variant="tertiary"] {
+    --_chip-bg: transparent;
+  }
+
+  /* Soft: the colour's soft fill */
+  [data-tds="chip"][data-tds-variant="soft"] {
+    &[data-tds-color="default"] {
+      --_chip-bg: var(--terria-ds-neutral-soft);
+    }
+
+    &[data-tds-color="accent"] {
+      --_chip-bg: var(--terria-ds-primary-soft);
+      --_chip-fg: var(--terria-ds-primary-soft-foreground);
+    }
+
+    &[data-tds-color="success"] {
+      --_chip-bg: var(--terria-ds-success-soft);
+      --_chip-fg: var(--terria-ds-success-soft-foreground);
+    }
+
+    &[data-tds-color="warning"] {
+      --_chip-bg: var(--terria-ds-warning-soft);
+      --_chip-fg: var(--terria-ds-warning-soft-foreground);
+    }
+
+    &[data-tds-color="danger"] {
+      --_chip-bg: var(--terria-ds-danger-soft);
+      --_chip-fg: var(--terria-ds-danger-soft-foreground);
+    }
+  }
+}

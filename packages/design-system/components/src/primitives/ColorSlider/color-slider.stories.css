@@ -1,0 +1,11 @@
+/* The room a ColorSlider fills in the stories, as in a picker's popover */
+
+@layer storybook {
+  .color-slider-story {
+    inline-size: var(--terria-ds-dimensions-spacing-60);
+  }
+
+  .color-slider-story-upright {
+    block-size: var(--terria-ds-dimensions-spacing-48);
+  }
+}

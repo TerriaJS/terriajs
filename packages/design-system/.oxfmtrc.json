@@ -1,0 +1,21 @@
+{
+  "trailingComma": "none",
+  "tabWidth": 2,
+  "printWidth": 80,
+  "sortPackageJson": false,
+  "ignorePatterns": [
+    "**/node_modules/",
+    "**/dist/",
+    "**/build/",
+    "**/coverage/",
+    "**/storybook-static/",
+    ".idea/",
+    ".DS_Store",
+    "*.swp",
+    "*.log",
+    "pnpm-lock.yaml",
+    "components/src/css/tokens.css",
+    "icons/src/icons/",
+    "icons/src/sprite/names.ts"
+  ]
+}

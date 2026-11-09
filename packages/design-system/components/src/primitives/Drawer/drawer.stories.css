@@ -1,0 +1,15 @@
+/* Layout for the Drawer stories */
+
+@layer storybook {
+  .drawer-stories-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--terria-ds-space-sm);
+    align-items: center;
+  }
+
+  .drawer-stories-list {
+    margin: 0;
+    padding-inline-start: var(--terria-ds-space-lg);
+  }
+}

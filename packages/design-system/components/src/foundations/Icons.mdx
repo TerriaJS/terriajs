@@ -1,0 +1,62 @@
+import { Meta, Story, Unstyled } from "@storybook/addon-docs/blocks";
+import * as IconsStories from "./Icons.stories";
+
+<Meta of={IconsStories} />
+
+{/* Rendered in the design system's own type, not Storybook's docs styles */}
+
+<Unstyled>
+<div className="docs-page tds-flow tds-body">
+
+# Icons
+
+The icon set is based on [Tabler Icons](https://tabler.io/icons), with custom
+icons added where Tabler has none. Designers add icons to the design file's
+icon page, and `@terria/design-system-icons` is built from there in two forms:
+
+- **React components**, one per icon, such as `MapIcon`. Each icon's shapes
+  are in your JavaScript, and only the icons you import are bundled.
+- **An SVG sprite**, `sprite.svg`, with every icon as a symbol, drawn by name
+  with `SpriteIcon` or by any `<use>` in HTML.
+
+Either way, each icon is drawn on a 24px grid, fills with `currentColor` so it
+takes the colour of the text around it, and is 24px unless you give it a
+`size`.
+
+An icon is decorative by default and hidden from assistive technology. When an
+icon stands on its own, with no text that says what it does, give it an
+`aria-label`.
+
+## React components
+
+<Story of={IconsStories.Usages} />
+
+## Sprite
+
+Every icon is a symbol in `sprite.svg`, named by its file, with `-filled`
+for the filled variants. `SpriteIcon` draws one by name, with the same props as
+the icon components. The icon's shapes stay in the sprite, which the browser
+caches, rather than in your JavaScript: worth it on pages that show many icons
+many times. The sprite has to be served from the same origin as the page.
+
+<Story of={IconsStories.Sprite} />
+
+## Sizes
+
+Size icons with the icon size tokens, so they keep in step with the text and
+controls they sit in.
+
+<Story of={IconsStories.Sizes} />
+
+## Regular
+
+<Story of={IconsStories.Regular} />
+
+## Filled
+
+Filled icons show a selected or active state of their regular icon.
+
+<Story of={IconsStories.Filled} />
+
+</div>
+</Unstyled>

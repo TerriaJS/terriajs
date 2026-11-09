@@ -1,0 +1,7 @@
+/* Layout for the Accordion stories */
+
+@layer storybook {
+  .accordion-stories-width {
+    inline-size: 22.5rem;
+  }
+}

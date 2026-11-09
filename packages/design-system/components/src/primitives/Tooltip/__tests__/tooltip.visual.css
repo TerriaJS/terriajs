@@ -1,0 +1,11 @@
+/* Layout around the component in its visual tests, as in its stories */
+
+@layer storybook {
+  /* Room around the trigger for the tooltip to open on any side */
+  .tooltip-visual-stage {
+    display: grid;
+    place-items: center;
+    inline-size: 400px;
+    block-size: 200px;
+  }
+}

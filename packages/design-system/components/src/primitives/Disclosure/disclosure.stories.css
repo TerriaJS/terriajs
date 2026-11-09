@@ -1,0 +1,16 @@
+/* Layout for the Disclosure stories */
+
+@layer storybook {
+  .disclosure-stories-width {
+    inline-size: 23rem;
+  }
+
+  /* A side panel's column, outlined so its edges show */
+  .disclosure-stories-panel {
+    inline-size: 23rem;
+    padding: var(--terria-ds-space-lg);
+    border: var(--terria-ds-border-width-default) dashed
+      var(--terria-ds-border-color-default);
+    border-radius: var(--terria-ds-radius-md);
+  }
+}

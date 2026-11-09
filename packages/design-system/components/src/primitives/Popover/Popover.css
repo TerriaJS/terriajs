@@ -1,0 +1,138 @@
+/**
+ * Popover Component Styles
+ */
+
+@layer terria-ds.components {
+  [data-tds="popover"] {
+    --_popover-bg: var(--terria-ds-surface-overlay);
+    --_popover-fg: var(--terria-ds-text-foreground);
+    --_popover-radius: var(--terria-ds-radius-md);
+    --_popover-shadow: var(--terria-ds-shadow-overlay);
+    --_popover-slide: 0.25rem;
+    --_popover-ease: var(--terria-ds-ease-smooth);
+
+    box-sizing: border-box;
+    border-radius: var(--_popover-radius);
+    background-color: var(--_popover-bg);
+    box-shadow: var(--_popover-shadow);
+    color: var(--_popover-fg);
+    font-family: inherit;
+    font-size: var(--terria-ds-text-size-body);
+    line-height: var(--terria-ds-line-height-body);
+    /* stylelint-disable-next-line custom-property-pattern -- The value is defined by react-aria */
+    transform-origin: var(--trigger-anchor-point, center);
+
+    /* Enter from the trigger's side */
+    &[data-placement="top"] {
+      --_popover-from: 0 var(--_popover-slide);
+    }
+
+    &[data-placement="bottom"] {
+      --_popover-from: 0 calc(-1 * var(--_popover-slide));
+    }
+
+    &[data-placement="left"] {
+      --_popover-from: var(--_popover-slide) 0;
+    }
+
+    &[data-placement="right"] {
+      --_popover-from: calc(-1 * var(--_popover-slide)) 0;
+    }
+
+    &[data-entering] {
+      animation: terria-ds-popover-enter var(--terria-ds-duration-150)
+        var(--_popover-ease);
+    }
+
+    &[data-exiting] {
+      animation: terria-ds-popover-exit var(--terria-ds-duration-100)
+        var(--_popover-ease) forwards;
+
+      /* Stays non-interactive while closing, even if the animation is interrupted */
+      pointer-events: none;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      &[data-entering],
+      &[data-exiting] {
+        animation: none;
+      }
+    }
+
+    [data-tds="popover-arrow"] > svg {
+      display: block;
+      fill: var(--_popover-bg);
+    }
+
+    &[data-placement="bottom"] [data-tds="popover-arrow"] > svg {
+      rotate: 180deg;
+    }
+
+    &[data-placement="left"] [data-tds="popover-arrow"] > svg {
+      rotate: -90deg;
+    }
+
+    &[data-placement="right"] [data-tds="popover-arrow"] > svg {
+      rotate: 90deg;
+    }
+  }
+
+  @keyframes terria-ds-popover-enter {
+    from {
+      opacity: 0;
+      translate: var(--_popover-from, 0);
+      scale: 0.9;
+    }
+  }
+
+  @keyframes terria-ds-popover-exit {
+    to {
+      opacity: 0;
+      scale: 0.95;
+    }
+  }
+
+  [data-tds="popover-dialog"] {
+    box-sizing: border-box;
+
+    /* Scrolls within the max-height react-aria sets from the space left in the viewport.
+       The arrow is positioned against the popover, so this doesn't clip it. */
+    max-block-size: inherit;
+    overflow: auto;
+    padding: var(--terria-ds-space-lg) var(--terria-ds-space-xl);
+    outline: none;
+  }
+
+  [data-tds="popover-heading"] {
+    margin: 0 0 var(--terria-ds-dimensions-spacing-2);
+    font-size: inherit;
+    font-weight: var(--terria-ds-font-medium);
+  }
+
+  [data-tds="popover-trigger"] {
+    display: inline-block;
+    border-radius: var(--terria-ds-radius-sm);
+    outline: none;
+    cursor: pointer;
+    transition: box-shadow var(--terria-ds-duration-150)
+      var(--terria-ds-ease-out);
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
+
+    /* Pressable sets no data-focus-visible, so this uses the native pseudo-class */
+    &:focus-visible {
+      box-shadow: var(--terria-ds-shadow-focus-ring);
+
+      /* Shadows are dropped in forced-colors mode; this outline shows there instead */
+      outline: var(--terria-ds-focus-ring-width) solid transparent;
+      outline-offset: var(--terria-ds-focus-ring-offset);
+    }
+
+    &[aria-disabled="true"] {
+      opacity: var(--terria-ds-effects-disabled-opacity);
+      cursor: not-allowed;
+    }
+  }
+}

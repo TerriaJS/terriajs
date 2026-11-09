@@ -1,0 +1,111 @@
+/**
+ * SortableList Component Styles
+ *
+ * The items are your markup; this only lays out the rows, the drag handle,
+ * and where a dragged item would land.
+ */
+
+@layer terria-ds.components {
+  [data-tds="sortable-list"] {
+    display: flex;
+    flex-direction: column;
+    border-radius: var(--terria-ds-radius-sm);
+    outline: none;
+
+    /* Focused itself, as when it's empty; otherwise focus is on an item */
+    &[data-focus-visible] {
+      outline: var(--terria-ds-focus-ring-width) solid
+        var(--terria-ds-focus-ring-halo);
+    }
+  }
+
+  [data-tds="sortable-list-item"] {
+    outline: none;
+
+    /* The ring goes round your item's markup, not the row around it, so it
+       follows its shape and leaves out its margins. An outline, so it keeps
+       the markup's own shadow */
+    &[data-focus-visible] > [role="gridcell"] > * {
+      outline: var(--terria-ds-focus-ring-width) solid
+        var(--terria-ds-focus-ring-halo);
+    }
+  }
+
+  [data-tds="sortable-list-drag-handle"] {
+    position: relative;
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--terria-ds-radius-sm);
+    cursor: grab;
+    touch-action: none;
+
+    &:active {
+      cursor: grabbing;
+    }
+
+    /* The grip is muted; a handle of your own, such as a title, keeps the
+       text's colour */
+    & > svg {
+      inline-size: var(--terria-ds-dimensions-icon-size-sm);
+      block-size: var(--terria-ds-dimensions-icon-size-sm);
+      color: var(--terria-ds-text-muted);
+    }
+
+    /* The keyboard focuses the button over it */
+    &:has(> [data-focus-visible]) {
+      box-shadow: 0 0 0 var(--terria-ds-focus-ring-width)
+        var(--terria-ds-focus-ring-halo);
+
+      /* Shadows are dropped in forced-colors mode; this outline shows there instead */
+      outline: var(--terria-ds-focus-ring-width) solid transparent;
+    }
+  }
+
+  /* React Aria's drag button, for the keyboard, over what the handle shows */
+  [data-tds="sortable-list-drag-button"] {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    outline: none;
+  }
+
+  /* Holds the hidden button that takes focus in a keyboard drag, so the
+     list scrolls to it */
+  .tds-sortable-list-drop-indicator {
+    position: relative;
+  }
+
+  /* A line between rows, as wide as they are. It's drawn over the gap, so it
+     takes no space and the rows don't move */
+  [data-tds-drop-indicator="line"] > .tds-sortable-list-drop-indicator {
+    block-size: 0;
+
+    &[data-drop-target]::before {
+      position: absolute;
+      inset-inline: 0;
+      block-size: var(--terria-ds-dimensions-border-width-2);
+      background-color: var(--terria-ds-primary);
+      content: "";
+      translate: 0 -50%;
+    }
+  }
+
+  /* With an axis, the browser's drag picture is left empty */
+  [data-tds="sortable-list-empty-preview"] {
+    inline-size: 1px;
+    block-size: 1px;
+    opacity: 0;
+  }
+
+  /* With an axis, what follows the pointer along it; the list places it */
+  [data-tds="sortable-list-drag-overlay"] {
+    /* Above everything, as the browser's picture would be */
+    --_sortable-list-overlay-layer: 2147483647;
+
+    position: fixed;
+    z-index: var(--_sortable-list-overlay-layer);
+    pointer-events: none;
+  }
+}

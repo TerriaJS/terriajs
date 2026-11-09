@@ -1,0 +1,80 @@
+/**
+ * AIActivityIndicator Component Styles
+ *
+ * Six sparkles along a wave, each pulsing in turn: growing, turning and
+ * brightening, then fading back. Sizes only set --_ai-indicator-size, the
+ * drawing's width.
+ */
+
+@layer terria-ds.components {
+  [data-tds="ai-activity-indicator"] {
+    --_ai-indicator-size: var(--terria-ds-dimensions-spacing-8);
+    --_ai-indicator-loop: 2.4s;
+
+    /* How far into the cycle a sparkle starts, from -1 to 0; each sparkle's
+       group sets its own */
+    --_ai-indicator-offset: 0;
+
+    display: inline-flex;
+    flex-shrink: 0;
+    inline-size: var(--_ai-indicator-size);
+    color: var(--terria-ds-primary);
+
+    & svg {
+      display: block;
+      inline-size: 100%;
+      block-size: auto;
+      overflow: visible;
+      fill: currentcolor;
+    }
+
+    & path {
+      transform-box: fill-box;
+      transform-origin: center;
+      animation: terria-ds-ai-sparkle var(--_ai-indicator-loop) linear infinite;
+
+      /* Each starts a step of the cycle after the last, so the pulse travels
+         along the wave */
+      animation-delay: calc(
+        var(--_ai-indicator-loop) * var(--_ai-indicator-offset)
+      );
+
+      /* Still, at full size: with no pulse, it reads as a mark, not a lull */
+      @media (prefers-reduced-motion: reduce) {
+        animation: none;
+      }
+    }
+  }
+
+  @keyframes terria-ds-ai-sparkle {
+    0% {
+      opacity: 0.15;
+      transform: scale(0.6) rotate(0deg);
+      animation-timing-function: var(--terria-ds-ease-in-out);
+    }
+
+    35% {
+      opacity: 1;
+      transform: scale(1) rotate(45deg);
+      animation-timing-function: var(--terria-ds-ease-in-out);
+    }
+
+    70%,
+    100% {
+      opacity: 0.15;
+      transform: scale(0.6) rotate(90deg);
+    }
+  }
+
+  /* ============================================================
+     SIZES
+     ============================================================ */
+
+  [data-tds="ai-activity-indicator"][data-tds-size="sm"] {
+    --_ai-indicator-size: var(--terria-ds-dimensions-spacing-6);
+  }
+
+  [data-tds="ai-activity-indicator"][data-tds-size="lg"] {
+    --_ai-indicator-size: var(--terria-ds-dimensions-spacing-12);
+  }
+}

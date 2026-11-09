@@ -1,0 +1,478 @@
+/**
+ * Spacing utilities for @terria/design-system
+ *
+ * Padding and margin on the spacing scale, with logical properties so they
+ * follow the reading direction: tds-p-md, tds-px-lg, tds-mt-sm, tds-ms-auto.
+ * Gaps are with the layouts: tds-flex-gap-* and tds-grid-gap-*.
+ * p/m all sides, x inline, y block, t/b block start/end, s/e inline
+ * start/end. Sizes: 0, 2xs, xs, sm, md, lg, xl, 2xl.
+ *
+ * In the utilities layer, after the components, so they win over a
+ * component's own padding.
+ */
+
+@layer terria-ds.utilities {
+  /* Padding */
+  .tds-p-0 {
+    padding: 0;
+  }
+
+  .tds-p-2xs {
+    padding: var(--terria-ds-space-2xs);
+  }
+
+  .tds-p-xs {
+    padding: var(--terria-ds-space-xs);
+  }
+
+  .tds-p-sm {
+    padding: var(--terria-ds-space-sm);
+  }
+
+  .tds-p-md {
+    padding: var(--terria-ds-space-md);
+  }
+
+  .tds-p-lg {
+    padding: var(--terria-ds-space-lg);
+  }
+
+  .tds-p-xl {
+    padding: var(--terria-ds-space-xl);
+  }
+
+  .tds-p-2xl {
+    padding: var(--terria-ds-space-2xl);
+  }
+
+  .tds-px-0 {
+    padding-inline: 0;
+  }
+
+  .tds-px-2xs {
+    padding-inline: var(--terria-ds-space-2xs);
+  }
+
+  .tds-px-xs {
+    padding-inline: var(--terria-ds-space-xs);
+  }
+
+  .tds-px-sm {
+    padding-inline: var(--terria-ds-space-sm);
+  }
+
+  .tds-px-md {
+    padding-inline: var(--terria-ds-space-md);
+  }
+
+  .tds-px-lg {
+    padding-inline: var(--terria-ds-space-lg);
+  }
+
+  .tds-px-xl {
+    padding-inline: var(--terria-ds-space-xl);
+  }
+
+  .tds-px-2xl {
+    padding-inline: var(--terria-ds-space-2xl);
+  }
+
+  .tds-py-0 {
+    padding-block: 0;
+  }
+
+  .tds-py-2xs {
+    padding-block: var(--terria-ds-space-2xs);
+  }
+
+  .tds-py-xs {
+    padding-block: var(--terria-ds-space-xs);
+  }
+
+  .tds-py-sm {
+    padding-block: var(--terria-ds-space-sm);
+  }
+
+  .tds-py-md {
+    padding-block: var(--terria-ds-space-md);
+  }
+
+  .tds-py-lg {
+    padding-block: var(--terria-ds-space-lg);
+  }
+
+  .tds-py-xl {
+    padding-block: var(--terria-ds-space-xl);
+  }
+
+  .tds-py-2xl {
+    padding-block: var(--terria-ds-space-2xl);
+  }
+
+  .tds-pt-0 {
+    padding-block-start: 0;
+  }
+
+  .tds-pt-2xs {
+    padding-block-start: var(--terria-ds-space-2xs);
+  }
+
+  .tds-pt-xs {
+    padding-block-start: var(--terria-ds-space-xs);
+  }
+
+  .tds-pt-sm {
+    padding-block-start: var(--terria-ds-space-sm);
+  }
+
+  .tds-pt-md {
+    padding-block-start: var(--terria-ds-space-md);
+  }
+
+  .tds-pt-lg {
+    padding-block-start: var(--terria-ds-space-lg);
+  }
+
+  .tds-pt-xl {
+    padding-block-start: var(--terria-ds-space-xl);
+  }
+
+  .tds-pt-2xl {
+    padding-block-start: var(--terria-ds-space-2xl);
+  }
+
+  .tds-pb-0 {
+    padding-block-end: 0;
+  }
+
+  .tds-pb-2xs {
+    padding-block-end: var(--terria-ds-space-2xs);
+  }
+
+  .tds-pb-xs {
+    padding-block-end: var(--terria-ds-space-xs);
+  }
+
+  .tds-pb-sm {
+    padding-block-end: var(--terria-ds-space-sm);
+  }
+
+  .tds-pb-md {
+    padding-block-end: var(--terria-ds-space-md);
+  }
+
+  .tds-pb-lg {
+    padding-block-end: var(--terria-ds-space-lg);
+  }
+
+  .tds-pb-xl {
+    padding-block-end: var(--terria-ds-space-xl);
+  }
+
+  .tds-pb-2xl {
+    padding-block-end: var(--terria-ds-space-2xl);
+  }
+
+  .tds-ps-0 {
+    padding-inline-start: 0;
+  }
+
+  .tds-ps-2xs {
+    padding-inline-start: var(--terria-ds-space-2xs);
+  }
+
+  .tds-ps-xs {
+    padding-inline-start: var(--terria-ds-space-xs);
+  }
+
+  .tds-ps-sm {
+    padding-inline-start: var(--terria-ds-space-sm);
+  }
+
+  .tds-ps-md {
+    padding-inline-start: var(--terria-ds-space-md);
+  }
+
+  .tds-ps-lg {
+    padding-inline-start: var(--terria-ds-space-lg);
+  }
+
+  .tds-ps-xl {
+    padding-inline-start: var(--terria-ds-space-xl);
+  }
+
+  .tds-ps-2xl {
+    padding-inline-start: var(--terria-ds-space-2xl);
+  }
+
+  .tds-pe-0 {
+    padding-inline-end: 0;
+  }
+
+  .tds-pe-2xs {
+    padding-inline-end: var(--terria-ds-space-2xs);
+  }
+
+  .tds-pe-xs {
+    padding-inline-end: var(--terria-ds-space-xs);
+  }
+
+  .tds-pe-sm {
+    padding-inline-end: var(--terria-ds-space-sm);
+  }
+
+  .tds-pe-md {
+    padding-inline-end: var(--terria-ds-space-md);
+  }
+
+  .tds-pe-lg {
+    padding-inline-end: var(--terria-ds-space-lg);
+  }
+
+  .tds-pe-xl {
+    padding-inline-end: var(--terria-ds-space-xl);
+  }
+
+  .tds-pe-2xl {
+    padding-inline-end: var(--terria-ds-space-2xl);
+  }
+
+  /* Margin */
+  .tds-m-0 {
+    margin: 0;
+  }
+
+  .tds-m-2xs {
+    margin: var(--terria-ds-space-2xs);
+  }
+
+  .tds-m-xs {
+    margin: var(--terria-ds-space-xs);
+  }
+
+  .tds-m-sm {
+    margin: var(--terria-ds-space-sm);
+  }
+
+  .tds-m-md {
+    margin: var(--terria-ds-space-md);
+  }
+
+  .tds-m-lg {
+    margin: var(--terria-ds-space-lg);
+  }
+
+  .tds-m-xl {
+    margin: var(--terria-ds-space-xl);
+  }
+
+  .tds-m-2xl {
+    margin: var(--terria-ds-space-2xl);
+  }
+
+  .tds-mx-0 {
+    margin-inline: 0;
+  }
+
+  .tds-mx-2xs {
+    margin-inline: var(--terria-ds-space-2xs);
+  }
+
+  .tds-mx-xs {
+    margin-inline: var(--terria-ds-space-xs);
+  }
+
+  .tds-mx-sm {
+    margin-inline: var(--terria-ds-space-sm);
+  }
+
+  .tds-mx-md {
+    margin-inline: var(--terria-ds-space-md);
+  }
+
+  .tds-mx-lg {
+    margin-inline: var(--terria-ds-space-lg);
+  }
+
+  .tds-mx-xl {
+    margin-inline: var(--terria-ds-space-xl);
+  }
+
+  .tds-mx-2xl {
+    margin-inline: var(--terria-ds-space-2xl);
+  }
+
+  .tds-my-0 {
+    margin-block: 0;
+  }
+
+  .tds-my-2xs {
+    margin-block: var(--terria-ds-space-2xs);
+  }
+
+  .tds-my-xs {
+    margin-block: var(--terria-ds-space-xs);
+  }
+
+  .tds-my-sm {
+    margin-block: var(--terria-ds-space-sm);
+  }
+
+  .tds-my-md {
+    margin-block: var(--terria-ds-space-md);
+  }
+
+  .tds-my-lg {
+    margin-block: var(--terria-ds-space-lg);
+  }
+
+  .tds-my-xl {
+    margin-block: var(--terria-ds-space-xl);
+  }
+
+  .tds-my-2xl {
+    margin-block: var(--terria-ds-space-2xl);
+  }
+
+  .tds-mt-0 {
+    margin-block-start: 0;
+  }
+
+  .tds-mt-2xs {
+    margin-block-start: var(--terria-ds-space-2xs);
+  }
+
+  .tds-mt-xs {
+    margin-block-start: var(--terria-ds-space-xs);
+  }
+
+  .tds-mt-sm {
+    margin-block-start: var(--terria-ds-space-sm);
+  }
+
+  .tds-mt-md {
+    margin-block-start: var(--terria-ds-space-md);
+  }
+
+  .tds-mt-lg {
+    margin-block-start: var(--terria-ds-space-lg);
+  }
+
+  .tds-mt-xl {
+    margin-block-start: var(--terria-ds-space-xl);
+  }
+
+  .tds-mt-2xl {
+    margin-block-start: var(--terria-ds-space-2xl);
+  }
+
+  .tds-mb-0 {
+    margin-block-end: 0;
+  }
+
+  .tds-mb-2xs {
+    margin-block-end: var(--terria-ds-space-2xs);
+  }
+
+  .tds-mb-xs {
+    margin-block-end: var(--terria-ds-space-xs);
+  }
+
+  .tds-mb-sm {
+    margin-block-end: var(--terria-ds-space-sm);
+  }
+
+  .tds-mb-md {
+    margin-block-end: var(--terria-ds-space-md);
+  }
+
+  .tds-mb-lg {
+    margin-block-end: var(--terria-ds-space-lg);
+  }
+
+  .tds-mb-xl {
+    margin-block-end: var(--terria-ds-space-xl);
+  }
+
+  .tds-mb-2xl {
+    margin-block-end: var(--terria-ds-space-2xl);
+  }
+
+  .tds-ms-0 {
+    margin-inline-start: 0;
+  }
+
+  .tds-ms-2xs {
+    margin-inline-start: var(--terria-ds-space-2xs);
+  }
+
+  .tds-ms-xs {
+    margin-inline-start: var(--terria-ds-space-xs);
+  }
+
+  .tds-ms-sm {
+    margin-inline-start: var(--terria-ds-space-sm);
+  }
+
+  .tds-ms-md {
+    margin-inline-start: var(--terria-ds-space-md);
+  }
+
+  .tds-ms-lg {
+    margin-inline-start: var(--terria-ds-space-lg);
+  }
+
+  .tds-ms-xl {
+    margin-inline-start: var(--terria-ds-space-xl);
+  }
+
+  .tds-ms-2xl {
+    margin-inline-start: var(--terria-ds-space-2xl);
+  }
+
+  .tds-me-0 {
+    margin-inline-end: 0;
+  }
+
+  .tds-me-2xs {
+    margin-inline-end: var(--terria-ds-space-2xs);
+  }
+
+  .tds-me-xs {
+    margin-inline-end: var(--terria-ds-space-xs);
+  }
+
+  .tds-me-sm {
+    margin-inline-end: var(--terria-ds-space-sm);
+  }
+
+  .tds-me-md {
+    margin-inline-end: var(--terria-ds-space-md);
+  }
+
+  .tds-me-lg {
+    margin-inline-end: var(--terria-ds-space-lg);
+  }
+
+  .tds-me-xl {
+    margin-inline-end: var(--terria-ds-space-xl);
+  }
+
+  .tds-me-2xl {
+    margin-inline-end: var(--terria-ds-space-2xl);
+  }
+
+  /* Auto margins: tds-mx-auto centres a block; tds-ms-auto and tds-me-auto
+     push a flex child to the end or the start of its row */
+  .tds-mx-auto {
+    margin-inline: auto;
+  }
+
+  .tds-ms-auto {
+    margin-inline-start: auto;
+  }
+
+  .tds-me-auto {
+    margin-inline-end: auto;
+  }
+}

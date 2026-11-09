@@ -1,0 +1,195 @@
+name: Design system visual tests
+
+# Compares a PR's components with its base branch's, as Taiga UI compares its
+# demo: the PR's own screenshots are taken as the references, then the base
+# branch's code runs the same visual tests against them. What differs fails
+# the run, and is posted on the PR (.github/scripts/design-system/report-visual-differences.sh).
+# Run on request: a maintainer comments /terria-bot visual-test on the PR
+# (design-system-visual-command.yml), which runs this on the PR's branch
+on:
+  workflow_dispatch:
+    inputs:
+      base:
+        description: Branch to compare with, the PR's base
+        required: true
+        default: main
+      pr:
+        description: PR to post the differences on, if any
+        required: false
+
+permissions:
+  # The differences' images, on the visual-tests-storage branch
+  contents: write
+  # The "Visual tests" status on the PR's commit
+  statuses: write
+  # The report comment
+  issues: write
+  pull-requests: write
+  # GitHub Packages, which pnpm checks the lockfile against
+  packages: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+jobs:
+  visual:
+    runs-on: ubuntu-latest
+    env:
+      # Vitest defaults to one worker fewer than the cores, which on GitHub's
+      # 2-core runners is one test file at a time. Browser tests spend much of
+      # their time waiting on Chromium, so 4 at once runs them 2.5x as fast
+      VITEST_MAX_WORKERS: 4
+      # A run started by the command isn't listed among the PR's checks, so it
+      # reports a "Visual tests" status on the PR's commit, which is
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      REPO: ${{ github.repository }}
+      SHA: ${{ github.sha }}
+      RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+    steps:
+      # A status has no "running" state, only pending, as CI's "not run" is,
+      # so the description says it
+      - name: Show the visual tests as running
+        env:
+          BASE: ${{ inputs.base }}
+        run: |
+          gh api "repos/$REPO/statuses/$SHA" -f context="Visual tests" -f state=pending \
+            -f description="⏳ Running: comparing with $BASE…" -f target_url="$RUN_URL" > /dev/null
+
+      # Actions pinned to release commits
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          # The base branch is checked out beside it
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Mark the PR's report as running again
+        if: inputs.pr != ''
+        continue-on-error: true
+        env:
+          STAGE: running
+          PR: ${{ inputs.pr }}
+          RUN_ID: ${{ github.run_id }}
+          BASE: ${{ inputs.base }}
+          OUTCOME: ""
+          VISUAL_SCREENSHOTS: ${{ runner.temp }}/visual
+        run: .github/scripts/design-system/report-visual-differences.sh
+
+      # Reads pnpm from packageManager in package.json
+      - uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: ".nvmrc"
+          registry-url: "https://npm.pkg.github.com"
+          scope: "@terriajs"
+          cache: pnpm
+
+      - name: Set where the screenshots go
+        run: echo "VISUAL_SCREENSHOTS=$RUNNER_TEMP/visual" >> "$GITHUB_ENV"
+
+      - run: pnpm install --frozen-lockfile --filter . --filter "@terria/design-system*..."
+
+      - name: Install Playwright Chromium
+        run: pnpm --filter @terria/design-system exec playwright install --with-deps chromium
+
+      # The components import the icons from their build
+      - run: pnpm --filter @terria/design-system-icons build
+
+      - name: Take this change's screenshots as the references
+        run: pnpm --filter @terria/design-system test:visual -u
+
+      # The base branch's components, with this change's visual tests: a test
+      # the base doesn't have yet fails without a screenshot to compare. A
+      # component the base lacks is left out, as its tests couldn't import it,
+      # and its tests are listed to show their screenshots instead. The lists
+      # are made before copying, which would make the components' folders
+      - name: Check out the base branch with this change's visual tests
+        env:
+          BASE_REF: ${{ inputs.base }}
+        run: |
+          git worktree add "$RUNNER_TEMP/base" "origin/$BASE_REF"
+          git ls-files \
+            'packages/design-system/components/vitest.visual.config.ts' \
+            'packages/design-system/components/src/visual.ts' \
+            'packages/design-system/components/src/visual-setup.ts' \
+            '*.visual.tsx' '*.visual.css' '*.stories.css' |
+            while read -r file; do
+              component=$(dirname "${file/\/__tests__\//\/}")
+              if [ -d "$RUNNER_TEMP/base/$component" ]; then
+                echo "$file"
+              elif [[ "$file" == *.visual.tsx ]]; then
+                basename "$file" >> "$RUNNER_TEMP/new-visual-tests"
+              fi
+            done > "$RUNNER_TEMP/visual-files"
+          rsync -a --files-from="$RUNNER_TEMP/visual-files" . "$RUNNER_TEMP/base/"
+          cd "$RUNNER_TEMP/base"
+          pnpm install --frozen-lockfile --filter . --filter "@terria/design-system*..."
+          pnpm --filter @terria/design-system-icons build
+
+      # The base branch may not have the test:visual script yet
+      - name: Compare the base branch with the references
+        id: compare
+        continue-on-error: true
+        working-directory: ${{ runner.temp }}/base
+        run: pnpm --filter @terria/design-system exec vitest run -c vitest.visual.config.ts
+
+      - name: Put each difference's before, diff and after side by side
+        if: steps.compare.outcome == 'failure'
+        run: node packages/design-system/components/scripts/combine-visual-diffs.ts
+
+      # Vitest keeps each test file's references in a folder named after it
+      - name: Add the new components' screenshots to the report
+        if: steps.compare.outcome == 'success' || steps.compare.outcome == 'failure'
+        run: |
+          [ -f "$RUNNER_TEMP/new-visual-tests" ] || exit 0
+          while read -r test; do
+            [ -d "$VISUAL_SCREENSHOTS/$test" ] || continue
+            mkdir -p "$VISUAL_SCREENSHOTS/__report__/__new__"
+            cp -R "$VISUAL_SCREENSHOTS/$test" "$VISUAL_SCREENSHOTS/__report__/__new__/"
+          done < "$RUNNER_TEMP/new-visual-tests"
+
+      - name: Upload the differences
+        if: steps.compare.outcome == 'failure'
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: visual-differences
+          path: ${{ env.VISUAL_SCREENSHOTS }}/__report__
+          if-no-files-found: ignore
+          retention-days: 7
+
+      - name: Post the differences on the PR
+        if: always() && inputs.pr != '' && (steps.compare.outcome == 'success' || steps.compare.outcome == 'failure')
+        env:
+          PR: ${{ inputs.pr }}
+          RUN_ID: ${{ github.run_id }}
+          BASE: ${{ inputs.base }}
+          OUTCOME: ${{ steps.compare.outcome }}
+        run: .github/scripts/design-system/report-visual-differences.sh
+
+      - name: Fail when the base branch looks different
+        if: steps.compare.outcome == 'failure'
+        run: exit 1
+
+      - name: Show how the visual tests went
+        if: always()
+        env:
+          COMPARED: ${{ steps.compare.outcome }}
+        run: |
+          case "$COMPARED" in
+            success) state=success; description="No visual differences" ;;
+            failure)
+              count=$(find "$VISUAL_SCREENSHOTS/__report__" -path '*/__new__' -prune -o -name '*.png' -print 2> /dev/null | wc -l | tr -d ' ')
+              state=failure
+              if [ "$count" -gt 0 ]; then
+                description="$count visual differences: see the report on the PR"
+              else
+                description="Failed without screenshots to compare: see the run"
+              fi ;;
+            *) state=error; description="Didn't get as far as comparing: see the run" ;;
+          esac
+          gh api "repos/$REPO/statuses/$SHA" -f context="Visual tests" -f state="$state" \
+            -f description="$description" -f target_url="$RUN_URL" > /dev/null

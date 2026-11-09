@@ -1,0 +1,420 @@
+/**
+ * Tree Component Styles
+ *
+ * Rows are flat siblings; each is indented by its --tree-item-level, which
+ * react-aria sets. Primary: rows on a card of their own. Secondary: rows
+ * open on the page. Guide lines are drawn on each row's indent, one per
+ * level above it, centred under the parents' indicators.
+ */
+
+@layer terria-ds.components {
+  [data-tds="tree"] {
+    --_tree-indent: var(--terria-ds-dimensions-spacing-5);
+    --_tree-row-size: var(--terria-ds-dimensions-spacing-9);
+    --_tree-padding-inline: var(--terria-ds-space-sm);
+    --_tree-gap: var(--terria-ds-space-sm);
+    --_tree-indicator-size: var(--terria-ds-dimensions-spacing-6);
+    --_tree-font-size: var(--terria-ds-text-size-body);
+    --_tree-line-height: var(--terria-ds-line-height-body);
+    --_tree-guide-color: color-mix(in oklch, currentcolor 15%, transparent);
+    --_tree-row-gap: var(--terria-ds-dimensions-spacing-0-5);
+
+    display: flex;
+    flex-direction: column;
+    gap: var(--_tree-row-gap);
+    box-sizing: border-box;
+    inline-size: 100%;
+    outline: none;
+    color: var(--terria-ds-text-foreground);
+    font-size: var(--_tree-font-size);
+    line-height: var(--_tree-line-height);
+
+    &[data-tds-size="sm"] {
+      --_tree-indent: var(--terria-ds-dimensions-spacing-4);
+      --_tree-indicator-size: var(--terria-ds-dimensions-spacing-5);
+      --_tree-row-size: var(--terria-ds-dimensions-spacing-8);
+      --_tree-gap: var(--terria-ds-space-xs);
+      --_tree-font-size: var(--terria-ds-text-size-caption);
+      --_tree-line-height: var(--terria-ds-line-height-caption);
+    }
+
+    &[data-tds-size="lg"] {
+      --_tree-indent: var(--terria-ds-dimensions-spacing-6);
+      --_tree-indicator-size: var(--terria-ds-dimensions-spacing-7);
+      --_tree-row-size: var(--terria-ds-dimensions-spacing-10);
+      --_tree-padding-inline: var(--terria-ds-space-md);
+      --_tree-font-size: var(--terria-ds-text-size-body-lg);
+      --_tree-line-height: var(--terria-ds-line-height-body-lg);
+    }
+
+    &[data-tds-variant="primary"] {
+      padding: var(--terria-ds-space-xs);
+      border-radius: var(--terria-ds-dimensions-radius-rounded-2xl);
+      background-color: var(--terria-ds-surface-overlay);
+    }
+
+    &[data-empty] {
+      align-items: center;
+      justify-content: center;
+      min-block-size: var(--terria-ds-dimensions-spacing-24);
+      color: var(--terria-ds-text-muted);
+    }
+  }
+
+  /* Virtualized, the rows sit in a box sized to all of them, which mustn't
+     shrink to the tree's height, or the tree can't scroll through them */
+  [data-tds="tree"] > [role="presentation"] {
+    flex-shrink: 0;
+  }
+
+  [data-tds="tree-item"],
+  [data-tds="tree-load-more-item"] {
+    /* stylelint-disable-next-line custom-property-pattern -- The value is defined by react-aria */
+    --_tree-level: var(--tree-item-level, 1);
+    --_tree-item-start: calc(
+      var(--_tree-padding-inline) + (var(--_tree-level) - 1) *
+        var(--_tree-indent)
+    );
+
+    position: relative;
+    display: flex;
+    gap: var(--_tree-gap);
+    align-items: center;
+    box-sizing: border-box;
+    min-block-size: var(--_tree-row-size);
+    padding-inline: var(--_tree-item-start) var(--_tree-padding-inline);
+  }
+
+  [data-tds="tree-item"] {
+    border-radius: var(--terria-ds-radius-lg);
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+    transition:
+      background-color var(--terria-ds-duration-150) var(--terria-ds-ease-out),
+      box-shadow var(--terria-ds-duration-150) var(--terria-ds-ease-out);
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
+
+    > svg {
+      flex-shrink: 0;
+    }
+
+    /* react-aria only hovers rows that select or have an action */
+    @media (hover: hover) {
+      &[data-hovered] {
+        background-color: color-mix(
+          in oklch,
+          var(--terria-ds-neutral-hover) 50%,
+          transparent
+        );
+        cursor: pointer;
+      }
+    }
+
+    /* neutral-hover, not neutral: in dark mode neutral is the card's own
+       colour, so a selected row on it wouldn't show */
+    &[data-selected] {
+      background-color: var(--terria-ds-neutral-hover);
+    }
+
+    &[data-focus-visible] {
+      box-shadow: inset 0 0 0 var(--terria-ds-focus-ring-width)
+        var(--terria-ds-focus-ring);
+
+      /* Shadows are dropped in forced-colors mode; this outline shows there instead */
+      outline: var(--terria-ds-focus-ring-width) solid transparent;
+      outline-offset: calc(var(--terria-ds-focus-ring-width) * -1);
+    }
+
+    &[data-disabled] {
+      cursor: not-allowed;
+    }
+
+    /* Rows dropped here go inside it */
+    &[data-drop-target] {
+      background-color: var(--terria-ds-primary-soft);
+      box-shadow: inset 0 0 0 var(--terria-ds-border-width-default)
+        var(--terria-ds-primary);
+    }
+
+    /* The contents fade, not the row, so its guide lines stay unbroken.
+       react-aria's cell is display: contents, so its children are the row's */
+    &[data-disabled] > [role="gridcell"] > * {
+      opacity: var(--terria-ds-effects-disabled-opacity);
+    }
+
+    &[data-dragging] > [role="gridcell"] > * {
+      opacity: 0.4;
+    }
+  }
+
+  /* One line per level above the row, a period of the indent apart */
+  [data-tds="tree"][data-tds-guide-lines] [data-tds="tree-item"]::before,
+  [data-tds="tree"][data-tds-guide-lines]
+    [data-tds="tree-load-more-item"]::before {
+    position: absolute;
+
+    /* Into the gaps either side, so the lines run unbroken */
+    inset-block: calc(var(--_tree-row-gap) / -2);
+    inset-inline-start: calc(
+      var(--_tree-padding-inline) + var(--_tree-indicator-size) / 2 -
+        var(--terria-ds-border-width-default) / 2
+    );
+    inline-size: calc((var(--_tree-level) - 1) * var(--_tree-indent));
+    background-image: repeating-linear-gradient(
+      to right,
+      var(--_tree-guide-color) 0 var(--terria-ds-border-width-default),
+      transparent var(--terria-ds-border-width-default) var(--_tree-indent)
+    );
+    content: "";
+    pointer-events: none;
+    transition: opacity var(--terria-ds-duration-150) var(--terria-ds-ease-out);
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
+  }
+
+  [data-tds="tree"][data-tds-guide-lines]:dir(rtl)
+    [data-tds="tree-item"]::before,
+  [data-tds="tree"][data-tds-guide-lines]:dir(rtl)
+    [data-tds="tree-load-more-item"]::before {
+    background-image: repeating-linear-gradient(
+      to left,
+      var(--_tree-guide-color) 0 var(--terria-ds-border-width-default),
+      transparent var(--terria-ds-border-width-default) var(--_tree-indent)
+    );
+  }
+
+  [data-tds="tree"][data-tds-guide-lines="hover"]
+    :is([data-tds="tree-item"], [data-tds="tree-load-more-item"])::before {
+    opacity: 0;
+  }
+
+  [data-tds="tree"][data-tds-guide-lines="hover"]:is(:hover, :focus-within)
+    :is([data-tds="tree-item"], [data-tds="tree-load-more-item"])::before {
+    opacity: 1;
+  }
+
+  /* The chevron points along the reading direction, and down when expanded */
+  [data-tds="tree-indicator"] {
+    /* From the text colour, so it shows on any row, selected too, in either
+       theme */
+    --_tree-indicator-hover: color-mix(in oklch, currentcolor 15%, transparent);
+
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    inline-size: var(--_tree-indicator-size);
+    block-size: var(--_tree-indicator-size);
+    padding: 0;
+    border: none;
+    border-radius: var(--terria-ds-radius-sm);
+    outline: none;
+    background: none;
+    color: var(--terria-ds-text-muted);
+    transition:
+      background-color var(--terria-ds-duration-150) var(--terria-ds-ease-out),
+      color var(--terria-ds-duration-150) var(--terria-ds-ease-out);
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
+
+    /* The button; a row without children has only its space */
+    &:is(button) {
+      cursor: pointer;
+    }
+
+    /* A target of its own within the row, which hovers too */
+    @media (hover: hover) {
+      &[data-hovered] {
+        background-color: var(--_tree-indicator-hover);
+        color: var(--terria-ds-text-foreground);
+      }
+    }
+
+    &[data-pressed] {
+      background-color: var(--_tree-indicator-hover);
+    }
+
+    &[data-focus-visible] {
+      box-shadow: var(--terria-ds-shadow-focus-ring);
+
+      /* Shadows are dropped in forced-colors mode; this outline shows there instead */
+      outline: var(--terria-ds-focus-ring-width) solid transparent;
+      outline-offset: var(--terria-ds-focus-ring-offset);
+    }
+  }
+
+  [data-tds="tree-item-label"] {
+    flex: 1;
+    min-inline-size: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /* The icon turns, not the button, so its background stays put */
+  [data-tds="tree-indicator-icon"] {
+    display: inline-flex;
+    transition: rotate var(--terria-ds-duration-200) var(--terria-ds-ease-out);
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
+
+    &:dir(rtl) {
+      scale: -1 1;
+    }
+
+    [data-expanded] > & {
+      rotate: 90deg;
+    }
+
+    [data-expanded] > &:dir(rtl) {
+      rotate: -90deg;
+    }
+  }
+
+  /* Shows while its row is hovered or focused; always where nothing hovers */
+  [data-tds="tree-drag-handle"] {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    inline-size: var(--_tree-indicator-size);
+    block-size: var(--_tree-indicator-size);
+    padding: 0;
+    border: none;
+    border-radius: var(--terria-ds-radius-sm);
+    outline: none;
+    background: none;
+    color: var(--terria-ds-text-muted);
+    cursor: grab;
+    transition: opacity var(--terria-ds-duration-150) var(--terria-ds-ease-out);
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
+
+    @media (hover: hover) {
+      opacity: 0;
+
+      [data-tds="tree-item"]:is([data-hovered], [data-focus-visible]) &,
+      [data-tds="tree-item"]:focus-within &,
+      [data-tds="tree-item"][data-dragging] & {
+        opacity: 1;
+      }
+    }
+
+    &[data-focus-visible] {
+      box-shadow: var(--terria-ds-shadow-focus-ring);
+
+      /* Shadows are dropped in forced-colors mode; this outline shows there instead */
+      outline: var(--terria-ds-focus-ring-width) solid transparent;
+      outline-offset: var(--terria-ds-focus-ring-offset);
+    }
+  }
+
+  /* While dragging, React Aria adds rows of its own: drop indicators, and
+     hidden ones for screen readers. They take no space, so they cancel the
+     gap they'd add */
+  [data-tds="tree"] > [role="row"]:not([data-tds]) {
+    margin-block-start: calc(var(--_tree-row-gap) * -1);
+  }
+
+  /* A line where dragged rows will land, at the indent of the level they'll
+     join, drawn in the gap between rows. Its hidden button takes focus in a
+     keyboard drag */
+  .tds-tree-drop-indicator {
+    /* stylelint-disable-next-line custom-property-pattern -- The value is defined by react-aria */
+    --_tree-level: var(--tree-item-level, 1);
+
+    position: relative;
+    block-size: 0;
+    outline: none;
+
+    &[data-drop-target]::before {
+      position: absolute;
+      inset-inline: calc(
+          var(--_tree-padding-inline) + (var(--_tree-level) - 1) *
+            var(--_tree-indent)
+        )
+        var(--_tree-padding-inline);
+      block-size: var(--terria-ds-dimensions-border-width-2);
+      border-radius: var(--terria-ds-radius-full);
+      background-color: var(--terria-ds-primary);
+      content: "";
+      translate: 0 calc(var(--_tree-row-gap) / 2 - 50%);
+    }
+  }
+
+  /* Dropped onto the tree itself, rows go to its end */
+  [data-tds="tree"][data-drop-target] {
+    box-shadow: inset 0 0 0 var(--terria-ds-border-width-default)
+      var(--terria-ds-primary);
+  }
+
+  /* What follows the pointer in a drag: a card with the first row's name,
+     and another behind it when several rows go. The browser pictures only
+     the preview's box, so the card behind sits inside it, in room left at
+     its end and bottom, and borders stand in for shadows */
+  [data-tds="tree-drag-preview"] {
+    --_tree-preview-offset: var(--terria-ds-dimensions-spacing-1-5);
+
+    /* The card behind, under the front one */
+    --_tree-preview-back-layer: -1;
+    --_tree-preview-edge: inset 0 0 0 var(--terria-ds-border-width-default)
+      var(--terria-ds-border-color-strong);
+
+    position: relative;
+    display: inline-flex;
+    box-sizing: border-box;
+    isolation: isolate;
+
+    &[data-tds-stacked] {
+      padding-block-end: var(--_tree-preview-offset);
+      padding-inline-end: var(--_tree-preview-offset);
+    }
+
+    &[data-tds-stacked]::before {
+      position: absolute;
+      z-index: var(--_tree-preview-back-layer);
+      inset-block: var(--_tree-preview-offset) 0;
+      inset-inline: var(--_tree-preview-offset) 0;
+      border-radius: var(--terria-ds-radius-lg);
+      background-color: var(--terria-ds-surface-overlay);
+      box-shadow: var(--_tree-preview-edge);
+      content: "";
+    }
+  }
+
+  [data-tds="tree-drag-preview-card"] {
+    display: inline-flex;
+    gap: var(--terria-ds-space-sm);
+    align-items: center;
+    box-sizing: border-box;
+    max-inline-size: 20rem;
+    min-block-size: var(--terria-ds-dimensions-spacing-9);
+    padding-inline: var(--terria-ds-space-md);
+    border-radius: var(--terria-ds-radius-lg);
+    background-color: var(--terria-ds-surface-overlay);
+    box-shadow: var(--_tree-preview-edge);
+    color: var(--terria-ds-text-foreground);
+    font-size: var(--terria-ds-text-size-body);
+    line-height: var(--terria-ds-line-height-body);
+  }
+
+  [data-tds="tree-drag-preview-label"] {
+    min-inline-size: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}

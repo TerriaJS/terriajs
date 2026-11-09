@@ -1,0 +1,67 @@
+/**
+ * SearchField Component Styles
+ *
+ * The group is an InputGroup (InputGroup.css); the search icon and clear
+ * button sit straight in it, closer to the text than a prefix or suffix.
+ */
+
+@layer terria-ds.components {
+  [data-tds="search-field"] [data-tds="input-group"] {
+    gap: var(--terria-ds-dimensions-spacing-1-5);
+  }
+
+  /* The field draws its own clear button */
+  [data-tds="search-field"] input::-webkit-search-cancel-button {
+    display: none;
+  }
+
+  [data-tds="search-field-icon"] {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    color: var(--terria-ds-field-foreground);
+
+    &:first-child {
+      margin-inline-start: calc(
+        var(--terria-ds-space-md) - var(--terria-ds-field-border-width)
+      );
+    }
+  }
+
+  [data-tds="search-field"] [data-tds="close-button"] {
+    align-self: center;
+    inline-size: var(--terria-ds-dimensions-spacing-5);
+    block-size: var(--terria-ds-dimensions-spacing-5);
+
+    & > svg {
+      inline-size: var(--terria-ds-dimensions-icon-size-xs);
+      block-size: var(--terria-ds-dimensions-icon-size-xs);
+    }
+
+    &:last-child {
+      margin-inline-end: calc(
+        var(--terria-ds-space-sm) - var(--terria-ds-field-border-width)
+      );
+    }
+  }
+
+  /* Nothing to clear: the clear button goes, and a shortcut hint, like a Kbd
+     in a suffix, takes its place at the end */
+  [data-tds="search-field"][data-empty] [data-tds="close-button"] {
+    display: none;
+  }
+
+  /* In the field, the shortcut that leads to it is no use: the hint goes
+     once the input has focus or text, and the clear button takes its place.
+     Only the Kbd goes; a suffix goes with it when the Kbd is all it holds */
+  [data-tds="search-field"]:is(
+      :not([data-empty]),
+      :has([data-tds="input-group"][data-focus-within])
+    )
+    [data-tds="input-group-suffix"] {
+    & > [data-tds="kbd"],
+    &:has(> [data-tds="kbd"]:only-child) {
+      display: none;
+    }
+  }
+}

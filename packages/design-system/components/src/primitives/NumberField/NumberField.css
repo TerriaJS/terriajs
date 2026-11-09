@@ -1,0 +1,41 @@
+/**
+ * NumberField Component Styles
+ *
+ * Its buttons are input-group affixes (InputGroup.css lays them out and
+ * divides them); here they become buttons.
+ */
+
+@layer terria-ds.components {
+  /* Scoped to the group so it wins over the affix rules whatever the order
+     the stylesheets load in */
+  [data-tds="input-group"] > [data-tds="number-field-button"] {
+    color: var(--terria-ds-field-foreground);
+    transition: background-color var(--terria-ds-duration-150)
+      var(--terria-ds-ease-smooth);
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
+
+    &[data-hovered] {
+      background-color: var(--terria-ds-neutral);
+    }
+
+    &[data-pressed],
+    [data-tds-variant="secondary"] > &[data-hovered] {
+      background-color: var(--terria-ds-neutral-hover);
+    }
+
+    &[data-focus-visible] {
+      outline: var(--terria-ds-focus-ring-width) solid
+        var(--terria-ds-field-border-focus);
+      outline-offset: calc(-1 * var(--terria-ds-focus-ring-width));
+    }
+
+    /* At a limit; the whole field fades when it's disabled instead */
+    &[data-disabled] {
+      color: var(--terria-ds-field-placeholder);
+      cursor: not-allowed;
+    }
+  }
+}

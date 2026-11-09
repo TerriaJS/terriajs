@@ -1,0 +1,241 @@
+/**
+ * DateTimeSelector Component Styles
+ *
+ * TerriaJS's date picker as a selector, in the Calendar's look (Calendar.css): the back button
+ * as its arrows, centuries as its year cells, and dots for the months and days
+ * with data, filled in primary. The lists' items are ListBox's (ListBox.css).
+ */
+
+@layer terria-ds.components {
+  [data-tds="date-time-selector"] {
+    --_dts-option-height: var(--terria-ds-dimensions-spacing-8);
+
+    display: flex;
+    flex-direction: column;
+    inline-size: var(--terria-ds-dimensions-spacing-64);
+    max-inline-size: 100%;
+    color: var(--terria-ds-text-foreground);
+    font-size: var(--terria-ds-text-size-body);
+    line-height: var(--terria-ds-line-height-body-lg);
+
+    /* Years, hours and times are stacked in columns: figures of equal width
+       line them up, as the foundations' numbers rule (tds-numeric) has it */
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* In from the sides by as much as an option's text, less the back
+     button's own inset, so its arrow lines up with the options below */
+  [data-tds="date-time-selector-header"] {
+    display: flex;
+    gap: var(--terria-ds-space-sm);
+    align-items: center;
+    padding: var(--terria-ds-space-sm) var(--terria-ds-space-sm)
+      var(--terria-ds-space-xs);
+  }
+
+  /* The day view's Calendar header, holding the back button as this one does */
+  [data-tds="calendar-header"][data-tds-date-time-selector] {
+    gap: var(--terria-ds-space-sm);
+    justify-content: flex-start;
+    min-block-size: 0;
+    padding: var(--terria-ds-space-sm) var(--terria-ds-space-sm)
+      var(--terria-ds-space-xs);
+  }
+
+  [data-tds="date-time-selector-heading"] {
+    font-weight: var(--terria-ds-font-medium);
+  }
+
+  :is(
+    [data-tds="date-time-selector-back"],
+    [data-tds="date-time-selector-option"],
+    [data-tds="date-time-selector-row"]
+  ) {
+    border: none;
+    outline: none;
+    background: none;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition:
+      background-color var(--terria-ds-duration-100) var(--terria-ds-ease-out),
+      box-shadow var(--terria-ds-duration-100) var(--terria-ds-ease-out);
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
+
+    /* The back button is a button; the options are React Aria's, which mark
+       their states with data attributes */
+    @media (hover: hover) {
+      &:is(:hover, [data-hovered]):not(
+          :disabled,
+          [data-disabled],
+          [data-selected]
+        ) {
+        background-color: var(--terria-ds-neutral);
+      }
+    }
+
+    &:is(:focus-visible, [data-focus-visible]) {
+      outline: var(--terria-ds-focus-ring-width) solid transparent;
+      box-shadow: var(--terria-ds-shadow-focus-ring);
+    }
+
+    &:is(:disabled, [data-disabled]) {
+      opacity: var(--terria-ds-effects-disabled-opacity);
+      cursor: not-allowed;
+    }
+  }
+
+  [data-tds="date-time-selector-back"] {
+    display: flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    inline-size: var(--terria-ds-dimensions-spacing-6);
+    block-size: var(--terria-ds-dimensions-spacing-6);
+    padding: 0;
+    border-radius: var(--terria-ds-radius-sm);
+    color: var(--terria-ds-primary-soft-foreground);
+
+    & > svg {
+      inline-size: var(--terria-ds-dimensions-spacing-4);
+      block-size: var(--terria-ds-dimensions-spacing-4);
+    }
+
+    &:dir(rtl) > svg {
+      rotate: 180deg;
+    }
+  }
+
+  /* Centuries: three to a row, as the Calendar's years */
+  [data-tds="date-time-selector-grid"] {
+    display: grid;
+    outline: none;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--terria-ds-space-sm);
+  }
+
+  /* Scrolls the longer lists */
+  [data-tds="scroll-shadow"][data-tds-date-time-selector] {
+    max-block-size: var(--terria-ds-dimensions-spacing-72);
+
+    /* Out by the list's padding, so its options still line up with the
+       header */
+    margin-inline: calc(-1 * var(--terria-ds-focus-ring-width));
+  }
+
+  /* Padded by the focus ring, which the scrolling would otherwise clip */
+  [data-tds="date-time-selector-listbox"] {
+    display: flex;
+    flex-direction: column;
+    gap: var(--terria-ds-dimensions-spacing-0-5);
+    padding: var(--terria-ds-focus-ring-width);
+    outline: none;
+  }
+
+  [data-tds="date-time-selector-option"] {
+    display: inline-flex;
+    gap: var(--terria-ds-dimensions-spacing-1);
+    align-items: center;
+    justify-content: center;
+    min-block-size: var(--_dts-option-height);
+    box-sizing: border-box;
+    padding-inline: var(--terria-ds-space-md);
+    border-radius: var(--terria-ds-radius-full);
+    font-weight: var(--terria-ds-font-medium);
+
+    /* In a list, a full-width row, read from the start */
+    [data-tds="date-time-selector-listbox"] > & {
+      justify-content: flex-start;
+    }
+  }
+
+  /* A list's rows and options as ListBox's items (ListBox.css): the held
+     time marked by its indicator, and filled as the Calendar's selected date */
+  [data-tds="date-time-selector-listbox"]
+    > :is(
+      [data-tds="date-time-selector-option"],
+      [data-tds="date-time-selector-row"]
+    ) {
+    position: relative;
+    min-block-size: var(--terria-ds-dimensions-spacing-9);
+    padding: var(--terria-ds-dimensions-spacing-1-5) var(--terria-ds-space-md);
+    border-radius: var(--terria-ds-radius-lg);
+    font-weight: var(--terria-ds-font-regular);
+    transition-duration: var(--terria-ds-duration-150);
+
+    &[data-focus-visible] {
+      background-color: var(--terria-ds-neutral);
+      outline-offset: var(--terria-ds-focus-ring-offset);
+    }
+
+    &[data-selected] {
+      background-color: var(--terria-ds-primary);
+      color: var(--terria-ds-primary-foreground);
+    }
+
+    &:has(> [data-tds="list-box-item-indicator"]) {
+      padding-inline-end: calc(
+        var(--terria-ds-space-md) * 2 + var(--terria-ds-dimensions-icon-size-sm)
+      );
+    }
+  }
+
+  [data-tds="date-time-selector-count"] {
+    color: var(--terria-ds-text-muted);
+    font-weight: var(--terria-ds-font-regular);
+  }
+
+  /* A year or month: its name, then a dot for each month or day */
+  [data-tds="date-time-selector-row"] {
+    display: grid;
+    grid-template-columns: 5.5rem minmax(0, 1fr);
+
+    /* Months show short names, as TerriaJS's, leaving their 31 dots room */
+    [data-tds-view="month"] & {
+      grid-template-columns: 2.5rem minmax(0, 1fr);
+    }
+    gap: var(--terria-ds-space-sm);
+    align-items: center;
+    min-block-size: var(--_dts-option-height);
+    box-sizing: border-box;
+    padding-inline: var(--terria-ds-space-md);
+    border-radius: var(--terria-ds-radius-sm);
+    font-weight: var(--terria-ds-font-medium);
+    text-align: start;
+  }
+
+  /* On one line: a month's dots shrink to fit it */
+  [data-tds="date-time-selector-dots"] {
+    --_dts-dots-gap: var(--terria-ds-dimensions-spacing-0-5);
+
+    display: flex;
+    gap: var(--_dts-dots-gap);
+    align-items: center;
+    min-inline-size: 0;
+  }
+
+  [data-tds="date-time-selector-dot"] {
+    flex: none;
+    inline-size: var(--terria-ds-dimensions-spacing-1-5);
+    block-size: var(--terria-ds-dimensions-spacing-1-5);
+    border-radius: var(--terria-ds-radius-full);
+
+    /* A shade darker than the row's hover background, so empty dots still
+       show on a hovered row */
+    background-color: var(--terria-ds-neutral-hover);
+
+    &[data-tds-filled] {
+      background-color: var(--terria-ds-primary);
+    }
+
+    /* A month's days are smaller, so 31 fit beside its short name */
+    [data-tds-view="month"] & {
+      inline-size: var(--terria-ds-dimensions-spacing-1);
+      block-size: var(--terria-ds-dimensions-spacing-1);
+    }
+  }
+}

@@ -1,0 +1,48 @@
+/* Layout for the Tree stories */
+
+@layer storybook {
+  .tree-stories-frame {
+    inline-size: 22rem;
+    max-inline-size: 100%;
+  }
+
+  /* The sizes sit side by side, wider than one tree */
+  .tree-stories-frame:has(> .tree-stories-row) {
+    inline-size: auto;
+  }
+
+  .tree-stories-narrow {
+    inline-size: 14rem;
+  }
+
+  .tree-stories-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+    gap: var(--terria-ds-space-lg);
+    align-items: start;
+    inline-size: 60rem;
+    max-inline-size: 100%;
+  }
+
+  .tree-stories-stack {
+    display: flex;
+    flex-direction: column;
+    gap: var(--terria-ds-space-md);
+  }
+
+  .tree-stories-buttons {
+    display: flex;
+    gap: var(--terria-ds-space-sm);
+  }
+
+  .tree-stories-note {
+    margin: 0;
+    color: var(--terria-ds-text-muted);
+    font-size: var(--terria-ds-text-size-caption);
+  }
+
+  .tree-stories-scroll {
+    block-size: 25rem;
+    overflow: auto;
+  }
+}

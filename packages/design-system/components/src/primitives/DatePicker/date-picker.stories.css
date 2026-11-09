@@ -1,0 +1,15 @@
+/* Layout for the DatePicker stories */
+
+@layer storybook {
+  .date-picker-stories-popover {
+    display: grid;
+    gap: var(--terria-ds-space-sm);
+  }
+
+  /* The design's time row: the label beside the field */
+  .date-picker-stories-time {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+}

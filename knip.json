@@ -1,0 +1,33 @@
+{
+  "$schema": "https://unpkg.com/knip@6/schema.json",
+  "ignoreExportsUsedInFile": {
+    "interface": true,
+    "type": true
+  },
+  "tags": ["-lintignore"],
+  "workspaces": {
+    ".": {
+      "entry": [],
+      "project": [],
+      "github-actions": false
+    },
+    "packages/design-system/*": {
+      "project": ["src/**/*.{ts,tsx}"]
+    },
+    "packages/design-system/icons": {
+      "project": ["src/**/*.{ts,tsx}", "scripts/**/*.ts"]
+    },
+    "packages/design-system/components": {
+      "project": ["src/**/*.{ts,tsx}"],
+      "entry": ["scripts/*.ts"]
+    }
+  },
+  "ignoreDependencies": [
+    "react",
+    "@types/react",
+    "@terria/*",
+    "@fontsource-variable/inter"
+  ],
+  "exclude": ["catalog"],
+  "ignoreWorkspaces": ["apps/*", "packages/!(design-system)"]
+}

@@ -1,0 +1,12 @@
+/**
+ * AlertDialog Component Styles
+ *
+ * The layout is shared with Modal (see Modal.css). An alert dialog sits on
+ * the lighter overlay surface.
+ */
+
+@layer terria-ds.components {
+  [data-tds="alert-dialog-dialog"] {
+    --_dialog-bg: var(--terria-ds-surface-overlay);
+  }
+}

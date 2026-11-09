@@ -1,0 +1,22 @@
+/* Layout for the Autocomplete stories */
+
+@layer storybook {
+  /* The design's width */
+  .autocomplete-stories-field {
+    inline-size: var(--terria-ds-dimensions-spacing-64);
+  }
+
+  .autocomplete-stories-wide {
+    inline-size: var(--terria-ds-dimensions-spacing-96);
+  }
+
+  .autocomplete-stories-stack {
+    display: grid;
+    gap: var(--terria-ds-space-lg);
+  }
+
+  .autocomplete-stories-option {
+    display: grid;
+    flex: 1;
+  }
+}

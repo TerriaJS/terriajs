@@ -1,0 +1,186 @@
+/**
+ * Pagination Component Styles
+ *
+ * Sizes only set --_pagination-* custom properties. Page buttons are a step
+ * larger on narrow screens, for fingers: sizes set both, the root picks one
+ */
+
+@layer terria-ds.components {
+  /* The summary above the pages on narrow screens, beside them on wider ones */
+  [data-tds="pagination"] {
+    --_pagination-link-narrow: var(--terria-ds-dimensions-spacing-9);
+    --_pagination-link-wide: var(--terria-ds-dimensions-spacing-8);
+    --_pagination-link: var(--_pagination-link-narrow);
+    --_pagination-nav-padding: var(--terria-ds-space-md);
+    --_pagination-font-size: var(--terria-ds-text-size-body);
+    --_pagination-line-height: var(--terria-ds-line-height-body-lg);
+    --_pagination-pressed-scale: 0.97;
+
+    display: flex;
+    flex-direction: column;
+    gap: var(--terria-ds-space-lg);
+    align-items: center;
+    justify-content: space-between;
+    inline-size: 100%;
+    font-size: var(--_pagination-font-size);
+
+    @media (width >= 768px) {
+      /* --terria-ds-dimensions-screens-sm */
+      flex-direction: row;
+    }
+
+    @media (width >= 992px) {
+      /* --terria-ds-dimensions-screens-md */
+      --_pagination-link: var(--_pagination-link-wide);
+    }
+  }
+
+  [data-tds="pagination-summary"] {
+    display: flex;
+    gap: var(--terria-ds-space-md);
+    align-items: center;
+    align-self: flex-start;
+    color: var(--terria-ds-text-muted);
+    line-height: var(--_pagination-line-height);
+
+    @media (width >= 768px) {
+      /* --terria-ds-dimensions-screens-sm */
+      align-self: center;
+    }
+  }
+
+  [data-tds="pagination-content"] {
+    display: flex;
+    gap: var(--terria-ds-space-sm);
+    align-items: center;
+    align-self: flex-start;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    @media (width >= 768px) {
+      /* --terria-ds-dimensions-screens-sm */
+      align-self: center;
+    }
+  }
+
+  [data-tds="pagination-item"] {
+    display: inline-flex;
+  }
+
+  /* A ghost button; the current page is filled */
+  [data-tds="pagination-link"] {
+    --_pagination-link-bg: transparent;
+    --_pagination-link-bg-hover: var(--terria-ds-neutral);
+
+    position: relative;
+    isolation: isolate;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    min-inline-size: var(--_pagination-link);
+    block-size: var(--_pagination-link);
+    padding: 0;
+    border: none;
+    border-radius: var(--terria-ds-radius-full);
+    outline: none;
+    background-color: var(--_pagination-link-bg);
+    color: var(--terria-ds-neutral-foreground);
+    font: inherit;
+    font-weight: var(--terria-ds-font-medium);
+    line-height: var(--terria-ds-line-height-body);
+    white-space: nowrap;
+    user-select: none;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition:
+      transform var(--terria-ds-duration-250) var(--terria-ds-ease-smooth),
+      background-color var(--terria-ds-duration-100) var(--terria-ds-ease-out),
+      box-shadow var(--terria-ds-duration-100) var(--terria-ds-ease-out);
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
+
+    @media (hover: hover) {
+      &[data-hovered] {
+        background-color: var(--_pagination-link-bg-hover);
+      }
+    }
+
+    &[data-pressed] {
+      background-color: var(--_pagination-link-bg-hover);
+      transform: scale(var(--_pagination-pressed-scale));
+    }
+
+    &[data-focus-visible] {
+      box-shadow: var(--terria-ds-shadow-focus-ring);
+
+      /* Shadows are dropped in forced-colors mode; this outline shows there instead */
+      outline: var(--terria-ds-focus-ring-width) solid transparent;
+      outline-offset: var(--terria-ds-focus-ring-offset);
+    }
+
+    &[data-disabled] {
+      opacity: var(--terria-ds-effects-disabled-opacity);
+      cursor: not-allowed;
+    }
+
+    &[data-active] {
+      --_pagination-link-bg: var(--terria-ds-neutral);
+      --_pagination-link-bg-hover: var(--terria-ds-neutral-hover);
+    }
+
+    /* Previous and Next: an arrow beside their word */
+    &[data-tds-nav] {
+      gap: var(--terria-ds-space-xs);
+      padding-inline: var(--_pagination-nav-padding);
+    }
+  }
+
+  [data-tds="pagination-previous-icon"],
+  [data-tds="pagination-next-icon"] {
+    display: inline-flex;
+
+    & > svg {
+      inline-size: var(--terria-ds-dimensions-icon-size-sm);
+      block-size: var(--terria-ds-dimensions-icon-size-sm);
+    }
+
+    &:dir(rtl) {
+      rotate: 180deg;
+    }
+  }
+
+  [data-tds="pagination-ellipsis"] {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    block-size: var(--_pagination-link);
+    color: var(--terria-ds-text-muted);
+    font-weight: var(--terria-ds-font-medium);
+    user-select: none;
+  }
+
+  /* ============================================================
+     SIZES
+     ============================================================ */
+
+  [data-tds="pagination"][data-tds-size="sm"] {
+    --_pagination-link-narrow: var(--terria-ds-dimensions-spacing-8);
+    --_pagination-link-wide: var(--terria-ds-dimensions-spacing-7);
+    --_pagination-nav-padding: var(--terria-ds-space-sm);
+    --_pagination-font-size: var(--terria-ds-text-size-caption);
+    --_pagination-line-height: var(--terria-ds-line-height-caption);
+    --_pagination-pressed-scale: 0.98;
+  }
+
+  [data-tds="pagination"][data-tds-size="lg"] {
+    --_pagination-link-narrow: var(--terria-ds-dimensions-spacing-10);
+    --_pagination-link-wide: var(--terria-ds-dimensions-spacing-9);
+    --_pagination-font-size: var(--terria-ds-text-size-body-lg);
+    --_pagination-line-height: var(--terria-ds-line-height-body-lg);
+    --_pagination-pressed-scale: 0.96;
+  }
+}

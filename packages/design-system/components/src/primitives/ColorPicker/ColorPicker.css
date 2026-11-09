@@ -1,0 +1,119 @@
+/**
+ * ColorPicker Component Styles
+ *
+ * The trigger lays out its swatch and label; the popover's content stacks
+ * what changes the colour.
+ */
+
+@layer terria-ds.components {
+  [data-tds="color-picker-trigger"] {
+    display: inline-flex;
+    gap: var(--terria-ds-space-md);
+    align-items: center;
+    border-radius: var(--terria-ds-radius-sm);
+    outline: none;
+    color: var(--terria-ds-text-foreground);
+    font-size: var(--terria-ds-text-size-body);
+    font-weight: var(--terria-ds-font-medium);
+    line-height: var(--terria-ds-line-height-body-lg);
+
+    &[data-focus-visible] {
+      box-shadow: var(--terria-ds-shadow-focus-ring);
+
+      /* Shadows are dropped in forced-colors mode; this outline shows there instead */
+      outline: var(--terria-ds-focus-ring-width) solid transparent;
+      outline-offset: var(--terria-ds-focus-ring-offset);
+    }
+
+    &[data-disabled] {
+      opacity: var(--terria-ds-effects-disabled-opacity);
+    }
+  }
+
+  /* The colour, in a rainbow ring, checked; or with isEmpty, the rainbow */
+  [data-tds="color-picker-indicator"] {
+    --_color-picker-indicator-size: var(--terria-ds-dimensions-spacing-9);
+    --_color-picker-ring: calc(
+      3.5 * var(--terria-ds-dimensions-border-width-1)
+    );
+
+    /* The design's own stops, from the bottom round; none is a colour
+       token */
+    --_color-picker-rainbow: conic-gradient(
+      from 180deg,
+      rgb(248 174 207) 0%,
+      rgb(251 199 163) 12%,
+      rgb(247 232 164) 24%,
+      rgb(215 245 176) 36%,
+      rgb(181 243 210) 48%,
+      rgb(163 234 247) 60%,
+      rgb(168 201 255) 72%,
+      rgb(201 184 255) 84%,
+      rgb(248 174 207) 100%
+    );
+
+    position: relative;
+    display: grid;
+    flex-shrink: 0;
+    place-items: center;
+    inline-size: var(--_color-picker-indicator-size);
+    block-size: var(--_color-picker-indicator-size);
+
+    & > * {
+      grid-area: 1 / 1;
+    }
+
+    /* The ring, just outside the swatch's box */
+    &::before {
+      position: absolute;
+      inset: calc(-1 * var(--terria-ds-dimensions-spacing-1));
+      border-radius: var(--terria-ds-radius-full);
+      background-image: var(--_color-picker-rainbow);
+      content: "";
+      mask-image: radial-gradient(
+        farthest-side,
+        transparent calc(100% - var(--_color-picker-ring)),
+        black calc(100% - var(--_color-picker-ring))
+      );
+    }
+
+    /* Over the swatch, as it comes after it */
+    & > svg {
+      inline-size: var(--terria-ds-dimensions-spacing-3);
+      block-size: var(--terria-ds-dimensions-spacing-3);
+      color: var(--terria-ds-colors-white);
+    }
+
+    /* No colour yet: the rainbow fills it, without the ring */
+    &[data-tds-empty] {
+      border-radius: var(--terria-ds-radius-full);
+      background-image: var(--_color-picker-rainbow);
+      box-shadow: var(--terria-ds-shadow-inner);
+
+      &::before {
+        content: none;
+      }
+    }
+  }
+
+  /* The popover's content: a column, as wide as the design's */
+  [data-tds="color-picker-content"] {
+    display: flex;
+    flex-direction: column;
+    gap: var(--terria-ds-space-sm);
+    box-sizing: border-box;
+    inline-size: var(--terria-ds-dimensions-spacing-60);
+    padding: var(--terria-ds-space-lg) var(--terria-ds-space-sm)
+      var(--terria-ds-space-md);
+  }
+
+  /* The popover around it is the design's, rounder, and its dialog leaves
+     the padding to the content */
+  [data-tds="popover"]:has([data-tds="color-picker-content"]) {
+    --_popover-radius: var(--terria-ds-radius-lg);
+  }
+
+  [data-tds="popover-dialog"]:has(> [data-tds="color-picker-content"]) {
+    padding: 0;
+  }
+}

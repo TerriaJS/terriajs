@@ -1,0 +1,152 @@
+/**
+ * Switch Component Styles
+ *
+ * Sizes only set --_switch-* custom properties; the base rules consume them.
+ */
+
+@layer terria-ds.components {
+  [data-tds="switch"] {
+    --_switch-width: var(--terria-ds-dimensions-spacing-10);
+    --_switch-height: var(--terria-ds-dimensions-spacing-5);
+    --_switch-thumb-width: var(--terria-ds-dimensions-spacing-5);
+    --_switch-thumb-radius: var(--terria-ds-dimensions-radius-rounded-lg);
+    --_switch-label-size: var(--terria-ds-text-size-body);
+    --_switch-label-line-height: var(--terria-ds-line-height-body-lg);
+    --_switch-gap: var(--terria-ds-space-lg);
+
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+
+    &[data-disabled] {
+      opacity: var(--terria-ds-effects-disabled-opacity);
+    }
+
+    /* Help text lines up with the label, past the control */
+    & > :is([data-tds="description"], [data-tds="field-error"]) {
+      box-sizing: border-box;
+      inline-size: 100%;
+      padding-inline-start: calc(var(--_switch-width) + var(--_switch-gap));
+    }
+  }
+
+  [data-tds="switch"][data-tds-size="sm"] {
+    --_switch-width: var(--terria-ds-dimensions-spacing-8);
+    --_switch-height: var(--terria-ds-dimensions-spacing-4);
+    --_switch-thumb-width: var(--terria-ds-dimensions-spacing-4);
+    --_switch-label-size: var(--terria-ds-text-size-nano);
+    --_switch-label-line-height: var(--terria-ds-line-height-body);
+  }
+
+  [data-tds="switch"][data-tds-size="lg"] {
+    --_switch-width: var(--terria-ds-dimensions-spacing-12);
+    --_switch-height: var(--terria-ds-dimensions-spacing-6);
+    --_switch-thumb-width: var(--terria-ds-dimensions-spacing-7);
+    --_switch-thumb-radius: var(--terria-ds-dimensions-radius-rounded-xl);
+    --_switch-label-size: var(--terria-ds-text-size-body-lg);
+    --_switch-label-line-height: var(--terria-ds-line-height-heading);
+  }
+
+  /* The clickable label: control and Label side by side */
+  [data-tds="switch-content"] {
+    display: inline-flex;
+    gap: var(--_switch-gap);
+    align-items: center;
+    outline: none;
+    color: var(--terria-ds-text-foreground);
+    font-size: var(--_switch-label-size);
+    font-weight: var(--terria-ds-font-medium);
+    line-height: var(--_switch-label-line-height);
+    cursor: pointer;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+
+    [data-disabled] > & {
+      cursor: not-allowed;
+    }
+
+    /* The Label takes the size's text, not its own */
+    [data-tds="label"] {
+      font-size: inherit;
+      line-height: inherit;
+    }
+  }
+
+  /* The track */
+  [data-tds="switch-control"] {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    box-sizing: border-box;
+    inline-size: var(--_switch-width);
+    block-size: var(--_switch-height);
+    padding: var(--terria-ds-dimensions-spacing-0-5);
+    border-radius: var(--terria-ds-radius-full);
+    background-color: var(--terria-ds-neutral);
+    transition:
+      background-color var(--terria-ds-duration-250)
+        var(--terria-ds-ease-smooth),
+      box-shadow var(--terria-ds-duration-150) var(--terria-ds-ease-out);
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
+
+    [data-selected] > [data-tds="switch-content"] > & {
+      background-color: var(--terria-ds-primary);
+    }
+
+    [data-tds="switch-content"][data-focus-visible] > & {
+      box-shadow: var(--terria-ds-shadow-focus-ring);
+
+      /* Shadows are dropped in forced-colors mode; this outline shows there instead */
+      outline: var(--terria-ds-focus-ring-width) solid transparent;
+    }
+  }
+
+  [data-tds="switch-thumb"] {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    inline-size: var(--_switch-thumb-width);
+    block-size: 100%;
+    border-radius: var(--_switch-thumb-radius);
+    background-color: var(--terria-ds-colors-white);
+    color: var(--terria-ds-neutral-foreground);
+    transition:
+      margin-inline-start var(--terria-ds-duration-300)
+        var(--terria-ds-ease-out-fluid),
+      background-color var(--terria-ds-duration-200) var(--terria-ds-ease-out);
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
+
+    /* Slides to the end: margin rather than translate so it tracks the size */
+    [data-selected]
+      > [data-tds="switch-content"]
+      > [data-tds="switch-control"]
+      > & {
+      margin-inline-start: calc(100% - var(--_switch-thumb-width));
+      background-color: var(--terria-ds-primary-foreground);
+      box-shadow: var(--terria-ds-shadow-switch);
+      color: var(--terria-ds-primary);
+    }
+  }
+
+  [data-tds="switch-icon"] {
+    display: flex;
+    inline-size: var(--terria-ds-dimensions-spacing-2-5);
+    block-size: var(--terria-ds-dimensions-spacing-2-5);
+
+    [data-tds-size="sm"] & {
+      inline-size: var(--terria-ds-space-sm);
+      block-size: var(--terria-ds-space-sm);
+    }
+
+    & > svg {
+      inline-size: 100%;
+      block-size: 100%;
+    }
+  }
+}

@@ -1,0 +1,33 @@
+import { Meta, Story, Unstyled } from "@storybook/addon-docs/blocks";
+import * as RadiusStories from "./Radius.stories";
+
+<Meta of={RadiusStories} />
+
+{/* Rendered in the design system's own type, not Storybook's docs styles */}
+
+<Unstyled>
+<div className="docs-page tds-flow tds-body">
+
+# Radius
+
+Radius defines the overall shape language of the interface. It's a
+system-level value rather than a per-component style: components use the
+semantic radius tokens, so changing those makes the whole interface feel
+sharper or softer without redesigning any component.
+
+## Semantic radius
+
+Use these on components. Fields have their own, so their shape can change
+apart from the rest.
+
+<Story of={RadiusStories.Semantic} />
+
+## Scale
+
+The full scale the semantic radii come from, from square corners to fully
+round.
+
+<Story of={RadiusStories.RadiusScale} />
+
+</div>
+</Unstyled>

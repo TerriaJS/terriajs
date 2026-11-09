@@ -1,0 +1,153 @@
+/* Layout for the Card stories: what goes in a card is yours */
+
+@layer storybook {
+  .card-stories-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--terria-ds-space-lg);
+    align-items: flex-start;
+  }
+
+  /* A busy background, as cards float over a map */
+  .card-stories-backdrop {
+    padding: var(--terria-ds-space-xl);
+    background-image: linear-gradient(
+      var(--terria-ds-success-soft),
+      var(--terria-ds-warning-soft)
+    );
+  }
+
+  .card-stories-basic {
+    inline-size: 22rem;
+  }
+
+  .card-stories-variant {
+    inline-size: 13.75rem;
+  }
+
+  .card-stories-icon {
+    inline-size: var(--terria-ds-dimensions-icon-size-lg);
+    block-size: var(--terria-ds-dimensions-icon-size-lg);
+  }
+
+  .card-stories-tagline {
+    display: block;
+    font-size: var(--terria-ds-text-size-nano);
+    font-weight: var(--terria-ds-font-medium);
+    line-height: var(--terria-ds-line-height-body);
+  }
+
+  .card-stories-thumbnail {
+    inline-size: 3.5rem;
+    block-size: 3.5rem;
+    border-radius: var(--terria-ds-radius-md);
+    object-fit: cover;
+  }
+
+  .card-stories-avatar {
+    inline-size: var(--terria-ds-dimensions-icon-size-sm);
+    block-size: var(--terria-ds-dimensions-icon-size-sm);
+    border-radius: var(--terria-ds-radius-full);
+  }
+
+  .card-stories-horizontal {
+    flex-direction: row;
+    gap: var(--terria-ds-space-lg);
+    inline-size: 29rem;
+  }
+
+  .card-stories-side-image {
+    flex-shrink: 0;
+    inline-size: 7.25rem;
+    border-radius: var(--terria-ds-radius-lg);
+    object-fit: cover;
+  }
+
+  /* The image runs to the card's edge, but for a thin frame */
+  .card-stories-item {
+    gap: var(--terria-ds-space-xs);
+    inline-size: 12.5rem;
+    padding: var(--terria-ds-space-xs);
+  }
+
+  .card-stories-item-image {
+    block-size: 9.5rem;
+    border-radius: var(--terria-ds-dimensions-radius-rounded-2-5xl);
+    object-fit: cover;
+  }
+
+  .card-stories-support {
+    justify-content: space-between;
+    padding: 0 var(--terria-ds-space-md) var(--terria-ds-space-xs);
+    color: var(--terria-ds-text-muted);
+    font-size: var(--terria-ds-text-size-body);
+    font-weight: var(--terria-ds-font-medium);
+    line-height: var(--terria-ds-line-height-body-lg);
+
+    & [data-tds="card-title"] {
+      color: var(--terria-ds-text-foreground);
+    }
+  }
+
+  .card-stories-cover {
+    overflow: clip;
+    inline-size: 17.5rem;
+    block-size: 21rem;
+
+    /* Above the image */
+    & > :not(.card-stories-cover-image) {
+      position: relative;
+    }
+
+    & > [data-tds="close-button"] {
+      position: absolute;
+    }
+  }
+
+  .card-stories-cover-image {
+    position: absolute;
+    inset: 0;
+    inline-size: 100%;
+    block-size: 100%;
+    object-fit: cover;
+  }
+
+  /* The footer at the bottom, over a blur of the image */
+  .card-stories-cta {
+    justify-content: space-between;
+    margin: auto calc(-1 * var(--terria-ds-space-lg))
+      calc(-1 * var(--terria-ds-space-lg));
+    padding: var(--terria-ds-space-lg);
+    background-color: var(--terria-ds-surface-glass);
+    backdrop-filter: var(--terria-ds-backdrop-blur);
+  }
+
+  .card-stories-dataset {
+    gap: var(--terria-ds-space-xs);
+    inline-size: 18.75rem;
+  }
+
+  .card-stories-media {
+    position: relative;
+
+    & [data-tds="chip"] {
+      position: absolute;
+      inset-block-end: var(--terria-ds-space-md);
+      inset-inline-start: var(--terria-ds-space-md);
+    }
+  }
+
+  .card-stories-media-image {
+    display: block;
+    inline-size: 100%;
+    block-size: 10rem;
+    border-radius: var(--terria-ds-dimensions-radius-rounded-2-5xl);
+    object-fit: cover;
+  }
+
+  .card-stories-source {
+    margin: 0;
+    font-size: var(--terria-ds-text-size-body);
+    line-height: var(--terria-ds-line-height-body-lg);
+  }
+}

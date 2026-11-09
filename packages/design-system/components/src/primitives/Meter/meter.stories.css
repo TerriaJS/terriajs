@@ -1,0 +1,9 @@
+/* Layout for the Meter stories */
+
+@layer storybook {
+  .meter-stories-stack {
+    display: grid;
+    gap: var(--terria-ds-space-xl);
+    inline-size: 15rem;
+  }
+}

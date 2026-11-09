@@ -1,0 +1,66 @@
+/**
+ * Styles for the Typography docs page, on top of docs.stories.css. Widths
+ * have no tokens, so they're given in rem and ch.
+ */
+
+@layer storybook {
+  /* One style per row, like the Figma page: spec on the left, sample and
+     description on the right. A divider between rows */
+  .type-spec {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 26rem);
+    gap: var(--terria-ds-dimensions-spacing-8);
+    padding-block: var(--terria-ds-dimensions-spacing-8);
+    border-block-end: var(--terria-ds-border-width-default) solid
+      var(--terria-ds-border);
+
+    &:last-child {
+      border-block-end: 0;
+    }
+  }
+
+  .type-spec-meta,
+  .type-spec-description {
+    font-size: var(--terria-ds-dimensions-font-text-sm);
+    line-height: var(--terria-ds-dimensions-leading-text-sm);
+  }
+
+  /* The family and the weight and size lines */
+  .type-spec-meta strong {
+    display: block;
+    font-weight: var(--terria-ds-font-semi-bold);
+  }
+
+  .type-spec-hooks {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--terria-ds-dimensions-spacing-1);
+    margin-block-start: var(--terria-ds-dimensions-spacing-2);
+  }
+
+  /* tds-flow spaces the sample and its description */
+  .type-spec-sample {
+    --terria-ds-flow-space: var(--terria-ds-dimensions-spacing-4);
+  }
+
+  .type-spec-description {
+    color: var(--terria-ds-text-muted);
+  }
+
+  .type-measure {
+    max-inline-size: 65ch;
+  }
+
+  /* Right-aligned, so equal-width figures line up by place value */
+  .type-numbers {
+    inline-size: max-content;
+
+    /* The browser's; tds-flow sets the space above */
+    margin-block-end: 0;
+    padding: 0;
+    list-style: none;
+    font-size: var(--terria-ds-dimensions-font-text-xl);
+    line-height: var(--terria-ds-dimensions-leading-text-xl);
+    text-align: end;
+  }
+}

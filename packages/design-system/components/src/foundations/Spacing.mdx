@@ -1,0 +1,42 @@
+import { Meta, Story, Unstyled } from "@storybook/addon-docs/blocks";
+import * as SpacingStories from "./Spacing.stories";
+
+<Meta of={SpacingStories} />
+
+{/* Rendered in the design system's own type, not Storybook's docs styles */}
+
+<Unstyled>
+<div className="docs-page tds-flow tds-body">
+
+# Spacing
+
+Spacing keeps layouts consistent and rhythmic. Every size comes from one
+scale, built on 4px steps, so elements line up across the interface.
+
+## Semantic spacing
+
+Use these for the space inside and between components: padding, gaps and
+margins. They step up from `space-2xs` to `space-2xl`.
+
+<Story of={SpacingStories.Semantic} />
+
+## Padding and gaps
+
+Padding is the space inside a component, between its edge and its content.
+Gaps are the space between the items in a row or a stack: set them on the
+container with `gap`, rather than margins on each item. The hatched space in
+each example is set by the token under it, smallest to largest, as the
+components use them.
+
+<Story of={SpacingStories.PaddingAndGaps} />
+
+## Scale
+
+The full scale the semantic sizes come from. Reach for it for layout the
+semantic sizes don't cover. Each step is 4px, with half steps at the small end.
+For the space between blocks of text, use `tds-flow` from Typography.
+
+<Story of={SpacingStories.SpacingScale} />
+
+</div>
+</Unstyled>

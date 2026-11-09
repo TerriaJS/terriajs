@@ -1,0 +1,14 @@
+/* The width a ColorArea fills in the stories, as in a picker's popover */
+
+@layer storybook {
+  .color-area-story {
+    inline-size: var(--terria-ds-dimensions-spacing-60);
+  }
+
+  /* The Selects for the space and channels, side by side over the area */
+  .color-area-story-selects {
+    display: flex;
+    gap: var(--terria-ds-space-md);
+    inline-size: max-content;
+  }
+}

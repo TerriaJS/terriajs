@@ -1,0 +1,56 @@
+/**
+ * CloseButton Component Styles
+ */
+
+@layer terria-ds.components {
+  [data-tds="close-button"] {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    inline-size: var(--terria-ds-dimensions-spacing-6);
+    block-size: var(--terria-ds-dimensions-spacing-6);
+    padding: var(--terria-ds-dimensions-spacing-1);
+    border-radius: var(--terria-ds-dimensions-radius-rounded-xl);
+    outline: none;
+    background-color: var(--terria-ds-neutral);
+    color: var(--terria-ds-text-muted);
+    transition:
+      background-color var(--terria-ds-duration-100) var(--terria-ds-ease-out),
+      box-shadow var(--terria-ds-duration-150) var(--terria-ds-ease-out);
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
+
+    & > svg {
+      inline-size: var(--terria-ds-dimensions-icon-size-sm);
+      block-size: var(--terria-ds-dimensions-icon-size-sm);
+      pointer-events: none;
+    }
+
+    @media (hover: hover) {
+      &[data-hovered] {
+        background-color: var(--terria-ds-neutral-hover);
+      }
+    }
+
+    &[data-pressed] {
+      background-color: var(--terria-ds-neutral-hover);
+    }
+
+    &[data-focus-visible] {
+      background-color: var(--terria-ds-neutral-hover);
+      box-shadow: var(--terria-ds-shadow-focus-ring);
+
+      /* Shadows are dropped in forced-colors mode; this outline shows there instead */
+      outline: var(--terria-ds-focus-ring-width) solid transparent;
+    }
+
+    &[data-disabled] {
+      opacity: var(--terria-ds-effects-disabled-opacity);
+      cursor: not-allowed;
+    }
+  }
+}

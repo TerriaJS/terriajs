@@ -1,0 +1,378 @@
+/**
+ * Tabs Component Styles
+ *
+ * Variants only set --_tabs-* custom properties on the root; the part rules
+ * consume them.
+ */
+
+@layer terria-ds.components {
+  [data-tds="tabs"] {
+    --_tabs-container-bg: var(--terria-ds-neutral);
+    --_tabs-container-radius: var(--terria-ds-dimensions-radius-rounded-3xl);
+    --_tabs-list-padding: var(--terria-ds-dimensions-spacing-1)
+      var(--terria-ds-dimensions-spacing-2);
+    --_tabs-list-gap: var(--terria-ds-dimensions-spacing-0-5);
+    --_tabs-tab-padding: var(--terria-ds-dimensions-spacing-1-5)
+      var(--terria-ds-dimensions-spacing-3);
+
+    /* The indicator's pill, so the focus ring follows it */
+    --_tabs-tab-radius: var(--terria-ds-radius-full);
+    --_tabs-fg: var(--terria-ds-text-muted);
+    --_tabs-fg-hover: var(--terria-ds-text-segment);
+    --_tabs-bg-hover: var(--terria-ds-surface-tint);
+    --_tabs-fg-selected: var(--terria-ds-text-segment);
+    --_tabs-indicator-bg: var(--terria-ds-segment);
+    --_tabs-indicator-radius: var(--terria-ds-radius-full);
+    --_tabs-indicator-shadow: var(--terria-ds-shadow-tab);
+    --_tabs-ease: var(--terria-ds-ease-out-fluid);
+    --_tabs-fade: var(--terria-ds-dimensions-spacing-11);
+
+    position: relative;
+    display: flex;
+    gap: var(--terria-ds-dimensions-spacing-2);
+
+    &[data-orientation="horizontal"] {
+      flex-direction: column;
+    }
+
+    &[data-orientation="vertical"] {
+      --_tabs-tab-padding: var(--terria-ds-dimensions-spacing-3);
+
+      flex-direction: row;
+    }
+  }
+
+  /* Secondary: tabs on an underline, the selected one marked by a line */
+  [data-tds="tabs"][data-tds-variant="secondary"] {
+    --_tabs-container-bg: transparent;
+    --_tabs-container-radius: 0;
+    --_tabs-list-padding: 0;
+    --_tabs-list-gap: 0;
+    --_tabs-tab-padding: var(--terria-ds-dimensions-spacing-1)
+      var(--terria-ds-dimensions-spacing-3);
+    --_tabs-tab-radius: 0;
+    --_tabs-fg-hover: var(--terria-ds-text-foreground);
+    --_tabs-bg-hover: transparent;
+    --_tabs-fg-selected: var(--terria-ds-text-foreground);
+    --_tabs-indicator-bg: transparent;
+    --_tabs-indicator-radius: 0;
+
+    /* Transparent, not none: it follows the focus ring in one box-shadow */
+    --_tabs-indicator-shadow: 0 0 transparent;
+    --_tabs-line-color: var(--terria-ds-primary);
+    --_tabs-fade: var(--terria-ds-dimensions-spacing-8);
+    --_tabs-line: var(--terria-ds-dimensions-spacing-0-5);
+
+    &[data-orientation="vertical"] {
+      --_tabs-tab-padding: var(--terria-ds-dimensions-spacing-2-5)
+        var(--terria-ds-dimensions-spacing-3);
+    }
+  }
+
+  /* The pill, or the underline. It hugs its tabs up to its parent's size;
+     past that the list inside scrolls, and the arrows show */
+  [data-tds="tabs-list-container"] {
+    position: relative;
+    box-sizing: border-box;
+    inline-size: fit-content;
+    max-inline-size: 100%;
+    max-block-size: 100%;
+    border-radius: var(--_tabs-container-radius);
+    background-color: var(--_tabs-container-bg);
+    backdrop-filter: var(--terria-ds-backdrop-blur);
+
+    /* Buttons in it don't blur again */
+    --terria-ds-button-backdrop: none;
+
+    [data-tds-full-width] > & {
+      inline-size: auto;
+    }
+
+    [data-tds-variant="secondary"][data-orientation="horizontal"] > & {
+      border-block-end: var(--terria-ds-border-width-default) solid
+        var(--terria-ds-border);
+    }
+
+    [data-tds-variant="secondary"][data-orientation="vertical"] > & {
+      border-inline-start: var(--terria-ds-border-width-default) solid
+        var(--terria-ds-border);
+    }
+  }
+
+  /* Scrolls when the tabs don't fit, its ends fading where there's more;
+     the pill behind doesn't. Scrolling clips what pokes out, hence the
+     tabs' inset focus ring */
+  [data-tds="tabs-list-container"] > [data-tds="scroll-shadow"] {
+    box-sizing: border-box;
+    max-block-size: 100%;
+
+    /* A tab scrolled into view keeps the list's padding clear */
+    scroll-padding: var(--_tabs-list-padding);
+  }
+
+  [data-tds="tabs-list"] {
+    display: flex;
+    gap: var(--_tabs-list-gap);
+    box-sizing: border-box;
+    padding: var(--_tabs-list-padding);
+
+    /* Wide as its tabs, so the end padding scrolls into view too; at least
+       as wide as the pill, so full-width tabs fill it */
+    &[data-orientation="horizontal"] {
+      inline-size: max-content;
+      min-inline-size: 100%;
+    }
+
+    &[data-orientation="vertical"] {
+      flex-direction: column;
+    }
+  }
+
+  /* 16px chevrons, 4px in from the ends, over the fades */
+  [data-tds="tabs-scroll"] {
+    --_tabs-scroll-inset: var(--terria-ds-dimensions-spacing-1);
+
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--terria-ds-text-foreground);
+    transition: opacity var(--terria-ds-duration-150)
+      var(--terria-ds-ease-smooth);
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
+
+    @media (hover: hover) {
+      &:hover {
+        opacity: 0.7;
+      }
+    }
+
+    &[hidden] {
+      display: none;
+    }
+
+    & > svg {
+      inline-size: var(--terria-ds-dimensions-spacing-4);
+      block-size: var(--terria-ds-dimensions-spacing-4);
+    }
+
+    [data-orientation="horizontal"] > [data-tds="tabs-list-container"] > & {
+      inset-block-start: 50%;
+      translate: 0 -50%;
+
+      /* The chevrons point left and right; flipped, they point to the start
+         and end in right-to-left */
+      &:dir(rtl) > svg {
+        rotate: 180deg;
+      }
+    }
+
+    /* Centred by its margins, the same either way the page reads */
+    [data-orientation="vertical"] > [data-tds="tabs-list-container"] > & {
+      inset-inline: 0;
+      inline-size: fit-content;
+      margin-inline: auto;
+    }
+
+    [data-orientation="horizontal"]
+      > [data-tds="tabs-list-container"]
+      > &[data-tds-direction="start"] {
+      inset-inline-start: var(--_tabs-scroll-inset);
+    }
+
+    [data-orientation="horizontal"]
+      > [data-tds="tabs-list-container"]
+      > &[data-tds-direction="end"] {
+      inset-inline-end: var(--_tabs-scroll-inset);
+    }
+
+    [data-orientation="vertical"]
+      > [data-tds="tabs-list-container"]
+      > &[data-tds-direction="start"] {
+      inset-block-start: var(--_tabs-scroll-inset);
+    }
+
+    [data-orientation="vertical"]
+      > [data-tds="tabs-list-container"]
+      > &[data-tds-direction="end"] {
+      inset-block-end: var(--_tabs-scroll-inset);
+    }
+  }
+
+  [data-tds="tabs-tab"] {
+    position: relative;
+
+    display: flex;
+    flex: 0 0 auto;
+    gap: var(--terria-ds-dimensions-spacing-1-5);
+    align-items: center;
+    justify-content: center;
+    padding: var(--_tabs-tab-padding);
+    border-radius: var(--_tabs-tab-radius);
+    outline: none;
+    color: var(--_tabs-fg);
+    font-size: var(--terria-ds-text-size-body);
+    font-weight: var(--terria-ds-font-medium);
+    line-height: var(--terria-ds-line-height-body);
+    text-align: center;
+    white-space: nowrap;
+    cursor: pointer;
+
+    /* Its own layer, so the indicator's -1 sits above the list's background */
+    isolation: isolate;
+    transition:
+      background-color var(--terria-ds-duration-150)
+        var(--terria-ds-ease-smooth),
+      color var(--terria-ds-duration-150) var(--terria-ds-ease-smooth);
+    -webkit-tap-highlight-color: transparent;
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
+
+    [data-tds-full-width] & {
+      flex: 1 1 0;
+    }
+
+    &[data-selected] {
+      color: var(--_tabs-fg-selected);
+      font-weight: var(--terria-ds-font-semi-bold);
+    }
+
+    &[data-hovered]:not([data-selected], [data-disabled]) {
+      background-color: var(--_tabs-bg-hover);
+      color: var(--_tabs-fg-hover);
+    }
+
+    &[data-disabled] {
+      opacity: var(--terria-ds-effects-disabled-opacity);
+      cursor: not-allowed;
+    }
+
+    /* An inset outline: the scrolling list would clip one outside the tab,
+       and outlines paint over the indicator. When selection follows focus,
+       the indicator carries the ring instead, so it slides with it; with
+       manual activation it stays on the focused tab, through selection */
+    &[data-focus-visible]:not(:has(> [data-tds="tabs-indicator"])),
+    [data-tds-keyboard-activation="manual"] &[data-focus-visible] {
+      outline: var(--terria-ds-focus-ring-width) solid
+        var(--terria-ds-focus-ring);
+      outline-offset: calc(-1 * var(--terria-ds-focus-ring-width));
+    }
+  }
+
+  /* As wide as the label will be once selected: a hidden semibold copy of
+     it takes the width, so selecting a tab doesn't shift the others */
+  [data-tds="tabs-tab-label"] {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  [data-tds="tabs-tab-label-reserve"] {
+    block-size: 0;
+    overflow: hidden;
+    font-weight: var(--terria-ds-font-semi-bold);
+    visibility: hidden;
+    user-select: none;
+  }
+
+  /* React Aria draws it in the selected tab, then slides it to the next one */
+  [data-tds="tabs-indicator"] {
+    --_tabs-indicator-layer: -1;
+
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline-start: 0;
+    z-index: var(--_tabs-indicator-layer);
+
+    /* Sized in percentages, not by its insets: React Aria starts the new
+       indicator at the old one's size in px, and px can transition to a
+       percentage but not to auto */
+    box-sizing: border-box;
+    inline-size: 100%;
+    block-size: 100%;
+    border-radius: var(--_tabs-indicator-radius);
+    background-color: var(--_tabs-indicator-bg);
+    box-shadow: var(--_tabs-indicator-shadow);
+    transition-timing-function: var(--_tabs-ease);
+    transition-duration: var(--terria-ds-duration-250);
+    transition-property: translate, width, height;
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
+
+    /* The focus ring, drawn on the indicator so it slides with it, when
+       selection follows focus */
+    [data-tds-keyboard-activation="automatic"] [data-focus-visible] > & {
+      box-shadow:
+        inset 0 0 0 var(--terria-ds-focus-ring-width)
+          var(--terria-ds-focus-ring),
+        var(--_tabs-indicator-shadow);
+
+      /* Shadows are dropped in forced-colors mode; this outline shows there instead */
+      outline: var(--terria-ds-focus-ring-width) solid transparent;
+      outline-offset: calc(-1 * var(--terria-ds-focus-ring-width));
+    }
+
+    /* Secondary: it fills the tab like the pill does, so it can carry the
+       focus ring, with the line as a border at the tab's foot, or its start
+       when vertical */
+    [data-tds-variant="secondary"][data-orientation="horizontal"] & {
+      border-block-end: var(--_tabs-line) solid var(--_tabs-line-color);
+    }
+
+    [data-tds-variant="secondary"][data-orientation="vertical"] & {
+      border-inline-start: var(--_tabs-line) solid var(--_tabs-line-color);
+    }
+  }
+
+  [data-tds="tabs-separator"] {
+    position: absolute;
+    border-radius: var(--terria-ds-radius-sm);
+    background-color: var(--terria-ds-text-muted);
+    opacity: 0.25;
+    pointer-events: none;
+    transition: opacity var(--terria-ds-duration-150)
+      var(--terria-ds-ease-smooth);
+
+    /* Hidden on underlines, and on the selected tab and the one after it */
+    [data-tds-variant="secondary"] &,
+    [data-selected] > &,
+    [data-selected] + [data-tds="tabs-tab"] > & {
+      opacity: 0;
+    }
+
+    [data-orientation="horizontal"] > [data-tds="tabs-tab"] > & {
+      inset-block-start: 25%;
+      inset-inline-start: 0;
+      inline-size: 1px;
+      block-size: 50%;
+    }
+
+    [data-orientation="vertical"] > [data-tds="tabs-tab"] > & {
+      inset-block-start: 0;
+      inset-inline-start: 5%;
+      inline-size: 90%;
+      block-size: 1px;
+    }
+  }
+
+  [data-tds="tabs-panel"] {
+    padding: var(--terria-ds-dimensions-spacing-2);
+    outline: none;
+
+    /* React Aria keeps the old panel while it exits; out of the flow, it
+       doesn't push the layout around, or the indicator with it */
+    &[data-exiting] {
+      position: absolute;
+      inset-block-start: 0;
+      inset-inline-start: 0;
+      inline-size: 100%;
+    }
+  }
+}

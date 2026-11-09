@@ -1,0 +1,31 @@
+/**
+ * Kbd Component Styles
+ */
+
+@layer terria-ds.components {
+  [data-tds="kbd"] {
+    display: inline-flex;
+    flex-shrink: 0;
+    gap: var(--terria-ds-dimensions-spacing-0-5);
+    align-items: center;
+    padding: var(--terria-ds-dimensions-spacing-px)
+      var(--terria-ds-dimensions-spacing-1-5);
+    border-radius: var(--terria-ds-dimensions-radius-rounded-lg);
+    background-color: var(--terria-ds-neutral);
+    color: var(--terria-ds-text-muted);
+    font-family: inherit;
+    font-size: var(--terria-ds-text-size-body);
+    font-weight: var(--terria-ds-font-medium);
+    line-height: var(--terria-ds-line-height-body-lg);
+    white-space: nowrap;
+
+    &[data-tds-variant="light"] {
+      background-color: transparent;
+    }
+  }
+
+  [data-tds="kbd-abbr"] {
+    padding-inline: var(--terria-ds-dimensions-spacing-px);
+    text-decoration: none;
+  }
+}

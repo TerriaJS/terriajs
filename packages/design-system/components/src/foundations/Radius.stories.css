@@ -1,0 +1,40 @@
+/**
+ * Styles for the Radius docs page, on top of docs.stories.css. Each tile's
+ * radius comes in as a --_radius custom property.
+ */
+
+@layer storybook {
+  .radius-corners {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr));
+    gap: var(--terria-ds-dimensions-spacing-6)
+      var(--terria-ds-dimensions-spacing-4);
+  }
+
+  .radius-corner {
+    --terria-ds-flow-space: var(--terria-ds-dimensions-spacing-2);
+
+    margin: 0;
+  }
+
+  .radius-tile {
+    /* Set per tile from the story */
+    --_radius: 0;
+
+    display: block;
+    aspect-ratio: 1;
+    border: var(--terria-ds-border-width-default) solid var(--terria-ds-border);
+    border-radius: var(--_radius);
+    background-color: var(--terria-ds-neutral-soft);
+  }
+
+  .radius-corner figcaption {
+    font-size: var(--terria-ds-dimensions-font-text-sm);
+    line-height: var(--terria-ds-dimensions-leading-text-sm);
+  }
+
+  .radius-label {
+    display: block;
+    font-weight: var(--terria-ds-font-medium);
+  }
+}

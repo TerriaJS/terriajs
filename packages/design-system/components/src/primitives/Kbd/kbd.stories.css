@@ -1,0 +1,30 @@
+/* Layout for the Kbd stories */
+
+@layer storybook {
+  .kbd-stories-stack {
+    display: grid;
+    gap: var(--terria-ds-space-md);
+    justify-items: start;
+  }
+
+  .kbd-stories-grid {
+    display: grid;
+    grid-template-columns: repeat(4, max-content);
+    gap: var(--terria-ds-space-md) var(--terria-ds-space-xl);
+  }
+
+  .kbd-stories-key {
+    display: flex;
+    gap: var(--terria-ds-space-sm);
+    align-items: center;
+    color: var(--terria-ds-text-muted);
+    font-size: var(--terria-ds-text-size-caption);
+  }
+
+  .kbd-stories-text {
+    max-inline-size: 30rem;
+    margin: 0;
+    font-size: var(--terria-ds-text-size-body);
+    line-height: var(--terria-ds-line-height-body);
+  }
+}

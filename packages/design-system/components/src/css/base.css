@@ -1,0 +1,21 @@
+@layer terria-ds.base {
+  /* On the root, so everything inherits it and code keeps its monospace */
+  :root {
+    /* Native controls, scrollbars and autofill follow the theme */
+    color-scheme: light;
+    color: var(--terria-ds-text-foreground);
+    font-family:
+      /* eslint-disable-next-line css/use-baseline */
+      var(--terria-ds-font), ui-sans-serif, system-ui, sans-serif,
+      "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
+      "Noto Color Emoji";
+  }
+
+  [data-theme="dark"] {
+    color-scheme: dark;
+  }
+
+  [data-theme="light"] {
+    color-scheme: light;
+  }
+}

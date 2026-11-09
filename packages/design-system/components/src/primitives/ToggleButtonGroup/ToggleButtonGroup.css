@@ -1,0 +1,35 @@
+/**
+ * ToggleButtonGroup Component Styles
+ *
+ * Laid out by ButtonGroup.css; this adds the design's rounding and the
+ * detached layout.
+ */
+
+@layer terria-ds.components {
+  /* Joined toggle buttons round less than a button group */
+  [data-tds="button-group"][data-tds-toggle] {
+    --_btn-group-radius: var(--terria-ds-radius-lg);
+  }
+
+  /* Detached: spaced apart, each fully rounded, with no separators */
+  [data-tds="button-group"][data-tds-toggle][data-tds-detached] {
+    --_btn-group-radius: var(
+      --terria-ds-button-radius,
+      var(--terria-ds-radius-full)
+    );
+
+    gap: var(--terria-ds-space-lg);
+
+    &[data-tds-orientation="vertical"] {
+      gap: var(--terria-ds-dimensions-spacing-1);
+    }
+
+    & > [data-tds="button"] {
+      border-radius: var(--_btn-group-radius);
+    }
+
+    & [data-tds="button-group-separator"] {
+      display: none;
+    }
+  }
+}

@@ -1,0 +1,17 @@
+/**
+ * Optional: loads Inter, the design system's typeface. Skip it when the app
+ * loads Inter itself and points --terria-ds-font at it.
+ *
+ * The bundler resolves the package and emits its font files.
+ */
+
+/* In a layer like everything else; layers don't affect @font-face */
+@import url("@fontsource-variable/inter") layer(terria-ds.base);
+
+/* The package names its family "Inter Variable", not the token's "Inter".
+   Base comes after tokens, so this wins whatever order the files load in */
+@layer terria-ds.base {
+  :root {
+    --terria-ds-font: "Inter Variable";
+  }
+}

@@ -1,0 +1,206 @@
+/**
+ * Button Component Styles
+ *
+ * Variants only set --_btn-* custom properties; the base rule consumes them.
+ */
+
+@layer terria-ds.components {
+  [data-tds="button"] {
+    --_btn-bg: transparent;
+    --_btn-bg-hover: var(--_btn-bg);
+    --_btn-bg-pressed: var(--_btn-bg-hover);
+    --_btn-fg: currentcolor;
+    --_btn-border-width: 0;
+    --_btn-border-color: transparent;
+    --_btn-height: var(--terria-ds-dimensions-spacing-9);
+    --_btn-padding-inline: var(--terria-ds-space-lg);
+    --_btn-font-size: var(--terria-ds-text-size-body);
+    --_btn-line-height: var(--terria-ds-line-height-body);
+    --_btn-gap: var(--terria-ds-space-sm);
+    --_btn-blur: var(--terria-ds-backdrop-blur);
+    --_btn-backdrop-filter: none;
+    --_btn-backdrop-filter-hover: var(--_btn-backdrop-filter);
+    --_btn-pressed-scale: 0.97;
+
+    position: relative;
+    isolation: isolate;
+    display: inline-flex;
+    flex-shrink: 0;
+    gap: var(--_btn-gap);
+    align-items: center;
+    justify-content: center;
+    inline-size: fit-content;
+    min-inline-size: var(--_btn-height);
+    block-size: var(--_btn-height);
+    padding-inline: var(--_btn-padding-inline);
+    border: var(--_btn-border-width) solid var(--_btn-border-color);
+    border-radius: var(--terria-ds-button-radius, var(--terria-ds-radius-full));
+    outline: none;
+    background-color: var(--_btn-bg);
+    color: var(--_btn-fg);
+
+    /* Surfaces that blur already set --terria-ds-button-backdrop: none, since
+       a nested backdrop-filter only sees the surface and goes dark */
+    backdrop-filter: var(
+      --terria-ds-button-backdrop,
+      var(--_btn-backdrop-filter)
+    );
+    font-family: inherit;
+    font-size: var(--_btn-font-size);
+    font-weight: var(--terria-ds-font-medium);
+    line-height: var(--_btn-line-height);
+    white-space: nowrap;
+    cursor: pointer;
+    user-select: none;
+    transform-origin: center;
+    transition:
+      transform var(--terria-ds-duration-250) var(--terria-ds-ease-smooth),
+      background-color var(--terria-ds-duration-100) var(--terria-ds-ease-out),
+      backdrop-filter var(--terria-ds-duration-100) var(--terria-ds-ease-out),
+      box-shadow var(--terria-ds-duration-100) var(--terria-ds-ease-out);
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
+
+    & > span {
+      display: inline-flex;
+      gap: inherit;
+      align-items: center;
+      justify-content: center;
+    }
+
+    & svg:not([data-tds="button-loader"] svg) {
+      flex-shrink: 0;
+      inline-size: var(--terria-ds-dimensions-icon-size-sm);
+      block-size: var(--terria-ds-dimensions-icon-size-sm);
+      pointer-events: none;
+    }
+
+    @media (hover: hover) {
+      &[data-hovered] {
+        background-color: var(--_btn-bg-hover);
+        backdrop-filter: var(
+          --terria-ds-button-backdrop,
+          var(--_btn-backdrop-filter-hover)
+        );
+      }
+    }
+
+    &[data-pressed] {
+      background-color: var(--_btn-bg-pressed);
+      transform: scale(var(--_btn-pressed-scale));
+      will-change: transform;
+    }
+
+    /* Focus only adds the ring; the background stays as it is at rest */
+    &[data-focus-visible] {
+      box-shadow: var(--terria-ds-shadow-focus-ring);
+
+      /* Shadows are dropped in forced-colors mode; this outline shows there instead */
+      outline: var(--terria-ds-focus-ring-width) solid transparent;
+      outline-offset: var(--terria-ds-focus-ring-offset);
+    }
+
+    &[data-disabled] {
+      opacity: var(--terria-ds-effects-disabled-opacity);
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    /* It still takes the pointer, for a tooltip: React Aria keeps its hover
+       events but neither presses nor shows it hovered */
+    &[data-pending] {
+      & > [data-tds="button-label"] {
+        opacity: 0;
+      }
+
+      [data-tds="button-loader"] {
+        position: absolute;
+        display: flex;
+        align-items: center;
+      }
+    }
+  }
+
+  /* ============================================================
+     SIZES
+     ============================================================ */
+
+  [data-tds="button"][data-tds-size="sm"] {
+    --_btn-height: var(--terria-ds-dimensions-spacing-8);
+    --_btn-padding-inline: var(--terria-ds-space-md);
+    --_btn-gap: var(--terria-ds-space-xs);
+    --_btn-pressed-scale: 0.98;
+  }
+
+  [data-tds="button"][data-tds-size="lg"] {
+    --_btn-height: var(--terria-ds-dimensions-spacing-10);
+    --_btn-font-size: var(--terria-ds-text-size-body-lg);
+    --_btn-line-height: var(--terria-ds-line-height-body-lg);
+    --_btn-pressed-scale: 0.96;
+  }
+
+  [data-tds="button"][data-tds-icon-only] {
+    inline-size: var(--_btn-height);
+    padding: 0;
+  }
+
+  [data-tds="button"][data-tds-full-width] {
+    inline-size: 100%;
+  }
+
+  /* ============================================================
+     VARIANTS
+     ============================================================ */
+
+  [data-tds="button"][data-tds-variant="primary"] {
+    --_btn-bg: var(--terria-ds-primary);
+    --_btn-bg-hover: var(--terria-ds-primary-hover);
+    --_btn-fg: var(--terria-ds-primary-foreground);
+  }
+
+  [data-tds="button"][data-tds-variant="secondary"] {
+    --_btn-backdrop-filter: var(--_btn-blur);
+    --_btn-bg: var(--terria-ds-neutral);
+    --_btn-bg-hover: var(--terria-ds-neutral-hover);
+    --_btn-fg: var(--terria-ds-primary-soft-foreground);
+  }
+
+  [data-tds="button"][data-tds-variant="tertiary"] {
+    --_btn-backdrop-filter: var(--_btn-blur);
+    --_btn-bg: var(--terria-ds-neutral);
+    --_btn-bg-hover: var(--terria-ds-neutral-hover);
+    --_btn-fg: var(--terria-ds-neutral-foreground);
+  }
+
+  [data-tds="button"][data-tds-variant="ghost"],
+  [data-tds="button"][data-tds-variant="outline"] {
+    --_btn-bg: transparent;
+
+    /* Blur fades in with the hover fill, from none at rest, so the fill reads
+       over busy content like a map */
+    --_btn-backdrop-filter: blur(0);
+    --_btn-backdrop-filter-hover: var(--_btn-blur);
+    --_btn-bg-hover: var(--terria-ds-neutral);
+    --_btn-fg: var(--terria-ds-neutral-foreground);
+  }
+
+  [data-tds="button"][data-tds-variant="outline"] {
+    --_btn-border-width: var(--terria-ds-border-width-default);
+    --_btn-border-color: var(--terria-ds-border);
+  }
+
+  [data-tds="button"][data-tds-variant="danger"] {
+    --_btn-bg: var(--terria-ds-danger);
+    --_btn-bg-hover: var(--terria-ds-danger-hover);
+    --_btn-fg: var(--terria-ds-danger-foreground);
+  }
+
+  [data-tds="button"][data-tds-variant="danger-soft"] {
+    --_btn-backdrop-filter: var(--_btn-blur);
+    --_btn-bg: var(--terria-ds-danger-soft);
+    --_btn-bg-hover: var(--terria-ds-danger-soft-hover);
+    --_btn-fg: var(--terria-ds-danger-soft-foreground);
+  }
+}

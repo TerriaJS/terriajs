@@ -1,0 +1,10 @@
+/**
+ * TextArea Component Styles; the field styles come from Input.css
+ */
+
+@layer terria-ds.components {
+  [data-tds="textarea"] {
+    /* Never shorter than a single-line Input */
+    min-block-size: var(--terria-ds-dimensions-spacing-9);
+  }
+}

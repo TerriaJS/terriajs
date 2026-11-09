@@ -1,0 +1,134 @@
+/**
+ * Shared styles for the Foundations docs pages: the page in the design
+ * system's own type, and framed examples. Widths have no tokens, so they're
+ * given in ch.
+ */
+
+@layer storybook {
+  /* The docs page itself, in the design system's own type. Use with tds-flow tds-body */
+  .docs-page {
+    /* One measure for the prose and its examples */
+    max-inline-size: 75ch;
+    color: var(--terria-ds-text-foreground);
+
+    /* Sections stand further apart than tds-flow's 1.5em before headings */
+    & > h2 {
+      --terria-ds-flow-space: 2.5em;
+    }
+
+    /* Examples sit a little further from the text that introduces them */
+    & > .sb-story {
+      --terria-ds-flow-space: var(--terria-ds-dimensions-spacing-4);
+    }
+
+    /* Custom properties inherit: inside, tds-flow keeps its own spacing */
+    & > .sb-story > * {
+      --terria-ds-flow-space: initial;
+    }
+
+    & :not(pre) > code {
+      padding-inline: var(--terria-ds-dimensions-spacing-1);
+      border-radius: var(--terria-ds-dimensions-radius-rounded-sm);
+      background-color: var(--terria-ds-neutral);
+      font-size: var(--terria-ds-dimensions-font-text-sm);
+    }
+  }
+
+  /* An example on the page, framed so it doesn't read as part of the docs */
+  .docs-example {
+    padding: var(--terria-ds-dimensions-spacing-6);
+    border: var(--terria-ds-border-width-default) solid var(--terria-ds-border);
+    border-radius: var(--terria-ds-radius-lg);
+  }
+
+  /* Two captioned versions of an example, side by side */
+  .docs-example-columns {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--terria-ds-dimensions-spacing-8)
+      var(--terria-ds-dimensions-spacing-14);
+
+    & > figure {
+      margin: 0;
+    }
+  }
+
+  /* Versions of an example in one frame, a divider between them */
+  .docs-example-rows {
+    & > figure {
+      margin: 0;
+    }
+
+    & > figure + figure {
+      margin-block-start: var(--terria-ds-dimensions-spacing-6);
+      padding-block-start: var(--terria-ds-dimensions-spacing-6);
+      border-block-start: var(--terria-ds-border-width-default) solid
+        var(--terria-ds-border);
+    }
+  }
+
+  .docs-caption {
+    color: var(--terria-ds-text-muted);
+    font-size: var(--terria-ds-dimensions-font-text-sm);
+    line-height: var(--terria-ds-dimensions-leading-text-sm);
+  }
+
+  /* A copy button, as small as the code next to it */
+  .docs-copy {
+    flex-shrink: 0;
+  }
+
+  /* A usage example, with its copy button in the corner */
+  .docs-usage {
+    --terria-ds-flow-space: var(--terria-ds-dimensions-spacing-4);
+
+    position: relative;
+    margin-inline: 0;
+
+    & pre {
+      margin: 0;
+      padding: var(--terria-ds-dimensions-spacing-4);
+      overflow: auto;
+      border: var(--terria-ds-border-width-default) solid
+        var(--terria-ds-border);
+      border-radius: var(--terria-ds-radius-lg);
+      background-color: var(--terria-ds-neutral-soft);
+      font-size: var(--terria-ds-dimensions-font-text-sm);
+      line-height: var(--terria-ds-dimensions-leading-text-sm);
+    }
+
+    & > .docs-copy {
+      position: absolute;
+      inset-block-start: var(--terria-ds-dimensions-spacing-2);
+      inset-inline-end: var(--terria-ds-dimensions-spacing-2);
+    }
+  }
+
+  /* The same examples in a light and a dark panel */
+  .docs-themes {
+    display: grid;
+    gap: var(--terria-ds-dimensions-spacing-4);
+
+    &[data-layout="columns"] {
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr));
+    }
+  }
+
+  /* One theme's panel, its own colours on its own background */
+  .docs-theme {
+    --terria-ds-flow-space: var(--terria-ds-dimensions-spacing-3);
+
+    padding: var(--terria-ds-dimensions-spacing-3);
+    border: var(--terria-ds-border-width-default) solid var(--terria-ds-border);
+    border-radius: var(--terria-ds-radius-lg);
+    background-color: var(--terria-ds-surface-bg);
+    color: var(--terria-ds-text-foreground);
+  }
+
+  /* A token name and the button that copies it */
+  .docs-token {
+    display: flex;
+    gap: var(--terria-ds-dimensions-spacing-1);
+    align-items: center;
+  }
+}

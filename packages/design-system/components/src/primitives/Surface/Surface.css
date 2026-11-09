@@ -1,0 +1,53 @@
+/**
+ * Surface Component Styles
+ *
+ * Variants only set --_surface-bg and --_surface-fg, the text colour that reads
+ * on it; transparent drops the shadow and blur too, and keeps the text colour
+ * around it.
+ */
+
+@layer terria-ds.components {
+  [data-tds="surface"] {
+    --_surface-bg: var(--terria-ds-surface-bg);
+    --_surface-fg: var(--terria-ds-text-foreground);
+
+    /* The surface blurs what's behind it; a button on it blurring again would
+       only see the surface, and go dark */
+    --terria-ds-button-backdrop: none;
+
+    /* Blurred scroll shadows tint to the surface's own colour, whichever
+       variant, not the page's. Declared here, so it takes each variant's
+       --_surface-bg */
+    --terria-ds-scroll-shadow-tint: color-mix(
+      in oklab,
+      var(--_surface-bg) 70%,
+      transparent
+    );
+
+    border-radius: var(--terria-ds-radius-lg);
+    background-color: var(--_surface-bg);
+    color: var(--_surface-fg);
+    box-shadow: var(--terria-ds-shadow-surface);
+    backdrop-filter: var(--terria-ds-backdrop-blur);
+
+    &[data-tds-variant="secondary"] {
+      --_surface-bg: var(--terria-ds-surface-overlay);
+    }
+
+    &[data-tds-variant="tertiary"] {
+      --_surface-bg: var(--terria-ds-neutral-soft);
+      --_surface-fg: var(--terria-ds-neutral-soft-foreground);
+    }
+
+    /* Nothing behind it to blur, so buttons on it blur as they would anywhere */
+    &[data-tds-variant="transparent"] {
+      --_surface-bg: var(--terria-ds-surface-transparent);
+      --terria-ds-button-backdrop: initial;
+      --terria-ds-scroll-shadow-tint: initial;
+
+      box-shadow: none;
+      color: inherit;
+      backdrop-filter: none;
+    }
+  }
+}

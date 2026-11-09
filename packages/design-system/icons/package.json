@@ -1,0 +1,76 @@
+{
+  "name": "@terria/design-system-icons",
+  "version": "0.0.0",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "@svgr/core": "8.1.0",
+    "@svgr/plugin-jsx": "8.1.0",
+    "@types/react": "catalog:types",
+    "@types/react-dom": "catalog:types",
+    "@typescript/native": "catalog:build",
+    "@vitejs/plugin-react": "^6.1.2",
+    "@vitest/browser-playwright": "catalog:test",
+    "playwright": "catalog:runtime",
+    "react": "catalog:runtime",
+    "react-dom": "catalog:runtime",
+    "rollup": "catalog:runtime",
+    "rollup-plugin-dts": "^6.5.1",
+    "rollup-plugin-esbuild": "catalog:runtime",
+    "svgo": "4.1.0",
+    "typescript": "catalog:build",
+    "vite": "catalog:runtime",
+    "vitest": "^5.0.5",
+    "vitest-browser-react": "catalog:runtime",
+    "@types/node": "catalog:types",
+    "@eslint-react/eslint-plugin": "catalog:build",
+    "@eslint/js": "catalog:lint",
+    "eslint": "catalog:lint",
+    "eslint-config-prettier": "catalog:lint",
+    "eslint-import-resolver-typescript": "catalog:lint",
+    "eslint-plugin-import": "catalog:lint",
+    "eslint-plugin-jsx-a11y": "catalog:lint",
+    "eslint-plugin-react": "catalog:lint",
+    "eslint-plugin-react-hooks": "catalog:lint",
+    "eslint-plugin-react-refresh": "catalog:lint",
+    "typescript-eslint": "catalog:lint"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./sprite": {
+      "types": "./dist/sprite/index.d.ts",
+      "import": "./dist/sprite/index.js"
+    },
+    "./sprite.svg": "./dist/sprite/sprite.svg",
+    "./*": {
+      "types": "./dist/icons/*.d.ts",
+      "import": "./dist/icons/*.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "peerDependencies": {
+    "react": "^18.2.0 || ^19.0.0",
+    "react-dom": "^18.2.0 || ^19.0.0"
+  },
+  "private": true,
+  "scripts": {
+    "build": "node scripts/generate-icons.ts && rollup -c && cp src/sprite/sprite.svg dist/sprite/",
+    "clean": "rm -rf dist *.tsbuildinfo",
+    "dev": "node scripts/generate-icons.ts && rollup -c --watch",
+    "fetch-icons": "node --env-file-if-exists=../../../.env scripts/fetch-icons.ts && node scripts/generate-icons.ts",
+    "generate-icons": "node scripts/generate-icons.ts",
+    "test": "node scripts/generate-icons.ts && vitest run",
+    "test:watch": "node scripts/generate-icons.ts && vitest",
+    "typecheck": "node scripts/generate-icons.ts && tsc --noEmit && tsc -p tsconfig.scripts.json",
+    "lint": "eslint ."
+  },
+  "type": "module",
+  "types": "./dist/index.d.ts",
+  "sideEffects": false
+}

@@ -1,0 +1,73 @@
+/**
+ * Breadcrumbs Component Styles
+ *
+ * Muted links to the levels above, the current page in the link color.
+ */
+
+@layer terria-ds.components {
+  [data-tds="breadcrumbs"] {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--terria-ds-space-xs);
+    align-items: center;
+    margin: 0;
+    padding: 0;
+    font-size: var(--terria-ds-text-size-body);
+    font-weight: var(--terria-ds-font-medium);
+    line-height: var(--terria-ds-line-height-body);
+    list-style: none;
+  }
+
+  [data-tds="breadcrumbs-item"] {
+    display: inline-flex;
+    gap: var(--terria-ds-space-xs);
+    align-items: center;
+  }
+
+  [data-tds="breadcrumbs-link"] {
+    padding-inline: var(--terria-ds-dimensions-spacing-0-5);
+    border-radius: var(--terria-ds-dimensions-radius-rounded-sm);
+    outline: none;
+    color: var(--terria-ds-text-muted);
+    text-decoration: none;
+    cursor: pointer;
+    transition: color var(--terria-ds-duration-150) var(--terria-ds-ease-out);
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
+
+    &[data-hovered] {
+      color: var(--terria-ds-text-foreground);
+      text-decoration: underline;
+    }
+
+    &[data-focus-visible] {
+      box-shadow: var(--terria-ds-shadow-focus-ring);
+
+      /* Shadows are dropped in forced-colors mode; this outline shows there instead */
+      outline: var(--terria-ds-focus-ring-width) solid transparent;
+    }
+
+    &[data-current] {
+      color: var(--terria-ds-text-link);
+      text-decoration: none;
+      cursor: default;
+    }
+
+    &[data-disabled]:not([data-current]) {
+      opacity: var(--terria-ds-effects-disabled-opacity);
+      cursor: not-allowed;
+    }
+  }
+
+  [data-tds="breadcrumbs-separator"] {
+    display: inline-flex;
+    color: var(--terria-ds-text-muted);
+
+    /* Pointing the way the trail reads */
+    &:dir(rtl) {
+      rotate: 180deg;
+    }
+  }
+}

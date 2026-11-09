@@ -1,0 +1,163 @@
+/**
+ * Flex layouts for @terria/design-system
+ *
+ * Three primitives for the common cases, and utilities to build or adjust a
+ * layout. tds-flex-gap-* sets the gap, through --terria-ds-flex-gap. The
+ * alignment utilities work on grids too.
+ *
+ * Primitives are wrapped in :where(), and the utilities sit in a later layer,
+ * so a utility wins over a layout's defaults and a component's own styles:
+ * tds-cluster tds-flex-gap-lg tds-items-start.
+ */
+
+/* The gap a flex layout's children are spaced by; tds-flex-gap-* sets it.
+   Not inherited, so a nested layout keeps its own */
+@property --terria-ds-flex-gap {
+  syntax: "*";
+  inherits: false;
+}
+
+@layer terria-ds.base {
+  /* ============================================================
+     PRIMITIVES
+     ============================================================ */
+
+  /* Children in a column, as in a form or a panel */
+  :where(.tds-stack) {
+    display: flex;
+    flex-direction: column;
+    gap: var(--terria-ds-flex-gap, var(--terria-ds-space-md));
+  }
+
+  /* Children in a row that wraps when they don't fit, as tags or buttons */
+  :where(.tds-cluster) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--terria-ds-flex-gap, var(--terria-ds-space-sm));
+    align-items: center;
+  }
+
+  /* Children in one row that doesn't wrap, as a toolbar or a header */
+  :where(.tds-row) {
+    display: flex;
+    gap: var(--terria-ds-flex-gap, var(--terria-ds-space-sm));
+    align-items: center;
+  }
+
+  /* A layout owns the space between its children: its gap, not their
+     margins, like the 8px between paragraphs in text. With no specificity,
+     a margin set on a child still wins */
+  :where(.tds-stack, .tds-cluster, .tds-row) > * {
+    margin: 0;
+  }
+}
+
+/* Utilities sit after the components' layer, so they win over a component's
+   own styles too: tds-items-start on any element */
+@layer terria-ds.utilities {
+  .tds-flex {
+    display: flex;
+    gap: var(--terria-ds-flex-gap, var(--terria-ds-space-lg));
+  }
+
+  .tds-inline-flex {
+    display: inline-flex;
+    gap: var(--terria-ds-flex-gap, var(--terria-ds-space-lg));
+  }
+
+  .tds-flex-row {
+    flex-direction: row;
+  }
+
+  .tds-flex-col {
+    flex-direction: column;
+  }
+
+  .tds-wrap {
+    flex-wrap: wrap;
+  }
+
+  .tds-nowrap {
+    flex-wrap: nowrap;
+  }
+
+  .tds-items-start {
+    align-items: start;
+  }
+
+  .tds-items-center {
+    align-items: center;
+  }
+
+  .tds-items-end {
+    align-items: end;
+  }
+
+  .tds-items-baseline {
+    align-items: baseline;
+  }
+
+  .tds-items-stretch {
+    align-items: stretch;
+  }
+
+  .tds-justify-start {
+    justify-content: start;
+  }
+
+  .tds-justify-center {
+    justify-content: center;
+  }
+
+  .tds-justify-end {
+    justify-content: end;
+  }
+
+  .tds-justify-between {
+    justify-content: space-between;
+  }
+
+  /* A child that takes the room left, and can shrink below its content */
+  .tds-grow {
+    flex: 1 1 0;
+    min-inline-size: 0;
+  }
+
+  /* A child that keeps its size, like an icon beside wrapping text */
+  .tds-shrink-0 {
+    flex-shrink: 0;
+  }
+
+  /* The space between a flex layout's children, on the spacing scale */
+  .tds-flex-gap-0 {
+    --terria-ds-flex-gap: 0;
+  }
+
+  .tds-flex-gap-2xs {
+    --terria-ds-flex-gap: var(--terria-ds-space-2xs);
+  }
+
+  .tds-flex-gap-xs {
+    --terria-ds-flex-gap: var(--terria-ds-space-xs);
+  }
+
+  .tds-flex-gap-sm {
+    --terria-ds-flex-gap: var(--terria-ds-space-sm);
+  }
+
+  .tds-flex-gap-md {
+    --terria-ds-flex-gap: var(--terria-ds-space-md);
+  }
+
+  .tds-flex-gap-lg {
+    --terria-ds-flex-gap: var(--terria-ds-space-lg);
+  }
+
+  .tds-flex-gap-xl {
+    --terria-ds-flex-gap: var(--terria-ds-space-xl);
+  }
+
+  .tds-flex-gap-2xl {
+    --terria-ds-flex-gap: var(--terria-ds-space-2xl);
+  }
+}

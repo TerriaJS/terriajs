@@ -1,0 +1,27 @@
+/* Layout for the Toast stories, and action colours Button has no variant for */
+
+@layer storybook {
+  .toast-stories-demo {
+    display: grid;
+    place-items: center;
+    min-block-size: 20rem;
+  }
+
+  .toast-stories-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--terria-ds-space-sm);
+    justify-content: center;
+    max-inline-size: 36rem;
+  }
+
+  .toast-stories-success {
+    background-color: var(--terria-ds-success);
+    color: var(--terria-ds-success-foreground);
+  }
+
+  .toast-stories-warning {
+    background-color: var(--terria-ds-warning);
+    color: var(--terria-ds-warning-foreground);
+  }
+}

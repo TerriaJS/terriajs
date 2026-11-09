@@ -1,0 +1,9 @@
+/* Layout for the ProgressBar stories */
+
+@layer storybook {
+  .progress-bar-stories-stack {
+    display: grid;
+    gap: var(--terria-ds-space-xl);
+    inline-size: 15rem;
+  }
+}

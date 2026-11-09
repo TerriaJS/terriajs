@@ -1,0 +1,148 @@
+/**
+ * Select Component Styles; the trigger's field styles come from Input.css
+ */
+
+@layer terria-ds.components {
+  [data-tds="select"] {
+    display: inline-flex;
+    flex-direction: column;
+    gap: var(--terria-ds-space-xs);
+
+    /* Forms and cards should fill; hugging is for inline and toolbar selects */
+    &[data-tds-full-width] {
+      display: flex;
+      inline-size: 100%;
+    }
+  }
+
+  [data-tds="select-trigger"] {
+    display: flex;
+    gap: var(--terria-ds-dimensions-spacing-0-5);
+    align-items: center;
+    inline-size: 100%;
+    text-align: start;
+    cursor: pointer;
+
+    [data-tds="select"][data-tds-variant="secondary"] > & {
+      --_input-bg: var(--terria-ds-neutral);
+      --_input-bg-hover: var(--terria-ds-neutral-hover);
+      --_input-bg-focus: var(--terria-ds-neutral);
+    }
+
+    [data-tds="select"][data-invalid] > & {
+      border-color: var(--terria-ds-field-border-error);
+    }
+
+    /* Hovering the clear button highlights only the button, not the trigger too */
+    &[data-hovered]:has([data-tds="select-clear-button"]:hover) {
+      background-color: var(--_input-bg);
+    }
+  }
+
+  [data-tds="select-value"] {
+    flex: 1;
+    line-height: inherit;
+    min-inline-size: 0;
+
+    /* Long or multiple choices wrap and the trigger grows to fit them */
+    overflow-wrap: anywhere;
+
+    &[data-placeholder] {
+      color: var(--terria-ds-field-placeholder);
+    }
+  }
+
+  [data-tds="select-indicator"] {
+    display: flex;
+    flex-shrink: 0;
+    padding-inline-start: var(--terria-ds-space-md);
+    color: var(--terria-ds-field-placeholder);
+
+    /* The icon turns, not the padded span, so it spins around its own centre */
+    & > svg {
+      inline-size: var(--terria-ds-dimensions-icon-size-sm);
+      block-size: var(--terria-ds-dimensions-icon-size-sm);
+      transition: rotate var(--terria-ds-duration-150)
+        var(--terria-ds-ease-in-out);
+
+      @media (prefers-reduced-motion: reduce) {
+        transition: none;
+      }
+    }
+
+    [data-tds="select"][data-open] & > svg {
+      rotate: 180deg;
+    }
+
+    /* Sits close to a clear button so the two read as one group */
+    [data-tds="select-clear-button"] + & {
+      padding-inline-start: var(--terria-ds-dimensions-spacing-0-5);
+    }
+  }
+
+  [data-tds="select-clear-button"] {
+    position: relative;
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    inline-size: var(--terria-ds-dimensions-icon-size-md);
+    block-size: var(--terria-ds-dimensions-icon-size-md);
+    border-radius: var(--terria-ds-radius-full);
+    color: var(--terria-ds-field-placeholder);
+    cursor: pointer;
+    transition:
+      opacity var(--terria-ds-duration-150) var(--terria-ds-ease-smooth),
+      scale var(--terria-ds-duration-150) var(--terria-ds-ease-out);
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
+
+    /* The circle stays 20px inside the 36px trigger; the target grows to the
+       24px minimum of WCAG 2.5.8 */
+    &::after {
+      position: absolute;
+      inset: calc(-1 * var(--terria-ds-space-2xs));
+      content: "";
+    }
+
+    @media (hover: hover) {
+      &:hover {
+        background-color: var(--terria-ds-neutral);
+        color: var(--terria-ds-field-foreground);
+      }
+    }
+
+    &:active {
+      scale: 0.93;
+    }
+
+    /* Nothing to clear: gone at once, fades back in when there is */
+    &[data-empty] {
+      opacity: 0;
+      pointer-events: none;
+      transition: none;
+    }
+  }
+
+  /* The list: as wide as the trigger, items 2px apart */
+  [data-tds="popover"][data-trigger="Select"] {
+    --_popover-radius: var(--terria-ds-radius-lg);
+
+    box-sizing: border-box;
+    /* stylelint-disable-next-line custom-property-pattern -- The value is defined by react-aria */
+    min-inline-size: var(--trigger-width, auto);
+    padding: var(--terria-ds-space-xs);
+    overflow: auto;
+
+    /* Scrolling past the end of the list doesn't scroll the page. Without
+       support the page just scrolls, as before */
+    /* eslint-disable-next-line css/use-baseline */
+    overscroll-behavior: contain;
+
+    [data-tds="list-box-item"] + [data-tds="list-box-item"] {
+      margin-block-start: var(--terria-ds-dimensions-spacing-0-5);
+    }
+  }
+}

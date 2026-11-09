@@ -1,0 +1,34 @@
+/* Layout for the Surface stories */
+
+@layer storybook {
+  .surface-stories-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--terria-ds-space-lg);
+  }
+
+  /* What a surface holds: its own padding, as surfaces set none */
+  .surface-stories-content {
+    display: grid;
+    gap: var(--terria-ds-space-sm);
+    inline-size: 13.75rem;
+    min-block-size: 8rem;
+    padding: var(--terria-ds-space-lg);
+  }
+
+  /* A busy background, as surfaces float over a map */
+  .surface-stories-map {
+    padding: var(--terria-ds-space-xl);
+    background-image:
+      repeating-linear-gradient(
+        45deg,
+        var(--terria-ds-primary-soft) 0 var(--terria-ds-dimensions-spacing-2),
+        transparent var(--terria-ds-dimensions-spacing-2)
+          var(--terria-ds-dimensions-spacing-4)
+      ),
+      linear-gradient(
+        var(--terria-ds-success-soft),
+        var(--terria-ds-warning-soft)
+      );
+  }
+}

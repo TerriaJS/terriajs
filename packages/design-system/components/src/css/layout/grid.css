@@ -1,0 +1,191 @@
+/**
+ * Grid layouts for @terria/design-system
+ *
+ * Primitives are wrapped in :where(), like the flex ones. tds-grid-gap-*
+ * sets the gaps, through --terria-ds-grid-gap, -column-gap and -row-gap.
+ */
+
+/* The gaps a grid's children are spaced by: between columns and rows, or
+   both. tds-grid-gap-* sets them. Not inherited, so a nested grid keeps its
+   own */
+@property --terria-ds-grid-gap {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --terria-ds-grid-column-gap {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --terria-ds-grid-row-gap {
+  syntax: "*";
+  inherits: false;
+}
+
+/* How tds-grid-fit sizes its columns: auto-fit or auto-fill, and each
+   column's minimum and maximum width. Not inherited, so a nested grid keeps
+   its own */
+@property --terria-ds-grid-auto-layout {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --terria-ds-grid-item-min {
+  syntax: "*";
+  inherits: false;
+}
+
+@property --terria-ds-grid-item-max {
+  syntax: "*";
+  inherits: false;
+}
+
+@layer terria-ds.base {
+  /* A grid: set its columns, or let its children fill one column */
+  :where(.tds-grid) {
+    display: grid;
+
+    /* Rows, then columns: each its own gap, or the grid's, or the default */
+    gap: var(
+        --terria-ds-grid-row-gap,
+        var(--terria-ds-grid-gap, var(--terria-ds-space-md))
+      )
+      var(
+        --terria-ds-grid-column-gap,
+        var(--terria-ds-grid-gap, var(--terria-ds-space-md))
+      );
+  }
+
+  /* As many equal columns as fit, for galleries and card listings. Each
+     column is at least --terria-ds-grid-item-min wide (15rem), or the whole
+     width when even one doesn't fit, and grows up to
+     --terria-ds-grid-item-max (1fr). auto-fit stretches a short last row's
+     children across it; --terria-ds-grid-auto-layout: auto-fill keeps the
+     empty columns, so they stay their minimum width */
+  :where(.tds-grid-fit) {
+    display: grid;
+    grid-template-columns: repeat(
+      var(--terria-ds-grid-auto-layout, auto-fit),
+      minmax(
+        min(var(--terria-ds-grid-item-min, 15rem), 100%),
+        var(--terria-ds-grid-item-max, 1fr)
+      )
+    );
+
+    /* Rows, then columns: each its own gap, or the grid's, or the default */
+    gap: var(
+        --terria-ds-grid-row-gap,
+        var(--terria-ds-grid-gap, var(--terria-ds-space-md))
+      )
+      var(
+        --terria-ds-grid-column-gap,
+        var(--terria-ds-grid-gap, var(--terria-ds-space-md))
+      );
+  }
+
+  /* A grid owns the space between its children, as the flex layouts do */
+  :where(.tds-grid, .tds-grid-fit) > * {
+    margin: 0;
+  }
+}
+
+/* The space between a grid's children, on the spacing scale: both ways,
+   x between columns, y between rows */
+@layer terria-ds.utilities {
+  .tds-grid-gap-0 {
+    --terria-ds-grid-gap: 0;
+  }
+
+  .tds-grid-gap-2xs {
+    --terria-ds-grid-gap: var(--terria-ds-space-2xs);
+  }
+
+  .tds-grid-gap-xs {
+    --terria-ds-grid-gap: var(--terria-ds-space-xs);
+  }
+
+  .tds-grid-gap-sm {
+    --terria-ds-grid-gap: var(--terria-ds-space-sm);
+  }
+
+  .tds-grid-gap-md {
+    --terria-ds-grid-gap: var(--terria-ds-space-md);
+  }
+
+  .tds-grid-gap-lg {
+    --terria-ds-grid-gap: var(--terria-ds-space-lg);
+  }
+
+  .tds-grid-gap-xl {
+    --terria-ds-grid-gap: var(--terria-ds-space-xl);
+  }
+
+  .tds-grid-gap-2xl {
+    --terria-ds-grid-gap: var(--terria-ds-space-2xl);
+  }
+
+  .tds-grid-gap-x-0 {
+    --terria-ds-grid-column-gap: 0;
+  }
+
+  .tds-grid-gap-x-2xs {
+    --terria-ds-grid-column-gap: var(--terria-ds-space-2xs);
+  }
+
+  .tds-grid-gap-x-xs {
+    --terria-ds-grid-column-gap: var(--terria-ds-space-xs);
+  }
+
+  .tds-grid-gap-x-sm {
+    --terria-ds-grid-column-gap: var(--terria-ds-space-sm);
+  }
+
+  .tds-grid-gap-x-md {
+    --terria-ds-grid-column-gap: var(--terria-ds-space-md);
+  }
+
+  .tds-grid-gap-x-lg {
+    --terria-ds-grid-column-gap: var(--terria-ds-space-lg);
+  }
+
+  .tds-grid-gap-x-xl {
+    --terria-ds-grid-column-gap: var(--terria-ds-space-xl);
+  }
+
+  .tds-grid-gap-x-2xl {
+    --terria-ds-grid-column-gap: var(--terria-ds-space-2xl);
+  }
+
+  .tds-grid-gap-y-0 {
+    --terria-ds-grid-row-gap: 0;
+  }
+
+  .tds-grid-gap-y-2xs {
+    --terria-ds-grid-row-gap: var(--terria-ds-space-2xs);
+  }
+
+  .tds-grid-gap-y-xs {
+    --terria-ds-grid-row-gap: var(--terria-ds-space-xs);
+  }
+
+  .tds-grid-gap-y-sm {
+    --terria-ds-grid-row-gap: var(--terria-ds-space-sm);
+  }
+
+  .tds-grid-gap-y-md {
+    --terria-ds-grid-row-gap: var(--terria-ds-space-md);
+  }
+
+  .tds-grid-gap-y-lg {
+    --terria-ds-grid-row-gap: var(--terria-ds-space-lg);
+  }
+
+  .tds-grid-gap-y-xl {
+    --terria-ds-grid-row-gap: var(--terria-ds-space-xl);
+  }
+
+  .tds-grid-gap-y-2xl {
+    --terria-ds-grid-row-gap: var(--terria-ds-space-2xl);
+  }
+}

@@ -1,0 +1,51 @@
+import { Meta, Story, Unstyled } from "@storybook/addon-docs/blocks";
+import * as EffectsStories from "./Effects.stories";
+
+<Meta of={EffectsStories} />
+
+{/* Rendered in the design system's own type, not Storybook's docs styles */}
+
+<Unstyled>
+<div className="docs-page tds-flow tds-body">
+
+# Effects
+
+Effect styles define how depth, separation and focus are expressed. They are
+system-level styles, applied consistently across the interface to show
+hierarchy without relying on color alone. Use them as they are rather than
+changing them in a component.
+
+## Shadows
+
+Shadows represent elevation and layering. They help distinguish surfaces,
+floating elements and interactive components while staying intentionally
+subtle.
+
+<Story of={EffectsStories.Shadows} />
+
+## Blur
+
+Blur is used selectively to create focus and separation, in overlays,
+backgrounds or temporary states. Each example blurs the right half of what's
+behind it.
+
+<Story of={EffectsStories.Blur} />
+
+## Focus rings
+
+Focus rings show where keyboard focus is, a clear and consistent indicator
+that keyboard users depend on. Fields use the plain ring; everything else uses
+the shield, which keeps a gap of the page between the control and its ring.
+Shadows are dropped in forced-colors mode, so pair a ring with a transparent
+outline that shows there instead.
+
+<Story of={EffectsStories.FocusRings} />
+
+## Disabled
+
+Disabled elements fade to a reduced opacity, the same for every component.
+
+<Story of={EffectsStories.Disabled} />
+
+</div>
+</Unstyled>

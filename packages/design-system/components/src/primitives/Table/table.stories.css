@@ -1,0 +1,120 @@
+/* Layout and cell contents for the Table stories */
+
+@layer storybook {
+  .table-stories-frame {
+    inline-size: 62rem;
+    max-inline-size: 100%;
+  }
+
+  /* Scrolls sideways in a narrow canvas rather than squeezing */
+  .table-stories-wide {
+    min-inline-size: 50rem;
+  }
+
+  .table-stories-scroll {
+    max-block-size: 17.5rem;
+  }
+
+  .table-stories-check {
+    inline-size: var(--terria-ds-dimensions-spacing-4);
+    padding-inline-end: 0;
+  }
+
+  .table-stories-end {
+    text-align: end;
+  }
+
+  .table-stories-id {
+    display: flex;
+    gap: var(--terria-ds-space-xs);
+    align-items: center;
+    font-weight: var(--terria-ds-font-medium);
+  }
+
+  .table-stories-member {
+    display: flex;
+    gap: var(--terria-ds-space-md);
+    align-items: center;
+  }
+
+  .table-stories-mark {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    inline-size: var(--terria-ds-dimensions-spacing-8);
+    block-size: var(--terria-ds-dimensions-spacing-8);
+    border-radius: var(--terria-ds-radius-full);
+    background-color: var(--terria-ds-primary-soft);
+    color: var(--terria-ds-primary-soft-foreground);
+
+    & > svg {
+      inline-size: var(--terria-ds-dimensions-icon-size-sm);
+      block-size: var(--terria-ds-dimensions-icon-size-sm);
+    }
+  }
+
+  .table-stories-lines {
+    display: grid;
+    font-size: var(--terria-ds-text-size-nano);
+    line-height: var(--terria-ds-line-height-body);
+  }
+
+  .table-stories-muted {
+    color: var(--terria-ds-text-muted);
+  }
+
+  .table-stories-actions {
+    display: flex;
+    gap: var(--terria-ds-space-xs);
+    justify-content: flex-end;
+  }
+
+  .table-stories-empty {
+    display: flex;
+    flex-direction: column;
+    gap: var(--terria-ds-space-lg);
+    align-items: center;
+    justify-content: center;
+    min-block-size: 20rem;
+    color: var(--terria-ds-text-muted);
+  }
+
+  .table-stories-empty-title {
+    color: var(--terria-ds-text-foreground);
+    font-size: var(--terria-ds-text-size-body);
+    font-weight: var(--terria-ds-font-medium);
+    line-height: var(--terria-ds-line-height-body-lg);
+  }
+
+  /* The virtualized table scrolls itself */
+  .table-stories-virtual {
+    block-size: 31.25rem;
+    overflow: auto;
+  }
+
+  .table-stories-tree {
+    display: inline-flex;
+    gap: var(--terria-ds-space-xs);
+    align-items: center;
+  }
+
+  /* Points into the row while closed, down while open; the other way right
+     to left */
+  .table-stories-chevron {
+    color: var(--terria-ds-text-muted);
+    transition: rotate var(--terria-ds-duration-150) var(--terria-ds-ease-out);
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
+
+    &:dir(rtl) {
+      rotate: 180deg;
+    }
+
+    [data-expanded] & {
+      rotate: 90deg;
+    }
+  }
+}

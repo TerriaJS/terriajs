@@ -1,0 +1,182 @@
+/**
+ * ColorSlider Component Styles
+ *
+ * The track is the channel's gradient over a checkerboard; its rounded ends
+ * are drawn outside it, as React Aria maps pointer movement onto its width
+ * alone. The thumb is a white ring in the colour picked.
+ */
+
+@layer terria-ds.components {
+  [data-tds="color-slider"] {
+    --_color-slider-size: var(--terria-ds-dimensions-spacing-5);
+    --_color-slider-thumb: var(--terria-ds-dimensions-spacing-4);
+
+    /* Half a thumb, and the gap around it, at each end */
+    --_color-slider-cap: calc(
+      var(--_color-slider-thumb) / 2 + var(--terria-ds-dimensions-spacing-0-5)
+    );
+
+    display: grid;
+    grid-template-areas:
+      "label output"
+      "track track";
+    grid-template-columns: 1fr auto;
+    gap: var(--terria-ds-dimensions-spacing-1);
+    inline-size: 100%;
+
+    &[data-disabled] {
+      opacity: var(--terria-ds-effects-disabled-opacity);
+    }
+
+    & > [data-tds="label"] {
+      grid-area: label;
+      font-size: var(--terria-ds-text-size-nano);
+    }
+
+    /* The whole slider fades; the Label shouldn't fade a second time */
+    &[data-disabled] > [data-tds="label"] {
+      opacity: 1;
+    }
+
+    &[data-orientation="vertical"] {
+      grid-template-areas: "track";
+      grid-template-columns: auto;
+      inline-size: auto;
+      block-size: 100%;
+    }
+  }
+
+  [data-tds="color-slider-output"] {
+    grid-area: output;
+    color: var(--terria-ds-text-muted);
+    font-size: var(--terria-ds-text-size-nano);
+    font-variant-numeric: tabular-nums;
+    text-align: end;
+  }
+
+  [data-tds="color-slider-track"] {
+    /* Set from the colour, at the channel's start and end */
+    --_color-slider-gradient: none;
+    --_color-slider-start-color: transparent;
+    --_color-slider-end-color: transparent;
+
+    position: relative;
+    grid-area: track;
+    block-size: var(--_color-slider-size);
+    margin-inline: var(--_color-slider-cap);
+
+    /* eslint-disable css/no-invalid-properties -- valid; its grammar can't read a var() colour stop with a position */
+    background-image:
+      var(--_color-slider-gradient),
+      repeating-conic-gradient(
+        var(--terria-ds-neutral) 0% 25%,
+        var(--terria-ds-surface-default) 0% 50%
+      );
+    /* eslint-enable css/no-invalid-properties */
+    background-size:
+      auto,
+      var(--terria-ds-space-sm) var(--terria-ds-space-sm);
+    box-shadow: var(--terria-ds-shadow-inner);
+
+    /* The rounded ends, in the colour at each end of the channel */
+    &::before,
+    &::after {
+      --_color-slider-cap-color: transparent;
+
+      position: absolute;
+      inset-block: 0;
+      inline-size: var(--_color-slider-cap);
+
+      /* eslint-disable css/no-invalid-properties -- valid; its grammar can't read a var() colour stop with a position */
+      background-image:
+        linear-gradient(
+          var(--_color-slider-cap-color),
+          var(--_color-slider-cap-color)
+        ),
+        repeating-conic-gradient(
+          var(--terria-ds-neutral) 0% 25%,
+          var(--terria-ds-surface-default) 0% 50%
+        );
+      /* eslint-enable css/no-invalid-properties */
+      background-size:
+        auto,
+        var(--terria-ds-space-sm) var(--terria-ds-space-sm);
+      content: "";
+    }
+
+    &::before {
+      --_color-slider-cap-color: var(--_color-slider-start-color);
+
+      inset-inline-end: 100%;
+      border-start-start-radius: var(--terria-ds-radius-full);
+      border-end-start-radius: var(--terria-ds-radius-full);
+    }
+
+    &::after {
+      --_color-slider-cap-color: var(--_color-slider-end-color);
+
+      inset-inline-start: 100%;
+      border-start-end-radius: var(--terria-ds-radius-full);
+      border-end-end-radius: var(--terria-ds-radius-full);
+    }
+
+    [data-orientation="vertical"] > & {
+      inline-size: var(--_color-slider-size);
+      block-size: auto;
+      margin-block: var(--_color-slider-cap);
+      margin-inline: 0;
+
+      &::before,
+      &::after {
+        inset-inline: 0;
+        inset-block: auto;
+        inline-size: auto;
+        block-size: var(--_color-slider-cap);
+      }
+
+      /* The channel runs bottom to top */
+      &::before {
+        inset-block-start: 100%;
+        border-radius: 0 0 var(--terria-ds-radius-full)
+          var(--terria-ds-radius-full);
+      }
+
+      &::after {
+        inset-block-end: 100%;
+        border-radius: var(--terria-ds-radius-full) var(--terria-ds-radius-full)
+          0 0;
+      }
+    }
+  }
+
+  /* React Aria places it along the track; this centres it across */
+  [data-tds="color-slider-thumb"] {
+    /* Above the track's ends */
+    --_color-slider-thumb-layer: 1;
+
+    z-index: var(--_color-slider-thumb-layer);
+    box-sizing: border-box;
+    inline-size: var(--_color-slider-thumb);
+    block-size: var(--_color-slider-thumb);
+    border: calc(3 * var(--terria-ds-dimensions-border-width-1)) solid
+      var(--terria-ds-colors-white);
+    border-radius: var(--terria-ds-radius-full);
+    box-shadow: var(--terria-ds-shadow-overlay);
+
+    [data-orientation="horizontal"] & {
+      inset-block-start: 50%;
+    }
+
+    [data-orientation="vertical"] & {
+      inset-inline-start: 50%;
+    }
+
+    &[data-focus-visible] {
+      box-shadow: var(--terria-ds-shadow-focus-ring);
+
+      /* Shadows are dropped in forced-colors mode; this outline shows there instead */
+      outline: var(--terria-ds-focus-ring-width) solid transparent;
+      outline-offset: var(--terria-ds-focus-ring-offset);
+    }
+  }
+}

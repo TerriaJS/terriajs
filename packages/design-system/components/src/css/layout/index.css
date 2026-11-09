@@ -1,0 +1,15 @@
+/**
+ * Layout for @terria/design-system: flex and grid layouts for any element
+ *
+ * Usage:
+ * import "@terria/design-system/layout.css";
+ */
+
+/* Each file puts its rules in their layers itself, terria-ds.base or
+   terria-ds.utilities; importing them into a layer too would nest them in a
+   sublayer of their own */
+/* eslint-disable css/use-layers */
+@import url("./flex.css");
+@import url("./grid.css");
+@import url("./spacing.css");
+/* eslint-enable css/use-layers */

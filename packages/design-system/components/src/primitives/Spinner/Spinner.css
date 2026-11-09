@@ -1,0 +1,87 @@
+/**
+ * Spinner Component Styles
+ *
+ * A ring whose arc fades from the track color into the spinner's color,
+ * ending in a round head. Colors and sizes only set --_spinner-* custom
+ * properties.
+ */
+
+@layer terria-ds.components {
+  [data-tds="spinner"] {
+    --_spinner-color: var(--terria-ds-primary);
+    --_spinner-track: var(--terria-ds-neutral-hover);
+    --_spinner-size: var(--terria-ds-dimensions-spacing-6);
+    --_spinner-stroke: calc(var(--_spinner-size) / 6);
+    --_spinner-loop: 0.75s;
+
+    position: relative;
+    display: inline-block;
+    flex-shrink: 0;
+    inline-size: var(--_spinner-size);
+    block-size: var(--_spinner-size);
+    border-radius: 50%;
+    background: conic-gradient(var(--_spinner-track), var(--_spinner-color));
+    animation: terria-ds-spinner-spin var(--_spinner-loop) linear infinite;
+    mask: radial-gradient(
+      farthest-side,
+      transparent calc(100% - var(--_spinner-stroke)),
+      #000 calc(100% - var(--_spinner-stroke) + 0.5px)
+    );
+
+    /* The arc's round head, where the gradient reaches the full color */
+    &::after {
+      position: absolute;
+      inset-block-start: 0;
+      inset-inline-start: calc(50% - var(--_spinner-stroke) / 2);
+      inline-size: var(--_spinner-stroke);
+      block-size: var(--_spinner-stroke);
+      border-radius: 50%;
+      background-color: var(--_spinner-color);
+      content: "";
+    }
+
+    /* Still spinning, more slowly: stopped, it wouldn't read as loading */
+    @media (prefers-reduced-motion: reduce) {
+      animation-duration: calc(3 * var(--_spinner-loop));
+    }
+  }
+
+  @keyframes terria-ds-spinner-spin {
+    to {
+      transform: rotate(1turn);
+    }
+  }
+
+  /* ============================================================
+     SIZES
+     ============================================================ */
+
+  [data-tds="spinner"][data-tds-size="sm"] {
+    --_spinner-size: var(--terria-ds-dimensions-spacing-4);
+  }
+
+  [data-tds="spinner"][data-tds-size="lg"] {
+    --_spinner-size: var(--terria-ds-dimensions-spacing-8);
+  }
+
+  /* ============================================================
+     COLORS
+     ============================================================ */
+
+  [data-tds="spinner"][data-tds-color="current"] {
+    --_spinner-color: currentcolor;
+    --_spinner-track: color-mix(in oklch, currentcolor 25%, transparent);
+  }
+
+  [data-tds="spinner"][data-tds-color="success"] {
+    --_spinner-color: var(--terria-ds-success);
+  }
+
+  [data-tds="spinner"][data-tds-color="warning"] {
+    --_spinner-color: var(--terria-ds-warning);
+  }
+
+  [data-tds="spinner"][data-tds-color="danger"] {
+    --_spinner-color: var(--terria-ds-danger);
+  }
+}

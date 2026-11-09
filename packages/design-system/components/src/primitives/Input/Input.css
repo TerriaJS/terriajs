@@ -1,0 +1,137 @@
+/**
+ * Input Component Styles, shared with TextArea, InputGroup, and the Select
+ * and Autocomplete triggers
+ *
+ * Variants only set --_input-* custom properties; the base rule consumes them.
+ */
+
+@layer terria-ds.components {
+  :is(
+    [data-tds="input"],
+    [data-tds="textarea"],
+    [data-tds="input-group"],
+    [data-tds="select-trigger"],
+    [data-tds="autocomplete-trigger"]
+  ) {
+    --_input-bg: var(--terria-ds-field-background);
+    --_input-bg-hover: var(--terria-ds-field-background-hover);
+    --_input-bg-focus: var(--terria-ds-field-background-focus);
+    --_input-border-hover: var(--terria-ds-field-border);
+
+    box-sizing: border-box;
+    min-inline-size: 0;
+
+    /* Figma draws the border inside the box, so it comes out of the padding */
+    padding: calc(
+        var(--terria-ds-space-sm) - var(--terria-ds-field-border-width)
+      )
+      calc(var(--terria-ds-space-md) - var(--terria-ds-field-border-width));
+    border: var(--terria-ds-field-border-width) solid
+      var(--terria-ds-field-border);
+    border-radius: var(--terria-ds-field-radius);
+    outline: none;
+    background-color: var(--_input-bg);
+    color: var(--terria-ds-field-foreground);
+    font: inherit;
+    font-size: var(--terria-ds-text-size-body);
+    line-height: var(--terria-ds-line-height-body);
+    transition:
+      background-color var(--terria-ds-duration-150)
+        var(--terria-ds-ease-smooth),
+      border-color var(--terria-ds-duration-150) var(--terria-ds-ease-smooth),
+      box-shadow var(--terria-ds-duration-150) var(--terria-ds-ease-out);
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
+
+    &::placeholder {
+      color: var(--terria-ds-field-placeholder);
+    }
+
+    &[data-hovered] {
+      border-color: var(--_input-border-hover);
+      background-color: var(--_input-bg-hover);
+    }
+
+    /* Over a button in an input group, only the button shows hover */
+    &[data-hovered]:has(:is(button, a)[data-hovered]) {
+      background-color: var(--_input-bg);
+    }
+
+    &[data-invalid],
+    &[aria-invalid="true"] {
+      border-color: var(--terria-ds-field-border-error);
+    }
+
+    &[data-disabled] {
+      opacity: var(--terria-ds-effects-disabled-opacity);
+      cursor: not-allowed;
+    }
+  }
+
+  /* Text fields show focus for pointer and keyboard alike, an input group
+     while its input has it; the Select trigger is a button, so only for the
+     keyboard */
+  :is([data-tds="input"], [data-tds="textarea"])[data-focused],
+  [data-tds="input-group"][data-focus-within],
+  [data-tds="select-trigger"][data-focus-visible],
+  [data-tds="autocomplete-trigger"][data-focus-visible] {
+    border-color: var(--terria-ds-field-border-focus);
+    background-color: var(--_input-bg-focus);
+    box-shadow: var(--terria-ds-shadow-focus-ring-field);
+
+    /* Shadows are dropped in forced-colors mode; this outline shows there instead */
+    outline: var(--terria-ds-focus-ring-width) solid transparent;
+  }
+
+  /* An invalid field in focus keeps its error border, with the halo in danger,
+     so it doesn't show two colours at once */
+  :is([data-tds="input"], [data-tds="textarea"])[data-focused]:is(
+      [data-invalid],
+      [aria-invalid="true"]
+    ),
+  [data-tds="input-group"][data-focus-within]:is(
+      [data-invalid],
+      :has(
+        > :is(
+          [data-tds="input-group-input"],
+          [data-tds="input-group-textarea"]
+        )[data-invalid]
+      )
+    ),
+  [data-tds="select"][data-invalid]
+    > [data-tds="select-trigger"][data-focus-visible],
+  [data-tds="autocomplete"][data-invalid]
+    > [data-tds="autocomplete-trigger"][data-focus-visible] {
+    border-color: var(--terria-ds-field-border-error);
+    box-shadow: var(--terria-ds-shadow-focus-ring-danger);
+  }
+
+  /* Without it, the input keeps the browser's own width (its size attribute) */
+  :is(
+    [data-tds="input"],
+    [data-tds="textarea"],
+    [data-tds="input-group"]
+  )[data-tds-full-width] {
+    inline-size: 100%;
+  }
+
+  :is(
+    [data-tds="input"],
+    [data-tds="textarea"],
+    [data-tds="input-group"]
+  )[data-tds-variant="secondary"] {
+    --_input-bg: var(--terria-ds-neutral);
+    --_input-bg-hover: var(--terria-ds-neutral-hover);
+    --_input-bg-focus: var(--terria-ds-neutral);
+
+    /* The hover background is the border color, so the border darkens to
+       stay visible */
+    --_input-border-hover: color-mix(
+      in oklch,
+      var(--terria-ds-field-placeholder) 30%,
+      transparent
+    );
+  }
+}

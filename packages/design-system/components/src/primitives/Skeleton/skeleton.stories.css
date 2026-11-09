@@ -1,0 +1,99 @@
+/* Shapes and layout for the Skeleton stories, at the design's sizes */
+
+@layer storybook {
+  .skeleton-stories-page {
+    padding: var(--terria-ds-space-xl);
+    background-color: var(--terria-ds-surface-bg);
+  }
+
+  .skeleton-stories-frame {
+    inline-size: fit-content;
+  }
+
+  .skeleton-stories-card {
+    display: grid;
+    gap: var(--terria-ds-dimensions-spacing-1-5);
+    inline-size: var(--terria-ds-dimensions-spacing-32);
+  }
+
+  .skeleton-stories-image {
+    block-size: 4.125rem;
+    margin-block-end: var(--terria-ds-dimensions-spacing-0-5);
+  }
+
+  .skeleton-stories-text {
+    display: grid;
+    gap: var(--terria-ds-dimensions-spacing-1-5);
+    inline-size: 9.3125rem;
+  }
+
+  .skeleton-stories-line {
+    block-size: var(--terria-ds-dimensions-spacing-1-5);
+  }
+
+  .skeleton-stories-w-45 {
+    inline-size: 45%;
+  }
+
+  .skeleton-stories-w-60 {
+    inline-size: 60%;
+  }
+
+  .skeleton-stories-w-70 {
+    inline-size: 70%;
+  }
+
+  .skeleton-stories-w-80 {
+    inline-size: 80%;
+  }
+
+  .skeleton-stories-profile {
+    display: flex;
+    gap: var(--terria-ds-dimensions-spacing-2);
+    align-items: center;
+    inline-size: 6.0625rem;
+  }
+
+  .skeleton-stories-avatar {
+    flex-shrink: 0;
+    inline-size: var(--terria-ds-dimensions-spacing-6);
+    block-size: var(--terria-ds-dimensions-spacing-6);
+    border-radius: var(--terria-ds-radius-full);
+  }
+
+  .skeleton-stories-icon {
+    flex-shrink: 0;
+    inline-size: var(--terria-ds-dimensions-spacing-6);
+    block-size: var(--terria-ds-dimensions-spacing-6);
+  }
+
+  .skeleton-stories-lines {
+    display: grid;
+    flex: 1;
+    gap: var(--terria-ds-dimensions-spacing-1);
+  }
+
+  .skeleton-stories-list {
+    display: grid;
+    gap: var(--terria-ds-dimensions-spacing-2);
+    inline-size: 15rem;
+  }
+
+  .skeleton-stories-row {
+    display: flex;
+    gap: var(--terria-ds-dimensions-spacing-2);
+    align-items: center;
+  }
+
+  .skeleton-stories-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--terria-ds-space-lg);
+    inline-size: 28rem;
+  }
+
+  .skeleton-stories-tile {
+    block-size: var(--terria-ds-dimensions-spacing-24);
+    border-radius: var(--terria-ds-radius-lg);
+  }
+}

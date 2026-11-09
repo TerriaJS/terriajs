@@ -1,0 +1,755 @@
+/**
+ * Do not edit directly, this file was auto-generated.
+ */
+
+@layer terria-ds.tokens {
+  :root, [data-theme='light'] {
+    --terria-ds-colors-white: oklch(100% 0 none);
+    --terria-ds-colors-snow: oklch(99.1% 0 none);
+    --terria-ds-colors-black: oklch(0% 0 none);
+    --terria-ds-colors-eclipse: oklch(21% 0.006 286);
+    --terria-ds-colors-terria-teal-50: oklch(97.9% 0.01 213);
+    --terria-ds-colors-terria-teal-100: oklch(95% 0.024 213);
+    --terria-ds-colors-terria-teal-200: oklch(90.1% 0.047 213);
+    --terria-ds-colors-terria-teal-300: oklch(83.1% 0.076 214);
+    --terria-ds-colors-terria-teal-400: oklch(74.5% 0.101 217);
+    --terria-ds-colors-terria-teal-500: oklch(67.8% 0.107 219);
+    --terria-ds-colors-terria-teal-600: oklch(58.2% 0.096 223);
+    --terria-ds-colors-terria-teal-700: oklch(49.7% 0.081 225);
+    --terria-ds-colors-terria-teal-800: oklch(43.6% 0.065 224);
+    --terria-ds-colors-terria-teal-900: oklch(38.6% 0.054 225);
+    --terria-ds-colors-terria-teal-950: oklch(28.6% 0.044 231);
+    --terria-ds-colors-slate-50: oklch(98.4% 0.003 248);
+    --terria-ds-colors-slate-100: oklch(96.8% 0.007 248);
+    --terria-ds-colors-slate-200: oklch(92.9% 0.013 256);
+    --terria-ds-colors-slate-300: oklch(86.9% 0.02 253);
+    --terria-ds-colors-slate-400: oklch(71.1% 0.035 257);
+    --terria-ds-colors-slate-500: oklch(55.4% 0.041 257);
+    --terria-ds-colors-slate-600: oklch(44.6% 0.037 257);
+    --terria-ds-colors-slate-700: oklch(37.2% 0.039 257);
+    --terria-ds-colors-slate-800: oklch(27.9% 0.037 260);
+    --terria-ds-colors-slate-900: oklch(20.8% 0.04 266);
+    --terria-ds-colors-slate-950: oklch(12.9% 0.041 265);
+    --terria-ds-colors-yellow-50: oklch(98.7% 0.026 102);
+    --terria-ds-colors-yellow-100: oklch(97.3% 0.069 103);
+    --terria-ds-colors-yellow-200: oklch(94.5% 0.124 102);
+    --terria-ds-colors-yellow-300: oklch(90.5% 0.166 98.1);
+    --terria-ds-colors-yellow-400: oklch(86.1% 0.173 91.9);
+    --terria-ds-colors-yellow-500: oklch(79.5% 0.162 86);
+    --terria-ds-colors-yellow-600: oklch(68.1% 0.142 75.8);
+    --terria-ds-colors-yellow-700: oklch(55.4% 0.121 66.4);
+    --terria-ds-colors-yellow-800: oklch(47.6% 0.103 61.9);
+    --terria-ds-colors-yellow-900: oklch(42.1% 0.09 57.7);
+    --terria-ds-colors-yellow-950: oklch(28.6% 0.064 53.8);
+    --terria-ds-colors-lime-50: oklch(98.6% 0.031 121);
+    --terria-ds-colors-lime-100: oklch(96.7% 0.066 122);
+    --terria-ds-colors-lime-200: oklch(93.8% 0.122 124);
+    --terria-ds-colors-lime-300: oklch(89.7% 0.179 127);
+    --terria-ds-colors-lime-400: oklch(84.9% 0.207 129);
+    --terria-ds-colors-lime-500: oklch(76.8% 0.204 131);
+    --terria-ds-colors-lime-600: oklch(64.8% 0.175 132);
+    --terria-ds-colors-lime-700: oklch(53.2% 0.141 132);
+    --terria-ds-colors-lime-800: oklch(45.3% 0.113 131);
+    --terria-ds-colors-lime-900: oklch(40.5% 0.096 131);
+    --terria-ds-colors-lime-950: oklch(27.4% 0.069 132);
+    --terria-ds-colors-green-50: oklch(98.2% 0.018 156);
+    --terria-ds-colors-green-100: oklch(96.2% 0.043 157);
+    --terria-ds-colors-green-200: oklch(92.5% 0.081 156);
+    --terria-ds-colors-green-300: oklch(87.1% 0.136 154);
+    --terria-ds-colors-green-400: oklch(80% 0.182 152);
+    --terria-ds-colors-green-500: oklch(72.3% 0.192 150);
+    --terria-ds-colors-green-600: oklch(62.7% 0.17 149);
+    --terria-ds-colors-green-700: oklch(52.7% 0.137 150);
+    --terria-ds-colors-green-800: oklch(44.8% 0.108 151);
+    --terria-ds-colors-green-900: oklch(39.3% 0.09 153);
+    --terria-ds-colors-green-950: oklch(26.6% 0.063 153);
+    --terria-ds-colors-emerald-50: oklch(97.9% 0.021 166);
+    --terria-ds-colors-emerald-100: oklch(95% 0.051 163);
+    --terria-ds-colors-emerald-200: oklch(90.5% 0.089 164);
+    --terria-ds-colors-emerald-300: oklch(84.5% 0.13 165);
+    --terria-ds-colors-emerald-400: oklch(77.3% 0.153 163);
+    --terria-ds-colors-emerald-500: oklch(69.6% 0.149 162);
+    --terria-ds-colors-emerald-600: oklch(59.6% 0.127 163);
+    --terria-ds-colors-emerald-700: oklch(50.8% 0.105 166);
+    --terria-ds-colors-emerald-800: oklch(43.2% 0.086 167);
+    --terria-ds-colors-emerald-900: oklch(37.8% 0.073 169);
+    --terria-ds-colors-emerald-950: oklch(26.2% 0.049 173);
+    --terria-ds-colors-teal-50: oklch(98.4% 0.014 181);
+    --terria-ds-colors-teal-100: oklch(95.3% 0.05 181);
+    --terria-ds-colors-teal-200: oklch(91% 0.093 180);
+    --terria-ds-colors-teal-300: oklch(85.5% 0.125 181);
+    --terria-ds-colors-teal-400: oklch(78.5% 0.133 182);
+    --terria-ds-colors-teal-500: oklch(70.4% 0.123 183);
+    --terria-ds-colors-teal-600: oklch(60% 0.104 185);
+    --terria-ds-colors-teal-700: oklch(51.1% 0.086 186);
+    --terria-ds-colors-teal-800: oklch(43.7% 0.071 188);
+    --terria-ds-colors-teal-900: oklch(38.6% 0.059 188);
+    --terria-ds-colors-teal-950: oklch(27.7% 0.045 193);
+    --terria-ds-colors-jade-50: oklch(98.4% 0.015 158);
+    --terria-ds-colors-jade-100: oklch(93.6% 0.057 158);
+    --terria-ds-colors-jade-200: oklch(88.9% 0.096 157);
+    --terria-ds-colors-jade-300: oklch(84.2% 0.128 155);
+    --terria-ds-colors-jade-400: oklch(79.9% 0.156 154);
+    --terria-ds-colors-jade-500: oklch(75.4% 0.176 152);
+    --terria-ds-colors-jade-600: oklch(66.2% 0.155 153);
+    --terria-ds-colors-jade-700: oklch(55.4% 0.124 154);
+    --terria-ds-colors-jade-800: oklch(44.2% 0.094 155);
+    --terria-ds-colors-jade-900: oklch(32.7% 0.064 155);
+    --terria-ds-colors-jade-950: oklch(20.3% 0.032 158);
+    --terria-ds-colors-cyan-50: oklch(98.4% 0.019 201);
+    --terria-ds-colors-cyan-100: oklch(95.6% 0.044 203);
+    --terria-ds-colors-cyan-200: oklch(91.7% 0.077 205);
+    --terria-ds-colors-cyan-300: oklch(86.5% 0.115 207);
+    --terria-ds-colors-cyan-400: oklch(79.7% 0.134 212);
+    --terria-ds-colors-cyan-500: oklch(71.5% 0.126 215);
+    --terria-ds-colors-cyan-600: oklch(60.9% 0.111 222);
+    --terria-ds-colors-cyan-700: oklch(52% 0.094 223);
+    --terria-ds-colors-cyan-800: oklch(45% 0.077 224);
+    --terria-ds-colors-cyan-900: oklch(39.8% 0.066 227);
+    --terria-ds-colors-cyan-950: oklch(30.2% 0.054 230);
+    --terria-ds-colors-sky-50: oklch(97.7% 0.012 237);
+    --terria-ds-colors-sky-100: oklch(95.1% 0.025 237);
+    --terria-ds-colors-sky-200: oklch(90.1% 0.055 231);
+    --terria-ds-colors-sky-300: oklch(82.8% 0.101 230);
+    --terria-ds-colors-sky-400: oklch(75.4% 0.139 233);
+    --terria-ds-colors-sky-500: oklch(68.5% 0.148 237);
+    --terria-ds-colors-sky-600: oklch(58.8% 0.139 242);
+    --terria-ds-colors-sky-700: oklch(50% 0.119 243);
+    --terria-ds-colors-sky-800: oklch(44.3% 0.1 241);
+    --terria-ds-colors-sky-900: oklch(39.1% 0.085 241);
+    --terria-ds-colors-sky-950: oklch(29.3% 0.063 243);
+    --terria-ds-colors-blue-50: oklch(97% 0.014 255);
+    --terria-ds-colors-blue-100: oklch(93.2% 0.032 256);
+    --terria-ds-colors-blue-200: oklch(88.2% 0.057 254);
+    --terria-ds-colors-blue-300: oklch(80.9% 0.096 252);
+    --terria-ds-colors-blue-400: oklch(71.4% 0.143 255);
+    --terria-ds-colors-blue-500: oklch(62.3% 0.188 260);
+    --terria-ds-colors-blue-600: oklch(54.6% 0.215 263);
+    --terria-ds-colors-blue-700: oklch(48.8% 0.217 264);
+    --terria-ds-colors-blue-800: oklch(42.4% 0.181 266);
+    --terria-ds-colors-blue-900: oklch(37.9% 0.138 266);
+    --terria-ds-colors-blue-950: oklch(28.2% 0.087 268);
+    --terria-ds-colors-indigo-50: oklch(96.2% 0.018 272);
+    --terria-ds-colors-indigo-100: oklch(93% 0.033 273);
+    --terria-ds-colors-indigo-200: oklch(87% 0.062 274);
+    --terria-ds-colors-indigo-300: oklch(78.5% 0.104 275);
+    --terria-ds-colors-indigo-400: oklch(68% 0.158 277);
+    --terria-ds-colors-indigo-500: oklch(58.5% 0.204 277);
+    --terria-ds-colors-indigo-600: oklch(51.1% 0.23 277);
+    --terria-ds-colors-indigo-700: oklch(45.7% 0.215 277);
+    --terria-ds-colors-indigo-800: oklch(39.8% 0.177 277);
+    --terria-ds-colors-indigo-900: oklch(35.9% 0.135 279);
+    --terria-ds-colors-indigo-950: oklch(25.7% 0.086 281);
+    --terria-ds-colors-violet-50: oklch(96.9% 0.016 294);
+    --terria-ds-colors-violet-100: oklch(94.3% 0.028 295);
+    --terria-ds-colors-violet-200: oklch(89.4% 0.055 293);
+    --terria-ds-colors-violet-300: oklch(81.1% 0.101 294);
+    --terria-ds-colors-violet-400: oklch(70.9% 0.159 294);
+    --terria-ds-colors-violet-500: oklch(60.6% 0.219 293);
+    --terria-ds-colors-violet-600: oklch(54.1% 0.247 293);
+    --terria-ds-colors-violet-700: oklch(49.1% 0.241 293);
+    --terria-ds-colors-violet-800: oklch(43.2% 0.211 293);
+    --terria-ds-colors-violet-900: oklch(38% 0.178 294);
+    --terria-ds-colors-violet-950: oklch(28.3% 0.135 291);
+    --terria-ds-colors-purple-50: oklch(97.7% 0.014 308);
+    --terria-ds-colors-purple-100: oklch(94.6% 0.033 307);
+    --terria-ds-colors-purple-200: oklch(90.2% 0.06 307);
+    --terria-ds-colors-purple-300: oklch(82.7% 0.108 306);
+    --terria-ds-colors-purple-400: oklch(72.2% 0.177 306);
+    --terria-ds-colors-purple-500: oklch(62.7% 0.233 304);
+    --terria-ds-colors-purple-600: oklch(55.8% 0.252 302);
+    --terria-ds-colors-purple-700: oklch(49.6% 0.237 302);
+    --terria-ds-colors-purple-800: oklch(43.8% 0.198 304);
+    --terria-ds-colors-purple-900: oklch(38.1% 0.166 305);
+    --terria-ds-colors-purple-950: oklch(29.1% 0.143 303);
+    --terria-ds-colors-fuchsia-50: oklch(97.7% 0.017 320);
+    --terria-ds-colors-fuchsia-100: oklch(95.2% 0.036 319);
+    --terria-ds-colors-fuchsia-200: oklch(90.3% 0.073 320);
+    --terria-ds-colors-fuchsia-300: oklch(83.3% 0.132 321);
+    --terria-ds-colors-fuchsia-400: oklch(74.8% 0.207 322);
+    --terria-ds-colors-fuchsia-500: oklch(66.7% 0.259 322);
+    --terria-ds-colors-fuchsia-600: oklch(59.1% 0.257 323);
+    --terria-ds-colors-fuchsia-700: oklch(51.8% 0.226 324);
+    --terria-ds-colors-fuchsia-800: oklch(45.2% 0.192 325);
+    --terria-ds-colors-fuchsia-900: oklch(40.1% 0.16 326);
+    --terria-ds-colors-fuchsia-950: oklch(29.3% 0.131 326);
+    --terria-ds-colors-pink-50: oklch(97.1% 0.014 343);
+    --terria-ds-colors-pink-100: oklch(94.8% 0.028 342);
+    --terria-ds-colors-pink-200: oklch(89.9% 0.059 343);
+    --terria-ds-colors-pink-300: oklch(82.3% 0.11 346);
+    --terria-ds-colors-pink-400: oklch(72.5% 0.175 350);
+    --terria-ds-colors-pink-500: oklch(65.6% 0.212 354);
+    --terria-ds-colors-pink-600: oklch(59.2% 0.218 0.584);
+    --terria-ds-colors-pink-700: oklch(52.5% 0.199 3.96);
+    --terria-ds-colors-pink-800: oklch(45.9% 0.17 3.82);
+    --terria-ds-colors-pink-900: oklch(40.8% 0.144 2.43);
+    --terria-ds-colors-pink-950: oklch(28.4% 0.105 3.91);
+    --terria-ds-colors-rose-50: oklch(96.9% 0.015 12.4);
+    --terria-ds-colors-rose-100: oklch(94.1% 0.03 12.6);
+    --terria-ds-colors-rose-200: oklch(89.2% 0.056 10);
+    --terria-ds-colors-rose-300: oklch(81% 0.106 11.6);
+    --terria-ds-colors-rose-400: oklch(71.9% 0.169 13.4);
+    --terria-ds-colors-rose-500: oklch(64.5% 0.215 16.4);
+    --terria-ds-colors-rose-600: oklch(58.6% 0.222 17.6);
+    --terria-ds-colors-rose-700: oklch(51.4% 0.198 16.9);
+    --terria-ds-colors-rose-800: oklch(45.5% 0.171 13.7);
+    --terria-ds-colors-rose-900: oklch(41% 0.15 10.3);
+    --terria-ds-colors-rose-950: oklch(27.1% 0.101 12.1);
+    --terria-ds-colors-gray-50: oklch(98.5% 0.002 248);
+    --terria-ds-colors-gray-100: oklch(96.7% 0.003 265);
+    --terria-ds-colors-gray-200: oklch(92.8% 0.006 265);
+    --terria-ds-colors-gray-300: oklch(87.2% 0.009 258);
+    --terria-ds-colors-gray-400: oklch(71.4% 0.019 261);
+    --terria-ds-colors-gray-500: oklch(55.1% 0.023 264);
+    --terria-ds-colors-gray-600: oklch(44.6% 0.026 257);
+    --terria-ds-colors-gray-700: oklch(37.3% 0.031 260);
+    --terria-ds-colors-gray-800: oklch(27.8% 0.03 257);
+    --terria-ds-colors-gray-900: oklch(21% 0.032 265);
+    --terria-ds-colors-gray-950: oklch(13% 0.027 262);
+    --terria-ds-colors-zinc-50: oklch(98.5% 0 none);
+    --terria-ds-colors-zinc-100: oklch(96.7% 0.001 286);
+    --terria-ds-colors-zinc-200: oklch(92% 0.004 286);
+    --terria-ds-colors-zinc-300: oklch(87.1% 0.005 286);
+    --terria-ds-colors-zinc-400: oklch(71.2% 0.013 286);
+    --terria-ds-colors-zinc-500: oklch(55.2% 0.014 286);
+    --terria-ds-colors-zinc-600: oklch(44.2% 0.015 286);
+    --terria-ds-colors-zinc-700: oklch(37% 0.012 286);
+    --terria-ds-colors-zinc-800: oklch(27.4% 0.005 286);
+    --terria-ds-colors-zinc-900: oklch(21% 0.006 286);
+    --terria-ds-colors-zinc-950: oklch(14.1% 0.004 286);
+    --terria-ds-colors-neutral-50: oklch(98.5% 0 none);
+    --terria-ds-colors-neutral-100: oklch(97% 0 none);
+    --terria-ds-colors-neutral-200: oklch(92.2% 0 none);
+    --terria-ds-colors-neutral-300: oklch(87% 0 none);
+    --terria-ds-colors-neutral-400: oklch(71.5% 0 none);
+    --terria-ds-colors-neutral-500: oklch(55.6% 0 none);
+    --terria-ds-colors-neutral-600: oklch(43.9% 0 none);
+    --terria-ds-colors-neutral-700: oklch(37.1% 0 none);
+    --terria-ds-colors-neutral-800: oklch(26.9% 0 none);
+    --terria-ds-colors-neutral-900: oklch(20.5% 0 none);
+    --terria-ds-colors-neutral-950: oklch(14.5% 0 none);
+    --terria-ds-colors-stone-50: oklch(98.5% 0.001 106);
+    --terria-ds-colors-stone-100: oklch(97% 0.001 106);
+    --terria-ds-colors-stone-200: oklch(92.3% 0.003 48.7);
+    --terria-ds-colors-stone-300: oklch(86.9% 0.004 56.4);
+    --terria-ds-colors-stone-400: oklch(71.6% 0.009 56.3);
+    --terria-ds-colors-stone-500: oklch(55.3% 0.012 58.1);
+    --terria-ds-colors-stone-600: oklch(44.4% 0.01 73.6);
+    --terria-ds-colors-stone-700: oklch(37.4% 0.009 67.6);
+    --terria-ds-colors-stone-800: oklch(26.8% 0.006 34.3);
+    --terria-ds-colors-stone-900: oklch(21.6% 0.006 56);
+    --terria-ds-colors-stone-950: oklch(14.7% 0.004 49.2);
+    --terria-ds-colors-red-50: oklch(97.1% 0.013 17.4);
+    --terria-ds-colors-red-100: oklch(93.6% 0.031 17.7);
+    --terria-ds-colors-red-200: oklch(88.5% 0.059 18.3);
+    --terria-ds-colors-red-300: oklch(80.8% 0.103 19.6);
+    --terria-ds-colors-red-400: oklch(71.1% 0.166 22.2);
+    --terria-ds-colors-red-500: oklch(63.7% 0.208 25.3);
+    --terria-ds-colors-red-600: oklch(57.7% 0.215 27.3);
+    --terria-ds-colors-red-700: oklch(50.5% 0.19 27.5);
+    --terria-ds-colors-red-800: oklch(44.4% 0.161 26.9);
+    --terria-ds-colors-red-900: oklch(39.6% 0.133 25.7);
+    --terria-ds-colors-red-950: oklch(25.8% 0.089 26);
+    --terria-ds-colors-ruby-50: oklch(98.9% 0.005 17.2);
+    --terria-ds-colors-ruby-100: oklch(89.9% 0.051 19.6);
+    --terria-ds-colors-ruby-200: oklch(81.9% 0.096 21.7);
+    --terria-ds-colors-ruby-300: oklch(74.6% 0.141 23.6);
+    --terria-ds-colors-ruby-400: oklch(68.5% 0.18 26.4);
+    --terria-ds-colors-ruby-500: oklch(63.5% 0.21 28.8);
+    --terria-ds-colors-ruby-600: oklch(58.9% 0.223 29.9);
+    --terria-ds-colors-ruby-700: oklch(50.3% 0.185 30.1);
+    --terria-ds-colors-ruby-800: oklch(41.8% 0.147 30.1);
+    --terria-ds-colors-ruby-900: oklch(32.8% 0.109 30);
+    --terria-ds-colors-ruby-950: oklch(23.5% 0.068 29.8);
+    --terria-ds-colors-orange-50: oklch(98% 0.016 73.7);
+    --terria-ds-colors-orange-100: oklch(95.4% 0.037 75.2);
+    --terria-ds-colors-orange-200: oklch(90.1% 0.073 70.7);
+    --terria-ds-colors-orange-300: oklch(83.7% 0.117 66.3);
+    --terria-ds-colors-orange-400: oklch(75.8% 0.159 55.9);
+    --terria-ds-colors-orange-500: oklch(70.5% 0.187 47.6);
+    --terria-ds-colors-orange-600: oklch(64.6% 0.194 41.1);
+    --terria-ds-colors-orange-700: oklch(55.3% 0.174 38.4);
+    --terria-ds-colors-orange-800: oklch(47% 0.143 37.3);
+    --terria-ds-colors-orange-900: oklch(40.8% 0.116 38.2);
+    --terria-ds-colors-orange-950: oklch(26.6% 0.076 36.3);
+    --terria-ds-colors-amber-50: oklch(98.7% 0.021 95.3);
+    --terria-ds-colors-amber-100: oklch(96.2% 0.058 95.6);
+    --terria-ds-colors-amber-200: oklch(92.4% 0.115 95.7);
+    --terria-ds-colors-amber-300: oklch(87.9% 0.153 91.6);
+    --terria-ds-colors-amber-400: oklch(83.7% 0.164 84.4);
+    --terria-ds-colors-amber-500: oklch(76.9% 0.165 70.1);
+    --terria-ds-colors-amber-600: oklch(66.6% 0.157 58.3);
+    --terria-ds-colors-amber-700: oklch(55.5% 0.146 49);
+    --terria-ds-colors-amber-800: oklch(47.3% 0.125 46.2);
+    --terria-ds-colors-amber-900: oklch(41.4% 0.105 45.9);
+    --terria-ds-colors-amber-950: oklch(27.9% 0.074 45.6);
+    --terria-ds-colors-coral-50: oklch(99.5% 0.005 78.3);
+    --terria-ds-colors-coral-100: oklch(95.3% 0.042 79);
+    --terria-ds-colors-coral-200: oklch(91.3% 0.078 78.6);
+    --terria-ds-colors-coral-300: oklch(87.8% 0.113 78.7);
+    --terria-ds-colors-coral-400: oklch(84.6% 0.141 77.9);
+    --terria-ds-colors-coral-500: oklch(81.7% 0.161 75.1);
+    --terria-ds-colors-coral-600: oklch(78.2% 0.168 70.7);
+    --terria-ds-colors-coral-700: oklch(67.4% 0.143 72.7);
+    --terria-ds-colors-coral-800: oklch(56.1% 0.117 75);
+    --terria-ds-colors-coral-900: oklch(44.4% 0.09 77.5);
+    --terria-ds-colors-coral-950: oklch(31.7% 0.062 80.8);
+    --terria-ds-colors-alpha-transparent: oklch(0% 0 none / 0);
+    --terria-ds-colors-alpha-black-30: oklch(0% 0 none / 0.3);
+    --terria-ds-colors-alpha-black-50: oklch(0% 0 none / 0.5);
+    --terria-ds-colors-alpha-black-70: oklch(0% 0 none / 0.7);
+    --terria-ds-colors-alpha-white-5: oklch(100% 0 none / 0.05);
+    --terria-ds-colors-alpha-white-10: oklch(100% 0 none / 0.1);
+    --terria-ds-colors-alpha-white-15: oklch(100% 0 none / 0.15);
+    --terria-ds-colors-alpha-white-30: oklch(100% 0 none / 0.3);
+    --terria-ds-colors-alpha-white-85: oklch(100% 0 none / 0.85);
+    --terria-ds-colors-alpha-gray-900-4: oklch(21% 0.032 265 / 0.04);
+    --terria-ds-colors-alpha-gray-900-8: oklch(21% 0.032 265 / 0.08);
+    --terria-ds-colors-alpha-gray-900-75: oklch(21% 0.032 265 / 0.75);
+    --terria-ds-colors-alpha-gray-900-95: oklch(21% 0.032 265 / 0.95);
+    --terria-ds-colors-alpha-teal-700-25: oklch(49.7% 0.081 225 / 0.25);
+    --terria-ds-colors-alpha-teal-400-30: oklch(74.5% 0.101 217 / 0.3);
+    --terria-ds-colors-alpha-red-700-25: oklch(50.5% 0.19 27.5 / 0.25);
+    --terria-ds-colors-alpha-red-400-30: oklch(71.1% 0.166 22.2 / 0.3);
+    --terria-ds-dimensions-radius-rounded-none: 0;
+    --terria-ds-dimensions-radius-rounded-xs: 0.125rem;
+    --terria-ds-dimensions-radius-rounded-sm: 0.25rem;
+    --terria-ds-dimensions-radius-rounded-md: 0.375rem;
+    --terria-ds-dimensions-radius-rounded-lg: 0.5rem;
+    --terria-ds-dimensions-radius-rounded-xl: 0.75rem;
+    --terria-ds-dimensions-radius-rounded-2xl: 1rem;
+    --terria-ds-dimensions-radius-rounded-2-5xl: 1.25rem;
+    --terria-ds-dimensions-radius-rounded-3xl: 1.5rem;
+    --terria-ds-dimensions-radius-rounded-4xl: 2rem;
+    --terria-ds-dimensions-radius-rounded-full: 624.9375rem;
+    --terria-ds-dimensions-spacing-0: 0;
+    --terria-ds-dimensions-spacing-1: 0.25rem;
+    --terria-ds-dimensions-spacing-2: 0.5rem;
+    --terria-ds-dimensions-spacing-3: 0.75rem;
+    --terria-ds-dimensions-spacing-4: 1rem;
+    --terria-ds-dimensions-spacing-5: 1.25rem;
+    --terria-ds-dimensions-spacing-6: 1.5rem;
+    --terria-ds-dimensions-spacing-7: 1.75rem;
+    --terria-ds-dimensions-spacing-8: 2rem;
+    --terria-ds-dimensions-spacing-9: 2.25rem;
+    --terria-ds-dimensions-spacing-10: 2.5rem;
+    --terria-ds-dimensions-spacing-11: 2.75rem;
+    --terria-ds-dimensions-spacing-12: 3rem;
+    --terria-ds-dimensions-spacing-14: 3.5rem;
+    --terria-ds-dimensions-spacing-16: 4rem;
+    --terria-ds-dimensions-spacing-20: 5rem;
+    --terria-ds-dimensions-spacing-24: 6rem;
+    --terria-ds-dimensions-spacing-28: 7rem;
+    --terria-ds-dimensions-spacing-32: 8rem;
+    --terria-ds-dimensions-spacing-36: 9rem;
+    --terria-ds-dimensions-spacing-40: 10rem;
+    --terria-ds-dimensions-spacing-44: 11rem;
+    --terria-ds-dimensions-spacing-48: 12rem;
+    --terria-ds-dimensions-spacing-52: 13rem;
+    --terria-ds-dimensions-spacing-56: 14rem;
+    --terria-ds-dimensions-spacing-60: 15rem;
+    --terria-ds-dimensions-spacing-64: 16rem;
+    --terria-ds-dimensions-spacing-72: 18rem;
+    --terria-ds-dimensions-spacing-80: 20rem;
+    --terria-ds-dimensions-spacing-96: 24rem;
+    --terria-ds-dimensions-spacing-px: 0.0625rem;
+    --terria-ds-dimensions-spacing-0-5: 0.125rem;
+    --terria-ds-dimensions-spacing-1-5: 0.375rem;
+    --terria-ds-dimensions-spacing-2-5: 0.625rem;
+    --terria-ds-dimensions-spacing-3-5: 0.875rem;
+    --terria-ds-dimensions-screens-sm: 768px;
+    --terria-ds-dimensions-screens-md: 992px;
+    --terria-ds-dimensions-screens-lg: 1300px;
+    --terria-ds-dimensions-screens-xl: 1600px;
+    --terria-ds-dimensions-font-text-3xs: 0.625rem;
+    --terria-ds-dimensions-font-text-2xs: 0.6875rem;
+    --terria-ds-dimensions-font-text-xs: 0.75rem;
+    --terria-ds-dimensions-font-text-sm: 0.875rem;
+    --terria-ds-dimensions-font-text-base: 1rem;
+    --terria-ds-dimensions-font-text-lg: 1.125rem;
+    --terria-ds-dimensions-font-text-xl: 1.25rem;
+    --terria-ds-dimensions-font-text-2xl: 1.5rem;
+    --terria-ds-dimensions-font-text-3xl: 1.875rem;
+    --terria-ds-dimensions-font-text-4xl: 2.25rem;
+    --terria-ds-dimensions-font-text-5xl: 3rem;
+    --terria-ds-dimensions-font-text-6xl: 3.75rem;
+    --terria-ds-dimensions-font-text-7xl: 4.5rem;
+    --terria-ds-dimensions-font-text-8xl: 6rem;
+    --terria-ds-dimensions-font-text-9xl: 8rem;
+    --terria-ds-dimensions-leading-text-2xs: 0.875rem;
+    --terria-ds-dimensions-leading-text-xs: 1rem;
+    --terria-ds-dimensions-leading-text-sm: 1.25rem;
+    --terria-ds-dimensions-leading-text-base: 1.5rem;
+    --terria-ds-dimensions-leading-text-lg: 1.75rem;
+    --terria-ds-dimensions-leading-text-xl: 1.75rem;
+    --terria-ds-dimensions-leading-text-2xl: 2rem;
+    --terria-ds-dimensions-leading-text-3xl: 2.25rem;
+    --terria-ds-dimensions-leading-text-4xl: 2.5rem;
+    --terria-ds-dimensions-leading-text-5xl: 3rem;
+    --terria-ds-dimensions-leading-text-6xl: 3.75rem;
+    --terria-ds-dimensions-leading-text-7xl: 4.5rem;
+    --terria-ds-dimensions-leading-text-8xl: 6rem;
+    --terria-ds-dimensions-leading-text-9xl: 8rem;
+    --terria-ds-dimensions-border-width-0: 0px;
+    --terria-ds-dimensions-border-width-1: 1px;
+    --terria-ds-dimensions-border-width-2: 2px;
+    --terria-ds-dimensions-icon-size-xs: 12px;
+    --terria-ds-dimensions-icon-size-sm: 16px;
+    --terria-ds-dimensions-icon-size-md: 20px;
+    --terria-ds-dimensions-icon-size-lg: 24px;
+    --terria-ds-font: Inter;
+    --terria-ds-font-bold: 700;
+    --terria-ds-font-semi-bold: 600;
+    --terria-ds-font-medium: 500;
+    --terria-ds-font-regular: 400;
+    --terria-ds-letter-spacing: 0;
+    --terria-ds-segment: oklch(100% 0 none);
+    --terria-ds-primary: oklch(49.7% 0.081 225);
+    --terria-ds-primary-hover: oklch(43.6% 0.065 224);
+    --terria-ds-primary-foreground: oklch(100% 0 none);
+    --terria-ds-primary-soft: oklch(95% 0.024 213);
+    --terria-ds-primary-soft-hover: oklch(90.1% 0.047 213);
+    --terria-ds-primary-soft-foreground: oklch(43.6% 0.065 224);
+    --terria-ds-secondary: oklch(55.5% 0.146 49);
+    --terria-ds-secondary-hover: oklch(47.3% 0.125 46.2);
+    --terria-ds-secondary-foreground: oklch(100% 0 none);
+    --terria-ds-secondary-soft: oklch(96.2% 0.058 95.6);
+    --terria-ds-secondary-soft-hover: oklch(92.4% 0.115 95.7);
+    --terria-ds-secondary-soft-foreground: oklch(47.3% 0.125 46.2);
+    --terria-ds-neutral: oklch(92.8% 0.006 265);
+    --terria-ds-neutral-hover: oklch(87.2% 0.009 258);
+    --terria-ds-neutral-foreground: oklch(21% 0.032 265);
+    --terria-ds-neutral-soft: oklch(96.7% 0.003 265);
+    --terria-ds-neutral-soft-hover: oklch(92.8% 0.006 265);
+    --terria-ds-neutral-soft-foreground: oklch(21% 0.032 265);
+    --terria-ds-surface-bg: oklch(96.7% 0.003 265);
+    --terria-ds-surface-default: oklch(98.5% 0.002 248);
+    --terria-ds-surface-skeleton: oklch(92.8% 0.006 265);
+    --terria-ds-surface-raised: oklch(100% 0 none);
+    --terria-ds-surface-overlay: oklch(100% 0 none);
+    --terria-ds-surface-glass: oklch(100% 0 none / 0.85);
+    --terria-ds-surface-inverse: oklch(21% 0.032 265);
+    --terria-ds-surface-backdrop: oklch(0% 0 none / 0.5);
+    --terria-ds-surface-transparent: oklch(0% 0 none / 0);
+    --terria-ds-surface-tint: oklch(21% 0.032 265 / 0.04);
+    --terria-ds-surface-tint-strong: oklch(21% 0.032 265 / 0.08);
+    --terria-ds-success: oklch(50.8% 0.105 166);
+    --terria-ds-success-hover: oklch(43.2% 0.086 167);
+    --terria-ds-success-foreground: oklch(100% 0 none);
+    --terria-ds-success-soft: oklch(95% 0.051 163);
+    --terria-ds-success-soft-hover: oklch(90.5% 0.089 164);
+    --terria-ds-success-soft-foreground: oklch(43.2% 0.086 167);
+    --terria-ds-warning: oklch(55.3% 0.174 38.4);
+    --terria-ds-warning-hover: oklch(47% 0.143 37.3);
+    --terria-ds-warning-foreground: oklch(100% 0 none);
+    --terria-ds-warning-soft: oklch(95.4% 0.037 75.2);
+    --terria-ds-warning-soft-hover: oklch(90.1% 0.073 70.7);
+    --terria-ds-warning-soft-foreground: oklch(47% 0.143 37.3);
+    --terria-ds-danger: oklch(50.5% 0.19 27.5);
+    --terria-ds-danger-hover: oklch(44.4% 0.161 26.9);
+    --terria-ds-danger-foreground: oklch(100% 0 none);
+    --terria-ds-danger-soft: oklch(93.6% 0.031 17.7);
+    --terria-ds-danger-soft-hover: oklch(88.5% 0.059 18.3);
+    --terria-ds-danger-soft-foreground: oklch(44.4% 0.161 26.9);
+    --terria-ds-text-foreground: oklch(21% 0.032 265);
+    --terria-ds-text-muted: oklch(44.6% 0.026 257);
+    --terria-ds-text-inverse: oklch(100% 0 none);
+    --terria-ds-text-disabled: oklch(71.4% 0.019 261);
+    --terria-ds-border-color-subtle: oklch(92.8% 0.006 265);
+    --terria-ds-border-color-default: oklch(87.2% 0.009 258);
+    --terria-ds-border-color-strong: oklch(71.4% 0.019 261);
+    --terria-ds-border-color-primary: oklch(83.1% 0.076 214);
+    --terria-ds-border-color-success: oklch(84.5% 0.13 165);
+    --terria-ds-border-color-warning: oklch(83.7% 0.117 66.3);
+    --terria-ds-border-color-danger: oklch(80.8% 0.103 19.6);
+    --terria-ds-border-width-default: 1px;
+    --terria-ds-border-width-control: 0px;
+    --terria-ds-effects-disabled-opacity: 50%;
+    --terria-ds-effects-blur: 5px;
+    --terria-ds-effects-depth: 0px;
+    --terria-ds-effects-shadow-inner: oklch(0% 0 none / 0.3);
+    --terria-ds-effects-shadow-scroll-blur: oklch(97% 0 none / 0.7);
+    --terria-ds-effects-shadow-scroll-blur-on-surface: oklch(100% 0 none / 0.7);
+    --terria-ds-effects-overlay-shadow: oklch(0% 0 none / 0);
+    --terria-ds-focus-ring-offset: 2px;
+    --terria-ds-focus-ring-width: 2px;
+    --terria-ds-focus-ring-halo: oklch(49.7% 0.081 225 / 0.25);
+    --terria-ds-data-chart-1: oklch(39.3% 0.183 262);
+    --terria-ds-data-chart-2: oklch(50.8% 0.188 258);
+    --terria-ds-data-chart-3: oklch(62% 0.195 254);
+    --terria-ds-data-chart-4: oklch(72.1% 0.154 246);
+    --terria-ds-data-chart-5: oklch(82.4% 0.114 228);
+    --terria-ds-field-border-width: 1px;
+    --terria-ds-field-border: oklch(87.2% 0.009 258);
+    --terria-ds-field-border-hover: oklch(71.4% 0.019 261);
+    --terria-ds-field-background: oklch(100% 0 none);
+    --terria-ds-field-background-hover: oklch(98.5% 0.002 248);
+    --terria-ds-field-background-focus: oklch(100% 0 none);
+    --terria-ds-radius-none: 0;
+    --terria-ds-radius-sm: 0.5rem;
+    --terria-ds-radius-md: 0.75rem;
+    --terria-ds-radius-lg: 1rem;
+    --terria-ds-radius-full: 624.9375rem;
+    --terria-ds-space-2xs: 0.125rem;
+    --terria-ds-space-xs: 0.25rem;
+    --terria-ds-space-sm: 0.5rem;
+    --terria-ds-space-md: 0.75rem;
+    --terria-ds-space-lg: 1rem;
+    --terria-ds-space-xl: 1.5rem;
+    --terria-ds-space-2xl: 2rem;
+    --terria-ds-text-size-nano: 0.625rem;
+    --terria-ds-text-size-micro: 0.6875rem;
+    --terria-ds-text-size-caption: 0.75rem;
+    --terria-ds-text-size-body: 0.875rem;
+    --terria-ds-text-size-body-lg: 1rem;
+    --terria-ds-text-size-heading: 1.125rem;
+    --terria-ds-text-size-display: 1.5rem;
+    --terria-ds-line-height-nano: 0.875rem;
+    --terria-ds-line-height-micro: 0.875rem;
+    --terria-ds-line-height-caption: 1rem;
+    --terria-ds-line-height-body: 1.25rem;
+    --terria-ds-line-height-body-lg: 1.5rem;
+    --terria-ds-line-height-heading: 1.75rem;
+    --terria-ds-line-height-display: 2rem;
+    --terria-ds-focus-danger-ring-offset: 2px;
+    --terria-ds-focus-danger-ring-width: 2px;
+    --terria-ds-focus-danger-ring-halo: oklch(50.5% 0.19 27.5 / 0.25);
+    --terria-ds-border: var(--terria-ds-border-color-default);
+    --terria-ds-backdrop: var(--terria-ds-surface-backdrop);
+    --terria-ds-overlay: var(--terria-ds-surface-bg);
+    --terria-ds-text-segment: var(--terria-ds-text-foreground);
+    --terria-ds-text-link: var(--terria-ds-primary);
+    --terria-ds-effects-shadow-scroll: var(--terria-ds-surface-bg);
+    --terria-ds-effects-shadow-scroll-on-surface: var(--terria-ds-surface-raised);
+    --terria-ds-effects-shadow-scroll-on-overlay: var(--terria-ds-surface-overlay);
+    --terria-ds-focus-ring: var(--terria-ds-primary);
+    --terria-ds-field-radius: var(--terria-ds-radius-md);
+    --terria-ds-field-placeholder: var(--terria-ds-text-muted);
+    --terria-ds-field-foreground: var(--terria-ds-text-foreground);
+    --terria-ds-field-border-focus: var(--terria-ds-primary);
+    --terria-ds-field-border-error: var(--terria-ds-danger);
+    --terria-ds-focus-danger-ring: var(--terria-ds-danger);
+  }
+}
+
+/**
+ * Do not edit directly, this file was auto-generated.
+ */
+
+@layer terria-ds.tokens {
+  [data-theme='dark'] {
+    --terria-ds-segment: oklch(44.6% 0.026 257);
+    --terria-ds-primary: oklch(74.5% 0.101 217);
+    --terria-ds-primary-hover: oklch(83.1% 0.076 214);
+    --terria-ds-primary-foreground: oklch(28.6% 0.044 231);
+    --terria-ds-primary-soft: oklch(38.6% 0.054 225);
+    --terria-ds-primary-soft-hover: oklch(43.6% 0.065 224);
+    --terria-ds-primary-soft-foreground: oklch(90.1% 0.047 213);
+    --terria-ds-secondary: oklch(76.9% 0.165 70.1);
+    --terria-ds-secondary-hover: oklch(83.7% 0.164 84.4);
+    --terria-ds-secondary-foreground: oklch(27.9% 0.074 45.6);
+    --terria-ds-secondary-soft: oklch(41.4% 0.105 45.9);
+    --terria-ds-secondary-soft-hover: oklch(47.3% 0.125 46.2);
+    --terria-ds-secondary-soft-foreground: oklch(92.4% 0.115 95.7);
+    --terria-ds-neutral: oklch(37.3% 0.031 260);
+    --terria-ds-neutral-hover: oklch(44.6% 0.026 257);
+    --terria-ds-neutral-foreground: oklch(100% 0 none);
+    --terria-ds-neutral-soft: oklch(21% 0.032 265);
+    --terria-ds-neutral-soft-hover: oklch(27.8% 0.03 257);
+    --terria-ds-neutral-soft-foreground: oklch(96.7% 0.003 265);
+    --terria-ds-surface-bg: oklch(13% 0.027 262);
+    --terria-ds-surface-default: oklch(21% 0.032 265);
+    --terria-ds-surface-skeleton: oklch(44.6% 0.026 257);
+    --terria-ds-surface-raised: oklch(27.8% 0.03 257);
+    --terria-ds-surface-overlay: oklch(37.3% 0.031 260);
+    --terria-ds-surface-glass: oklch(21% 0.032 265 / 0.75);
+    --terria-ds-surface-inverse: oklch(100% 0 none);
+    --terria-ds-surface-backdrop: oklch(0% 0 none / 0.7);
+    --terria-ds-surface-transparent: oklch(0% 0 none / 0);
+    --terria-ds-surface-tint: oklch(100% 0 none / 0.05);
+    --terria-ds-surface-tint-strong: oklch(100% 0 none / 0.1);
+    --terria-ds-success: oklch(77.3% 0.153 163);
+    --terria-ds-success-hover: oklch(84.5% 0.13 165);
+    --terria-ds-success-foreground: oklch(26.2% 0.049 173);
+    --terria-ds-success-soft: oklch(26.2% 0.049 173);
+    --terria-ds-success-soft-hover: oklch(37.8% 0.073 169);
+    --terria-ds-success-soft-foreground: oklch(90.5% 0.089 164);
+    --terria-ds-warning: oklch(75.8% 0.159 55.9);
+    --terria-ds-warning-hover: oklch(83.7% 0.117 66.3);
+    --terria-ds-warning-foreground: oklch(26.6% 0.076 36.3);
+    --terria-ds-warning-soft: oklch(26.6% 0.076 36.3);
+    --terria-ds-warning-soft-hover: oklch(40.8% 0.116 38.2);
+    --terria-ds-warning-soft-foreground: oklch(90.1% 0.073 70.7);
+    --terria-ds-danger: oklch(71.1% 0.166 22.2);
+    --terria-ds-danger-hover: oklch(80.8% 0.103 19.6);
+    --terria-ds-danger-foreground: oklch(25.8% 0.089 26);
+    --terria-ds-danger-soft: oklch(25.8% 0.089 26);
+    --terria-ds-danger-soft-hover: oklch(39.6% 0.133 25.7);
+    --terria-ds-danger-soft-foreground: oklch(88.5% 0.059 18.3);
+    --terria-ds-text-foreground: oklch(100% 0 none);
+    --terria-ds-text-muted: oklch(87.2% 0.009 258);
+    --terria-ds-text-inverse: oklch(21% 0.032 265);
+    --terria-ds-text-link: oklch(83.1% 0.076 214);
+    --terria-ds-text-disabled: oklch(55.1% 0.023 264);
+    --terria-ds-border-color-subtle: oklch(100% 0 none / 0.05);
+    --terria-ds-border-color-default: oklch(37.3% 0.031 260);
+    --terria-ds-border-color-strong: oklch(44.6% 0.026 257);
+    --terria-ds-border-color-primary: oklch(43.6% 0.065 224);
+    --terria-ds-border-color-success: oklch(43.2% 0.086 167);
+    --terria-ds-border-color-warning: oklch(47% 0.143 37.3);
+    --terria-ds-border-color-danger: oklch(44.4% 0.161 26.9);
+    --terria-ds-border-width-default: 1px;
+    --terria-ds-border-width-control: 0px;
+    --terria-ds-effects-disabled-opacity: 50%;
+    --terria-ds-effects-blur: 5px;
+    --terria-ds-effects-depth: 0px;
+    --terria-ds-effects-shadow-inner: oklch(100% 0 none / 0.3);
+    --terria-ds-effects-shadow-scroll-blur: oklch(12.3% 0.003 286 / 0.7);
+    --terria-ds-effects-shadow-scroll-blur-on-surface: oklch(21% 0.006 286 / 0.7);
+    --terria-ds-effects-overlay-shadow: oklch(100% 0 none / 0.3);
+    --terria-ds-focus-ring-offset: 2px;
+    --terria-ds-focus-ring-width: 2px;
+    --terria-ds-focus-ring-halo: oklch(74.5% 0.101 217 / 0.3);
+    --terria-ds-data-chart-1: oklch(39.3% 0.183 262);
+    --terria-ds-data-chart-2: oklch(50.8% 0.188 258);
+    --terria-ds-data-chart-3: oklch(62% 0.195 254);
+    --terria-ds-data-chart-4: oklch(72.1% 0.154 246);
+    --terria-ds-data-chart-5: oklch(82.4% 0.114 228);
+    --terria-ds-field-border-width: 1px;
+    --terria-ds-field-border: oklch(100% 0 none / 0.3);
+    --terria-ds-field-border-hover: oklch(44.6% 0.026 257);
+    --terria-ds-field-background: oklch(27.8% 0.03 257);
+    --terria-ds-field-background-hover: oklch(37.3% 0.031 260);
+    --terria-ds-field-background-focus: oklch(27.8% 0.03 257);
+    --terria-ds-radius-none: 0;
+    --terria-ds-radius-sm: 0.5rem;
+    --terria-ds-radius-md: 0.75rem;
+    --terria-ds-radius-lg: 1rem;
+    --terria-ds-radius-full: 624.9375rem;
+    --terria-ds-space-2xs: 0.125rem;
+    --terria-ds-space-xs: 0.25rem;
+    --terria-ds-space-sm: 0.5rem;
+    --terria-ds-space-md: 0.75rem;
+    --terria-ds-space-lg: 1rem;
+    --terria-ds-space-xl: 1.5rem;
+    --terria-ds-space-2xl: 2rem;
+    --terria-ds-text-size-nano: 0.625rem;
+    --terria-ds-text-size-micro: 0.6875rem;
+    --terria-ds-text-size-caption: 0.75rem;
+    --terria-ds-text-size-body: 0.875rem;
+    --terria-ds-text-size-body-lg: 1rem;
+    --terria-ds-text-size-heading: 1.125rem;
+    --terria-ds-text-size-display: 1.5rem;
+    --terria-ds-line-height-nano: 0.875rem;
+    --terria-ds-line-height-micro: 0.875rem;
+    --terria-ds-line-height-caption: 1rem;
+    --terria-ds-line-height-body: 1.25rem;
+    --terria-ds-line-height-body-lg: 1.5rem;
+    --terria-ds-line-height-heading: 1.75rem;
+    --terria-ds-line-height-display: 2rem;
+    --terria-ds-focus-danger-ring-offset: 2px;
+    --terria-ds-focus-danger-ring-width: 2px;
+    --terria-ds-focus-danger-ring-halo: oklch(71.1% 0.166 22.2 / 0.3);
+    --terria-ds-border: var(--terria-ds-border-color-default);
+    --terria-ds-backdrop: var(--terria-ds-surface-backdrop);
+    --terria-ds-overlay: var(--terria-ds-surface-bg);
+    --terria-ds-text-segment: var(--terria-ds-text-foreground);
+    --terria-ds-effects-shadow-scroll: var(--terria-ds-surface-bg);
+    --terria-ds-effects-shadow-scroll-on-surface: var(--terria-ds-surface-raised);
+    --terria-ds-effects-shadow-scroll-on-overlay: var(--terria-ds-surface-overlay);
+    --terria-ds-focus-ring: var(--terria-ds-primary);
+    --terria-ds-field-radius: var(--terria-ds-radius-md);
+    --terria-ds-field-placeholder: var(--terria-ds-text-muted);
+    --terria-ds-field-foreground: var(--terria-ds-text-foreground);
+    --terria-ds-field-border-focus: var(--terria-ds-primary);
+    --terria-ds-field-border-error: var(--terria-ds-danger);
+    --terria-ds-focus-danger-ring: var(--terria-ds-danger);
+  }
+}
+
+/**
+ * Effect tokens: the Figma file's effect styles (Foundations › Effect
+ * Styles), which its variable export leaves out. Authored here, appended to
+ * tokens.css by config.js.
+ *
+ * They're built from theme colours, so they're declared on every theme root:
+ * a custom property holding var() resolves where it's declared, not where
+ * it's used.
+ */
+
+@layer terria-ds.tokens {
+  :root,
+  [data-theme] {
+    /* A hairline inside the edge */
+    --terria-ds-shadow-inner: inset 0 0 1px 0
+      var(--terria-ds-effects-shadow-inner);
+
+    /* Raised surfaces, like cards. field/shadow and field/shadow-2 aren't in
+       the variable export, so their values are inlined */
+    --terria-ds-shadow-surface:
+      0 0 1px 0 oklch(0% 0 0deg / 6%), 0 1px 2px 0 oklch(0% 0 0deg / 6%),
+      0 2px 4px 0 oklch(0% 0 0deg / 4%), var(--terria-ds-shadow-inner);
+
+    /* Fields sit flat */
+    --terria-ds-shadow-field: 0 0 transparent;
+
+    /* The switch thumb */
+    --terria-ds-shadow-switch:
+      0 0 1px 0 oklch(0% 0 0deg / 30%), 0 2px 10px 0 oklch(0% 0 0deg / 6%),
+      0 0 5px 0 oklch(0% 0 0deg / 2%);
+
+    /* The selected tab */
+    --terria-ds-shadow-tab: 0 2px 8px 0 oklch(0% 0 0deg / 6%);
+
+    /* Popovers, tooltips and other floating surfaces */
+    --terria-ds-shadow-overlay:
+      0 2px 8px 0 oklch(0% 0 0deg / 6%), 0 -6px 12px 0 oklch(0% 0 0deg / 3%),
+      0 14px 28px 0 oklch(0% 0 0deg / 8%),
+      inset 0 0 1px 0 var(--terria-ds-effects-overlay-shadow);
+
+    /* Keyboard focus: a halo, with a ring of the page between it and the
+       control. Shadows are dropped in forced-colors mode, so controls pair
+       it with a transparent outline */
+    --terria-ds-shadow-focus-ring:
+      0 0 0 var(--terria-ds-focus-ring-offset) var(--terria-ds-focus-ring-halo),
+      0 0 0 var(--terria-ds-focus-ring-width) var(--terria-ds-surface-bg);
+
+    /* Keyboard focus on fields: a 3px halo */
+    --terria-ds-shadow-focus-ring-field: 0 0 0 3px
+      var(--terria-ds-focus-ring-halo);
+
+    /* Keyboard focus on an invalid field: the same halo, in danger */
+    --terria-ds-shadow-focus-ring-danger: 0 0 0 3px
+      var(--terria-ds-focus-danger-ring-halo);
+
+    /* Frosted surfaces, for backdrop-filter. Figma's blur radius is twice
+       CSS's */
+    --terria-ds-backdrop-blur: blur(calc(var(--terria-ds-effects-blur) / 2));
+  }
+}
+
+/**
+ * Motion tokens: durations and easing curves. The Figma file has none, so
+ * these follow the motion the components were ported with. Authored here,
+ * appended to tokens.css by config.js.
+ */
+
+@layer terria-ds.tokens {
+  :root {
+    --terria-ds-duration-50: 50ms;
+    --terria-ds-duration-100: 100ms;
+    --terria-ds-duration-150: 150ms;
+    --terria-ds-duration-200: 200ms;
+    --terria-ds-duration-250: 250ms;
+    --terria-ds-duration-300: 300ms;
+    --terria-ds-duration-350: 350ms;
+
+    --terria-ds-ease-smooth: ease;
+    --terria-ds-ease-out: cubic-bezier(0, 0, 0.2, 1);
+    --terria-ds-ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+    --terria-ds-ease-out-quad: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+    /* Fast start, long soft stop: for things that slide */
+    --terria-ds-ease-out-fluid: cubic-bezier(0.32, 0.72, 0, 1);
+  }
+}

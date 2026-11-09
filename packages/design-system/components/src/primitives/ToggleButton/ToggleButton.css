@@ -1,0 +1,18 @@
+/**
+ * ToggleButton Component Styles
+ *
+ * Styled as a Button; this adds only the on state: the soft accent.
+ */
+
+@layer terria-ds.components {
+  /* 8px between icon and label at every size, where a small button has 4px */
+  [data-tds="button"][data-tds-toggle][data-tds-size] {
+    --_btn-gap: var(--terria-ds-dimensions-spacing-2);
+  }
+
+  [data-tds="button"][data-tds-toggle][data-selected] {
+    --_btn-bg: var(--terria-ds-primary-soft);
+    --_btn-bg-hover: var(--terria-ds-primary-soft-hover);
+    --_btn-fg: var(--terria-ds-primary-soft-foreground);
+  }
+}

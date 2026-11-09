@@ -1,0 +1,188 @@
+/**
+ * Drawer Component Styles
+ *
+ * The backdrop, the dialog's surface and its header, body and footer are
+ * Modal's (Modal.css). This places the dialog against an edge, slides it in
+ * and out from there, and draws the handle and heading. Like the Modal's
+ * sheet on phones, it floats 16px from the screen's edges, rounded all round.
+ */
+
+@layer terria-ds.components {
+  /* The page behind fades in step with the slide: the same timing, so
+     neither finishes first. In, it eases out to a stop; out, it eases in
+     and away */
+  [data-tds="drawer-backdrop"] {
+    --_drawer-enter: var(--terria-ds-duration-250)
+      var(--terria-ds-ease-out-fluid);
+    --_drawer-exit: var(--terria-ds-duration-200)
+      var(--terria-ds-ease-out-fluid);
+
+    &[data-entering] {
+      animation: terria-ds-modal-fade var(--_drawer-enter);
+    }
+
+    &[data-exiting] {
+      animation: terria-ds-drawer-fade-out var(--_drawer-exit) forwards;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      &[data-entering],
+      &[data-exiting] {
+        animation: none;
+      }
+    }
+  }
+
+  @keyframes terria-ds-drawer-fade-out {
+    to {
+      opacity: 0;
+    }
+  }
+
+  /* The frame against an edge that holds the dialog, padded by the gap to
+     the screen's edge. It slides in and out by its own size, which takes
+     the dialog off the screen: an animation on it, not the dialog, as React
+     Aria keeps it marked entering and exiting, and in the page, only while
+     it animates itself; it cancels transitions there */
+  [data-tds="drawer-content"] {
+    --_drawer-inset: var(--terria-ds-dimensions-spacing-4);
+    --_drawer-from: 0 100%;
+
+    position: fixed;
+    display: flex;
+    box-sizing: border-box;
+    padding: var(--_drawer-inset);
+    outline: none;
+
+    /* Its padding belongs to the backdrop, so pressing there closes it */
+    pointer-events: none;
+
+    &[data-tds-placement="bottom"] {
+      inset: auto 0 0;
+    }
+
+    &[data-tds-placement="top"] {
+      --_drawer-from: 0 -100%;
+
+      inset: 0 0 auto;
+    }
+
+    /* Beside the page, as tall as the visual viewport React Aria tracks, so
+       it stays in view above an on-screen keyboard */
+    &:is([data-tds-placement="left"], [data-tds-placement="right"]) {
+      /* stylelint-disable-next-line custom-property-pattern -- The value is defined by react-aria */
+      block-size: var(--visual-viewport-height, 100dvb);
+    }
+
+    &[data-tds-placement="left"] {
+      --_drawer-from: -100% 0;
+
+      inset: 0 auto 0 0;
+    }
+
+    &[data-tds-placement="right"] {
+      --_drawer-from: 100% 0;
+
+      inset: 0 0 0 auto;
+    }
+
+    /* Its own animation each way, not one reversed, so it eases out to a
+       stop coming in and eases in going away. Dragged away, the dialog's
+       inline transform stays, so it slides out from where it was let go */
+    &[data-entering] {
+      animation: terria-ds-drawer-slide-in var(--_drawer-enter);
+    }
+
+    &[data-exiting] {
+      animation: terria-ds-drawer-slide-out var(--_drawer-exit) forwards;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      &[data-entering],
+      &[data-exiting] {
+        animation: none;
+      }
+    }
+  }
+
+  @keyframes terria-ds-drawer-slide-in {
+    from {
+      translate: var(--_drawer-from);
+    }
+  }
+
+  @keyframes terria-ds-drawer-slide-out {
+    to {
+      translate: var(--_drawer-from);
+    }
+  }
+
+  [data-tds="drawer-dialog"] {
+    --_dialog-bg: var(--terria-ds-surface-overlay);
+    --_modal-radius: var(--terria-ds-radius-lg);
+
+    flex: 1 1 auto;
+
+    /* Across the screen above or below, as tall as it needs up to 85% */
+    &:is([data-tds-placement="bottom"], [data-tds-placement="top"]) {
+      max-block-size: calc(85dvb - 2 * var(--_drawer-inset));
+    }
+
+    /* Beside the page, full height, 320px wide, 384px on wider screens */
+    &:is([data-tds-placement="left"], [data-tds-placement="right"]) {
+      flex: none;
+      inline-size: var(--terria-ds-dimensions-spacing-80);
+      max-inline-size: calc(85vi - 2 * var(--_drawer-inset));
+
+      @media (width >= 768px) {
+        /* --terria-ds-dimensions-screens-sm */
+        inline-size: var(--terria-ds-dimensions-spacing-96);
+      }
+    }
+
+    /* Dragging it starts from the handle, header or footer; touch there
+       drags rather than scrolls the page */
+    &[data-tds-dismissable] {
+      touch-action: none;
+    }
+  }
+
+  /* The body scrolls vertically; touch there scrolls it, not the drawer */
+  [data-tds="drawer-body"] {
+    touch-action: pan-y;
+
+    /* Scrolling past its end doesn't scroll the page. Without support the
+       page just scrolls, as before */
+    /* eslint-disable-next-line css/use-baseline */
+    overscroll-behavior: contain;
+  }
+
+  [data-tds="drawer-heading"] {
+    margin: 0;
+    font-size: var(--terria-ds-dimensions-font-text-xl);
+    font-weight: var(--terria-ds-font-semi-bold);
+    line-height: var(--terria-ds-dimensions-leading-text-xl);
+  }
+
+  /* A 36 by 4px bar, 8px in from the edge it's dragged from: the top of a
+     bottom drawer, the bottom of a top one */
+  [data-tds="drawer-handle"] {
+    position: absolute;
+    inset-block-start: var(--terria-ds-dimensions-spacing-2);
+    inset-inline: 0;
+    display: flex;
+    justify-content: center;
+    pointer-events: none;
+
+    [data-tds-placement="top"] > & {
+      inset-block: auto var(--terria-ds-dimensions-spacing-2);
+    }
+  }
+
+  [data-tds="drawer-handle-bar"] {
+    inline-size: var(--terria-ds-dimensions-spacing-9);
+    block-size: var(--terria-ds-dimensions-spacing-1);
+    border-radius: var(--terria-ds-radius-full);
+    background-color: var(--terria-ds-border);
+  }
+}

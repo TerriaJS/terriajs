@@ -1,0 +1,322 @@
+/**
+ * Slider Component Styles
+ *
+ * The thumb's outer box is fill-coloured and 2px wider than the white pill
+ * drawn in it, so the fill always shows a 2px margin around the pill.
+ */
+
+@layer terria-ds.components {
+  [data-tds="slider"] {
+    --_slider-size: var(--terria-ds-dimensions-spacing-5);
+    --_slider-pill-long: var(--terria-ds-dimensions-spacing-6);
+    --_slider-pill-short: var(--terria-ds-dimensions-spacing-4);
+    --_slider-gap: var(--terria-ds-dimensions-spacing-0-5);
+    --_slider-thumb-long: calc(
+      var(--_slider-pill-long) + 2 * var(--_slider-gap)
+    );
+
+    /* Room at each end for half a thumb, so it stops at the track's edge */
+    --_slider-end: calc(var(--_slider-thumb-long) / 2);
+    --_slider-fill: var(--terria-ds-primary);
+    --_slider-radius: var(--terria-ds-dimensions-radius-rounded-xl);
+
+    /* Ticks and thumbs paint above the track's ends; thumbs come later, so above ticks */
+    --_slider-above-ends: 1;
+
+    display: grid;
+    grid-template-areas:
+      "label output"
+      "track track"
+      "marks marks";
+    grid-template-columns: 1fr auto;
+    gap: var(--terria-ds-dimensions-spacing-1);
+    inline-size: 100%;
+
+    &[data-disabled] {
+      opacity: var(--terria-ds-effects-disabled-opacity);
+    }
+
+    & > [data-tds="label"] {
+      grid-area: label;
+    }
+
+    /* The whole slider fades; the Label shouldn't fade a second time */
+    &[data-disabled] > [data-tds="label"] {
+      opacity: 1;
+    }
+  }
+
+  [data-tds="slider-output"] {
+    grid-area: output;
+    color: var(--terria-ds-text-foreground);
+    font-size: var(--terria-ds-text-size-body);
+    font-weight: var(--terria-ds-font-medium);
+    font-variant-numeric: tabular-nums;
+    line-height: var(--terria-ds-line-height-body-lg);
+    text-align: end;
+  }
+
+  /* The track is exactly the range values map onto: React Aria turns pointer
+     movement into value by its width, so the thumb would trail the pointer if
+     it also held the ends. The rounded ends the thumbs sit in at the extremes
+     are drawn outside it, in the margin, by ::before and ::after */
+  [data-tds="slider-track"] {
+    position: relative;
+    grid-area: track;
+    background-color: var(--terria-ds-neutral);
+
+    &::before,
+    &::after {
+      content: "";
+      position: absolute;
+      background-color: var(--terria-ds-neutral);
+    }
+  }
+
+  /* The fill knows its own range, so it fills the track's ends itself when
+     it reaches them, over the track's neutral ones */
+  [data-tds="slider-fill"] {
+    z-index: var(--_slider-above-ends);
+    background-color: var(--_slider-fill);
+    pointer-events: none;
+
+    &[data-tds-fill-start]::before,
+    &[data-tds-fill-end]::after {
+      content: "";
+      position: absolute;
+      background-color: var(--_slider-fill);
+    }
+  }
+
+  /* 3px dots. Each sets its position along the track inline, as React Aria
+     does for the thumbs; a logical margin centres it there in either direction */
+  [data-tds="slider-tick"] {
+    --_slider-tick-size: 0.1875rem;
+
+    position: absolute;
+    z-index: var(--_slider-above-ends);
+    inline-size: var(--_slider-tick-size);
+    block-size: var(--_slider-tick-size);
+    border-radius: var(--terria-ds-radius-full);
+    background-color: var(--terria-ds-field-placeholder);
+    opacity: 0.17;
+    pointer-events: none;
+
+    &[data-tds-filled] {
+      background-color: var(--terria-ds-primary-foreground);
+    }
+  }
+
+  [data-tds="slider-marks"] {
+    position: relative;
+    grid-area: marks;
+    color: var(--terria-ds-text-foreground);
+    font-size: var(--terria-ds-text-size-nano);
+    line-height: var(--terria-ds-line-height-body);
+  }
+
+  [data-tds="slider-mark"] {
+    position: absolute;
+    white-space: nowrap;
+  }
+
+  [data-tds="slider-thumb"] {
+    z-index: var(--_slider-above-ends);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    border-radius: var(--terria-ds-radius-full);
+    background-color: var(--_slider-fill);
+    cursor: grab;
+    transition: box-shadow var(--terria-ds-duration-150)
+      var(--terria-ds-ease-out);
+    -webkit-tap-highlight-color: transparent;
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
+
+    /* The white pill */
+    &::after {
+      content: "";
+      border-radius: var(--terria-ds-dimensions-radius-rounded-lg);
+      background-color: var(--terria-ds-primary-foreground);
+      transition: scale var(--terria-ds-duration-150)
+        var(--terria-ds-ease-in-out);
+
+      @media (prefers-reduced-motion: reduce) {
+        transition: none;
+      }
+    }
+
+    &[data-dragging] {
+      cursor: grabbing;
+
+      &::after {
+        scale: 0.9;
+      }
+    }
+
+    &[data-focus-visible] {
+      box-shadow: var(--terria-ds-shadow-focus-ring);
+
+      /* Shadows are dropped in forced-colors mode; this outline shows there instead */
+      outline: var(--terria-ds-focus-ring-width) solid transparent;
+    }
+
+    &[data-disabled] {
+      cursor: default;
+    }
+  }
+
+  [data-tds="slider"][data-orientation="horizontal"] {
+    [data-tds="slider-track"] {
+      block-size: var(--_slider-size);
+      margin-inline: var(--_slider-end);
+    }
+
+    /* The rounded ends, the track's and the fill's alike */
+    :is([data-tds="slider-track"], [data-tds="slider-fill"]) {
+      &::before,
+      &::after {
+        inset-block: 0;
+        inline-size: var(--_slider-end);
+      }
+
+      &::before {
+        inset-inline-end: 100%;
+        border-start-start-radius: var(--_slider-radius);
+        border-end-start-radius: var(--_slider-radius);
+      }
+
+      &::after {
+        inset-inline-start: 100%;
+        border-start-end-radius: var(--_slider-radius);
+        border-end-end-radius: var(--_slider-radius);
+      }
+    }
+
+    /* Spans the same range as the track, so each label centres on its value */
+    [data-tds="slider-marks"] {
+      block-size: var(--terria-ds-line-height-body);
+      margin-inline: var(--_slider-end);
+    }
+
+    [data-tds="slider-mark"] {
+      translate: -50% 0;
+
+      &:dir(rtl) {
+        translate: 50% 0;
+      }
+
+      /* Labels at the ends line up with the slider's edges, so they don't
+         hang off it; the ends sit half a thumb outside the marks */
+      &[data-tds-edge="start"] {
+        translate: calc(-1 * var(--_slider-end)) 0;
+
+        &:dir(rtl) {
+          translate: var(--_slider-end) 0;
+        }
+      }
+
+      &[data-tds-edge="end"] {
+        translate: calc(var(--_slider-end) - 100%) 0;
+
+        &:dir(rtl) {
+          translate: calc(100% - var(--_slider-end)) 0;
+        }
+      }
+    }
+
+    [data-tds="slider-tick"] {
+      inset-block-start: 50%;
+      margin-block-start: calc(var(--_slider-tick-size) / -2);
+      margin-inline-start: calc(var(--_slider-tick-size) / -2);
+    }
+
+    [data-tds="slider-thumb"] {
+      inset-block-start: 50%;
+      inline-size: var(--_slider-thumb-long);
+      block-size: 100%;
+
+      &::after {
+        inline-size: var(--_slider-pill-long);
+        block-size: var(--_slider-pill-short);
+      }
+    }
+  }
+
+  [data-tds="slider"][data-orientation="vertical"] {
+    grid-template:
+      "output output output" auto
+      ". track marks" 1fr
+      "label label label" auto / 1fr auto 1fr;
+    gap: var(--terria-ds-dimensions-spacing-2);
+    block-size: 100%;
+
+    & > [data-tds="label"],
+    [data-tds="slider-output"] {
+      justify-self: center;
+      text-align: center;
+    }
+
+    [data-tds="slider-track"] {
+      justify-self: center;
+      inline-size: var(--_slider-size);
+      margin-block: var(--_slider-end);
+    }
+
+    /* The rounded ends, the track's and the fill's alike */
+    :is([data-tds="slider-track"], [data-tds="slider-fill"]) {
+      &::before,
+      &::after {
+        inset-inline: 0;
+        block-size: var(--_slider-end);
+      }
+
+      /* The start is the bottom */
+      &::before {
+        inset-block-start: 100%;
+        border-end-start-radius: var(--_slider-radius);
+        border-end-end-radius: var(--_slider-radius);
+      }
+
+      &::after {
+        inset-block-end: 100%;
+        border-start-start-radius: var(--_slider-radius);
+        border-start-end-radius: var(--_slider-radius);
+      }
+    }
+
+    [data-tds="slider-tick"] {
+      inset-inline-start: 50%;
+      margin-block-end: calc(var(--_slider-tick-size) / -2);
+      margin-inline-start: calc(var(--_slider-tick-size) / -2);
+    }
+
+    [data-tds="slider-marks"] {
+      justify-self: start;
+      margin-block: var(--_slider-end);
+      padding-inline-start: var(--terria-ds-dimensions-spacing-2);
+    }
+
+    [data-tds="slider-mark"] {
+      translate: 0 50%;
+    }
+
+    [data-tds="slider-thumb"] {
+      /* React Aria centres the thumb with a physical translate(-50%), so this
+         stays physical too, or it would land off-centre in right-to-left */
+      /* eslint-disable-next-line css/prefer-logical-properties */
+      left: 50%;
+      inline-size: 100%;
+      block-size: var(--_slider-thumb-long);
+
+      &::after {
+        inline-size: var(--_slider-pill-short);
+        block-size: var(--_slider-pill-long);
+      }
+    }
+  }
+}

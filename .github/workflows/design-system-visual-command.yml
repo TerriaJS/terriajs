@@ -1,0 +1,55 @@
+name: Design system visual tests command
+
+# A maintainer comments /terria-bot visual-test on a PR to run the visual tests
+# (design-system-visual.yml) on its branch, which posts what differs on the PR.
+# Comment again to run them again after new commits. Until then, each PR
+# commit shows them as not run (design-system-ci.yml)
+on:
+  issue_comment:
+    types: [created]
+
+permissions:
+  contents: read
+
+jobs:
+  run:
+    if: github.event.issue.pull_request && startsWith(github.event.comment.body, '/terria-bot visual-test')
+    runs-on: ubuntu-latest
+    permissions:
+      # Starts design-system-visual.yml
+      actions: write
+      # Reacts to the comment, or replies
+      issues: write
+      pull-requests: write
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      REPO: ${{ github.repository }}
+      PR: ${{ github.event.issue.number }}
+      COMMENTER: ${{ github.event.comment.user.login }}
+      COMMENT_ID: ${{ github.event.comment.id }}
+    steps:
+      - name: Only for maintainers
+        id: allowed
+        run: |
+          permission=$(gh api "repos/$REPO/collaborators/$COMMENTER/permission" --jq .permission)
+          case "$permission" in
+            admin | write) echo "yes=true" >> "$GITHUB_OUTPUT" ;;
+            *) echo "::notice::$COMMENTER can't run the visual tests ($permission)" ;;
+          esac
+
+      # A fork's branch isn't in this repository, so there's nothing to run on
+      - name: Run the visual tests on the PR's branch
+        if: steps.allowed.outputs.yes == 'true'
+        run: |
+          pr=$(gh api "repos/$REPO/pulls/$PR")
+          head=$(jq -r .head.ref <<< "$pr")
+          base=$(jq -r .base.ref <<< "$pr")
+          from=$(jq -r .head.repo.full_name <<< "$pr")
+          if [ "$from" != "$REPO" ]; then
+            gh api "repos/$REPO/issues/$PR/comments" \
+              -f body="The visual tests run on a branch in this repository, and this PR's branch is in $from. Push it here to run them." > /dev/null
+            gh api "repos/$REPO/issues/comments/$COMMENT_ID/reactions" -f content=confused > /dev/null
+            exit 0
+          fi
+          gh workflow run design-system-visual.yml --repo "$REPO" --ref "$head" -f base="$base" -f pr="$PR"
+          gh api "repos/$REPO/issues/comments/$COMMENT_ID/reactions" -f content=rocket > /dev/null

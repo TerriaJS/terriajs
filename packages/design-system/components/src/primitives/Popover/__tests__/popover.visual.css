@@ -1,0 +1,11 @@
+/* Layout around the component in its visual tests, as in its stories */
+
+@layer storybook {
+  /* Room around the trigger for the popover to open on any side */
+  .popover-visual-stage {
+    display: grid;
+    place-items: center;
+    inline-size: 560px;
+    block-size: 400px;
+  }
+}

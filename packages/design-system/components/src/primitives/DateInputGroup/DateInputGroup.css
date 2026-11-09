@@ -1,0 +1,82 @@
+/**
+ * DateInputGroup Component Styles
+ *
+ * The group is an InputGroup
+ * (InputGroup.css, Input.css draw the field); this styles the segmented
+ * input inside it and its segments.
+ */
+
+@layer terria-ds.components {
+  /* In place of the InputGroup's text input: its padding and size */
+  [data-tds="date-input"] {
+    display: flex;
+    flex: 1;
+    gap: var(--terria-ds-dimensions-spacing-px, 1px);
+    align-items: center;
+
+    /* As the InputGroup's text input: its edge padding at the group's edges,
+       none beside a prefix or suffix, which bring their own */
+    padding: calc(
+        var(--terria-ds-space-sm) - var(--terria-ds-field-border-width)
+      )
+      calc(var(--terria-ds-space-md) - var(--terria-ds-field-border-width));
+    cursor: text;
+    white-space: nowrap;
+
+    [data-disabled] > & {
+      cursor: not-allowed;
+    }
+
+    /* Not :first-child and :last-child: React Aria follows it with a hidden
+       input for forms */
+    [data-tds="input-group-prefix"] ~ & {
+      padding-inline-start: 0;
+    }
+
+    &:has(~ [data-tds="input-group-suffix"]) {
+      padding-inline-end: 0;
+    }
+  }
+
+  [data-tds="date-input-container"] {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    inline-size: fit-content;
+    overflow: auto clip;
+    scrollbar-width: none;
+  }
+
+  [data-tds="date-segment"] {
+    display: inline-block;
+    padding-inline: var(--terria-ds-dimensions-spacing-0-5);
+    border-radius: var(--terria-ds-radius-sm);
+    outline: none;
+    font-variant-numeric: tabular-nums;
+    text-align: end;
+
+    /* The separators: "/", ":", "," */
+    &[data-type="literal"] {
+      padding: 0;
+      color: var(--terria-ds-text-muted);
+    }
+
+    &[data-placeholder] {
+      color: var(--terria-ds-field-placeholder);
+    }
+
+    &[data-focused] {
+      background-color: var(--terria-ds-primary-soft);
+      color: var(--terria-ds-primary-soft-foreground);
+    }
+
+    &[data-invalid] {
+      color: var(--terria-ds-danger);
+
+      &[data-focused] {
+        background-color: var(--terria-ds-danger-soft);
+        color: var(--terria-ds-danger-soft-foreground);
+      }
+    }
+  }
+}

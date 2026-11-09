@@ -1,0 +1,111 @@
+name: Design system CI
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "packages/design-system/**"
+      - ".github/workflows/design-system-*.yml"
+      - ".github/scripts/design-system/**"
+      - "pnpm-lock.yaml"
+      - "pnpm-workspace.yaml"
+      - "package.json"
+      - "knip.json"
+  pull_request:
+    paths:
+      - "packages/design-system/**"
+      - ".github/workflows/design-system-*.yml"
+      - ".github/scripts/design-system/**"
+      - "pnpm-lock.yaml"
+      - "pnpm-workspace.yaml"
+      - "package.json"
+      - "knip.json"
+
+permissions:
+  contents: read
+  # The "Visual tests" status, below, and the PR's files it's decided by
+  statuses: write
+  pull-requests: read
+  # GitHub Packages, which pnpm checks the lockfile against
+  packages: read
+
+# A newer push to the same branch or PR replaces a run that's still going
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    env:
+      # Vitest defaults to one worker fewer than the cores, which on GitHub's
+      # 2-core runners is one test file at a time. Browser tests spend much of
+      # their time waiting on Chromium, so 4 at once runs them 2.5x as fast
+      VITEST_MAX_WORKERS: 4
+    steps:
+      # The visual tests run when a maintainer asks (design-system-visual-command.yml);
+      # until then each commit of a PR that could change how components look
+      # shows them as not run. Other PRs show nothing, and can still be run.
+      # Pending is the nearest a status comes to "not run", and doesn't block
+      # merging unless branch protection requires it. A fork's PR can't set
+      # statuses, and can't run the visual tests either
+      - name: Show the visual tests as not run
+        if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
+        # Only reports; CI doesn't fail over it
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          SHA: ${{ github.event.pull_request.head.sha }}
+          FILES: repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/files
+        run: |
+          visual='^(packages/design-system/(components|icons)/|pnpm-lock\.yaml$|pnpm-workspace\.yaml$|\.github/workflows/design-system-visual)'
+          files=$(gh api "$FILES" --paginate --jq '.[].filename')
+          grep -qE "$visual" <<< "$files" || exit 0
+          gh api "repos/$REPO/statuses/$SHA" -f context="Visual tests" -f state=pending \
+            -f description="Not run: comment (maintainers): /terria-bot visual-test" > /dev/null
+
+      # Actions pinned to release commits
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      # Reads pnpm from packageManager in package.json
+      - uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: ".nvmrc"
+          registry-url: "https://npm.pkg.github.com"
+          scope: "@terriajs"
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile --filter . --filter "@terria/design-system*..."
+
+      # Generates the icons that lint, knip and the type-check resolve
+      - name: Build
+        run: pnpm --filter "@terria/design-system*" -r build
+
+      - name: Check formatting
+        run: pnpm exec oxfmt --check packages/design-system
+
+      - name: Lint
+        run: pnpm --filter "@terria/design-system*" -r lint
+
+      - name: Find unused files, exports and dependencies
+        run: pnpm knip
+
+      - name: Type-check
+        run: pnpm --filter "@terria/design-system*" -r typecheck
+
+      - name: Install Playwright Chromium
+        run: pnpm --filter @terria/design-system exec playwright install --with-deps chromium
+
+      - name: Test
+        run: pnpm --filter "@terria/design-system*" -r test
+
+      - name: Build Storybook
+        run: pnpm build-storybook

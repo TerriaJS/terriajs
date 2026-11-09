@@ -1,0 +1,56 @@
+name: Design system visual tests cleanup
+
+# Removes a closed PR's visual differences from the visual-tests-storage
+# branch, where design-system-visual.yml keeps the images its report comment shows. A fork's
+# PR can't run the visual tests, so has none
+on:
+  pull_request:
+    types: [closed]
+
+permissions:
+  # Cancels the PR's visual tests runs
+  actions: write
+  # Removes its images
+  contents: write
+
+jobs:
+  clean:
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      REPO: ${{ github.repository }}
+      PR: ${{ github.event.pull_request.number }}
+    steps:
+      # First, so none stores images after they're removed; one already past
+      # its tests finds the PR closed and stores nothing
+      - name: Cancel the PR's visual tests runs
+        env:
+          HEAD_REF: ${{ github.event.pull_request.head.ref }}
+        run: |
+          for status in queued in_progress; do
+            gh run list --repo "$REPO" --workflow design-system-visual.yml --branch "$HEAD_REF" \
+              --status "$status" --json databaseId --jq '.[].databaseId' |
+              while read -r id; do gh run cancel "$id" --repo "$REPO"; done
+          done
+
+      - name: Remove the PR's images
+        run: |
+          branch=visual-tests-storage
+          # Afresh from the branch's latest commit each time, so a push that
+          # lost a race to a visual tests run just tries again
+          for attempt in 1 2 3; do
+            dir=$(mktemp -d)
+            cd "$dir"
+            git init -q
+            git remote add origin "https://x-access-token:$GH_TOKEN@github.com/$REPO.git"
+            git fetch -q --depth 1 origin "$branch" 2> /dev/null || exit 0
+            git checkout -q -B "$branch" FETCH_HEAD
+            [ -d "pr-$PR" ] || exit 0
+            git rm -rq "pr-$PR"
+            git -c user.name="github-actions[bot]" \
+              -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
+              commit -q -m "Remove the visual differences of #$PR, now closed"
+            git push -q origin "HEAD:$branch" && exit 0
+          done
+          exit 1
