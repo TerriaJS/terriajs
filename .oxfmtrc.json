@@ -29,7 +29,6 @@
     "packages/terriajs/wwwroot/data/regionids",
     "packages/terriajs/lib/ThirdParty/i18n/resources.d.ts",
     "packages/terriajs/wwwroot/third_party/",
-    "packages/terriajs/wwwroot/mockServiceWorker.js",
     "packages/terriajs/doc/acknowledgements/attributions.md",
     "packages/terriajs/project.inlang/cache/"
   ]

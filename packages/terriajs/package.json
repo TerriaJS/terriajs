@@ -238,10 +238,5 @@
     "test": "gulp test",
     "test:ui": "vitest run",
     "lint:css": "stylelint \"lib/UI/**/*.css\" --allow-empty-input"
-  },
-  "msw": {
-    "workerDirectory": [
-      "wwwroot"
-    ]
   }
 }
