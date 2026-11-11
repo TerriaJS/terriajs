@@ -1,1 +1,26 @@
-{}
+{
+  "general": {
+    "close": "itxi",
+    "open": "ireki",
+    "prev": "aurrekoa",
+    "next": "hurrengoa",
+    "skip": "jauzi",
+    "back": "atzera",
+    "delete": "ezabatu"
+  },
+  "browsers": {
+    "chrome": "Google Chrome",
+    "firefox": "Mozilla Firefox",
+    "edge": "Microsoft Edge"
+  },
+  "trainer": {
+    "showAllSteps": "Pauso guztiak erakutsi",
+    "hideAllSteps": "Pauso guztiak iskutatu"
+  },
+  "tour": {
+    "preface": {
+      "close": "Geroago agian"
+    },
+    "finish": "Bukatu"
+  }
+}
