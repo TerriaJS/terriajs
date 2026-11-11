@@ -1,5 +1,5 @@
 import { FC, useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
+import { Trans } from "react-i18next";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
@@ -23,7 +23,6 @@ const DropPedestrianToGround: FC<DropPedestrianToGroundProps> = (props) => {
   const cesium = props.cesium;
   const scene = cesium.scene;
   const eventHandler = new ScreenSpaceEventHandler(scene.canvas);
-  const [t] = useTranslation();
   const [showMouseTooltip, setShowMouseTooltip] = useState<boolean>(true);
 
   // eslint-disable-next-line react-hooks/immutability
@@ -82,7 +81,12 @@ const DropPedestrianToGround: FC<DropPedestrianToGroundProps> = (props) => {
   return showMouseTooltip ? (
     <MouseTooltip
       scene={scene}
-      text={t(($) => $.pedestrianMode.dropPedestrianTooltipMessage)}
+      text={
+        <Trans
+          i18nKey={($) => $.pedestrianMode.dropPedestrianTooltipMessage}
+          components={{ b: <b />, br: <br /> }}
+        />
+      }
     />
   ) : null;
 };

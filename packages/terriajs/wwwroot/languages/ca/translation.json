@@ -238,7 +238,7 @@
     "btnText": "Començar",
     "loadError": "no s'ha pogut carregar.",
     "countingMessage": "Comptant, espereu...",
-    "subTotals": "<div> {{name}}: {{items}} articles / {{groups}} grups</div>",
+    "subTotals": "{{name}}: {{items}} articles / {{groups}} grups",
     "recount": "Recompte",
     "title": "Comptar conjunts de dades",
     "btnCount": "Comptar conjunts de dades",
@@ -246,7 +246,7 @@
     "mapDataState_0": "{{count}} conjunt de dades actiu al mapa",
     "mapDataState_1": "{{count}} conjunts de dades actius al mapa",
     "mapDataState_2": "{{count}} conjunts de dades actius al mapa",
-    "totals": "<div>El catàleg conté {{items}} articles en {{groups}} grups.</div>",
+    "totals": "El catàleg conté {{items}} articles en {{groups}} grups.",
     "mapDataState_one": "{{count}} joc de dades actiu en el mapa",
     "mapDataState_many": "{{count}} jocs de dades actiu en el mapa",
     "mapDataState_other": "{{count}} jocs de dades actiu en el mapa"

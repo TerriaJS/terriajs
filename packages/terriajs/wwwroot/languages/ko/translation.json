@@ -490,9 +490,9 @@
     "loadError": "로드에 실패했습니다.",
     "countingMessage": "계산 중입니다...",
     "btnText": "시작",
-    "subTotals": "<div> {{name}}: {{items}개 / {{groups}}개 그룹</div>",
+    "subTotals": "{{name}}: {{items}}개 / {{groups}}개 그룹",
     "mapDataState_0": "{{count}}개의 데이터셋을 맵에서 사용 가능",
-    "totals": "<div> 카탈로그에는 {{groups}}개 그룹으로 구성된 {{item}개 품목이 들어있습니다./div&gt;</div>",
+    "totals": "카탈로그에는 {{groups}}개 그룹으로 구성된 {{items}}개 품목이 들어있습니다.",
     "title": "데이터셋 수",
     "noMapDataEnabled": "활성화된 지도 데이터 없음"
   },

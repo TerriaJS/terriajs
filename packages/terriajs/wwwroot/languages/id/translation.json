@@ -157,7 +157,7 @@
     "btnCount": "Hitung dataset",
     "title": "Hitung Dataset",
     "recount": "Hitung ulang",
-    "subTotals": "<div> {{name}}: {{items}} item / {{groups}} kelompok</div>",
+    "subTotals": "{{name}}: {{items}} item / {{groups}} kelompok",
     "countingMessage": "Menghitung, harap tunggu...",
     "loadError": "gagal memuat.",
     "btnText": "Mulai"

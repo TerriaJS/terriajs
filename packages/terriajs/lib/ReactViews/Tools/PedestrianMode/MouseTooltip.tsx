@@ -1,4 +1,4 @@
-import { FC, useEffect, useRef } from "react";
+import { FC, ReactNode, useEffect, useRef } from "react";
 import styled from "styled-components";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Scene from "terriajs-cesium/Source/Scene/Scene";
@@ -6,7 +6,7 @@ import Text from "../../../Styled/Text";
 
 type MouseTooltipProps = {
   scene: Scene;
-  text: string;
+  text: ReactNode;
 };
 
 const MouseTooltip: FC<MouseTooltipProps> = (props) => {
@@ -41,9 +41,7 @@ const MouseTooltip: FC<MouseTooltipProps> = (props) => {
     };
   });
 
-  return (
-    <TooltipText ref={tooltipText} dangerouslySetInnerHTML={{ __html: text }} />
-  );
+  return <TooltipText ref={tooltipText}>{text}</TooltipText>;
 };
 
 const TooltipText = styled(Text).attrs({

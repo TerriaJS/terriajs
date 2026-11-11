@@ -22,8 +22,8 @@
     "clickMap": "Clicca sulla mappa per saperne di più su una posizione"
   },
   "countDatasets": {
-    "subTotals": "<div> {{name}}: {{items}} elementi / {{groups}} gruppi</div>",
-    "totals": "<div>Il catalogo contiene {{items}} oggetti in {{groups}} gruppi.</div>",
+    "subTotals": "{{name}}: {{items}} elementi / {{groups}} gruppi",
+    "totals": "Il catalogo contiene {{items}} oggetti in {{groups}} gruppi.",
     "loadError": "caricamento fallito.",
     "btnText": "Inizio",
     "btnCount": "Conta i dataset",

@@ -252,10 +252,10 @@
   },
   "countDatasets": {
     "title": "Contagem de conjuntos de dados",
-    "totals": "<div>O catálogo contém {{items}} itens em {{groups}} grupos.</div>",
+    "totals": "O catálogo contém {{items}} itens em {{groups}} grupos.",
     "loadError": "Falha ao carregar.",
     "countingMessage": "Contando, por favor aguarde ...",
-    "subTotals": "<div> {{name}}: {{items}} itens / {{groups}} grupos </div>",
+    "subTotals": "{{name}}: {{items}} itens / {{groups}} grupos",
     "btnCount": "Contagem de conjuntos de dados",
     "noMapDataEnabled": "Nenhum dado de mapa ativado",
     "btnText": "Começar",

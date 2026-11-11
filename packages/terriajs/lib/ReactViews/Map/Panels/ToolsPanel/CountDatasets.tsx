@@ -1,5 +1,5 @@
 import { observer } from "mobx-react";
-import { FC, useState } from "react";
+import { FC, ReactNode, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
   applyTranslationIfExists,
@@ -25,7 +25,7 @@ interface CounterStats {
 type GroupAndMember = GroupMixin.Instance & CatalogMemberMixin.Instance;
 
 interface CountDatasetsProps {
-  updateResults: (resultsHtml: string) => void;
+  updateResults: (results: ReactNode) => void;
 }
 
 const CountDatasets: FC<CountDatasetsProps> = observer((props) => {
@@ -138,30 +138,31 @@ const CountDatasets: FC<CountDatasetsProps> = observer((props) => {
     const root = viewState.terria.catalog.group;
 
     counter(root as GroupAndMember, totals, []).then(function () {
-      let info = t(($) => $.countDatasets.totals, {
-        items: totals.members,
-        groups: totals.groups
-      });
-      props.updateResults(info);
-      let i;
-      const subTotals = totals.subTotals;
-      for (i = 0; i < subTotals.length; ++i) {
-        info += t(($) => $.countDatasets.subTotals, {
-          name: subTotals[i].name as string,
-          items: subTotals[i].members,
-          groups: subTotals[i].groups
-        });
-      }
-
-      info += "<div>&nbsp;</div>";
-
-      const messages = totals.messages;
-      for (i = 0; i < messages.length; ++i) {
-        info += "<div>" + messages[i] + "</div>";
-      }
       setBtnStringOrComponent(`${TRANSLATE_KEY_PREFIX}countDatasets.recount`);
 
-      props.updateResults(info);
+      props.updateResults(
+        <>
+          <div>
+            {t(($) => $.countDatasets.totals, {
+              items: totals.members,
+              groups: totals.groups
+            })}
+          </div>
+          {totals.subTotals.map((subTotal, i) => (
+            <div key={i}>
+              {t(($) => $.countDatasets.subTotals, {
+                name: subTotal.name,
+                items: subTotal.members,
+                groups: subTotal.groups
+              })}
+            </div>
+          ))}
+          <div>&nbsp;</div>
+          {totals.messages.map((message, i) => (
+            <div key={i}>{message}</div>
+          ))}
+        </>
+      );
     });
   };
   return (

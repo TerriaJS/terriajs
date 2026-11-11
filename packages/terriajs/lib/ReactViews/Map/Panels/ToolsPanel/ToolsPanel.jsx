@@ -11,7 +11,7 @@ import withControlledVisibility from "../../../HOCs/withControlledVisibility";
 
 const ToolsPanel = observer(() => {
   const [isOpen, setIsOpen] = useState(false);
-  const [resultsMessage, setResultsMessage] = useState("");
+  const [resultsMessage, setResultsMessage] = useState(null);
   const dropdownTheme = {
     btn: Styles.btnShare,
     outer: Styles.ToolsPanel,
@@ -37,10 +37,7 @@ const ToolsPanel = observer(() => {
           </div>
         </div>
       )}
-      <div className={Styles.results}>
-        {/* eslint-disable-next-line react/no-danger */}
-        <div dangerouslySetInnerHTML={{ __html: resultsMessage }} />
-      </div>
+      <div className={Styles.results}>{resultsMessage}</div>
     </MenuPanel>
   );
 });

@@ -237,8 +237,8 @@
   "countDatasets": {
     "btnText": "Spustit",
     "loadError": "nepodařilo načíst.",
-    "totals": "<div>Katalog obsahuje {{items}} položky ve {{groups}} skupinách.</div>",
-    "subTotals": "<div> {{name}}: {{items}} položek / {{groups}} skupin</div>",
+    "totals": "Katalog obsahuje {{items}} položky ve {{groups}} skupinách.",
+    "subTotals": "{{name}}: {{items}} položek / {{groups}} skupin",
     "recount": "Přepočítat",
     "title": "Počet datových sad",
     "noMapDataEnabled": "Nejsou povolena mapová data",

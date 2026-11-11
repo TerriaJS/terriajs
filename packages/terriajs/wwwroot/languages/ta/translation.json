@@ -237,8 +237,8 @@
     "mapDataState_plural": "{{count}} தரவுத்தொகுப்புகள் வரைபடத்தில் இயக்கப்பட்டன",
     "btnText": "தொடங்கு",
     "countingMessage": "எண்ணுதல், தயவுசெய்து காத்திருங்கள் ...",
-    "totals": "<div> {{items}} பட்டியலில் {{groups}} குழுக்களில் உள்ளன. </div>",
-    "subTotals": "<div> {{name}}: {{items}} உருப்படிகள் / {{groups}} குழுக்கள் </div>",
+    "totals": "{{items}} பட்டியலில் {{groups}} குழுக்களில் உள்ளன.",
+    "subTotals": "{{name}}: {{items}} உருப்படிகள் / {{groups}} குழுக்கள்",
     "loadError": "ஏற்றுவதில் தோல்வி."
   },
   "toolsPanel": {
