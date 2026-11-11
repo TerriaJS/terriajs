@@ -339,11 +339,11 @@
     "changeLanguage": "更改语言"
   },
   "countDatasets": {
-    "totals": "<div>本目录包含 {{items}} 个子项在{{groups}} 组中</div>",
+    "totals": "本目录包含 {{items}} 个子项在{{groups}} 组中",
     "btnText": "开始",
     "loadError": "加载时失败。",
     "countingMessage": "正在计算中，请稍候...",
-    "subTotals": "<div> {{name}}：{{items}} 子项 / {{groups}} 组</div>",
+    "subTotals": "{{name}}：{{items}} 子项 / {{groups}} 组",
     "recount": "重新计算",
     "title": "计数数据集",
     "btnCount": "计算数据集",

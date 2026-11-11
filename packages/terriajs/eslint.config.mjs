@@ -91,7 +91,7 @@ export default defineConfig([
         }
       ],
 
-      "react/no-danger": "warn",
+      "react/no-danger": "error",
       "react/no-did-update-set-state": "error",
       "react/no-will-update-set-state": "error",
       "react/self-closing-comp": "error",
@@ -115,6 +115,26 @@ export default defineConfig([
         {
           name: "lodash",
           message: "Please use 'lodash-es' instead."
+        }
+      ],
+      "no-restricted-syntax": [
+        "error",
+        {
+          selector:
+            "AssignmentExpression[left.property.name=/^(innerHTML|outerHTML)$/]",
+          message:
+            "Raw HTML sink. Render React elements, or pass HTML through parseCustomHtmlToReact / markdownToHtml (DOMPurify)."
+        },
+        {
+          selector:
+            "CallExpression[callee.property.name=/^(insertAdjacentHTML|createContextualFragment)$/]",
+          message:
+            "Raw HTML sink. Render React elements, or pass HTML through parseCustomHtmlToReact / markdownToHtml (DOMPurify)."
+        },
+        {
+          selector:
+            "CallExpression[callee.object.name='document'][callee.property.name=/^(write|writeln)$/]",
+          message: "document.write is a raw HTML sink."
         }
       ],
       "block-scoped-var": "error",
@@ -218,6 +238,10 @@ export default defineConfig([
       globals: {
         ...globals.jasmine
       }
+    },
+    rules: {
+      "no-restricted-syntax": "off",
+      "react/no-danger": "off"
     }
   },
   {

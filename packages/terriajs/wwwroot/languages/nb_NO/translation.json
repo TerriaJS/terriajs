@@ -768,10 +768,10 @@
     "btnCount": "Tell datasett",
     "title": "Tell datasett",
     "recount": "Tell igjen",
-    "subTotals": "<div> {{name}}: {{items}} elementer / {{groups}} grupper</div>",
+    "subTotals": "{{name}}: {{items}} elementer / {{groups}} grupper",
     "btnText": "Start",
     "loadError": "kunne ikke innlastes.",
-    "totals": "<div>Katalogen inneholder {{items}} elementer i {{groups}} grupper.</div>"
+    "totals": "Katalogen inneholder {{items}} elementer i {{groups}} grupper."
   },
   "share": {
     "btnMapShareTitle": "Del kartet ditt med andre",

@@ -485,8 +485,8 @@
     "btnCount": "データセットをカウントする",
     "title": "データセットをカウントする",
     "recount": "再カウント",
-    "subTotals": "<div>{{name}}: {{items}}個のアイテム / {{groups}}個のグループ</div>",
-    "totals": "<div>このカタログには{{groups}}個のグループと{{items}}個のアイテムが含まれています。</div>",
+    "subTotals": "{{name}}: {{items}}個のアイテム / {{groups}}個のグループ",
+    "totals": "このカタログには{{groups}}個のグループと{{items}}個のアイテムが含まれています。",
     "countingMessage": "数えています、しばらくお待ちください…",
     "loadError": "読み込みに失敗しました。",
     "btnText": "カウントする"

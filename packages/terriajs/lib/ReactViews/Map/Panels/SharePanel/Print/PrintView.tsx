@@ -111,7 +111,7 @@ const styles = `
 
 const mkStyle = (unsafeCSS: string) => {
   const style = document.createElement("style");
-  style.innerHTML = DOMPurify.sanitize(unsafeCSS, {});
+  style.textContent = DOMPurify.sanitize(unsafeCSS, {});
   return style;
 };
 
