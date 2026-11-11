@@ -29,7 +29,9 @@ type UseTreeDragAndDropOptions<T extends object> = Omit<
    * What a drag carries out of the tree, from the dragged rows' keys and
    * nodes. By default each row's name as screen readers read it, taken from
    * the page: a row out of view in a virtualized tree isn't there, so its key
-   * stands in. Name rows from their data here to cover those too
+   * stands in. Name rows from their data here to cover those too. An item
+   * without text, carrying only the app's own types, gets the row's name as
+   * text, which the preview shows
    */
   getItems?: (keys: Set<Key>, items: TreeDataNode<T>[]) => DragItem[];
   /** Called once rows have moved */
@@ -96,7 +98,15 @@ const useTreeDragAndDrop = <T extends object>({
 }: UseTreeDragAndDropOptions<T>): { dragAndDropHooks: DragAndDropHooks } =>
   useDragAndDrop<TreeDataNode<T>>({
     ...options,
-    getItems,
+    // The preview names each row by its text, so a row given none gets its
+    // name
+    getItems: (keys, items) => {
+      const ordered = [...keys];
+      return getItems(keys, items).map((item, index) => ({
+        "text/plain": rowName(ordered[index] ?? ""),
+        ...item
+      }));
+    },
     renderDragPreview,
     onMove: ({ keys, target }) => {
       if (target.dropPosition === "before") {
