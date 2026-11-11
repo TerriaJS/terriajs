@@ -69,6 +69,88 @@ const animateRows = (
     return animation;
   });
 
+// A virtualized tree places each row itself, in a wrapper of its own, so rows
+// don't move each other: they're slid from where they were instead
+const isVirtualized = (tree: HTMLElement): boolean => {
+  const wrapper = tree.querySelector('[role="row"]')?.parentElement;
+  return !!wrapper && getComputedStyle(wrapper).position === "absolute";
+};
+
+// Where each shown row is, by key, from the top of the tree's content
+const rowTops = (tree: HTMLElement): Map<string, number> => {
+  const origin = tree.getBoundingClientRect().top - tree.scrollTop;
+  return new Map(
+    [...tree.querySelectorAll<HTMLElement>('[role="row"][data-key]')].map(
+      (row) => [
+        row.getAttribute("data-key") ?? "",
+        row.getBoundingClientRect().top - origin
+      ]
+    )
+  );
+};
+
+type VirtualChange = {
+  // Where the rows were before it
+  before: Map<string, number>;
+  // The bottom of each group it opens
+  openedBottoms: number[];
+  isOpening: boolean;
+};
+
+const slide = (row: HTMLElement, from: number): Animation =>
+  row.animate([{ translate: `0 ${String(from)}px` }, { translate: "0 0" }], {
+    duration: DURATION,
+    easing: EASING
+  });
+
+// Grows a row out of its group, from nothing, as the rows above it grow
+const reveal = (row: HTMLElement, below: number): Animation =>
+  row.animate(
+    [
+      {
+        translate: `0 ${String(-below)}px`,
+        clipPath: "inset(0 0 100% 0)",
+        opacity: 0
+      },
+      { translate: "0 0", clipPath: "inset(0)", opacity: 1 }
+    ],
+    { duration: DURATION, easing: EASING }
+  );
+
+// Slides a virtualized tree's rows from where they were to where they are.
+// Rows new below an opening group grow out of it; rows new below a closing
+// one come up from the bottom of the view, as the rows below them do
+const animateVirtualRows = (
+  tree: HTMLElement,
+  { before, openedBottoms, isOpening }: VirtualChange
+): Animation[] => {
+  const after = rowTops(tree);
+  const rows = new Map(
+    [...tree.querySelectorAll<HTMLElement>('[role="row"][data-key]')].map(
+      (row) => [row.getAttribute("data-key") ?? "", row]
+    )
+  );
+  const shifts = [...after]
+    .map(([key, top]) => (before.get(key) ?? top) - top)
+    .filter((shift) => shift !== 0);
+  const viewBottom = tree.scrollTop + tree.clientHeight;
+  return [...after].flatMap(([key, top]) => {
+    const row = rows.get(key);
+    const was = before.get(key);
+    if (!row) return [];
+    if (was !== undefined) return was === top ? [] : [slide(row, was - top)];
+    if (isOpening) {
+      const groupBottom = Math.max(
+        ...openedBottoms.filter((bottom) => bottom <= top)
+      );
+      return Number.isFinite(groupBottom)
+        ? [reveal(row, top - groupBottom)]
+        : [];
+    }
+    return [slide(row, shifts[0] ?? Math.max(0, viewBottom - top))];
+  });
+};
+
 type ExpansionOptions = {
   expandedKeys?: Iterable<Key>;
   defaultExpandedKeys?: Iterable<Key>;
@@ -108,6 +190,8 @@ const useAnimatedExpansion = (
   const pendingRef = useRef<Set<Key> | null>(null);
   // And the keys it started from
   const fromRef = useRef<Set<Key>>(keys);
+  const virtualRef = useRef<VirtualChange | null>(null);
+  const slidingRef = useRef<Animation[]>([]);
 
   const cancelCollapse = (): void => {
     for (const animation of closingRef.current) animation.cancel();
@@ -128,8 +212,26 @@ const useAnimatedExpansion = (
       return;
     }
 
-    openingRef.current = [...next].filter((key) => !keys.has(key));
+    const opened = [...next].filter((key) => !keys.has(key));
     const closed = [...keys].filter((key) => !next.has(key));
+
+    if (isVirtualized(tree)) {
+      for (const animation of slidingRef.current) animation.cancel();
+      const before = rowTops(tree);
+      virtualRef.current = {
+        before,
+        openedBottoms: opened.flatMap((key) => {
+          const row = rowFor(tree, key);
+          const top = before.get(String(key));
+          return row && top !== undefined ? [top + row.offsetHeight] : [];
+        }),
+        isOpening: opened.length > 0
+      };
+      setKeys(next);
+      return;
+    }
+
+    openingRef.current = opened;
     const rows = closed.flatMap((key) => descendantRows(tree, key));
     if (rows.length === 0) {
       setKeys(next);
@@ -199,8 +301,14 @@ const useAnimatedExpansion = (
   useLayoutEffect(() => {
     const tree = treeRef.current;
     const opened = openingRef.current;
+    const virtual = virtualRef.current;
     openingRef.current = [];
+    virtualRef.current = null;
     if (!tree) return;
+    if (virtual) {
+      slidingRef.current = animateVirtualRows(tree, virtual);
+      return;
+    }
     animateRows(
       opened.flatMap((key) => descendantRows(tree, key)),
       "open"

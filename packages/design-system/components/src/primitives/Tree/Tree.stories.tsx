@@ -623,8 +623,9 @@ const LARGE_CATALOG: CatalogNode[] = Array.from({ length: 40 }, (_, r) => ({
 const ROW_HEIGHT = { sm: 32, md: 36, lg: 40 };
 
 /** Only the rows in view are rendered, inside a Virtualizer whose row height
- * matches the size's. Expanding all shows 11,000 rows. Groups open and shut
- * without animating. Accessibility checks run from the panel's button: run on
+ * matches the size's. Expanding all shows 11,000 rows. A group's rows grow
+ * out of it as it opens, and the rows below slide to make room or close the
+ * gap. Accessibility checks run from the panel's button: run on
  * each scroll, they stall it. The code shown is the story's own: written out
  * from the render, it would list every row */
 export const Virtualized: Story = {
