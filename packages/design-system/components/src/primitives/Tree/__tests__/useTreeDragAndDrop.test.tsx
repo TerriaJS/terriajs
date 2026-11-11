@@ -2,8 +2,8 @@ import { Collection } from "react-aria-components/Collection";
 import { useEffect } from "react";
 import type { DragAndDropHooks } from "react-aria-components/useDragAndDrop";
 import { useTreeData } from "react-stately";
-import type { DragItem } from "react-aria";
-import type { Key } from "react-aria-components";
+import type { DragItem, DropEvent } from "react-aria";
+import { DropZone, type Key } from "react-aria-components";
 import { describe, expect, it, vi } from "vitest";
 import { render } from "vitest-browser-react";
 import { userEvent } from "vitest/browser";
@@ -110,6 +110,41 @@ describe("useTreeDragAndDrop", () => {
     const items = getItems.mock.lastCall?.[1] ?? [];
     expect(items.map((item) => item.value.name)).toEqual(["Suburbs"]);
     await userEvent.keyboard("{Escape}");
+  });
+
+  it("names the dragged rows as text when getItems gives only its own types", async () => {
+    const onDrop = vi.fn<(event: DropEvent) => void>();
+    const screen = await render(
+      <>
+        <Workbench
+          getItems={(keys) =>
+            [...keys].map((key) => ({ "terria/layer": String(key) }))
+          }
+        />
+        <DropZone aria-label="Elsewhere" onDrop={onDrop} />
+      </>
+    );
+
+    await userEvent.tab();
+    await userEvent.tab();
+    await expect
+      .element(screen.getByRole("button", { name: /^Drag Suburbs/ }))
+      .toHaveFocus();
+    await userEvent.keyboard("{Enter}");
+    // Past the tree's own drop targets, to the zone
+    for (let target = 0; target < 10 && !onDrop.mock.calls.length; target++) {
+      if (document.activeElement?.closest(".react-aria-DropZone")) {
+        await userEvent.keyboard("{Enter}");
+      } else {
+        await userEvent.tab();
+      }
+    }
+
+    const [item] = onDrop.mock.lastCall?.[0].items ?? [];
+    expect(item?.kind).toBe("text");
+    expect(
+      item?.kind === "text" ? await item.getText("text/plain") : undefined
+    ).toBe("Suburbs");
   });
 
   it("moves a row into the row it's dropped on", async () => {
