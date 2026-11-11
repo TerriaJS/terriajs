@@ -30,6 +30,55 @@ const check = async (
   await userEvent.click(label);
 };
 
+// A virtualized catalogue: a group of three datasets, then three more datasets
+const virtualCatalog = (
+  defaultExpandedKeys: Key[] = []
+): React.ReactElement => (
+  <Virtualizer layout={ListLayout} layoutOptions={{ rowHeight: 36 }}>
+    <Tree
+      aria-label="Catalog"
+      defaultExpandedKeys={defaultExpandedKeys}
+      style={{ blockSize: 400, overflow: "auto" }}
+    >
+      <Tree.Item id="boundaries" textValue="Boundaries">
+        <Tree.ItemContent>
+          <Tree.Indicator />
+          <Tree.ItemLabel>Boundaries</Tree.ItemLabel>
+        </Tree.ItemContent>
+        {["Suburbs", "Postcodes", "Councils"].map((name) => (
+          <Tree.Item key={name} id={name} textValue={name}>
+            <Tree.ItemContent>
+              <Tree.ItemLabel>{name}</Tree.ItemLabel>
+            </Tree.ItemContent>
+          </Tree.Item>
+        ))}
+      </Tree.Item>
+      {["Roads", "Rail", "Ferries"].map((name) => (
+        <Tree.Item key={name} id={name} textValue={name}>
+          <Tree.ItemContent>
+            <Tree.ItemLabel>{name}</Tree.ItemLabel>
+          </Tree.ItemContent>
+        </Tree.Item>
+      ))}
+    </Tree>
+  </Virtualizer>
+);
+
+// Where a row is drawn, on screen
+const rowTop = (
+  screen: Awaited<ReturnType<typeof render>>,
+  name: string
+): number =>
+  screen.getByRole("row", { name }).element().getBoundingClientRect().top;
+
+// Holds every animation on the page at its start
+const atStart = (): void => {
+  for (const animation of document.getAnimations()) {
+    animation.pause();
+    animation.currentTime = 0;
+  }
+};
+
 describe("Tree", () => {
   it("shows a group's children once its indicator expands it", async () => {
     const screen = await render(
@@ -428,5 +477,44 @@ describe("Tree", () => {
 
     expect(animation).toBeDefined();
     expect(row.isConnected).toBe(false);
+  });
+
+  it("slides the rows below a virtualized group down as it opens, from where they were", async () => {
+    const screen = await render(virtualCatalog());
+    const before = rowTop(screen, "Roads");
+
+    await screen.getByRole("button", { name: "Expand Boundaries" }).click();
+    await expect
+      .element(screen.getByRole("row", { name: "Councils" }))
+      .toBeInTheDocument();
+    atStart();
+
+    expect(rowTop(screen, "Roads")).toBeCloseTo(before, 0);
+  });
+
+  it("grows a virtualized group's rows in as it opens", async () => {
+    const screen = await render(virtualCatalog());
+
+    await screen.getByRole("button", { name: "Expand Boundaries" }).click();
+    await expect
+      .element(screen.getByRole("row", { name: "Suburbs" }))
+      .toBeInTheDocument();
+    atStart();
+
+    const suburbs = screen.getByRole("row", { name: "Suburbs" }).element();
+    expect(getComputedStyle(suburbs).opacity).toBe("0");
+  });
+
+  it("slides the rows below a virtualized group up as it closes, from where they were", async () => {
+    const screen = await render(virtualCatalog(["boundaries"]));
+    const before = rowTop(screen, "Roads");
+
+    await screen.getByRole("button", { name: "Collapse Boundaries" }).click();
+    await expect
+      .element(screen.getByRole("row", { name: "Suburbs" }))
+      .not.toBeInTheDocument();
+    atStart();
+
+    expect(rowTop(screen, "Roads")).toBeCloseTo(before, 0);
   });
 });
