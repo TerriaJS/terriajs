@@ -139,4 +139,12 @@
     inline-size: 50%;
     block-size: 1px;
   }
+
+  /* Outline buttons are divided by their shared border already */
+  [data-tds="button-group"]
+    > [data-tds="button"]
+    ~ [data-tds="button-group-separator"]
+    + [data-tds="button"][data-tds-variant="outline"]::before {
+    content: none;
+  }
 }

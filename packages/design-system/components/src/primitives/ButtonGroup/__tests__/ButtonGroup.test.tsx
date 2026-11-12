@@ -162,6 +162,21 @@ describe("ButtonGroup", () => {
     ).toEqual([false, true]);
   });
 
+  // Their shared border divides them already
+  it("draws no separator between outline buttons", async () => {
+    const screen = await render(
+      <ButtonGroup aria-label="Map tools" variant="outline">
+        <Button>Zoom in</Button>
+        <ButtonGroup.Separator />
+        <Button>Zoom out</Button>
+      </ButtonGroup>
+    );
+
+    expect(
+      line(screen.getByRole("button", { name: "Zoom out" }).element())
+    ).toBeNull();
+  });
+
   it("rounds its end buttons' outer corners only, among separators", async () => {
     const screen = await render(
       <ButtonGroup aria-label="Map tools">
