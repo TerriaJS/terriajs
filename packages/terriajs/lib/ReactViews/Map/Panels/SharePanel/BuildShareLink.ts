@@ -24,6 +24,7 @@ import ViewState from "../../../../ReactViewModels/ViewState";
 import getDereferencedIfExists from "../../../../Core/getDereferencedIfExists";
 import CatalogMemberMixin from "../../../../ModelMixins/CatalogMemberMixin";
 import ViewerMode from "../../../../Models/ViewerMode";
+import { raiseShareDataEvent } from "../../../../ViewModels/ShareDataListener";
 
 /** User properties (generated from URL hash parameters) to add to share link URL in PRODUCTION environment.
  * If in Dev, we add all user properties.
@@ -148,6 +149,12 @@ export function getShareData(
     addTimelineItems(terria, initSource);
     addViewSettings(terria, viewState, initSource, !autoStartStory);
     addFeaturePicking(terria, initSource);
+    raiseShareDataEvent({
+      initSource,
+      includeCurrentView: !autoStartStory,
+      terria,
+      viewState
+    });
     if (includeStories) {
       // info that are not needed in scene share data
       addStories(terria, initSource);
