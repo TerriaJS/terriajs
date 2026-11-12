@@ -21,9 +21,11 @@ import { setViewerMode } from "../../../../../lib/Models/ViewerMode";
 import ViewState from "../../../../../lib/ReactViewModels/ViewState";
 import {
   buildShareLink,
+  getShareData,
   isShareable,
   SHARE_VERSION
 } from "../../../../../lib/ReactViews/Map/Panels/SharePanel/BuildShareLink";
+import { addShareDataListener } from "../../../../../lib/ViewModels/ShareDataListener";
 
 import bikeRacksGeoJson from "../../../../../wwwroot/test/GeoJSON/bike_racks.geojson" with { type: "json" };
 import { ConfigStrata } from "../../../../../lib/Models/Config/ConfigStrata";
@@ -391,6 +393,67 @@ describe("BuildShareLink", function () {
 
       expect(initSources.initialCamera).toBeUndefined();
       expect(initSources.settings?.storyAutoStart).toBe(true);
+    });
+  });
+
+  describe("share data listeners", function () {
+    type ExtendedInitSource = InitSourceData & {
+      extra?: { includeCurrentView: boolean };
+    };
+
+    let removeListener: (() => void) | undefined;
+
+    beforeEach(function () {
+      removeListener = addShareDataListener(
+        ({ initSource, includeCurrentView }) => {
+          (initSource as ExtendedInitSource).extra = { includeCurrentView };
+        }
+      );
+    });
+
+    afterEach(function () {
+      removeListener?.();
+    });
+
+    it("can add their own keys to the shared init source", function () {
+      const [initSource] = getShareData(terria, viewState).initSources;
+
+      expect((initSource as ExtendedInitSource).extra).toEqual({
+        includeCurrentView: true
+      });
+    });
+
+    it("are told not to capture the current view when the story starts by itself", function () {
+      runInAction(() => {
+        terria.stories = [
+          {
+            id: "story-1",
+            title: "Test story",
+            text: "",
+            shareData: { version: SHARE_VERSION, initSources: [] }
+          }
+        ];
+        terria.configParameters.setValue(
+          ConfigStrata.user,
+          "storyAutoStart",
+          true
+        );
+      });
+
+      const [initSource] = getShareData(terria, viewState).initSources;
+
+      expect((initSource as ExtendedInitSource).extra).toEqual({
+        includeCurrentView: false
+      });
+    });
+
+    it("stop being called once removed", function () {
+      removeListener?.();
+      removeListener = undefined;
+
+      const [initSource] = getShareData(terria, viewState).initSources;
+
+      expect((initSource as ExtendedInitSource).extra).toBeUndefined();
     });
   });
 

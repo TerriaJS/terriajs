@@ -1,5 +1,6 @@
 import Terria from "../../../../lib/Models/Terria";
 import { activateStory } from "../../../../lib/ReactViews/Story/StoryPanel/StoryPanel";
+import { addStorySceneActivatedListener } from "../../../../lib/ViewModels/StorySceneListener";
 
 describe("activateStory", function () {
   let terria: Terria;
@@ -58,5 +59,31 @@ describe("activateStory", function () {
     expect(terria.notificationState.currentNotification?.showAsToast).toBe(
       true
     );
+  });
+
+  it("tells scene listeners once the scene's init sources are applied", async function () {
+    const initSources = [{ settings: { alwaysShowTimeline: true } }];
+    const scene = {
+      id: "scene-1",
+      title: "Scene 1",
+      text: "",
+      shareData: { version: "8.0.0", initSources }
+    };
+    const calls: { sceneId: string; timelineShown: boolean }[] = [];
+    const removeListener = addStorySceneActivatedListener((params) => {
+      expect(params.initSources).toBe(initSources);
+      calls.push({
+        sceneId: params.scene.id,
+        timelineShown: params.terria.timelineStack.alwaysShowingTimeline
+      });
+    });
+
+    try {
+      await activateStory(scene, terria);
+    } finally {
+      removeListener();
+    }
+
+    expect(calls).toEqual([{ sceneId: "scene-1", timelineShown: true }]);
   });
 });
