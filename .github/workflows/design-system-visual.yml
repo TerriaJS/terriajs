@@ -111,7 +111,9 @@ jobs:
         env:
           BASE_REF: ${{ inputs.base }}
         run: |
-          git worktree add "$RUNNER_TEMP/base" "origin/$BASE_REF"
+          # LFS files stay pointers, as actions/checkout leaves them: the visual tests
+          # need none, and the job has no credentials to fetch them
+          GIT_LFS_SKIP_SMUDGE=1 git worktree add "$RUNNER_TEMP/base" "origin/$BASE_REF"
           git ls-files \
             'packages/design-system/components/vitest.visual.config.ts' \
             'packages/design-system/components/src/visual.ts' \
