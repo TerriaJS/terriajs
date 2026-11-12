@@ -21,4 +21,13 @@ Canvas.prototype._onClick = function (e: any) {
   this._fireEvent(layers.length ? layers : false, e);
 };
 
+// Leaflet 1.9 forgets a queued redraw frame without cancelling it when a redraw runs
+// synchronously, so that frame can run after the map is removed and throw on the
+// deleted canvas context. Backport of Leaflet/Leaflet#10522 (Leaflet 2-beta).
+const redraw = Canvas.prototype._redraw;
+Canvas.prototype._redraw = function () {
+  L.Util.cancelAnimFrame(this._redrawRequest);
+  redraw.call(this);
+};
+
 export default L;
