@@ -168,7 +168,7 @@ function TileErrorHandlerMixin<T extends AbstractConstructor<ModelType>>(
             if (this.terria.workbench.contains(this) && !disableItem) {
               if (this.terria.workbench.getItemErrors(this).length === 0) {
                 this.terria.workbench.setItemErrors(this, [error]);
-                this.terria.errorService.error(error);
+                this.terria.errorService.error(error, "workbench");
                 error.log();
               }
               operation.stop();
@@ -178,7 +178,7 @@ function TileErrorHandlerMixin<T extends AbstractConstructor<ModelType>>(
               this.terria.workbench.setItemErrors(this, [error], {
                 clearWhenShown: true
               });
-              this.terria.errorService.error(error);
+              this.terria.errorService.error(error, "workbench");
               error.log();
             } else {
               this.terria.raiseErrorToUser(error);

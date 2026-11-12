@@ -476,7 +476,10 @@ export default class Terria {
     if (forceRaiseToUser) terriaError.overrideRaiseToUser = true;
 
     // Log error to error service
-    this.errorService.error(terriaError);
+    this.errorService.error(
+      terriaError,
+      this.showsRaisedError(terriaError) ? "modal" : "none"
+    );
 
     // Only show error to user if `ignoreError` flag hasn't been set to "1"
     // Note: this will take precedence over forceRaiseToUser/overrideRaiseToUser
@@ -494,12 +497,22 @@ export default class Terria {
     overrides?: TerriaErrorOverrides
   ): void {
     const terriaError = TerriaError.from(error, overrides);
-    this.errorService.error(terriaError);
+    this.errorService.error(
+      terriaError,
+      this.showsRaisedError(terriaError) ? "toast" : "none"
+    );
     if (this.userProperties.get("ignoreErrors") !== "1")
       this.notificationState.addNotificationToQueue(
         terriaError.toToastNotification()
       );
     terriaError.log();
+  }
+
+  private showsRaisedError(terriaError: TerriaError): boolean {
+    return (
+      this.userProperties.get("ignoreErrors") !== "1" &&
+      terriaError.shouldRaiseToUser
+    );
   }
 
   @computed
@@ -1854,7 +1867,7 @@ export default class Terria {
     });
     itemErrors.forEach((itemErrorList) =>
       itemErrorList.forEach((error) => {
-        this.errorService.error(error);
+        this.errorService.error(error, "workbench");
         error.log();
       })
     );
@@ -1912,7 +1925,7 @@ export default class Terria {
                 e,
                 "Failed to load picked features"
               );
-              this.errorService.error(error);
+              this.errorService.error(error, "none");
               error.log();
             });
           }

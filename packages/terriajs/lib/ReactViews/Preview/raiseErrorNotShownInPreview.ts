@@ -21,7 +21,11 @@ export default function raiseErrorNotShownInPreview(
   item: BaseModel,
   result: Result<unknown>
 ): void {
-  if (result.error && !previewShowsLoadErrors(item)) {
+  if (!result.error) return;
+  if (previewShowsLoadErrors(item)) {
+    viewState.terria.errorService.error(result.error, "catalog");
+    result.error.log();
+  } else {
     result.raiseError(viewState.terria);
   }
 }

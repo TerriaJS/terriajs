@@ -62,6 +62,9 @@ export default async function toggleItemOnMapFromCatalog(
         undefined,
         true // We want to force show error to user here - because this function is called when a user clicks the "Add to workbench"  buttons
       );
+    } else if (result.error) {
+      viewState.terria.errorService.error(result.error, "workbench");
+      result.error.log();
     }
   } else {
     viewState.terria.workbench.remove(item);
