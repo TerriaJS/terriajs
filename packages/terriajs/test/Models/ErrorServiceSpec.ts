@@ -1,5 +1,5 @@
 import { http, HttpResponse } from "msw";
-import TerriaError from "../../lib/Core/TerriaError";
+import TerriaError, { TerriaErrorSeverity } from "../../lib/Core/TerriaError";
 import { ErrorServiceProvider } from "../../lib/Models/ErrorServiceProviders/ErrorService";
 import StubErrorServiceProvider from "../../lib/Models/ErrorServiceProviders/StubErrorServiceProvider";
 import Terria from "../../lib/Models/Terria";
@@ -49,7 +49,25 @@ describe("ErrorService", function () {
       message: "test error"
     });
     terria.raiseErrorToUser(error);
-    expect(errorSpy).toHaveBeenCalledWith(error);
+    expect(errorSpy).toHaveBeenCalledWith(error, "modal");
+  });
+
+  it("Reports where the error was shown", async function () {
+    const errorSpy = spyOn(mockErrorServiceProvider, "error").and.callThrough();
+    await terria.start({
+      configUrl: "test-config.json",
+      errorService: mockErrorServiceProvider
+    });
+    const warning = new TerriaError({
+      message: "test warning",
+      severity: TerriaErrorSeverity.Warning
+    });
+    terria.raiseErrorToUser(warning);
+    expect(errorSpy).toHaveBeenCalledWith(warning, "none");
+
+    const toast = new TerriaError({ message: "test toast" });
+    terria.raiseErrorToUserAsToast(toast);
+    expect(errorSpy).toHaveBeenCalledWith(toast, "toast");
   });
 
   it("Falls back to stub provider", async () => {
