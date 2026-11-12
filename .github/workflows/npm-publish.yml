@@ -21,13 +21,25 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
 
+      - name: Install pnpm
+        uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
+
       - name: Detect a version change
         id: detect
+        working-directory: packages/terriajs
         run: |
-          LOCAL_VERSION=$(node -p "require('./packages/terriajs/package.json').version")
+          LOCAL_VERSION=$(node -p "require('./package.json').version")
           echo "Current version in package.json: $LOCAL_VERSION"
 
-          IS_ALREADY_PUBLISHED=$(npm view terriajs@$LOCAL_VERSION version 2>/dev/null || echo 'false')
+          # Only "not found" means "not published"; any other error must fail the job rather than trigger a publish
+          if PNPM_VIEW_OUTPUT=$(pnpm view terriajs@$LOCAL_VERSION version 2>&1); then
+            IS_ALREADY_PUBLISHED=true
+          elif echo "$PNPM_VIEW_OUTPUT" | grep -q ERR_PNPM_PACKAGE_NOT_FOUND; then
+            IS_ALREADY_PUBLISHED=false
+          else
+            echo "$PNPM_VIEW_OUTPUT"
+            exit 1
+          fi
 
           if [ "$IS_ALREADY_PUBLISHED" != "false" ]; then
             echo "terriajs@$LOCAL_VERSION is already published"
@@ -53,10 +65,6 @@ jobs:
           node-version: 24
           registry-url: "https://registry.npmjs.org"
           node-version-file: ".nvmrc"
-
-      - name: Install pnpm
-        if: steps.detect.outputs.should_publish == 'true'
-        uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
 
       - name: Install dependencies
         if: steps.detect.outputs.should_publish == 'true'
