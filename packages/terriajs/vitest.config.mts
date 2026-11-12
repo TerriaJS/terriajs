@@ -85,10 +85,30 @@ const serveCesium = (): Plugin => ({
   }
 });
 
+// MSW's service worker, from the installed package so it matches the msw the
+// tests import, served where lib/UI/test/network.ts registers it
+const serveMockServiceWorker = (): Plugin => ({
+  name: "terriajs-serve-mock-service-worker",
+  configureServer(server) {
+    server.middlewares.use("/mockServiceWorker.js", (_request, response) => {
+      response.setHeader("Content-Type", "text/javascript");
+      createReadStream(require.resolve("msw/mockServiceWorker.js")).pipe(
+        response
+      );
+    });
+  }
+});
+
 // The new UI's tests (lib/UI). The rest of TerriaJS is tested with Jasmine
 // (gulp test) until it moves here too
 export default defineConfig({
-  plugins: [react(), inlineText(), stubCurrentUi(), serveCesium()],
+  plugins: [
+    react(),
+    inlineText(),
+    stubCurrentUi(),
+    serveCesium(),
+    serveMockServiceWorker()
+  ],
   assetsInclude: ["**/*.DAC"],
   resolve: {
     alias: {
