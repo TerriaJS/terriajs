@@ -414,6 +414,17 @@ describe("TerriaSpec", function () {
       ]);
     });
 
+    it("turns on the new UI with #experimentalNewUi, loading no init file for it", async function () {
+      expect(terria.configParameters.experimentalNewUi).toBe(false);
+
+      await terria.updateApplicationUrl(
+        "https://application.url/#experimentalNewUi"
+      );
+
+      expect(terria.configParameters.experimentalNewUi).toBe(true);
+      expect(terria.initSources.length).toEqual(0);
+    });
+
     it("processes #start correctly", async function () {
       expect(terria.initSources.length).toEqual(0);
 

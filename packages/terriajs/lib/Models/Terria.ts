@@ -2154,7 +2154,15 @@ async function interpretHash(
 
   runInAction(() => {
     Object.keys(hashProperties).forEach(function (property) {
-      if (["clean", "hideWelcomeMessage", "start", "share"].includes(property))
+      if (
+        [
+          "clean",
+          "hideWelcomeMessage",
+          "experimentalNewUi",
+          "start",
+          "share"
+        ].includes(property)
+      )
         return;
       const propertyValue = hashProperties[property];
       if (defined(propertyValue) && propertyValue.length > 0) {
@@ -2179,6 +2187,15 @@ async function interpretHash(
       ConfigStrata.url,
       "showWelcomeMessage",
       false
+    );
+  }
+
+  // Tries the new UI on any map, without changing its config
+  if (isDefined(hashProperties.experimentalNewUi)) {
+    terria.configParameters.setValue(
+      ConfigStrata.url,
+      "experimentalNewUi",
+      true
     );
   }
 
