@@ -482,7 +482,8 @@ export const CONFIG_DEFAULTS: z.output<typeof ConfigParametersSchema> = {
   nextExperimentalFeatures: {
     imageryLayerGuard: false,
     keepLayersOnMissingTiles: true,
-    progressiveLoading: false
+    progressiveLoading: false,
+    loadLeafletTilesWithResource: false
   },
   disablePedestrianMode: false,
   keepCatalogOpen: false,
