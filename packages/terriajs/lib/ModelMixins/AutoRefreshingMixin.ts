@@ -65,9 +65,7 @@ export default function AutoRefreshingMixin<
 
     private refresh() {
       new Promise<void>((resolve) => resolve(this.refreshData())).then(
-        () => {
-          this.refreshError = undefined;
-        },
+        () => this.clearRefreshError(),
         (e: unknown) => this.reportRefreshError(e)
       );
     }
@@ -75,14 +73,37 @@ export default function AutoRefreshingMixin<
     /** Reports the first failure of a run, so a dead feed isn't reported every interval. */
     private reportRefreshError(e: unknown) {
       if (this.refreshError) return;
-      this.refreshError = TerriaError.from(e, {
+      const error = TerriaError.from(e, {
         title: i18next.t(($) => $.models.autoRefreshing.refreshErrorTitle),
         message: i18next.t(($) => $.models.autoRefreshing.refreshErrorMessage, {
           name: getName(this)
         })
       });
-      this.terria.errorService.error(this.refreshError, "none");
-      this.refreshError.log();
+      this.refreshError = error;
+      const workbench = this.terria.workbench;
+      const onWorkbench = workbench.contains(this);
+      if (onWorkbench) {
+        workbench.setItemErrors(this, [
+          ...workbench.getItemErrors(this),
+          error
+        ]);
+      }
+      this.terria.errorService.error(error, onWorkbench ? "workbench" : "none");
+      error.log();
+    }
+
+    private clearRefreshError() {
+      const error = this.refreshError;
+      if (!error) return;
+      this.refreshError = undefined;
+      const workbench = this.terria.workbench;
+      const errors = workbench.getItemErrors(this);
+      if (errors.includes(error)) {
+        workbench.setItemErrors(
+          this,
+          errors.filter((e) => e !== error)
+        );
+      }
     }
 
     private stopAutoRefresh() {
