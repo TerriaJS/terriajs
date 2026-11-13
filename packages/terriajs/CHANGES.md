@@ -9,6 +9,9 @@
 - Migrate to pnpm
 - Imagery tiles that fail with no HTTP status code (a dropped connection, a timeout, or a response that can't be decoded) are now retried with backoff, as 5xx responses already were, instead of failing on the first attempt. When the retries run out, the underlying error is attached to the reported `TerriaError` as `originalError`.
 - Added `retries`, `retryMinTimeout` and `retryMaxTimeout` to `tileErrorHandlingOptions`, to set how many times and how quickly a failed imagery tile is retried.
+- Added two extension points for plugins, following the pattern of `FileDragDropListener`:
+  - `addShareDataListener` (`lib/ViewModels/ShareDataListener`) is called whenever share data is built, for a share link or a story scene capture. Listeners can add their own keys to the init source being built. `includeCurrentView` is `false` when a story will auto-start and the current view is left out.
+  - `addStorySceneActivatedListener` (`lib/ViewModels/StorySceneListener`) is called once a story scene's init sources have been applied, with the scene and its init sources, so a plugin can act on keys it added to the scene.
 - Error service providers now receive a second `display` argument saying where the user saw the error: `modal`, `toast`, `workbench`, `catalog` or `none`. Load errors shown on a workbench row after adding from the catalogue, and load errors shown in the catalogue's preview, are now reported to the error service too.
 - `AutoRefreshingMixin` now reports a failed refresh to the error service, once per run of failures, instead of leaving it as an unhandled promise rejection. `refreshData()` may return a promise for this; the GTFS, OpenDataSoft, CSV, API table and CZML items now do.
 - A failed refresh of a workbench item now shows as a "Live data stopped updating" warning on its workbench row, and is reported as `workbench`. The warning clears when a refresh next succeeds.
