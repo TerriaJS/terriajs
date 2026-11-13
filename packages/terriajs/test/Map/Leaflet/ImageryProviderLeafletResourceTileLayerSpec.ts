@@ -94,13 +94,35 @@ describe("ImageryProviderLeafletResourceTileLayer", function () {
     expect(tile.src).toMatch(/^blob:/);
   });
 
-  it("revokes the blob URL once the tile has loaded", async function () {
+  it("keeps the blob URL of a loaded tile readable", async function () {
     worker.use(http.get("https://tiles.example.com/*", pngResponse));
     spyOn(URL, "revokeObjectURL").and.callThrough();
 
     const tile = await loadTile();
+    const response = await fetch(tile.src);
 
-    expect(URL.revokeObjectURL).toHaveBeenCalledWith(tile.src);
+    expect(URL.revokeObjectURL).not.toHaveBeenCalled();
+    expect(response.ok).toBe(true);
+  });
+
+  it("revokes the blob URL when the tile is unloaded", async function () {
+    worker.use(http.get("https://tiles.example.com/*", pngResponse));
+    spyOn(URL, "revokeObjectURL").and.callThrough();
+
+    const tile = await loadTile();
+    layer.fire("tileunload", { tile, coords });
+
+    expect(URL.revokeObjectURL).toHaveBeenCalledOnceWith(tile.src);
+  });
+
+  it("revokes the blob URL when the tile is aborted", async function () {
+    worker.use(http.get("https://tiles.example.com/*", pngResponse));
+    spyOn(URL, "revokeObjectURL").and.callThrough();
+
+    const tile = await loadTile();
+    layer.fire("tileabort", { tile, coords });
+
+    expect(URL.revokeObjectURL).toHaveBeenCalledOnceWith(tile.src);
   });
 
   it("updates RequestScheduler once the tile request has finished", async function () {
