@@ -271,7 +271,7 @@ export default class GtfsCatalogItem extends UrlMixin(
   }
 
   refreshData() {
-    this.forceLoadMapItems();
+    return this.forceLoadMapItems();
   }
 
   @computed

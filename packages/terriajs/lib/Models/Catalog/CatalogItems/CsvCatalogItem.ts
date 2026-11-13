@@ -129,7 +129,7 @@ export default class CsvCatalogItem
       return;
     }
 
-    Csv.parseUrl(
+    return Csv.parseUrl(
       proxyCatalogItemUrl(this, this.refreshUrl),
       true,
       this.ignoreRowsStartingWithComment

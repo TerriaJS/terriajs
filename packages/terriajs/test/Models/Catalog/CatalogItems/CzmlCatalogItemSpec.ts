@@ -168,7 +168,7 @@ describe("CzmlCatalogItem", function () {
       await czml.loadMapItems();
       const [dataSource] = czml.mapItems as [CzmlDataSource];
       expect(dataSource).toBeDefined("Expected datasource to be defined");
-      spyOn(dataSource, "process");
+      spyOn(dataSource, "process").and.resolveTo(dataSource);
       czml.refreshData();
       expect(dataSource.process).toHaveBeenCalledWith("test/CZML/Vehicle.czml");
     });

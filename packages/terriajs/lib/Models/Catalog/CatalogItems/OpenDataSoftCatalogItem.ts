@@ -651,8 +651,8 @@ export default class OpenDataSoftCatalogItem
     return data;
   }
 
-  refreshData(): void {
-    this.forceLoadMapItems();
+  refreshData(): Promise<void> {
+    return this.forceLoadMapItems();
   }
 
   // Convert availableFields DimensionTraits to SelectableDimension

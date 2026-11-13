@@ -225,8 +225,8 @@ export class ApiTableCatalogItem extends AutoRefreshingMixin(
       .then(() => undefined);
   }
 
-  refreshData(): void {
-    this.loadDataFromApis().then(() => {
+  refreshData(): Promise<void> {
+    return this.loadDataFromApis().then(() => {
       runInAction(() => {
         const newTableData = this.apiResponseToTable();
         if (this.shouldAppendNewData) {
