@@ -186,7 +186,7 @@ export default class CzmlCatalogItem
   refreshData() {
     if (this.url === undefined) return;
     const url = proxyCatalogItemUrl(this, this.url, this.cacheDuration);
-    this._dataSource?.process(url);
+    return this._dataSource?.process(url).then(() => {});
   }
 }
 

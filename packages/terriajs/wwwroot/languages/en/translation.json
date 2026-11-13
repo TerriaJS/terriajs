@@ -896,6 +896,10 @@
     }
   },
   "models": {
+    "autoRefreshing": {
+      "refreshErrorTitle": "Live data stopped updating",
+      "refreshErrorMessage": "{{name}} couldn't refresh, so what's on the map may be out of date. It will keep trying."
+    },
     "userData": {
       "addingDataErrorTitle": "Data could not be added",
       "addingDataErrorMessage": "The specified data could not be added because it is invalid or does not have the expected format.",
