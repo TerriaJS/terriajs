@@ -93,6 +93,43 @@ describe("AutoRefreshingMixin", function () {
     expect(errorSpy).toHaveBeenCalledTimes(2);
   });
 
+  describe("on the workbench", function () {
+    beforeEach(function () {
+      terria.workbench.items = [item];
+    });
+
+    it("shows the failure on the item and tags it workbench", async function () {
+      item.refreshResult = () => Promise.reject(new Error("feed down"));
+      await tick();
+
+      const [error, display] = errorSpy.calls.mostRecent().args;
+      expect(display).toBe("workbench");
+      expect(terria.workbench.getItemErrors(item)).toEqual([error]);
+    });
+
+    it("keeps the item's other errors", async function () {
+      const loadError = new TerriaError({ message: "load failed" });
+      terria.workbench.setItemErrors(item, [loadError]);
+      item.refreshResult = () => Promise.reject(new Error("feed down"));
+      await tick();
+
+      expect(terria.workbench.getItemErrors(item).length).toBe(2);
+      item.refreshResult = () => Promise.resolve();
+      await tick();
+
+      expect(terria.workbench.getItemErrors(item)).toEqual([loadError]);
+    });
+
+    it("clears the failure after a successful refresh", async function () {
+      item.refreshResult = () => Promise.reject(new Error("feed down"));
+      await tick();
+      item.refreshResult = () => Promise.resolve();
+      await tick();
+
+      expect(terria.workbench.getItemErrors(item)).toEqual([]);
+    });
+  });
+
   it("reports a refresh that throws synchronously", async function () {
     item.refreshResult = () => {
       throw new Error("bad config");
