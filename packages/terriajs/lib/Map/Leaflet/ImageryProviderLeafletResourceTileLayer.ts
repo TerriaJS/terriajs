@@ -13,12 +13,14 @@ const updateRequestScheduler = () => (RequestScheduler as any).update();
 /**
  * Loads tiles through Cesium Resource, as the Cesium map does, instead of
  * setting the tile image's src, so that Resource request headers and overrides
- * apply in 2D as they do in 3D. Tiles are shown from blob URLs. Requires tile
+ * apply in 2D as they do in 3D. Tiles are shown from blob URLs, which are kept
+ * until the tile is removed so that screenshots can read them. Requires tile
  * servers to support CORS.
  */
 export default class ImageryProviderLeafletResourceTileLayer extends ImageryProviderLeafletTileLayer {
   /** Cancels the pending Resource request of a tile */
   private _tileRequestCancellers = new WeakMap<HTMLElement, () => void>();
+  private _tileBlobUrls = new WeakMap<HTMLElement, string>();
 
   constructor(
     leaflet: Leaflet,
@@ -27,12 +29,21 @@ export default class ImageryProviderLeafletResourceTileLayer extends ImageryProv
   ) {
     super(leaflet, imageryProvider, options);
 
-    const cancelTileRequest = (event: TileEvent) => {
+    const releaseTile = (event: TileEvent) => {
       this._tileRequestCancellers.get(event.tile)?.();
       this._tileRequestCancellers.delete(event.tile);
+      this._revokeBlobUrl(event.tile);
     };
-    this.on("tileabort", cancelTileRequest);
-    this.on("tileunload", cancelTileRequest);
+    this.on("tileabort", releaseTile);
+    this.on("tileunload", releaseTile);
+  }
+
+  private _revokeBlobUrl(tile: HTMLElement) {
+    const blobUrl = this._tileBlobUrls.get(tile);
+    if (blobUrl) {
+      URL.revokeObjectURL(blobUrl);
+      this._tileBlobUrls.delete(tile);
+    }
   }
 
   _abortLoading() {
@@ -60,25 +71,15 @@ export default class ImageryProviderLeafletResourceTileLayer extends ImageryProv
     tile.alt = "";
     tile.setAttribute("role", "presentation");
 
-    let blobUrl: string | undefined;
-    const revokeBlobUrl = () => {
-      if (blobUrl) {
-        URL.revokeObjectURL(blobUrl);
-        blobUrl = undefined;
-      }
-    };
     const showErrorTile = (e: unknown) =>
       (L.TileLayer as any).prototype._tileOnError.call(this, done, tile, e);
     const failTile = (e: unknown) => {
-      revokeBlobUrl();
+      this._revokeBlobUrl(tile);
       this._reportTileError(coords, e);
       showErrorTile(e);
     };
 
-    L.DomEvent.on(tile, "load", () => {
-      revokeBlobUrl();
-      (this as any)._tileOnLoad(done, tile);
-    });
+    L.DomEvent.on(tile, "load", () => (this as any)._tileOnLoad(done, tile));
     // Errors decoding the image, unless it is the error tile failing to load
     L.DomEvent.on(tile, "error", (e) => {
       if (tile.getAttribute("src") !== this.options.errorTileUrl) {
@@ -132,7 +133,8 @@ export default class ImageryProviderLeafletResourceTileLayer extends ImageryProv
           failTile(new Error("Tile request returned no data"));
           return;
         }
-        blobUrl = URL.createObjectURL(blob);
+        const blobUrl = URL.createObjectURL(blob);
+        this._tileBlobUrls.set(tile, blobUrl);
         tile.src = blobUrl;
       })
       .catch((e) => {
