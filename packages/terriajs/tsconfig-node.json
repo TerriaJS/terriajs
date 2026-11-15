@@ -7,6 +7,7 @@
     "types": ["terriajs-cesium"]
   },
   "include": ["./lib/**/*"],
-  // The new UI's Vitest tests and their helpers aren't part of the build
-  "exclude": ["./lib/**/*.test.ts", "./lib/**/*.test.tsx", "./lib/UI/test/**"]
+  // The new UI runs in the browser only, built by an app's webpack once the
+  // design system is built, so it isn't part of the node build
+  "exclude": ["./lib/UI/**"]
 }
