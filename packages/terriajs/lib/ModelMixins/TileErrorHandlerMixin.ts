@@ -116,11 +116,14 @@ function TileErrorHandlerMixin<T extends AbstractConstructor<ModelType>>(
         tileProviderError.retry = false;
         return;
       }
+      let unknownErrorCause: unknown;
+
       /** Helper methods **/
 
       // Give up loading this (definitively, unexpectedly bad) tile and
       // possibly give up on this layer entirely.
       const failTile = action((e: Error, disableItem = true) => {
+        const originalError = toOriginalError(unknownErrorCause);
         this.tileFailures += 1;
         const opts = this.tileErrorHandlingOptions;
         const thresholdBeforeDisablingItem =
@@ -145,7 +148,8 @@ function TileErrorHandlerMixin<T extends AbstractConstructor<ModelType>>(
                   ) +
                   "<pre>" +
                   formatError(e) +
-                  "</pre>"
+                  "</pre>",
+                originalError
               })
             );
           } else {
@@ -163,7 +167,8 @@ function TileErrorHandlerMixin<T extends AbstractConstructor<ModelType>>(
                 ) +
                 "<pre>" +
                 formatError(e) +
-                "</pre>"
+                "</pre>",
+              originalError
             });
             if (this.terria.workbench.contains(this) && !disableItem) {
               if (this.terria.workbench.getItemErrors(this).length === 0) {
@@ -246,6 +251,7 @@ function TileErrorHandlerMixin<T extends AbstractConstructor<ModelType>>(
 
       operation.attempt(
         action(async (attemptNumber) => {
+          unknownErrorCause = undefined;
           if (this.show === false) {
             // If the layer is no longer shown, ignore errors and don't retry.
             tellMapToSilentlyGiveUp();
@@ -338,8 +344,11 @@ function TileErrorHandlerMixin<T extends AbstractConstructor<ModelType>>(
                   )
                 });
               } else {
-                // Unknown error
-                failTile({
+                // No status code and no image element: the request got no
+                // readable response, or the response could not be decoded.
+                // Either can be transient, so retry before giving up.
+                unknownErrorCause = error;
+                retryWithBackoff({
                   name: i18next.t(
                     ($) => $.models.imageryLayer.unknownTileErrorTitle
                   ),
@@ -395,6 +404,12 @@ function TileErrorHandlerMixin<T extends AbstractConstructor<ModelType>>(
       });
     }
     return Promise.reject();
+  }
+
+  function toOriginalError(cause: unknown): Error | undefined {
+    if (cause === undefined || cause === null) return undefined;
+    if (cause instanceof Error) return cause;
+    return new Error(String(cause));
   }
 
   function isTileOutsideExtent(

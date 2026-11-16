@@ -230,15 +230,37 @@ describe("TileErrorHandlerMixin", function () {
       expect(raiseEvent.calls.count()).toBe(0);
     });
 
-    it("otherwise, it fails with unknown error", async function () {
+    it("otherwise, it retries and then fails with unknown error", async function () {
+      const cause = new Error("The source image could not be decoded.");
+      spyOn(Resource, "fetchImage").and.rejectWith(cause);
       try {
         await onTileLoadError(item, newError(undefined));
       } catch {}
+      expect(Resource.fetchImage).toHaveBeenCalledTimes(3);
       expect(item.tileFailures).toBe(1);
       expect(raiseEvent.calls.count()).toBe(1);
       expect(raiseEvent.calls.argsFor(0)[0]?.message).toContain(
         i18next.t(($) => $.models.imageryLayer.unknownTileErrorMessage)
       );
+      expect(raiseEvent.calls.argsFor(0)[0]?.originalError).toEqual([cause]);
+    });
+
+    it("reports a failed request with no status code as the cause", async function () {
+      spyOn(Resource, "fetchImage").and.rejectWith(new RequestErrorEvent());
+      try {
+        await onTileLoadError(item, newError(undefined));
+      } catch {}
+      expect(raiseEvent.calls.argsFor(0)[0]?.originalError?.[0].message).toBe(
+        "Request has failed."
+      );
+    });
+
+    it("tells the map to reload the tile if a retry succeeds", async function () {
+      spyOn(Resource, "fetchImage").and.resolveTo();
+      await onTileLoadError(item, newError(undefined));
+      expect(Resource.fetchImage).toHaveBeenCalledTimes(1);
+      expect(item.tileFailures).toBe(0);
+      expect(raiseEvent.calls.count()).toBe(0);
     });
   });
 
@@ -290,6 +312,7 @@ describe("TileErrorHandlerMixin", function () {
 
   describe("when a tile fails more than the threshold number of times", function () {
     beforeEach(function () {
+      spyOn(Resource, "fetchImage").and.rejectWith(new RequestErrorEvent());
       item.tileErrorHandlingOptions.setTrait(
         CommonStrata.user,
         "thresholdBeforeDisablingItem",
@@ -421,6 +444,7 @@ describe("TileErrorHandlerMixin", function () {
 
   it("resets tileFailures to 0 when there is an intervening success", async function () {
     const error = newError(undefined);
+    spyOn(Resource, "fetchImage").and.rejectWith(new RequestErrorEvent());
     expect(item.tileFailures).toBe(0);
 
     try {
