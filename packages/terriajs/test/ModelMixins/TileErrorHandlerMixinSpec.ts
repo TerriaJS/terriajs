@@ -1,6 +1,7 @@
 import TerriaError from "../../lib/Core/TerriaError";
 import i18next from "i18next";
 import L from "leaflet";
+import retry from "retry";
 import RequestErrorEvent from "terriajs-cesium/Source/Core/RequestErrorEvent";
 import Resource from "terriajs-cesium/Source/Core/Resource";
 import TileProviderError from "terriajs-cesium/Source/Core/TileProviderError";
@@ -296,6 +297,52 @@ describe("TileErrorHandlerMixin", function () {
         await onTileLoadError(item, newError(randomIntBetween(500, 599), 5));
       } catch {}
       expect(item.tileFailures).toEqual(1);
+    });
+
+    it("retries as many times as tileErrorHandlingOptions.retries says", async function () {
+      item.tileErrorHandlingOptions.setTrait(CommonStrata.user, "retries", 1);
+      const error = newError(randomIntBetween(500, 599));
+      spyOn(Resource, "fetchImage").and.rejectWith(error.error);
+      try {
+        await onTileLoadError(item, error);
+      } catch {}
+      expect(Resource.fetchImage).toHaveBeenCalledTimes(1);
+      expect(item.tileFailures).toBe(1);
+    });
+
+    it("fails on the first attempt when retries is 0", async function () {
+      item.tileErrorHandlingOptions.setTrait(CommonStrata.user, "retries", 0);
+      const error = newError(undefined);
+      spyOn(Resource, "fetchImage").and.rejectWith(error.error);
+      try {
+        await onTileLoadError(item, error);
+      } catch {}
+      expect(Resource.fetchImage).not.toHaveBeenCalled();
+      expect(item.tileFailures).toBe(1);
+    });
+
+    it("waits between retries as the timeout options say", async function () {
+      item.tileRetryOptions = { retries: 3, randomize: false };
+      item.tileErrorHandlingOptions.setTrait(
+        CommonStrata.user,
+        "retryMinTimeout",
+        100
+      );
+      item.tileErrorHandlingOptions.setTrait(
+        CommonStrata.user,
+        "retryMaxTimeout",
+        150
+      );
+      const createOperation = spyOn(retry, "operation").and.callThrough();
+      try {
+        await onTileLoadError(item, newError(400));
+      } catch {}
+      expect(createOperation.calls.argsFor(0)[0]).toEqual({
+        retries: 3,
+        randomize: false,
+        minTimeout: 100,
+        maxTimeout: 150
+      });
     });
 
     it("gives up silently if the item is hidden", async function () {

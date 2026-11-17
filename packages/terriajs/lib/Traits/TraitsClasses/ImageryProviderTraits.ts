@@ -37,6 +37,30 @@ export class TileErrorHandlingTraits extends ModelTraits {
       "A flag indicating whether non-specific (no HTTP status code) tile errors should be ignored. This is a last resort, for dealing with odd cases such as data sources that return non-images (eg XML) with a 200 status code. No error messages will be shown to the user."
   })
   ignoreUnknownTileErrors?: boolean;
+
+  @primitiveTrait({
+    type: "number",
+    name: "retries",
+    description:
+      "The number of times to retry a tile that fails with a 5xx response or with no HTTP status code, before counting it as failed. Defaults to 8. Set to 0 to fail on the first attempt."
+  })
+  retries?: number;
+
+  @primitiveTrait({
+    type: "number",
+    name: "retryMinTimeout",
+    description:
+      "The wait in milliseconds before the first retry of a failed tile. Each later retry waits twice as long as the one before, up to `retryMaxTimeout`. Defaults to 200."
+  })
+  retryMinTimeout?: number;
+
+  @primitiveTrait({
+    type: "number",
+    name: "retryMaxTimeout",
+    description:
+      "The longest wait in milliseconds between two retries of a failed tile. Lower it to report a server that stays down sooner. Unlimited by default."
+  })
+  retryMaxTimeout?: number;
 }
 
 export default class ImageryProviderTraits extends mixTraits(
