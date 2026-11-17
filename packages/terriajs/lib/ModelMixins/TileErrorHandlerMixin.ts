@@ -14,7 +14,9 @@ import CompositeCatalogItem from "../Models/Catalog/CatalogItems/CompositeCatalo
 import CommonStrata from "../Models/Definition/CommonStrata";
 import Model from "../Models/Definition/Model";
 import CatalogMemberTraits from "../Traits/TraitsClasses/CatalogMemberTraits";
-import ImageryProviderTraits from "../Traits/TraitsClasses/ImageryProviderTraits";
+import ImageryProviderTraits, {
+  TileErrorHandlingTraits
+} from "../Traits/TraitsClasses/ImageryProviderTraits";
 import MappableTraits from "../Traits/TraitsClasses/MappableTraits";
 import DiscretelyTimeVaryingMixin from "./DiscretelyTimeVaryingMixin";
 import MappableMixin from "./MappableMixin";
@@ -81,7 +83,10 @@ function TileErrorHandlerMixin<T extends AbstractConstructor<ModelType>>(
      *   - The "retry" library knows how to pace the retries, and when to actually stop.
      */
     onTileLoadError(tileProviderError: TileProviderError): void {
-      const operation = retry.operation(this.tileRetryOptions);
+      const operation = createTileRetryOperation(
+        this.tileRetryOptions,
+        runInAction(() => this.tileErrorHandlingOptions)
+      );
 
       // Cesium's TileProviderError has a native Promise now, but the code
       // below is adapted from when it had a when.js promise. That's why it's
@@ -404,6 +409,30 @@ function TileErrorHandlerMixin<T extends AbstractConstructor<ModelType>>(
       });
     }
     return Promise.reject();
+  }
+
+  /**
+   * Paces the retries of a failed tile. The item's `tileErrorHandlingOptions`
+   * override the count and timing in `defaults`.
+   */
+  function createTileRetryOperation(
+    defaults: retry.OperationOptions,
+    overrides: Pick<
+      TileErrorHandlingTraits,
+      "retries" | "retryMinTimeout" | "retryMaxTimeout"
+    >
+  ) {
+    if (Array.isArray(defaults)) return retry.operation(defaults);
+
+    const options = { ...defaults };
+    if (overrides.retries !== undefined) options.retries = overrides.retries;
+    if (overrides.retryMinTimeout !== undefined)
+      options.minTimeout = overrides.retryMinTimeout;
+    if (overrides.retryMaxTimeout !== undefined)
+      options.maxTimeout = overrides.retryMaxTimeout;
+    if (options.minTimeout !== undefined && options.maxTimeout !== undefined)
+      options.minTimeout = Math.min(options.minTimeout, options.maxTimeout);
+    return retry.operation(options);
   }
 
   function toOriginalError(cause: unknown): Error | undefined {
