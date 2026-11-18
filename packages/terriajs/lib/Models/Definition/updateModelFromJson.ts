@@ -53,7 +53,8 @@ function updateModelFromJsonInternal(
         propertyName === "type" ||
         propertyName === "localId" ||
         propertyName === "shareKeys" ||
-        propertyName === "strata"
+        propertyName === "strata" ||
+        propertyName === "isOptionalModel"
       ) {
         return;
       }

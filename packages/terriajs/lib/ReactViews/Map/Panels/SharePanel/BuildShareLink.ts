@@ -8,6 +8,7 @@ import hashEntity from "../../../../Core/hashEntity";
 import isDefined from "../../../../Core/isDefined";
 import TerriaError from "../../../../Core/TerriaError";
 import ReferenceMixin from "../../../../ModelMixins/ReferenceMixin";
+import CatalogMemberFactory from "../../../../Models/Catalog/CatalogMemberFactory";
 import CommonStrata from "../../../../Models/Definition/CommonStrata";
 import { BaseModel } from "../../../../Models/Definition/Model";
 import saveStratumToJson from "../../../../Models/Definition/saveStratumToJson";
@@ -24,7 +25,6 @@ import ViewState from "../../../../ReactViewModels/ViewState";
 import getDereferencedIfExists from "../../../../Core/getDereferencedIfExists";
 import CatalogMemberMixin from "../../../../ModelMixins/CatalogMemberMixin";
 import ViewerMode from "../../../../Models/ViewerMode";
-import { raiseShareDataEvent } from "../../../../ViewModels/ShareDataListener";
 
 /** User properties (generated from URL hash parameters) to add to share link URL in PRODUCTION environment.
  * If in Dev, we add all user properties.
@@ -149,12 +149,6 @@ export function getShareData(
     addTimelineItems(terria, initSource);
     addViewSettings(terria, viewState, initSource, !autoStartStory);
     addFeaturePicking(terria, initSource);
-    raiseShareDataEvent({
-      initSource,
-      includeCurrentView: !autoStartStory,
-      terria,
-      viewState
-    });
     if (includeStories) {
       // info that are not needed in scene share data
       addStories(terria, initSource);
@@ -282,6 +276,9 @@ function addModelStratum(
   }
 
   models[id].type = model.type;
+  if (CatalogMemberFactory.isOptional(model.type)) {
+    models[id].isOptionalModel = true;
+  }
 }
 
 /**

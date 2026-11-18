@@ -11,7 +11,6 @@ import getPath from "../../../Core/getPath";
 import TerriaError from "../../../Core/TerriaError";
 import Terria from "../../../Models/Terria";
 import Box from "../../../Styled/Box";
-import { raiseStorySceneActivatedEvent } from "../../../ViewModels/StorySceneListener";
 import { WithViewState, withViewState } from "../../Context";
 import { onStoryButtonClick } from "../../Map/MenuBar/StoryButton/StoryButton";
 import { Story } from "../Story";
@@ -76,12 +75,6 @@ export async function activateStory(scene: Story, terria: Terria) {
         })
       );
     }
-
-    raiseStorySceneActivatedEvent({
-      scene,
-      initSources: scene.shareData.initSources,
-      terria
-    });
   }
 
   terria.workbench.items.forEach((item) => {
