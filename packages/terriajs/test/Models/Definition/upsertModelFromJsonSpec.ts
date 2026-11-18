@@ -1,8 +1,10 @@
 import { runInAction } from "mobx";
 import CatalogMemberFactory from "../../../lib/Models/Catalog/CatalogMemberFactory";
+import StubCatalogItem from "../../../lib/Models/Catalog/CatalogItems/StubCatalogItem";
 import WebMapServiceCatalogGroup from "../../../lib/Models/Catalog/Ows/WebMapServiceCatalogGroup";
 import WebMapServiceCatalogItem from "../../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
 import CommonStrata from "../../../lib/Models/Definition/CommonStrata";
+import { BaseModel } from "../../../lib/Models/Definition/Model";
 import upsertModelFromJson from "../../../lib/Models/Definition/upsertModelFromJson";
 import Terria from "../../../lib/Models/Terria";
 
@@ -166,5 +168,57 @@ describe("upsertModelFromJson", function () {
 
     const wms = model as WebMapServiceCatalogItem;
     expect(wms.opacity).toBe(0.5);
+  });
+
+  describe("with a type the map doesn't know", function () {
+    const upsertUnknown = (terria: Terria, json: object) =>
+      upsertModelFromJson(CatalogMemberFactory, terria, "", "user", {
+        id: "from-a-plugin",
+        type: "not-a-registered-type",
+        ...json
+      });
+
+    it("adds a stub item and reports an error", function () {
+      const terria = new Terria();
+
+      const result = upsertUnknown(terria, {});
+
+      expect(result.error).toBeDefined();
+      expect(result.ignoreError()?.type).toBe(StubCatalogItem.type);
+    });
+
+    it("is skipped without an error when isOptionalModel is set", function () {
+      const terria = new Terria();
+      const warnSpy = spyOn(console, "warn");
+
+      const result = upsertUnknown(terria, {
+        isOptionalModel: true,
+        speed: 2
+      });
+
+      expect(result.error).toBeUndefined();
+      expect(result.ignoreError()).toBeUndefined();
+      expect(terria.getModelById(BaseModel, "from-a-plugin")).toBeUndefined();
+      expect(warnSpy).toHaveBeenCalledOnceWith(
+        "Skipped optional model `from-a-plugin`: type `not-a-registered-type` isn't registered on this map."
+      );
+    });
+  });
+
+  it("loads isOptionalModel JSON on a map that knows the type", function () {
+    const terria = new Terria();
+
+    const result = upsertModelFromJson(
+      CatalogMemberFactory,
+      terria,
+      "",
+      "user",
+      { id: "known", type: "wms", isOptionalModel: true, name: "Known" }
+    );
+
+    expect(result.error).toBeUndefined();
+    expect((result.ignoreError() as WebMapServiceCatalogItem).name).toBe(
+      "Known"
+    );
   });
 });

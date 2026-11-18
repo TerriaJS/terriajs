@@ -82,6 +82,12 @@ export default function upsertModelFromJson(
       model = isJsonString(json.type)
         ? factory.create(json.type, uniqueId, terria)
         : undefined;
+      if (model === undefined && json.isOptionalModel === true) {
+        console.warn(
+          `Skipped optional model \`${uniqueId}\`: type \`${json.type}\` isn't registered on this map.`
+        );
+        return Result.none();
+      }
       if (model === undefined) {
         errors.push(
           new TerriaError({

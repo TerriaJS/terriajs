@@ -7,6 +7,7 @@ import URI from "urijs";
 import { USER_ADDED_CATEGORY_ID } from "../../../../../lib/Core/addedByUser";
 import PickedFeatures from "../../../../../lib/Map/PickedFeatures/PickedFeatures";
 import addUserCatalogMember from "../../../../../lib/Models/Catalog/addUserCatalogMember";
+import CatalogMemberFactory from "../../../../../lib/Models/Catalog/CatalogMemberFactory";
 import GeoJsonCatalogItem from "../../../../../lib/Models/Catalog/CatalogItems/GeoJsonCatalogItem";
 import WebMapServiceCatalogItem from "../../../../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
 import CommonStrata from "../../../../../lib/Models/Definition/CommonStrata";
@@ -21,11 +22,9 @@ import { setViewerMode } from "../../../../../lib/Models/ViewerMode";
 import ViewState from "../../../../../lib/ReactViewModels/ViewState";
 import {
   buildShareLink,
-  getShareData,
   isShareable,
   SHARE_VERSION
 } from "../../../../../lib/ReactViews/Map/Panels/SharePanel/BuildShareLink";
-import { addShareDataListener } from "../../../../../lib/ViewModels/ShareDataListener";
 
 import bikeRacksGeoJson from "../../../../../wwwroot/test/GeoJSON/bike_racks.geojson" with { type: "json" };
 import { ConfigStrata } from "../../../../../lib/Models/Config/ConfigStrata";
@@ -155,6 +154,47 @@ describe("BuildShareLink", function () {
       const initSources = flattenInitSources(params.initSources);
 
       expect(initSources.workbench).toContain(model.uniqueId);
+    });
+  });
+
+  describe("a model whose type is registered as optional", function () {
+    let model: BaseModel;
+
+    const sharedModelJson = () =>
+      flattenInitSources(
+        decodeAndParseStartHash(buildShareLink(terria, viewState)).initSources
+      ).models?.[model.uniqueId!];
+
+    beforeEach(function () {
+      model = new WebMapServiceCatalogItem("optional-test", terria);
+      model.setTrait(CommonStrata.user, "opacity", 0.5);
+      terria.addModel(model);
+    });
+
+    afterEach(function () {
+      CatalogMemberFactory.register(
+        WebMapServiceCatalogItem.type,
+        WebMapServiceCatalogItem
+      );
+    });
+
+    it("is saved with isOptionalModel", function () {
+      CatalogMemberFactory.register(
+        WebMapServiceCatalogItem.type,
+        WebMapServiceCatalogItem,
+        { optional: true }
+      );
+
+      expect(sharedModelJson()).toEqual(
+        jasmine.objectContaining({ isOptionalModel: true })
+      );
+    });
+
+    it("is saved without isOptionalModel when not optional", function () {
+      const json = sharedModelJson();
+
+      expect(json).toBeDefined();
+      expect(json?.isOptionalModel).toBeUndefined();
     });
   });
 
@@ -393,67 +433,6 @@ describe("BuildShareLink", function () {
 
       expect(initSources.initialCamera).toBeUndefined();
       expect(initSources.settings?.storyAutoStart).toBe(true);
-    });
-  });
-
-  describe("share data listeners", function () {
-    type ExtendedInitSource = InitSourceData & {
-      extra?: { includeCurrentView: boolean };
-    };
-
-    let removeListener: (() => void) | undefined;
-
-    beforeEach(function () {
-      removeListener = addShareDataListener(
-        ({ initSource, includeCurrentView }) => {
-          (initSource as ExtendedInitSource).extra = { includeCurrentView };
-        }
-      );
-    });
-
-    afterEach(function () {
-      removeListener?.();
-    });
-
-    it("can add their own keys to the shared init source", function () {
-      const [initSource] = getShareData(terria, viewState).initSources;
-
-      expect((initSource as ExtendedInitSource).extra).toEqual({
-        includeCurrentView: true
-      });
-    });
-
-    it("are told not to capture the current view when the story starts by itself", function () {
-      runInAction(() => {
-        terria.stories = [
-          {
-            id: "story-1",
-            title: "Test story",
-            text: "",
-            shareData: { version: SHARE_VERSION, initSources: [] }
-          }
-        ];
-        terria.configParameters.setValue(
-          ConfigStrata.user,
-          "storyAutoStart",
-          true
-        );
-      });
-
-      const [initSource] = getShareData(terria, viewState).initSources;
-
-      expect((initSource as ExtendedInitSource).extra).toEqual({
-        includeCurrentView: false
-      });
-    });
-
-    it("stop being called once removed", function () {
-      removeListener?.();
-      removeListener = undefined;
-
-      const [initSource] = getShareData(terria, viewState).initSources;
-
-      expect((initSource as ExtendedInitSource).extra).toBeUndefined();
     });
   });
 
