@@ -2187,6 +2187,10 @@
     "shadowsDisabledForPerformance": {
       "title": "Ombres desactivades",
       "message": "El rendiment màxim està activat. El mapa és de menor qualitat i les ombres estan desactivades. <settingspanel title='Obre la configuració de qualitat del mapa'>Configuració de visualització</settingspanel>"
+    },
+    "autoRefreshing": {
+      "refreshErrorTitle": "S'ha deixat d'actualitzar les dades en directe",
+      "refreshErrorMessage": "{{name}} no s'ha pogut actualitzar, de manera que el que hi ha al mapa pot estar desactualitzat. Ho seguirà intentant."
     }
   },
   "deltaTool": {
