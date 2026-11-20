@@ -24,6 +24,7 @@ import TablePointStyleTraits, {
   EnumPointSymbolTraits
 } from "../../../Traits/TraitsClasses/Table/PointStyleTraits";
 import TableStyleTraits from "../../../Traits/TraitsClasses/Table/StyleTraits";
+import TableTimeStyleTraits from "../../../Traits/TraitsClasses/Table/TimeStyleTraits";
 import createStratumInstance from "../../Definition/createStratumInstance";
 import LoadableStratum from "../../Definition/LoadableStratum";
 import { BaseModel } from "../../Definition/Model";
@@ -176,6 +177,14 @@ interface FeatureServer {
   supportsTilesAndBasicQueriesMode?: boolean;
   objectIdField?: string;
   fields?: Field[];
+  timeInfo?: TimeInfo;
+}
+
+/** See https://developers.arcgis.com/rest/services-reference/enterprise/layer-feature-service/#timeinfo */
+interface TimeInfo {
+  startTimeField?: string | null;
+  endTimeField?: string | null;
+  trackIdField?: string | null;
 }
 
 type FieldType =
@@ -386,6 +395,34 @@ export class ArcGisFeatureServerStratum extends LoadableStratum(
 
   @computed get activeStyle() {
     return "ESRI";
+  }
+
+  /** Whether the layer is time-enabled, ie its `timeInfo` has a start or end time field */
+  @computed get hasTimeInfo() {
+    const timeInfo = this._featureServer?.timeInfo;
+    return !!(timeInfo?.startTimeField || timeInfo?.endTimeField);
+  }
+
+  /** Time settings from the layer's `timeInfo`, if it is time-enabled */
+  @computed get defaultStyle() {
+    if (!this.hasTimeInfo) return undefined;
+    const timeInfo = this._featureServer?.timeInfo;
+    const timeColumn = timeInfo?.startTimeField || timeInfo?.endTimeField;
+
+    // Rows need an ID to be grouped, otherwise TableStyle drops them from the
+    // timeline. Use the track ID if there is one, else every feature is its
+    // own row group.
+    const idColumn = timeInfo?.trackIdField || this.objectIdField;
+
+    return createStratumInstance(TableStyleTraits, {
+      time: createStratumInstance(TableTimeStyleTraits, {
+        timeColumn,
+        endTimeColumn: timeInfo?.startTimeField
+          ? timeInfo.endTimeField || undefined
+          : undefined,
+        idColumns: idColumn ? [idColumn] : undefined
+      })
+    });
   }
 
   @computed get styles() {
@@ -632,6 +669,9 @@ export class ArcGisFeatureServerStratum extends LoadableStratum(
   @computed get tileRequests() {
     if (this._item.forceCesiumPrimitives) return false;
 
+    // Tiled requests don't load the full table, which the timeline needs
+    if (this.hasTimeInfo) return false;
+
     const supportsPbfTiles =
       this._featureServer?.supportsTilesAndBasicQueriesMode &&
       typeof this._featureServer?.supportedQueryFormats === "string" &&
@@ -646,8 +686,14 @@ export class ArcGisFeatureServerStratum extends LoadableStratum(
     return undefined;
   }
 
+  /** MapServer layers don't have `objectIdField`, so fall back to the OID field */
   get objectIdField() {
-    return this._featureServer?.objectIdField;
+    return (
+      this._featureServer?.objectIdField ??
+      this._featureServer?.fields?.find(
+        (field) => field.type === "esriFieldTypeOID"
+      )?.name
+    );
   }
 
   // Add properties/columns to outFields if they are needed for styling. Otherwise, these properties won't be in tile features

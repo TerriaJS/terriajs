@@ -350,9 +350,165 @@ describe("ArcGisFeatureServerCatalogItem", function () {
         isDataSource(mapItem) ? mapItem.entities.values.length : 0
       ).toEqual(13);
     });
+
+    it("converts esri date fields to ISO strings", async function () {
+      const layerJson = JSON.parse(JSON.stringify(waterNetworkLayerJson));
+      layerJson.features[0].attributes.installdate = 1794873600000;
+
+      worker.use(
+        http.get(
+          "http://example.com/arcgis/rest/services/Water_Network/FeatureServer/2/query",
+          () => HttpResponse.json(layerJson)
+        )
+      );
+
+      runInAction(() => {
+        item.setTrait(CommonStrata.definition, "url", featureServerUrl);
+        item.setTrait(CommonStrata.definition, "maxFeatures", 20);
+        item.setTrait(CommonStrata.definition, "tileRequests", false);
+      });
+
+      await item.loadMapItems();
+
+      const properties = item.readyData?.features[0].properties;
+      expect(properties?.installdate).toEqual(
+        new Date(1794873600000).toISOString()
+      );
+      // Null dates are left alone
+      expect(properties?.abandate).toBeNull();
+    });
+
+    it("detects time settings from timeInfo", async function () {
+      const metadataJson = {
+        ...waterNetwork2Json,
+        timeInfo: {
+          startTimeField: "installdate",
+          endTimeField: "lastupdate",
+          trackIdField: ""
+        }
+      };
+      const layerJson = JSON.parse(JSON.stringify(waterNetworkLayerJson));
+      layerJson.features[0].attributes.installdate = 1794873600000;
+      layerJson.features[0].attributes.lastupdate = 1794895200000;
+      layerJson.features[1].attributes.installdate = 1794895200000;
+      layerJson.features[1].attributes.lastupdate = 1794916800000;
+
+      worker.use(
+        http.get(
+          "http://example.com/arcgis/rest/services/Water_Network/FeatureServer/2/query",
+          () => HttpResponse.json(layerJson)
+        ),
+        http.get(
+          "http://example.com/arcgis/rest/services/Water_Network/FeatureServer/2",
+          () => HttpResponse.json(metadataJson)
+        )
+      );
+
+      runInAction(() => {
+        item.setTrait(CommonStrata.definition, "url", featureServerUrl);
+        item.setTrait(CommonStrata.definition, "maxFeatures", 20);
+      });
+
+      await item.loadMapItems();
+
+      const time = item.defaultStyle.time;
+      expect(time.timeColumn).toBe("installdate");
+      expect(time.endTimeColumn).toBe("lastupdate");
+      // Falls back to objectIdField when there is no trackIdField
+      expect(time.idColumns).toEqual(["objectid"]);
+
+      expect(item.discreteTimes?.map((t) => t.time)).toEqual([
+        new Date(1794873600000).toISOString(),
+        new Date(1794895200000).toISOString()
+      ]);
+      expect(item.disableDateTimeSelector).toBeFalsy();
+    });
+
+    it("loads a MapServer layer", async function () {
+      worker.use(
+        http.get(
+          "http://example.com/arcgis/rest/services/Water_Network/MapServer/2/query",
+          () => HttpResponse.json(waterNetworkLayerJson)
+        ),
+        http.get(
+          "http://example.com/arcgis/rest/services/Water_Network/MapServer/2",
+          () => HttpResponse.json(waterNetwork2Json)
+        )
+      );
+
+      runInAction(() => {
+        item.setTrait(
+          CommonStrata.definition,
+          "url",
+          "http://example.com/arcgis/rest/services/Water_Network/MapServer/2"
+        );
+        item.setTrait(CommonStrata.definition, "maxFeatures", 20);
+        item.setTrait(CommonStrata.definition, "tileRequests", false);
+      });
+
+      await item.loadMapItems();
+
+      expect(item.mapItems.length).toEqual(1);
+      const mapItem = item.mapItems[0];
+      expect(
+        isDataSource(mapItem) ? mapItem.entities.values.length : 0
+      ).toEqual(13);
+    });
+
+    it("uses the OID field as idColumn for MapServer layers", async function () {
+      const metadataJson = JSON.parse(JSON.stringify(waterNetwork2Json));
+      // MapServer layer metadata has no `objectIdField`
+      delete metadataJson.objectIdField;
+      metadataJson.timeInfo = {
+        startTimeField: "installdate",
+        endTimeField: "lastupdate",
+        trackIdField: null
+      };
+
+      worker.use(
+        http.get(
+          "http://example.com/arcgis/rest/services/Water_Network/MapServer/2",
+          () => HttpResponse.json(metadataJson)
+        )
+      );
+
+      runInAction(() => {
+        item.setTrait(
+          CommonStrata.definition,
+          "url",
+          "http://example.com/arcgis/rest/services/Water_Network/MapServer/2"
+        );
+      });
+
+      await item.loadMetadata();
+
+      expect(item.objectIdField).toBe("objectid");
+      expect(item.defaultStyle.time.idColumns).toEqual(["objectid"]);
+    });
   });
 
   describe("loadMapItems - tiled query", function () {
+    it("disables tiling for time-enabled layers", async function () {
+      worker.use(
+        http.get(featureServerUrlTiled, () =>
+          HttpResponse.json({
+            ...tiledActVegMapJson,
+            timeInfo: { startTimeField: "date", endTimeField: null }
+          })
+        )
+      );
+
+      runInAction(() => {
+        item.setTrait(CommonStrata.definition, "url", featureServerUrlTiled);
+      });
+
+      await item.loadMetadata();
+
+      expect(item.tileRequests).toBe(false);
+      expect(item.defaultStyle.time.timeColumn).toBe("date");
+      expect(item.defaultStyle.time.endTimeColumn).toBeUndefined();
+    });
+
     it("properly loads a layer", async function () {
       runInAction(() => {
         item.setTrait(CommonStrata.definition, "url", featureServerUrlTiled);

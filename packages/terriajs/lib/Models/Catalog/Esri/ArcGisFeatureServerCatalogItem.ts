@@ -65,7 +65,9 @@ export default class ArcGisFeatureServerCatalogItem extends MinMaxLevelMixin(
     if (!this.supportsPagination) {
       // Make a single request without pagination
       return (
-        featureDataToGeoJson(await getEsriLayerJson()) ?? {
+        featureDataToGeoJson(
+          convertEsriDatesToIso(await getEsriLayerJson())
+        ) ?? {
           type: "FeatureCollection",
           features: []
         }
@@ -123,7 +125,7 @@ export default class ArcGisFeatureServerCatalogItem extends MinMaxLevelMixin(
     }
 
     return (
-      featureDataToGeoJson(combinedEsriLayerJson) ?? {
+      featureDataToGeoJson(convertEsriDatesToIso(combinedEsriLayerJson)) ?? {
         type: "FeatureCollection",
         features: []
       }
@@ -258,7 +260,8 @@ export default class ArcGisFeatureServerCatalogItem extends MinMaxLevelMixin(
 }
 
 function splitLayerIdFromPath(url: string) {
-  const regex = /^(.*FeatureServer)\/(\d+)/;
+  // MapServer layers expose the same query API as FeatureServer layers
+  const regex = /^(.*(?:FeatureServer|MapServer))\/(\d+)/;
   const matches = url.match(regex);
   if (isDefined(matches) && matches !== null && matches.length > 2) {
     return {
@@ -269,6 +272,30 @@ function splitLayerIdFromPath(url: string) {
   return {
     urlWithoutLayerId: url
   };
+}
+
+/**
+ * Esri JSON returns `esriFieldTypeDate` values as epoch milliseconds, which
+ * TableColumn can't parse as dates. Convert them (in place) to ISO strings so
+ * date fields can be used as time columns.
+ */
+function convertEsriDatesToIso(esriLayerJson: any) {
+  const dateFields: string[] = (esriLayerJson?.fields ?? [])
+    .filter((field: any) => field.type === "esriFieldTypeDate")
+    .map((field: any) => field.name);
+  if (dateFields.length === 0) return esriLayerJson;
+
+  for (const feature of esriLayerJson.features ?? []) {
+    const attributes = feature.attributes;
+    if (!attributes) continue;
+    for (const name of dateFields) {
+      const value = attributes[name];
+      if (typeof value === "number" && Number.isFinite(value)) {
+        attributes[name] = new Date(value).toISOString();
+      }
+    }
+  }
+  return esriLayerJson;
 }
 
 function cleanUrl(url: string): string {
