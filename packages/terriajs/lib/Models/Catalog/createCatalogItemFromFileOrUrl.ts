@@ -35,7 +35,6 @@ export default function createCatalogItemFromFileOrUrl(
             message: i18next.t(
               ($) => $.models.catalog.unsupportedFileTypeMessage,
               {
-                appName: terria.appName,
                 link: '<a href="https://github.com/TerriaJS/nationalmap/wiki/csv-geo-au">csv-geo-au format</a>'
               }
             )

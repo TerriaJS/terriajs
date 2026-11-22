@@ -90,6 +90,18 @@ i18next.on("languageChanged", (lng) => {
 });
 
 class Internationalization {
+  /**
+   * Values every translation can use without the caller passing them, such as
+   * `{{appName}}`. A value the caller passes wins.
+   */
+  static setDefaultVariables(variables: Record<string, string>): void {
+    const interpolation = i18next.options.interpolation;
+    i18next.options.interpolation = {
+      ...interpolation,
+      defaultVariables: { ...interpolation?.defaultVariables, ...variables }
+    };
+  }
+
   static async initLanguage(
     languageConfiguration: Partial<LanguageConfiguration> | undefined,
     /**
@@ -204,7 +216,8 @@ class Internationalization {
           // cookieDomain: "myDomain",
         },
         interpolation: {
-          escapeValue: false // not needed for react as it escapes by default and not needed in node
+          escapeValue: false, // not needed for react as it escapes by default and not needed in node
+          defaultVariables: i18next.options.interpolation?.defaultVariables
         }
       });
   }

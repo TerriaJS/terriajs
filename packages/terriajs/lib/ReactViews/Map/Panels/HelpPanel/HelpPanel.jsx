@@ -100,11 +100,7 @@ class HelpPanel extends Component {
           </Text>
           <Spacing bottom={4} />
           <Text medium textDark highlightLinks>
-            {parseCustomMarkdownToReact(
-              t(($) => $.helpPanel.menuPaneBody, {
-                supportEmail: this.props.viewState.terria.supportEmail
-              })
-            )}
+            {parseCustomMarkdownToReact(t(($) => $.helpPanel.menuPaneBody))}
           </Text>
           <Spacing bottom={5} />
           <Box centered>

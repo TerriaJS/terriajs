@@ -61,7 +61,7 @@ class ShapefileCatalogItem
     if (this.url) {
       if (this.hasLocalData || isZip(this.url)) {
         if (typeof FileReader === "undefined") {
-          throw fileApiNotSupportedError(this.terria);
+          throw fileApiNotSupportedError();
         }
         const blob = await loadBlob(proxyCatalogItemUrl(this, this.url));
         return await parseShapefile(blob);

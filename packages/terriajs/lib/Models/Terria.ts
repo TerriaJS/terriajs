@@ -1,6 +1,8 @@
 import i18next, { keyFromSelector } from "i18next";
 import {
+  IReactionDisposer,
   action,
+  autorun,
   computed,
   makeObservable,
   observable,
@@ -325,6 +327,8 @@ export default class Terria {
 
   @observable
   readonly initSources: InitSource[] = [];
+  private _disposeTranslationDefaults: IReactionDisposer | undefined;
+
   private _initSourceLoader = new AsyncLoader(
     this.forceLoadInitSources.bind(this)
   );
@@ -793,6 +797,13 @@ export default class Terria {
       });
     }
     this.preloadWorldTerrain();
+    this._disposeTranslationDefaults?.();
+    this._disposeTranslationDefaults = autorun(() =>
+      Internationalization.setDefaultVariables({
+        appName: this.appName,
+        supportEmail: this.supportEmail
+      })
+    );
     // Language init and server config don't depend on each other, so with
     // progressive loading they load in parallel rather than back to back.
     const languageInitialized = options.i18nOptions?.skipInit
@@ -1062,6 +1073,7 @@ export default class Terria {
 
   dispose(): void {
     this._initSourceLoader.dispose();
+    this._disposeTranslationDefaults?.();
   }
 
   async updateFromStartData(
@@ -1285,7 +1297,7 @@ export default class Terria {
           key: keyFromSelector(
             ($) => $.models.terria.loadingInitSourcesErrorMessage
           ),
-          parameters: { appName: this.appName, email: this.supportEmail }
+          parameters: { email: this.supportEmail }
         }
       });
     }

@@ -90,9 +90,7 @@ class KmlCatalogItem
         TerriaError.from(e, {
           sender: this,
           title: i18next.t(($) => $.models.kml.errorLoadingTitle),
-          message: i18next.t(($) => $.models.kml.errorLoadingMessage, {
-            appName: this.terria.appName
-          })
+          message: i18next.t(($) => $.models.kml.errorLoadingMessage)
         })
       );
     }

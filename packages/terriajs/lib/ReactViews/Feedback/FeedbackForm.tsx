@@ -302,11 +302,7 @@ class FeedbackForm extends Component<IProps, IState> {
             value="sendShareUrl"
             onChange={this.changeSendShareUrl}
           >
-            <Text>
-              {t(($) => $.feedback.shareWithDevelopers, {
-                appName: this.props.viewState.terria.appName
-              })!}
-            </Text>
+            <Text>{t(($) => $.feedback.shareWithDevelopers)!}</Text>
           </Checkbox>
           <Spacing bottom={2} />
           {postamble ? <Text textDarker>{postamble}</Text> : null}

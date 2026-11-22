@@ -60,9 +60,7 @@ class GpxCatalogItem extends GeoJsonMixin(CreateModel(GpxCatalogItemTraits)) {
       throw networkRequestError({
         sender: this,
         title: i18next.t(($) => $.models.gpx.errorLoadingTitle),
-        message: i18next.t(($) => $.models.gpx.errorLoadingMessage, {
-          appName: this.terria.appName
-        })
+        message: i18next.t(($) => $.models.gpx.errorLoadingMessage)
       });
     }
 
