@@ -174,7 +174,7 @@ class GeoJsonCatalogItem
     // URL to zipped fle
     if (isZip(url)) {
       if (typeof FileReader === "undefined") {
-        throw fileApiNotSupportedError(this.terria);
+        throw fileApiNotSupportedError();
       }
       const body = source.requestData ? toJS(source.requestData) : undefined;
       const blob = await loadBlob(
@@ -210,12 +210,11 @@ function mergeFeatureCollections(
   return featureCollection(featureCollections.map((fc) => fc.features).flat());
 }
 
-export function fileApiNotSupportedError(terria: Terria) {
+/** @param _terria Unused; kept so existing callers still compile. */
+export function fileApiNotSupportedError(_terria?: Terria) {
   return new TerriaError({
     title: i18next.t(($) => $.models.userData.fileApiNotSupportedTitle),
     message: i18next.t(($) => $.models.userData.fileApiNotSupportedTitle, {
-      appName: terria.appName,
-
       chrome:
         '<a href="http://www.google.com/chrome" target="_blank">' +
         i18next.t(($) => $.browsers.chrome) +

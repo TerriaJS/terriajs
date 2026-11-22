@@ -192,9 +192,7 @@ export default class GeoRssCatalogItem
       throw networkRequestError({
         sender: this,
         title: i18next.t(($) => $.models.georss.errorLoadingTitle),
-        message: i18next.t(($) => $.models.georss.errorLoadingMessage, {
-          appName: this.terria.appName
-        })
+        message: i18next.t(($) => $.models.georss.errorLoadingMessage)
       });
     }
 

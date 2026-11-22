@@ -71,6 +71,7 @@
 - Fixed imagery providers of time-varying items being recreated on every clock tick while the timeline is playing, rather than once per time step. `FeatureInfoUrlTemplateMixin.wrapImageryPickFeatures` read the current time when wrapping a provider, and `tableStyleToProtomaps` read it even when it doesn't filter by time (for tiled ArcGIS FeatureServer layers). Time-enabled FeatureServer tiles could then never finish loading.
 - Fixed tiled ArcGIS FeatureServer layers drawing nothing when their Web Mercator extent ends just past the edge of the world, eg the NOAA NDFD layers. The east edge wrapped round to -179.99°, so the layer was clipped to a sliver at -180°.
 - Added `legendTitle` to `TableColorStyleTraits.enumColors`, to title an enumerated value in the legend. ArcGIS FeatureServer unique value renderers now use it for their labels, which fixes their legends showing each value twice - once titled by value with its colour, and once titled by label with no colour - when the labels differ from the values.
+- Translations get `{{appName}}` and `{{supportEmail}}` from i18next default variables, so callers no longer pass them. Added `Internationalization.setDefaultVariables`; `Terria#start` keeps them in step with config, and apps that start Terria themselves call it once config is loaded. `fileApiNotSupportedError`'s `terria` argument is no longer used.
 - [The next improvement]
 
 #### 8.13.0 - 2026-09-11

@@ -160,9 +160,7 @@ export default class ShareDataService implements IShareDataService {
 
       throw TerriaError.from(error, {
         title: i18next.t(($) => $.models.shareData.expandErrorTitle),
-        message: i18next.t(($) => $.models.shareData.expandErrorMessage, {
-          appName: this.terria.appName
-        }),
+        message: i18next.t(($) => $.models.shareData.expandErrorMessage),
         importance: 1
       });
     }

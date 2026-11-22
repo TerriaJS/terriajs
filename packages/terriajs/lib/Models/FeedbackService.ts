@@ -108,9 +108,7 @@ export class FeedbackService implements IFeedbackService {
           result: "SUCCESS",
           notification: {
             title: i18next.t((t) => t.models.feedback.thanksTitle),
-            message: i18next.t((t) => t.models.feedback.thanksMessage, {
-              appName: this._terria.appName
-            })
+            message: i18next.t((t) => t.models.feedback.thanksMessage)
           }
         };
       }

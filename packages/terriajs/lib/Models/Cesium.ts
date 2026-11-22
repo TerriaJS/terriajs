@@ -264,7 +264,7 @@ export default class Cesium extends GlobeOrMap {
           key: keyFromSelector(
             ($) => $.terriaViewer.slowWebGLAvailableMessageII
           ),
-          parameters: { appName: this.terria.appName, webGL: "WebGL" }
+          parameters: { webGL: "WebGL" }
         }
       });
     }
@@ -642,10 +642,7 @@ export default class Cesium extends GlobeOrMap {
         if (!this._terrainMessageViewed) {
           this.terria.raiseErrorToUser(err, {
             title: i18next.t(($) => $.map.cesium.terrainServerErrorTitle),
-            message: i18next.t(($) => $.map.cesium.terrainServerErrorMessage, {
-              appName: this.terria.appName,
-              supportEmail: this.terria.supportEmail
-            })
+            message: i18next.t(($) => $.map.cesium.terrainServerErrorMessage)
           });
 
           this._terrainMessageViewed = true;
@@ -749,9 +746,7 @@ export default class Cesium extends GlobeOrMap {
         this.previousRenderError = error.toString();
         this.terria.raiseErrorToUser(error, {
           title: i18next.t(($) => $.map.cesium.stoppedRenderingTitle),
-          message: i18next.t(($) => $.map.cesium.stoppedRenderingMessage, {
-            appName: this.terria.appName
-          })
+          message: i18next.t(($) => $.map.cesium.stoppedRenderingMessage)
         });
       }
     }
