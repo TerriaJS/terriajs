@@ -389,12 +389,19 @@ export class ArcGisFeatureServerStratum extends LoadableStratum(
       const source = Proj4Definitions[wkid];
       const dest = "EPSG:4326";
 
-      let p = proj4(source, dest, [extent.xmin, extent.ymin]);
+      // Web Mercator x beyond the edge of the world would wrap round, eg an extent
+      // ending just past 180° would end at -179.99°
+      const clampX = isWebMercator(source)
+        ? (x: number) =>
+            Math.max(-WEB_MERCATOR_MAX_X, Math.min(WEB_MERCATOR_MAX_X, x))
+        : (x: number) => x;
+
+      let p = proj4(source, dest, [clampX(extent.xmin), extent.ymin]);
 
       const west = p[0];
       const south = p[1];
 
-      p = proj4(source, dest, [extent.xmax, extent.ymax]);
+      p = proj4(source, dest, [clampX(extent.xmax), extent.ymax]);
 
       const east = p[0];
       const north = p[1];
@@ -797,6 +804,14 @@ function buildMetadataUrl(
     url.addQuery("token", token);
   }
   return proxyCatalogItemUrl(catalogItem, url.toString());
+}
+
+/** Web Mercator x at ±180° */
+const WEB_MERCATOR_MAX_X = 20037508.342789244;
+
+/** Whether a `Proj4Definitions` value is Web Mercator (wkid 3857, and 102100 which maps to it) */
+function isWebMercator(proj4Definition: string) {
+  return proj4Definition === "EPSG:3857" || proj4Definition === "EPSG:900913";
 }
 
 function supportsPbfTiles(featureServer: FeatureServer) {

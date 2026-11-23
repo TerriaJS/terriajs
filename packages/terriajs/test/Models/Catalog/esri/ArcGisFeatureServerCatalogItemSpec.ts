@@ -238,6 +238,33 @@ describe("ArcGisFeatureServerCatalogItem", function () {
     });
   });
 
+  it("defines a whole-world rectangle for a Web Mercator extent slightly past the edge of the world", async function () {
+    // Eg the NOAA NDFD layers. Projecting the east edge naively wraps it to -179.998°.
+    worker.use(
+      http.get(featureServerUrlTiled, () =>
+        HttpResponse.json({
+          ...tiledActVegMapJson,
+          extent: {
+            xmin: -20037507.0672,
+            ymin: 1917132.1743,
+            xmax: 20037715.9809,
+            ymax: 10107528.6612,
+            spatialReference: { wkid: 102100, latestWkid: 3857 }
+          }
+        })
+      )
+    );
+    runInAction(() => {
+      item.setTrait(CommonStrata.definition, "url", featureServerUrlTiled);
+    });
+    await item.loadMetadata();
+
+    expect(item.rectangle.west).toBeCloseTo(-180, 4);
+    expect(item.rectangle.east).toBeCloseTo(180, 4);
+    expect(item.rectangle.south).toBeCloseTo(16.97, 2);
+    expect(item.rectangle.north).toBeCloseTo(66.83, 2);
+  });
+
   describe("after loading metadata - layer with min/max extent", function () {
     beforeEach(async function () {
       runInAction(() => {
