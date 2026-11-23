@@ -8,6 +8,7 @@ import { USER_ADDED_CATEGORY_ID } from "../../../../../lib/Core/addedByUser";
 import PickedFeatures from "../../../../../lib/Map/PickedFeatures/PickedFeatures";
 import addUserCatalogMember from "../../../../../lib/Models/Catalog/addUserCatalogMember";
 import CatalogMemberFactory from "../../../../../lib/Models/Catalog/CatalogMemberFactory";
+import CompositeCatalogItem from "../../../../../lib/Models/Catalog/CatalogItems/CompositeCatalogItem";
 import GeoJsonCatalogItem from "../../../../../lib/Models/Catalog/CatalogItems/GeoJsonCatalogItem";
 import WebMapServiceCatalogItem from "../../../../../lib/Models/Catalog/Ows/WebMapServiceCatalogItem";
 import CommonStrata from "../../../../../lib/Models/Definition/CommonStrata";
@@ -195,6 +196,48 @@ describe("BuildShareLink", function () {
 
       expect(json).toBeDefined();
       expect(json?.isOptionalModel).toBeUndefined();
+    });
+  });
+
+  describe("a composite on the workbench", function () {
+    let composite: CompositeCatalogItem;
+
+    const sharedModels = () =>
+      flattenInitSources(
+        decodeAndParseStartHash(buildShareLink(terria, viewState)).initSources
+      ).models ?? {};
+
+    beforeEach(function () {
+      composite = new CompositeCatalogItem("composite", terria);
+      const member = new GeoJsonCatalogItem("member", terria);
+      member.setTrait(CommonStrata.definition, "show", false);
+      terria.addModel(composite);
+      terria.addModel(member);
+      composite.setTrait(CommonStrata.definition, "members", ["member"]);
+    });
+
+    it("saves a member that holds nothing in the user stratum", async function () {
+      await terria.workbench.add(composite);
+
+      expect(sharedModels().member).toEqual({ type: "geojson" });
+    });
+
+    it("leaves such a member out while the composite is off the workbench", function () {
+      expect(sharedModels().member).toBeUndefined();
+    });
+
+    it("lets a later scene undo what an earlier one showed", async function () {
+      await terria.workbench.add(composite);
+      const member = terria.getModelById(GeoJsonCatalogItem, "member")!;
+      const untouched = sharedModels();
+
+      member.setTrait(CommonStrata.user, "show", true);
+      await terria.applyInitData({
+        initData: { stratum: CommonStrata.user, models: untouched },
+        replaceStratum: true
+      });
+
+      expect(member.show).toBe(false);
     });
   });
 

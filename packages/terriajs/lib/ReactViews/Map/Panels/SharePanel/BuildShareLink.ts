@@ -9,6 +9,7 @@ import isDefined from "../../../../Core/isDefined";
 import TerriaError from "../../../../Core/TerriaError";
 import ReferenceMixin from "../../../../ModelMixins/ReferenceMixin";
 import CatalogMemberFactory from "../../../../Models/Catalog/CatalogMemberFactory";
+import CompositeCatalogItem from "../../../../Models/Catalog/CatalogItems/CompositeCatalogItem";
 import CommonStrata from "../../../../Models/Definition/CommonStrata";
 import { BaseModel } from "../../../../Models/Definition/Model";
 import saveStratumToJson from "../../../../Models/Definition/saveStratumToJson";
@@ -181,9 +182,12 @@ function addStratum(
   initSource.stratum = stratumId;
   initSource.models = {};
 
+  const compositeMembers = workbenchCompositeMembers(terria);
+
   terria.modelValues.forEach((model) => {
     if (model.uniqueId === GlobeOrMap.featureHighlightID) return;
-    const force = terria.workbench.contains(model);
+    const force =
+      terria.workbench.contains(model) || compositeMembers.has(model);
     addModelStratum(terria, model, stratumId, force, initSource);
   });
 
@@ -205,6 +209,27 @@ function addStratum(
         }
       });
   });
+}
+
+/**
+ * The members of every composite on the workbench, nested composites included.
+ * A composite's dimensions show and hide its members by writing to the members
+ * themselves, so a member is saved even when it holds nothing in the stratum:
+ * a story scene resets only the models it lists, and a member left out would
+ * keep what the previous scene set on it.
+ */
+function workbenchCompositeMembers(terria: Terria): Set<BaseModel> {
+  const members = new Set<BaseModel>();
+  const collect = (model: BaseModel) => {
+    if (!(model instanceof CompositeCatalogItem)) return;
+    model.memberModels.forEach((member) => {
+      if (members.has(member)) return;
+      members.add(member);
+      collect(member);
+    });
+  };
+  terria.workbench.items.forEach(collect);
+  return members;
 }
 
 function addWorkbench(terria: Terria, initSource: InitSourceData) {
