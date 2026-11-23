@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { configure, runInAction } from "mobx";
+import { autorun, configure, runInAction } from "mobx";
 import { http, HttpResponse, passthrough } from "msw";
 import { GeomType } from "protomaps-leaflet";
 import Color from "terriajs-cesium/Source/Core/Color";
@@ -597,6 +597,37 @@ describe("ArcGisFeatureServerCatalogItem", function () {
         expect(
           item.discreteTimes?.map((t) => new Date(t.time).getTime())
         ).toEqual(times);
+      });
+
+      it("makes one tile provider per time step, not per clock tick", async function () {
+        useMetadata({});
+        runInAction(() => {
+          item.setTrait(CommonStrata.user, "currentTime", iso(times[0]));
+        });
+        await item.loadMapItems();
+
+        const providers = new Set();
+        const dispose = autorun(() => {
+          providers.add(item.imageryProvider);
+        });
+
+        // The clock moves within a time step on every frame while playing
+        [1, 2, 3].forEach((minutes) =>
+          runInAction(() => {
+            item.setTrait(
+              CommonStrata.user,
+              "currentTime",
+              iso(times[0] + minutes * 60000)
+            );
+          })
+        );
+        expect(providers.size).toBe(1);
+
+        runInAction(() => {
+          item.setTrait(CommonStrata.user, "currentTime", iso(times[1]));
+        });
+        expect(providers.size).toBe(2);
+        dispose();
       });
 
       it("loads every feature instead if tileRequests is false", async function () {

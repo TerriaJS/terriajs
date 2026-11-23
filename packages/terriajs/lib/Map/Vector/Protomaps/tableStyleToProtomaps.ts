@@ -92,8 +92,10 @@ export function tableStyleToProtomaps(
   getStyleReactiveDependencies(catalogItem);
 
   // If time varying, get row indices which match
-  // This is used to filter feature[FEATURE_ID_PROP]
+  // This is used to filter feature[FEATURE_ID_PROP], so only applies with row IDs.
+  // Check that first - reading the current time makes this re-run on every clock tick.
   if (
+    useRowIds &&
     catalogItem.currentTimeAsJulianDate &&
     catalogItem.activeTableStyle.timeIntervals &&
     catalogItem.activeTableStyle.moreThanOneTimeInterval
