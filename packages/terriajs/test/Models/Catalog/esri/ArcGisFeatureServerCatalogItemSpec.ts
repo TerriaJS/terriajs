@@ -488,25 +488,127 @@ describe("ArcGisFeatureServerCatalogItem", function () {
   });
 
   describe("loadMapItems - tiled query", function () {
-    it("disables tiling for time-enabled layers", async function () {
-      worker.use(
-        http.get(featureServerUrlTiled, () =>
-          HttpResponse.json({
-            ...tiledActVegMapJson,
-            timeInfo: { startTimeField: "date", endTimeField: null }
-          })
-        )
-      );
+    describe("time-enabled layer", function () {
+      const hour = 3600 * 1000;
+      const times = [
+        Date.UTC(2021, 1, 1),
+        Date.UTC(2021, 1, 1) + 6 * hour,
+        Date.UTC(2021, 1, 1) + 12 * hour
+      ];
+      const iso = (time: number) => new Date(time).toISOString();
 
-      runInAction(() => {
-        item.setTrait(CommonStrata.definition, "url", featureServerUrlTiled);
+      let distinctRequests: number;
+      let tileTimes: (string | null)[];
+      let pickTimes: (string | null)[];
+
+      const useMetadata = (overrides: object) =>
+        worker.use(
+          http.get(featureServerUrlTiled, () =>
+            HttpResponse.json({
+              ...tiledActVegMapJson,
+              timeInfo: {
+                startTimeField: "date",
+                endTimeField: null,
+                timeExtent: [times[0], times[2]],
+                timeInterval: 6,
+                timeIntervalUnits: "esriTimeUnitsHours"
+              },
+              ...overrides
+            })
+          )
+        );
+
+      const source = () =>
+        (item.mapItems[0] as ImageryParts).imageryProvider as unknown as {
+          source: ProtomapsArcGisPbfSource;
+        };
+
+      beforeEach(function () {
+        distinctRequests = 0;
+        tileTimes = [];
+        pickTimes = [];
+        worker.use(
+          http.get(`${featureServerUrlTiled}/query`, ({ request }) => {
+            const params = new URL(request.url).searchParams;
+            if (params.get("returnDistinctValues") !== "true") return;
+            distinctRequests++;
+            return HttpResponse.json({
+              features: times.map((date) => ({ attributes: { date } }))
+            });
+          }),
+          http.get(`${featureServerUrlTiled}/query/query`, ({ request }) => {
+            pickTimes.push(new URL(request.url).searchParams.get("time"));
+            return HttpResponse.json(featurePickGeojson);
+          }),
+          http.get(`${featureServerUrlTiled}/query/`, ({ request }) => {
+            tileTimes.push(new URL(request.url).searchParams.get("time"));
+            return new HttpResponse(tilePbfBuffer, {
+              headers: { "Content-Type": "application/x-protobuf" }
+            });
+          })
+        );
+        runInAction(() => {
+          item.setTrait(CommonStrata.definition, "url", featureServerUrlTiled);
+        });
       });
 
-      await item.loadMetadata();
+      it("tiles the layer, with a time step for each distinct start time", async function () {
+        useMetadata({});
+        await item.loadMapItems();
 
-      expect(item.tileRequests).toBe(false);
-      expect(item.defaultStyle.time.timeColumn).toBe("date");
-      expect(item.defaultStyle.time.endTimeColumn).toBeUndefined();
+        expect(item.tileRequests).toBe(true);
+        expect(distinctRequests).toBe(1);
+        expect(item.discreteTimes?.map((t) => t.time)).toEqual(times.map(iso));
+        expect(item.defaultStyle.time.timeColumn).toBe("date");
+      });
+
+      it("requests the current time step's tiles and features", async function () {
+        useMetadata({});
+        runInAction(() => {
+          item.setTrait(CommonStrata.user, "currentTime", iso(times[1]));
+        });
+        await item.loadMapItems();
+
+        await source().source.get({ x: 241014, y: 157088, z: 18 }, 256);
+        await source().source.pickFeatures(0, 0, 18, 2.6, -0.58);
+        // From just after this step to just before the next
+        const stepTime = `${times[1] + 1},${times[2] - 1}`;
+        expect(tileTimes).toEqual([stepTime]);
+        expect(pickTimes).toEqual([stepTime]);
+
+        // The last step is open-ended
+        runInAction(() => {
+          item.setTrait(CommonStrata.user, "currentTime", iso(times[2]));
+        });
+        await source().source.get({ x: 241014, y: 157088, z: 18 }, 256);
+        expect(tileTimes[1]).toBe(`${times[2] + 1},null`);
+      });
+
+      it("makes time steps from timeExtent and timeInterval if the layer can't return distinct values", async function () {
+        useMetadata({
+          advancedQueryCapabilities: {
+            ...tiledActVegMapJson.advancedQueryCapabilities,
+            supportsDistinct: false
+          }
+        });
+        await item.loadMapItems();
+
+        expect(distinctRequests).toBe(0);
+        expect(
+          item.discreteTimes?.map((t) => new Date(t.time).getTime())
+        ).toEqual(times);
+      });
+
+      it("loads every feature instead if tileRequests is false", async function () {
+        useMetadata({});
+        runInAction(() => {
+          item.setTrait(CommonStrata.user, "tileRequests", false);
+        });
+        await item.loadMetadata();
+
+        expect(item.tileRequests).toBe(false);
+        expect(item.tiledTimeQuery).toBeUndefined();
+      });
     });
 
     it("properly loads a layer", async function () {

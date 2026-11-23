@@ -1,12 +1,15 @@
 import i18next from "i18next";
 import { computed, makeObservable } from "mobx";
+import moment from "moment";
 import proj4 from "proj4";
 import URI from "urijs";
+import createDiscreteTimesFromIsoSegments from "../../../Core/createDiscreteTimes";
 import isDefined from "../../../Core/isDefined";
 import loadJson from "../../../Core/loadJson";
 import replaceUnderscores from "../../../Core/replaceUnderscores";
 import Proj4Definitions from "../../../Map/Vector/Proj4Definitions";
 import { hasUnsupportedStylesForProtomaps } from "../../../Map/Vector/Protomaps/tableStyleToProtomaps";
+import { DiscreteTimeAsJS } from "../../../ModelMixins/DiscretelyTimeVaryingMixin";
 import ArcGisFeatureServerCatalogItemTraits from "../../../Traits/TraitsClasses/ArcGisFeatureServerCatalogItemTraits";
 import { InfoSectionTraits } from "../../../Traits/TraitsClasses/CatalogMemberTraits";
 import { RectangleTraits } from "../../../Traits/TraitsClasses/MappableTraits";
@@ -168,6 +171,7 @@ interface FeatureServer {
   maxScale?: number;
   advancedQueryCapabilities?: {
     supportsPagination: boolean;
+    supportsDistinct?: boolean;
   };
   supportedQueryFormats?: string;
   maxRecordCount?: number;
@@ -185,7 +189,28 @@ interface TimeInfo {
   startTimeField?: string | null;
   endTimeField?: string | null;
   trackIdField?: string | null;
+  /** Start and end of the layer's data, in epoch milliseconds */
+  timeExtent?: [number, number] | null;
+  timeInterval?: number | null;
+  timeIntervalUnits?: string | null;
 }
+
+/** Most time steps made from `timeInfo.timeExtent`, as for the other items' `maxRefreshIntervals` */
+const MAX_TIME_STEPS = 10000;
+
+/** `timeInfo.timeIntervalUnits` as `moment` units */
+const esriTimeUnits: Record<string, [number, moment.unitOfTime.Base]> = {
+  esriTimeUnitsMilliseconds: [1, "millisecond"],
+  esriTimeUnitsSeconds: [1, "second"],
+  esriTimeUnitsMinutes: [1, "minute"],
+  esriTimeUnitsHours: [1, "hour"],
+  esriTimeUnitsDays: [1, "day"],
+  esriTimeUnitsWeeks: [1, "week"],
+  esriTimeUnitsMonths: [1, "month"],
+  esriTimeUnitsYears: [1, "year"],
+  esriTimeUnitsDecades: [10, "year"],
+  esriTimeUnitsCenturies: [100, "year"]
+};
 
 type FieldType =
   | "esriFieldTypeSmallInteger"
@@ -253,7 +278,9 @@ export class ArcGisFeatureServerStratum extends LoadableStratum(
   constructor(
     private readonly _item: ArcGisFeatureServerCatalogItem,
     private readonly _featureServer: FeatureServer | undefined,
-    private readonly _token: string | undefined
+    private readonly _token: string | undefined,
+    /** Distinct start times (epoch milliseconds) of a time-enabled layer that supports tiles */
+    private readonly _startTimes?: number[]
   ) {
     super();
     makeObservable(this);
@@ -263,7 +290,8 @@ export class ArcGisFeatureServerStratum extends LoadableStratum(
     return new ArcGisFeatureServerStratum(
       newModel as ArcGisFeatureServerCatalogItem,
       this._featureServer,
-      this._token
+      this._token,
+      this._startTimes
     ) as this;
   }
 
@@ -282,8 +310,21 @@ export class ArcGisFeatureServerStratum extends LoadableStratum(
     }
 
     const metaUrl = buildMetadataUrl(item, token);
-    const featureServer = await loadJson(metaUrl);
-    return new ArcGisFeatureServerStratum(item, featureServer, token);
+    const featureServer: FeatureServer = await loadJson(metaUrl);
+
+    // Tiles only hold the features in view, so get the time steps from the server
+    const startTimeField = featureServer.timeInfo?.startTimeField;
+    const startTimes =
+      startTimeField && supportsPbfTiles(featureServer)
+        ? await loadDistinctValues(item, featureServer, token, startTimeField)
+        : undefined;
+
+    return new ArcGisFeatureServerStratum(
+      item,
+      featureServer,
+      token,
+      startTimes
+    );
   }
 
   get token() {
@@ -401,6 +442,44 @@ export class ArcGisFeatureServerStratum extends LoadableStratum(
   @computed get hasTimeInfo() {
     const timeInfo = this._featureServer?.timeInfo;
     return !!(timeInfo?.startTimeField || timeInfo?.endTimeField);
+  }
+
+  /**
+   * Time steps for tiled requests, which don't load the table that the timeline otherwise
+   * uses: the layer's distinct start times, or else steps of `timeInfo.timeInterval` over
+   * `timeInfo.timeExtent`
+   */
+  @computed get tiledDiscreteTimes(): DiscreteTimeAsJS[] | undefined {
+    if (!this.hasTimeInfo) return undefined;
+
+    if (this._startTimes && this._startTimes.length > 0) {
+      return this._startTimes.map((time) => ({
+        time: new Date(time).toISOString(),
+        tag: undefined
+      }));
+    }
+
+    const timeInfo = this._featureServer?.timeInfo;
+    const timeExtent = timeInfo?.timeExtent;
+    if (!timeExtent) return undefined;
+
+    const units = timeInfo.timeIntervalUnits
+      ? esriTimeUnits[timeInfo.timeIntervalUnits]
+      : undefined;
+    const interval =
+      timeInfo.timeInterval && units
+        ? moment.duration(timeInfo.timeInterval * units[0], units[1])
+        : undefined;
+
+    const result: DiscreteTimeAsJS[] = [];
+    createDiscreteTimesFromIsoSegments(
+      result,
+      new Date(timeExtent[0]).toISOString(),
+      new Date(timeExtent[1]).toISOString(),
+      interval?.toISOString(),
+      MAX_TIME_STEPS
+    );
+    return result;
   }
 
   /** Time settings from the layer's `timeInfo`, if it is time-enabled */
@@ -669,19 +748,12 @@ export class ArcGisFeatureServerStratum extends LoadableStratum(
   @computed get tileRequests() {
     if (this._item.forceCesiumPrimitives) return false;
 
-    // Tiled requests don't load the full table, which the timeline needs
-    if (this.hasTimeInfo) return false;
-
-    const supportsPbfTiles =
-      this._featureServer?.supportsTilesAndBasicQueriesMode &&
-      typeof this._featureServer?.supportedQueryFormats === "string" &&
-      (this._featureServer.supportedQueryFormats as string)
-        .toLowerCase()
-        .includes("pbf");
-
-    if (supportsPbfTiles) {
+    if (this._featureServer && supportsPbfTiles(this._featureServer)) {
       return !hasUnsupportedStylesForProtomaps(this._item);
     }
+
+    // Without tiles that can be requested by time, the timeline needs every feature loaded
+    if (this.hasTimeInfo) return false;
 
     return undefined;
   }
@@ -718,6 +790,52 @@ function buildMetadataUrl(
     url.addQuery("token", token);
   }
   return proxyCatalogItemUrl(catalogItem, url.toString());
+}
+
+function supportsPbfTiles(featureServer: FeatureServer) {
+  return (
+    !!featureServer.supportsTilesAndBasicQueriesMode &&
+    typeof featureServer.supportedQueryFormats === "string" &&
+    featureServer.supportedQueryFormats.toLowerCase().includes("pbf")
+  );
+}
+
+/**
+ * Sorted distinct values of a date field, in epoch milliseconds. Undefined if the layer
+ * can't return distinct values, or there are more than one response can hold.
+ */
+async function loadDistinctValues(
+  catalogItem: ArcGisFeatureServerCatalogItem,
+  featureServer: FeatureServer,
+  token: string | undefined,
+  field: string
+): Promise<number[] | undefined> {
+  if (!featureServer.advancedQueryCapabilities?.supportsDistinct) return;
+
+  // `layerDef` is the older equivalent of `where` - see `buildEsriJsonUrl`
+  const where =
+    catalogItem.where === "1=1" ? catalogItem.layerDef : catalogItem.where;
+  const url = new URI(catalogItem.url).segment("query").addQuery({
+    f: "json",
+    where,
+    outFields: field,
+    returnDistinctValues: true,
+    returnGeometry: false,
+    orderByFields: field
+  });
+  if (token) url.addQuery("token", token);
+
+  try {
+    const json = await loadJson(
+      proxyCatalogItemUrl(catalogItem, url.toString())
+    );
+    if (json?.error || json?.exceededTransferLimit) return;
+    return (json?.features ?? [])
+      .map((feature: any) => feature.attributes?.[field])
+      .filter((value: unknown): value is number => typeof value === "number");
+  } catch {
+    return;
+  }
 }
 
 StratumOrder.addLoadStratum(ArcGisFeatureServerStratum.stratumName);

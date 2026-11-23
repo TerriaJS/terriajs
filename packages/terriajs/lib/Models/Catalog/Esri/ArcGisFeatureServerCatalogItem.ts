@@ -2,6 +2,7 @@ import { featureCollection } from "@turf/helpers";
 import { GeoJsonProperties, Geometry, GeometryCollection } from "geojson";
 import i18next, { keyFromSelector } from "i18next";
 import { computed, makeObservable, override, runInAction } from "mobx";
+import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
 import URI from "urijs";
 import { FeatureCollectionWithCrs } from "../../../Core/GeoJson";
@@ -132,6 +133,31 @@ export default class ArcGisFeatureServerCatalogItem extends MinMaxLevelMixin(
     );
   }
 
+  @override
+  get discreteTimes() {
+    if (!this.tileRequests) return super.discreteTimes;
+    const stratum = this.strata.get(ArcGisFeatureServerStratum.stratumName) as
+      | ArcGisFeatureServerStratum
+      | undefined;
+    return stratum?.tiledDiscreteTimes;
+  }
+
+  /**
+   * The `time` query parameter for tiled requests: the current time step, up to the next.
+   * The server includes features whose time range touches either end, so it leaves out
+   * 1ms at each end - otherwise features that end as this step starts would be included,
+   * as would features that start with the next step.
+   */
+  @computed get tiledTimeQuery() {
+    const current = this.currentDiscreteJulianDate;
+    if (!this.tileRequests || !current) return undefined;
+    const start = JulianDate.toDate(current).getTime() + 1;
+    const next = this.nextDiscreteJulianDate;
+    return next
+      ? `${start},${JulianDate.toDate(next).getTime() - 1}`
+      : `${start},null`;
+  }
+
   @computed get imageryProvider() {
     // Don't return an imagery provider if we haven't loaded metadata yet
     if (!this.strata.has(ArcGisFeatureServerStratum.stratumName)) {
@@ -161,7 +187,8 @@ export default class ArcGisFeatureServerCatalogItem extends MinMaxLevelMixin(
         tilingScheme: new WebMercatorTilingScheme(),
         enablePickFeatures: this.allowFeaturePicking,
         objectIdField: this.objectIdField,
-        supportsQuantization: this.supportsQuantization
+        supportsQuantization: this.supportsQuantization,
+        time: this.tiledTimeQuery
       }),
       id: this.uniqueId,
       paintRules,
