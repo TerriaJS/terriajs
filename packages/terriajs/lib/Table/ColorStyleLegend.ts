@@ -235,15 +235,23 @@ export class ColorStyleLegend extends LoadableStratum(LegendTraits) {
           ]
         : [];
 
+    // Values' legend titles, if they have them
+    const legendTitles = new Map(
+      style.colorTraits.enumColors
+        ?.filter((enumColor) => enumColor.value && enumColor.legendTitle)
+        .map((enumColor) => [enumColor.value!, enumColor.legendTitle!])
+    );
+
     // Aggregate colours (don't show multiple legend items for the same colour)
     const colorMapValues = colorMap.values.reduce<{
       [color: string]: string[];
     }>((prev, current, i) => {
       const cssCol = colorMap.colors[i].toCssColorString();
+      const title = legendTitles.get(current) ?? current;
       if (isDefined(prev[cssCol])) {
-        prev[cssCol].push(current);
+        prev[cssCol].push(title);
       } else {
-        prev[cssCol] = [current];
+        prev[cssCol] = [title];
       }
       return prev;
     }, {});

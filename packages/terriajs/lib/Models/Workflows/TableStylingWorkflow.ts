@@ -3117,7 +3117,16 @@ export default class TableStylingWorkflow implements SelectableDimensionWorkflow
 
     // Remove element if value and color are undefined
     if (!isDefined(value) && !isDefined(color)) enumColors.splice(index, 1);
-    else enumColors[index] = { value, color };
+    else
+      enumColors[index] = {
+        value,
+        color,
+        // The title describes the value, so keep it only if the value is unchanged
+        legendTitle:
+          enumColors[index]?.value === value
+            ? enumColors[index]?.legendTitle
+            : undefined
+      };
 
     this.getTableStyleTraits(stratumId)?.color.setTrait(
       stratumId,

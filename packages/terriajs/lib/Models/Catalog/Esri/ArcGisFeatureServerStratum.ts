@@ -607,7 +607,9 @@ export class ArcGisFeatureServerStratum extends LoadableStratum(
                 enumColors: uniqueValueRenderer.uniqueValueInfos.map((v, i) =>
                   createStratumInstance(EnumColorTraits, {
                     value: v.value,
-                    color: symbolStyles[i].color ?? "#ffffff"
+                    color: symbolStyles[i].color ?? "#ffffff",
+                    // Same title as the point and outline symbols, so the legends merge
+                    legendTitle: v.label || undefined
                   })
                 ),
                 nullColor: defaultSymbolStyle.color
