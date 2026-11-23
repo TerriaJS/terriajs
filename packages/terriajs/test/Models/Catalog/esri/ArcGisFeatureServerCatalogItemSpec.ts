@@ -742,6 +742,40 @@ describe("ArcGisFeatureServerCatalogItem", function () {
       expect(item.activeTableStyle.tableColorMap.type).toEqual("enum");
     });
 
+    it("shows one legend item for each unique value, titled with its label", async function () {
+      const renderer = tiledActVegMapJson.drawingInfo.renderer;
+      const uniqueValueInfos = renderer.uniqueValueInfos
+        .slice(0, 3)
+        .map((info, i) => ({ ...info, label: `Category ${i}` }));
+      worker.use(
+        http.get(featureServerUrlTiled, () =>
+          HttpResponse.json({
+            ...tiledActVegMapJson,
+            drawingInfo: {
+              ...tiledActVegMapJson.drawingInfo,
+              renderer: { ...renderer, uniqueValueInfos }
+            }
+          })
+        )
+      );
+      runInAction(() => {
+        item.setTrait(CommonStrata.definition, "url", featureServerUrlTiled);
+      });
+      await item.loadMapItems();
+
+      // The fill colour and outline of each value are in the same item
+      const items = item.legends[0].items;
+      expect(items.map((legendItem) => legendItem.title)).toEqual([
+        "Category 0",
+        "Category 1",
+        "Category 2"
+      ]);
+      items.forEach((legendItem) => {
+        expect(legendItem.color).toBeDefined();
+        expect(legendItem.outlineColor).toBeDefined();
+      });
+    });
+
     describe("ProtomapsImageryProvider - ArcGisPbfSource", function () {
       it("fetch tile - with single request", async function () {
         runInAction(() => {

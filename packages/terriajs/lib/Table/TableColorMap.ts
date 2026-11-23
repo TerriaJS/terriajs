@@ -360,7 +360,8 @@ export default class TableColorMap {
       .map((color, i) => {
         return {
           value: uniqueValues[i],
-          color
+          color,
+          legendTitle: undefined
         };
       })
       .filter((color) => isDefined(color.value));

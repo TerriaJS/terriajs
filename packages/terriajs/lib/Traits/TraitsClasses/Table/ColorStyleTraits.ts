@@ -20,6 +20,14 @@ export class EnumColorTraits extends ModelTraits {
     type: "string"
   })
   color?: string;
+
+  @primitiveTrait({
+    name: "Legend title",
+    description:
+      "The title of the enumerated value in the legend. Defaults to the value.",
+    type: "string"
+  })
+  legendTitle?: string;
 }
 
 export default class TableColorStyleTraits extends ModelTraits {
