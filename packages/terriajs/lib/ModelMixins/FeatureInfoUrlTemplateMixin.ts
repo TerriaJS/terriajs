@@ -116,9 +116,6 @@ function FeatureInfoUrlTemplateMixin<T extends AbstractConstructor<BaseType>>(
         ? this.showStringIfPropertyValueIsNull
         : undefined;
       const maxRequests = this.maxRequests;
-      const currentTime = TimeVarying.is(this)
-        ? this.currentTimeAsJulianDate
-        : undefined;
 
       imageryProvider.pickFeatures = async (
         x: number,
@@ -140,6 +137,11 @@ function FeatureInfoUrlTemplateMixin<T extends AbstractConstructor<BaseType>>(
           isDefined(features) &&
           features.length < maxRequests
         ) {
+          // Read when picking, not when wrapping - otherwise anything that wraps a provider in a
+          // computed would re-run (and recreate the provider) on every clock tick
+          const currentTime = runInAction(() =>
+            TimeVarying.is(this) ? this.currentTimeAsJulianDate : undefined
+          );
           for (let i = 0; i < features.length; i++) {
             const feature = features[i];
             const resource = new Resource({
