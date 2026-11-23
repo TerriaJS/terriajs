@@ -560,6 +560,8 @@ describe("ArcGisFeatureServerCatalogItem", function () {
         expect(distinctRequests).toBe(1);
         expect(item.discreteTimes?.map((t) => t.time)).toEqual(times.map(iso));
         expect(item.defaultStyle.time.timeColumn).toBe("date");
+        // The table is empty when tiling, but the time steps come from the server
+        expect(item.disableDateTimeSelector).toBeFalsy();
       });
 
       it("requests the current time step's tiles and features", async function () {

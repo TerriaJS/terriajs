@@ -482,6 +482,13 @@ export class ArcGisFeatureServerStratum extends LoadableStratum(
     return result;
   }
 
+  /** Tiled requests don't load the table, which would otherwise turn off the date picker */
+  @computed get disableDateTimeSelector() {
+    if (this._item.tileRequests && (this.tiledDiscreteTimes?.length ?? 0) > 1)
+      return false;
+    return undefined;
+  }
+
   /** Time settings from the layer's `timeInfo`, if it is time-enabled */
   @computed get defaultStyle() {
     if (!this.hasTimeInfo) return undefined;
