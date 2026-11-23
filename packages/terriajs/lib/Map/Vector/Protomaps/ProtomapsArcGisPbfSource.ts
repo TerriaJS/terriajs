@@ -36,6 +36,8 @@ interface ArcGisPbfSourceOptions {
   tilingScheme: WebMercatorTilingScheme;
   enablePickFeatures: boolean;
   supportsQuantization: boolean;
+  /** The `time` query parameter for a time-enabled layer, for tile and pick requests */
+  time?: string;
 }
 
 export class ProtomapsArcGisPbfSource implements TileSource {
@@ -56,6 +58,12 @@ export class ProtomapsArcGisPbfSource implements TileSource {
     if (options.token) {
       this.baseResource.setQueryParameters({
         token: options.token
+      });
+    }
+
+    if (options.time) {
+      this.baseResource.setQueryParameters({
+        time: options.time
       });
     }
 
