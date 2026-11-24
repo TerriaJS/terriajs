@@ -111,6 +111,12 @@ export type {
   DrawerRootProps,
   DrawerTriggerProps
 } from "./primitives/Drawer";
+export { FloatingPanel, FloatingPanelRoot } from "./primitives/FloatingPanel";
+export type {
+  FloatingPanelPlacement,
+  FloatingPanelProps,
+  FloatingPanelSize
+} from "./primitives/FloatingPanel";
 export {
   Popover,
   PopoverArrow,
