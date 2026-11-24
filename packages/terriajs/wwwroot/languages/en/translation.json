@@ -823,6 +823,7 @@
     }
   },
   "map": {
+    "loadingData": "Loading map data",
     "addressGeocoder": {
       "devError": "bulkConvertAddresses must be implemented in the derived class."
     },

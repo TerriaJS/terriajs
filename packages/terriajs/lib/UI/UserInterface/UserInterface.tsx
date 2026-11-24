@@ -8,6 +8,7 @@ import type Terria from "../../Models/Terria";
 import type ViewState from "../../ReactViewModels/ViewState";
 import { ViewStateProvider } from "../../ReactViewModels/ViewStateContext";
 import { MapView } from "../MapView/MapView";
+import { MapProgressBar } from "./MapProgressBar/MapProgressBar";
 
 type UserInterfaceProps = {
   terria: Terria;
@@ -30,6 +31,7 @@ const UserInterface = ({
       <aside className="tjs-user-interface__side-panel" />
       <main className="tjs-user-interface__map">
         <MapView viewer={terria.mainViewer} />
+        <MapProgressBar className="tjs-user-interface__map-progress" />
       </main>
       <div className="tjs-user-interface__bottom-dock" />
     </div>

@@ -308,7 +308,8 @@ export default defineConfig([
     }
   },
   // The new UI (lib/UI): TypeScript function components on the design system,
-  // with no logic of their own. Its tests may set up model state
+  // with no logic of their own. A feature's logic that only the new UI uses
+  // sits beside it in *.model.ts, and its tests may set up model state
   {
     name: "terriajs/new-ui",
     files: ["lib/UI/**/*.{ts,tsx}"],
@@ -320,7 +321,11 @@ export default defineConfig([
   {
     name: "terriajs/new-ui-no-logic",
     files: ["lib/UI/**/*.{ts,tsx}"],
-    ignores: ["lib/UI/**/*.test.{ts,tsx}", "lib/UI/test/**"],
+    ignores: [
+      "lib/UI/**/*.test.{ts,tsx}",
+      "lib/UI/test/**",
+      "lib/UI/**/*.model.ts"
+    ],
     rules: {
       "no-restricted-imports": [
         "error",
