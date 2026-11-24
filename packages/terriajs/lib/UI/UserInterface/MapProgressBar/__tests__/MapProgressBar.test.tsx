@@ -4,7 +4,10 @@ import type { ReactElement } from "react";
 import { render } from "vitest-browser-react";
 import { ViewStateProvider } from "../../../../ReactViewModels/ViewStateContext";
 import { MapView } from "../../../MapView/MapView";
+import { addDatasets } from "../../../test/datasets";
+import { network } from "../../../test/network";
 import { createTerria, waitForMap } from "../../../test/terria";
+import { tileServerDown } from "../../../test/tiles";
 import { MapProgressBar } from "../MapProgressBar";
 
 const progressBar = (): Locator =>
@@ -48,6 +51,24 @@ describe("MapProgressBar", () => {
     terria.tileLoadProgressEvent.raiseEvent(0, 4);
 
     await expect.element(progressBar()).not.toBeInTheDocument();
+  });
+
+  it("goes once the 2D map has tried every tile, those its server failed too", async () => {
+    network.use(tileServerDown);
+    const { terria } = await renderBar(<MapProgressBar />, { onMap: true });
+
+    // The most tiles the map has said it's loading at once
+    let mostLoading = 0;
+    terria.tileLoadProgressEvent.addEventListener((remaining: number) => {
+      mostLoading = Math.max(mostLoading, remaining);
+    });
+
+    await addDatasets(terria, ["Rainfall"]);
+
+    await expect.poll(() => mostLoading).toBeGreaterThan(0);
+    await expect
+      .element(progressBar(), { timeout: 5000 })
+      .not.toBeInTheDocument();
   });
 
   it("shows the map is loading without how far, while it can't say", async () => {

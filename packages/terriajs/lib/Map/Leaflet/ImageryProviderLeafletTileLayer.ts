@@ -140,8 +140,10 @@ export default class ImageryProviderLeafletTileLayer extends L.TileLayer {
     };
   }
 
-  _tileOnError(_done: unknown, _tile: unknown, _e: unknown) {
-    // Do nothing, we'll handle tile errors separately.
+  // The error is reported to the imagery provider separately; the tile is only
+  // finished here, as failed, or the layer never finishes loading
+  _tileOnError(done: L.DoneCallback, tile: HTMLElement, e: Error) {
+    done(e, tile);
   }
 
   createTile(coords: L.Coords, done: L.DoneCallback) {
