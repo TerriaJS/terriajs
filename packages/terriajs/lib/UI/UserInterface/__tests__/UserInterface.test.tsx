@@ -138,4 +138,24 @@ describe("UserInterface", () => {
         .trim()
     ).not.toBe("");
   });
+
+  it("shows the map's loading progress along its top edge, over the map", async () => {
+    const { terria, viewState } = createTerria();
+    const screen = await render(
+      <UserInterface terria={terria} viewState={viewState} />
+    );
+
+    terria.tileLoadProgressEvent.raiseEvent(1, 2);
+
+    const bar = screen.getByRole("progressbar", { name: "Loading map data" });
+    await expect.element(bar).toBeVisible();
+    const map = screen.getByRole("main").element().getBoundingClientRect();
+    const { top, left, width, height } = bar.element().getBoundingClientRect();
+    expect([top, left, width]).toEqual([map.top, map.left, map.width]);
+    expect(
+      document
+        .elementFromPoint(left + width / 2, top + height / 2)
+        ?.closest('[role="progressbar"]')
+    ).toBe(bar.element());
+  });
 });

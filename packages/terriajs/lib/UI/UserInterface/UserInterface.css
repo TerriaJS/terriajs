@@ -26,6 +26,13 @@
     grid-area: map;
   }
 
+  /* Along the map's top edge, across its width, over the map */
+  .tjs-user-interface__map-progress {
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline: 0;
+  }
+
   .tjs-user-interface__bottom-dock {
     grid-area: dock;
   }
