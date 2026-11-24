@@ -106,7 +106,7 @@ ModalCloseTrigger.displayName = "Modal.CloseTrigger";
 
 type ModalHeaderAlign = "start" | "center";
 
-type ModalHeaderProps = ComponentPropsWithoutRef<"header"> & {
+type ModalHeaderProps = ComponentPropsWithoutRef<"div"> & {
   align?: ModalHeaderAlign;
 };
 
@@ -114,7 +114,7 @@ const ModalHeader = ({
   align = "start",
   ...props
 }: ModalHeaderProps): React.ReactElement => {
-  return <header {...props} data-tds="modal-header" data-tds-align={align} />;
+  return <div {...props} data-tds="modal-header" data-tds-align={align} />;
 };
 
 ModalHeader.displayName = "Modal.Header";
@@ -143,10 +143,10 @@ const ModalBody = (props: ModalBodyProps): React.ReactElement => {
 
 ModalBody.displayName = "Modal.Body";
 
-type ModalFooterProps = ComponentPropsWithoutRef<"footer">;
+type ModalFooterProps = ComponentPropsWithoutRef<"div">;
 
 const ModalFooter = (props: ModalFooterProps): React.ReactElement => {
-  return <footer {...props} data-tds="modal-footer" />;
+  return <div {...props} data-tds="modal-footer" />;
 };
 
 ModalFooter.displayName = "Modal.Footer";

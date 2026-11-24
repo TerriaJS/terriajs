@@ -113,7 +113,7 @@ AlertDialogCloseTrigger.displayName = "AlertDialog.CloseTrigger";
 
 type AlertDialogHeaderAlign = "start" | "center";
 
-type AlertDialogHeaderProps = ComponentPropsWithoutRef<"header"> & {
+type AlertDialogHeaderProps = ComponentPropsWithoutRef<"div"> & {
   align?: AlertDialogHeaderAlign;
 };
 
@@ -122,7 +122,7 @@ const AlertDialogHeader = ({
   ...props
 }: AlertDialogHeaderProps): React.ReactElement => {
   return (
-    <header {...props} data-tds="alert-dialog-header" data-tds-align={align} />
+    <div {...props} data-tds="alert-dialog-header" data-tds-align={align} />
   );
 };
 
@@ -158,12 +158,12 @@ const AlertDialogBody = (props: AlertDialogBodyProps): React.ReactElement => {
 
 AlertDialogBody.displayName = "AlertDialog.Body";
 
-type AlertDialogFooterProps = ComponentPropsWithoutRef<"footer">;
+type AlertDialogFooterProps = ComponentPropsWithoutRef<"div">;
 
 const AlertDialogFooter = (
   props: AlertDialogFooterProps
 ): React.ReactElement => {
-  return <footer {...props} data-tds="alert-dialog-footer" />;
+  return <div {...props} data-tds="alert-dialog-footer" />;
 };
 
 AlertDialogFooter.displayName = "AlertDialog.Footer";
