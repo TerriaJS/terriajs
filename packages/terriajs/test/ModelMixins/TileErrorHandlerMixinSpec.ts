@@ -235,11 +235,11 @@ describe("TileErrorHandlerMixin", function () {
 
     it("otherwise, it retries and then fails with unknown error", async function () {
       const cause = new Error("The source image could not be decoded.");
-      spyOn(Resource, "fetchImage").and.rejectWith(cause);
+      spyOn(Resource.prototype, "fetchImage").and.rejectWith(cause);
       try {
         await onTileLoadError(item, newError(undefined));
       } catch {}
-      expect(Resource.fetchImage).toHaveBeenCalledTimes(3);
+      expect(Resource.prototype.fetchImage).toHaveBeenCalledTimes(3);
       expect(item.tileFailures).toBe(1);
       expect(raiseEvent.calls.count()).toBe(1);
       expect(raiseEvent.calls.argsFor(0)[0]?.message).toContain(
@@ -249,7 +249,9 @@ describe("TileErrorHandlerMixin", function () {
     });
 
     it("reports a failed request with no status code as the cause", async function () {
-      spyOn(Resource, "fetchImage").and.rejectWith(new RequestErrorEvent());
+      spyOn(Resource.prototype, "fetchImage").and.rejectWith(
+        new RequestErrorEvent()
+      );
       try {
         await onTileLoadError(item, newError(undefined));
       } catch {}
@@ -259,9 +261,9 @@ describe("TileErrorHandlerMixin", function () {
     });
 
     it("tells the map to reload the tile if a retry succeeds", async function () {
-      spyOn(Resource, "fetchImage").and.resolveTo();
+      spyOn(Resource.prototype, "fetchImage").and.resolveTo();
       await onTileLoadError(item, newError(undefined));
-      expect(Resource.fetchImage).toHaveBeenCalledTimes(1);
+      expect(Resource.prototype.fetchImage).toHaveBeenCalledTimes(1);
       expect(item.tileFailures).toBe(0);
       expect(raiseEvent.calls.count()).toBe(0);
     });
@@ -332,22 +334,22 @@ describe("TileErrorHandlerMixin", function () {
     it("retries as many times as tileErrorHandlingOptions.retries says", async function () {
       item.tileErrorHandlingOptions.setTrait(CommonStrata.user, "retries", 1);
       const error = newError(randomIntBetween(500, 599));
-      spyOn(Resource, "fetchImage").and.rejectWith(error.error);
+      spyOn(Resource.prototype, "fetchImage").and.rejectWith(error.error);
       try {
         await onTileLoadError(item, error);
       } catch {}
-      expect(Resource.fetchImage).toHaveBeenCalledTimes(1);
+      expect(Resource.prototype.fetchImage).toHaveBeenCalledTimes(1);
       expect(item.tileFailures).toBe(1);
     });
 
     it("fails on the first attempt when retries is 0", async function () {
       item.tileErrorHandlingOptions.setTrait(CommonStrata.user, "retries", 0);
       const error = newError(undefined);
-      spyOn(Resource, "fetchImage").and.rejectWith(error.error);
+      spyOn(Resource.prototype, "fetchImage").and.rejectWith(error.error);
       try {
         await onTileLoadError(item, error);
       } catch {}
-      expect(Resource.fetchImage).not.toHaveBeenCalled();
+      expect(Resource.prototype.fetchImage).not.toHaveBeenCalled();
       expect(item.tileFailures).toBe(1);
     });
 
@@ -389,7 +391,9 @@ describe("TileErrorHandlerMixin", function () {
 
   describe("when a tile fails more than the threshold number of times", function () {
     beforeEach(function () {
-      spyOn(Resource, "fetchImage").and.rejectWith(new RequestErrorEvent());
+      spyOn(Resource.prototype, "fetchImage").and.rejectWith(
+        new RequestErrorEvent()
+      );
       item.tileErrorHandlingOptions.setTrait(
         CommonStrata.user,
         "thresholdBeforeDisablingItem",
@@ -521,7 +525,9 @@ describe("TileErrorHandlerMixin", function () {
 
   it("resets tileFailures to 0 when there is an intervening success", async function () {
     const error = newError(undefined);
-    spyOn(Resource, "fetchImage").and.rejectWith(new RequestErrorEvent());
+    spyOn(Resource.prototype, "fetchImage").and.rejectWith(
+      new RequestErrorEvent()
+    );
     expect(item.tileFailures).toBe(0);
 
     try {
