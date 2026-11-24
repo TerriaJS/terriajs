@@ -63,6 +63,14 @@ describe("Modal", () => {
     await open(screen);
   });
 
+  it("adds no landmarks to the page with its header and footer", async () => {
+    const screen = await render(<RemoveLayer />);
+    await open(screen);
+
+    expect(page.getByRole("banner").elements()).toHaveLength(0);
+    expect(page.getByRole("contentinfo").elements()).toHaveLength(0);
+  });
+
   it("is modal: the rest of the page is inert while it's open", async () => {
     const screen = await render(<RemoveLayer />);
     const trigger = screen.getByRole("button", { name: "Remove layer" });
