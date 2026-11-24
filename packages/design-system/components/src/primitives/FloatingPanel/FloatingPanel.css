@@ -1,0 +1,48 @@
+/**
+ * FloatingPanel Component Styles
+ *
+ * Its surface and its header, body and footer are Modal's (Modal.css). This
+ * places it in a corner of its positioned parent, 16px in from the edges, at
+ * the modal's widths. Taller than the space it has, its body scrolls.
+ */
+
+@layer terria-ds.components {
+  /* Only listens for the panel's keys and focus; it lays nothing out */
+  [data-tds="floating-panel-root"] {
+    display: contents;
+  }
+
+  [data-tds="floating-panel"] {
+    --_panel-inset: var(--terria-ds-dimensions-spacing-4);
+    --_modal-radius: var(--terria-ds-radius-lg);
+
+    position: absolute;
+    inline-size: calc(100% - 2 * var(--_panel-inset));
+    max-inline-size: 30rem;
+    max-block-size: calc(100% - 2 * var(--_panel-inset));
+
+    &[data-tds-size="xs"] {
+      max-inline-size: 20rem;
+    }
+
+    &[data-tds-size="md"] {
+      max-inline-size: 40rem;
+    }
+
+    &[data-tds-placement^="top"] {
+      inset-block-start: var(--_panel-inset);
+    }
+
+    &[data-tds-placement^="bottom"] {
+      inset-block-end: var(--_panel-inset);
+    }
+
+    &[data-tds-placement$="start"] {
+      inset-inline-start: var(--_panel-inset);
+    }
+
+    &[data-tds-placement$="end"] {
+      inset-inline-end: var(--_panel-inset);
+    }
+  }
+}

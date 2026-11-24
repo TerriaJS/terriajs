@@ -1,8 +1,8 @@
 /**
  * Modal Component Styles
  *
- * The layout here is shared with AlertDialog and Drawer: each rule matches
- * their parts too. What differs between them (the surface and body line
+ * The layout here is shared with AlertDialog, Drawer and FloatingPanel: each
+ * rule matches their parts too. What differs between them (the surface and body line
  * height) is set per component through --_dialog-* properties, at the end of
  * this file, in AlertDialog.css and in Drawer.css.
  *
@@ -206,7 +206,8 @@
   :is(
     [data-tds="modal-dialog"],
     [data-tds="alert-dialog-dialog"],
-    [data-tds="drawer-dialog"]
+    [data-tds="drawer-dialog"],
+    [data-tds="floating-panel"]
   ) {
     pointer-events: auto;
     position: relative;
@@ -346,7 +347,7 @@
     }
   }
 
-  [data-tds="modal-dialog"] {
+  :is([data-tds="modal-dialog"], [data-tds="floating-panel"]) {
     --_dialog-bg: var(--terria-ds-surface-overlay);
   }
 }
