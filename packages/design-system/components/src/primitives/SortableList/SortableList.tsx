@@ -4,6 +4,7 @@ import {
   forwardRef,
   useContext,
   useEffect,
+  useLayoutEffect,
   useMemo,
   useRef,
   useState,
@@ -137,10 +138,12 @@ type TargetReporterProps = {
 
 // Tells the list where the dragged item would land. React Aria only says so
 // while drawing the drop indicator, and the list can't change during that.
-// Only a new place is told, not each time the indicator is drawn
+// Only a new place is told, not each time the indicator is drawn. Told as
+// it's drawn, before the next key's handled: Enter pressed straight after an
+// arrow drops it where the arrow moved it
 const TargetReporter = ({ target, onTarget }: TargetReporterProps): null => {
   const { key, dropPosition } = target;
-  useEffect(() => {
+  useLayoutEffect(() => {
     onTarget({ type: "item", key, dropPosition });
   }, [key, dropPosition, onTarget]);
   return null;
@@ -338,6 +341,18 @@ const SortableList = <T extends { id: Key }>({
     // A type only this list uses: as text, a drop on a text field or another
     // app would paste the item's text there
     getItems: (keys) => [...keys].map((key) => ({ [DRAG_TYPE]: String(key) })),
+    // With the item indicator, the item shows where it lands, and just
+    // before it looks as just after it does: only one of the two is a place
+    // to drop, so each arrow from the keyboard moves it a place, rather than
+    // the first one way or the other leaving it where it was. The line
+    // indicator draws the two as lines either side of it
+    getDropOperation: (target) =>
+      dropIndicator === "item" &&
+      target.type === "item" &&
+      target.dropPosition === "before" &&
+      draggedKeys.has(target.key)
+        ? "cancel"
+        : "move",
     onReorder: (event) => {
       // With the item indicator, the item has been moved where it lands
       // already, and React Aria's target is often next to it. Dropped before
@@ -347,6 +362,10 @@ const SortableList = <T extends { id: Key }>({
       // Dropped next to itself, it's where it was. Several items dropped next
       // to one of them stay where they are too, rather than gathering there
       if (event.keys.has(target.key)) return;
+      // Nor is it moved where it'd be in the same order, as it would be
+      // dropped where it was picked up
+      const moved = moveItems(list, event.keys, target);
+      if (moved.every((item, at) => item.id === list[at]?.id)) return;
       onReorder({ ...event, target });
     },
     onDragStart: (event) => {

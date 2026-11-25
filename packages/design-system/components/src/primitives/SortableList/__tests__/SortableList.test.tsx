@@ -340,6 +340,55 @@ describe("SortableList", () => {
     });
   });
 
+  // The item shows where it lands, so just before it and just after it
+  // look alike: each arrow moves it a place
+  describe("moving from the keyboard, with the item indicator", () => {
+    const dropIndicator = "item";
+    // Where Rivers, the middle row, is dropped after the keys given
+    const dropRivers = async (
+      keys: string
+    ): Promise<{ key: string; dropPosition: string } | undefined> => {
+      const onReorder = vi.fn();
+      await renderList({ onReorder, dropIndicator });
+      // To Rivers' row, then its handle, and picked up
+      await userEvent.tab();
+      await userEvent.keyboard("{ArrowDown}");
+      await userEvent.tab();
+      await userEvent.keyboard("{Enter}");
+      await expect
+        .poll(() =>
+          document.activeElement?.getAttribute("aria-roledescription")
+        )
+        .toBe("drop indicator");
+      await userEvent.keyboard(`${keys}{Enter}`);
+      await expect.poll(() => onReorder.mock.calls.length).toBe(1);
+      const [event] = onReorder.mock.calls[0] as [
+        { target: { key: string; dropPosition: string } }
+      ];
+      return event.target;
+    };
+
+    it("moves a place up with each arrow up, from the first", async () => {
+      expect(await dropRivers("{ArrowUp}")).toMatchObject({
+        key: "roads",
+        dropPosition: "before"
+      });
+    });
+
+    it("moves a place down with each arrow down, from the first", async () => {
+      expect(await dropRivers("{ArrowDown}")).toMatchObject({
+        key: "suburbs",
+        dropPosition: "after"
+      });
+    });
+
+    it("comes back with one arrow, and moves on with the next", async () => {
+      expect(await dropRivers("{ArrowUp}{ArrowDown}{ArrowDown}")).toMatchObject(
+        { key: "suburbs", dropPosition: "after" }
+      );
+    });
+  });
+
   it("picks up any row from the keyboard: arrows to the row, Tab to its handle, then Enter", async () => {
     await renderList();
 
