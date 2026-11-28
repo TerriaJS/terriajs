@@ -1785,4 +1785,6 @@ export async function adjustGeoJsonHeightsFromGeoidToEllipsoid(geoJson: unknown)
     }
   } else {
     await adjustGeometry(geoJsonObject.geometry ?? geoJson);
-  }}
+  }
+}
+
