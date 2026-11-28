@@ -14,10 +14,20 @@
 // Style guide: 3.2
 //
 
+// The form is the positioning context for the invisible file input, so the
+// input always covers the Browse button no matter how much content (for
+// example a long data-type description) sits above it in the panel.
+.fileInput {
+  position: relative;
+}
+
 .input {
   width: 100%;
   opacity: 0;
   position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
   padding: variables.$padding;
   cursor: pointer;
 }
@@ -25,7 +35,6 @@
 .btn {
   composes: btn from "../../../../Sass/common/_buttons.scss";
   composes: btn-primary from "../../../../Sass/common/_buttons.scss";
-
   &--hover {
     composes: btn-primary--hover from "../../../../Sass/common/_buttons.scss";
   }
