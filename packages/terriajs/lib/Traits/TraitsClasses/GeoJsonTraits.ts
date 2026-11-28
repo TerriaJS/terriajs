@@ -75,6 +75,13 @@ export class GeoJsonTraits extends mixTraits(
       "Whether the features in this GeoJSON should be clamped to the terrain surface. If `forceCesiumPrimitives` is false, this will be `true`"
   })
   clampToGround: boolean = true;
+  @primitiveTrait({
+      type: "boolean",
+      name: "Adjust heights from geoid to ellipsoid",
+      description:
+            "If enabled, heights in this GeoJSON are adjusted from geoid (mean sea level) to WGS84 ellipsoid heights using EGM96, on load."
+  })
+  adjustHeightsFromGeoidToEllipsoid: boolean = false;
 
   @primitiveTrait({
     type: "boolean",

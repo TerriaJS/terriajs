@@ -68,6 +68,8 @@ import TerriaError, { networkRequestError } from "../Core/TerriaError";
 import ProtomapsImageryProvider, {
   ProtomapsData
 } from "../Map/ImageryProvider/ProtomapsImageryProvider";
+import EarthGravityModel1996 from "../Map/Vector/EarthGravityModel1996";
+import geoidGridFileUrl from ".../wwwroot/data/WW15MGH.DAC";
 import { ProtomapsGeojsonSource } from "../Map/Vector/Protomaps/ProtomapsGeojsonSource";
 import { tableStyleToProtomaps } from "../Map/Vector/Protomaps/tableStyleToProtomaps";
 import Reproject from "../Map/Vector/Reproject";
@@ -487,6 +489,9 @@ function GeoJsonMixin<T extends AbstractConstructor<BaseType>>(Base: T) {
           geoJson,
           this.terria.configParameters.proj4ServiceBaseUrl
         );
+        if (this.adjustHeightsFromGeoidToEllipsoid) {
+          await adjustGeoJsonHeightsFromGeoidToEllipsoid(geoJsonWgs84);
+        }
 
         const featureCounts: FeatureCounts = {
           point: 0,
@@ -1732,3 +1737,54 @@ export function getStyleReactiveDependencies(item: GeoJsonMixin.Instance) {
     item.terria.baseMapContrastColor // This needs to be here as `baseMapContrastColor` is used as the default outline color in `getFeatureStyle`
   ];
 }
+
+export async function adjustGeoJsonHeightsFromGeoidToEllipsoid(geoJson: unknown): Promise<void> {
+  if (!geoJson || typeof geoJson !== "object") {
+    return;
+  }
+  const model = new EarthGravityModel1996(geoidGridFileUrl);
+  const adjustCoordinates = async (coordinates: unknown): Promise<void> => {
+    if (!Array.isArray(coordinates)) {
+      return;
+    }
+    if (
+      coordinates.length >= 3 &&
+      typeof coordinates[0] === "number" &&
+      typeof coordinates[1] === "number" &&
+      typeof coordinates[2] === "number"
+  ) {
+      const geoidHeight = await model.getHeight(
+        (coordinates[0] * Math.PI) / 180,
+        (coordinates[1] * Math.PI) / 180
+    );
+      coordinates[2] = coordinates[2] + geoidHeight;
+      return;
+    }
+    for (const child of coordinates) {
+      await adjustCoordinates(child);
+    }
+  };
+  const adjustGeometry = async (geometry: unknown): Promise<void> => {
+    if (!geometry || typeof geometry !== "object") {
+      return;
+    }
+    const geometryObject = geometry as { coordinates?: unknown; geometries?: unknown[] };
+    if (geometryObject.coordinates !== undefined) {
+      await adjustCoordinates(geometryObject.coordinates);
+    }
+    if (Array.isArray(geometryObject.geometries)) {
+      for (const child of geometryObject.geometries) {
+        await adjustGeometry(child);
+      }
+    }
+  };
+  const geoJsonObject = geoJson as { features?: unknown[]; geometry?: unknown };
+  if (Array.isArray(geoJsonObject.features)) {
+    for (const feature of geoJsonObject.features) {
+      await adjustGeometry((feature as { geometry?: unknown } | null)?.geometry);
+    }
+  } else {
+    await adjustGeometry(geoJsonObject.geometry ?? geoJson);
+  }
+}
+

@@ -1880,4 +1880,28 @@ describe("GeoJsonCatalogItemSpec", () => {
       });
     });
   });
+it("adjusts GeoJSON heights from geoid to ellipsoid when enabled", async function () {
+  const terria = new Terria({ baseUrl: "./" });
+    const catalogItem = new GeoJsonCatalogItem("test", terria);
+  catalogItem.setTrait("definition", "adjustHeightsFromGeoidToEllipsoid", true);
+  catalogItem.setTrait(
+    "definition",
+    "geoJsonString",
+    `{"type":"FeatureCollection","features":[{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[0,0,100]}}]}`
+  );
+    await catalogItem.loadMapItems();
+  expect((catalogItem.readyData as any).features[0].geometry.coordinates[2]).toBeCloseTo(117.16, 1);
 });
+
+  it("does not adjust GeoJSON heights when disabled", async function () {
+    const terria = new Terria({ baseUrl: "./" });
+    const catalogItem = new GeoJsonCatalogItem("test", terria);
+    catalogItem.setTrait(
+      "definition",
+      "geoJsonString",
+      `{"type":"FeatureCollection","features":[{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[0,0,100]}}]}`
+    );
+    await catalogItem.loadMapItems();
+    expect((catalogItem.readyData as any).features[0].geometry.coordinates[2]).toBe(100);
+  });
+
