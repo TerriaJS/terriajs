@@ -15,6 +15,13 @@
   text-align: left;
 }
 
+// Data-type descriptions are rendered from Markdown directly into the panel,
+// with no wrapper of their own. Keep long descriptions (and long links in
+// them) wrapped inside the panel so they cannot widen it or sit over the Browse button.
+.tab-panel p {
+    overflow-wrap: anywhere;
+}
+
 .label {
   composes: label from "../../../../Sass/common/_labels.scss";
 
